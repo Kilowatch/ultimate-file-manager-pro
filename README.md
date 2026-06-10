@@ -17,7 +17,7 @@ To comply with open-source guidelines and maintain user privacy, the FOSS build 
 * **No Proprietary Cloud Storages**: Support for Google Drive, Microsoft OneDrive, and Dropbox has been removed, as they rely on proprietary closed-source SDKs and OAuth redirection schemes. You can still use fully open and self-hosted storage alternatives such as **WebDAV, SFTP, FTP, SMB, and AWS S3**.
 * **No Closed-Source Trackers**: Firebase Analytics, Firebase Crashlytics, and GMS trackers are completely stripped out.
 * **No Store Integration**: Google Play Billing (In-App Purchases) and Google Play review prompts have been disabled. 
-* **Sponsorship / Donation Screen**: The Tip Jar in the FOSS build links directly to open donation web interfaces (Ko-fi and GitHub Sponsors) instead of using store billing services.
+* **Sponsorship / Donation Screen**: The Tip Jar in the FOSS build links directly to the GitHub Sponsors donation web interface instead of using store billing services.
 
 If you require Google Drive, OneDrive, or Dropbox integrations, please download the official version on [Google Play](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager).
 

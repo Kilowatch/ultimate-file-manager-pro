@@ -9,7 +9,6 @@
     <string name="foss_donation_title">Support UFM</string>
     <string name="foss_donation_subtitle">Donate to open-source development</string>
     <string name="foss_donation_explanation">This is a Free and Open Source (FOSS) build of Ultimate File Manager. Google Play Billing and Amazon IAP are disabled.\n\nIf you find this app helpful, please consider supporting the project with a donation. Your support helps keep UFM active and ad-free!</string>
-    <string name="foss_donation_btn_kofi">Support on Ko-fi</string>
     <string name="foss_donation_btn_github">Sponsor on GitHub</string>
     <string name="foss_donation_version_format">Android SDK Version: %1$d (FOSS Build)</string>
 

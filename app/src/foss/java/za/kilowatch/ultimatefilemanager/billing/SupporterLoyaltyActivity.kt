@@ -13,6 +13,9 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 
+import android.widget.ImageView
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+
 /**
  * FOSS build replacement for SupporterLoyaltyActivity.
  *
@@ -25,9 +28,10 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
     // TODO: Replace these with your real donation URLs once set up.
     companion object {
-        const val KOFI_URL             = "https://ko-fi.com/kilowatch"
         const val GITHUB_SPONSORS_URL  = "https://github.com/sponsors/Kilowatch"
     }
+
+    private var isTv = false
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -37,11 +41,21 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_supporter_loyalty_foss)
+        isTv = DeviceUtils.isTvDevice(this)
+
+        if (isTv) {
+            setContentView(R.layout.activity_supporter_loyalty_foss_tv)
+        } else {
+            setContentView(R.layout.activity_supporter_loyalty_foss)
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val tvPad = if (isTv) (27 * resources.displayMetrics.density).toInt() else 0
+            v.setPadding(
+                systemBars.left + tvPad, systemBars.top + tvPad,
+                systemBars.right + tvPad, systemBars.bottom + tvPad
+            )
             insets
         }
 
@@ -50,12 +64,18 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         txtVersion?.text = getString(R.string.foss_donation_version_format, android.os.Build.VERSION.SDK_INT)
 
         // Back button
-        findViewById<android.widget.ImageView?>(R.id.btnBack)?.setOnClickListener { finish() }
-
-        // Ko-fi button
-        findViewById<MaterialButton?>(R.id.btnKofi)?.setOnClickListener {
-            openUrl(KOFI_URL)
+        val btnBack = findViewById<ImageView?>(R.id.btnBack)
+        if (isTv) {
+            val whiteCsl  = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            btnBack?.imageTintList = whiteCsl
+            btnBack?.setOnFocusChangeListener { _, hasFocus ->
+                btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
+                if (hasFocus) btnBack.setBackgroundResource(R.drawable.bg_icon_circle_focused)
+                else btnBack.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+            }
         }
+        btnBack?.setOnClickListener { finish() }
 
         // GitHub Sponsors button
         findViewById<MaterialButton?>(R.id.btnGithubSponsors)?.setOnClickListener {

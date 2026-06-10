@@ -130,18 +130,6 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- Ko-fi Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnKofi"
-                        style="@style/Widget.Material3.Button.ElevatedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:text="@string/foss_donation_btn_kofi"
-                        android:textColor="?attr/colorOnPrimaryContainer"
-                        app:icon="@drawable/ic_coffee"
-                        app:iconTint="?attr/colorPrimary"
-                        android:layout_marginBottom="12dp" />
-
                     <!-- GitHub Sponsors Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnGithubSponsors"
