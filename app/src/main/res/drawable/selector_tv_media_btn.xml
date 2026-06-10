@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV media control button selector: yellow on focus, clearly visible default -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focused: solid yellow rounded rect with outer glow -->
+    <item android:state_focused="true">
+        <layer-list>
+            <!-- Outer glow -->
+            <item android:top="-6dp" android:bottom="-6dp" android:left="-6dp" android:right="-6dp">
+                <shape android:shape="rectangle">
+                    <corners android:radius="18dp" />
+                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                </shape>
+            </item>
+            <!-- Yellow fill -->
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="14dp" />
+                    <solid android:color="@color/tv_button_focused_yellow" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Pressed: slightly dimmed yellow -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp" />
+            <solid android:color="@color/tv_button_focused_yellow" />
+        </shape>
+    </item>
+
+    <!-- Default: theme-aware surface with visible border -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="14dp" />
+            <solid android:color="@color/tv_btn_default_surface" />
+            <stroke android:width="1.5dp" android:color="@color/tv_btn_default_border" />
+        </shape>
+    </item>
+
+</selector>

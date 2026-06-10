@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- TV Header -->
+    <LinearLayout
+        android:id="@+id/layerHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
+            android:nextFocusRight="@+id/chipOneDrive"
+            android:nextFocusDown="@+id/chipOneDrive"
+            app:tint="@color/tv_text_primary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="24dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_online_storage_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/online_storages_subtitle_foss"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="18sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="40dp"
+        app:layout_constraintTop_toBottomOf="@id/layerHeader"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="100dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_online_storage_provider_label"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="4dp" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupProvider1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                app:checkedButton="@id/chipOneDrive">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipOneDrive"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/add_online_storage_onedrive"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_cloud"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusDown="@+id/chipDropbox" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipGoogleDrive"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/add_online_storage_gdrive"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_cloud"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusDown="@+id/chipDropbox" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupProvider2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipDropbox"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/add_online_storage_dropbox"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_dropbox"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/chipOneDrive"
+                    android:nextFocusDown="@+id/chipAwsS3" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipWebDav"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/add_online_storage_webdav"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_cloud"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/chipGoogleDrive"
+                    android:nextFocusDown="@+id/chipAwsS3" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Row 3: S3-compatible providers -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupProvider3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipAwsS3"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/add_online_storage_aws_s3"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_cloud"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/chipDropbox"
+                    android:nextFocusDown="@+id/btnAuthenticate" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipIDriveE2"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/add_online_storage_idrive_e2"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_cloud"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/chipDropbox"
+                    android:nextFocusDown="@+id/btnAuthenticate" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+            <TextView
+                android:id="@+id/tvOneDriveNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:text="@string/onedrive_personal_note"
+                android:textColor="@color/tv_note_color"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="visible"
+                android:alpha="0.8" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAuthenticate"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/add_online_storage_auth_onedrive"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                app:cornerRadius="20dp"
+                app:backgroundTint="@color/selector_tv_button_yellow"
+                android:textColor="@color/selector_tv_button_text_yellow"
+                app:elevation="8dp"
+                android:focusable="true" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

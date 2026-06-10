@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium mobile "Connection Successful" dialog.
+     Uses dark glassmorphism to match the mobile design language.
+     Vertically stacked buttons: Save & Exit on top, Keep Editing below. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_glass_card_dark"
+    android:clipToOutline="true"
+    android:padding="0dp">
+
+    <!-- Green accent top bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="@color/status_success" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Centered success icon -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_success_circle">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_check"
+                android:contentDescription="@null"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/txtSuccessTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/network_dialog_success_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/txtSuccessSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/network_dialog_success_body"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:gravity="center" />
+
+        <!-- Save & Exit — primary action on top -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccessSave"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/network_dialog_success_save"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:backgroundTint="@color/status_success"
+            app:cornerRadius="14dp"
+            app:elevation="0dp"
+            app:icon="@drawable/ic_check"
+            app:iconTint="@color/white"
+            app:iconSize="18dp"
+            app:iconGravity="textStart" />
+
+        <!-- Keep Editing — secondary action below -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSuccessCancel"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/network_dialog_success_cancel"
+            android:textColor="@color/ufm_primary_light"
+            android:textSize="14sp"
+            app:cornerRadius="14dp"
+            app:strokeColor="@color/ufm_primary_light"
+            app:strokeWidth="1dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

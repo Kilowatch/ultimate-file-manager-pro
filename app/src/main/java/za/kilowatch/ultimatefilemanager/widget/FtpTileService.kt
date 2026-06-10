@@ -1,0 +1,46 @@
+package za.kilowatch.ultimatefilemanager.widget
+
+import android.os.Build
+import android.service.quicksettings.Tile
+import android.service.quicksettings.TileService
+import androidx.annotation.RequiresApi
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.server.FileServerService
+
+@RequiresApi(Build.VERSION_CODES.N)
+class FtpTileService : TileService() {
+
+    override fun onStartListening() {
+        super.onStartListening()
+        updateTileState()
+    }
+
+    override fun onClick() {
+        super.onClick()
+        val isEnabled = FileServerService.isFtpEnabled(this)
+        if (isEnabled) {
+            FileServerService.stopFtp(this)
+        } else {
+            FileServerService.startFtp(this)
+        }
+        FileServerService.setFtpEnabled(this, !isEnabled)
+        FileServerService.refreshNotification(this)
+        updateTileState()
+    }
+
+    private fun updateTileState() {
+        val tile = qsTile ?: return
+        val isEnabled = FileServerService.isFtpEnabled(this)
+
+        if (isEnabled) {
+            tile.state = Tile.STATE_ACTIVE
+            tile.label = getString(R.string.widget_ftp_sftp_ftp_label)
+            tile.subtitle = getString(R.string.widget_ftp_sftp_running)
+        } else {
+            tile.state = Tile.STATE_INACTIVE
+            tile.label = getString(R.string.widget_ftp_sftp_ftp_label)
+            tile.subtitle = getString(R.string.widget_ftp_sftp_stopped)
+        }
+        tile.updateTile()
+    }
+}

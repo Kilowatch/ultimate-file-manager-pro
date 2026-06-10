@@ -1,0 +1,3994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate File Manager Pro Remote</title>
+  <link rel="icon" type="image/png" href="/api/logo">
+  <style>
+    :root {
+      --primary: #00897B;
+      --primary-dark: #00695C;
+      --primary-light: #4DB6AC;
+      --accent: #1976D2;
+      --bg: #0F172A;
+      --surface: #1E293B;
+      --surface-hover: #334155;
+      --surface-variant: rgba(255, 255, 255, 0.05);
+      --text: #F1F5F9;
+      --text-sec: #94A3B8;
+      --text-hint: #64748B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --glass: rgba(30, 41, 59, 0.7);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 0% 0%, rgba(0, 137, 123, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(25, 118, 210, 0.1) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* ─── LOGIN ─────────────────────────────────── */
+    #loginScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      padding: 48px 40px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    .lock-glow {
+      width: 80px;
+      height: 80px;
+      background: rgba(0, 137, 123, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 32px;
+      box-shadow: 0 0 30px rgba(0, 137, 123, 0.3);
+    }
+
+    .pin-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 32px 0;
+    }
+
+    .pin-row input {
+      width: 56px;
+      height: 68px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      color: white;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .pin-row input:focus {
+      border-color: var(--primary);
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 121, 107, 0.4);
+    }
+
+    .pin-error {
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 20px;
+      margin-top: 16px;
+      transition: opacity 0.3s;
+    }
+
+    /* Upload Progress Widget */
+    .upload-widget {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--surface-variant);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      min-width: 320px;
+      box-shadow: var(--shadow-lg);
+      z-index: 3000;
+    }
+
+    .upload-widget.show {
+      display: block;
+    }
+
+    .upload-widget .uw-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .upload-widget .uw-title {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .upload-widget .uw-pct {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--primary-light);
+    }
+
+    .upload-widget .uw-file {
+      font-size: 12px;
+      color: var(--text-sec);
+      margin-bottom: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .upload-widget .uw-bar-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .upload-widget .uw-bar {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.15s;
+      width: 0%;
+    }
+
+    /* Folder Download Modal */
+    .dl-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 5000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .dl-overlay.show {
+      display: flex;
+    }
+
+    .dl-modal {
+      background: var(--surface);
+      border: 1px solid var(--surface-variant);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    .dl-modal .dl-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .dl-modal .dl-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .dl-modal .dl-status {
+      font-size: 14px;
+      color: var(--text-sec);
+      margin-bottom: 6px;
+    }
+
+    .dl-modal .dl-detail {
+      font-size: 13px;
+      color: var(--text-hint);
+      margin-bottom: 20px;
+    }
+
+    .dl-modal .dl-bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .dl-modal .dl-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 4px;
+      transition: width 0.2s;
+      width: 0%;
+    }
+
+    .dl-modal .dl-bar.indeterminate {
+      width: 30%;
+      animation: dlPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes dlPulse {
+      0% {
+        transform: translateX(-100%);
+      }
+
+      100% {
+        transform: translateX(400%);
+      }
+    }
+
+    .dl-modal .dl-cancel-btn {
+      padding: 12px 32px;
+      border-radius: 30px;
+      border: 1px solid var(--danger);
+      background: transparent;
+      color: var(--danger);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .dl-modal .dl-cancel-btn:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    /* ─── DASHBOARD ─────────────────────────────── */
+    #appScreen {
+      display: none;
+    }
+
+    .top-nav {
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--surface-variant);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .logo-area h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-area .badge {
+      background: var(--primary);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--surface-variant);
+      border-radius: 30px;
+      background: transparent;
+      color: var(--text-sec);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: var(--surface-variant);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    /* Volumes */
+    .storage-hero {
+      padding: 32px;
+    }
+
+    .storage-grid {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) rgba(255, 255, 255, 0.05);
+    }
+
+    .storage-grid::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .storage-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    .storage-grid::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .storage-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-light);
+    }
+
+    .storage-card {
+      min-width: 260px;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid var(--surface-variant);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .storage-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary-light);
+      background: var(--surface-hover);
+    }
+
+    .storage-card.active {
+      border-color: var(--primary);
+      background: rgba(0, 121, 107, 0.1);
+    }
+
+    .storage-card .hd {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .storage-card .vol-name {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .storage-card .vol-info {
+      font-size: 13px;
+      color: var(--text-sec);
+    }
+
+    .progress-container {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.5s;
+    }
+
+    /* Content Browser */
+    .browser-chrome {
+      background: var(--surface);
+      padding: 12px 32px;
+      border-top: 1px solid var(--surface-variant);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 72px;
+      z-index: 90;
+    }
+
+    .btn-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--surface-variant);
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-circle:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-circle:disabled {
+      opacity: 0.2;
+      cursor: default;
+    }
+
+    .path-bar {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-sec);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .path-sep {
+      color: var(--text-hint);
+      margin: 0 6px;
+    }
+
+    .path-node {
+      cursor: pointer;
+      color: var(--text);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .path-node:hover {
+      background: var(--surface-variant);
+      color: var(--primary-light);
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 12px;
+    }
+
+    .action-btn {
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: none;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .action-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-btn.outline {
+      background: transparent;
+      border: 1px solid var(--surface-variant);
+      color: var(--text);
+    }
+
+    .action-btn:hover {
+      background: var(--primary-dark);
+      transform: scale(1.02);
+    }
+
+    /* File List (Vertical) */
+    .main-content {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .item-row {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 12px 24px;
+      border: 1px solid var(--surface-variant);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 72px;
+      animation: slideIn 0.3s ease-out backwards;
+    }
+
+    .item-row:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary-light);
+    }
+
+    .item-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .item-details {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      overflow: hidden;
+    }
+
+    .item-name {
+      flex: 1;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-meta {
+      width: 180px;
+      font-size: 13px;
+      color: var(--text-sec);
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+      gap: 2px;
+    }
+
+    .item-meta span {
+      white-space: nowrap;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+      opacity: 0.3;
+      transition: opacity 0.2s;
+      margin-left: 20px;
+    }
+
+    .item-row:hover .item-actions {
+      opacity: 1;
+    }
+
+    .action-sm {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--surface-variant);
+      background: transparent;
+      color: var(--text-sec);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .action-sm:hover {
+      border-color: var(--primary);
+      color: var(--primary-light);
+      background: rgba(0, 121, 107, 0.1);
+    }
+
+    .action-sm.del:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .action-sm.btn-encrypt:hover {
+      border-color: #9333ea;
+      color: #a855f7;
+      background: rgba(147, 51, 234, 0.1);
+    }
+
+    /* Multi-Selection & FAB */
+    .selection-bar {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--primary);
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .selection-bar.active {
+      display: flex;
+    }
+
+    .selection-info {
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .selection-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .checkbox-round {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--text-sec);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-right: 12px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .checkbox-round.checked {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .checkbox-round.checked::after {
+      content: '✓';
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 30px;
+      box-shadow: var(--shadow-xl);
+      display: none;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      z-index: 1000;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .fab:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .fab-cancel {
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .fab-cancel:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Modals */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--surface-variant);
+    }
+
+    .modal h3 {
+      font-size: 24px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .modal p {
+      color: var(--text-sec);
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--surface-variant);
+      background: rgba(255, 255, 255, 0.03);
+      color: white;
+      font-size: 16px;
+      outline: none;
+      margin-bottom: 24px;
+    }
+
+    .input-group input:focus {
+      border-color: var(--primary);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Vault */
+    .vault-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(25, 118, 210, 0.12));
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .vault-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .vault-actions .action-btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .vault-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+      max-height: 340px;
+      overflow: auto;
+    }
+
+    .vault-item {
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .vault-item .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+    }
+
+    .vault-item .meta .name {
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vault-item .meta .path {
+      font-size: 12px;
+      color: var(--text-hint);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .vault-item .action-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--surface-variant);
+      background: transparent;
+      color: var(--text-sec);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .vault-item .action-sm:hover {
+      border-color: var(--primary);
+      color: var(--primary-light);
+      background: rgba(0, 121, 107, 0.1);
+    }
+
+    .vault-item.active {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    /* Vault add button in browser chrome */
+    .btn-vault-add {
+      opacity: 0.8;
+    }
+
+    .btn-vault-add:hover {
+      opacity: 1;
+    }
+
+    /* Spinner for indeterminate state */
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ─── APPS SECTION ──────────────────────────── */
+    .apps-toggle {
+      display: flex;
+      gap: 8px;
+      padding: 12px 32px;
+      background: var(--surface);
+      border-top: 1px solid var(--surface-variant);
+      position: sticky;
+      top: 72px;
+      z-index: 90;
+    }
+
+    .apps-toggle button {
+      padding: 10px 24px;
+      border-radius: 30px;
+      border: 1px solid var(--surface-variant);
+      background: transparent;
+      color: var(--text-sec);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .apps-toggle button:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .apps-toggle button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .apps-toggle .apps-count {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-hint);
+      font-weight: 500;
+    }
+
+    .apps-toggle .apps-search {
+      padding: 10px 18px;
+      border-radius: 30px;
+      border: 1px solid var(--surface-variant);
+      background: rgba(255, 255, 255, 0.03);
+      color: white;
+      font-size: 14px;
+      outline: none;
+      width: 220px;
+      transition: border-color 0.2s;
+    }
+
+    .apps-toggle .apps-search:focus {
+      border-color: var(--primary);
+    }
+
+    .app-row {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 12px 24px;
+      border: 1px solid var(--surface-variant);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 72px;
+      animation: slideIn 0.3s ease-out backwards;
+    }
+
+    .app-row:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary-light);
+      transform: translateX(4px);
+    }
+
+    .app-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: contain;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .app-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .app-name {
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-pkg {
+      font-size: 12px;
+      color: var(--text-hint);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-size-badge {
+      font-size: 13px;
+      color: var(--text-sec);
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    /* App Detail Popup */
+    .app-detail-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 5000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app-detail-overlay.show {
+      display: flex;
+    }
+
+    .app-detail-modal {
+      background: var(--surface);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-xl);
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      animation: modalIn 0.3s ease-out;
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .app-detail-header {
+      background: linear-gradient(135deg, rgba(0, 137, 123, 0.3), rgba(25, 118, 210, 0.2));
+      padding: 32px 32px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+
+    .app-detail-header .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-sec);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .app-detail-header .close-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .app-detail-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .app-detail-title {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .app-detail-title h3 {
+      font-size: 20px;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-detail-title p {
+      font-size: 13px;
+      color: var(--text-sec);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .app-detail-body {
+      padding: 24px 32px 32px;
+    }
+
+    .app-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .app-info-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+
+    .app-info-card .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-hint);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .app-info-card .value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .app-info-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .app-detail-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .app-detail-actions button {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      border: none;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-additional-info {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+    }
+
+    .btn-additional-info:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 121, 107, 0.4);
+    }
+
+    .btn-close-detail {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--surface-variant) !important;
+      color: var(--text-sec);
+    }
+
+    .btn-close-detail:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .btn-extract-app {
+      padding: 12px 20px;
+      border-radius: 30px;
+      border: 1px solid var(--primary);
+      background: rgba(0, 137, 123, 0.12);
+      color: var(--primary-light);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-extract-app:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 121, 107, 0.4);
+    }
+
+    /* Loading spinner for apps */
+    .apps-loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-sec);
+    }
+
+    .apps-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--surface-variant);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    /* Mobile responsive (Tablets & Phones) */
+    @media (max-width: 768px) {
+      .top-nav {
+        padding: 12px 16px;
+        gap: 12px;
+      }
+
+      .logo-area h1 {
+        font-size: 16px;
+      }
+
+      .logo-area img {
+        width: 24px !important;
+        height: 24px !important;
+        margin-right: 8px !important;
+      }
+
+      .logout-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      .storage-hero,
+      .main-content {
+        padding: 16px;
+      }
+
+      .browser-chrome {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .path-bar {
+        width: calc(100% - 56px);
+        /* minus back button */
+        order: 1;
+      }
+
+      .action-btns {
+        width: 100%;
+        order: 2;
+        justify-content: space-between;
+      }
+
+      .action-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        flex: 1;
+        justify-content: center;
+      }
+
+      /* Item Row adjustments */
+      .item-row {
+        padding: 12px;
+        gap: 12px;
+        height: auto;
+        flex-wrap: wrap;
+      }
+
+      .item-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        width: calc(100% - 60px);
+        /* Adjust for icon */
+      }
+
+      .item-name {
+        width: 100%;
+      }
+
+      .item-meta {
+        width: 100%;
+        text-align: left;
+        flex-direction: row;
+        gap: 12px;
+        font-size: 12px;
+      }
+
+      /* MUST force actions to be visible on touch devices */
+      .item-actions {
+        opacity: 1 !important;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        justify-content: flex-end;
+      }
+
+      .storage-grid {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding-bottom: 24px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        /* Custom scrollbar to ensure visibility */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+      }
+
+      .storage-grid::-webkit-scrollbar {
+        height: 10px;
+        display: block;
+      }
+      .storage-grid::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+      }
+      .storage-grid::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+      }
+      .storage-grid::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+        background-clip: content-box;
+      }
+
+      .storage-card {
+        min-width: 280px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+        padding: 16px;
+      }
+
+      /* Modals */
+      .modal,
+      .dl-modal,
+      .app-detail-modal {
+        padding: 24px;
+        margin: 16px;
+        width: 100%;
+      }
+
+      .modal h3 {
+        font-size: 20px;
+      }
+
+      .upload-widget {
+        min-width: calc(100vw - 32px);
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+        padding: 16px;
+      }
+    }
+
+    /* Small Mobile responsive */
+    @media (max-width: 640px) {
+      .apps-toggle {
+        padding: 10px 16px;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .apps-toggle .apps-search {
+        width: 100%;
+        order: -1;
+      }
+
+      .app-info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-detail-header {
+        padding: 24px 20px 20px;
+      }
+
+      .app-detail-body {
+        padding: 20px;
+      }
+
+      .app-detail-actions {
+        flex-direction: column;
+      }
+    }
+    /* Language Selector */
+    .lang-selector {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 1000;
+    }
+
+    .lang-btn {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 8px 16px;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:hover {
+      background: var(--surface-hover);
+    }
+
+    .lang-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--surface-variant);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      width: 180px;
+      overflow-y: auto;
+      max-height: 400px;
+      animation: slideIn 0.2s ease-out;
+      z-index: 1001;
+    }
+
+    .lang-dropdown.show {
+      display: block;
+    }
+
+    .lang-item {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-sec);
+      transition: all 0.2s;
+    }
+
+    .lang-item:hover {
+      background: var(--surface-variant);
+      color: white;
+    }
+
+    .lang-item.active {
+      color: var(--primary-light);
+      background: rgba(0, 137, 123, 0.1);
+    }
+
+    .lang-flag {
+      width: 20px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .lang-selector {
+        top: 12px;
+        right: 12px;
+      }
+      .lang-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body ondragover="preventDef(event)" ondrop="handleDrop(event)">
+  <!-- Localized Strings (Safe Injection) -->
+  <div id="locStrings" style="display:none">
+    <span id="l_vol_used">{{remote_vol_used}}</span>
+    <span id="l_vol_free_of">{{remote_vol_free_of}}</span>
+    <span id="l_vol_shared_folder">{{remote_vol_shared_folder}}</span>
+    <span id="l_vol_manager">{{remote_vol_manager}}</span>
+    <span id="l_vol_apps">{{remote_vol_apps}}</span>
+    <span id="l_vol_view_apps">{{remote_vol_view_apps}}</span>
+    <span id="l_vol_vault">{{remote_vol_vault}}</span>
+    <span id="l_vol_vault_secure">{{remote_vol_vault_secure}}</span>
+    <span id="l_vol_vault_info">{{remote_vol_vault_info}}</span>
+    <span id="l_parent_dir">{{remote_parent_dir}}</span>
+    <span id="l_folder_empty">{{remote_folder_empty}}</span>
+    <span id="l_msg_enter_4_digits">{{remote_msg_enter_4_digits}}</span>
+    <span id="l_msg_incorrect_pin">{{remote_msg_incorrect_pin}}</span>
+    <span id="l_msg_server_error">{{remote_msg_server_error}}</span>
+    <span id="l_msg_rename_failed">{{remote_msg_rename_failed}}</span>
+    <span id="l_msg_transfer_complete_err">{{remote_msg_transfer_complete_err}}</span>
+    <span id="l_msg_transfer_failed">{{remote_msg_transfer_failed}}</span>
+    <span id="l_msg_delete_failed_count">{{remote_msg_delete_failed_count}}</span>
+    <span id="l_msg_upload_complete">{{remote_msg_upload_complete}}</span>
+    <span id="l_msg_uploading_count">{{remote_msg_uploading_count}}</span>
+    <span id="l_msg_upload_failed_http">{{remote_msg_upload_failed_http}}</span>
+    <span id="l_msg_network_error">{{remote_msg_network_error}}</span>
+    <span id="l_msg_preparing_download">{{remote_msg_preparing_download}}</span>
+    <span id="l_msg_starting_compression">{{remote_msg_starting_compression}}</span>
+    <span id="l_msg_compressing_name">{{remote_msg_compressing_name}}</span>
+    <span id="l_msg_zip_progress">{{remote_msg_zip_progress}}</span>
+    <span id="l_msg_zip_wait">{{remote_msg_zip_wait}}</span>
+    <span id="l_msg_starting_download">{{remote_msg_starting_download}}</span>
+    <span id="l_msg_download_complete">{{remote_msg_download_complete}}</span>
+    <span id="l_msg_download_failed">{{remote_msg_download_failed}}</span>
+    <span id="l_downloading_zip">{{remote_downloading_zip}}</span>
+    <span id="l_msg_current_file">{{remote_msg_current_file}}</span>
+    <span id="l_msg_downloading_pct">{{remote_msg_downloading_pct}}</span>
+    <span id="l_msg_of">{{remote_msg_of}}</span>
+    <span id="l_msg_files_compressed_saved">{{remote_msg_files_compressed_saved}}</span>
+    <span id="l_msg_no_dpi_match">{{remote_msg_no_dpi_match}}</span>
+    <span id="l_msg_upload_complete_extracting">{{remote_msg_upload_complete_extracting}}</span>
+    <span id="l_msg_starting_extraction">{{remote_msg_starting_extraction}}</span>
+    <span id="l_msg_could_not_start_compression">{{remote_msg_could_not_start_compression}}</span>
+    <span id="l_msg_compression_failed">{{remote_msg_compression_failed}}</span>
+    <span id="l_msg_splits_extracted">{{remote_msg_splits_extracted}}</span>
+    <span id="l_msg_streaming_installer">{{remote_msg_streaming_installer}}</span>
+    <span id="l_msg_waiting_install_prompt">{{remote_msg_waiting_install_prompt}}</span>
+    <span id="l_msg_extracting_name">{{remote_msg_extracting_name}}</span>
+    <span id="l_msg_uploading_name">{{remote_msg_uploading_name}}</span>
+    <span id="l_msg_remote_xapk_install">{{remote_msg_remote_xapk_install}}</span>
+    <span id="l_msg_xapk_install_failed">{{remote_msg_xapk_install_failed}}</span>
+    <span id="l_msg_apk_install_failed">{{remote_msg_apk_install_failed}}</span>
+    <span id="l_msg_upload_failed">{{remote_msg_upload_failed}}</span>
+    <span id="l_msg_network_error_title">{{remote_msg_network_error_title}}</span>
+    <span id="l_msg_loading_apps">{{remote_msg_loading_apps}}</span>
+    <span id="l_msg_failed_load_apps">{{remote_msg_failed_load_apps}}</span>
+    <span id="l_msg_no_apps_found">{{remote_msg_no_apps_found}}</span>
+    <span id="l_msg_app_singular">{{remote_msg_app_singular}}</span>
+    <span id="l_msg_apps_plural">{{remote_msg_apps_plural}}</span>
+    <span id="l_msg_item_singular">{{remote_msg_item_singular}}</span>
+    <span id="l_msg_items_plural">{{remote_msg_items_plural}}</span>
+    <span id="l_msg_opened_on_device">{{remote_msg_opened_on_device}}</span>
+    <span id="l_msg_reading_package">{{remote_msg_reading_package}}</span>
+    <span id="l_msg_upload_complete_prompting">{{remote_msg_upload_complete_prompting}}</span>
+    <span id="l_msg_failed_trigger_install">{{remote_msg_failed_trigger_install}}</span>
+    <span id="l_recommended">{{remote_recommended}}</span>
+    <span id="l_msg_install_permission_denied">{{remote_msg_install_permission_denied}}</span>
+    <span id="l_msg_installing_apk">{{remote_msg_installing_apk}}</span>
+    <span id="l_msg_triggering_installer">{{remote_msg_triggering_installer}}</span>
+    <span id="l_msg_prompt_sent">{{remote_msg_prompt_sent}}</span>
+    <span id="l_msg_confirm_on_device">{{remote_msg_confirm_on_device}}</span>
+    <span id="l_msg_remote_install">{{remote_msg_remote_install}}</span>
+    <span id="l_msg_uploading_apk">{{remote_msg_uploading_apk}}</span>
+    <span id="l_modal_delete_permanently">{{remote_modal_delete_permanently}}</span>
+    <span id="l_modal_delete_confirm">{{remote_modal_delete_confirm}}</span>
+    <span id="l_vol_network_share">{{remote_volume_network}}</span>
+    <span id="l_root">{{remote_root}}</span>
+    <span id="l_vault_operation">{{remote_vault_operation}}</span>
+    <span id="l_processing">{{remote_processing}}</span>
+    <span id="l_no_folder_selected">{{remote_no_folder_selected}}</span>
+    <span id="l_browse_to_folder_first">{{remote_browse_to_folder_first}}</span>
+    <span id="l_error">{{remote_error}}</span>
+    <span id="l_unlock_vault">{{remote_unlock_vault}}</span>
+    <span id="l_msg_items_uploaded">{{remote_msg_items_uploaded}}</span>
+    <span id="l_msg_paste_items">{{remote_msg_paste_items}}</span>
+    <span id="l_msg_paste_item">{{remote_msg_paste_item}}</span>
+    <span id="l_msg_look_at_device">{{remote_msg_look_at_device}}</span>
+    <span id="l_msg_select_density">{{remote_msg_select_density}}</span>
+    <span id="l_msg_abi_architecture">{{remote_msg_abi_architecture}}</span>
+    <span id="l_btn_install_selected">{{remote_btn_install_selected}}</span>
+    <span id="l_msg_loading_vault_folders">{{remote_msg_loading_vault_folders}}</span>
+    <span id="l_msg_error_prefix">{{remote_msg_error_prefix}}</span>
+    <span id="l_msg_chunk_failed">{{remote_msg_chunk_failed}}</span>
+    <span id="l_msg_network_error_label">{{remote_msg_network_error_label}}</span>
+    <span id="l_msg_folder_label">{{remote_msg_folder_label}}</span>
+    <span id="l_msg_split_apk_label">{{remote_msg_split_apk_label}}</span>
+    <span id="l_msg_skipped">{{remote_msg_skipped}}</span>
+    <span id="l_msg_installing_split_apk">{{remote_msg_installing_split_apk}}</span>
+    <span id="l_msg_vault_locked">{{remote_msg_vault_locked}}</span>
+    <span id="l_msg_vault_unlocked">{{remote_msg_vault_unlocked}}</span>
+    <span id="l_msg_vault_title">{{remote_msg_vault_title}}</span>
+    <span id="l_msg_scanning_vault">{{remote_msg_scanning_vault}}</span>
+    <span id="l_close">{{remote_close}}</span>
+  </div>
+  <div class="lang-selector">
+    <button class="lang-btn" onclick="toggleLangDropdown()">
+      <img src="/api/flags/gb.svg" id="currentLangFlag" class="lang-flag">
+      <span id="currentLangName">English</span>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <div class="lang-item" onclick="setLang('en')"><img src="/api/flags/gb.svg" class="lang-flag"> English</div>
+      <div class="lang-item" onclick="setLang('pt')"><img src="/api/flags/br.svg" class="lang-flag"> Português</div>
+      <div class="lang-item" onclick="setLang('de')"><img src="/api/flags/de.svg" class="lang-flag"> Deutsch</div>
+      <div class="lang-item" onclick="setLang('es')"><img src="/api/flags/es.svg" class="lang-flag"> Español</div>
+      <div class="lang-item" onclick="setLang('hi')"><img src="/api/flags/in.svg" class="lang-flag"> हिन्दी</div>
+      <div class="lang-item" onclick="setLang('id')"><img src="/api/flags/id.svg" class="lang-flag"> Indonesia</div>
+      <div class="lang-item" onclick="setLang('ar')"><img src="/api/flags/sa.svg" class="lang-flag"> العربية</div>
+      <div class="lang-item" onclick="setLang('ru')"><img src="/api/flags/ru.svg" class="lang-flag"> Русский</div>
+      <div class="lang-item" onclick="setLang('fr')"><img src="/api/flags/fr.svg" class="lang-flag"> Français</div>
+      <div class="lang-item" onclick="setLang('tr')"><img src="/api/flags/tr.svg" class="lang-flag"> Türkçe</div>
+      <div class="lang-item" onclick="setLang('ja')"><img src="/api/flags/jp.svg" class="lang-flag"> 日本語</div>
+      <div class="lang-item" onclick="setLang('ko')"><img src="/api/flags/kr.svg" class="lang-flag"> 한국어</div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="lock-glow">
+        <img src="/api/logo" alt="UFM" style="width:48px; height:48px; object-fit:contain;">
+      </div>
+      <h2>{{remote_title}}</h2>
+      <p>{{remote_subtitle_login}}</p>
+      <div class="pin-row">
+        <input type="tel" maxlength="1" class="pbox" id="p1" autofocus autocomplete="off" oninput="pinAdvance(this, 0)"
+          onkeydown="pinBack(event, 0)">
+        <input type="tel" maxlength="1" class="pbox" id="p2" autocomplete="off" oninput="pinAdvance(this, 1)"
+          onkeydown="pinBack(event, 1)">
+        <input type="tel" maxlength="1" class="pbox" id="p3" autocomplete="off" oninput="pinAdvance(this, 2)"
+          onkeydown="pinBack(event, 2)">
+        <input type="tel" maxlength="1" class="pbox" id="p4" autocomplete="off" oninput="pinAdvance(this, 3)"
+          onkeydown="pinBack(event, 3)">
+      </div>
+      <button class="login-btn" onclick="doLogin()">{{remote_btn_unlock}}</button>
+      <div class="pin-error" id="pinError"></div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="appScreen">
+    <nav class="top-nav">
+      <div class="logo-area">
+        <img src="/api/logo" alt="UFM" style="width:32px; height:32px; object-fit:contain; margin-right:12px;">
+        <h1>{{remote_title}} <span class="badge">{{remote_badge_remote}}</span></h1>
+      </div>
+      <button class="logout-btn" onclick="location.reload()">{{remote_btn_disconnect}}</button>
+    </nav>
+
+    <section class="storage-hero">
+      <div class="storage-grid" id="volRow"></div>
+    </section>
+
+    <section class="storage-hero" id="vaultSection" style="display:none;">
+      <div class="storage-card vault-card" id="vaultContentCard">
+        <div class="hd">
+          <div
+            style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,0.05);border-radius:10px;">
+            &#128274;</div>
+          <span class="vol-info" id="vaultStatusLabel">{{remote_vault}}</span>
+        </div>
+        <span class="vol-name" id="vaultTitle">{{remote_vault}}</span>
+        <span class="vol-info" id="vaultSubtitle">{{remote_vault_subtitle}}</span>
+        <div class="vault-actions" id="vaultActions"></div>
+        <div class="vault-list" id="vaultList"></div>
+      </div>
+    </section>
+
+    <!-- APPS VIEW (hidden by default) -->
+    <div id="appsToggleBar" class="apps-toggle" style="display:none;">
+      <button id="btnUserApps" class="active" onclick="filterApps('user')">&#128100; {{remote_user_apps}}</button>
+      <button id="btnSystemApps" onclick="filterApps('system')">&#9881;&#65039; {{remote_default_apps}}</button>
+      <input type="text" class="apps-search" id="appsSearch" placeholder="{{remote_search_apps}}" oninput="filterAppsSearch()">
+      <div class="apps-count" id="appsCount"></div>
+    </div>
+
+    <div class="browser-chrome">
+      <button class="btn-circle" id="btnBack" onclick="goBack()" disabled title="{{remote_tooltip_back}}">&#8592;</button>
+      <div class="path-bar" id="pathBar"></div>
+      <div class="action-btns">
+        <button class="action-btn outline btn-vault-add" onclick="addCurrentFolderToVault()"
+          title="{{remote_add_to_vault}}">
+          <span style="font-size:1.1em;">&#128274;</span> {{remote_add_to_vault}}
+        </button>
+        <button class="action-btn outline btn-install-apk" onclick="document.getElementById('remoteApkInp').click()">
+          <span style="font-size:1.1em;">&#128241;</span> {{remote_install_apk}}
+        </button>
+        <button class="action-btn outline btn-install-xapk-remote"
+          onclick="document.getElementById('remoteXapkInp').click()"
+          title="{{remote_install_xapk}}">
+          <span style="font-size:1.1em;">&#128230;</span> {{remote_install_xapk}}
+        </button>
+        <button class="action-btn outline" onclick="showModal('mkdirModal')">&#128193; {{remote_new_folder}}</button>
+        <button class="action-btn primary" onclick="document.getElementById('fileInp').click()">&#128228;
+          {{remote_upload}}</button>
+      </div>
+      <input type="file" id="fileInp" multiple style="display:none" onchange="uploadFiles(this.files)">
+      <input type="file" id="remoteApkInp" accept=".apk" style="display:none"
+        onchange="remoteInstallApk(this.files[0])">
+      <input type="file" id="remoteXapkInp" accept=".xapk,.apks" style="display:none"
+        onchange="remoteInstallXapk(this.files[0])">
+    </div>
+  </div>
+
+  <main class="main-content">
+    <div class="selection-bar" id="selectionBar">
+      <div class="selection-info">
+        <span id="selectionCount">0</span> {{remote_items_selected}}
+      </div>
+      <div class="selection-actions">
+        <button class="action-btn outline btn-copy" onclick="doCopy()">{{remote_btn_copy}}</button>
+        <button class="action-btn outline btn-cut" onclick="doCut()">{{remote_btn_cut}}</button>
+        <button class="action-btn outline btn-del" onclick="doDeleteSelected()"
+          style="color:var(--danger); border-color:var(--danger);">{{remote_btn_delete}}</button>
+        <button class="action-btn outline btn-cancel" onclick="clearSelection()">{{remote_btn_cancel}}</button>
+      </div>
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+  </main>
+  </div>
+
+  <!-- Paste FAB -->
+  <button class="fab" id="pasteFab" onclick="doPaste()">
+    <span id="pasteFabText"></span>
+    <div class="fab-cancel" onclick="event.stopPropagation(); cancelClipboard()">✕</div>
+  </button>
+
+  <!-- UPLOAD PROGRESS -->
+  <div class="upload-widget" id="uploadWidget">
+    <div class="uw-header">
+      <span class="uw-title" id="uwTitle">{{remote_uploading}}</span>
+      <span class="uw-pct" id="uwPct">0%</span>
+    </div>
+    <div class="uw-file" id="uwFile"></div>
+    <div class="uw-bar-bg">
+      <div class="uw-bar" id="uwBar"></div>
+    </div>
+  </div>
+
+  <!-- FOLDER DOWNLOAD MODAL -->
+  <div class="dl-overlay" id="dlOverlay">
+    <div class="dl-modal">
+      <div class="dl-icon" id="dlIcon">&#128230;</div>
+      <div class="dl-title" id="dlTitle">{{remote_prep_download}}</div>
+      <div class="dl-status" id="dlStatus">{{remote_analyzing_folder}}</div>
+      <div class="dl-detail" id="dlDetail"></div>
+      <div class="dl-bar-bg">
+        <div class="dl-bar indeterminate" id="dlBar"></div>
+      </div>
+      <button class="dl-cancel-btn" onclick="cancelFolderDownload()">{{remote_cancel_download}}</button>
+    </div>
+  </div>
+
+  <!-- INSTALL STATUS MODAL -->
+  <div class="dl-overlay" id="installOverlay">
+    <div class="dl-modal">
+      <div class="dl-icon" id="installIcon">&#128230;</div>
+      <div class="dl-title" id="installTitle">{{remote_remote_install}}</div>
+      <div class="dl-status" id="installStatus">{{remote_preparing}}</div>
+      <div class="dl-detail" id="installDetail"></div>
+      <div class="dl-bar-bg" id="installProgressBox" style="display:none;">
+        <div class="dl-bar" id="installBar" style="width:0%"></div>
+      </div>
+      <div id="installMessage"
+        style="margin-top:20px; font-size:13px; color:var(--text-sec); text-align:center; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px;">
+        {{remote_msg_look_at_device}}
+      </div>
+      <button class="dl-cancel-btn" onclick="closeInstallModal()"
+        style="margin-top:15px; background:var(--surface-hover);">{{remote_close}}</button>
+    </div>
+  </div>
+
+  <!-- XAPK INSTALL MODAL -->
+  <div class="dl-overlay" id="xapkOverlay">
+    <div class="dl-modal">
+      <div class="dl-icon" id="xapkIcon">&#128230;</div>
+      <div class="dl-title" id="xapkTitle">{{remote_msg_installing_split_apk}}</div>
+      <div class="dl-status" id="xapkStatus">{{remote_analysing_splits}}</div>
+      <div class="dl-detail" id="xapkDetail"></div>
+
+      <!-- DPI PICKER — shown only when no exact DPI match -->
+      <div id="xapkSplitPicker"
+        style="display:none; width:100%; margin-top:14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px; text-align:left;">
+        <div style="font-size:12px; color:var(--text-sec); margin-bottom:4px;" id="xapkPickerWarning"></div>
+        <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:10px;">{{remote_msg_select_density}}</div>
+        <div id="xapkDpiOptions" style="display:flex; flex-direction:column; gap:6px;"></div>
+        <div style="margin-top:12px; font-size:12px; color:var(--text-sec);">{{remote_msg_abi_architecture}}</div>
+        <div id="xapkAbiOptions" style="display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;"></div>
+        <button onclick="confirmXapkInstall()"
+          style="margin-top:14px; width:100%; padding:10px; border:none; border-radius:8px; background:var(--accent); color:#fff; font-size:14px; font-weight:600; cursor:pointer;">{{remote_btn_install_selected}}</button>
+      </div>
+
+      <div class="dl-bar-bg" id="xapkBarWrap" style="display:none;">
+        <div class="dl-bar" id="xapkBar" style="width:0%"></div>
+      </div>
+      <div id="xapkMsg"
+        style="margin-top:16px; font-size:13px; color:var(--text-sec); text-align:center; padding:10px; background:rgba(255,255,255,0.05); border-radius:8px; display:none;">
+        {{remote_msg_look_at_device}}
+      </div>
+      <button class="dl-cancel-btn" onclick="closeXapkModal()" style="margin-top:15px;">{{remote_close}}</button>
+    </div>
+  </div>
+
+  <!-- APP DETAIL POPUP -->
+  <div class="app-detail-overlay" id="appDetailOverlay">
+    <div class="app-detail-modal">
+      <div class="app-detail-header">
+        <button class="close-btn" onclick="closeAppDetail()">&#10005;</button>
+        <img class="app-detail-icon" id="appDetailIcon" src="" alt="@string/app_icon">
+        <div class="app-detail-title">
+          <h3 id="appDetailName"></h3>
+          <p id="appDetailPkg"></p>
+        </div>
+      </div>
+      <div class="app-detail-body">
+        <div class="app-info-grid">
+          <div class="app-info-card">
+            <div class="label">{{remote_app_installed_date}}</div>
+            <div class="value" id="appDetailDate"></div>
+          </div>
+          <div class="app-info-card">
+            <div class="label">{{remote_app_size}}</div>
+            <div class="value" id="appDetailAppSize"></div>
+          </div>
+          <div class="app-info-card full-width">
+            <div class="label">{{remote_app_package}}</div>
+            <div class="value" id="appDetailPkgFull"></div>
+          </div>
+          <div class="app-info-card">
+            <div class="label">{{remote_app_cache_data}}</div>
+            <div class="value" id="appDetailDataSize"></div>
+          </div>
+        </div>
+        <div class="app-detail-actions">
+          <button class="btn-extract-app" onclick="extractApp()">&#11015; {{remote_btn_extract}}</button>
+          <button class="btn-additional-info" onclick="openAppInfo()">&#9432; {{remote_btn_info}}</button>
+          <button class="btn-close-detail" onclick="closeAppDetail()">{{remote_modal_cancel}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <div class="overlay" id="mkdirModal">
+    <div class="modal">
+      <h3>{{remote_modal_new_folder_title}}</h3>
+      <p>{{remote_modal_new_folder_desc}}</p>
+      <div class="input-group"><input type="text" id="dirName" placeholder="{{remote_modal_new_folder_placeholder}}"></div>
+      <div class="modal-footer">
+        <button class="action-btn outline" onclick="closeModal('mkdirModal')">{{remote_modal_cancel}}</button>
+        <button class="action-btn primary" onclick="doMkdir()">{{remote_modal_continue}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="delModal">
+    <div class="modal">
+      <h3>{{remote_delete_title}}</h3>
+      <p id="delMsg">{{remote_delete_msg}}</p>
+      <div class="modal-footer">
+        <button class="action-btn outline" onclick="closeModal('delModal')">{{remote_btn_no_cancel}}</button>
+        <button class="action-btn primary" style="background:var(--danger)" onclick="doDelete()">{{remote_btn_yes_delete}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="renameModal">
+    <div class="modal">
+      <h3>{{remote_rename_title}}</h3>
+      <p>{{remote_rename_msg}}</p>
+      <div class="input-group"><input type="text" id="renameName" placeholder="{{remote_modal_rename_placeholder}}"></div>
+      <div class="modal-footer">
+        <button class="action-btn outline" onclick="closeModal('renameModal')">{{remote_btn_cancel}}</button>
+        <button class="action-btn primary" onclick="doRename()">{{remote_btn_rename}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="vaultPinModal">
+    <div class="modal">
+      <h3 id="vaultPinTitle">{{remote_vault_pin_title}}</h3>
+      <p id="vaultPinSubtitle">{{remote_vault_pin_subtitle}}</p>
+      <form onsubmit="event.preventDefault(); submitVaultPin();">
+        <div class="input-group">
+          <input type="password" id="vaultPinInput" maxlength="4" placeholder="••••" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-btn outline" onclick="closeModal('vaultPinModal')">{{remote_modal_cancel}}</button>
+          <button type="submit" class="action-btn primary">{{remote_modal_continue}}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vault Operation Modal -->
+  <div class="dl-overlay" id="vaultOpOverlay">
+    <div class="dl-modal">
+      <div class="dl-icon" id="vaultOpIcon">&#128274;</div>
+      <div class="dl-title" id="vaultOpTitle">{{remote_vault_operation}}</div>
+      <div class="dl-status" id="vaultOpStatus">{{remote_processing}}</div>
+      <div class="dl-detail" id="vaultOpDetail"></div>
+      <div class="dl-bar-bg" id="vaultOpProgressBox">
+        <div class="dl-bar indeterminate" id="vaultOpBar"></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button class="dl-cancel-btn" id="vaultOpCancelBtn" onclick="closeVaultOpModal()"
+          style="display:none;">{{remote_btn_cancel}}</button>
+        <button class="dl-cancel-btn" id="vaultOpCloseBtn" onclick="closeVaultOpModal()"
+          style="display:none;">{{remote_close}}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vault Picker Modal for Encrypt Operations -->
+  <div class="overlay" id="vaultPickerModal">
+    <div class="modal">
+      <h3 id="vaultPickerTitle">{{remote_select_vault_folder}}</h3>
+      <p id="vaultPickerSubtitle">{{remote_choose_vault_folder}}</p>
+      <div class="input-group">
+        <select id="vaultPickerSelect"
+          style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text);">
+          <option value="">{{remote_msg_loading_vault_folders}}</option>
+        </select>
+      </div>
+      <div id="vaultPickerEmpty" style="display:none; text-align:center; padding:20px; color:var(--text-sec);">
+        <p>{{remote_vault_no_folders}}</p>
+        <p style="font-size:12px;">{{remote_vault_add_first}}</p>
+        <button class="action-btn outline" style="margin-top:15px;"
+          onclick="closeModal('vaultPickerModal')">{{remote_close}}</button>
+      </div>
+      <div class="modal-footer" id="vaultPickerFooter">
+        <button class="action-btn outline" onclick="closeModal('vaultPickerModal')">{{remote_btn_cancel}}</button>
+        <button class="action-btn primary" id="vaultPickerConfirmBtn" onclick="confirmEncryptToVault()">{{remote_btn_encrypt}}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vault Add Confirmation Modal -->
+  <div class="overlay" id="vaultAddConfirmModal">
+    <div class="modal" style="text-align:center;">
+      <div
+        style="width:64px;height:64px;margin:0 auto 20px;background:rgba(0,137,123,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;">
+        &#128274;</div>
+      <h3>{{remote_vault_add_title}}</h3>
+      <p style="margin-bottom:8px;">{{remote_vault_add_msg}}</p>
+      <div id="vaultAddConfirmPath"
+        style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--primary-light);font-weight:600;word-break:break-all;margin-bottom:12px;">
+      </div>
+      <p style="font-size:12px;color:var(--text-hint);margin-bottom:24px;">{{remote_vault_add_warning}}</p>
+      <div class="modal-footer" style="justify-content:center;">
+        <button class="action-btn outline" onclick="closeModal('vaultAddConfirmModal')">{{remote_btn_cancel}}</button>
+        <button class="action-btn primary" onclick="closeModal('vaultAddConfirmModal');addToVault(curPath)">{{remote_btn_encrypt_add}}</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── All globals ── */
+    var token = '';
+    var curPath = '';
+    var parentPath = '';
+    var delTarget = '';
+    var pinIds = ['p1', 'p2', 'p3', 'p4'];
+    var appsMode = false;
+    var allApps = [];
+    var appsFilter = 'user';
+    var currentAppPkg = '';
+    var vaultToken = '';
+    var vaultMode = false;
+    var vaultActiveEntryId = '';
+    var vaultPinMode = '';
+    var vaultStatusData = null; // cached vault status for race-condition safety
+
+    function getString(id) {
+      var el = document.getElementById('l_' + id);
+      return el ? el.textContent : '';
+    }
+
+    var remoteStrings = {
+      vol_used: getString('vol_used'),
+      vol_free_of: getString('vol_free_of'),
+      vol_shared_folder: getString('vol_shared_folder'),
+      vol_manager: getString('vol_manager'),
+      vol_apps: getString('vol_apps'),
+      vol_view_apps: getString('vol_view_apps'),
+      vol_vault: getString('vol_vault'),
+      vol_vault_secure: getString('vol_vault_secure'),
+      vol_vault_info: getString('vol_vault_info'),
+      parent_dir: getString('parent_dir'),
+      folder_empty: getString('folder_empty'),
+      msg_enter_4_digits: getString('msg_enter_4_digits'),
+      msg_incorrect_pin: getString('msg_incorrect_pin'),
+      msg_server_error: getString('msg_server_error'),
+      msg_rename_failed: getString('msg_rename_failed'),
+      msg_transfer_complete_err: getString('msg_transfer_complete_err'),
+      msg_transfer_failed: getString('msg_transfer_failed'),
+      msg_delete_failed_count: getString('msg_delete_failed_count'),
+      msg_upload_complete: getString('msg_upload_complete'),
+      msg_uploading_count: getString('msg_uploading_count'),
+      msg_upload_failed_http: getString('msg_upload_failed_http'),
+      msg_network_error: getString('msg_network_error'),
+      msg_preparing_download: getString('msg_preparing_download'),
+      msg_starting_compression: getString('msg_starting_compression'),
+      msg_compressing_name: getString('msg_compressing_name'),
+      msg_zip_progress: getString('msg_zip_progress'),
+      msg_zip_wait: getString('msg_zip_wait'),
+      msg_starting_download: getString('msg_starting_download'),
+      msg_download_complete: getString('msg_download_complete'),
+      msg_download_failed: getString('msg_download_failed'),
+      msg_install_permission_denied: getString('msg_install_permission_denied'),
+      msg_installing_apk: getString('msg_installing_apk'),
+      msg_triggering_installer: getString('msg_triggering_installer'),
+      msg_prompt_sent: getString('msg_prompt_sent'),
+      msg_confirm_on_device: getString('msg_confirm_on_device'),
+      msg_remote_install: getString('msg_remote_install'),
+      msg_uploading_apk: getString('msg_uploading_apk'),
+      modal_delete_permanently: getString('modal_delete_permanently'),
+      modal_delete_confirm: getString('modal_delete_confirm'),
+      vol_network_share: getString('vol_network_share'),
+      root: getString('root'),
+      downloading_zip: getString('downloading_zip'),
+      msg_current_file: getString('msg_current_file'),
+      msg_downloading_pct: getString('msg_downloading_pct'),
+      msg_of: getString('msg_of'),
+      msg_files_compressed_saved: getString('msg_files_compressed_saved'),
+      msg_no_dpi_match: getString('msg_no_dpi_match'),
+      msg_upload_complete_extracting: getString('msg_upload_complete_extracting'),
+      msg_starting_extraction: getString('msg_starting_extraction'),
+      msg_could_not_start_compression: getString('msg_could_not_start_compression'),
+      msg_compression_failed: getString('msg_compression_failed'),
+      msg_splits_extracted: getString('msg_splits_extracted'),
+      msg_streaming_installer: getString('msg_streaming_installer'),
+      msg_waiting_install_prompt: getString('msg_waiting_install_prompt'),
+      msg_extracting_name: getString('msg_extracting_name'),
+      msg_uploading_name: getString('msg_uploading_name'),
+      msg_remote_xapk_install: getString('msg_remote_xapk_install'),
+      msg_xapk_install_failed: getString('msg_xapk_install_failed'),
+      msg_apk_install_failed: getString('msg_apk_install_failed'),
+      msg_upload_failed: getString('msg_upload_failed'),
+      msg_network_error_title: getString('msg_network_error_title'),
+      msg_reading_package: getString('msg_reading_package'),
+      msg_upload_complete_prompting: getString('msg_upload_complete_prompting'),
+      msg_failed_trigger_install: getString('msg_failed_trigger_install'),
+      recommended: getString('recommended'),
+      msg_loading_apps: getString('msg_loading_apps'),
+      msg_failed_load_apps: getString('msg_failed_load_apps'),
+      msg_no_apps_found: getString('msg_no_apps_found'),
+      msg_app_singular: getString('msg_app_singular'),
+      msg_apps_plural: getString('msg_apps_plural'),
+      msg_item_singular: getString('msg_item_singular'),
+      msg_items_plural: getString('msg_items_plural'),
+      msg_opened_on_device: getString('msg_opened_on_device'),
+      vault_operation: getString('vault_operation'),
+      processing: getString('processing'),
+      no_folder_selected: getString('no_folder_selected'),
+      browse_to_folder_first: getString('browse_to_folder_first'),
+      error: getString('error'),
+      unlock_vault: getString('unlock_vault'),
+      choose_vault_folder: getString('choose_vault_folder'),
+      msg_items_uploaded: getString('msg_items_uploaded'),
+      msg_paste_items: getString('msg_paste_items'),
+      msg_paste_item: getString('msg_paste_item'),
+      msg_look_at_device: getString('msg_look_at_device'),
+      msg_select_density: getString('msg_select_density'),
+      msg_abi_architecture: getString('msg_abi_architecture'),
+      btn_install_selected: getString('l_btn_install_selected'),
+      msg_loading_vault_folders: getString('msg_loading_vault_folders'),
+      msg_error_prefix: getString('msg_error_prefix'),
+      msg_chunk_failed: getString('msg_chunk_failed'),
+      msg_network_error_label: getString('msg_network_error_label'),
+      msg_folder_label: getString('msg_folder_label'),
+      msg_split_apk_label: getString('msg_split_apk_label'),
+      msg_skipped: getString('msg_skipped'),
+      msg_installing_split_apk: getString('msg_installing_split_apk'),
+      msg_vault_locked: getString('msg_vault_locked'),
+      msg_vault_unlocked: getString('msg_vault_unlocked'),
+      msg_vault_title: getString('msg_vault_title'),
+      msg_scanning_vault: getString('msg_scanning_vault'),
+      close: getString('close')
+    };
+
+    /* ── File Operations State ── */
+    var selectedFiles = []; // array of paths
+    var clipboard = { mode: '', files: [] }; // mode: 'copy' | 'cut'
+
+    /* ── Drag/Drop helper ── */
+    function preventDef(e) { e.preventDefault(); }
+
+    /* ── PIN: auto-advance on input ── */
+    function pinAdvance(el, idx) {
+      if (el.value.length > 1) el.value = el.value.charAt(0);
+      if (el.value.length === 1 && idx < 3) {
+        document.getElementById(pinIds[idx + 1]).focus();
+      }
+    }
+
+    /* ── PIN: backspace to previous ── */
+    function pinBack(e, idx) {
+      if (e.key === 'Backspace' && e.target.value === '' && idx > 0) {
+        var prev = document.getElementById(pinIds[idx - 1]);
+        prev.focus();
+        prev.value = '';
+      }
+      if (e.key === 'Enter') doLogin();
+    }
+
+    /* ── Login ── */
+    function showPinError(msg) {
+      var el = document.getElementById('pinError');
+      el.textContent = msg;
+      el.style.opacity = '1';
+      if (msg) {
+        setTimeout(function () { el.style.opacity = '0'; }, 4000);
+      }
+    }
+
+    function doLogin() {
+      var pin = '';
+      for (var i = 0; i < pinIds.length; i++) {
+        pin += document.getElementById(pinIds[i]).value;
+      }
+      if (pin.length !== 4) { showPinError(remoteStrings.msg_enter_4_digits); return; }
+
+      showPinError('');
+      fetch('/api/auth', {
+        method: 'POST',
+        body: JSON.stringify({ pin: pin })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d && d.token) {
+            token = d.token;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            loadVolumes();
+            loadVaultStatus();
+            checkInstallPermission();
+          } else {
+            showPinError(remoteStrings.msg_incorrect_pin);
+            for (var i = 0; i < pinIds.length; i++) document.getElementById(pinIds[i]).value = '';
+            document.getElementById('p1').focus();
+          }
+        })
+        .catch(function () { showPinError(remoteStrings.msg_server_error); });
+    }
+
+    /* ── API helper ── */
+    function api(url, opts) {
+      opts = opts || {};
+      var headers = { 'Authorization': 'Bearer ' + token };
+      if (opts.headers) {
+        for (var k in opts.headers) {
+          if (opts.headers.hasOwnProperty(k)) headers[k] = opts.headers[k];
+        }
+      }
+      opts.headers = headers;
+      return fetch(url, opts).then(function (r) {
+        if (r.status === 401) { token = ''; location.reload(); return null; }
+        return r.ok ? r.json() : null;
+      });
+    }
+
+    function apiVault(url, opts) {
+      opts = opts || {};
+      var headers = { 'Authorization': 'Bearer ' + token, 'X-Vault-Token': vaultToken };
+      if (opts.headers) {
+        for (var k in opts.headers) {
+          if (opts.headers.hasOwnProperty(k)) headers[k] = opts.headers[k];
+        }
+      }
+      opts.headers = headers;
+      return fetch(url, opts).then(function (r) {
+        if (r.status === 401) { return null; }
+        return r.ok ? r.json() : null;
+      });
+    }
+
+    /* ── Volumes ── */
+    function loadVolumes() {
+      api('/api/volumes').then(function (volumes) {
+        if (!volumes) return;
+        var html = '';
+        for (var i = 0; i < volumes.length; i++) {
+          var v = volumes[i];
+          var used = v.totalBytes > 0 ? Math.round((v.totalBytes - v.freeBytes) / v.totalBytes * 100) : 0;
+          var hasSize = v.totalBytes > 0;
+          var icon = v.removable ? '&#128268;' : '&#128190;';
+          html += '<div class="storage-card' + (i === 0 ? ' active' : '') + '" onclick="browse(\'' + v.path + '\'); selectVol(this)">'
+            + '<div class="hd">'
+            + '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,0.05);border-radius:10px;">' + icon + '</div>'
+            + (hasSize ? '<span class="vol-info">' + remoteStrings.vol_used.replace('%d', used).replace('%%', '%') + '</span>' : '<span class="vol-info">' + remoteStrings.vol_network_share + '</span>')
+            + '</div>'
+            + '<span class="vol-name">' + v.label + '</span>'
+            + (hasSize ? '<span class="vol-info">' + remoteStrings.vol_free_of.replace('%1$s', v.freeFormatted).replace('%2$s', v.totalFormatted) + '</span>' : '<span class="vol-info">' + remoteStrings.vol_shared_folder + '</span>')
+            + (hasSize ? '<div class="progress-container"><div class="progress-bar" style="width:' + used + '%"></div></div>' : '')
+            + '</div>';
+        }
+        // Add Apps card
+        html += '<div class="storage-card" id="appsCard" onclick="showApps(); selectVol(this)">' +
+          '<div class="hd">' +
+          '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,0.05);border-radius:10px;">&#128241;</div>' +
+          '<span class="vol-info">' + remoteStrings.vol_manager + '</span>' +
+          '</div>' +
+          '<span class="vol-name">' + remoteStrings.vol_apps + '</span>' +
+          '<span class="vol-info">' + remoteStrings.vol_view_apps + '</span>' +
+          '</div>';
+
+        // Add Vault card
+        html += '<div class="storage-card" id="vaultCard" onclick="toggleVaultSection(); selectVol(this)">' +
+          '<div class="hd">' +
+          '<div style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;background:rgba(255,255,255,0.05);border-radius:10px;">&#128274;</div>' +
+          '<span class="vol-info" id="vaultCardLabel">' + remoteStrings.vol_vault_secure + '</span>' +
+          '</div>' +
+          '<span class="vol-name">' + remoteStrings.vol_vault + '</span>' +
+          '<span class="vol-info" id="vaultCardInfo">' + remoteStrings.vol_vault_info + '</span>' +
+          '</div>';
+
+        document.getElementById('volRow').innerHTML = html;
+        // Re-apply vault card state in case loadVaultStatus() already resolved
+        if (vaultStatusData) updateVaultCardInfo(vaultStatusData);
+        browse(volumes[0].path);
+      });
+    }
+
+    function selectVol(el) {
+      var cards = document.querySelectorAll('.storage-card');
+      for (var i = 0; i < cards.length; i++) cards[i].classList.remove('active');
+      if (el) el.classList.add('active');
+    }
+
+    /* ── Browse ── */
+    function browse(path) {
+      exitAppsMode();
+      curPath = path;
+      api('/api/browse?path=' + encodeURIComponent(path)).then(function (d) {
+        if (!d) return;
+        parentPath = d.parent;
+        document.getElementById('btnBack').disabled = !parentPath;
+        renderPath(d.path);
+        renderFiles(d.items);
+        window.scrollTo(0, 0);
+      });
+    }
+
+    function goBack() { if (parentPath) browse(parentPath); }
+
+    function renderPath(p) {
+      var bar = document.getElementById('pathBar');
+      var parts = p.split('/');
+      var filtered = [];
+      for (var i = 0; i < parts.length; i++) { if (parts[i]) filtered.push(parts[i]); }
+      var html = '<span class="path-node" onclick="browse(\'/\')">' + remoteStrings.root + '</span>';
+      var acc = '';
+      for (var j = 0; j < filtered.length; j++) {
+        acc += '/' + filtered[j];
+        html += '<span class="path-sep">/</span><span class="path-node" onclick="browse(\'' + acc + '\')">' + filtered[j] + '</span>';
+      }
+      bar.innerHTML = html;
+    }
+
+    function toggleSelect(path, isDir, event) {
+      if (event) {
+        event.stopPropagation();
+      }
+      var idx = selectedFiles.indexOf(path);
+      if (idx > -1) {
+        selectedFiles.splice(idx, 1);
+      } else {
+        selectedFiles.push(path);
+      }
+
+      var checkbox = document.getElementById('cb_' + btoa(path).replace(/[=]/g, ''));
+      if (checkbox) {
+        if (idx > -1) checkbox.classList.remove('checked');
+        else checkbox.classList.add('checked');
+      }
+      updateSelectionUI();
+    }
+
+    function clearSelection() {
+      selectedFiles = [];
+      updateSelectionUI();
+      // re-render to clear visual checkboxes
+      var checkboxes = document.querySelectorAll('.checkbox-round');
+      for (var i = 0; i < checkboxes.length; i++) checkboxes[i].classList.remove('checked');
+    }
+
+    function updateSelectionUI() {
+      var bar = document.getElementById('selectionBar');
+      if (selectedFiles.length > 0) {
+        bar.classList.add('active');
+        document.getElementById('selectionCount').innerText = selectedFiles.length;
+      } else {
+        bar.classList.remove('active');
+      }
+    }
+
+    function renderFiles(items) {
+      var list = document.getElementById('fileList');
+      var html = '';
+
+      if (parentPath) {
+        html += '<div class="item-row" onclick="goBack()" style="background:rgba(255,255,255,0.01);opacity:0.8;">'
+          + '<div class="item-icon-box">&#11014;&#65039;</div>'
+          + '<div class="item-details"><div class="item-name">..</div>'
+          + '<div class="item-meta"><span>' + remoteStrings.parent_dir + '</span></div></div></div>';
+      }
+
+      try {
+        for (var i = 0; i < items.length; i++) {
+          var f = items[i];
+          var sp = f.path.replace(/'/g, "\\'");
+          var sn = f.name.replace(/'/g, "\\'");
+          var clickAction = f.isDirectory ? "browse('" + sp + "')" : "download('" + sp + "')";
+          var icon = f.isDirectory ? '&#128193;' : getIcon(f.name);
+          var meta2 = f.isDirectory ? (f.childCountFormatted || '') : formatDate(f.lastModified);
+
+          var isSelected = selectedFiles.indexOf(f.path) > -1;
+          var cbId = 'cb_' + btoa(encodeURIComponent(f.path)).replace(/[=]/g, '');
+
+          html += '<div class="item-row" onclick="' + clickAction + '" style="animation-delay:' + (i * 0.01) + 's">'
+            + '<div class="checkbox-round ' + (isSelected ? 'checked' : '') + '" id="' + cbId + '" onclick="toggleSelect(\'' + sp + '\', ' + f.isDirectory + ', event)"></div>'
+            + '<div class="item-icon-box">' + icon + '</div>'
+            + '<div class="item-details">'
+            + '<div class="item-name" title="' + f.name + '">' + f.name + '</div>'
+            + '<div class="item-meta">'
+            + '<span style="font-weight:600;color:var(--text);">' + (f.sizeFormatted || '') + '</span>'
+            + '<span style="font-size:11px;">' + meta2 + '</span>'
+            + '</div></div>'
+            + '<div class="item-actions">'
+            + '<button class="action-sm" onclick="event.stopPropagation();' + (f.isDirectory ? 'downloadFolder(\'' + sp + '\')' : 'download(\'' + sp + '\')') + '" title="{{remote_tooltip_download}}">&#11015;</button>';
+
+          if (!f.isDirectory && f.name.toLowerCase().endsWith('.apk')) {
+            html += '<button class="action-sm btn-install-inline" onclick="event.stopPropagation();installApk(\'' + sp + '\')" title="{{remote_tooltip_install}}">&#128230;</button>';
+          }
+
+          if (!f.isDirectory && (f.name.toLowerCase().endsWith('.xapk') || f.name.toLowerCase().endsWith('.apks'))) {
+            html += '<button class="action-sm btn-install-xapk-inline" onclick="event.stopPropagation();installXapk(\'' + sp + '\')" title="{{remote_tooltip_install}}" style="color:#a78bfa;border-color:#7c3aed;">&#128230;+</button>';
+          }
+
+          // Add encrypt buttons for files (not directories)
+          if (!f.isDirectory) {
+            html += '<button class="action-sm btn-encrypt" onclick="event.stopPropagation();encryptSingleFile(\'' + sp + '\', false)" title="{{remote_tooltip_copy_encrypt}}">&#128274;</button>';
+            html += '<button class="action-sm btn-encrypt" onclick="event.stopPropagation();encryptSingleFile(\'' + sp + '\', true)" title="{{remote_tooltip_move_encrypt}}">&#128274;&#10132;</button>';
+          }
+
+          html += '<button class="action-sm" onclick="event.stopPropagation();showRename(\'' + sp + '\',\'' + sn + '\')" title="{{remote_tooltip_rename}}">&#9998;</button>'
+          html += '<button class="action-sm del" onclick="event.stopPropagation();confirmDel(\'' + sp + '\',\'' + sn + '\')" title="{{remote_tooltip_delete}}">&#128465;</button>'
+          html += '</div></div>';
+        }
+      } catch (e) {
+        console.error('Render error:', e);
+        html += '<div style="color:red;padding:20px;">UI Error: ' + e.message + '</div>';
+      }
+
+      list.innerHTML = html || ('<div style="text-align:center;padding:100px;color:var(--text-sec);font-weight:500">' + remoteStrings.folder_empty + '</div>');
+
+      // Cleanup orphan selections
+      var availablePaths = items.map(function (itm) { return itm.path; });
+      selectedFiles = selectedFiles.filter(function (path) { return availablePaths.indexOf(path) > -1; });
+      updateSelectionUI();
+    }
+
+    function getIcon(n) {
+      var e = n.split('.').pop().toLowerCase();
+      var m = {
+        jpg: '&#128248;', jpeg: '&#128248;', png: '&#128248;', gif: '&#128248;', webp: '&#128248;',
+        mp3: '&#127925;', wav: '&#127925;', flac: '&#127925;',
+        mp4: '&#127916;', mkv: '&#127916;', avi: '&#127916;', mov: '&#127916;',
+        pdf: '&#128196;', doc: '&#128221;', docx: '&#128221;', txt: '&#128221;',
+        zip: '&#128230;', rar: '&#128230;', '7z': '&#128230;',
+        apk: '&#128241;',
+        xapk: '&#128230;&#128241;', apks: '&#128230;&#128241;'
+      };
+      return m[e] || '&#128196;';
+    }
+
+    function formatDate(ts) {
+      if (!ts) return '';
+      var d = new Date(ts);
+      return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function showModal(id) {
+      document.getElementById(id).classList.add('show');
+      if (id === 'mkdirModal') document.getElementById('dirName').focus();
+      if (id === 'renameModal') document.getElementById('renameName').focus();
+    }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    /* ── File Operations Logic ── */
+
+    var renameTarget = '';
+    function showRename(path, name) {
+      renameTarget = path;
+      document.getElementById('renameName').value = name;
+      showModal('renameModal');
+    }
+
+    function doRename() {
+      var newName = document.getElementById('renameName').value.trim();
+      if (!newName) return;
+      closeModal('renameModal');
+      document.body.style.cursor = 'wait';
+      api('/api/rename', {
+        method: 'POST',
+        body: JSON.stringify({ path: renameTarget, newName: newName })
+      }).then(function (d) {
+        document.body.style.cursor = '';
+        if (d && d.success) browse(curPath);
+        else alert(d ? d.error : remoteStrings.msg_rename_failed);
+      });
+    }
+
+    function doCopy() {
+      if (selectedFiles.length === 0) return;
+      clipboard = { mode: 'copy', files: [...selectedFiles] };
+      clearSelection();
+      showFab();
+    }
+
+    function doCut() {
+      if (selectedFiles.length === 0) return;
+      clipboard = { mode: 'cut', files: [...selectedFiles] };
+      clearSelection();
+      showFab();
+    }
+
+    function showFab() {
+      var fab = document.getElementById('pasteFab');
+      var count = clipboard.files.length;
+      var str = (count === 1 ? remoteStrings.msg_paste_item : remoteStrings.msg_paste_items).replace('%d', count);
+      document.getElementById('pasteFabText').innerText = str;
+      fab.style.display = 'flex';
+    }
+
+    function cancelClipboard() {
+      clipboard = { mode: '', files: [] };
+      document.getElementById('pasteFab').style.display = 'none';
+    }
+
+    function doPaste() {
+      if (clipboard.files.length === 0) return;
+      var endpoint = clipboard.mode === 'cut' ? '/api/move' : '/api/copy';
+      var payload = {
+        sources: clipboard.files,
+        destination: curPath
+      };
+
+      var oldMode = clipboard.mode;
+      cancelClipboard();
+      document.body.style.cursor = 'wait';
+
+      api(endpoint, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      }).then(function (d) {
+        document.body.style.cursor = '';
+        if (d && d.success) {
+          if (d.failCount > 0) alert(remoteStrings.msg_transfer_complete_err.replace('%d', d.failCount));
+          browse(curPath);
+        } else {
+          alert(d ? d.error : remoteStrings.msg_transfer_failed);
+        }
+      });
+    }
+
+    function doDeleteSelected() {
+      if (selectedFiles.length === 0) return;
+      if (!confirm(remoteStrings.modal_delete_confirm.replace('%d', selectedFiles.length))) return;
+
+      document.body.style.cursor = 'wait';
+      var queue = [...selectedFiles];
+      var err = 0;
+
+      function nextDel() {
+        if (queue.length === 0) {
+          document.body.style.cursor = '';
+          clearSelection();
+          if (err > 0) alert(remoteStrings.msg_delete_failed_count.replace('%d', err));
+          browse(curPath);
+          return;
+        }
+        var trg = queue.shift();
+        api('/api/delete', { method: 'POST', body: JSON.stringify({ path: trg }) }).then(function (d) {
+          if (!d || !d.success) err++;
+          nextDel();
+        });
+      }
+      nextDel();
+    }
+
+    /* ── End File Operations ── */
+
+    function doMkdir() {
+      var n = document.getElementById('dirName').value.trim();
+      if (!n) return;
+      fetch('/api/mkdir', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: curPath, name: n })
+      }).then(function (r) {
+        if (r.ok) { closeModal('mkdirModal'); document.getElementById('dirName').value = ''; browse(curPath); }
+      });
+    }
+
+    function confirmDel(p, n) {
+      delTarget = p;
+      document.getElementById('delMsg').textContent = remoteStrings.modal_delete_permanently.replace('%s', n);
+      showModal('delModal');
+    }
+
+    function doDelete() {
+      fetch('/api/delete', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: delTarget })
+      }).then(function (r) {
+        if (r.ok) { closeModal('delModal'); browse(curPath); }
+      });
+    }
+
+    var CHUNK_SIZE = 1024 * 1024 * 1024; // 1 GB chunks (avoids NanoHTTPD 4 GB limit)
+
+    function uploadFiles(files) {
+      var total = files.length;
+      var idx = 0;
+      var widget = document.getElementById('uploadWidget');
+      var uwTitle = document.getElementById('uwTitle');
+      var uwPct = document.getElementById('uwPct');
+      var uwFile = document.getElementById('uwFile');
+      var uwBar = document.getElementById('uwBar');
+
+      widget.classList.add('show');
+
+      function nextFile() {
+        if (idx >= total) {
+          uwTitle.textContent = remoteStrings.msg_upload_complete;
+          uwPct.textContent = '100%';
+          uwBar.style.width = '100%';
+          uwFile.textContent = remoteStrings.msg_items_uploaded.replace('%d', total);
+          setTimeout(function () { widget.classList.remove('show'); }, 2000);
+          browse(curPath);
+          return;
+        }
+        var f = files[idx];
+        var fileNum = idx + 1;
+        idx++;
+        uwTitle.textContent = remoteStrings.msg_uploading_count.replace('%1$d', fileNum).replace('%2$d', total);
+        uwFile.textContent = f.name;
+        uwPct.textContent = '0%';
+        uwBar.style.width = '0%';
+
+        if (f.size <= CHUNK_SIZE) {
+          // Small file: single request
+          uploadSingleFile(f, nextFile);
+        } else {
+          // Large file: chunked upload
+          uploadChunkedFile(f, nextFile);
+        }
+      }
+
+      function uploadSingleFile(f, done) {
+        var xhr = new XMLHttpRequest();
+        var url = '/api/upload-stream?path=' + encodeURIComponent(curPath)
+          + '&filename=' + encodeURIComponent(f.name)
+          + '&size=' + f.size;
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+        xhr.upload.onprogress = function (e) {
+          if (e.lengthComputable) {
+            var pct = Math.round(e.loaded / e.total * 100);
+            uwPct.textContent = pct + '%';
+            uwBar.style.width = pct + '%';
+            uwFile.textContent = f.name + '  —  ' + formatBytes(e.loaded) + ' / ' + formatBytes(f.size);
+          }
+        };
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            try {
+              var res = JSON.parse(xhr.responseText);
+              if (res && res.error) uwFile.textContent = f.name + ' — ' + remoteStrings.msg_error_prefix.replace('%s', res.error);
+            } catch(e) {}
+          } else {
+            uwFile.textContent = f.name + ' — ' + remoteStrings.msg_upload_failed_http.replace('%d', xhr.status);
+          }
+          done();
+        };
+        xhr.onerror = function () { uwFile.textContent = f.name + ' — ' + remoteStrings.msg_network_error; done(); };
+        xhr.send(f);
+      }
+
+      function uploadChunkedFile(f, done) {
+        var offset = 0;
+        var fileSize = f.size;
+
+        function sendNextChunk() {
+          if (offset >= fileSize) { done(); return; }
+
+          var end = Math.min(offset + CHUNK_SIZE, fileSize);
+          var chunk = f.slice(offset, end);
+          var chunkSize = end - offset;
+
+          var xhr = new XMLHttpRequest();
+          var url = '/api/upload-stream?path=' + encodeURIComponent(curPath)
+            + '&filename=' + encodeURIComponent(f.name)
+            + '&size=' + fileSize
+            + '&offset=' + offset
+            + '&chunkSize=' + chunkSize;
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+          xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+          var chunkOffset = offset; // capture for closure
+          xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+              var totalSent = chunkOffset + e.loaded;
+              var pct = Math.round(totalSent / fileSize * 100);
+              uwPct.textContent = pct + '%';
+              uwBar.style.width = pct + '%';
+              uwFile.textContent = f.name + '  —  ' + formatBytes(totalSent) + ' / ' + formatBytes(fileSize);
+            }
+          };
+
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              try {
+                var res = JSON.parse(xhr.responseText);
+                if (res && res.error) {
+                  uwFile.textContent = f.name + ' — ERROR: ' + res.error;
+                  done(); return;
+                }
+              } catch(e) {}
+              offset = end;
+              sendNextChunk();
+            } else {
+              uwFile.textContent = f.name + ' — ' + remoteStrings.msg_chunk_failed.replace('%d', xhr.status);
+              done();
+            }
+          };
+          xhr.onerror = function () { uwFile.textContent = f.name + ' — ' + remoteStrings.msg_network_error_label; done(); };
+          xhr.send(chunk);
+        }
+        sendNextChunk();
+      }
+
+      nextFile();
+    }
+
+    function download(p) {
+      window.location.href = '/api/download?path=' + encodeURIComponent(p) + '&token=' + token;
+    }
+
+    function downloadFolder(p) {
+      var overlay = document.getElementById('dlOverlay');
+      var dlIcon = document.getElementById('dlIcon');
+      var dlTitle = document.getElementById('dlTitle');
+      var dlStatus = document.getElementById('dlStatus');
+      var dlDetail = document.getElementById('dlDetail');
+      var dlBar = document.getElementById('dlBar');
+
+      // Reset and show modal
+      dlIcon.innerHTML = '&#128230;';
+      dlTitle.textContent = remoteStrings.msg_preparing_download;
+      dlStatus.textContent = remoteStrings.msg_starting_compression;
+      dlDetail.textContent = '';
+      dlBar.className = 'dl-bar indeterminate';
+      dlBar.style.width = '30%';
+      overlay.classList.add('show');
+      window._folderDlJobId = null;
+      window._folderDlPollTimer = null;
+
+      // Phase 1: Start the background ZIP job
+      api('/api/download-folder-start?path=' + encodeURIComponent(p)).then(function (result) {
+        if (!result || !result.jobId) {
+          dlTitle.textContent = remoteStrings.msg_download_failed;
+          dlStatus.textContent = remoteStrings.msg_could_not_start_compression;
+          dlBar.className = 'dl-bar';
+          dlBar.style.width = '0%';
+          return;
+        }
+
+        var jobId = result.jobId;
+        var total = result.total || 0;
+        var folderName = result.folderName || remoteStrings.msg_folder_label;
+        window._folderDlJobId = jobId;
+
+        dlTitle.textContent = remoteStrings.msg_compressing_name.replace('%s', folderName);
+        dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', '0').replace('%2$d', total);
+        dlDetail.textContent = remoteStrings.msg_zip_wait;
+        dlBar.className = 'dl-bar';
+        dlBar.style.width = '0%';
+
+        // Phase 2: Poll for progress every 500ms
+        function pollProgress() {
+          api('/api/download-folder-status?jobId=' + jobId).then(function (s) {
+            if (!s) return;
+
+            if (s.status === 'compressing') {
+              var pct = total > 0 ? Math.round(s.current / total * 100) : 0;
+              dlBar.style.width = pct + '%';
+              dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', s.current).replace('%2$d', total);
+              dlDetail.textContent = remoteStrings.msg_current_file.replace('%1$s', s.currentFile || '…');
+              window._folderDlPollTimer = setTimeout(pollProgress, 500);
+            }
+            else if (s.status === 'done') {
+              // Phase 3: Compression done - download the file
+              dlIcon.innerHTML = '&#11015;';
+              dlTitle.textContent = remoteStrings.downloading_zip;
+              dlStatus.textContent = remoteStrings.msg_zip_progress.replace('%1$d', total).replace('%2$d', total);
+              dlDetail.textContent = remoteStrings.msg_starting_download;
+              dlBar.style.width = '100%';
+
+              // Use XHR to download with progress tracking
+              var xhr = new XMLHttpRequest();
+              window._folderDlXhr = xhr;
+              xhr.open('GET', '/api/download-folder-file?jobId=' + jobId + '&token=' + token, true);
+              xhr.responseType = 'blob';
+
+              xhr.onprogress = function (e) {
+                if (e.lengthComputable) {
+                  var dpct = Math.round(e.loaded / e.total * 100);
+                  dlStatus.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', dpct);
+                  dlDetail.textContent = remoteStrings.msg_of.replace('%1$s', formatBytes(e.loaded)).replace('%2$s', formatBytes(e.total));
+                  dlBar.style.width = dpct + '%';
+                } else {
+                  dlStatus.textContent = remoteStrings.msg_downloading_pct.replace('… %1$d%%', '… ') + formatBytes(e.loaded);
+                }
+              };
+
+              xhr.onload = function () {
+                window._folderDlXhr = null;
+                if (xhr.status === 200) {
+                  var disposition = xhr.getResponseHeader('Content-Disposition') || '';
+                  var matches = disposition.match(/filename="(.+?)"/);
+                  var filename = matches ? matches[1] : (folderName + '.zip');
+
+                  var blob = xhr.response;
+                  var url = URL.createObjectURL(blob);
+                  var a = document.createElement('a');
+                  a.href = url;
+                  a.download = filename;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+
+                  // Auto-close modal
+                  dlIcon.innerHTML = '&#9989;';
+                  dlTitle.textContent = remoteStrings.msg_download_complete;
+                  dlStatus.textContent = filename;
+                  dlDetail.textContent = remoteStrings.msg_files_compressed_saved.replace('%1$d', total);
+                  dlBar.style.width = '100%';
+                  setTimeout(function () { overlay.classList.remove('show'); }, 1500);
+                } else {
+                  dlTitle.textContent = remoteStrings.msg_download_failed;
+                  dlStatus.textContent = remoteStrings.msg_server_error;
+                  dlBar.style.width = '0%';
+                }
+              };
+
+              xhr.onerror = function () {
+                window._folderDlXhr = null;
+                dlTitle.textContent = remoteStrings.msg_download_failed;
+                dlStatus.textContent = remoteStrings.msg_network_error;
+                dlBar.style.width = '0%';
+              };
+
+              xhr.send();
+            }
+            else if (s.status === 'error') {
+              dlTitle.textContent = remoteStrings.msg_compression_failed;
+              dlStatus.textContent = s.error || 'Unknown error';
+              dlBar.className = 'dl-bar';
+              dlBar.style.width = '0%';
+            }
+            else if (s.status === 'cancelled') {
+              overlay.classList.remove('show');
+            }
+          });
+        }
+        pollProgress();
+      });
+    }
+
+    function cancelFolderDownload() {
+      // Stop polling
+      if (window._folderDlPollTimer) {
+        clearTimeout(window._folderDlPollTimer);
+        window._folderDlPollTimer = null;
+      }
+      // Abort download XHR
+      if (window._folderDlXhr) {
+        window._folderDlXhr.abort();
+        window._folderDlXhr = null;
+      }
+      // Tell server to cancel the job
+      if (window._folderDlJobId) {
+        api('/api/download-folder-cancel?jobId=' + window._folderDlJobId);
+        window._folderDlJobId = null;
+      }
+      document.getElementById('dlOverlay').classList.remove('show');
+    }
+
+    function formatBytes(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+      if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
+      return (b / 1073741824).toFixed(2) + ' GB';
+    }
+
+    /* ── Installation ── */
+    var installPermissionGranted = false;
+
+    function checkInstallPermission() {
+      api('/api/install-status').then(function (res) {
+        if (!res) return;
+        installPermissionGranted = res.granted;
+        updateInstallUI();
+      });
+    }
+
+    function updateInstallUI() {
+      var globalBtn = document.querySelector('.btn-install-apk');
+      var globalXapk = document.querySelector('.btn-install-xapk-remote');
+      var inlineBtns = document.querySelectorAll('.btn-install-inline');
+      var inlineXapkBtns = document.querySelectorAll('.btn-install-xapk-inline');
+
+      if (!installPermissionGranted) {
+        if (globalBtn) { globalBtn.classList.add('btn-disabled'); globalBtn.title = 'Permission required: Grant "Install Unknown Apps" in Android settings'; }
+        if (globalXapk) { globalXapk.classList.add('btn-disabled'); globalXapk.title = 'Permission required'; }
+        for (var i = 0; i < inlineBtns.length; i++) { inlineBtns[i].classList.add('btn-disabled'); inlineBtns[i].title = 'Permission required'; }
+        for (var k = 0; k < inlineXapkBtns.length; k++) { inlineXapkBtns[k].classList.add('btn-disabled'); inlineXapkBtns[k].title = 'Permission required'; }
+      } else {
+        if (globalBtn) { globalBtn.classList.remove('btn-disabled'); globalBtn.title = 'Install a new APK from your computer'; }
+        if (globalXapk) { globalXapk.classList.remove('btn-disabled'); globalXapk.title = 'Upload & install an XAPK or APKS from your computer'; }
+        for (var j = 0; j < inlineBtns.length; j++) { inlineBtns[j].classList.remove('btn-disabled'); inlineBtns[j].title = 'Install on Device'; }
+        for (var m = 0; m < inlineXapkBtns.length; m++) { inlineXapkBtns[m].classList.remove('btn-disabled'); inlineXapkBtns[m].title = 'Install Split APK on Device'; }
+      }
+    }
+
+    function installApk(path) {
+      if (!installPermissionGranted) {
+        alert('Cannot install: Permission to "Install Unknown Apps" is not granted on the device.');
+        return;
+      }
+
+      var overlay = document.getElementById('installOverlay');
+      var title = document.getElementById('installTitle');
+      var status = document.getElementById('installStatus');
+      var detail = document.getElementById('installDetail');
+      var icon = document.getElementById('installIcon');
+      var progressBox = document.getElementById('installProgressBox');
+
+      icon.innerHTML = '&#128230;';
+      title.textContent = remoteStrings.msg_installing_apk;
+      status.textContent = remoteStrings.msg_triggering_installer;
+      detail.textContent = path.split('/').pop();
+      progressBox.style.display = 'none';
+      overlay.classList.add('show');
+
+      api('/api/install-apk?path=' + encodeURIComponent(path)).then(function (res) {
+        if (res && res.success) {
+          status.textContent = remoteStrings.msg_prompt_sent;
+          detail.textContent = remoteStrings.msg_confirm_on_device;
+          icon.innerHTML = '&#128242;';
+        } else {
+          status.textContent = remoteStrings.msg_failed_trigger_install;
+          detail.textContent = (res && res.error) || remoteStrings.msg_server_error;
+          icon.innerHTML = '&#10060;';
+        }
+      });
+    }
+
+    function remoteInstallApk(file) {
+      if (!file) return;
+      if (!installPermissionGranted) {
+        alert('Cannot install: Permission to "Install Unknown Apps" is not granted on the device.');
+        return;
+      }
+
+      var overlay = document.getElementById('installOverlay');
+      var title = document.getElementById('installTitle');
+      var status = document.getElementById('installStatus');
+      var detail = document.getElementById('installDetail');
+      var icon = document.getElementById('installIcon');
+      var bar = document.getElementById('installBar');
+      var progressBox = document.getElementById('installProgressBox');
+
+      icon.innerHTML = '&#128228;';
+      title.textContent = remoteStrings.msg_remote_install;
+      status.textContent = remoteStrings.msg_uploading_apk;
+      detail.textContent = file.name + ' (' + formatBytes(file.size) + ')';
+      bar.style.width = '0%';
+      progressBox.style.display = 'block';
+      overlay.classList.add('show');
+
+      var fd = new FormData();
+      fd.append('file', file);
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/install-remote?file=' + encodeURIComponent(file.name) + '&token=' + token, true);
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          var pct = Math.round(e.loaded / e.total * 100);
+          bar.style.width = pct + '%';
+          status.textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct); 
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var res = JSON.parse(xhr.responseText);
+          if (res.success) {
+            status.textContent = remoteStrings.msg_upload_complete_prompting;
+            detail.textContent = remoteStrings.msg_confirm_on_device;
+            icon.innerHTML = '&#128242;';
+            bar.style.width = '100%';
+          } else {
+            status.textContent = remoteStrings.msg_apk_install_failed;
+            detail.textContent = res.error || remoteStrings.msg_server_error;
+            icon.innerHTML = '&#10060;';
+          }
+        } else {
+          status.textContent = remoteStrings.msg_upload_failed;
+          detail.textContent = 'Status: ' + xhr.status;
+          icon.innerHTML = '&#10060;';
+        }
+      };
+
+      xhr.onerror = function () {
+        status.textContent = remoteStrings.msg_network_error_title;
+        detail.textContent = remoteStrings.msg_server_error;
+        icon.innerHTML = '&#10060;';
+      };
+
+      xhr.send(fd);
+    }
+
+    function closeInstallModal() {
+      document.getElementById('installOverlay').classList.remove('show');
+    }
+
+    /* ── XAPK / Split-APK Installation ── */
+    var _xapkPollTimer = null;
+    var _xapkPendingPath = null;   // stored for confirmXapkInstall()
+    var _xapkSelectedDpi = null;
+    var _xapkSelectedAbi = null;
+
+    function installXapk(path) {
+      if (!installPermissionGranted) {
+        alert('Cannot install: Permission to "Install Unknown Apps" is not granted on the device.');
+        return;
+      }
+      _xapkPendingPath = path;
+      var overlay = document.getElementById('xapkOverlay');
+      resetXapkModal(remoteStrings.analysing_splits, remoteStrings.msg_reading_package, path.split('/').pop());
+      overlay.classList.add('show');
+
+      api('/api/xapk-splits?path=' + encodeURIComponent(path)).then(function (res) {
+        if (!res || res.error) {
+          // Can't analyse — proceed with all splits (safe default)
+          startXapkInstall(path, null, null);
+          return;
+        }
+
+        var availDpi = res.availableDpi ? res.availableDpi.split(',').filter(Boolean) : [];
+        var availAbi = res.availableAbi ? res.availableAbi.split(',').filter(Boolean) : [];
+
+        if (res.exactMatch || availDpi.length === 0) {
+          // Exact match or no density splits at all — install without picker
+          startXapkInstall(path, null, null);
+        } else {
+          // No exact match — show picker
+          showXapkPicker(res, availDpi, availAbi);
+        }
+      });
+    }
+
+    function showXapkPicker(res, availDpi, availAbi) {
+      _xapkSelectedDpi = res.recommendedDpi || availDpi[0] || null;
+      _xapkSelectedAbi = null;
+
+      document.getElementById('xapkStatus').textContent = remoteStrings.msg_no_dpi_match;
+      document.getElementById('xapkIcon').innerHTML = '&#9888;';
+      document.getElementById('xapkPickerWarning').textContent =
+        '\u26a0\ufe0f Device DPI: ' + res.deviceDpi + ' dpi (' + res.deviceBucket + ') — no exact match found.';
+
+      // Build DPI radio buttons
+      var dpiContainer = document.getElementById('xapkDpiOptions');
+      dpiContainer.innerHTML = '';
+      availDpi.forEach(function (d) {
+        var row = document.createElement('label');
+        row.style.cssText = 'display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-primary);padding:6px 8px;border-radius:6px;background:' + (d === _xapkSelectedDpi ? 'rgba(var(--accent-rgb,2,132,199),0.18)' : 'transparent');
+        var inp = document.createElement('input');
+        inp.type = 'radio'; inp.name = 'xapkDpi'; inp.value = d;
+        if (d === _xapkSelectedDpi) inp.checked = true;
+        inp.onchange = function () {
+          _xapkSelectedDpi = d;
+          dpiContainer.querySelectorAll('label').forEach(function (l) { l.style.background = 'transparent'; });
+          row.style.background = 'rgba(var(--accent-rgb,2,132,199),0.18)';
+        };
+        var badge = '';
+        if (d === res.recommendedDpi) badge = ' <span style="font-size:10px;background:#0284c7;color:#fff;padding:1px 5px;border-radius:4px;">' + remoteStrings.recommended + '</span>';
+        row.appendChild(inp);
+        row.innerHTML += dpiLabel(d) + badge;
+        dpiContainer.appendChild(row);
+      });
+
+      // Build ABI checkboxes (optional — only if splits exist)
+      var abiContainer = document.getElementById('xapkAbiOptions');
+      abiContainer.innerHTML = '';
+      if (availAbi.length === 0) {
+        abiContainer.parentElement.style.display = 'none';
+      } else {
+        abiContainer.parentElement.style.display = '';
+        availAbi.forEach(function (a) {
+          var chip = document.createElement('label');
+          chip.style.cssText = 'display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-primary);padding:4px 8px;border-radius:6px;background:rgba(255,255,255,0.08);cursor:pointer;';
+          var inp = document.createElement('input');
+          inp.type = 'radio'; inp.name = 'xapkAbi'; inp.value = a;
+          if (a === res.deviceAbi || (!_xapkSelectedAbi && availAbi.indexOf(res.deviceAbi) === -1 && a === availAbi[0])) {
+            inp.checked = true; _xapkSelectedAbi = a;
+          }
+          inp.onchange = function () { _xapkSelectedAbi = a; };
+          chip.appendChild(inp);
+          chip.appendChild(document.createTextNode(a));
+          abiContainer.appendChild(chip);
+        });
+      }
+
+      document.getElementById('xapkSplitPicker').style.display = 'block';
+      document.getElementById('xapkBarWrap').style.display = 'none';
+    }
+
+    function confirmXapkInstall() {
+      document.getElementById('xapkSplitPicker').style.display = 'none';
+      document.getElementById('xapkBarWrap').style.display = 'block';
+      document.getElementById('xapkIcon').innerHTML = '&#128230;';
+      startXapkInstall(_xapkPendingPath, _xapkSelectedDpi, _xapkSelectedAbi);
+    }
+
+    function startXapkInstall(path, forceDpi, forceAbi) {
+      document.getElementById('xapkBarWrap').style.display = 'block';
+      document.getElementById('xapkStatus').textContent = remoteStrings.msg_starting_extraction;
+      var url = '/api/install-xapk?path=' + encodeURIComponent(path);
+      if (forceDpi) url += '&forceDpi=' + encodeURIComponent(forceDpi);
+      if (forceAbi) url += '&forceAbi=' + encodeURIComponent(forceAbi);
+      api(url).then(function (res) {
+        if (!res || !res.jobId) {
+          document.getElementById('xapkTitle').textContent = remoteStrings.msg_failed_trigger_install;
+          document.getElementById('xapkStatus').textContent = (res && res.error) || remoteStrings.msg_server_error;
+          document.getElementById('xapkIcon').innerHTML = '&#10060;';
+          return;
+        }
+        pollXapkStatus(res.jobId);
+      });
+    }
+
+    function dpiLabel(d) {
+      var labels = { ldpi: 'ldpi (~120dpi)', mdpi: 'mdpi (~160dpi)', tvdpi: 'tvdpi (~213dpi)', hdpi: 'hdpi (~240dpi)', xhdpi: 'xhdpi (~320dpi)', xxhdpi: 'xxhdpi (~480dpi)', xxxhdpi: 'xxxhdpi (~640dpi)', anydpi: 'anydpi (vector)', nodpi: 'nodpi (no scaling)' };
+      return labels[d] || d;
+    }
+
+    function remoteInstallXapk(file) {
+      if (!file) return;
+      if (!installPermissionGranted) {
+        alert('Cannot install: Permission to "Install Unknown Apps" is not granted on the device.');
+        return;
+      }
+      var overlay = document.getElementById('xapkOverlay');
+      var bar = document.getElementById('xapkBar');
+      var uploadTitle = remoteStrings.msg_uploading_name.replace('%s', file.name);
+      resetXapkModal(remoteStrings.msg_remote_xapk_install, uploadTitle, file.name + ' (' + formatBytes(file.size) + ')');
+      overlay.classList.add('show');
+
+      var fd = new FormData();
+      fd.append('file', file);
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/api/install-xapk-remote?file=' + encodeURIComponent(file.name) + '&token=' + token, true);
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          var pct = Math.round(e.loaded / e.total * 100);
+          bar.style.width = pct + '%';
+          document.getElementById('xapkStatus').textContent = remoteStrings.msg_downloading_pct.replace('%1$d', pct);
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var res = JSON.parse(xhr.responseText);
+          if (res && res.jobId) {
+            bar.style.width = '0%';
+            document.getElementById('xapkStatus').textContent = remoteStrings.msg_upload_complete_extracting;
+            pollXapkStatus(res.jobId);
+          } else {
+            document.getElementById('xapkTitle').textContent = remoteStrings.msg_upload_failed;
+            document.getElementById('xapkStatus').textContent = (res && res.error) || remoteStrings.msg_server_error;
+            document.getElementById('xapkIcon').innerHTML = '&#10060;';
+          }
+        } else {
+          document.getElementById('xapkTitle').textContent = remoteStrings.msg_upload_failed;
+          document.getElementById('xapkStatus').textContent = 'HTTP ' + xhr.status;
+          document.getElementById('xapkIcon').innerHTML = '&#10060;';
+        }
+      };
+
+      xhr.onerror = function () {
+        document.getElementById('xapkTitle').textContent = remoteStrings.msg_network_error_title;
+        document.getElementById('xapkStatus').textContent = remoteStrings.msg_server_error;
+        document.getElementById('xapkIcon').innerHTML = '&#10060;';
+      };
+
+      xhr.send(fd);
+    }
+
+    function pollXapkStatus(jobId) {
+      api('/api/xapk-status?jobId=' + jobId).then(function (s) {
+        if (!s) return;
+        var bar = document.getElementById('xapkBar');
+        var status = document.getElementById('xapkStatus');
+        var detail = document.getElementById('xapkDetail');
+        var icon = document.getElementById('xapkIcon');
+        var title = document.getElementById('xapkTitle');
+        var msg = document.getElementById('xapkMsg');
+
+        if (s.status === 'extracting') {
+          var pct = s.total > 0 ? Math.round(s.current / s.total * 100) : 0;
+          bar.style.width = pct + '%';
+          var label = s.packageLabel ? '"' + s.packageLabel + '"' : remoteStrings.msg_split_apk_label;
+          title.textContent = remoteStrings.msg_extracting_name.replace('%s', label);
+          status.textContent = remoteStrings.msg_splits_extracted.replace('%1$d', s.current).replace('%2$d', s.total);
+          detail.textContent = s.currentFile ? remoteStrings.msg_current_file.replace('%1$s', s.currentFile) : '';
+          _xapkPollTimer = setTimeout(function () { pollXapkStatus(jobId); }, 500);
+
+        } else if (s.status === 'installing') {
+          bar.style.width = '100%';
+          status.textContent = remoteStrings.msg_streaming_installer;
+          detail.textContent = '';
+          _xapkPollTimer = setTimeout(function () { pollXapkStatus(jobId); }, 500);
+
+        } else if (s.status === 'awaiting_os') {
+          bar.style.width = '100%';
+          icon.innerHTML = '&#128242;';
+          status.textContent = remoteStrings.msg_waiting_install_prompt;
+          detail.textContent = s.packageLabel ? s.packageLabel : '';
+          msg.style.display = 'block';
+
+        } else if (s.status === 'error') {
+          icon.innerHTML = '&#10060;';
+          title.textContent = remoteStrings.msg_xapk_install_failed;
+          status.textContent = s.error || remoteStrings.msg_server_error;
+          detail.textContent = '';
+          bar.style.width = '0%';
+        }
+      });
+    }
+
+    function resetXapkModal(titleText, statusText, detailText) {
+      document.getElementById('xapkIcon').innerHTML = '&#128230;';
+      document.getElementById('xapkTitle').textContent = titleText;
+      document.getElementById('xapkStatus').textContent = statusText;
+      document.getElementById('xapkDetail').textContent = detailText;
+      var barWrap = document.getElementById('xapkBarWrap');
+      if (barWrap) { barWrap.style.display = 'block'; }
+      document.getElementById('xapkBar').style.width = '0%';
+      document.getElementById('xapkMsg').style.display = 'none';
+      var picker = document.getElementById('xapkSplitPicker');
+      if (picker) picker.style.display = 'none';
+      if (_xapkPollTimer) { clearTimeout(_xapkPollTimer); _xapkPollTimer = null; }
+    }
+
+    function closeXapkModal() {
+      if (_xapkPollTimer) { clearTimeout(_xapkPollTimer); _xapkPollTimer = null; }
+      document.getElementById('xapkOverlay').classList.remove('show');
+      // Reset file input so same file can be re-selected
+      var inp = document.getElementById('remoteXapkInp');
+      if (inp) inp.value = '';
+    }
+
+    // Initialize
+    checkInstallPermission();
+
+    /* ── Styles ── */
+    var style = document.createElement('style');
+    style.innerHTML = '.btn-disabled { opacity: 0.5; cursor: not-allowed !important; filter: grayscale(1); }';
+    document.head.appendChild(style);
+
+    function handleDrop(e) {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
+    }
+
+    /* ── Apps Section ── */
+    function exitAppsMode() {
+      if (!appsMode) return;
+      appsMode = false;
+      document.getElementById('appsToggleBar').style.display = 'none';
+      document.querySelector('.browser-chrome').style.display = '';
+      document.querySelector('.main-content').style.display = '';
+    }
+
+    function showApps() {
+      appsMode = true;
+      // Hide file browser, show apps toggle
+      document.querySelector('.browser-chrome').style.display = 'none';
+      document.getElementById('appsToggleBar').style.display = '';
+      document.querySelector('.main-content').style.display = '';
+
+      // Show loading state
+      var list = document.getElementById('fileList');
+      list.innerHTML = '<div class="apps-loading"><div class="spinner"></div><div>' + remoteStrings.msg_loading_apps + '</div></div>';
+
+      api('/api/apps').then(function (apps) {
+        if (!apps) { list.innerHTML = '<div style="text-align:center;padding:80px;color:var(--text-sec)">' + remoteStrings.msg_failed_load_apps + '</div>'; return; }
+        allApps = apps.sort(function (a, b) { return a.name.toLowerCase().localeCompare(b.name.toLowerCase()); });
+        appsFilter = 'user';
+        document.getElementById('btnUserApps').classList.add('active');
+        document.getElementById('btnSystemApps').classList.remove('active');
+        document.getElementById('appsSearch').value = '';
+        renderAppsList();
+      });
+    }
+
+    function filterApps(type) {
+      appsFilter = type;
+      document.getElementById('btnUserApps').classList.toggle('active', type === 'user');
+      document.getElementById('btnSystemApps').classList.toggle('active', type === 'system');
+      renderAppsList();
+    }
+
+    function filterAppsSearch() {
+      renderAppsList();
+    }
+
+    function renderAppsList() {
+      var search = (document.getElementById('appsSearch').value || '').toLowerCase();
+      var filtered = allApps.filter(function (a) {
+        var matchType = appsFilter === 'user' ? !a.isSystem : a.isSystem;
+        var matchSearch = !search || a.name.toLowerCase().indexOf(search) >= 0 || a.packageName.toLowerCase().indexOf(search) >= 0;
+        return matchType && matchSearch;
+      });
+
+      var countLabel = filtered.length === 1 ? remoteStrings.msg_app_singular : remoteStrings.msg_apps_plural;
+      document.getElementById('appsCount').textContent = countLabel.replace('%d', filtered.length);
+
+      var list = document.getElementById('fileList');
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:80px;color:var(--text-sec);font-weight:500">' + remoteStrings.msg_no_apps_found + '</div>';
+        return;
+      }
+
+      var html = '';
+      for (var i = 0; i < filtered.length; i++) {
+        var a = filtered[i];
+        var iconSrc = a.icon ? 'data:image/png;base64,' + a.icon : '';
+        var escapedPkg = a.packageName.replace(/'/g, "\\'");
+        var extractLabel = (a.hasSplits || a.hasObb) ? 'XAPK' : 'APK';
+        var escapedPkg2 = a.packageName.replace(/'/g, "\\'");
+        html += '<div class="app-row" onclick="showAppDetail(\'' + escapedPkg + '\')" style="animation-delay:' + (i * 0.015) + 's">' +
+          (iconSrc ? '<img class="app-icon" src="' + iconSrc + '" alt="">' : '<div class="app-icon" style="display:flex;align-items:center;justify-content:center;font-size:24px;">&#128241;</div>') +
+          '<div class="app-info">' +
+          '<div class="app-name">' + a.name + '</div>' +
+          '<div class="app-pkg">' + a.packageName + '</div>' +
+          '</div>' +
+          '<div class="app-size-badge">' + a.appSizeFormatted + '</div>' +
+          '<button class="action-sm" onclick="event.stopPropagation();extractAppByPkg(\'' + escapedPkg2 + '\')" title="' + '{{remote_tooltip_extract_app}}'.replace('%s', extractLabel) + '" style="margin-left:8px;flex-shrink:0;font-size:12px;width:auto;padding:0 10px;">&#11015; ' + extractLabel + '</button>' +
+          '</div>';
+      }
+      list.innerHTML = html;
+    }
+
+    function showAppDetail(pkgName) {
+      var app = null;
+      for (var i = 0; i < allApps.length; i++) {
+        if (allApps[i].packageName === pkgName) { app = allApps[i]; break; }
+      }
+      if (!app) return;
+      currentAppPkg = pkgName;
+
+      var iconSrc = app.icon ? 'data:image/png;base64,' + app.icon : '';
+      document.getElementById('appDetailIcon').src = iconSrc;
+      document.getElementById('appDetailName').textContent = app.name;
+      document.getElementById('appDetailPkg').textContent = app.packageName;
+      document.getElementById('appDetailPkgFull').textContent = app.packageName;
+      document.getElementById('appDetailAppSize').textContent = app.appSizeFormatted;
+      document.getElementById('appDetailDataSize').textContent = app.dataSizeFormatted || formatBytes(0);
+
+      var d = new Date(app.installedDate);
+      document.getElementById('appDetailDate').textContent = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      document.getElementById('appDetailOverlay').classList.add('show');
+    }
+
+    function closeAppDetail() {
+      document.getElementById('appDetailOverlay').classList.remove('show');
+      currentAppPkg = '';
+    }
+
+    /** Trigger extraction for the currently open app detail. */
+    function extractApp() {
+      if (!currentAppPkg) return;
+      extractAppByPkg(currentAppPkg);
+    }
+
+    /** Trigger browser download of APK or XAPK for the given package. */
+    function extractAppByPkg(pkg) {
+      var a = document.createElement('a');
+      a.href = '/api/apps/extract?packageName=' + encodeURIComponent(pkg) + '&token=' + token;
+      a.download = '';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function openAppInfo() {
+      if (!currentAppPkg) return;
+      fetch('/api/apps/open-info', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packageName: currentAppPkg })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.success) {
+          // Show a brief notification
+          var btn = document.querySelector('.btn-additional-info');
+          var orig = btn.innerHTML;
+          btn.innerHTML = '&#9989; ' + remoteStrings.msg_opened_on_device;
+          btn.style.opacity = '0.7';
+          setTimeout(function () { btn.innerHTML = orig; btn.style.opacity = '1'; }, 2000);
+        }
+      });
+    }
+
+    /* ── Vault Section ── */
+    var vaultOpCallback = null;
+    var vaultExpanded = false;
+    var vaultStatusData = null;
+
+    function toggleVaultSection() {
+      vaultExpanded = !vaultExpanded;
+      var section = document.getElementById('vaultSection');
+      var card = document.getElementById('vaultCard');
+
+      if (vaultExpanded) {
+        section.style.display = 'block';
+        card.classList.add('active');
+        if (vaultStatusData) {
+          renderVaultUI(vaultStatusData);
+        } else {
+          loadVaultStatus();
+        }
+      } else {
+        section.style.display = 'none';
+        card.classList.remove('active');
+      }
+    }
+
+    function showVaultOpModal(title, status, detail, showProgress, showClose, icon) {
+      var overlay = document.getElementById('vaultOpOverlay');
+      document.getElementById('vaultOpTitle').textContent = title || remoteStrings.vault_operation;
+      document.getElementById('vaultOpStatus').textContent = status || remoteStrings.processing;
+      document.getElementById('vaultOpDetail').textContent = detail || '';
+      document.getElementById('vaultOpIcon').innerHTML = icon || '&#128274;';
+
+      var progressBar = document.getElementById('vaultOpBar');
+      var progressBox = document.getElementById('vaultOpProgressBox');
+      var closeBtn = document.getElementById('vaultOpCloseBtn');
+      var cancelBtn = document.getElementById('vaultOpCancelBtn');
+
+      if (showProgress) {
+        progressBox.style.display = 'block';
+        progressBar.className = 'dl-bar indeterminate';
+        progressBar.style.width = '30%';
+      } else {
+        progressBox.style.display = 'none';
+      }
+
+      // Reset buttons
+      closeBtn.textContent = remoteStrings.close;
+      closeBtn.onclick = closeVaultOpModal;
+      closeBtn.style.display = showClose ? 'inline-block' : 'none';
+      cancelBtn.style.display = showClose ? 'inline-block' : 'none';
+      cancelBtn.onclick = closeVaultOpModal;
+
+      overlay.classList.add('show');
+    }
+
+    function updateVaultOpModal(title, status, detail, icon, progress) {
+      if (title) document.getElementById('vaultOpTitle').textContent = title;
+      if (status) document.getElementById('vaultOpStatus').textContent = status;
+      if (detail) document.getElementById('vaultOpDetail').textContent = detail;
+      if (icon) document.getElementById('vaultOpIcon').innerHTML = icon;
+
+      var progressBar = document.getElementById('vaultOpBar');
+      if (progress !== undefined && progress !== null) {
+        progressBar.className = 'dl-bar';
+        progressBar.style.width = progress + '%';
+      }
+    }
+
+    function closeVaultOpModal() {
+      document.getElementById('vaultOpOverlay').classList.remove('show');
+    }
+
+    function loadVaultStatus() {
+      api('/api/vault/status').then(function (status) {
+        if (!status) return;
+        vaultStatusData = status;
+        updateVaultCardInfo(status);
+        if (vaultExpanded) {
+          renderVaultUI(status);
+        }
+      });
+    }
+
+    function updateVaultCardInfo(status) {
+      var cardLabel = document.getElementById('vaultCardLabel');
+      var cardInfo = document.getElementById('vaultCardInfo');
+
+      // Elements are created dynamically by loadVolumes(); exit safely if not in DOM yet
+      if (!cardLabel || !cardInfo) return;
+
+      if (!status.hasPin) {
+        cardLabel.textContent = '{{remote_vault_setup}}';
+        cardInfo.textContent = '{{remote_vault_setup_sub}}';
+      } else if (vaultToken) {
+        cardLabel.textContent = '{{remote_unlocked}}';
+        var countStr = (status.count === 1 ? remoteStrings.msg_item_singular : remoteStrings.msg_items_plural).replace('%d', status.count);
+        cardInfo.textContent = countStr;
+      } else {
+        cardLabel.textContent = '{{remote_locked}}';
+        cardInfo.textContent = status.hasVault ? (status.count + ' {{remote_item}}' + (status.count !== 1 ? 's' : '')) : '{{remote_no_encrypted}}';
+      }
+    }
+
+    function renderVaultUI(status) {
+      var title = document.getElementById('vaultTitle');
+      var subtitle = document.getElementById('vaultSubtitle');
+      var label = document.getElementById('vaultStatusLabel');
+      var actions = document.getElementById('vaultActions');
+      var list = document.getElementById('vaultList');
+
+      if (!status.hasPin) {
+        // No PIN set - show setup option
+        title.textContent = '{{remote_vault_setup}}';
+        subtitle.textContent = '{{remote_vault_setup_sub}}';
+        label.textContent = '{{remote_not_configured}}';
+        actions.innerHTML = '<button class="action-btn primary" onclick="showVaultPinModal(\'setup\')">&#128274; {{remote_btn_set_vault_pin}}</button>';
+        list.innerHTML = '';
+      } else if (!vaultToken) {
+        // PIN exists but not authenticated
+        title.textContent = '{{remote_vault}}';
+        var countStr = (status.count === 1 ? remoteStrings.msg_item_singular : remoteStrings.msg_items_plural).replace('%d', status.count);
+        subtitle.textContent = status.hasVault ? countStr : '{{remote_no_encrypted}}';
+        label.textContent = '{{remote_locked}}';
+        actions.innerHTML = '<button class="action-btn primary" onclick="showVaultPinModal(\'auth\')">&#128274; {{remote_unlock_vault}}</button>';
+        list.innerHTML = '';
+      } else {
+        // Authenticated - show vault contents
+        title.textContent = '{{remote_vault}}';
+        var countStr = (status.count === 1 ? remoteStrings.msg_item_singular : remoteStrings.msg_items_plural).replace('%d', status.count);
+        subtitle.textContent = countStr;
+        label.textContent = '{{remote_unlocked}}';
+        actions.innerHTML =
+          '<button class="action-btn outline" onclick="lockVault()">&#128274; {{remote_btn_lock}}</button>' +
+          '<button class="action-btn primary" onclick="showAddToVaultModal()">&#10133; {{remote_btn_add_folder}}</button>';
+        refreshVaultList();
+      }
+    }
+
+    function showVaultPinModal(mode) {
+      vaultPinMode = mode;
+      var modal = document.getElementById('vaultPinModal');
+      var title = document.getElementById('vaultPinTitle');
+      var subtitle = document.getElementById('vaultPinSubtitle');
+      var input = document.getElementById('vaultPinInput');
+
+      if (mode === 'setup') {
+        title.textContent = '{{remote_create_vault_pin}}';
+        subtitle.textContent = '{{remote_vault_setup_sub}}';
+      } else {
+        title.textContent = '{{remote_unlock_vault}}';
+        subtitle.textContent = '{{remote_enter_vault_pin}}';
+      }
+
+      input.value = '';
+      modal.classList.add('show');
+      setTimeout(function () { input.focus(); }, 100);
+    }
+
+    function submitVaultPin() {
+      var pin = document.getElementById('vaultPinInput').value;
+      if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+        showVaultOpModal('{{remote_invalid_pin}}', '{{remote_invalid_pin_msg}}', '', false, true, '&#9888;');
+        return;
+      }
+
+      closeModal('vaultPinModal');
+      showVaultOpModal('{{remote_vault_pin}}', '{{remote_verifying_pin}}', '', true, false, '&#128274;');
+
+      if (vaultPinMode === 'setup') {
+        // Set new vault PIN
+        fetch('/api/vault/set-pin', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: pin })
+        }).then(function (r) { return r.json(); }).then(function (d) {
+          if (d && d.success) {
+            // Now authenticate with the new PIN
+            vaultPinMode = 'auth';
+            submitVaultPinInternal(pin);
+          } else {
+            updateVaultOpModal('{{remote_error}}', d && d.error ? d.error : '{{remote_failed_set_pin}}', '', '&#10060;', 0);
+            document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          }
+        });
+      } else {
+        // Authenticate with existing PIN
+        submitVaultPinInternal(pin);
+      }
+    }
+
+    var pendingVaultAction = null; // Store action to run after vault unlock
+
+    function submitVaultPinInternal(pin) {
+      fetch('/api/vault/auth', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: pin })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d && d.vaultToken) {
+          vaultToken = d.vaultToken;
+          updateVaultOpModal('{{remote_vault_unlocked}}', '{{remote_access_granted}}', '', '&#9989;', 100);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          setTimeout(function () {
+            closeVaultOpModal();
+            loadVaultStatus();
+            // Execute pending action if any
+            if (pendingVaultAction) {
+              var action = pendingVaultAction;
+              pendingVaultAction = null;
+              action();
+            }
+          }, 1000);
+        } else {
+          updateVaultOpModal('{{remote_access_denied}}', '{{remote_incorrect_vault_pin}}', '', '&#128274;', 0);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+        }
+      });
+    }
+
+    function lockVault() {
+      vaultToken = '';
+      loadVaultStatus();
+    }
+
+    function refreshVaultList() {
+      if (!vaultToken) return;
+
+      apiVault('/api/vault/list').then(function (entries) {
+        var list = document.getElementById('vaultList');
+        if (!entries || entries.length === 0) {
+          list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-hint);font-size:13px;">{{remote_no_encrypted}}</div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < entries.length; i++) {
+          var e = entries[i];
+          var escapedId = e.id.replace(/'/g, "\\'");
+          var escapedName = e.displayName.replace(/'/g, "\\'");
+          var isOpen = vaultActiveEntryId === e.id;
+          var countStr = (e.fileCount === 1 ? remoteStrings.msg_item_singular : remoteStrings.msg_items_plural).replace('%d', e.fileCount);
+          html += '<div class="vault-item' + (isOpen ? ' active' : '') + '">' +
+            '<div class="meta">' +
+            '<div class="name">' + e.displayName + (isOpen ? ' <span style="color:var(--success);font-size:11px;">&#9679; {{remote_status_open}}</span>' : '') + '</div>' +
+            '<div class="path">' + countStr + ' &bull; ' + (e.originalRoot || '') + '</div>' +
+            '</div>' +
+            '<div style="display:flex;gap:6px;">' +
+            (isOpen ?
+              '<button class="action-sm" onclick="closeVaultEntry(\'' + escapedId + '\')" title="{{remote_tooltip_close_reencrypt}}">&#128274;</button>' :
+              '<button class="action-sm" onclick="openVaultEntry(\'' + escapedId + '\')" title="{{remote_tooltip_open_decrypt}}">&#128194;</button>'
+            ) +
+            '<button class="action-sm" onclick="decryptVaultOriginal(\'' + escapedId + '\',\'' + escapedName + '\')" title="{{remote_tooltip_decrypt_original}}">&#128275;</button>' +
+            '</div>' +
+            '</div>';
+        }
+        list.innerHTML = html;
+      });
+    }
+
+    function showAddToVaultModal() {
+      if (!vaultToken) {
+        showVaultOpModal('{{remote_vault_locked}}', '{{remote_please_unlock_vault}}', '', false, true, '&#128274;');
+        return;
+      }
+      if (!curPath || curPath === '/') {
+        showVaultOpModal('{{remote_no_folder_selected}}', '{{remote_browse_to_folder_first}}', '', false, true, '&#128193;');
+        return;
+      }
+
+      document.getElementById('vaultAddConfirmPath').textContent = curPath;
+      showModal('vaultAddConfirmModal');
+    }
+
+    function addToVault(path) {
+      showVaultOpModal('{{remote_adding_to_vault}}', '{{remote_encrypting_folder_msg}}', path.split('/').pop() || path, true, false, '&#128274;');
+
+      apiVault('/api/vault/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: path })
+      }).then(function (d) {
+        if (d && d.success) {
+          updateVaultOpModal('{{remote_success}}', '{{remote_added_to_vault_success}}', '', '&#9989;', 100);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          setTimeout(function () {
+            closeVaultOpModal();
+            loadVaultStatus();
+            browse(parentPath || '/');
+          }, 1500);
+        } else {
+          updateVaultOpModal('{{remote_error}}', d && d.error ? d.error : '{{remote_failed_add_vault}}', '', '&#10060;', 0);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          refreshVaultList();
+        }
+      });
+    }
+
+    function openVaultEntry(entryId) {
+      if (!vaultToken) {
+        showVaultOpModal('{{remote_vault_locked}}', '{{remote_please_unlock_vault}}', '', false, true, '&#128274;');
+        return;
+      }
+
+      showVaultOpModal('{{remote_opening_vault_entry}}', '{{remote_decrypting_files_mirror}}', '', true, false, '&#128194;');
+
+      apiVault('/api/vault/open', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId: entryId })
+      }).then(function (d) {
+        if (d && d.mirrorPath) {
+          vaultActiveEntryId = entryId;
+          updateVaultOpModal('{{remote_vault_entry_opened}}', '{{remote_files_decrypted_success}}', '{{remote_browsing_mirror}}', '&#128194;', 100);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          setTimeout(function () {
+            closeVaultOpModal();
+            refreshVaultList();
+            browse(d.mirrorPath);
+          }, 1000);
+        } else {
+          updateVaultOpModal('{{remote_error}}', d && d.error ? d.error : '{{remote_failed_open_vault}}', '', '&#10060;', 0);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+        }
+      });
+    }
+
+    function closeVaultEntry(entryId) {
+      if (!vaultToken) {
+        showVaultOpModal('{{remote_vault_locked}}', '{{remote_please_unlock_vault}}', '', false, true, '&#128274;');
+        return;
+      }
+
+      showVaultOpModal('{{remote_closing_vault_entry}}', '{{remote_reencrypting_files_msg}}', '', true, false, '&#128274;');
+
+      apiVault('/api/vault/close', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId: entryId })
+      }).then(function (d) {
+        if (d && d.success) {
+          vaultActiveEntryId = '';
+          updateVaultOpModal('{{remote_vault_entry_closed}}', '{{remote_files_reencrypted_success}}', '', '&#9989;', 100);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          setTimeout(function () {
+            closeVaultOpModal();
+            refreshVaultList();
+            loadVolumes();
+          }, 1000);
+        } else {
+          updateVaultOpModal('{{remote_error}}', d && d.error ? d.error : '{{remote_failed_close_vault}}', '', '&#10060;', 0);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+        }
+      });
+    }
+
+    function decryptVaultOriginal(entryId, name) {
+      if (!vaultToken) {
+        showVaultOpModal('{{remote_vault_locked}}', '{{remote_please_unlock_vault}}', '', false, true, '&#128274;');
+        return;
+      }
+
+      showVaultOpModal('{{remote_decrypt_to_original_title}}', '{{remote_decrypting_original_msg}}', name, true, false, '&#128275;');
+
+      apiVault('/api/vault/decrypt-original', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId: entryId })
+      }).then(function (d) {
+        if (d && d.success) {
+          updateVaultOpModal('{{remote_decryption_complete}}', '{{remote_files_restored_original}}', '{{remote_entry_removed_vault}}', '&#9989;', 100);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          setTimeout(function () {
+            closeVaultOpModal();
+            loadVaultStatus(); // This will refresh the vault list and remove the entry
+          }, 1500);
+        } else {
+          updateVaultOpModal('{{remote_error}}', d && d.error ? d.error : '{{remote_failed_decrypt_original}}', '', '&#10060;', 0);
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+        }
+      });
+    }
+
+    function addCurrentFolderToVault() {
+      if (!curPath || curPath === '/') {
+        showVaultOpModal(remoteStrings.no_folder_selected, remoteStrings.browse_to_folder_first, '', false, true, '&#128193;');
+        return;
+      }
+
+      // Check if vault is set up
+      api('/api/vault/status').then(function (status) {
+        if (!status) return;
+
+        if (!status.hasPin) {
+          // Need to set up vault PIN first
+          showVaultOpModal('{{remote_vault_not_configured}}', '{{remote_setup_vault_pin_q}}', '{{remote_secure_files_msg}}', false, true, '&#128274;');
+          vaultOpCallback = function () {
+            closeVaultOpModal();
+            showVaultPinModal('setup');
+          };
+          document.getElementById('vaultOpCloseBtn').onclick = function () {
+            closeVaultOpModal();
+            showVaultPinModal('setup');
+          };
+          document.getElementById('vaultOpCloseBtn').textContent = '{{remote_setup_vault}}';
+          document.getElementById('vaultOpCloseBtn').style.display = 'block';
+          return;
+        }
+
+        if (!vaultToken) {
+          // Need to unlock vault first
+          showVaultOpModal('{{remote_vault_locked}}', '{{remote_unlock_vault_q}}', '{{remote_enter_pin_to_add}}', false, true, '&#128274;');
+          document.getElementById('vaultOpCloseBtn').onclick = function () {
+            closeVaultOpModal();
+            showVaultPinModal('auth');
+          };
+          document.getElementById('vaultOpCloseBtn').textContent = remoteStrings.unlock_vault;
+          document.getElementById('vaultOpCloseBtn').style.display = 'block';
+          return;
+        }
+
+        // Vault is unlocked, proceed with adding
+        showVaultOpModal('{{remote_add_folder_to_vault}}', '{{remote_encrypt_folder_q}}', curPath, false, true, '&#128274;');
+        document.getElementById('vaultOpCloseBtn').onclick = function () {
+          closeVaultOpModal();
+          addToVault(curPath);
+        };
+        document.getElementById('vaultOpCloseBtn').textContent = '{{remote_add_folder_to_vault}}';
+        document.getElementById('vaultOpCloseBtn').style.display = 'block';
+      });
+    }
+
+    /* Encrypt a single file to existing vault entry */
+    var encryptFilesTarget = [];
+    var encryptDeleteOriginals = false;
+
+    function encryptSingleFile(filePath, deleteOriginals) {
+      encryptFilesTarget = [filePath];
+      encryptDeleteOriginals = deleteOriginals;
+
+      if (!vaultToken) {
+        // Need to unlock vault first - set pending action
+        pendingVaultAction = function () {
+          encryptSingleFile(filePath, deleteOriginals);
+        };
+
+        api('/api/vault/status').then(function (status) {
+          if (!status) return;
+          if (!status.hasPin) {
+            showVaultOpModal('{{remote_vault_not_configured}}', '{{remote_setup_vault_pin_q}}', '{{remote_secure_files_msg}}', false, true, '&#128274;');
+            document.getElementById('vaultOpCloseBtn').onclick = function () {
+              closeVaultOpModal();
+              showVaultPinModal('setup');
+            };
+            document.getElementById('vaultOpCloseBtn').textContent = '{{remote_setup_vault}}';
+            document.getElementById('vaultOpCloseBtn').style.display = 'block';
+          } else {
+            showVaultOpModal('{{remote_vault_locked}}', '{{remote_unlock_vault_to_encrypt}}', '{{remote_enter_pin_continue}}', false, true, '&#128274;');
+            document.getElementById('vaultOpCloseBtn').onclick = function () {
+              closeVaultOpModal();
+              showVaultPinModal('auth');
+            };
+            document.getElementById('vaultOpCloseBtn').textContent = '{{remote_unlock_vault}}';
+            document.getElementById('vaultOpCloseBtn').style.display = 'block';
+          }
+        });
+        return;
+      }
+
+      // Fetch vault entries
+      apiVault('/api/vault/entries').then(function (data) {
+        if (!data || !data.entries) return;
+
+        var select = document.getElementById('vaultPickerSelect');
+        var emptyDiv = document.getElementById('vaultPickerEmpty');
+        var confirmBtn = document.getElementById('vaultPickerConfirmBtn');
+
+        if (data.entries.length === 0) {
+          select.style.display = 'none';
+          emptyDiv.style.display = 'block';
+          confirmBtn.style.display = 'none';
+          document.getElementById('vaultPickerFooter').style.display = 'none';
+        } else {
+          select.style.display = 'block';
+          emptyDiv.style.display = 'none';
+          confirmBtn.style.display = 'inline-block';
+          document.getElementById('vaultPickerFooter').style.display = 'flex';
+
+          select.innerHTML = '';
+          data.entries.forEach(function (entry) {
+            var opt = document.createElement('option');
+            opt.value = entry.id;
+            var countStr = (entry.fileCount === 1 ? remoteStrings.msg_item_singular : remoteStrings.msg_items_plural).replace('%d', entry.fileCount);
+            opt.textContent = entry.displayName + ' (' + countStr + ')';
+            select.appendChild(opt);
+          });
+        }
+
+        // Update title
+        document.getElementById('vaultPickerTitle').textContent = '{{remote_add_to_vault}}';
+        document.getElementById('vaultPickerSubtitle').textContent = '{{remote_choose_vault_folder}}';
+
+        showModal('vaultPickerModal');
+      });
+    }
+
+    function confirmEncryptToVault() {
+      var select = document.getElementById('vaultPickerSelect');
+      var entryId = select.value;
+
+      if (!entryId) {
+        showVaultOpModal(remoteStrings.error, remoteStrings.choose_vault_folder, '', false, true, '&#9888;');
+        return;
+      }
+
+      closeModal('vaultPickerModal');
+
+      var title = encryptDeleteOriginals ? '{{remote_moving_encrypting}}' : '{{remote_copying_encrypting}}';
+      showVaultOpModal(title, '{{remote_processing_files}}', '', true, false, '&#128274;');
+
+      apiVault('/api/vault/encrypt-files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          entryId: entryId,
+          files: encryptFilesTarget,
+          deleteOriginals: encryptDeleteOriginals
+        })
+      }).then(function (result) {
+        if (!result) {
+          showVaultOpModal('{{remote_error}}', '{{remote_encryption_failed}}', '', false, true, '&#9888;');
+          return;
+        }
+
+        if (result.success) {
+          var msg = '{{remote_encrypt_success}}'.replace('%d', result.addedCount);
+          if (result.failedCount > 0) {
+            msg += '\n' + result.failedCount + ' ' + remoteStrings.msg_skipped;
+          }
+          showVaultOpModal('{{remote_encryption_complete}}', msg, '', false, true, '&#10004;');
+          document.getElementById('vaultOpCloseBtn').textContent = '{{remote_btn_done}}';
+          document.getElementById('vaultOpCloseBtn').style.display = 'block'; document.getElementById('vaultOpCancelBtn').style.display = 'none';
+          document.getElementById('vaultOpCloseBtn').onclick = function () {
+            closeVaultOpModal();
+            browse(curPath); // Refresh file list
+          };
+        } else {
+          showVaultOpModal('{{remote_error}}', result.error || '{{remote_encryption_failed}}', '', false, true, '&#9888;');
+        }
+      });
+    }
+    /* Language Selection */
+    function toggleLangDropdown() {
+      document.getElementById('langDropdown').classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+      if (!event.target.closest('.lang-selector')) {
+        var dropdown = document.getElementById('langDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    }
+
+    function setLang(lang) {
+      document.cookie = "ufm_lang=" + lang + "; path=/; max-age=" + (365 * 24 * 60 * 60);
+      location.reload();
+    }
+
+    // Set active class and current name in UI based on cookie
+    function initLangUI() {
+      var lang = document.cookie.split('; ').find(row => row.startsWith('ufm_lang='))?.split('=')[1] || 'en';
+      var langItems = document.querySelectorAll('.lang-item');
+      var langMap = {
+        'en': { name: 'English', flag: 'gb' },
+        'pt': { name: 'Português', flag: 'br' },
+        'de': { name: 'Deutsch', flag: 'de' },
+        'es': { name: 'Español', flag: 'es' },
+        'hi': { name: 'हिन्दी', flag: 'in' },
+        'id': { name: 'Indonesia', flag: 'id' },
+        'ar': { name: 'العربية', flag: 'sa' },
+        'ru': { name: 'Русский', flag: 'ru' },
+        'fr': { name: 'Français', flag: 'fr' },
+        'tr': { name: 'Türkçe', flag: 'tr' },
+        'ja': { name: '日本語', flag: 'jp' },
+        'ko': { name: '한국어', flag: 'kr' }
+      };
+
+      var current = langMap[lang] || langMap['en'];
+      var flagEl = document.getElementById('currentLangFlag');
+      var nameEl = document.getElementById('currentLangName');
+      if (flagEl) flagEl.src = '/api/flags/' + current.flag + '.svg';
+      if (nameEl) nameEl.textContent = current.name;
+
+      langItems.forEach(item => {
+        if (item.getAttribute('onclick').includes("'" + lang + "'")) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    // Call initLangUI on load
+    document.addEventListener('DOMContentLoaded', initLangUI);
+  </script>
+</body>
+
+</html>

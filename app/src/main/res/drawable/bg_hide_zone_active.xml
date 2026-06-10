@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dashed border for the Hide Zone strip — active (highlighted) state -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <stroke
+        android:width="3dp"
+        android:color="#FFD32F2F"
+        android:dashWidth="12dp"
+        android:dashGap="6dp" />
+    <solid android:color="#FFEBEBEB" /> <!-- Light grey solid background for contrast -->
+    <corners android:radius="16dp" />
+</shape>

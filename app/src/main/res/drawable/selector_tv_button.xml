@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focused: bright yellow fill + strong amber glow — impossible to miss -->
+    <item android:state_focused="true">
+        <layer-list>
+            <!-- Outer amber glow bleed -->
+            <item android:bottom="-6dp" android:left="-6dp" android:right="-6dp" android:top="-6dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                    <corners android:radius="34dp" />
+                </shape>
+            </item>
+            <!-- Inner glow ring -->
+            <item android:bottom="-2dp" android:left="-2dp" android:right="-2dp" android:top="-2dp">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <corners android:radius="30dp" />
+                </shape>
+            </item>
+            <!-- Filled yellow button body -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/tv_button_focused_yellow" />
+                    <corners android:radius="28dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Default: subtle glass outline -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/tv_glass_white_10" />
+            <stroke android:width="1dp" android:color="@color/tv_glass_border_strong" />
+            <corners android:radius="28dp" />
+        </shape>
+    </item>
+
+</selector>

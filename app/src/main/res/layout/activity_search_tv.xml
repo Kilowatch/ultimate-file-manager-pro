@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".storage.SearchActivity">
+
+    <!-- Header Bar: Refined with Title and Drive Spinner inline -->
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="24dp"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnSearchBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/selector_tv_icon_tint_yellow" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
+
+            <!-- Dynamic Subtitle/Context hint -->
+            <TextView
+                android:id="@+id/txtSearchSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/internal_storage"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Drive Spinner inline in header -->
+        <Spinner
+            android:id="@+id/spinnerDrive"
+            android:layout_width="220dp"
+            android:layout_height="44dp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:paddingHorizontal="12dp"
+            android:popupBackground="@color/tv_dialog_background"
+            android:focusable="true"
+            android:focusableInTouchMode="false" />
+
+    </LinearLayout>
+
+    <!-- Hidden toolbar stub for code compatibility -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Filter Pills Section -->
+    <HorizontalScrollView
+        android:id="@+id/scrollCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterSize"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/search_pill_size"
+                android:textColor="@color/tv_text_primary"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:chipBackgroundColor="@color/tv_glass_white_10"
+                app:chipStrokeColor="@color/tv_glass_white_10"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterType"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/search_pill_type"
+                android:textColor="@color/tv_text_primary"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:chipBackgroundColor="@color/tv_glass_white_10"
+                app:chipStrokeColor="@color/tv_glass_white_10"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterExtension"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/search_pill_extension"
+                android:textColor="@color/tv_text_primary"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:chipBackgroundColor="@color/tv_glass_white_10"
+                app:chipStrokeColor="@color/tv_glass_white_10"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipFilterDate"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/search_pill_date"
+                android:textColor="@color/tv_text_primary"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:chipBackgroundColor="@color/tv_glass_white_10"
+                app:chipStrokeColor="@color/tv_glass_white_10"
+                app:chipStrokeWidth="1dp" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Search Input Field: Below pills for better D-pad flow -->
+    <FrameLayout
+        android:id="@+id/layoutSearchInput"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/scrollCategories"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            android:paddingEnd="48dp"
+            android:hint="@string/search_hint"
+            android:textColor="@color/tv_text_primary"
+            android:textColorHint="@color/tv_text_hint"
+            android:textSize="18sp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:nextFocusUp="@id/chipFilterSize" />
+
+        <ImageView
+            android:id="@+id/btnSearchClear"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="14dp"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/search_clear"
+            android:visibility="gone"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_hint" />
+
+    </FrameLayout>
+
+    <!-- Indexing Status Banner -->
+    <TextView
+        android:id="@+id/txtIndexingBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        android:padding="10dp"
+        android:text="@string/notice_some_storage_areas_are"
+        android:textColor="@color/ufm_risk_moderate"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:background="@color/tv_glass_white_10"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutSearchInput"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Status / Count -->
+    <TextView
+        android:id="@+id/txtSearchStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="8dp"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtIndexingBanner"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <!-- Progress -->
+    <ProgressBar
+        android:id="@+id/progressSearch"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/tv_accent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/txtSearchStatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Results -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerResults"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/margin_xs"
+        app:layout_constraintTop_toBottomOf="@id/progressSearch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_file" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/progressSearch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size_xl"
+            android:layout_height="@dimen/icon_size_xl"
+            android:src="@drawable/ic_search"
+            android:alpha="0.3"
+            app:tint="@color/tv_text_hint"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtEmptyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_md"
+            android:text="@string/search_no_results"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="@dimen/text_md" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

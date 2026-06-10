@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV layout for WebDAV setup — D-Pad friendly, spinner instead of chips -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="32dp"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/selector_tv_toggle_btn_text" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+            <TextView
+                android:id="@+id/tvSetupTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/webdav_setup_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
+            <TextView
+                android:id="@+id/tvSetupSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/webdav_setup_subtitle"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="64dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="20dp">
+
+            <!-- Server type hint buttons — D-Pad friendly 2×2 grid -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/webdav_tv_server_type_prompt"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Row 1: Nextcloud | ownCloud -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupWebDav1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/hintChipNextcloud"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/webdav_hint_nextcloud"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusDown="@+id/hintChipBox" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/hintChipOwncloud"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/webdav_hint_owncloud"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusDown="@+id/hintChipGeneric" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Row 2: Box | Generic WebDAV -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupWebDav2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/hintChipBox"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/webdav_hint_box"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/hintChipNextcloud"
+                    android:nextFocusDown="@+id/edtWebDavLabel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/hintChipGeneric"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/webdav_hint_generic"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/hintChipOwncloud"
+                    android:nextFocusDown="@+id/edtWebDavLabel" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+
+            <!-- Display name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/webdav_setup_label_hint"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtWebDavLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Server URL -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/webdav_setup_url_hint"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtWebDavUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textUri" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Username -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/webdav_setup_username_hint"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtWebDavUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Password -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/webdav_setup_password_hint"
+                android:layout_marginBottom="14dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:passwordToggleEnabled="true">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtWebDavPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Status text -->
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- Progress -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone" />
+
+            <!-- Connect Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConnect"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/webdav_setup_connect"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:focusable="true"
+                app:cornerRadius="12dp"
+                app:backgroundTint="@color/btn_save_bg_tint"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Replay/rewind 10 seconds icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Circular arrow (replay shape) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,5V1L7,6l5,5V7c3.31,0 6,2.69 6,6s-2.69,6 -6,6 -6,-2.69 -6,-6H4c0,4.42 3.58,8 8,8s8,-3.58 8,-8 -3.58,-8 -8,-8z"/>
+    <!-- "10" text approximated as path — we use a simpler label in code -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M9.5,16v-4.5H8.25V10.5H10.75V16zM12.5,10.4c0.75,0 1.25,0.5 1.25,1.4v2.4c0,0.9 -0.5,1.4 -1.25,1.4s-1.25,-0.5 -1.25,-1.4v-2.4c0,-0.9 0.5,-1.4 1.25,-1.4zM12.5,11.5c-0.15,0 -0.25,0.1 -0.25,0.35v2.3c0,0.25 0.1,0.35 0.25,0.35s0.25,-0.1 0.25,-0.35v-2.3c0,-0.25 -0.1,-0.35 -0.25,-0.35z"/>
+</vector>

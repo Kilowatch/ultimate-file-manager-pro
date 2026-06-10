@@ -1,0 +1,227 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. colorPrimary/colorSurface etc. define the
+         fallback palette for Android < 12.  On API 31+ Dynamic Colors will
+         overlay these with wallpaper-extracted values automatically.
+         Note: colorAccent is a legacy MDC-1 alias — use colorSecondary in M3. -->
+    <style name="Base.Theme.UltimateFileManager" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary -->
+        <item name="colorPrimary">@color/ufm_primary</item>
+        <item name="colorPrimaryDark">@color/ufm_primary_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary (replaces deprecated colorAccent in M3) -->
+        <item name="colorSecondary">@color/ufm_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/ufm_accent_light</item>
+        <item name="colorOnSecondaryContainer">@color/ufm_text_primary</item>
+
+        <!-- Surfaces -->
+        <item name="colorSurface">@color/ufm_surface</item>
+        <item name="colorSurfaceVariant">@color/ufm_surface_variant</item>
+        <item name="colorOnSurface">@color/ufm_text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/ufm_text_secondary</item>
+        <item name="android:colorBackground">@color/ufm_background</item>
+        <item name="android:windowBackground">@color/ufm_background</item>
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">@color/ufm_text_primary</item>
+        <item name="android:textColorSecondary">@color/ufm_text_secondary</item>
+        <item name="android:textColorHint">@color/ufm_text_hint</item>
+
+        <!-- Status bar (light background, dark icons) -->
+        <item name="android:statusBarColor">@color/ufm_background</item>
+        <item name="android:navigationBarColor">@color/ufm_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
+    <style name="Theme.UltimateFileManager" parent="Base.Theme.UltimateFileManager" />
+
+    <!-- Permission Card Style -->
+    <style name="PermissionCard">
+        <item name="cardBackgroundColor">@color/ufm_card_background</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- Storage Card Style -->
+    <style name="StorageCard">
+        <item name="cardBackgroundColor">@color/ufm_card_background</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">3dp</item>
+        <item name="contentPadding">20dp</item>
+    </style>
+
+    <!-- Mobile Glass Card — transparent card, use bg_glass_card on inner layout -->
+    <style name="MobileGlassCard">
+        <item name="cardBackgroundColor">@android:color/transparent</item>
+        <item name="cardCornerRadius">@dimen/card_radius_lg</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <!-- Grant Button Style -->
+    <style name="GrantButton" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/ufm_primary</item>
+        <item name="android:textColor">@color/tv_button_text</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- TV Grant Button Style — uses backgroundTint CSL for yellow focus -->
+    <style name="TvGrantButton" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/tv_button_bg_tint</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+        <item name="cornerRadius">26dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="rippleColor">#33000000</item>
+        <item name="strokeColor">@color/tv_button_stroke</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Continue Button Style (mobile) -->
+    <style name="ContinueButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/ufm_primary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- TV Continue Button Style — yellow on focus, glass-white default -->
+    <style name="TvContinueButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/tv_button_bg_tint</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+        <item name="cornerRadius">28dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="rippleColor">#33000000</item>
+        <item name="strokeColor">@color/tv_button_stroke</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <!-- Header Title -->
+    <style name="WelcomeTitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Header Subtitle -->
+    <style name="WelcomeSubtitle">
+        <item name="android:textColor">#DDFFFFFF</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- TV-specific title -->
+    <style name="WelcomeTitleTv">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="WelcomeSubtitleTv">
+        <item name="android:textColor">#DDFFFFFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- Dialog theme overlay: inherits correct dark/light text from Material3.
+         MaterialAlertDialogBuilder reads colorOnSurface automatically — white in
+         dark mode, near-black in light mode. No hardcoded colours needed. -->
+    <style name="UFM.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/ufm_primary_light</item>
+    </style>
+
+    <!-- Premium Transparent Bottom Sheet -->
+    <style name="TransparentBottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/TransparentBottomSheetStyle</item>
+    </style>
+    <style name="TransparentBottomSheetStyle" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+    <!-- TV Yellow Focus style for buttons/spinners -->
+    <style name="TvYellowFocusStyle">
+        <item name="android:background">@drawable/selector_tv_button_yellow</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="ShapeAppearance.Material3.Corner.Full" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- ADB PIN Box Style (Mobile) -->
+    <style name="AdbPinBox">
+        <item name="android:layout_width">44dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_marginHorizontal">2dp</item>
+        <item name="android:background">@drawable/bg_mobile_pin_digit</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textColor">@color/ufm_text_primary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:cursorVisible">false</item>
+        <item name="android:importantForAutofill">no</item>
+    </style>
+
+    <!-- ADB PIN Box Style (TV) -->
+    <style name="TvAdbPinBox">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginHorizontal">4dp</item>
+        <item name="android:background">@drawable/bg_input_field</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">1</item>
+        <item name="android:textColor">@color/tv_text_primary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <!-- Player theme: Always black background to avoid glitches and bleed-through -->
+    <style name="Theme.UFM.Player" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <!--
+        AMOLED Black ThemeOverlay — applied on top of the dark theme when the user
+        selects AMOLED Black. Overrides Material3 surface / background theme
+        attributes to pure black so OLED pixels turn completely off.
+        Applied programmatically via activity.theme.applyStyle() in ThemeHelper.
+    -->
+    <style name="ThemeOverlay.UFM.Amoled" parent="">
+        <item name="android:colorBackground">#FF000000</item>
+        <item name="android:windowBackground">#FF000000</item>
+        <item name="colorSurface">#FF000000</item>
+        <item name="colorSurfaceVariant">#FF0A0A0A</item>
+        <item name="android:statusBarColor">#FF000000</item>
+        <item name="android:navigationBarColor">#FF000000</item>
+    </style>
+
+    <style name="Theme.UFM.Translucent" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+</resources>

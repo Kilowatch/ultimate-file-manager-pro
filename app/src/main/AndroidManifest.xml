@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions -->
+    <!-- Notifications (API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <!-- Sync foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Legacy storage (API < 33) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29" />
+
+    <!-- All Files Access (API 30+, requires Play Console declaration) -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <!-- Install APK from file manager (optional, requires Play Console declaration) -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <!-- Query all installed packages for app management (API 30+, requires Play Console declaration) -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+
+    <!-- Network (Remote Manage) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+
+    <!-- Shizuku API Permission -->
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" tools:ignore="ProtectedPermissions" />
+
+    <!-- TV Support -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.type.tv"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <!-- Prevent ACCESS_WIFI_STATE / CHANGE_WIFI_MULTICAST_STATE from implying
+         wifi is required — ethernet-only TVs (e.g. Xiaomi MiTV) must not be excluded -->
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+
+
+    <!-- Queries for MSAL Broker Apps and Shizuku -->
+    <queries>
+        <package android:name="com.azure.authenticator" />
+        <package android:name="com.microsoft.windowsintune.companyportal" />
+        <package android:name="com.microsoft.identity.testuserapp" />
+        <package android:name="moe.shizuku.privileged.api" />
+    </queries>
+
+    <application
+        android:name=".UfmApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:banner="@drawable/tv_banner"
+        android:logo="@drawable/tv_banner"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/Theme.UltimateFileManager">
+
+        <!-- Language Welcome (New Entry Point) -->
+        <activity
+            android:name=".onboarding.LanguageWelcomeActivity"
+            android:exported="true"
+            android:banner="@drawable/tv_banner"
+            android:logo="@drawable/tv_banner"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Policy Gate -->
+        <activity
+            android:name=".onboarding.PolicyWelcomeActivity"
+            android:exported="true" />
+
+
+        <!-- Welcome/Onboarding (Permissions) -->
+        <activity
+            android:name=".onboarding.WelcomeActivity"
+            android:exported="true" />
+
+        <!-- Storage Browser -->
+        <activity
+            android:name=".storage.StorageBrowserActivity"
+            android:exported="false" />
+
+        <!-- TV Tile Colour Activities -->
+        <activity
+            android:name=".storage.TileColorTvActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".storage.TileCopyTvActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".storage.TileColorImportTvActivity"
+            android:theme="@style/Theme.UFM.Translucent"
+            android:exported="false" />
+
+        <activity
+            android:name=".storage.TvColorPickerActivity"
+            android:exported="false" />
+
+        <!-- File Browser -->
+        <activity
+            android:name=".storage.FileBrowserActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Batch Rename TV Activity -->
+        <activity
+            android:name=".storage.BatchRenameTvActivity"
+            android:theme="@style/Theme.UltimateFileManager"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation"
+            android:exported="false" />
+
+        <!-- Twin Window (Dual Pane) -->
+        <activity
+            android:name=".storage.TwinWindowActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Notepad -->
+        <activity
+            android:name=".notepad.NotepadActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Document Scanner (Mobile only) -->
+        <activity
+            android:name=".scanner.DocumentScannerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- App Manager -->
+        <activity
+            android:name=".storage.AppManagerActivity"
+            android:exported="false" />
+
+        <!-- Remote Manage -->
+        <activity
+            android:name=".remote.RemoteManageActivity"
+            android:exported="false" />
+
+        <!-- ADB Terminal -->
+        <activity
+            android:name=".ui.TerminalActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- ADB Pairing Activities (Mobile/TV) -->
+        <activity
+            android:name=".ui.AdbPairingActivity"
+            android:exported="false"
+            android:label="ADB Pairing" />
+
+        <activity
+            android:name=".ui.AdbPairingTvActivity"
+            android:exported="false"
+            android:label="ADB Pairing (TV)" />
+
+        <!-- Device Pairing (Mobile/TV) -->
+        <activity
+            android:name=".ui.DevicePairingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.TvPairingActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|uiMode" />
+
+        <activity
+            android:name=".ui.PremiumShareActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".ui.PremiumShareTvActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|uiMode" />
+
+        <!-- Shizuku Manager (Mobile/TV) -->
+        <activity
+            android:name=".ui.ShizukuActivity"
+            android:exported="false"
+            android:label="@string/shizuku_title" />
+
+        <activity
+            android:name=".ui.ShizukuTvActivity"
+            android:exported="false"
+            android:label="@string/shizuku_title" />
+
+        <!-- Search Files -->
+        <activity
+            android:name=".storage.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible" />
+
+        <!-- Storage Analyzer -->
+        <activity
+            android:name=".storage.StorageAnalyzerActivity"
+            android:exported="false" />
+
+        <!-- Smart Sort -->
+        <activity
+            android:name=".smartsort.SmartSortActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".smartsort.SmartSortTvActivity"
+            android:exported="false" />
+
+        <!-- Category Files (from Analyzer) -->
+        <activity
+            android:name=".storage.CategoryFilesActivity"
+            android:exported="false" />
+
+        <!-- Theme / Appearance -->
+        <activity
+            android:name=".settings.ThemeActivity"
+            android:exported="false" />
+
+        <!-- Font Size / Settings -->
+        <activity
+            android:name=".settings.FontSizeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.FileServerTilesActivity"
+            android:exported="false" />
+
+        <!-- Language Selection -->
+        <activity
+            android:name=".settings.LanguageActivity"
+            android:exported="false" />
+
+        <!-- Settings Hub -->
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.StartScreenPreferenceActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.DefaultAppsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.renamer.StorageRenameActivity"
+            android:exported="false" />
+
+        <!-- Main Menu View Mode -->
+        <activity
+            android:name=".settings.MainMenuViewModeActivity"
+            android:exported="false" />
+
+        <!-- Long Press Duration -->
+        <activity
+            android:name=".settings.LongPressDurationActivity"
+            android:exported="false" />
+
+        <!-- Toolbar Icons -->
+        <activity
+            android:name=".settings.ToolbarIconsActivity"
+            android:exported="false" />
+
+        <!-- Manage Favorites -->
+        <activity
+            android:name=".settings.ManageFavoritesActivity"
+            android:exported="false" />
+
+        <!-- Network Thumbnails Settings -->
+        <activity
+            android:name=".settings.NetworkThumbnailSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_network_thumbnails_title" />
+
+        <!-- APK / XAPK Extract Settings -->
+        <activity
+            android:name=".settings.ExtractApkSettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_apk_extract_title" />
+
+        <!-- TV: Custom Cache Limit Fullscreen Activity -->
+        <activity
+            android:name=".settings.NetworkThumbnailCustomLimitActivity"
+            android:exported="false"
+            android:label="@string/nt_cache_limit_title"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Video Thumbnail Time -->
+        <activity
+            android:name=".settings.VideoThumbnailTimeActivity"
+            android:exported="false"
+            android:label="@string/video_thumbnail_time_title" />
+
+        <!-- Storage Indexer -->
+        <activity
+            android:name=".settings.StorageIndexerActivity"
+            android:exported="false" />
+ 
+        <activity
+            android:name=".settings.StorageIndexDetailActivity"
+            android:exported="false" />
+
+        <!-- Rate Us -->
+        <activity
+            android:name=".settings.RateUsActivity"
+            android:exported="false" />
+
+        <!-- About -->
+        <activity
+            android:name=".settings.AboutActivity"
+            android:exported="false" />
+
+        <!-- Backup & Restore -->
+        <activity
+            android:name=".settings.BackupRestoreActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.ImportDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".settings.ExportDetailsActivity"
+            android:exported="false" />
+
+        <!-- Icon Customization -->
+        <activity
+            android:name=".settings.IconCustomizationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.IconPickerTvActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.IconPackExportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.IconPackImportActivity"
+            android:exported="false" />
+
+        <!-- Tip Jar (Coffee & Code) -->
+        <activity
+            android:name=".billing.SupporterLoyaltyActivity"
+            android:exported="false" />
+
+        <!-- Policy Selection -->
+        <activity
+            android:name=".ui.policy.PolicySelectionActivity"
+            android:exported="false" />
+
+        <!-- Policy (Terms & Privacy) -->
+        <activity
+            android:name=".ui.policy.PolicyActivity"
+            android:exported="false" />
+
+        <!-- Encrypted Vault -->
+        <activity
+            android:name=".storage.VaultActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".storage.VaultFolderPickerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".storage.VaultBrowserActivity"
+            android:exported="false" />
+
+
+        <!-- XAPK Install Result Receiver -->
+        <receiver
+            android:name=".remote.InstallReceiver"
+            android:exported="false" />
+
+        <!-- Main Activity (future file browser) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- Open Source Licenses -->
+        <activity
+            android:name=".ui.policy.LicensesActivity"
+            android:exported="false" />
+
+        <!-- FileProvider for opening files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Shizuku Provider (Mandatory for receiving the binder) -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
+        <!-- SAF DocumentsProvider — makes UFM appear in Android's file picker (ACTION_OPEN_DOCUMENT / ACTION_OPEN_DOCUMENT_TREE) -->
+        <provider
+            android:name=".storage.UfmDocumentsProvider"
+            android:authorities="${applicationId}.documents"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />
+            </intent-filter>
+        </provider>
+
+        <!-- SAF Picker — custom picker for devices without a system-level document browser -->
+        <activity
+            android:name=".ui.SafPickerActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.UltimateFileManager">
+            <intent-filter>
+                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_DOCUMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_DOCUMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+        <!-- Share Receiver — handles incoming share intents (WhatsApp, etc.) -->
+        <activity
+            android:name=".ui.ShareReceiverActivity"
+            android:exported="true"
+            android:theme="@style/Theme.UltimateFileManager"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
+
+        <!-- SAF Info Screen -->
+        <activity
+            android:name=".storage.SafInfoActivity"
+            android:exported="false"
+            android:label="@string/saf_info_title" />
+
+        <!-- Network Share Manager & Edit -->
+        <activity
+            android:name=".network.NetworkShareManagerActivity"
+            android:exported="false"
+            android:label="@string/network_shares_title" />
+
+        <!-- Online Storage Manager -->
+        <activity
+            android:name=".network.OnlineStorageManagerActivity"
+            android:exported="false"
+            android:label="@string/online_storages_title" />
+
+        <activity
+            android:name=".network.AddOnlineStorageActivity"
+            android:exported="false"
+            android:label="@string/add_online_storage_title"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".network.OnedriveDeviceCodeAuthActivity"
+            android:exported="false"
+            android:label="@string/add_online_storage_auth_onedrive"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Google Drive TV: Device Authorization Grant -->
+        <activity
+            android:name=".network.GoogleDriveDeviceCodeAuthActivity"
+            android:exported="false"
+            android:label="@string/add_online_storage_auth_gdrive"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Google Drive Mobile: OAuth2 PKCE via Chrome Custom Tab + reverse-scheme redirect -->
+        <activity
+            android:name=".network.GoogleDriveAuthActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${googleDriveMobileScheme}" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".network.DropboxManualCodeAuthActivity"
+            android:exported="false"
+            android:label="@string/add_online_storage_auth_dropbox"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".network.DropboxAuthActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${dropboxAuthScheme}" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".network.S3SetupActivity"
+            android:exported="false"
+            android:label="@string/s3_setup_title_default"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".network.WebDavSetupActivity"
+            android:exported="false"
+            android:label="@string/webdav_setup_title"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".network.NetworkShareEditActivity"
+            android:exported="false"
+            android:label="@string/network_edit_title_add" />
+
+        <activity
+            android:name=".network.NetworkBrowserActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Transfer Settings (Mobile → TV) -->
+        <activity
+            android:name=".network.TransferSettingsActivity"
+            android:exported="false"
+            android:label="@string/transfer_settings" />
+
+
+        <!-- Transfer Approval (TV side — shown over existing TV UI) -->
+        <activity
+            android:name=".network.TransferApprovalActivity"
+            android:exported="false"
+            android:label="@string/transfer_settings"
+            android:theme="@style/Theme.UltimateFileManager" />
+
+        <!-- Built-in File Viewers -->
+        <activity
+            android:name=".viewer.SpreadsheetViewerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|uiMode" />
+
+        <activity
+            android:name=".viewer.TextViewerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".viewer.PdfViewerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".viewer.ZipViewerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".viewer.SevenZipViewerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".viewer.ImageViewerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".viewer.ImageCompressActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".viewer.MediaPlayerActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
+            android:name=".viewer.UFMPlayerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.UFM.Player"
+            android:configChanges="orientation|screenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|locale" />
+
+        <activity
+            android:name=".viewer.SlideShowActivity"
+            android:exported="false"
+            android:theme="@style/Theme.UFM.Player"
+            android:configChanges="orientation|screenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|locale" />
+
+        <!-- Package Installer Bridge -->
+        <activity
+            android:name=".ui.PackageInstallerActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.UltimateFileManager"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density">
+            <intent-filter android:priority="1">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/vnd.android.package-archive" />
+            </intent-filter>
+            <!-- XAPK / APKS support - Robust filters matching by extension with any MIME type -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <!-- Modern Suffix matching (API 31+) -->
+                <data android:pathSuffix=".xapk" />
+                <data android:pathSuffix=".apks" />
+                <!-- Legacy Pattern matching (multiple dots workaround) -->
+                <data android:pathPattern=".*\\.xapk" />
+                <data android:pathPattern=".*\\..*\\.xapk" />
+                <data android:pathPattern=".*\\..*\\..*\\.xapk" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.xapk" />
+                <data android:pathPattern=".*\\.apks" />
+                <data android:pathPattern=".*\\..*\\.apks" />
+                <data android:pathPattern=".*\\..*\\..*\\.apks" />
+            </intent-filter>
+        </activity>
+
+        <!-- Recycle Bin -->
+        <activity
+            android:name=".recycle.RecycleBinActivity"
+            android:exported="false"
+            android:label="@string/recycle_bin_title"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density" />
+        <activity
+            android:name=".recycle.RecycleBinAutoDeleteActivity"
+            android:exported="false"
+            android:label="@string/recycle_bin_auto_delete_duration"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|density" />
+
+        <!-- Sync Feature -->
+        <activity
+            android:name=".sync.SyncManagerActivity"
+            android:exported="false"
+            android:label="Folder Sync" />
+            
+        <activity
+            android:name=".sync.SyncEditActivity"
+            android:exported="false"
+            android:label="Edit Sync" />
+
+        <!-- File Server (FTP/SFTP hosting) -->
+        <activity
+            android:name=".server.ServerHostActivity"
+            android:exported="false"
+            android:label="File Server" />
+
+        <activity
+            android:name=".server.ServerProfileEditActivity"
+            android:exported="false"
+            android:label="Server Profile" />
+
+        <service
+            android:name=".server.FileServerService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- Required for WorkManager Foreground Service in Android 14+ -->
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- Keeps file transfers alive during screen-off -->
+        <service
+            android:name=".util.TransferService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+
+        <receiver
+            android:name=".widget.SmartSortWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_smart_sort_info" />
+        </receiver>
+
+        <service
+            android:name=".widget.SmartSortWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".widget.SmartSortWidgetExecuteService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <service
+            android:name=".remote.AdbRemoteForegroundService"
+            android:foregroundServiceType="connectedDevice"
+            android:exported="false" />
+
+        <!-- Quick Settings Tiles for FTP and SFTP (enabled programmatically via Settings) -->
+        <service
+            android:name=".widget.FtpTileService"
+            android:icon="@drawable/ic_ufm_ftp"
+            android:label="@string/settings_ftp_tile_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".widget.SftpTileService"
+            android:icon="@drawable/ic_ufm_sftp"
+            android:label="@string/settings_sftp_tile_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".widget.DlnaTileService"
+            android:icon="@drawable/ic_dlna"
+            android:label="@string/settings_dlna_tile_title"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".server.DlnaServerSettingsActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden" />
+
+        <!-- DLNA Host (dedicated DLNA management screen) -->
+        <activity
+            android:name=".server.DlnaHostActivity"
+            android:exported="false"
+            android:label="@string/dlna_host_title" />
+
+    </application>
+
+</manifest>

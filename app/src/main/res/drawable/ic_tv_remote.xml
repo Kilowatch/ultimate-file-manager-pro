@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Remote body (rounded rectangle outline) -->
+    <path
+        android:pathData="M8,1 L16,1 C17.657,1 19,2.343 19,4 L19,20 C19,21.657 17.657,23 16,23 L8,23 C6.343,23 5,21.657 5,20 L5,4 C5,2.343 6.343,1 8,1 Z"
+        android:strokeColor="#FF1B1B1F"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000" />
+
+    <!-- Power / top button dot -->
+    <path
+        android:pathData="M12,4 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0"
+        android:fillColor="#FF00897B" />
+
+    <!-- D-Pad Up arrow -->
+    <path
+        android:pathData="M12,8.5 L10.8,10.2 L13.2,10.2 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Down arrow -->
+    <path
+        android:pathData="M12,15.5 L10.8,13.8 L13.2,13.8 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Left arrow -->
+    <path
+        android:pathData="M8.5,12 L10.2,10.8 L10.2,13.2 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Right arrow -->
+    <path
+        android:pathData="M15.5,12 L13.8,10.8 L13.8,13.2 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- Center OK dot -->
+    <path
+        android:pathData="M12,12 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0"
+        android:fillColor="#FF00897B" />
+
+    <!-- Bottom row dots (Back / Home / Menu) -->
+    <path
+        android:pathData="M9,19.5 m-0.55,0 a0.55,0.55 0 1,0 1.1,0 a0.55,0.55 0 1,0 -1.1,0"
+        android:fillColor="#FF49454F" />
+    <path
+        android:pathData="M12,19.5 m-0.55,0 a0.55,0.55 0 1,0 1.1,0 a0.55,0.55 0 1,0 -1.1,0"
+        android:fillColor="#FF49454F" />
+    <path
+        android:pathData="M15,19.5 m-0.55,0 a0.55,0.55 0 1,0 1.1,0 a0.55,0.55 0 1,0 -1.1,0"
+        android:fillColor="#FF49454F" />
+
+</vector>

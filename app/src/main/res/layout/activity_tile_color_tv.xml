@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- Header bar                                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingTop="@dimen/margin_xxl"
+        android:paddingBottom="16dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_palette"
+            app:tint="@color/tv_accent"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtTileColorTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-black" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTvColorReset"
+            style="@style/TvContinueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginEnd="12dp"
+            android:text="@string/tile_color_reset" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTvColorExport"
+            style="@style/TvContinueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginEnd="12dp"
+            android:text="@string/tile_color_export" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTvColorDone"
+            style="@style/TvGrantButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/done" />
+
+    </LinearLayout>
+
+    <!-- Accent underline -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_border" />
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- Body: Left panel + Right preview                -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
+
+        <!-- LEFT: scrollable section list (icon header is RecyclerView item 0) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerColorSections"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.1"
+            android:layout_marginEnd="32dp"
+            android:clipToPadding="false"
+            android:descendantFocusability="afterDescendants" />
+
+        <!-- Vertical divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="32dp"
+            android:background="@color/tv_glass_border" />
+
+        <!-- RIGHT: preview + copy button (fully compact to fit on screen without scrolling) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- GRID preview (single full-width tile) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tvPreviewTile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <FrameLayout
+                        android:id="@+id/tvPreviewIconContainer"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/bg_icon_circle_accent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <ImageView
+                            android:id="@+id/tvPreviewIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_storage_internal"
+                            app:tint="@color/tv_accent" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tvPreviewLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/tvPreviewIconContainer" />
+
+                    <TextView
+                        android:id="@+id/tvPreviewCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="12sp"
+                        app:layout_constraintTop_toBottomOf="@id/tvPreviewLabel" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- LIST preview -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tvPreviewListCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="12dp">
+
+                    <FrameLayout
+                        android:id="@+id/tvPreviewListIconContainer"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:id="@+id/tvPreviewListIcon"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_storage_internal"
+                            app:tint="@color/tv_accent" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvPreviewListLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="18sp"
+                            android:fontFamily="sans-serif-black"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:id="@+id/tvPreviewListCapacity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Icon selection card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <ImageView
+                            android:id="@+id/tvIconPreview"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_storage_internal"
+                            app:tint="@color/tv_accent"
+                            android:layout_marginEnd="10dp"
+                            android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/tile_icon_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTvIcons"
+                            style="@style/TvContinueButton"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="6dp"
+                            android:textSize="12sp"
+                            android:padding="0dp"
+                            android:text="@string/tile_icon_pick_builtin" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTvBrowseIcon"
+                            style="@style/TvContinueButton"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:layout_marginEnd="6dp"
+                            android:textSize="12sp"
+                            android:padding="0dp"
+                            android:text="@string/tile_icon_browse" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTvResetIcon"
+                            style="@style/TvContinueButton"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="40dp"
+                            android:textSize="12sp"
+                            android:padding="0dp"
+                            android:text="@string/tile_icon_reset_default" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Copy to… button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvCopyTo"
+                style="@style/TvContinueButton"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="13sp"
+                android:text="@string/tile_color_copy_to" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

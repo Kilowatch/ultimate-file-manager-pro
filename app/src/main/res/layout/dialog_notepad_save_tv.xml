@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notepad_save_as_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="24dp" />
+
+    <EditText
+        android:id="@+id/edtFilename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/notepad_filename_hint"
+        android:padding="16dp"
+        android:background="@drawable/bg_input_field"
+        android:textColor="@color/tv_text_primary"
+        android:textColorHint="@color/tv_text_hint"
+        android:layout_marginBottom="8dp"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/txtSavePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:textColor="@color/tv_text_secondary"
+        android:maxLines="2"
+        android:ellipsize="middle" />
+
+    <Button
+        android:id="@+id/btnSelectFolder"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/notepad_select_folder"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_text_primary"
+        android:focusable="true" />
+
+    <Button
+        android:id="@+id/btnConfirmSave"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/save"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:textColor="@color/tv_button_focused_yellow_text"
+        android:focusable="true"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/btnCancelSave"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_text_primary"
+        android:focusable="true" />
+
+</LinearLayout>

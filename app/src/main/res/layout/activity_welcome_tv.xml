@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".onboarding.WelcomeActivity">
+
+    <!-- ═══════════════════════════════════════════════════════
+         TOP HEADER BAR — Logo + App Name + Subtitle
+         ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- App Logo -->
+        <ImageView
+            android:id="@+id/imgAppIcon"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/cd_app_icon" />
+
+        <!-- Cyan accent divider -->
+        <View
+            android:layout_width="3dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@color/tv_accent"
+            android:alpha="0.8" />
+
+        <!-- App Name + Tagline -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="24sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.02" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_subtitle_tv"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Step indicator -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_1"
+            android:textColor="@color/tv_accent"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:textAllCaps="true"
+            android:letterSpacing="0.12"
+            android:background="@drawable/bg_status_badge"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp" />
+
+    </LinearLayout>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECTION HEADING
+         ═══════════════════════════════════════════════════════ -->
+    <TextView
+        android:id="@+id/txtSectionHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grant_permissions"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.01"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="@dimen/tv_safe_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Cyan underline accent -->
+    <View
+        android:id="@+id/viewAccentLine"
+        android:layout_width="48dp"
+        android:layout_height="3dp"
+        android:background="@color/tv_accent"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="@dimen/tv_safe_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/txtSectionHeading"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         PERMISSION CARDS — Vertical list
+         ═══════════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPermissions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="@dimen/margin_sm"
+        app:layout_constraintTop_toBottomOf="@id/viewAccentLine"
+        app:layout_constraintBottom_toTopOf="@id/layoutFooter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_permission_card_tv" />
+
+    <!-- ═══════════════════════════════════════════════════════
+         FOOTER — Continue Button
+         ═══════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutFooter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="16dp"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/grant_all_required_permissions_to"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinue"
+            style="@style/TvContinueButton"
+            android:layout_width="220dp"
+            android:layout_height="@dimen/tv_button_height"
+            android:text="@string/btn_continue"
+            android:enabled="false"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

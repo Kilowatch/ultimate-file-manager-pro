@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- Light teal tint so the focused card is clearly distinguishable -->
+    <solid android:color="#1A00897B" />
+    <corners android:radius="20dp" />
+    <stroke
+        android:width="3dp"
+        android:color="@color/ufm_primary" />
+</shape>

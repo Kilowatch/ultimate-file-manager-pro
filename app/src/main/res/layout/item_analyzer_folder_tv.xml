@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Analyzer Folder Row — TV (light glass theme)
+    D-pad focusable. Larger touch targets, TV text sizes.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selector_tv_storage_category_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:duplicateParentState="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:duplicateParentState="true">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_folder"
+                app:tint="@color/selector_tv_storage_category_icon_tint"
+                android:contentDescription="@null"
+                android:duplicateParentState="true" />
+
+            <TextView
+                android:id="@+id/txtFolderName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/selector_tv_storage_category_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="start"
+                android:duplicateParentState="true"
+                tools:text="…/DCIM/Camera" />
+
+            <TextView
+                android:id="@+id/txtFolderCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/selector_tv_storage_category_text_secondary"
+                android:textSize="13sp"
+                android:duplicateParentState="true"
+                tools:text="1,234 files" />
+
+            <TextView
+                android:id="@+id/txtFolderSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_accent"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:duplicateParentState="true"
+                tools:text="4.8 GB" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressFolder"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="6dp"
+            android:indeterminate="false"
+            android:progressTint="@color/selector_tv_storage_category_icon_tint"
+            android:progressBackgroundTint="@color/tv_glass_white_15"
+            android:duplicateParentState="true"
+            tools:progress="70" />
+
+    </LinearLayout>
+</FrameLayout>

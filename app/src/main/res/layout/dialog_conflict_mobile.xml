@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Header row: icon + title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_warning"
+            android:tint="?attr/colorError"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@string/conflict_title" />
+
+        <TextView
+            android:id="@+id/txtConflictTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/conflict_title"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="?attr/colorOnSurface" />
+    </LinearLayout>
+
+    <!-- Filename -->
+    <TextView
+        android:id="@+id/txtConflictFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="filename.txt"
+        android:textStyle="bold"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:maxLines="2"
+        android:ellipsize="middle"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Destination info -->
+    <TextView
+        android:id="@+id/txtConflictInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_message_file"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="4dp" />
+
+    <!-- 0-byte warning (hidden by default) -->
+    <TextView
+        android:id="@+id/txtZeroByteWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_zero_byte_warning"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorError"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Action buttons -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictOverwrite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_overwrite"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="?attr/colorError"
+        android:textColor="?attr/colorOnError"
+        style="@style/Widget.Material3.Button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictSkip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_skip"
+        android:layout_marginBottom="8dp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictKeepBoth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_keep_both"
+        android:layout_marginBottom="8dp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:layout_marginBottom="12dp"
+        style="@style/Widget.Material3.Button.TextButton" />
+
+    <!-- Apply to all checkbox -->
+    <CheckBox
+        android:id="@+id/chkApplyToAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_apply_to_all"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:layout_marginBottom="4dp" />
+
+</LinearLayout>

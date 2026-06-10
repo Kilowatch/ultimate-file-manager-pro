@@ -1,0 +1,20 @@
+{
+  "client_id": "1c135efb-c510-42a7-a7a6-32d29ab38d19",
+  "authorization_user_agent": "DEFAULT",
+  "account_mode": "MULTIPLE",
+  "broker_redirect_uri_registered": false,
+  "multiple_account_broker_allowed": false,
+  "redirect_uri": "msauth://za.kilowatch.ultimatefilemanager/8fxq1QLVl7DSq%2FttvhvEmD3KHCM%3D",
+  "signature_hash": [
+    "8fxq1QLVl7DSq/ttvhvEmD3KHCM=",
+    "858ZWrm6G2uM2BKKE2MjSQT2+wY="
+  ],
+  "authorities": [
+    {
+      "type": "AAD",
+      "audience": {
+        "type": "PersonalMicrosoftAccount"
+      }
+    }
+  ]
+}

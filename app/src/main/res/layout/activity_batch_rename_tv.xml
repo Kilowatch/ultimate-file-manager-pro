@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- TV Header / Toolbar -->
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="@string/batch_rename_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black" />
+
+        <TextView
+            android:id="@+id/txtHeaderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/batch_rename_subtitle_tv"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:layout_marginEnd="16dp" />
+    </LinearLayout>
+
+    <!-- Split Pane Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Left Column: Functions / Inputs -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.2"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:paddingEnd="16dp"
+            tools:ignore="RtlSymmetry">
+
+            <!-- Scrollable input form -->
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Pattern EditText -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPattern"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/tv_text_hint"
+                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPattern"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/batch_rename_hint"
+                            android:singleLine="true"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:textSize="18sp"
+                            android:paddingVertical="16dp"
+                            android:focusable="true"
+                            android:nextFocusDown="@id/btnToggleOriginal"
+                            android:nextFocusUp="@id/btnBack"
+                            android:nextFocusRight="@id/recyclerPreview" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Inline error text -->
+                    <TextView
+                        android:id="@+id/txtPatternError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_button_focused_yellow"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:layout_marginTop="4dp"
+                        android:focusable="false" />
+
+                    <!-- Option toggle buttons -->
+                    <LinearLayout
+                        android:id="@+id/layoutOptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnToggleOriginal"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="12dp"
+                            android:text="@string/batch_rename_option_original"
+                            android:textSize="15sp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:focusable="true"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                            android:textColor="@color/selector_tv_toggle_btn_text"
+                            app:strokeColor="@color/tv_button_stroke"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="28dp"
+                            android:nextFocusLeft="@id/edtPattern"
+                            android:nextFocusRight="@id/btnTogglePadding"
+                            android:nextFocusUp="@id/edtPattern"
+                            android:nextFocusDown="@id/edtPaddingLength"
+                            style="@style/Widget.Material3.Button" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTogglePadding"
+                            android:layout_width="0dp"
+                            android:layout_height="56dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="@string/batch_rename_option_padding"
+                            android:textSize="15sp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:focusable="true"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                            android:textColor="@color/selector_tv_toggle_btn_text"
+                            app:strokeColor="@color/tv_button_stroke"
+                            app:strokeWidth="1dp"
+                            app:cornerRadius="28dp"
+                            android:nextFocusLeft="@id/btnToggleOriginal"
+                            android:nextFocusRight="@id/recyclerPreview"
+                            android:nextFocusUp="@id/edtPattern"
+                            android:nextFocusDown="@id/edtPaddingLength"
+                            style="@style/Widget.Material3.Button" />
+                    </LinearLayout>
+
+                    <!-- Padding controls row (initially GONE) -->
+                    <LinearLayout
+                        android:id="@+id/layoutPaddingControls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone">
+
+                        <!-- Padding Length Block -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="12dp">
+
+                            <TextView
+                                android:id="@+id/txtPaddingLengthLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/batch_rename_padding_length_label"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp"
+                                android:focusable="false" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:hintEnabled="false"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edtPaddingLength"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="1"
+                                    android:text="3"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="16sp"
+                                    android:paddingVertical="14dp"
+                                    android:gravity="center"
+                                    android:focusable="true"
+                                    android:nextFocusUp="@id/btnToggleOriginal"
+                                    android:nextFocusRight="@id/edtPaddingStart"
+                                    android:nextFocusDown="@id/btnCancel" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <!-- Starting Number Block -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="12dp">
+
+                            <TextView
+                                android:id="@+id/txtPaddingStartLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/batch_rename_padding_start_label"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp"
+                                android:layout_marginBottom="8dp"
+                                android:focusable="false" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:boxStrokeColor="@color/tv_button_focused_yellow"
+                                app:hintEnabled="false"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/edtPaddingStart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:text="1"
+                                    android:textColor="@color/tv_text_primary"
+                                    android:textSize="16sp"
+                                    android:paddingVertical="14dp"
+                                    android:gravity="center"
+                                    android:focusable="true"
+                                    android:nextFocusUp="@id/btnToggleOriginal"
+                                    android:nextFocusLeft="@id/edtPaddingLength"
+                                    android:nextFocusRight="@id/recyclerPreview"
+                                    android:nextFocusDown="@id/btnCancel" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <!-- Action buttons at the bottom of the left column (always visible) -->
+            <LinearLayout
+                android:id="@+id/layoutActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/batch_rename_cancel"
+                    android:textSize="15sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@id/edtPaddingLength"
+                    android:nextFocusRight="@id/btnRename"
+                    android:textColor="@color/tv_button_text"
+                    style="@style/TvContinueButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRename"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/batch_rename_confirm"
+                    android:textSize="15sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@id/edtPaddingLength"
+                    android:nextFocusLeft="@id/btnCancel"
+                    android:nextFocusRight="@id/recyclerPreview"
+                    android:textColor="@color/tv_button_text"
+                    style="@style/TvContinueButton" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Right Column: Result Preview (scrollable by itself) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:paddingStart="16dp"
+            tools:ignore="RtlSymmetry">
+
+            <!-- Preview header -->
+            <TextView
+                android:id="@+id/txtPreviewHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/batch_rename_preview_header"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:focusable="false"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Preview list card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:padding="8dp"
+                    android:scrollbars="vertical"
+                    android:nextFocusLeft="@id/edtPattern" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

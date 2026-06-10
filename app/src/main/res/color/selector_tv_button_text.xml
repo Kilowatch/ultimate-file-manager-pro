@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused: black text on yellow -->
+    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow_text" />
+    <!-- Normal: white text on accent -->
+    <item android:color="@color/white" />
+</selector>

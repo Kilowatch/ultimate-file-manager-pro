@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shared text-input filter dialog — used for Extension filter -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/txtFilterTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/editFilterText"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textColorHint="@color/mobile_text_secondary"
+        android:backgroundTint="@color/mobile_glass_stroke"
+        android:paddingHorizontal="8dp"
+        android:inputType="text"
+        android:singleLine="true"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnTextCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary" />
+
+        <Button
+            android:id="@+id/btnTextApply"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/search_filter_apply"
+            android:backgroundTint="@color/tv_accent"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

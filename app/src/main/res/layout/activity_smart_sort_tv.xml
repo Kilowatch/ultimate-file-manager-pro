@@ -1,0 +1,1624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".smartsort.SmartSortTvActivity">
+
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_config"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtTvPath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="/storage/emulated/0/DCIM" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSaveConfig"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_save"
+            android:contentDescription="@string/smart_sort_save_config"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_hint" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:layout_marginTop="@dimen/margin_md"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toTopOf="@id/layoutActions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="#0AFFFFFF"
+                app:strokeColor="#1AFFFFFF"
+                app:strokeWidth="1dp"
+                android:focusable="false">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_scope"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="@dimen/margin_sm" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cgSortType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="false"
+                        android:layout_marginBottom="@dimen/margin_xs">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSortStandard"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_standard"
+                            android:checked="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSortCustom"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_custom"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                    </com.google.android.material.chip.ChipGroup>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/layoutTvStandardOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/margin_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_scope_label"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="@dimen/text_sm"
+                        android:layout_marginBottom="@dimen/margin_sm" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cgScope"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="false"
+                        android:layout_marginBottom="@dimen/margin_xs">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRootOnly"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                             android:text="@string/smart_sort_root_only"
+                             android:checked="true" 
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/bg_tv_card_selector"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipRecursive"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_recursive" 
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/bg_tv_card_selector"/>
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <TextView
+                        android:id="@+id/txtHintScope"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_hint"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="@dimen/margin_sm"
+                        android:maxLines="2"
+                        tools:text="Only files directly in this folder will be sorted." />
+
+                    <LinearLayout
+                        android:id="@+id/layoutRecursiveOptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="@dimen/margin_sm"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_subfolder_mode"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="@dimen/text_sm"
+                            android:layout_marginBottom="@dimen/margin_sm" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/cgSubfolderMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="false"
+                            android:layout_marginBottom="@dimen/margin_xs">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFlatten"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_flatten"
+                                android:checked="true" 
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/bg_tv_card_selector"/>
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipPreserve"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_preserve" 
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/bg_tv_card_selector"/>
+                        </com.google.android.material.chip.ChipGroup>
+
+                        <TextView
+                            android:id="@+id/txtHintSubfolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_hint"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="@dimen/margin_sm"
+                            android:maxLines="2"
+                            tools:text="Files from subfolders are moved directly into category folders." />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutTvStandardRightCol"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/margin_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_default_folder"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="@dimen/text_sm"
+                        android:layout_marginBottom="@dimen/margin_sm" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/txtPrefixLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_marginBottom="@dimen/margin_md"
+                        app:boxStrokeColor="@color/tv_accent"
+                        app:hintTextColor="@color/tv_text_hint">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/txtPrefix"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="UFM"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutTvSortMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_mode_label"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="@dimen/text_sm"
+                            android:layout_marginBottom="@dimen/margin_sm" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/cgSortMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="false"
+                            android:layout_marginBottom="@dimen/margin_xs">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipModeType"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_mode_type"
+                                android:checked="true" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipModeSize"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_mode_size" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipModeDate"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_mode_date" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                        </com.google.android.material.chip.ChipGroup>
+
+                        <TextView
+                            android:id="@+id/txtHintMode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_hint"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="@dimen/margin_sm"
+                            android:maxLines="2"
+                            tools:text="Files are grouped by their file type." />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutTvStandardBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/tv_glass_white_15"
+                android:layout_marginVertical="@dimen/margin_md" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_categories"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <LinearLayout
+                android:id="@+id/layoutTypeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatPhotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_photos"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatPhotos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Photos" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatPhotosFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatPhotosReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatVideos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_videos"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatVideos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Videos" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatVideosFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatVideosReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatAudio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_audio"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatAudio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Audio" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatAudioFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatAudioReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatDocuments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_documents"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatDocuments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Documents" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatDocumentsFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatDocumentsReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatArchives"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_archives"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatArchives"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Archives" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatArchivesFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatArchivesReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatApps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_apps"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatApps"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Apps" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatAppsFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatAppsReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkCatEbooks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_category_ebooks"
+                    android:checked="false"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+
+                    <TextView
+                        android:id="@+id/lblCatEbooks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM eBooks" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCatEbooksFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnCatEbooksReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutSizeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeTiny"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_tiny"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblSizeTiny"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Tiny" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeTinyFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnSizeTinyReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_small"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblSizeSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Small" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeSmallFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnSizeSmallReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_medium"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblSizeMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Medium" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeMediumFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnSizeMediumReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_large"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblSizeLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Large" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeLargeFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnSizeLargeReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeHuge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_huge"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblSizeHuge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Huge" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeHugeFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnSizeHugeReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutDateCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateToday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_today"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblDateToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Today" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateTodayFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnDateTodayReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_week"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblDateWeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM This Week" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateWeekFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnDateWeekReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_month"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblDateMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM This Month" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateMonthFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnDateMonthReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateYear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_year"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblDateYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM This Year" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateYearFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnDateYearReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateOlder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_older"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" 
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/bg_tv_card_selector"/>
+                    <TextView
+                        android:id="@+id/lblDateOlder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/tv_text_hint"
+                        android:paddingStart="24dp"
+                        android:text="UFM Older" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="24dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateOlderFolder"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp"
+                            android:paddingVertical="2dp"
+                            android:minHeight="0dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                        <ImageView
+                            android:id="@+id/btnDateOlderReset"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_close"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipIncludeOther"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_include_other" 
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/bg_tv_card_selector"/>
+
+                <TextView
+                    android:id="@+id/lblCatOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint"
+                    android:paddingStart="24dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOtherFolder"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_select_folder"
+                        android:textSize="12sp"
+                        android:paddingVertical="2dp"
+                        android:minHeight="0dp"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false" />
+                    <ImageView
+                        android:id="@+id/btnOtherReset"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_close"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutTvCustomOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddRule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/tv_button_height"
+                    android:text="@string/smart_sort_add_rule"
+                    android:textSize="16sp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    app:icon="@drawable/ic_add"
+                    app:iconPadding="@dimen/margin_sm"
+                    app:iconTint="@color/tv_accent"
+                    app:backgroundTint="@color/tv_glass_white_15"
+                    app:cornerRadius="@dimen/card_radius_lg"
+                    android:layout_marginBottom="@dimen/margin_md" />
+
+                <TextView
+                    android:id="@+id/txtCustomRulesEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_no_rules"
+                    android:textColor="@color/tv_text_hint"
+                    android:textSize="14sp"
+                    android:paddingStart="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutCustomRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/tv_glass_white_15"
+                android:layout_marginVertical="@dimen/margin_md" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_options"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/margin_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_duplicates"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="@dimen/text_sm"
+                        android:layout_marginBottom="@dimen/margin_sm" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cgDuplicateStrategy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="false"
+                        android:layout_marginBottom="@dimen/margin_xs">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDupSkip"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_skip"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDupRename"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_rename"
+                            android:checked="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDupOverwrite"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_overwrite"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <TextView
+                        android:id="@+id/txtHintDuplicate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_hint"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="@dimen/margin_sm"
+                        android:maxLines="2"
+                        tools:text="Files with the same name are renamed with a number suffix." />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_existing_folder"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="@dimen/text_sm"
+                        android:layout_marginBottom="@dimen/margin_sm" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cgExistingFolderStrategy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="false">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExistingMerge"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_merge"
+                            android:checked="true"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExistingSkip"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_skip"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExistingRename"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_strategy_rename"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false" />
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <TextView
+                        android:id="@+id/txtHintExisting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_hint"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="@dimen/margin_sm"
+                        android:maxLines="2"
+                        tools:text="Files are added to the existing category folder." />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/margin_md"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPreview"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tv_button_height"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:text="@string/smart_sort_preview"
+            android:textSize="16sp"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:icon="@drawable/ic_search"
+            app:iconPadding="@dimen/margin_sm"
+            app:iconTint="@color/tv_accent"
+            app:backgroundTint="@color/tv_glass_white_15"
+            app:cornerRadius="@dimen/card_radius_lg" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartSort"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tv_button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_start"
+            android:textSize="16sp"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:icon="@drawable/ic_sort"
+            app:iconPadding="@dimen/margin_sm"
+            app:iconTint="@color/tv_accent"
+            app:backgroundTint="@color/tv_glass_white_15"
+            app:cornerRadius="@dimen/card_radius_lg" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTvHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tv_button_height"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_history"
+            android:textSize="14sp"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:backgroundTint="@color/tv_glass_white_10"
+            app:cornerRadius="@dimen/card_radius_lg" />
+    </LinearLayout>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+

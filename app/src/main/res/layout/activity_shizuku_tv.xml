@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Shizuku Manager — Premium TV Design -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">    <!-- Optimized Layout: Header and Content in one flow -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="32dp">
+
+        <!-- Header Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/shizuku_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="36sp"
+                android:fontFamily="sans-serif-black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBack"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:focusable="true"
+                android:nextFocusDown="@id/btnShizukuDownload" />
+        </LinearLayout>
+
+        <!-- Main Glass Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_glass_card"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/shizuku_status_label"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="true" />
+
+            <TextView
+                android:id="@+id/txtShizukuStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/shizuku_not_installed"
+                android:textColor="@color/shizuku_status_error"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textAlignment="center" />
+
+            <View
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/tv_accent" />
+
+            <!-- Service Status Section -->
+            <TextView
+                android:id="@+id/txtShizukuServiceStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/shizuku_service_status"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="true"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtShizukuServiceStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/shizuku_service_not_running"
+                android:textColor="@color/shizuku_status_error"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShizukuEnable"
+                style="@style/TvYellowFocusStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/shizuku_btn_enable"
+                android:visibility="gone"
+                android:focusable="true"
+                android:nextFocusUp="@id/btnBack"
+                android:nextFocusDown="@id/btnShizukuDownload" />
+
+            <TextView
+                android:id="@+id/txtShizukuDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/shizuku_description"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:lineSpacingExtra="4dp"
+                android:visibility="gone" />
+
+            <!-- Download Section -->
+            <TextView
+                android:id="@+id/txtShizukuDownloadHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/shizuku_download_hint"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnShizukuDownload"
+                style="@style/TvYellowFocusStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/shizuku_download_link"
+                android:visibility="gone"
+                android:focusable="true"
+                android:nextFocusUp="@id/btnBack"
+                android:paddingVertical="12dp"
+                android:paddingHorizontal="32dp"
+                android:textColor="@color/black"
+                android:fontFamily="sans-serif-black"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

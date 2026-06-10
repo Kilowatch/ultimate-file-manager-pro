@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Move arrow -->
+    <path
+        android:fillColor="@color/ufm_primary"
+        android:pathData="M12,2L8,6h3v6H7l-3,-3v4l3,3h4v6h2v-6h4l3,-3V7l-3,3h-4V6h3L12,2z" />
+    <!-- Lock overlay -->
+    <path
+        android:fillColor="@color/ufm_primary"
+        android:pathData="M19,14h-0.5v-1c0,-1.38 -1.12,-2.5 -2.5,-2.5S13.5,11.62 13.5,13v1H13c-0.55,0 -1,0.45 -1,1v4c0,0.55 0.45,1 1,1h6c0.55,0 1,-0.45 1,-1v-4C20,14.45 19.55,14 19,14zM17.5,14h-3v-1c0,-0.83 0.67,-1.5 1.5,-1.5s1.5,0.67 1.5,1.5V14z" />
+</vector>

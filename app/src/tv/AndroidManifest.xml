@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- TV Support - Required for TV devices -->
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.type.tv"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <application
+        xmlns:tools="http://schemas.android.com/tools"
+        android:icon="@mipmap/ic_launcher_tv"
+        android:roundIcon="@mipmap/ic_launcher_tv"
+        android:banner="@drawable/tv_banner"
+        tools:replace="android:icon,android:roundIcon">
+        <activity android:name=".onboarding.LanguageWelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

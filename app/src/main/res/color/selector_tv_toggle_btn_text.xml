@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state: Black text on yellow -->
+    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow_text" />
+    <!-- Checked (Selected) state: Black text on yellow -->
+    <item android:state_checked="true" android:color="@color/tv_button_focused_yellow_text" />
+    <!-- Default state: Primary text (White in dark, Dark in light) -->
+    <item android:color="@color/tv_text_primary" />
+</selector>

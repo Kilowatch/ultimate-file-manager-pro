@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Generic List Tab Fragment Layout — shared by Large Files, Duplicates, Junk, Suggestions.
+    When the storage is not indexed the banner is shown; the RecyclerView is hidden.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- "Not indexed" banner -->
+    <LinearLayout
+        android:id="@+id/layoutNotIndexed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/margin_lg"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/txtListNotIndexed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            tools:text="⚡ Index this storage to unlock advanced analysis" />
+    </LinearLayout>
+
+    <!-- Empty state text (no duplicates, no large files, etc.) -->
+    <TextView
+        android:id="@+id/txtListEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_lg"
+        android:gravity="center"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="No duplicates found" />
+
+    <!-- Main list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerAnalyzerList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingVertical="@dimen/margin_sm"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

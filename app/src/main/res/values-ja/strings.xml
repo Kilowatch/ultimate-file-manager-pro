@@ -1,0 +1,4783 @@
+<resources>
+    <string name="app_name">究極のファイルマネージャー Pro</string>
+    <string name="settings_language">言語</string>
+    <string name="language_english">英語</string>
+    <string name="language_german">ドイツ語 (ドイツ語)</string>
+    <string name="language_japanese">日本語 (日本語)</string>
+    <string name="language_arabic">アラビア語 (العربية)</string>
+    <string name="language_spanish">スペイン語 (スペイン語)</string>
+    <string name="language_french">フランス語 (フランセ)</string>
+    <string name="language_hindi">ヒンディー語 (हिन्दी)</string>
+    <string name="language_indonesian">インドネシア語 (インドネシア語)</string>
+    <string name="language_korean">韓国語 (한국어)</string>
+    <string name="language_portuguese">ポルトガル語 (Português)</string>
+    <string name="language_russian">ロシア語 (Русский)</string>
+    <string name="language_turkish">トルコ語 (テュルクチェ)</string>
+    <string name="select_language">言語の選択</string>
+    <string name="language_system_default">システムのデフォルト</string>
+
+    <!-- Spreadsheet Viewer -->
+    <string name="view_mode_list">
+肖像画
+</string>
+    <string name="view_mode_grid">
+風景
+</string>
+    <string name="dialog_view_mode_title">
+表示モードの選択
+</string>
+    <string name="view_mode_list_small">
+リストビュー -> 小
+</string>
+    <string name="view_mode_list_medium">
+リストビュー -> 中
+</string>
+    <string name="view_mode_list_large">
+リストビュー -> 大
+</string>
+    <string name="view_mode_list_xlarge">
+リストビュー -> 特大
+</string>
+    <string name="view_mode_grid_small">
+グリッドビュー -> 小
+</string>
+    <string name="view_mode_grid_medium">
+グリッドビュー -> 中
+</string>
+    <string name="view_mode_grid_large">
+グリッドビュー -> 大
+</string>
+    <string name="spreadsheet_viewer_fallback_title">
+スプレッドシート
+</string>
+    <string name="spreadsheet_performance_warning">
+パフォーマンスの警告: 大きなドキュメントは最初の %1$d 行まで切り詰められました。
+</string>
+    <string name="spreadsheet_error_parsing">
+ファイル解析エラー: %1$s
+</string>
+    <string name="spreadsheet_portrait_toast">
+ポートレートモード
+</string>
+    <string name="spreadsheet_landscape_toast">
+ランドスケープモード
+</string>
+    <string name="spreadsheet_rotate_screen">
+画面を回転する
+</string>
+
+    <!-- Welcome & Language Selection -->
+    <string name="welcome_tagline">パワー ユーザー向けに構築された究極のファイル管理エクスペリエンス。</string>
+    <string name="welcome_select_language">ご希望の言語を選択してください</string>
+    <string name="welcome_translation_disclaimer">すべての翻訳はベストエフォートに基づいており、誤りが含まれる可能性があります。</string>
+    <string name="welcome_change_later_hint">言語は後から「設定」→「言語」で変更できます。</string>
+    <string name="btn_set_default_language">デフォルト言語の設定</string>
+
+    <string name="welcome_title">究極のファイルマネージャープロへようこそ</string>
+    <string name="welcome_subtitle">すべてのファイルを簡単に管理します。\n開始するには、必要な権限を付与してください。</string>
+    <string name="welcome_subtitle_tv">すべてのファイルを簡単に管理します。許可してください\n開始するために必要な権限。</string>
+    <string name="btn_continue">続く</string>
+    <string name="welcome_footer_hint">続行するには必要な権限をすべて付与してください</string>
+    <string name="btn_grant">付与</string>
+    <string name="btn_enable">有効にする</string>
+    <string name="btn_open_settings">設定を開く</string>
+
+    <!-- Permission Titles -->
+    <string name="perm_notifications_title">通知</string>
+    <string name="perm_audio_title">音楽とオーディオ</string>
+    <string name="perm_photos_videos_title">写真とビデオ</string>
+    <string name="perm_media_title">メディアアクセス</string>
+    <string name="perm_all_files_title">すべてのファイルへのアクセス</string>
+    <string name="perm_install_apps_title">アプリをインストールする</string>
+    <string name="perm_query_apps_title">アプリへのアクセス</string>
+
+    <!-- Permission Descriptions (Policy-Aligned) -->
+    <string name="perm_notifications_desc">ファイル転送が完了したとき、USB ドライブが接続されたとき、またはストレージが不足したときにアラートを受け取ります。</string>
+    <string name="perm_audio_desc">すべてのストレージ デバイス間で音楽ファイルやオーディオ ファイルを参照、コピー、移動、整理します。</string>
+    <string name="perm_photos_videos_desc">すべてのストレージ デバイス間で写真やビデオ ファイルを表示、コピー、移動、管理します。</string>
+    <string name="perm_media_desc">すべてのストレージ デバイス間で音楽、写真、ビデオ ファイルを参照、コピー、移動、整理します。</string>
+    <string name="perm_all_files_desc">完全なファイル管理: デバイス上のファイルまたはフォルダーを作成、名前変更、コピー、移動、削除します。</string>
+    <string name="perm_install_apps_desc">オプションで、ストレージ上にある APK ファイルをインストールします。インストールするたびに、必ず確認を求めるメッセージが表示されます。</string>
+    <string name="perm_query_apps_desc">リモート管理および ADB ターミナル用にインストールされているアプリを表示します。デバイス上のアプリケーションを一覧表示して検査できます。</string>
+
+    <!-- Permission Status -->
+    <string name="status_granted">付与された</string>
+    <string name="status_denied">拒否されました</string>
+    <string name="status_required">必須</string>
+    <string name="status_optional">オプション</string>
+    <string name="status_not_requested">要求されていません</string>
+
+    <!-- Storage Browser -->
+    <string name="storage">ストレージ</string>
+    <string name="storage_title">究極のファイルマネージャープロ</string>
+    <string name="storage_internal">内部ストレージ</string>
+    <string name="storage_sd_card">SDカード</string>
+    <string name="storage_usb">USBドライブ</string>
+    <string name="storage_unknown">不明なストレージ</string>
+    <string name="showing_results_count">%1$d の結果を表示しています</string>
+    <string name="storage_unknown_pattern">ストレージ (%1$s)</string>
+    <string name="storage_new_badge">新しい</string>
+    <string name="apps_tile_subtitle">インストールされているアプリを表示する</string>
+    <string name="remote_tile_subtitle">ファイルをリモートで管理する</string>
+    <string name="storage_free_format">%1$sは%2$s無料</string>
+    <string name="storage_no_storages">ストレージデバイスが見つかりません</string>
+    <string name="storage_browser_subtitle">ファイルをどこにでも — ドライブをタップして探索します</string>
+    <string name="twin_window_title">ツインウィンドウ</string>
+    <string name="twin_window_subtitle">デュアルペインのファイル管理</string>
+    <string name="twin_window">ツインウィンドウ</string>
+    <string name="close_twin_window">
+ツインウィンドウを閉じる
+</string>
+    <string name="settings_twin_window_layout_title">ツインウィンドウレイアウト</string>
+    <string name="settings_twin_window_layout_subtitle_horizontal">水平分割</string>
+    <string name="settings_twin_window_layout_subtitle_vertical">垂直分割</string>
+    <string name="settings_twin_window_startup_title">ツインパネルで開始</string>
+    <string name="settings_twin_window_startup_subtitle_on">有効</string>
+    <string name="settings_twin_window_startup_subtitle_off">無効</string>
+    <string name="settings_side_by_side_video_title">
+サイドバイサイドビデオ
+</string>
+    <string name="settings_side_by_side_video_subtitle_on">
+有効 — ペインで再生
+</string>
+    <string name="settings_side_by_side_video_subtitle_off">
+無効 — 全画面表示
+</string>
+    <string name="settings_breadcrumbs_title">
+パスのブレッドクラム
+</string>
+    <string name="settings_breadcrumbs_subtitle_on">
+ツールバーの下にパスナビゲーションバーを表示
+</string>
+    <string name="settings_breadcrumbs_subtitle_off">
+パスナビゲーションバーを非表示にする
+</string>
+    <string name="settings_scrolling_text_title">
+スクロールテキスト
+</string>
+    <string name="settings_scrolling_text_subtitle_on">
+ファイル名がオーバーフローするとスクロールする
+</string>
+    <string name="settings_scrolling_text_subtitle_off">
+ファイル名が切り詰められます
+</string>
+    <string name="audio_conflict_title">
+音声警告
+</string>
+    <string name="audio_conflict_message">
+ビデオは別のペインですでに再生されています。両方とも同時にオーディオを再生します。
+</string>
+    <string name="player_mute">
+ミュート
+</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_app_icon">Ultimate File Manager Pro アイコン</string>
+    <string name="cd_permission_icon">許可アイコン</string>
+    <string name="cd_storage_icon">ストレージデバイスのアイコン</string>
+    <string name="cd_settings">設定</string>
+    <string name="cd_menu">メニュー</string>
+    <string name="cd_file_icon">ファイルアイコン</string>
+    <string name="cd_back">戻る</string>
+    <string name="cd_new_folder">新しいフォルダーを作成する</string>
+    <string name="cd_view_toggle">表示モードの切り替え</string>
+
+    <!-- Settings: Favorites -->
+    <string name="settings_favorites_title">お気に入りの管理</string>
+    <string name="settings_favorites_subtitle">お気に入りアイテムの表示と削除</string>
+    <string name="manage_favorites_title">お気に入り</string>
+    <string name="manage_favorites_empty">まだお気に入りを追加していません。\n\nファイルまたはフォルダーを長押しし、星のアイコンをタップしてここに追加します。</string>
+    <string name="manage_favorites_removed">%1$s がお気に入りから削除されました</string>
+
+    <!-- Bookmark Launcher Widget -->
+    <string name="widget_bookmark_title">お気に入り</string>
+    <string name="widget_bookmark_empty">まだお気に入りはありません。\nアプリにいくつか追加してください。</string>
+    <string name="widget_bookmark_open_app">開ける</string>
+    <string name="widget_bookmark_cd_icon">ブックマークアイコン</string>
+    <string name="widget_bookmark_description">お気に入りのファイルやフォルダーにすばやくアクセス</string>
+    <string name="widget_ftp_sftp_title">
+FTP/SFTPサーバー
+</string>
+    <string name="widget_ftp_sftp_description">
+FTP サーバーと SFTP サーバーのクイック切り替え
+</string>
+    <string name="widget_ftp_sftp_ftp_label">
+FTP
+</string>
+    <string name="widget_ftp_sftp_sftp_label">
+SFTP
+</string>
+    <string name="widget_ftp_sftp_running">
+ランニング
+</string>
+    <string name="widget_ftp_sftp_stopped">
+停止しました
+</string>
+    <string name="widget_ftp_sftp_start">
+始める
+</string>
+    <string name="widget_ftp_sftp_stop">
+停止
+</string>
+    <string name="widget_ftp_sftp_ip">
+IP: %1$s
+</string>
+    <string name="file_server_tiles_title">
+ファイルサーバーシステムタイル
+</string>
+    <string name="file_server_tiles_screen_subtitle">
+クイック設定パネルのタイルを有効または無効にする
+</string>
+    <string name="settings_file_server_tiles_title">
+ファイルサーバーシステムタイル
+</string>
+    <string name="settings_file_server_tiles_subtitle">
+FTP および sFTP のクイック設定タイルを構成する
+</string>
+    <string name="settings_ftp_tile_title">
+FTPタイル
+</string>
+    <string name="settings_ftp_tile_subtitle_on">
+有効 — タイルが利用可能
+</string>
+    <string name="settings_ftp_tile_subtitle_off">
+無効 — タイルが非表示
+</string>
+    <string name="settings_sftp_tile_title">
+sFTPタイル
+</string>
+    <string name="settings_sftp_tile_subtitle_on">
+有効 — タイルが利用可能
+</string>
+    <string name="settings_sftp_tile_subtitle_off">
+無効 — タイルが非表示
+</string>
+    <string name="toast_profile_required_ftp">
+最初に FTP サーバー プロファイルを作成してください
+</string>
+    <string name="toast_profile_required_sftp">
+最初に SFTP サーバー プロファイルを作成してください
+</string>
+    <string name="toast_tile_enabled_old_api">
+タイルが有効になりました。クイック設定パネルを編集して追加します。
+</string>
+    <string name="widget_preview_mock_1">ダウンロード</string>
+    <string name="widget_preview_mock_2">書類</string>
+    <string name="widget_preview_mock_3">DCIM</string>
+    <string name="widget_preview_mock_network">ホームNAS</string>
+    <string name="network_connection_restored_first">接続に失敗しました\n\nデバイスがネットワークに接続されているか、テレビの電源が入っていることを確認して、もう一度お試しください。</string>
+
+    <!-- Storage Browser Section -->
+    <string name="storage_section_devices">デバイスと機能</string>
+
+    <!-- File Browser -->
+    <string name="file_empty_folder">このフォルダは空です</string>
+
+    <!-- Selection Actions -->
+    <string name="action_select_all">すべて選択</string>
+    <string name="action_deselect_all">すべての選択を解除</string>
+    <string name="action_clear_selection">選択をクリア</string>
+    <string name="action_delete">消去</string>
+    <string name="action_done">終わり</string>
+    <string name="selection_count">%1$d が選択されました</string>
+    <string name="selection_prompt_select_item">
+アクションを実行するファイルを選択してください
+</string>
+
+    <!-- Delete Confirmation -->
+    <string name="delete_confirm_single">%1$sを削除しますか?</string>
+    <string name="delete_confirm_multiple">%1$d アイテムを削除しますか?</string>
+    <string name="delete_title">永久に削除しますか?</string>
+    <string name="delete_message_mixed">%1$d フォルダと %2$d ファイルを完全に削除しようとしています。\n\nこの操作は元に戻すことができません。</string>
+    <string name="delete_message_folders">%1$d フォルダとそのすべてのコンテンツを完全に削除しようとしています。\n\nこの操作は元に戻すことができません。</string>
+    <string name="delete_message_files">%1$d ファイルを完全に削除しようとしています。\n\nこの操作は元に戻すことができません。</string>
+    <string name="delete_confirm">永久に削除</string>
+    <string name="delete_cancel">キャンセル</string>
+    <string name="adb_required_title">ADB が必要です</string>
+    <string name="adb_required_to_take_screenshots">「スクリーンショットをキャプチャするには、テレビで USB デバッグを有効にする必要があります。\n\n有効にするには:\n1. テレビの設定を開きます\n2. [デバイス設定] &gt; [開発者向けオプション] に移動します。\n3.「USBデバッグ」を有効にする\n\n開発者向けオプションが表示されない場合は、「バージョン情報」に移動し、まず「ビルド番号」を 7 回タップしてください。</string>
+    <string name="adb_pairing_required">ADB ペアリングが必要です</string>
+    <string name="pairing_required_to_take_screenshots">このテレビはまだ ADB にペアリングされていません。まずはメイン画面からペアリングを行ってください。</string>
+    <string name="failed_to_capture_screenshot">スクリーンショットのキャプチャに失敗しました</string>
+    <string name="screenshot_saved_to_path">スクリーンショットの保存先: %1$s</string>
+    <string name="connected_capturing_screen">接続されました。画面をキャプチャ中...</string>
+    <string name="adb_connection_denied_or_failed">ADB 接続が拒否または失敗しました</string>
+    <string name="screenshot_failed_no_data_received">スクリーンショットが失敗しました: データを受信できませんでした</string>
+    <string name="saving_screenshot">スクリーンショットを保存しています...</string>
+    <string name="delete_success">%1$d 個のアイテムが正常に削除されました</string>
+    <string name="delete_error">一部のアイテムの削除に失敗しました</string>
+    <string name="delete_error_shizuku_required">
+削除に失敗しました: 保護された Android/data または Android/obb フォルダー内のファイルを変更するには、Shizuku が必要です。
+</string>
+    <string name="deleting_items">削除中…</string>
+    <string name="cleaning_up_index">インデックスをクリーンアップしています…</string>
+    <string name="deleting_folder_progress">「%1$s」を削除しています… インデックス データベースをクリアしています。お待ちください。</string>
+    <string name="deleting_folder_only_progress">「%1$s」を削除しています…お待ちください。</string>
+    <string name="deleting_items_progress">アイテムを削除しています…しばらくお待ちください。</string>
+
+    <!-- Remote Manage -->
+    <string name="remote_manage_title">リモート管理</string>
+    <string name="remote_manage_btn">リモート管理</string>
+    <string name="remote_server_starting_title">
+サーバーの起動
+</string>
+    <string name="remote_server_starting_msg">
+利用可能なポートを探しています...
+</string>
+    <string name="remote_server_running">サーバー稼働中</string>
+    <string name="remote_server_error">サーバーの起動に失敗しました</string>
+    <string name="remote_open_browser">ネットワーク上の任意のブラウザでこの URL を開きます。</string>
+    <string name="remote_warning_screen">⚠️この画面を離れるとサーバーが停止します</string>
+    <string name="remote_stop_server">ストップ＆ゴーバック</string>
+    <string name="remote_fingerprint_label">
+証明書のフィンガープリント (SHA-256):
+</string>
+    <string name="remote_verify_fingerprint">
+これがブラウザに表示されている内容と一致していることを確認します (南京錠のアイコンをクリックします)。
+</string>
+    <string name="remote_pin_label">アクセスPIN</string>
+    <string name="remote_use_ca">
+CA証明書のインポート
+</string>
+    <string name="remote_cert_active">
+カスタム CA を削除する
+</string>
+    <string name="remote_ca_status_unverified">
+未検証 — 自動生成された CA
+</string>
+    <string name="remote_ca_status_verified">
+検証済み - カスタム CA
+</string>
+    <string name="remote_ca_action_import">
+CA証明書のインポート
+</string>
+    <string name="remote_ca_action_remove">
+カスタム CA を削除する
+</string>
+    <string name="remote_ca_info_title">
+カスタム CA 証明書
+</string>
+    <string name="remote_ca_info_message">
+デフォルトでは、Remote Manage は自動的に生成された自己署名証明書を使用します。この証明書を検証できないため、ブラウザにはセキュリティ警告が表示されます。\n
+\n
+独自の信頼できる CA 証明書 (組織または自己ホスト型 CA など) をお持ちの場合は、ここでそれをインポートできます。これにより、ブラウザの警告が表示されなくなり、信頼できる独自の CA が接続を確認できるようになります。\n
+\n
+サポートされる形式: .p12 / .pfx (PKCS12) または .pem / .crt + .key (PEM + 秘密キー ペア)。
+</string>
+    <string name="remote_ca_info_browse">
+証明書を参照してください
+</string>
+    <string name="remote_cert_confirm">
+証明書を使用する
+</string>
+    <string name="remote_cert_import_title">
+この証明書を使用する
+</string>
+    <string name="remote_cert_import_msg">
+このファイルを Remote Manage サーバーのカスタム HTTPS 証明書として使用しますか?
+</string>
+    <string name="remote_cert_notice">
+証明書がデバイスの IP アドレスをカバーしていることを確認してください
+</string>
+    <string name="remote_cert_imported">
+証明書がインポートされました
+</string>
+    <string name="remote_cert_failed">
+証明書のインポートに失敗しました
+</string>
+    <string name="remote_cert_remove_title">
+カスタム証明書の削除
+</string>
+    <string name="remote_cert_remove_msg">
+これによりカスタム証明書が削除され、サーバーは自動生成された CA に戻ります。
+</string>
+    <string name="remote_cert_remove">
+取り除く
+</string>
+    <string name="remote_cert_pick_key">
+秘密キーの選択
+</string>
+    <string name="remote_cert_pick_key_msg">
+次に、一致する秘密キー ファイル (.pem または .key) を選択します。
+</string>
+    <string name="remote_cert_password_hint">
+PKCS12 パスワード
+</string>
+    <string name="remote_cert_password_title">
+証明書のパスワード
+</string>
+
+    <!-- VPN Warning -->
+    <string name="vpn_warning_title">VPNがアクティブです</string>
+    <string name="vpn_warning_subtitle">リモートマネージャーが利用できない</string>
+    <string name="vpn_warning_message">VPN がアクティブな間は、リモート マネージャーは動作できません。 VPN は、ローカル ネットワークの IP アドレスの検出を防ぎます。\n\n実際の VPN の代わりにローカル DNS ブロッカーまたは広告ブロッカー (AdGuard など) を使用している場合は、この警告を無視して続行できます。\n\nそれ以外の場合は、VPN を切断して再試行してください。</string>
+    <string name="vpn_warning_close">近い</string>
+    <string name="vpn_warning_continue">とにかく続けてください</string>
+    <string name="policy_blocked_title">アクセス制限あり</string>
+    <string name="policy_blocked_subtitle">企業ポリシーが検出されました</string>
+    <string name="policy_blocked_message">「お使いのデバイスまたは組織では、このストレージ プロバイダーへのアクセスが制限されているようです。\n\n一般的な理由は次のとおりです。\n• Intune/MDM ポリシー\n• 条件付きアクセス ルール\n• ネットワークレベルのブロック\n\nIT 管理者に連絡して、「Ultimate File Manager Pro」によるクラウド ストレージへのアクセスを許可してください。」</string>
+    <string name="policy_blocked_details">技術的な詳細</string>
+
+    <!-- Search -->
+    <string name="search_title">ファイルの検索</string>
+    <string name="search_tile_subtitle">ストレージ全体でファイルを検索する</string>
+    <string name="search_hint">ファイル名で検索...</string>
+    <string name="search_results_count">%1$d 件の結果が見つかりました</string>
+    <string name="search_no_results">ファイルが見つかりません</string>
+    <string name="search_searching">検索中...</string>
+    <string name="search_chip_images">画像</string>
+    <string name="search_chip_videos">動画</string>
+    <string name="search_chip_audio">オーディオ</string>
+    <string name="search_chip_documents">書類</string>
+    <string name="search_chip_apk">APK</string>
+    <string name="search_chip_archives">アーカイブ</string>
+    <string name="search_filter_hint">ヒント: サイズ &gt; 5MB · 拡張子:pdf · タイプ:ビデオ · 日付:7d</string>
+    <string name="search_recent_header">最近の検索</string>
+    <string name="search_load_more">さらに結果を読み込む</string>
+    <!-- Filter pills -->
+    <string name="search_pill_size">ファイルサイズ</string>
+    <string name="search_pill_type">ファイルの種類</string>
+    <string name="search_pill_extension">拡大</string>
+    <string name="search_pill_date">日付</string>
+    <!-- Filter dialog labels -->
+    <string name="search_filter_apply">適用する</string>
+    <string name="search_filter_size_title">ファイルサイズによるフィルター</string>
+    <string name="search_filter_size_min_label">最小サイズ (オプション)</string>
+    <string name="search_filter_size_max_label">最大サイズ (オプション)</string>
+    <string name="search_filter_size_min_hint">例えば1</string>
+    <string name="search_filter_size_max_hint">例えば100</string>
+    <string name="search_filter_type_title">ファイルの種類でフィルタリングする</string>
+    <string name="search_filter_ext_title">拡張子でフィルターする</string>
+    <string name="search_filter_ext_hint">例えばpdf、jpg、mp4</string>
+    <string name="search_filter_date_title">変更日によるフィルター</string>
+    <string name="search_filter_date_body">過去 N 日間に変更されたファイルのみを表示します。</string>
+    <string name="search_filter_date_hint">例えば7</string>
+    <string name="search_clear">クリア</string>
+
+    <!-- Storage Analyzer -->
+    <string name="analyzer_title">ストレージアナライザー</string>
+    <string name="analyzer_subtitle">ディスク使用量を視覚化する</string>
+    <string name="analyzer_tile_subtitle">ディスク使用量を視覚化する</string>
+    <string name="analyzer_scanning">ストレージをスキャン中...</string>
+    <string name="analyzer_category_images">画像</string>
+    <string name="analyzer_category_videos">動画</string>
+    <string name="analyzer_category_audio">オーディオ</string>
+    <string name="analyzer_category_documents">書類</string>
+    <string name="analyzer_category_apks">APK</string>
+    <string name="analyzer_category_other">他の</string>
+    <string name="analyzer_largest_files">最大のファイル</string>
+    <string name="analyzer_total_used">%1$s が %2$s で使用されました</string>
+    <!-- Tabs -->
+    <string name="analyzer_tab_overview">概要</string>
+    <string name="analyzer_tab_large">大きなファイル</string>
+    <string name="analyzer_tab_duplicates">重複</string>
+    <string name="analyzer_tab_junk">ジャンク＆オールド</string>
+    <string name="analyzer_tab_suggestions">提案</string>
+    <string name="analyzer_old_files_desc">%1$d ファイルは 180 日以上変更されていません。</string>
+    <string name="analyzer_file_count_singular">%1$d ファイル</string>
+    <string name="analyzer_file_count_plural">%1$d ファイル</string>
+    <string name="analyzer_duplicate_copy_singular">%1$d コピー</string>
+    <string name="analyzer_duplicate_copy_plural">%1$d 部</string>
+    <string name="analyzer_duplicate_saves">%1$s を保存します</string>
+    <!-- Section headers inside Overview -->
+    <string name="analyzer_top_folders">サイズ別上位フォルダー</string>
+    <string name="analyzer_app_usage">アプリのストレージ使用量</string>
+    <!-- Non-indexed banners -->
+    <string name="analyzer_not_indexed_banner">⚡ 詳細レポート用にこのストレージにインデックスを付けます。概要のみが利用可能です。</string>
+    <string name="analyzer_not_indexed_tab">⚡ このタブの高度な分析をロックするには、このストレージにインデックスを付けます。</string>
+    <!-- Duplicate delete -->
+    <string name="analyzer_delete_selected">選択したものを削除</string>
+    <string name="analyzer_delete_confirm_title">%1$d ファイルを削除しますか?</string>
+    <string name="analyzer_delete_confirm_msg">これらのファイルは完全に削除され、インデックスから削除されます。</string>
+    <string name="analyzer_duplicate_all_selected_warning">警告: 重大な削除</string>
+    <string name="analyzer_duplicate_all_selected_msg">これらの重複グループのすべてのコピーを選択しました。続行すると、次のファイルのコピーは残りません。</string>
+    <string name="analyzer_delete_anyway">すべてのコピーを削除</string>
+    <!-- Common aliases used in activity -->
+    <string name="internal_storage">内部ストレージ</string>
+    <string name="delete">消去</string>
+
+    <!-- Theme -->
+    <string name="theme_title">外観</string>
+    <string name="theme_tile_subtitle">ライト、ダーク、AMOLED、または自動</string>
+    <string name="vault_title">暗号化された保管庫</string>
+    <string name="vault_tile_subtitle">安全なプライベートフォルダー</string>
+    <string name="vault_subtitle">PINで保護されています</string>
+    <string name="vault_empty">保管庫アイテムはまだありません</string>
+    <string name="vault_unlock_title">金庫のロックを解除する</string>
+    <string name="vault_unlock_subtitle">4 桁の PIN を入力して金庫にアクセスします</string>
+    <string name="vault_set_pin_title">ボールトPINの設定</string>
+    <string name="vault_set_pin_subtitle">4 桁の PIN を作成して金庫を保護します</string>
+    <string name="vault_pin_saved">保管庫 PIN が保存されました</string>
+    <string name="vault_pin_invalid">間違ったPIN</string>
+    <string name="vault_pin_mismatch">PIN が一致しません - もう一度試してください</string>
+    <string name="vault_confirm_pin_title">PIN を確認する</string>
+    <string name="vault_confirm_pin_subtitle">確認のため 4 桁の PIN を再入力してください</string>
+    <string name="vault_pin_warning_title">重要 — PIN を覚えておいてください</string>
+    <string name="vault_pin_warning_message">PIN を保存すると、リカバリ コードが表示されます。それを安全な場所 ​​(例: 書き留めたり、パスワード マネージャーなど) に保存します。二度と表示されることはありません。\n\nPIN を忘れた場合、アクセスを取り戻すには回復コードが唯一の方法です。両方を失うと、保管庫データに永久にアクセスできなくなります。</string>
+    <string name="vault_pin_warning_message_change">PIN が更新されます。既存のリカバリ コードは引き続き有効です。保存しておいてください。\n\nPIN と回復コードの両方を紛失した場合、保管庫データは永久にアクセスできなくなります。</string>
+    <string name="vault_pin_warning_confirm">理解しました。PIN を保存します</string>
+    <string name="vault_recovery_code_title">リカバリーコード</string>
+    <string name="vault_recovery_code_body">このコードは安全な場所に保存してください。二度と表示されることはありません。 PIN を忘れた場合、このコードが保管庫へのアクセスを取り戻す唯一の方法です。</string>
+    <string name="vault_recovery_code_copy">コードをコピーする</string>
+    <string name="vault_recovery_code_done">完了 — 保存しました</string>
+    <string name="vault_recovery_code_copied">リカバリコードがクリップボードにコピーされました</string>
+    <string name="vault_recovery_entry_title">リカバリーコードを入力してください</string>
+    <string name="vault_recovery_entry_subtitle">16 文字のリカバリ コードを入力して PIN をリセットしてください</string>
+    <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
+    <string name="vault_recovery_invalid">間違ったリカバリコード</string>
+    <string name="vault_recovery_confirm">PIN の確認とリセット</string>
+    <string name="vault_add_folder">フォルダーの追加</string>
+    <string name="vault_remove">ボールトから削除</string>
+    <string name="vault_confirm_remove">%1$s を保管庫から削除しますか?</string>
+    <string name="vault_change_pin">PINの変更</string>
+    <string name="vault_verify_pin_title">PINの確認</string>
+    <string name="vault_verify_pin_subtitle">続行するには現在の PIN を入力してください</string>
+    <string name="vault_select_folder">フォルダーの選択</string>
+    <string name="vault_select_current">このフォルダを選択してください</string>
+    <string name="vault_encrypt">ボールトに暗号化する</string>
+    <string name="vault_decrypt">復号化</string>
+    <string name="vault_open">オープンボールト</string>
+    <string name="vault_encryption_failed">アイテムの暗号化に失敗しました</string>
+    <string name="vault_decryption_failed">アイテムの復号化に失敗しました</string>
+    <string name="vault_empty_subtitle">暗号化されたアイテムが保存される</string>
+    <string name="vault_decrypting">%1$d/%2$d を復号化しています...</string>
+    <string name="vault_decrypt_complete">復号化が完了しました</string>
+    <string name="vault_opening">ボールト %1$d/%2$d を準備しています...</string>
+    <string name="vault_reencrypting">金庫 %1$d/%2$d を保護しています...</string>
+    <string name="vault_delete_title">保管庫から削除しますか?</string>
+    <string name="vault_delete_message">これらの暗号化されたファイルは完全に削除され、元に戻すことはできません。</string>
+    <string name="vault_delete_confirm">完全に削除</string>
+
+    <string name="theme_light">ライト</string>
+    <string name="theme_dark">暗い</string>
+    <string name="theme_system">システムのデフォルト</string>
+    <string name="theme_amoled">AMOLED ブラック</string>
+    <string name="theme_amoled_desc">ピュアブラック — OLED スクリーンのバッテリーを節約します</string>
+    <string name="theme_applied">適用されたテーマ</string>
+
+    <!-- Font Size / Settings Tile -->
+    <string name="font_size_title">設定</string>
+    <string name="font_size_tile_subtitle">エクスペリエンスを最適化する</string>
+    <string name="font_size_screen_subtitle">アプリ全体のテキストサイズを調整する</string>
+    <string name="font_size_small">小さい</string>
+    <string name="font_size_normal">普通</string>
+    <string name="font_size_large">大きい</string>
+    <string name="font_size_applied">適用されるフォント サイズ</string>
+    <string name="font_size_preview">素早い茶色のキツネがジャンプします</string>
+
+    <!-- Storage Renaming -->
+    <string name="settings_storage_rename_title">カスタムドライブ名</string>
+    <string name="settings_storage_rename_subtitle">USB およびローカル ストレージ ドライブの名前を変更する</string>
+    <string name="rename_drive_dialog_title">ドライブ名の変更</string>
+    <string name="custom_name_hint">新しいドライブ名</string>
+    <string name="reset_action">リセット</string>
+    <string name="status_online">オンライン</string>
+    <string name="status_offline">オフライン</string>
+    <string name="rename_action">名前の変更</string>
+
+
+    <!-- Settings Hub -->
+    <string name="settings_title">設定</string>
+    <string name="settings_subtitle">アプリの設定</string>
+    <string name="font_size_title_row">フォントサイズ</string>
+
+    <!-- Default Start Screen -->
+    <string name="settings_default_start_screen_title">
+デフォルトのスタート画面
+</string>
+    <string name="settings_default_start_screen_subtitle">
+起動時に開く画面を選択する
+</string>
+    <string name="start_screen_storage_browser">
+メインメニュー (デフォルト)
+</string>
+    <string name="start_screen_twin_window">
+ツインウィンドウ
+</string>
+    <string name="start_screen_file_server">
+ファイルサーバー
+</string>
+
+    <!-- Analytics Toggle -->
+    <string name="settings_analytics_title">使用状況分析</string>
+    <string name="settings_analytics_subtitle_on">有効 — アプリの改善に役立ちます</string>
+    <string name="settings_analytics_subtitle_off">無効 — データは収集されません</string>
+
+    <!-- Cache Copying Toggle -->
+    <string name="settings_cache_copy_title">キャッシュのコピー</string>
+    <string name="settings_cache_copy_subtitle_on">有効 - 安全なコピー、速度が遅くなる可能性があります</string>
+    <string name="settings_cache_copy_subtitle_off">無効 — 標準コピー (デフォルト)</string>
+    <string name="settings_cache_copy_note">ファイルは、宛先に配置される前に一時キャッシュに書き込まれます。これはより安全なコピー方法ですが、時間がさらにかかる可能性があります。</string>
+
+    <!-- Quick Copy / Move (direct-destination transfer) -->
+    <string name="settings_quick_transfer_title">クイックコピー/移動</string>
+    <string name="settings_quick_transfer_subtitle_on">有効 — ワンステップでコピー先/移動先へ</string>
+    <string name="settings_quick_transfer_subtitle_off">無効 — 標準クリップボード (デフォルト)</string>
+    <string name="settings_quick_transfer_note">有効にすると、コピーと移動により宛先フォルダー ピッカーが直接開きます。クリップボードの手順は必要ありません。</string>
+    <string name="action_copy_to">コピー先…</string>
+    <string name="action_move_to">移動先…</string>
+    <string name="quick_transfer_select_dest">保存先フォルダを選択</string>
+    <string name="quick_transfer_copy_confirm">%1$d 個のアイテムをここにコピーしますか?</string>
+    <string name="quick_transfer_move_confirm">%1$d 個のアイテムをここに移動しますか?</string>
+    <string name="quick_transfer_copy_here">ここにコピー</string>
+    <string name="quick_transfer_move_here">ここに移動</string>
+
+    <!-- Network Open Cache Toggle -->
+    <string name="settings_network_open_cache_title">ネットワークファイルキャッシュ</string>
+    <string name="settings_network_open_cache_subtitle_on">有効 — 開く前にキャッシュします</string>
+    <string name="settings_network_open_cache_subtitle_off">無効 — ダイレクト ストリーム (デフォルト)</string>
+
+    <!-- Open Source Licenses -->
+    <string name="policy_licenses_button">オープンソースライセンス</string>
+    <string name="policy_selection_subtitle2">利用規約、プライバシー ポリシー、ライセンス</string>
+    <string name="no_browser_installed_dialog_message">このデバイスにはブラウザがインストールされていません。\n\n別のデバイスでこの URL にアクセスしてください:\n\n%1$s</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_title">並べ替えとフィルター</string>
+    <string name="sort_by_name">名前</string>
+    <string name="sort_by_size">サイズ</string>
+    <string name="sort_by_date">変更日</string>
+    <string name="sort_by_type">タイプ</string>
+    <string name="sort_ascending">上昇</string>
+    <string name="sort_descending">降順</string>
+    <string name="filter_all">全て</string>
+    <string name="filter_images">画像</string>
+    <string name="filter_videos">動画</string>
+    <string name="filter_audio">オーディオ</string>
+    <string name="filter_documents">書類</string>
+    <string name="filter_apks">APK</string>
+    <string name="group_by_date">
+日付ごとにグループ化
+</string>
+    <string name="group_header_format_files">
+%d ファイル
+</string>
+
+    <!-- File Operations -->
+    <string name="action_copy">コピー</string>
+    <string name="action_move">動く</string>
+    <string name="action_rename">名前の変更</string>
+    <string name="action_share">共有</string>
+    <string name="action_open">開ける</string>
+    <string name="action_paste">ここに貼り付けます</string>
+    <string name="action_copy_encrypt">コピーと暗号化</string>
+    <string name="action_move_encrypt">移動と暗号化</string>
+    <string name="clipboard_copied">%1$d 個のアイテムがクリップボードにコピーされました</string>
+    <string name="clipboard_cut">%1$d 個のアイテムがクリップボードに切り取られました</string>
+    <string name="paste_success">%1$d 個のアイテムが正常に貼り付けられました</string>
+    <string name="paste_error">一部の項目の貼り付けに失敗しました</string>
+
+    <!-- Transfer Conflict Resolution -->
+    <string name="conflict_title">すでに存在します</string>
+    <string name="conflict_message_file">「%1$s」は宛先にすでに存在します。</string>
+    <string name="conflict_message_folder">フォルダー「%1$s」はすでに存在します。コンテンツはマージされ、競合は個別に解決されます。</string>
+    <string name="conflict_overwrite">上書き</string>
+    <string name="conflict_skip">スキップ</string>
+    <string name="conflict_keep_both">両方を維持する</string>
+    <string name="conflict_apply_to_all">残りのすべての競合に適用する</string>
+    <string name="remember_my_choice">私の選択を覚えておいてください</string>
+    <string name="settings_default_apps_title">デフォルトのアプリケーション</string>
+    <string name="settings_default_apps_subtitle">ファイルの種類に応じたデフォルトのアプリを管理する</string>
+    <string name="default_apps_empty">デフォルトのアプリケーションは設定されていません。</string>
+    <string name="default_apps_clear_all">すべてのデフォルトをクリア</string>
+    <string name="default_apps_extension_label">ファイルタイプ: %1$s</string>
+    <string name="default_apps_action_internal">内部ビューア</string>
+    <string name="default_apps_action_external">外部アプリ</string>
+    <string name="default_apps_action_player">UFMプレーヤー</string>
+    <string name="default_apps_action_slideshow">
+UFM スライド ショー
+</string>
+    <string name="default_apps_context_local">地元</string>
+    <string name="default_apps_context_network">クラウド・ネットワーク</string>
+    <string name="action_clear">クリア</string>
+    <string name="conflict_zero_byte_warning">⚠ 宛先は 0 B — 上書きは安全ですが、最初にソースの整合性を確認してください。</string>
+    <string name="conflict_skipped_n">スキップされた %1$d ファイル — 宛先にすでに存在しています</string>
+    <string name="action_favorite">お気に入り</string>
+    <string name="favorite_name_title">お気に入りに名前を付ける</string>
+    <string name="favorite_name_hint">好きな名前</string>
+    <string name="favorite_name_empty">名前を空にすることはできません</string>
+    <string name="favorite_added">お気に入りが追加されました</string>
+
+    <string name="rename_title">名前の変更</string>
+    <string name="rename_hint">新しい名前</string>
+    <string name="rename_confirm">名前の変更</string>
+    <string name="rename_success">名前が正常に変更されました</string>
+    <string name="rename_error">名前の変更に失敗しました</string>
+    <string name="share_error">ファイルを共有できません</string>
+    <string name="rename_single_only">名前を変更する項目を 1 つだけ選択してください</string>
+
+    <!-- Batch Rename -->
+    <string name="batch_rename_title">
+名前の一括変更
+</string>
+    <string name="batch_rename_subtitle_tv">
+選択したファイルとフォルダーの名前変更パターンをプレビューして適用します
+</string>
+    <string name="batch_rename_hint">
+新しい名前を入力してください…
+</string>
+    <string name="batch_rename_option_original">
+元のテキストを保持する
+</string>
+    <string name="batch_rename_option_padding">
+数字のパディングを追加する
+</string>
+    <string name="batch_rename_padding_length_label">
+パディングの長さ (最大 9)
+</string>
+    <string name="batch_rename_padding_start_label">
+開始番号
+</string>
+    <string name="batch_rename_preview_header">
+プレビュー
+</string>
+    <string name="batch_rename_preview_invalid">
+（無効）
+</string>
+    <string name="batch_rename_cancel">
+キャンセル
+</string>
+    <string name="batch_rename_confirm">
+名前の変更
+</string>
+    <string name="batch_rename_error_empty_pattern">
+名前を入力するか、トークンを選択してください。
+</string>
+    <string name="batch_rename_confirm_title">
+名前変更の確認
+</string>
+    <string name="batch_rename_confirm_body">
+%1$d フォルダーと %2$d ファイルの名前が変更されます。この操作は元に戻すことができません。
+</string>
+    <string name="batch_rename_confirm_accept">
+名前の変更
+</string>
+    <string name="batch_rename_confirm_cancel">
+キャンセル
+</string>
+    <string name="batch_rename_result_success">
+%1$d 個のアイテムの名前が正常に変更されました。
+</string>
+    <string name="batch_rename_result_partial">
+%1$d 個のアイテムの名前が変更されました。 %2$d は失敗しました。
+</string>
+    <string name="batch_rename_back_discard_title">
+変更を破棄しますか?
+</string>
+    <string name="batch_rename_back_discard_body">
+名前変更パターンを入力しました。破棄して閉じますか?
+</string>
+    <string name="batch_rename_back_discard_confirm">
+破棄
+</string>
+    <string name="batch_rename_back_discard_cancel">
+編集を続ける
+</string>
+    <string name="batch_rename_error_provider_unavailable">
+ストレージプロバイダーが利用できません。一部の項目の名前を変更できませんでした。
+</string>
+
+    <string name="toast_hidden_success">%1$d 個のアイテムが非表示になりました</string>
+    <string name="toast_unhidden_success">%1$d 個のアイテムが非表示になりました</string>
+
+    <!-- New Folder -->
+    <string name="action_new_folder">新しいフォルダー</string>
+    <string name="new_folder_title">新しいフォルダー</string>
+    <string name="new_folder_hint">フォルダ名</string>
+    <string name="new_folder_create">作成する</string>
+    <string name="new_folder_success">フォルダーが作成されました</string>
+    <string name="new_folder_error">フォルダーの作成に失敗しました</string>
+    <string name="new_folder_exists">その名前のフォルダーはすでに存在します</string>
+    <string name="new_folder_empty">フォルダー名を空にすることはできません</string>
+
+    <!-- Encrypt to Vault -->
+    <string name="encrypt_select_vault">ボルトフォルダの選択</string>
+    <string name="encrypt_no_vaults">ボルトフォルダーが存在しません</string>
+    <string name="encrypt_create_first">最初にボルトフォルダーを作成する必要があります</string>
+    <string name="encrypt_create_vault">ボルトフォルダーの作成</string>
+    <string name="encrypt_copy_title">Vault にコピーして暗号化する</string>
+    <string name="encrypt_move_title">Vault への移動と暗号化</string>
+    <string name="encrypt_progress">%2$d ファイル中 %1$d を暗号化しています...</string>
+    <string name="encrypt_success">%1$d ファイルが正常に暗号化されました</string>
+    <string name="encrypt_error">一部のファイルの暗号化に失敗しました</string>
+    <string name="vault_folder_encrypt_title">フォルダをボールトに暗号化する</string>
+    <string name="vault_folder_encrypt_warning">フォルダー — %1$s — は暗号化され、元のファイルは完全に削除されます。\n\nこれを元に戻すことはできません。</string>
+    <string name="vault_folder_encrypt_confirm">暗号化と削除</string>
+
+    <!-- Drive Picker -->
+    <string name="select_drive">ドライブの選択</string>
+    <string name="all_drives">すべてのドライブ</string>
+
+    <!-- Category detail -->
+    <string name="category_files_title">%1$s ファイル</string>
+
+    <!-- Search long-press -->
+    <string name="action_open_folder">フォルダーの場所を開く</string>
+
+    <!-- Policy Selection -->
+    <string name="policy_selection_title">法律上の</string>
+    <string name="policy_selection_subtitle">法務とポリシー</string>
+    <string name="policy_button">利用規約 / プライバシーポリシー</string>
+    <string name="policy_terms_button">利用規約</string>
+    <string name="policy_privacy_button">プライバシーポリシー</string>
+
+    <!-- Rate Us -->
+    <string name="rate_us_title">評価してください</string>
+    <string name="rate_us_subtitle">アプリをお楽しみですか?</string>
+    <string name="rate_us_screen_title">Ultimate File Manager Pro をお楽しみですか?</string>
+    <string name="rate_us_screen_body">あなたのフィードバックはアプリの改善に役立ち、アプリの開発を直接サポートします。\n\nGoogle Play にレビューを残していただけますか?</string>
+    <!-- Amazon Store rating strings -->
+    <string name="rating_unavailable_amazon_msg">Amazon デバイスではまだ評価を利用できません。しばらくお待ちください。</string>
+    <string name="rate_us_button_play">Google Play での評価</string>
+    <string name="rate_us_button_amazon">Amazonアプリストアでの評価</string>
+
+    <!-- SAF / File Picker -->
+    <string name="saf_tile_title">UFM で開く</string>
+    <string name="saf_tile_subtitle">ファイルピッカーに表示される</string>
+    <string name="saf_info_title">UFM で開く</string>
+    <string name="saf_info_subtitle">ストレージアクセスフレームワーク</string>
+    <string name="saf_info_heading">UFMをファイルソースとして使用する</string>
+    <string name="saf_info_body">UFM は、このデバイスにファイル プロバイダーとして登録されています。\n\nAndroid のファイル ピッカーを使用するアプリ (メディア プレーヤー、大辞典などのランチャー、クラウド バックアップ ツールなど) は、UFM を通じてストレージを参照できるようになりました。\n\nAndroid TV では、アプリでファイル ピッカーを起動し、利用可能なソースのリストから「Ultimate File Manager Pro」を選択するだけです。</string>
+    <string name="saf_info_how_title">使い方</string>
+    <string name="saf_info_step1">1.「参照」または「ライブラリの追加」オプションがあるアプリを開きます</string>
+    <string name="saf_info_step2">2. ファイルピッカーが表示されたら、サイドバーで「Ultimate File Manager Pro」を探します。</string>
+    <string name="saf_info_step3">3. ストレージに移動し、ファイルまたはフォルダーを選択します</string>
+    <string name="saf_info_status_active">✓ プロバイダーがアクティブ - UFM はすべてのファイル ピッカーで利用可能です</string>
+    <string name="saf_info_close">戻る</string>
+
+    <string name="refresh">リフレッシュ</string>
+    <string name="reindexing_title">
+フォルダーのインデックスを再作成しています
+</string>
+    <string name="reindexing_msg">
+このフォルダーとサブフォルダーの変更をスキャンしています…
+</string>
+    <string name="reindexing_complete">
+再インデックスが完了しました
+</string>
+    <string name="reindex_scope_title">
+フォルダーを再インデックス
+</string>
+    <string name="reindex_scope_msg">
+このフォルダーの再インデックス範囲を選択してください:
+</string>
+    <string name="reindex_option_shallow">
+このフォルダのみ
+</string>
+    <string name="reindex_option_shallow_desc">
+このディレクトリ内のファイルのみの高速スキャン
+</string>
+    <string name="reindex_option_recursive">
+サブフォルダーを含める
+</string>
+    <string name="reindex_option_recursive_desc">
+すべてのファイルとサブフォルダーの完全な再帰的スキャン
+</string>
+
+    <!-- Network Shares -->
+    <string name="network_tile_title">ネットワーク共有</string>
+    <string name="network_tile_subtitle">SMB、FTPなど</string>
+    <string name="network_shares_title">ネットワーク共有</string>
+    <string name="network_shares_subtitle">SMB・FTP</string>
+    <string name="network_add_share">共有を追加</string>
+    <string name="network_empty_title">ネットワーク共有が構成されていません</string>
+    <string name="network_empty_body">+ ボタンをタップして、SMB または FTP 共有を追加します。\n構成された共有は、アプリのファイル ピッカーに表示されます。</string>
+    <string name="network_edit_title_add">共有を追加</string>
+    <string name="network_edit_title_edit">共有の編集</string>
+    <string name="network_field_type">プロトコル</string>
+    <string name="network_type_smb">SMB / サンバ</string>
+    <string name="network_type_ftp">FTP</string>
+    <string name="network_type_sftp">SFTP (SSH)</string>
+    <string name="network_type_scp">SCP (SSH シェル)</string>
+    <string name="network_type_nfs">
+NFS
+</string>
+    <string name="network_type_dlna">
+DLNA
+</string>
+    <string name="network_field_name">共有名 (例: メイン NAS)</string>
+    <string name="network_field_host">ホスト/IPアドレス</string>
+    <string name="network_field_port">ポート (デフォルトでは空白のまま)</string>
+    <string name="network_field_username">ユーザー名 (空白 = ゲスト)</string>
+    <string name="network_field_password">パスワード</string>
+    <string name="network_field_domain">ドメイン (SMB のみ)</string>
+    <string name="network_field_private_key">秘密鍵のパス</string>
+    <string name="network_btn_pick_key">キーファイルの選択</string>
+    <string name="network_btn_show_ssh_auth">SSH キー認証を表示</string>
+    <string name="network_btn_hide_ssh_auth">SSH キー認証を非表示にする</string>
+    <string name="network_header_ssh_auth">SSHキー認証</string>
+    <string name="network_label_use_keychain">パスフレーズをキーチェーンに安全に保存</string>
+    <string name="network_field_path">リモート パス (例: /Media または空白のまま)</string>
+    <string name="network_btn_test">テスト接続</string>
+    <string name="network_btn_save">保存</string>
+    <string name="network_testing">接続をテストしています...</string>
+    <string name="network_test_ok">正常に接続されました</string>
+    <string name="network_test_fail">接続に失敗しました - ホスト、資格情報、ネットワークを確認してください</string>
+    <string name="network_error_required">名前とホストは必須です</string>
+    <string name="network_delete_confirm_title">共有を削除する</string>
+    <string name="network_delete_confirm_body">「%1$s」をリストから削除しますか?これにより、ファイル ピッカーからも削除されます。</string>
+    <string name="network_delete_confirm_yes">取り除く</string>
+    <!-- TV share item action dialog options -->
+    <string name="network_action_browse">📂 共有を参照</string>
+    <string name="network_action_edit">✏️ 共有を編集</string>
+    <string name="network_action_delete">🗑️ 共有を削除</string>
+    <string name="network_field_access">アクセスモード</string>
+    <string name="network_access_readonly">読み取り専用 — メディアの参照と再生</string>
+    <string name="network_access_readwrite">読み取りと書き込み - 参照、アップロード、削除、名前変更</string>
+    
+    <!-- SMB Protocol Selection -->
+    <string name="network_field_smb_protocol">SMB プロトコルのバージョン (SMB のみ)</string>
+    <string name="network_smb_protocol_auto">自動デフォルト (SMB2 / SMB3 最小)</string>
+    <string name="network_smb_protocol_smb2">SMB2 のみ (レガシー NAS/ルーター)</string>
+    <string name="network_smb_protocol_smb3">SMB3 のみ (モダン セキュア)</string>
+
+    <!-- Connection Success Dialog -->
+    <string name="network_dialog_success_title">接続成功</string>
+    <string name="network_dialog_success_body">あなたのシェアは到達可能です。今すぐ保存しますか?</string>
+    <string name="network_dialog_success_save">保存して終了</string>
+    <string name="network_dialog_success_cancel">編集を続ける</string>
+
+    <!-- Tip Jar — Fuel the Developer -->
+    <string name="tip_jar_title">開発者に燃料を与える</string>
+    <string name="tip_jar_subtitle">開発者にエネルギーを与えます ☕</string>
+    <string name="tip_jar_header_sub">エスプレッソを選んでください</string>
+    <string name="tip_jar_loading">Google Play から価格を読み込んでいます...</string>
+    <string name="tip_jar_transparency">UFM は広告なしで完全に無料になるように構築されており、今後もその状態が続きます。チップは完全にオプションです。チップは単にコーヒーの流れを維持し、新しい機能を提供するのに役立ちます。 ☕</string>
+    <string name="tip_jar_espresso_title">簡単なエスプレッソ</string>
+    <string name="tip_jar_espresso_desc">たった 1 つの迷惑なバグを潰すのに役立つ小さなエネルギーの衝撃です。</string>
+    <string name="tip_jar_latte_title">フルラテ</string>
+    <string name="tip_jar_latte_desc">完璧にバランスの取れた燃料 - まったく新しい機能を構築するのに十分です。</string>
+    <string name="tip_jar_beans_title">コーヒー豆の袋</string>
+    <string name="tip_jar_beans_desc">伝説のサポート。 1 か月間深夜のコーディングに備えてパントリーを備蓄します。</string>
+    <string name="tip_jar_thanks">どうもありがとうございます！ ☕あなたはすごいです！</string>
+    <string name="tip_jar_thanks_espresso">小さなエスプレッソが到着中です — ありがとうございます!</string>
+    <string name="tip_jar_thanks_latte">完全なラテが 1 つ受信されます。コードは生きたままになっています。</string>
+    <string name="tip_jar_thanks_beans">伝説の！これでパントリーには商品がいっぱいになりました。ありがとう！ ☕</string>
+    <string name="tip_jar_footer">Google Play 経由で安全に処理されます · ありがとうございます! ☕</string>
+    <string name="purchase_failed_code">購入に失敗しました (コード %1$d)</string>
+    <string name="billing_unavailable">請求は利用できません: %1$s</string>
+    <string name="product_not_found">製品が見つかりません。インターネット接続を確認してください。</string>
+    <string name="tip_celebrate_espresso_title">エスプレッソショットが届きました！ ☕⚡</string>
+    <string name="tip_celebrate_latte_title">ラテズオン！ ☕💛</string>
+    <string name="tip_celebrate_beans_title">あなたはレジェンドです！ ☕🏆✨</string>
+    <string name="tip_celebrate_subtitle">真剣に、ありがとう。あなたは私の一日をとても充実させてくれました！ 🙌</string>
+    <string name="google_play_store">Google Play ストア</string>
+    <!-- Amazon IAP Tip Jar strings -->
+    <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
+    <string name="billing_unavailable_amazon_msg">アプリ内チップは Amazon デバイスでは利用できません。</string>
+    <string name="billing_unavailable_amazon_coming_soon">Amazon Tip Jar は近日公開予定です — お待ちいただきありがとうございます! ☕</string>
+    <!-- Shown in txtLoading while Amazon product prices are being fetched -->
+    <string name="tip_jar_loading_amazon">Amazon アプリストアから価格を読み込んでいます…</string>
+    <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
+    <string name="amazon_iap_error">Amazon 購入エラー: %1$s</string>
+    <string name="tile_hidden_with_name">「%1$s」タイルが非表示になりました</string>
+
+    <!-- Folder Sync -->
+    <string name="sync_title">フォルダーの同期</string>
+    <string name="sync_subtitle">ネットワーク共有へのバックアップ</string>
+
+    <!-- Generic -->
+    <string name="cancel">キャンセル</string>
+    <string name="close">閉じる</string>
+
+    <!-- SMB Network Discovery -->
+    <string name="smb_scan_title">SMB ホストのスキャン</string>
+    <string name="smb_scan_searching">ローカル ネットワークで SMB ホストをスキャンしています...</string>
+    <string name="smb_scan_none_found">このネットワーク上に SMB ホストが見つかりません。</string>
+    <string name="smb_credentials_header">ホストに接続する</string>
+    <string name="smb_shares_title_generic">利用可能な株式数</string>
+    <string name="smb_shares_loading">共有を読み込んでいます...</string>
+    <string name="smb_shares_none">アクセス可能な共有が見つかりません。</string>
+    <string name="smb_btn_connect">接続する</string>
+    <string name="smb_cd_scan">SMB ホストをスキャンする</string>
+    <string name="smb_cd_browse_shares">利用可能な共有を参照する</string>
+    <string name="smb_error_max_connections">SMBサーバーへの接続数が上限に達しています。しばらくしてから再試行するか、このサーバーへ接続している他のデバイスを切断してください。</string>
+
+    <!-- NFS Error Messages -->
+    <string name="nfs_error_stale_handle">
+NFS サーバーが接続を拒否しました (古いファイル ハンドル)。これは通常、サーバーに特権ポートが必要であることを意味します。 NFS サーバーで、エクスポート構成の「安全でない」オプションを有効にして、Android デバイスからの接続を許可します。
+</string>
+    <string name="nfs_error_portmapper_unreachable">
+NFS サーバー上のポートマッパー (ポート 111) に到達できません。 Portmapper/rpcbind サービスが実行中であり、ファイアウォールでポート 111 が開いていることを確認します。
+</string>
+    <string name="nfs_error_permission_denied">
+NFS サーバーがアクセスを拒否しました。エクスポート パスが正しいこと、およびサーバーがこのデバイスからの接続を許可していることを確認してください。
+</string>
+
+    <!-- Tile Reorder -->
+    <string name="tile_reorder_title">タイルの移動</string>
+    <string name="tile_move_up">▲上に移動</string>
+    <string name="tile_move_down">▼ 下に移動</string>
+    <string name="tile_locked_toast">✦ このタイルは下部に固定されており、移動できません。</string>
+
+    <!-- Tile Hide / Unhide -->
+    <string name="fab_hide_tile">タイルを非表示にする</string>
+    <string name="cd_hide_tile">このタイルを非表示にするには、ここにドロップします</string>
+    <string name="hide_zone_label">ここにドラッグしてタイルを非表示にします</string>
+    <string name="cd_manage_tiles">タイルの管理</string>
+    <string name="tile_hidden_snackbar">タイルが非表示になっています — 復元するには ⚙ をタップします</string>
+    <string name="manage_tiles_title">タイルの管理</string>
+    <string name="manage_tiles_hidden_section">隠しタイル</string>
+    <string name="manage_tiles_visible_section">目に見えるタイル</string>
+    <string name="manage_tiles_restore">復元する</string>
+    <string name="manage_tiles_restore_all">すべて復元</string>
+    <string name="manage_tiles_no_hidden">現在非表示になっているタイルはありません</string>
+    <string name="manage_tiles_restored_snackbar">タイルが復元されました</string>
+    <string name="manage_tiles_all_restored_snackbar">すべてのタイルが復元されました</string>
+    <string name="tile_color_title">
+タイルの色
+</string>
+    <string name="tile_color_ring">
+外輪
+</string>
+    <string name="tile_color_icon_bg">
+アイコンの背景
+</string>
+    <string name="tile_color_tile_bg">
+タイルの背景
+</string>
+    <string name="tile_color_copy_to">
+コピー先\\u2026
+</string>
+    <string name="tile_copy_title">
+タイルに色を適用する
+</string>
+    <string name="tile_copy_apply_selected">
+選択したものに適用
+</string>
+    <string name="tile_copy_apply_all">
+すべてに適用
+</string>
+    <string name="tile_copy_select_all">
+すべて選択
+</string>
+    <string name="tile_copy_deselect_all">
+すべての選択を解除
+</string>
+    <string name="tile_copy_confirm_count">
+%d タイルが更新されます
+</string>
+    <string name="tile_copy_confirm_subtitle">
+次の外観が適用されます。
+</string>
+    <string name="tile_copy_confirm_apply">
+適用する
+</string>
+    <string name="tile_copy_confirm_cancel">
+キャンセル
+</string>
+    <string name="tile_color_custom">
+カスタムカラー
+</string>
+    <string name="tile_color_hue">
+色相
+</string>
+    <string name="tile_color_saturation">
+飽和
+</string>
+    <string name="tile_color_brightness">
+輝度
+</string>
+    <string name="tile_color_icon">
+アイコン
+</string>
+    <string name="tile_color_preview_label">
+タイルのプレビュー: %s
+</string>
+    <string name="tile_color_label">
+文章
+</string>
+    <string name="tile_color_reset">
+デフォルトにリセット
+</string>
+    <string name="tile_color_select_tile">
+タイルをタップして色をカスタマイズします
+</string>
+    <string name="tile_color_title_select">
+色を付けるタイルを選択してください
+</string>
+    <string name="tile_color_message_select">
+[選択]を押した後、タイルをタップしてカラー ピッカーを開きます。
+</string>
+    <string name="tile_color_button_select">
+タイルの選択
+</string>
+    <string name="tile_color_done">
+終わり
+</string>
+    <string name="tile_color_cancel">
+キャンセル
+</string>
+    <string name="tile_color_current">
+現在: %s
+</string>
+
+    <!-- Tile Color Export / Import Code -->
+    <string name="tile_color_export">
+輸出
+</string>
+    <string name="tile_color_import">
+コードをインポートする
+</string>
+    <string name="tile_color_export_title">
+タイルの色を共有する
+</string>
+    <string name="tile_color_import_title">
+タイルの色のインポート
+</string>
+    <string name="tile_color_import_hint">
+ここに UFM Pro カラーコードを貼り付けてください…
+</string>
+    <string name="tile_color_import_invalid">
+無効なコードまたは改ざんされたコード — UFM で生成されたコードのみが受け入れられます
+</string>
+    <string name="tile_color_export_copy">
+コードをコピーする
+</string>
+    <string name="tile_color_export_copied">
+コピーしました！
+</string>
+    <string name="tile_color_import_apply">
+色の適用
+</string>
+    <string name="tile_color_code_icon">
+アイコン
+</string>
+    <string name="tile_color_code_tile_bg">
+タイルの背景
+</string>
+    <string name="tile_color_code_ring">
+外輪
+</string>
+    <string name="tile_color_code_icon_bg">
+アイコンの背景
+</string>
+    <string name="tile_color_code_label">
+文章
+</string>
+    <string name="tile_color_export_none">
+色なし
+</string>
+    <string name="tile_color_code_copied_toast">
+カラーコードをクリップボードにコピーしました
+</string>
+    <string name="tile_color_export_desc_tv">
+このコードを別のデバイスと共有して、同じタイルの色を適用します。
+</string>
+    <string name="tile_color_export_desc_mobile">
+このコードを共有して、同じタイルの色を別のデバイスに適用します。
+</string>
+    <string name="tile_color_code_clipboard_label">
+UFM カラーコード
+</string>
+    <string name="tile_color_preview_example_label">
+ラベルの例
+</string>
+    <string name="tile_color_preview_example_subtitle">
+サブタイトルの例
+</string>
+
+    <!-- Tile Icons -->
+    <string name="tile_icon_title">
+アイコン
+</string>
+    <string name="tile_icon_pick_builtin">
+内蔵アイコン
+</string>
+    <string name="tile_icon_browse">
+ファイルを参照…
+</string>
+    <string name="tile_icon_reset_default">
+デフォルト
+</string>
+    <string name="tile_icon_file_too_large">
+ファイルが大きすぎます。最大1MB。
+</string>
+    <string name="tile_icon_invalid_file">
+画像を読み込めませんでした。
+</string>
+    <string name="tile_icon_picker_title">
+アイコンファイルの選択
+</string>
+    <string name="tile_icon_saved">
+アイコンセット。
+</string>
+
+    <!-- Storage Indexer -->
+    <string name="storage_indexer_title">ストレージインデクサー</string>
+    <string name="storage_indexer_subtitle">すべてのドライブのファイルインデックス作成を管理する</string>
+    <string name="storage_indexer_detail_title">インデクサーの詳細</string>
+    <string name="storage_indexer_delete_records">インデックス付きレコードの削除</string>
+    <string name="storage_indexer_not_now">このストレージを無視します (今は無視します)</string>
+    <string name="storage_indexer_delete_confirm_title">インデックス付きレコードを削除しますか?</string>
+    <string name="storage_indexer_delete_confirm_message">これにより、このストレージのすべてのインデックス付きファイル レコードが削除されます。非常に高速にロードするには、再度インデックスを作成する必要があります。</string>
+    <string name="storage_indexer_mark_not_now_message">このストレージを「今は実行しない」とマークすると、ブラウザで開くときにインデックスを付けるかどうかを尋ねられなくなります。</string>
+    <string name="storage_indexer_indexed_count">%1$s のインデックス付きレコード</string>
+    <string name="storage_indexer_status_ready">完全にインデックス化されています ⚡</string>
+    <string name="storage_indexer_status_never">インデックスが作成されていない</string>
+    <string name="storage_indexer_premium_title">プレミアム機能: クイックインデックス作成</string>
+    <string name="storage_indexer_premium_message">このストレージにインデックスを付けると、瞬時の検索と高速なブラウジングが可能になります。今すぐ有効にしますか?</string>
+    <string name="storage_indexer_btn_continue">続く</string>
+    <string name="storage_indexer_btn_exit">出口</string>
+    <string name="storage_indexer_reminder_title">インデックス作成が無効です</string>
+    <string name="storage_indexer_reminder_message">[設定] -&gt; [ストレージ インデクサー] に移動すると、いつでもこのドライブのインデックス作成を有効にできます。</string>
+    <string name="btn_ok">わかりました</string>
+
+    <!-- Compression & Archives -->
+    <string name="action_compress">圧縮する</string>
+    <string name="compress_title">選択範囲を圧縮</string>
+    <string name="compress_format">アーカイブ形式</string>
+    <string name="compress_password_protect">パスワード保護</string>
+    <string name="compress_password_hint">パスワードを入力してください</string>
+    <string name="compress_password_confirm_hint">パスワードを認証する</string>
+    <string name="compress_password_mismatch">パスワードが一致しません</string>
+    <string name="compress_password_too_short">パスワードが短すぎます (最低 4 文字)</string>
+    <string name="compress_destination">目的地を選択してください</string>
+    <string name="compress_btn_start">圧縮する</string>
+    <string name="compress_filename_label">アーカイブファイル名</string>
+    <string name="compress_filename_hint">アーカイブ名を入力してください</string>
+    <string name="compress_filename_empty">ファイル名を空にすることはできません</string>
+    <string name="compress_progress_title">圧縮中...</string>
+    <string name="compress_success">アーカイブが作成されました: %1$s</string>
+    <string name="compress_error">圧縮に失敗しました: %1$s</string>
+
+    <!-- Image Compression -->
+    <string name="action_compress_image">
+画像を圧縮する
+</string>
+    <string name="compress_image_title">
+画像を圧縮する
+</string>
+    <string name="compress_image_count">
+%1$d 個の画像が選択されました
+</string>
+    <string name="compress_image_quality">
+品質
+</string>
+    <string name="compress_image_resize">
+サイズ変更
+</string>
+    <string name="compress_image_width">
+幅
+</string>
+    <string name="compress_image_height">
+身長
+</string>
+    <string name="compress_image_format">
+出力フォーマット
+</string>
+    <string name="compress_image_format_original">
+オリジナルを維持
+</string>
+    <string name="compress_image_output">
+出力場所
+</string>
+    <string name="compress_image_output_same">
+同じフォルダ
+</string>
+    <string name="compress_image_btn_compress">
+圧縮する
+</string>
+    <string name="compress_image_progress">
+%2$d の %1$d を圧縮しています…
+</string>
+    <string name="compress_image_complete">
+圧縮が完了しました
+</string>
+    <string name="compress_image_result">
+%1$s → %2$s (%3$d%% 節約)
+</string>
+    <string name="compress_image_total_saved">
+合計: %1$s → %2$s (%3$d%% 節約)
+</string>
+    <string name="compress_image_no_images">
+画像ファイルが選択されていません
+</string>
+    <string name="compress_image_error">
+%1$s の圧縮エラー: %2$s
+</string>
+    <string name="use_this_folder_image">
+このフォルダーを使用します
+</string>
+    <string name="archive_password_required">このアーカイブはパスワードで保護されています</string>
+    <string name="change">
+変化
+</string>
+    <string name="archive_invalid_password">パスワードが間違っています</string>
+    <string name="archive_extract_all">すべて抽出</string>
+    <string name="archive_extracting">抽出中...</string>
+    <string name="archive_extract_success">%1$s に抽出されました</string>
+    <string name="archive_extract_error">抽出に失敗しました</string>
+    <string name="extract_location_title">抽出場所の選択</string>
+    <string name="extract_location_body">コンテンツを抽出するフォルダーを選択します。</string>
+    <string name="extract_set_location">抽出場所の設定</string>
+
+    <!-- Main Menu Layout Settings -->
+    <string name="settings_main_menu_layout_title">メインメニューのレイアウト</string>
+    <string name="settings_main_menu_layout_subtitle">リストまたはグリッドビュー</string>
+    <string name="layout_list">リスト</string>
+    <string name="layout_grid">グリッド</string>
+    <string name="column_count">コラム</string>
+    <string name="columns_4">4列</string>
+    <string name="columns_3">3列</string>
+
+    <!-- Long Press Duration Settings -->
+    <string name="settings_long_press_title">編集モードのホールド時間</string>
+    <string name="settings_long_press_subtitle">編集モードに入るまでのタイルの長さ</string>
+
+    <string name="settings_toolbar_icons_title">
+ツールバーアイコンを長押し
+</string>
+    <string name="settings_toolbar_icons_subtitle">
+選択アクションバーをカスタマイズする
+</string>
+    <string name="long_press_duration_seconds">%1$.1f 秒</string>
+    <string name="long_press_duration_value">%1$.1f s</string>
+    <string name="long_press_faster">高速化 (0.5秒)</string>
+    <string name="long_press_slower">遅い (5.0 秒)</string>
+    <string name="long_press_hint">この期間メイン画面上のいずれかのタイルを押し続けると、タイル編集モードに入り、タイルを並べ替えたり非表示にしたりできます。</string>
+    <string name="long_press_decrease">ホールド時間を短縮する</string>
+    <string name="long_press_increase">ホールド時間を長くする</string>
+    <string name="save">保存</string>
+
+    <!-- ADB Terminal -->
+    <string name="adb_terminal_title">ADBターミナル</string>
+    <string name="adb_terminal_subtitle">ADB経由でシェルコマンドを実行する</string>
+    <string name="adb_terminal_status_disconnected">切断されました</string>
+    <string name="adb_terminal_status_connected">接続済み</string>
+    <string name="adb_terminal_status_connecting">接続中...</string>
+    <string name="adb_terminal_connect">接続する</string>
+    <string name="adb_terminal_disconnect">切断する</string>
+    <string name="adb_terminal_send">送信</string>
+    <string name="adb_terminal_hint">コマンドを入力してください...</string>
+    <string name="adb_pairing_title">ADB ペアリングが必要です</string>
+    <string name="adb_pairing_steps">プレースホルダー</string>
+    <string name="adb_port_label">ポート (例: 37815)</string>
+    <string name="adb_pin_label">6桁の暗証番号</string>
+    <string name="adb_scan_devices">デバイスのスキャン</string>
+    <string name="adb_pairing_error">接続に失敗しました。ポート/PIN をチェックし、ワイヤレス デバッグがアクティブであることを確認します。</string>
+    <string name="adb_status_awaiting">接続しているデバイスで承認を待っています...</string>
+    <string name="adb_status_denied">リモートデバイスによって接続が拒否されました。</string>
+    <string name="adb_status_approved">接続が承認されました!</string>
+    <string name="adb_shell_closed">閉じたシェル: %1$s</string>
+    <string name="adb_pairing">ADBペアリング</string>
+    <string name="scanning">走査...</string>
+    <string name="devices_detected_0">検出されたデバイス: 0</string>
+    <string name="select_device">デバイスの選択</string>
+    <string name="s_5555">5555</string>
+    <string name="connect_without_pin">PIN なしで接続する</string>
+    <string name="use_pin_pairing">PINを使用する（ペアリング）</string>
+    <string name="pair_and_connect">ペアリングして接続する</string>
+    <string name="connect_to_android_device">Android デバイスに接続する</string>
+    <string name="search_apps">アプリを検索...</string>
+    <string name="no_apps_found">アプリが見つかりませんでした</string>
+    <string name="paired_tvs">ペアリングされたテレビ</string>
+    <string name="manage_tv_connections">テレビ接続を管理する</string>
+    <string name="no_devices_paired_yetntap_to">まだデバイスがペアリングされていません。\n+ をタップしてテレビをリンクします。</string>
+    <string name="paired_phones">ペアリングされた電話機</string>
+    <string name="rename_tv">テレビの名前を変更する</string>
+    <string name="link_mobile_app">モバイルアプリをリンクする</string>
+    <string name="manage_connected_phones_or_tablets">接続された携帯電話やタブレットを管理する</string>
+    <string name="no_devices_connected">デバイスが接続されていません</string>
+    <string name="tv_pairing_title">モバイルアプリをリンクする</string>
+    <string name="bt_remote_volume_guidance_title">電話の音量コントロール</string>
+    <string name="bt_remote_volume_guidance_message">有効にすると、携帯電話のハードウェア音量ボタンがテレビの音量を制御します。画面上の音量ボタンは非表示になりますが、ミュートは引き続き使用できます。</string>
+    <string name="bt_remote_volume_guidance_dont_show">これを二度と表示しないでください</string>
+    <string name="tv_pairing_subtitle">モバイルデバイスを使用してテレビをリンクする</string>>
+    <string name="tv_pairing_step1">1. 携帯電話で、「ペアリングされたテレビ」に移動します。</string>
+    <string name="tv_pairing_step2">2. 右上の「+」アイコンをクリックして、&lt;font color=\'#0284C7\'&gt;%1$s&lt;/font&gt; を検索します。</string>
+    <string name="tv_pairing_step3">3. &lt;font color=\'#0284C7\'&gt;%1$s&lt;/font&gt; を選択します。</string>
+    <string name="tv_pairing_step4">4. 以下に示すコードを入力します。</string>
+    <string name="tv_pairing_step5">5. コードを入力したら、「リンク」を押します。</string>
+    <string name="tv_pairing_waiting">ペアリングを待っています…</string>
+    <string name="tv_pairing_linked">%s とリンクされました</string>
+    <string name="type_here_to_search">ここに入力して検索します</string>
+    <string name="a">あ</string>
+    <string name="hello_world">「こんにちは世界」</string>
+    <string name="view_mode">ビューモード</string>
+    <string name="single_column_list_view">単一列のリストビュー</string>
+    <string name="multicolumn_grid_view">複数列のグリッドビュー</string>
+    <string name="clipboard">クリップボード</string>
+    <string name="clear_all">すべてクリア</string>
+    <string name="paste_here">ここに貼り付けます</string>
+    <string name="thirdparty_library_attributions">サードパーティライブラリの帰属</string>
+    <string name="legal_amp_policy">法務と政策</string>
+    <string name="please_review_the_terms_before">続行する前に規約を確認してください。</string>
+    <string name="terms_amp_conditions">利用規約</string>
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="welcome_to_ultimate_file_manager">究極のファイルマネージャープロへようこそ</string>
+    <string name="legal_requirements">法的要件</string>
+    <string name="please_review_and_accept_our">続行する前に、ポリシーを確認して同意してください。</string>
+    <string name="required">必須</string>
+    <string name="read_and_approve_the_policies">続行するには、ポリシーを読んで承認してください。</string>
+    <string name="file_name">ファイル名</string>
+    <string name="select_this_folder">このフォルダーを選択してください</string>
+    <string name="empty_folder">空のフォルダー</string>
+    <string name="some_storages_are_not_indexed">一部のストレージにはインデックスが作成されていません。検索が遅い可能性があります。</string>
+    <string name="notice_some_storage_areas_are">注意: 一部のストレージ領域にはインデックスが作成されていません。</string>
+    <string name="show_hidden_files">隠しファイルを表示する</string>
+    <string name="hidden_files_are_not_visible">隠しファイルは表示されません</string>
+    <string name="settings_media_thumbnails_title">メディアのサムネイル</string>
+    <string name="settings_media_thumbnails_subtitle_on">有効 — 画像とビデオはプレビューを表示します</string>
+    <string name="settings_media_thumbnails_subtitle_off">無効 — 一般的なアイコンが表示されます</string>
+    <string name="video_thumbnail_time_title">
+動画のサムネイル時間
+</string>
+    <string name="video_thumbnail_time_subtitle">
+ビデオのサムネイルに使用するフレームを選択します
+</string>
+    <string name="vtt_percent_0">
+最初のフレーム (0%)
+</string>
+    <string name="vtt_percent_10">
+ビデオへの 10%
+</string>
+    <string name="vtt_percent_25">
+25% がビデオに
+</string>
+    <string name="vtt_percent_50">
+50% はビデオに注力
+</string>
+    <string name="vtt_percent_75">
+75% がビデオに
+</string>
+    <string name="done">終わり</string>
+    <string name="select_a_storage_device_to">ファイルを探索するストレージ デバイスを選択してください</string>
+    <string name="storage_details">ストレージの詳細</string>
+    <string name="edit_sync_profile">同期プロファイルの編集</string>
+    <string name="profile_name_eg_dcim_backup">プロファイル名 (例: DCIM バックアップ)</string>
+    <string name="source_phone">ソース (電話)</string>
+    <string name="not_selected">未選択</string>
+    <string name="select_folder">フォルダーの選択</string>
+    <string name="use_folder_as_default_location">デフォルトの場所として「%1$s」を使用しますか?</string>
+    <string name="use_network_folder_as_default_location">ネットワークフォルダー「%1$s」をデフォルトの場所として使用しますか?</string>
+    <string name="destination_network_share">宛先 (ネットワーク共有)</string>
+    <string name="select_share">共有を選択</string>
+    <string name="remote_folder">リモートフォルダー</string>
+    <string name="browse_remote">リモートを参照</string>
+    <string name="settings">設定</string>
+    <string name="every_x_minshrs">X分/時間ごと</string>
+    <string name="scheduled_time">予定時刻</string>
+    <string name="sync_frequency">同期周波数</string>
+    <string name="repeat">繰り返す</string>
+    <string name="day_of_week">曜日</string>
+    <string name="day_of_month">月の日</string>
+    <string name="sync_time">同期時間</string>
+    <string name="show_sync_notifications">同期通知を表示する</string>
+    <string name="delete_1">消去</string>
+    <string name="save_profile">プロファイルの保存</string>
+    <string name="folder_sync">フォルダーの同期</string>
+    <string name="backup_sync_between_mobile_and">モバイルとネットワーク間のバックアップ同期</string>
+    <string name="automatic_folder_sync">自動フォルダー同期</string>
+    <string name="keep_your_important_files_backed">重要なファイルは自動的にバックアップされます。フォルダー同期はバックグラウンドで実行され、選択した電話フォルダーがネットワーク共有に安全に同期されます。</string>
+    <string name="sync_from_any_phone_folder">任意の電話フォルダーから同期</string>
+    <string name="backup_to_smb_or_ftp">SMB または FTP 共有へのバックアップ</string>
+    <string name="set_your_own_schedule">自分のスケジュールを設定する</string>
+    <string name="add_profile">プロファイルの追加</string>
+    <string name="setup">設定</string>
+    <string name="grant_permissions">権限の付与</string>
+    <string name="setup_1">設定</string>
+    <string name="grant_all_required_permissions_to">続行するには必要な権限をすべて付与してください</string>
+    <string name="extract_all">すべて抽出</string>
+    <string name="tap_a_tile_to_open">タイルをタップして開きます · 復元をタップしてメイン画面に表示します</string>
+    <string name="port">ポート</string>
+    <string name="use_pin">PINを使用する</string>
+    <string name="zip">ジップ</string>
+    <string name="s_7z">7Z</string>
+    <string name="optimizing_storage">ストレージの最適化</string>
+    <string name="we_are_indexing_your_files">瞬時の検索と超高速のブラウジングのために、ファイルのインデックスを作成しています。</string>
+    <string name="indexed_0_files">インデックス付きの 0 ファイル</string>
+    <string name="run_in_background">バックグラウンドで実行</string>
+    <string name="select_a_tile_ok_to">タイルを選択します · [OK] でアクションを選択します</string>
+    <string name="open">開ける</string>
+    <string name="cancel_1">キャンセル</string>
+    <string name="restore">復元する</string>
+    <string name="enter_the_4digit_pin_shown">テレビに表示されている4桁のPINを入力してください</string>
+    <string name="set_access_pin">アクセスPINを設定する</string>
+    <string name="enter_a_4digit_pin">4桁のPINを入力してください</string>
+    <string name="change_pin">PINの変更</string>
+    <string name="use_recovery_code">リカバリーコードを使用する</string>
+    <string name="s_0_16">0 / 16</string>
+    <string name="hey_got_a_minute">ねえ、ちょっといい？ 😊</string>
+    <string name="youve_been_using_the_app">しばらくこのアプリをご利用いただいており、それは私たちにとって非常に意味のあることです。楽しんでいる場合は、簡単な評価を行うと、他の人がそれを発見するのに役立ちます。ほんの 1 秒しかかかりません。</string>
+    <string name="rate_the_app">⭐ アプリを評価する</string>
+    <string name="maybe_later">🕐 たぶん後で</string>
+    <string name="no_thanks">✖ いいえ、ありがとう</string>
+    <string name="theres_also_a_tiny_coffee">☕ このプロジェクトを支援したいと思ったら、小さなコーヒー基金もあります。</string>
+    <string name="no_thanks_1">✖ いいえ、ありがとう</string>
+    <string name="copying_files">ファイルをコピーしています…</string>
+    <string name="item_00">アイテム0/0</string>
+    <string name="filenameext">ファイル名.拡張子</string>
+    <string name="s_0_mb_0_mb_0">0MB / 0MB (0%)</string>
+    <string name="tv_edit_mode">TV編集モード</string>
+    <string name="ok">わかりました</string>
+    <string name="short_press_to_hide_tile">短く押すとタイルを非表示にします</string>
+    <string name="long_ok">長い間OK</string>
+    <string name="long_press_to_move_tile">長押ししてタイルを移動します</string>
+    
+    <!-- Network Thumbnails -->
+    <string name="settings_network_thumbnails_title">ネットワークサムネイル</string>
+    <string name="settings_network_thumbnails_subtitle">クラウドおよびネットワーク ストレージの永続的なキャッシュ</string>
+    <string name="nt_enable_title">リモートサムネイルを有効にする</string>
+    <string name="nt_enable_desc">ネットワーク共有、Google ドライブ、OneDrive 上のファイルのサムネイルを生成してキャッシュします。</string>
+    <string name="nt_cache_limit_title">キャッシュサイズの制限</string>
+    <string name="nt_cache_limit_desc">サムネイルのキャッシュに使用する最大ストレージ容量。</string>
+    <string name="nt_cache_folder_title">キャッシュディレクトリ</string>
+    <string name="nt_cache_folder_desc">サムネイル キャッシュ ファイルを保存する場所 (内部または SD カード) を選択します。</string>
+    <string name="nt_clear_cache_title">すべてのキャッシュをクリア</string>
+    <string name="nt_clear_cache_desc">キャッシュされたサムネイルをすべて削除し、マッピング データベースをリセットします。</string>
+    <string name="nt_clear_cache_confirm_title">キャッシュをクリアしますか?</string>
+    <string name="nt_clear_cache_confirm_msg">これにより、ネットワーク ドライブのキャッシュされたサムネイルがすべて完全に削除されます。閲覧すると再生成されます。</string>
+    <string name="nt_stats_title">キャッシュ統計</string>
+    <string name="nt_stats_size">現在の使用量: %1$s / %2$d MB</string>
+    <string name="nt_folder_not_selected">ディレクトリが選択されていません</string>
+    <string name="nt_select_folder">キャッシュフォルダーの選択</string>
+    <string name="nt_limit_500mb">500MB</string>
+    <string name="nt_limit_1gb">1GB</string>
+    <string name="nt_limit_2gb">2GB</string>
+    <string name="nt_limit_5gb">5GB</string>
+
+    <string name="got_it">わかった</string>
+    <string name="decrypting_00">0/0を復号中…</string>
+    <string name="extracted_str">•</string>
+    <string name="extracted_str_1">›</string>
+    <string name="connect">接続する</string>
+    <string name="disconnect">切断する</string>
+    <string name="s_45_gb_128_gb">45GB / 128GB</string>
+    <string name="s_new">新しい</string>
+    <string name="ready_for_indexing">インデックス作成の準備完了</string>
+    <string name="s_0_files_indexed">インデックス付けされたファイルは 0 件あります</string>
+    <string name="never_indexed">インデックスが作成されていない</string>
+    <string name="sort_by">並べ替え</string>
+    <string name="app_name_1">Ultimate File Manager Pro</string>
+    <string name="app_size">アプリのサイズ</string>
+    <string name="install_date">インストール日</string>
+    <string name="order">注文</string>
+    <string name="ascending">上昇</string>
+    <string name="descending">降順</string>
+    <string name="apply">適用する</string>
+    <string name="sort_by_1">並べ替え</string>
+    <string name="filter">フィルター</string>
+    <string name="please_fill_all_required_fields">必須フィールドをすべて入力してください</string>
+    <string name="please_select_a_network_share">最初にネットワーク共有を選択してください</string>
+    <string name="preparing_installation">インストールを準備しています...</string>
+    <string name="installation_failed">インストールに失敗しました</string>
+    <string name="unknown_error">不明なエラー</string>
+    <string name="error_failed_open_uri">Uriを開けませんでした</string>
+    <string name="error_no_apk_in_archive">アーカイブ内に APK ファイルが見つかりません</string>
+    <string name="error_no_splits_matched">フィルタリング後に一致する APK スプリットはありませんでした</string>
+    <string name="error_staging_failed">ファイルのステージングに失敗しました: %1$s</string>
+    <string name="error_trigger_install_failed">インストールのトリガーに失敗しました</string>
+    <string name="error_not_apk_xapk">XAPK/APKS ファイルではありません</string>
+    <string name="error_not_apk">APKファイルではありません</string>
+    <string name="error_job_not_found">ジョブが見つかりません</string>
+    <string name="error_manifest_not_found">マニフェスト.json なし (APKS 形式にはメタデータがありません)</string>
+    <string name="error_parse_failed">解析に失敗しました</string>
+    <string name="error_read_failed">読み取りに失敗しました</string>
+    <string name="error_install_unknown_apps_instruction">「UFM では「不明なアプリのインストール」が有効になっていません。設定画面が開きました。有効にしてもう一度お試しください。」</string>
+    <string name="error_install_unknown_apps_remote_instruction">「UFM では「不明なアプリのインストール」が有効になっていません。デバイスで設定画面が開かれています。そこで有効にしてから、再試行してください。」</string>
+    <string name="notif_apk_ready_title">APKをインストールする準備ができました</string>
+    <string name="notif_apk_ready_desc">タップしてデバイスへのインストールを確認します。</string>
+    <string name="notif_channel_apk_install_name">APKのインストール</string>
+    <string name="notif_channel_apk_install_desc">リモート ファイル マネージャーから APK のインストールを確認するプロンプトが表示されます</string>
+    <string name="error_no_apk_in_xapk">XAPK 内に APK ファイルが見つかりません</string>
+    <string name="error_no_splits_extracted">XAPK から抽出された APK 分割はありません</string>
+    <string name="error_missing_path">パスがありません</string>
+    <string name="error_file_not_found">ファイルが見つかりません</string>
+    <string name="error_missing_job_id">ジョブIDがありません</string>
+    <string name="error_missing_filename">ファイル名がありません</string>
+    <string name="error_no_file_uploaded">ファイルがアップロードされていません</string>
+    <string name="sync_triggered_locally_background_job">同期はローカルでトリガーされます。バックグラウンドジョブがキューに追加されました。</string>
+    <string name="no_adb_devices_found">ADB デバイスが見つかりません</string>
+    <string name="scan_failed_emessage">スキャンに失敗しました: %1$s</string>
+    <string name="please_enter_a_6digit_pin">6桁のPINを入力してください</string>
+    <string name="linked_with_newdevice">%1$s とリンクされました</string>
+    <string name="connection_failed_make_sure_the">接続に失敗しました。他のデバイスがオンラインであることを確認してください。</string>
+    <string name="generating_pin">PIN を生成中…</string>
+    <string name="tv_renamed_to_newname">テレビの名前が %1$s に変更されました</string>
+    <string name="no_tvs_found_make_sure">テレビが見つかりませんでした。アプリがテレビで開いていることを確認してください。</string>
+    <string name="please_enter_all_4_digits">4桁すべてを入力してください</string>
+    <string name="paired_successfully">正常にペアリングされました！</string>
+    <string name="pairing_failed_incorrect_pin">ペアリングに失敗しました。 PIN が間違っていますか?</string>
+    <string name="copied_all_output_to_clipboard">すべての出力をクリップボードにコピーしました</string>
+    <string name="connect_to_adb_first">まずADBに接続します</string>
+    <string name="no_adb_devices_found_on">ネットワーク上に ADB デバイスが見つかりません</string>
+    <string name="back">戻る</string>
+    <string name="refresh_debloat_list">デブロートリストを更新</string>
+    <string name="toggle_options">オプションの切り替え</string>
+    <string name="sort_and_filter">並べ替えとフィルター</string>
+    <string name="search">検索</string>
+    <string name="hide">隠れる</string>
+    <string name="unhide">再表示</string>
+    <string name="new_folder">新しいフォルダー</string>
+    <string name="rotate_left">左に回転</string>
+    <string name="rotate_right">右回転</string>
+    <string name="image_preview">画像プレビュー</string>
+    <string name="pan_left">左にパン</string>
+    <string name="pan_up">パンアップ</string>
+    <string name="pan_down">パンダウン</string>
+    <string name="pan_right">右にパン</string>
+    <string name="zoom_in">ズームイン</string>
+    <string name="zoom_out">ズームアウト</string>
+    <string name="fit_to_screen">画面に合わせる</string>
+    <string name="audio">オーディオ</string>
+    <string name="rewind_10_seconds">10秒巻き戻し</string>
+    <string name="play_pause">再生/一時停止</string>
+    <string name="forward_10_seconds">10秒進む</string>
+    <!-- Audio & Subtitle Track Selection -->
+    <string name="audio_track">
+オーディオトラック
+</string>
+    <string name="subtitles">
+字幕
+</string>
+    <string name="subtitles_off">
+オフ
+</string>
+    <string name="no_subtitles_available">
+字幕はありません
+</string>
+    <string name="no_alternate_audio">
+代替オーディオトラックはありません
+</string>
+    <string name="track_embedded">
+埋め込み
+</string>
+    <string name="track_srt">
+SRT
+</string>
+    <string name="track_vtt">
+VTT
+</string>
+    <string name="track_ass">
+お尻
+</string>
+    <string name="subtitle_rendering">
+字幕のレンダリング
+</string>
+    <string name="icon">アイコン</string>
+    <string name="show_hidden_files_1">隠しファイルを表示</string>
+    <string name="database_viewer">データベースビューア</string>
+    <string name="select_storage">ストレージの選択</string>
+    <string name="remove_from_clipboard">クリップボードから削除</string>
+    <string name="favorite_icon">お気に入りのアイコン</string>
+    <string name="remove_favorite">お気に入りを削除</string>
+    <string name="pdf_page">PDFページ</string>
+    <string name="hide_tile">タイルを非表示にする</string>
+    <string name="file_icon">ファイルアイコン</string>
+    <string name="blazingfast_browsing">⚡ 超高速ブラウジング</string>
+    <string name="continue_anyway">とにかく続ける</string>
+    <string name="compress_here">ここを圧縮しますか?</string>
+    <string name="confirm_sync_folder">同期フォルダーの確認</string>
+    <string name="compressing_network_files">ネットワークファイルの圧縮</string>
+    <string name="transferring_files">ファイルの転送</string>
+    <string name="usb_debugging_required">USBデバッグが必要です</string>
+
+    <string name="take_screenshot">スクリーンショットを撮る</string>
+
+    <!-- TV Remote -->
+    <string name="tv_remote">リモート</string>
+    <string name="tv_remote_title">テレビのリモコン</string>
+    <string name="tv_remote_subtitle">
+Bluetooth または WiFi 経由でテレビを制御
+</string>
+    <string name="tv_remote_connected_to">%1$s に接続しました</string>
+    <string name="tv_remote_connecting">%1$s に接続中…</string>
+    <string name="tv_remote_failed">テレビのリモコンに接続できませんでした</string>
+    <string name="tv_remote_adb_required">リモコンを使用するには、テレビで ADB (USB デバッグ) を有効にする必要があります。\n\n有効にするには:\n1. テレビの設定を開きます\n2. デバイス設定 › 開発者向けオプション に移動します。\n3.「USBデバッグ」を有効にする</string>
+    <string name="tv_remote_not_paired">このテレビはまだ ADB にペアリングされていません。まずはメイン画面からペアリングを行ってください。</string>
+    <string name="tv_remote_disconnected">リモートが切断されました</string>
+    <string name="tv_remote_reconnecting">再接続中…</string>
+
+    <string name="use_this_folder">このフォルダを使用する</string>
+    <string name="compressing">圧縮中…</string>
+    <string name="saving">保存中…</string>
+    <string name="extracted_str_2">✓</string>
+    <string name="extract_here">ここで抽出しますか?</string>
+    <string name="folder_not_supported">フォルダーはサポートされていません</string>
+    <string name="confirm_source_folder">ソースフォルダーの確認</string>
+    <string name="compressing_uploading">圧縮とアップロード</string>
+    <string name="compressing_files">ファイルの圧縮</string>
+    <string name="ufm_does_not_support_selecting">UFM は、システム ピッカーによるこれらのフォルダーの選択をサポートしていません。</string>
+    <string name="extract_here_1">ここから抜粋</string>
+    <string name="extract_contents_to_path">内容を次の場所に抽出します。\n\n%1$s</string>
+    <string name="use_folder_as_sync_source">次のフォルダーを同期ソースとして使用しますか?\n\n%1$s</string>
+    <string name="processing">処理…</string>
+    <string name="code_must_be_exactly_16">コードは正確に 16 文字である必要があります</string>
+    <string name="network_share_required">ネットワーク共有が必要です</string>
+    <string name="never_synced">決して同期しない</string>
+    <string name="scanning_0254_ips_scanned">スキャン中… 0/254 IP がスキャンされました</string>
+    <string name="rename_device">デバイス名の変更</string>
+    <string name="remove_device">デバイスの削除</string>
+    <string name="searching_for_tvs">テレビを検索しています…</string>
+    <string name="select_tv_to_link">リンクするテレビを選択してください</string>
+    <string name="enter_pin">PINを入力してください</string>
+    <string name="looking_for_tvs_on_local">ローカル ネットワークでテレビを探しています…</string>
+    <string name="save_here">ここに保存</string>
+    <!-- Share Receiver -->
+    <string name="share_receive_title">
+UFM に保存
+</string>
+    <string name="share_receive_from">
+%s からファイルを受信して​​います
+</string>
+    <string name="share_receive_select_destination">
+目的地を選択してください
+</string>
+    <string name="share_receive_save_here">
+ここに保存
+</string>
+    <string name="share_receive_saving">
+ファイルを保存中…
+</string>
+    <string name="share_receive_success">
+ファイルは正常に保存されました
+</string>
+    <string name="share_receive_error">
+ファイルの保存に失敗しました
+</string>
+    <string name="share_receive_confirm">
+ファイルを %s に保存しますか?
+</string>
+    <string name="share_receive_browse">
+閲覧＆閲覧フォルダーの選択
+</string>
+    <string name="share_receive_selected">
+目的地: %s
+</string>
+    <string name="share_receive_save_to_path">
+%s に保存します
+</string>
+    <string name="share_receive_multiple_files">
+%d ファイル
+</string>
+    <string name="choose_a_volume_to_browse">参照するボリュームを選択してください</string>
+    <string name="unable_to_decode_image">画像をデコードできません</string>
+    <string name="folder">フォルダ</string>
+
+    <!-- Recycle Bin -->
+    <string name="recycle_bin_title">
+ごみ箱
+</string>
+    <string name="recycle_bin_empty">
+ごみ箱が空です
+</string>
+    <string name="recycle_bin_restore">
+復元する
+</string>
+    <string name="recycle_bin_delete_perm">
+完全に削除
+</string>
+    <string name="recycle_bin_clear_title">
+ごみ箱を空にしますか?
+</string>
+    <string name="recycle_bin_clear_confirm">
+%d ファイルは完全に削除されます。これを元に戻すことはできません。
+</string>
+    <string name="recycle_bin_cleared">
+%d ファイルが完全に削除されました
+</string>
+    <string name="recycle_bin_restored_count">
+%d ファイルが復元されました
+</string>
+    <string name="recycle_bin_deleted_count">
+%d ファイルが完全に削除されました
+</string>
+    <string name="recycle_bin_delete_perm_title">
+永久に削除しますか?
+</string>
+    <string name="recycle_bin_delete_perm_confirm">
+%d ファイルは完全に削除されます。これを元に戻すことはできません。
+</string>
+    <string name="recycle_bin_file_missing">
+ファイルがゴミ箱に存在しなくなりました
+</string>
+    <string name="recycle_bin_network_restore_hint">
+復元を使用してファイルを元の場所に戻します
+</string>
+    <string name="recycle_bin_share_offline">
+ストレージはオフラインです。復元も削除もできない
+</string>
+    <string name="recycle_bin_move_confirm">
+%d ファイルをごみ箱に移動しますか?
+</string>
+    <string name="recycle_bin_move_success">
+%d ファイルがごみ箱に移動されました
+</string>
+    <string name="move_to_bin">
+ビンに移動
+</string>
+    <string name="settings_recycle_bin">
+ごみ箱
+</string>
+    <string name="settings_recycle_bin_summary">
+削除されたファイルを完全に削除する代わりにごみ箱に移動する
+</string>
+    <string name="opening_recycle_bin">
+ごみ箱を開く
+</string>
+    <string name="recycle_bin_expires_in">
+%d 日で期限切れになります
+</string>
+    <string name="recycle_bin_expires_today">
+本日有効期限が切れます
+</string>
+    <string name="recycle_bin_expired">
+削除保留中
+</string>
+    <string name="recycle_bin_auto_delete">
+自動削除
+</string>
+    <string name="recycle_bin_auto_delete_duration">
+自動削除期間
+</string>
+    <string name="recycle_bin_auto_delete_disabled">
+無効
+</string>
+    <string name="recycle_bin_auto_delete_days">
+%d 日
+</string>
+    <string name="recycle_bin_auto_delete_subtitle">
+これより古いファイルは完全に削除されます
+</string>
+    <string name="recycle_bin_auto_delete_hint">
+自動削除を無効にするには、0 に設定します。デフォルトは 30 日です。
+</string>
+    <string name="recycle_bin_auto_delete_fewer">
+日数が少なくなる
+</string>
+    <string name="recycle_bin_auto_delete_more">
+さらに日数がかかる
+</string>
+    <string name="recycle_bin_auto_delete_decrease">
+自動削除日を減らす
+</string>
+    <string name="recycle_bin_auto_delete_increase">
+自動削除日を増やす
+</string>
+    <string name="cd_recycle_bin_auto_delete">
+自動削除設定
+</string>
+    <string name="opening_recycle_bin_settings">
+ごみ箱設定を開く
+</string>
+
+    <!-- Remote Manager Web Interface -->
+    <string name="remote_title">究極のファイルマネージャープロリモート</string>
+    <string name="remote_subtitle_login">安全なアクセス - 4桁のPINを入力してください</string>
+    <string name="remote_btn_unlock">ダッシュボードのロックを解除する</string>
+    <string name="remote_btn_disconnect">切断する</string>
+    <string name="remote_vault">保管庫</string>
+    <string name="remote_vault_subtitle">安全な暗号化フォルダー</string>
+    <string name="remote_user_apps">ユーザーアプリ</string>
+    <string name="user_apps">ユーザーアプリ</string>
+    <string name="remote_default_apps">デフォルトのアプリ</string>
+    <string name="remote_search_apps">アプリを検索…</string>
+    <string name="remote_back">戻る</string>
+    <string name="remote_add_to_vault">ボールトに追加</string>
+    <string name="remote_install_apk">APKをインストールする</string>
+    <string name="remote_install_xapk">XAPKをインストールする</string>
+    <string name="remote_new_folder">新しいフォルダー</string>
+    <string name="remote_upload">アップロード</string>
+    <string name="remote_items_selected">選択されたアイテム</string>
+    <string name="remote_btn_copy">コピー</string>
+    <string name="remote_btn_cut">カット</string>
+    <string name="remote_btn_delete">消去</string>
+    <string name="remote_btn_cancel">キャンセル</string>
+    <string name="remote_btn_paste">%d 個のアイテムを貼り付けます</string>
+    <string name="remote_uploading">アップロード中…</string>
+    <string name="remote_prep_download">ダウンロードの準備中</string>
+    <string name="remote_analyzing_folder">フォルダーを分析中…</string>
+    <string name="remote_cancel_download">ダウンロードのキャンセル</string>
+    <string name="remote_remote_install">リモートインストール</string>
+    <string name="remote_preparing">準備中…</string>
+    <string name="remote_confirm_device">Android デバイスを見て、インストール プロンプトを確認してください。</string>
+    <string name="remote_install_splits">分割APKのインストール</string>
+    <string name="remote_analysing_splits">スプリットを分析中…</string>
+    <string name="remote_select_density">密度リソースを選択します。</string>
+    <string name="remote_abi">ABI (アーキテクチャ):</string>
+    <string name="remote_btn_install_splits">選択した分割を使用してインストールする</string>
+    <string name="remote_opened_device">デバイス上で開かれました</string>
+    <string name="remote_vault_setup">ボールトのセットアップ</string>
+    <string name="remote_vault_setup_sub">4 桁の PIN を作成して金庫を保護します</string>
+    <string name="remote_not_configured">未構成</string>
+    <string name="remote_btn_set_vault_pin">ボールトPINの設定</string>
+    <string name="remote_unlock_vault">金庫のロックを解除する</string>
+    <string name="remote_enter_vault_pin">保管庫の PIN を入力してください</string>
+    <string name="remote_btn_lock">ロック</string>
+    <string name="remote_btn_add_folder">フォルダーの追加</string>
+    <string name="remote_no_encrypted">暗号化されたフォルダーはまだありません</string>
+    <string name="remote_status_open">開ける</string>
+    <string name="remote_item">アイテム</string>
+    <string name="remote_items">アイテム</string>
+    <string name="remote_reencrypt">閉じる/再暗号化する</string>
+    <string name="remote_open_mirror">ミラーリングに開く/復号化する</string>
+    <string name="remote_decrypt_original">元の場所に復号化する</string>
+    <string name="remote_encrypt_success">%d ファイルが正常に暗号化されました</string>
+    <string name="remote_skipped">ファイルがスキップされました</string>
+    <string name="remote_btn_done">終わり</string>
+    <string name="remote_delete_title">項目を削除しますか?</string>
+    <string name="remote_delete_msg">これを削除してもよろしいですか?</string>
+    <string name="remote_btn_yes_delete">はい、削除します</string>
+    <string name="remote_btn_no_cancel">いいえ、キャンセルします</string>
+    <string name="remote_rename_title">名前の変更</string>
+    <string name="remote_rename_msg">項目の新しい名前を入力します。</string>
+    <string name="remote_select_vault_folder">ボルトフォルダの選択</string>
+    <string name="remote_choose_vault_folder">ファイルを暗号化する保管庫フォルダーを選択します。</string>
+    <string name="remote_no_vault_folders">ボルトフォルダーが存在しません。</string>
+    <string name="remote_add_vault_first">まずフォルダーをボールトに追加して、ボールト エントリを作成します。</string>
+    <string name="remote_close">近い</string>
+    <string name="remote_locked">ロックされています</string>
+    <string name="remote_unlocked">ロック解除済み</string>
+    <string name="remote_create_vault_pin">ボールトPINの作成</string>
+    <string name="remote_invalid_pin">無効なPIN</string>
+    <string name="remote_invalid_pin_msg">有効な 4 桁の PIN を入力してください</string>
+    <string name="remote_verifying_pin">PIN を確認中…</string>
+    <string name="remote_access_granted">アクセスが許可されました</string>
+    <string name="remote_access_denied">アクセスが拒否されました</string>
+    <string name="remote_incorrect_vault_pin">不正な保管庫 PIN</string>
+    <string name="remote_adding_to_vault">ボールトに追加する</string>
+    <string name="remote_encrypting_folder_msg">フォルダーを暗号化しています…</string>
+    <string name="remote_added_to_vault_success">フォルダが暗号化されてボールトに追加されました</string>
+    <string name="remote_failed_add_vault">ボールトにフォルダを追加できませんでした</string>
+    <string name="remote_opening_vault_entry">ボールトのエントリを開く</string>
+    <string name="remote_decrypting_files_mirror">ファイルをミラーリング場所に復号化しています…</string>
+    <string name="remote_vault_entry_opened">金庫の入り口が開かれました</string>
+    <string name="remote_files_decrypted_success">ファイルは正常に復号化されました</string>
+    <string name="remote_browsing_mirror">閲覧ミラーの場所…</string>
+    <string name="remote_failed_open_vault">ボールトのエントリを開けませんでした</string>
+    <string name="remote_closing_vault_entry">ボールト エントリを閉じる</string>
+    <string name="remote_reencrypting_files_msg">ファイルを再暗号化しています…</string>
+    <string name="remote_vault_entry_closed">保管庫のエントリが閉じられました</string>
+    <string name="remote_files_reencrypted_success">ファイルは正常に再暗号化されました</string>
+    <string name="remote_failed_close_vault">ボールトエントリを閉じることができませんでした</string>
+    <string name="remote_decrypt_to_original_title">オリジナルに復号化する</string>
+    <string name="remote_decrypting_original_msg">ファイルを元の場所に復号化しています…</string>
+    <string name="remote_decryption_complete">復号化が完了しました</string>
+    <string name="remote_files_restored_original">ファイルは元の場所に復元されました</string>
+    <string name="remote_entry_removed_vault">エントリがボールトから削除されました</string>
+    <string name="remote_failed_decrypt_original">オリジナルへの復号化に失敗しました</string>
+    <string name="remote_vault_not_configured">ボールトが構成されていません</string>
+    <string name="remote_setup_vault_pin_q">保管庫の PIN を設定しますか?</string>
+    <string name="remote_secure_files_msg">これにより、暗号化されたファイルが保護されます</string>
+    <string name="remote_setup_vault">ボールトのセットアップ</string>
+    <string name="remote_unlock_vault_q">金庫のロックを解除しますか?</string>
+    <string name="remote_enter_pin_to_add">PIN を入力してフォルダーを追加します</string>
+    <string name="remote_encrypt_folder_q">このフォルダを暗号化してボールトに追加しますか?</string>
+    <string name="remote_moving_encrypting">移動と暗号化</string>
+    <string name="remote_copying_encrypting">コピーと暗号化</string>
+    <string name="remote_processing_files">ファイルを処理中…</string>
+    <string name="remote_encryption_failed">暗号化に失敗しました</string>
+    <string name="remote_no_vault_folders_yet">ボルトフォルダーはまだ存在しません</string>
+
+    <!-- Remote Manager Final Localization -->
+    <string name="remote_volume_internal">内部共有ストレージ</string>
+    <string name="remote_volume_sdcard">SDカード</string>
+    <string name="remote_volume_network">ネットワーク共有</string>
+    <string name="remote_status_readonly">読み取り専用</string>
+    <string name="remote_status_shared">共有</string>
+    <string name="remote_tooltip_back">戻る</string>
+    <string name="remote_tooltip_refresh">ファイルリストを更新</string>
+    <string name="remote_tooltip_new_folder">新しいフォルダーの作成</string>
+    <string name="remote_tooltip_upload">ファイルをアップロードする</string>
+    <string name="remote_modal_new_folder_title">新しいフォルダー</string>
+    <string name="remote_modal_new_folder_desc">現在のパスに新しいディレクトリを作成します。</string>
+    <string name="remote_modal_new_folder_placeholder">フォルダ名</string>
+    <string name="remote_modal_cancel">キャンセル</string>
+    <string name="remote_modal_continue">続く</string>
+    <string name="remote_tooltip_download">ダウンロード</string>
+    <string name="remote_tooltip_install">デバイスにインストールする</string>
+    <string name="remote_tooltip_rename">名前の変更</string>
+    <string name="remote_tooltip_delete">消去</string>
+    <string name="remote_tooltip_close_reencrypt">閉じる/再暗号化する</string>
+    <string name="remote_tooltip_open_decrypt">ミラーリングに開く/復号化する</string>
+    <string name="remote_tooltip_decrypt_original">元の場所に復号化する</string>
+    <string name="remote_tooltip_copy_encrypt">Vault にコピーして暗号化する</string>
+    <string name="remote_tooltip_move_encrypt">Vault への移動と暗号化</string>
+    <string name="remote_tooltip_extract_app">%s を抽出します</string>
+    <string name="remote_modal_rename_placeholder">新しい名前</string>
+    <string name="remote_btn_rename">名前の変更</string>
+    <string name="remote_btn_encrypt">暗号化する</string>
+    <string name="remote_btn_encrypt_add">暗号化して追加</string>
+    <string name="remote_btn_extract">抽出する</string>
+    <string name="remote_btn_info">追加情報</string>
+    <string name="remote_modal_delete_confirm">%d 選択したアイテムを削除してもよろしいですか?</string>
+    <string name="remote_vol_used">%d%% 使用済み</string>
+    <string name="remote_vol_free_of">%1$sは%2$s無料</string>
+    <string name="remote_vol_shared_folder">共有フォルダー</string>
+    <string name="remote_vol_manager">マネージャー</string>
+    <string name="remote_vol_apps">アプリ</string>
+    <string name="remote_vol_view_apps">インストールされているアプリケーションを表示する</string>
+    <string name="remote_vol_vault">保管庫</string>
+    <string name="remote_vol_vault_secure">安全な</string>
+    <string name="remote_vol_vault_info">暗号化されたフォルダー</string>
+    <string name="remote_modal_delete_permanently">「%s」を完全に削除しますか?</string>
+    <string name="remote_parent_dir">親ディレクトリ</string>
+    <string name="remote_folder_empty">フォルダーが空です</string>
+    <string name="remote_msg_enter_4_digits">4桁すべてを入力してください</string>
+    <string name="remote_msg_incorrect_pin">PIN が間違っています - もう一度試してください</string>
+    <string name="remote_msg_server_error">サーバーにアクセスできませんでした</string>
+    <string name="remote_msg_rename_failed">名前の変更に失敗しました</string>
+    <string name="remote_msg_transfer_complete_err">転送は完了しましたが、%d 個のアイテムが失敗しました。</string>
+    <string name="remote_msg_transfer_failed">転送に失敗しました</string>
+    <string name="remote_msg_delete_failed_count">%d 個のアイテムを削除できませんでした。</string>
+    <string name="remote_msg_upload_complete">アップロード完了</string>
+    <string name="remote_msg_uploading_count">%2$d の %1$d をアップロードしています</string>
+    <string name="remote_msg_upload_failed_http">アップロードに失敗しました (HTTP %d)</string>
+    <string name="remote_msg_network_error">ネットワークエラー</string>
+    <string name="remote_msg_preparing_download">ダウンロードの準備中</string>
+    <string name="remote_msg_starting_compression">圧縮を開始しています…</string>
+    <string name="remote_msg_compressing_name">「%s」を圧縮しています</string>
+    <string name="remote_msg_zip_progress">%1$d / %2$d ファイルが圧縮されました</string>
+    <string name="remote_msg_zip_wait">サーバーが ZIP アーカイブを作成するまでお待ちください…</string>
+    <string name="remote_msg_starting_download">ダウンロードを開始しています…</string>
+    <string name="remote_msg_download_complete">ダウンロード完了</string>
+    <string name="remote_msg_download_failed">ダウンロードに失敗しました</string>
+    <string name="remote_downloading_zip">ZIPのダウンロード</string>
+    <string name="remote_msg_current_file">現在: %1$s</string>
+    <string name="remote_msg_downloading_pct">ダウンロード中… %1$d%%</string>
+    <string name="remote_msg_of">%1$s/%2$s</string>
+    <string name="remote_msg_files_compressed_saved">%1$d ファイルを圧縮して保存</string>
+    <string name="remote_msg_no_dpi_match">正確な DPI 一致はありません — 分割を選択します:</string>
+    <string name="remote_msg_upload_complete_extracting">アップロードが完了しました。分割を抽出中…</string>
+    <string name="remote_msg_starting_extraction">抽出を開始しています…</string>
+    <string name="remote_msg_could_not_start_compression">圧縮を開始できませんでした</string>
+    <string name="remote_msg_compression_failed">圧縮に失敗しました</string>
+    <string name="remote_msg_splits_extracted">%1$d / %2$d スプリットが抽出されました</string>
+    <string name="remote_msg_streaming_installer">Android インストーラーにストリーミング中…</string>
+    <string name="remote_msg_waiting_install_prompt">OS のインストール プロンプトを待っています…</string>
+    <string name="remote_msg_extracting_name">「%s」を抽出しています</string>
+    <string name="remote_msg_uploading_name">「%s」をアップロードしています…</string>
+    <string name="remote_msg_remote_xapk_install">リモート XAPK インストール</string>
+    <string name="remote_msg_xapk_install_failed">XAPKのインストールに失敗しました</string>
+    <string name="remote_msg_apk_install_failed">APKのインストールに失敗しました</string>
+    <string name="remote_msg_upload_failed">アップロードに失敗しました</string>
+    <string name="remote_msg_network_error_title">ネットワークエラー</string>
+    <string name="remote_vault_operation">ボールトの操作</string>
+    <string name="remote_processing">処理…</string>
+    <string name="remote_no_folder_selected">フォルダーが選択されていません</string>
+    <string name="remote_browse_to_folder_first">まずフォルダーを参照してください</string>
+    <string name="remote_msg_loading_apps">アプリを読み込んでいます…</string>
+    <string name="remote_msg_failed_load_apps">アプリの読み込みに失敗しました</string>
+    <string name="remote_msg_no_apps_found">アプリが見つかりませんでした</string>
+    <string name="remote_msg_app_singular">%d アプリ</string>
+    <string name="remote_msg_apps_plural">%d 個のアプリ</string>
+    <string name="remote_msg_item_singular">%d アイテム</string>
+    <string name="remote_msg_items_plural">%d 個のアイテム</string>
+    <string name="remote_msg_items_uploaded">%d 個のアイテムをアップロードしました</string>
+    <string name="remote_msg_paste_items">%d 個のアイテムを貼り付けます</string>
+    <string name="remote_msg_paste_item">%d アイテムを貼り付け</string>
+    <string name="remote_msg_look_at_device">Android デバイスを見て、インストール プロンプトを確認してください。</string>
+    <string name="remote_msg_select_density">密度リソースを選択します。</string>
+    <string name="remote_msg_abi_architecture">ABI (アーキテクチャ):</string>
+    <string name="remote_btn_install_selected">選択した分割を使用してインストールする</string>
+    <string name="remote_msg_loading_vault_folders">ボルトフォルダーをロード中…</string>
+    <string name="remote_msg_error_prefix">エラー: %s</string>
+    <string name="remote_msg_chunk_failed">チャンクが失敗しました (HTTP %d)</string>
+    <string name="remote_msg_network_error_label">ネットワークエラー</string>
+    <string name="remote_msg_folder_label">フォルダ</string>
+    <string name="remote_msg_split_apk_label">APKを分割する</string>
+    <string name="remote_msg_skipped">スキップしました</string>
+    <string name="remote_msg_opened_on_device">デバイス上で開かれました</string>
+    <string name="remote_msg_installing_split_apk">分割APKのインストール</string>
+    <string name="remote_msg_vault_locked">金庫がロックされました</string>
+    <string name="remote_msg_vault_unlocked">金庫のロックが解除されました</string>
+    <string name="remote_msg_vault_title">保管庫</string>
+    <string name="remote_msg_scanning_vault">保管庫アイテムをスキャンしています…</string>
+    <string name="remote_msg_reading_package">パッケージの内容を読んでいます…</string>
+    <string name="remote_msg_upload_complete_prompting">アップロード完了！プロンプトデバイス…</string>
+    <string name="remote_msg_failed_trigger_install">インストールのトリガーに失敗しました</string>
+    <string name="remote_recommended">推奨</string>
+    <string name="remote_msg_install_permission_denied">インストールできません: デバイスに「不明なアプリのインストール」権限が付与されていません。</string>
+    <string name="remote_msg_installing_apk">APKのインストール</string>
+    <string name="remote_msg_triggering_installer">インストーラーを起動中…</string>
+    <string name="remote_msg_prompt_sent">デバイスに送信されるプロンプト</string>
+    <string name="remote_msg_confirm_on_device">Androidの画面でご確認ください。</string>
+    <string name="remote_msg_remote_install">リモートインストール</string>
+    <string name="remote_msg_uploading_apk">APKをアップロード中…</string>
+    <string name="remote_vault_pin_title">ボールトPIN</string>
+    <string name="remote_vault_pin_subtitle">4桁のPINを入力してください</string>
+    <string name="remote_vault_add_title">ボールトに追加</string>
+    <string name="remote_vault_add_msg">このフォルダを暗号化してボールトに追加しますか?</string>
+    <string name="remote_vault_add_warning">⚠ これにより、フォルダー内のすべてのファイルが暗号化され、元のファイルが削除されます。</string>
+    <string name="remote_root">根</string>
+    <string name="remote_badge_remote">リモート</string>
+    <string name="remote_app_installed_date">設置日</string>
+    <string name="remote_app_size">アプリケーションサイズ</string>
+    <string name="remote_app_package">パッケージ名</string>
+    <string name="remote_app_cache_data">キャッシュ/データサイズ</string>
+    <string name="remote_vault_no_folders">ボルトフォルダーが存在しません。</string>
+    <string name="remote_vault_add_first">まずフォルダーをボールトに追加して、ボールト エントリを作成します。</string>
+    <string name="indexed_current_files">インデックス付き %1$d ファイル</string>
+    <string name="practical_advice">実践的なアドバイス</string>
+    <string name="before_using_any_file_manager_back_up_your_important_files_this_is_good_practice_regardless_of_which_app_you_use">ファイルマネージャーを使用する前に、重要なファイルをバックアップしてください。どのアプリを使用するかに関係なく、これは良い習慣です。</string>
+    <string name="payment_processor">支払処理業者</string>
+    <string name="refunds">払い戻し</string>
+    <string name="recurring_charges">定期的な料金</string>
+    <string name="no_obligation">義務なし</string>
+    <string name="plainenglish_summary">平易な英語の要約</string>
+    <string name="tips_are_processed_safely_by_google_we_never_see_your_payment_details_you_will_never_be_charged_without_tapping_a_button_yourself">チップは Google によって安全に処理されます。お支払いの詳細が表示されることはありません。自分でボタンをタップしない限り、料金が請求されることはありません。</string>
+    <string name="your_privacy_is_protected">あなたのプライバシーは保護されています</string>
+    <string name="a_note_on_billing">課金に関する注意事項</string>
+    <string name="about_remote_management">リモート管理について</string>
+    <string name="important_warning">重要な警告</string>
+    <string name="we_do_not_sell_your_data">私たちはあなたのデータを販売しません</string>
+    <string name="before_you_clear_data">データを消去する前に</string>
+    <string name="purchase_failed_code_result_responsecode">購入に失敗しました (コード %1$d)</string>
+    <string name="billing_unavailable_result_debugmessage">課金は利用できません (%1$s)</string>
+    <string name="product_not_found_check_your_internet_connection_and_try_again">製品が見つかりません。インターネット接続を確認して、もう一度試してください。</string>
+    <string name="indexing_storagelabel_enables">「%1$s」のインデックス作成により、次のことが可能になります。</string>
+    <string name="instant_search_across_all_files">• すべてのファイルの即時検索</string>
+    <string name="faster_folder_loading">• フォルダーの読み込みが高速化</string>
+    <string name="duplicate_file_detection">• 重複ファイルの検出</string>
+    <string name="this_only_needs_to_be_done_once_future_opens_are_always_incremental">これは一度だけ行う必要があります。将来のオープンは常に増分です。</string>
+    <string name="index_now_recommended">今すぐインデックスを付ける (推奨)</string>
+    <string name="not_now">今じゃない</string>
+    <string name="device_disconnected">デバイスが切断されました</string>
+    <string name="please_wait_for_the_transfer_to_finish_or_press_cancel_on_the_dialog">転送が完了するまで待つか、ダイアログでキャンセルを押してください。</string>
+    <string name="select_files_not_folders_to_share">共有するファイル (フォルダーではない) を選択します</string>
+    <string name="select_files_not_folders_to_encrypt">暗号化するファイル (フォルダーではない) を選択します</string>
+    <string name="save_archive_to_displaypath">アーカイブの保存先: %1$s</string>
+    <string name="use_the_following_path_as_the_sync_destination_displaypath">同期先として次のパスを使用しますか? %1$s</string>
+    <string name="folder_sync_will_back_up_to_this_location_on_the_network_share">Folder Sync は、ネットワーク共有上のこの場所にバックアップします。</string>
+    <string name="clipboard_1_file">クリップボード（1ファイル）</string>
+    <string name="clipboard_total_files">クリップボード (%1$d ファイル)</string>
+    <string name="error_loading_directory_errmessage">ディレクトリのロード中にエラーが発生しました: %1$s</string>
+    <string name="sideload_apk">サイドロードAPK</string>
+    <string name="sideload_xapk">サイドロードXAPK</string>
+
+    <!-- Transfer Settings Feature -->
+    <string name="transfer_settings">転送設定</string>
+    <string name="transfer_settings_select_all">すべて選択</string>
+    <string name="transfer_settings_subtitle">%1$s → %2$s から</string>
+    <string name="transfer_settings_biometric_subtitle">認証して設定をテレビに安全に転送します</string>
+    <string name="transfer_settings_section_network">ネットワーク共有</string>
+    <string name="transfer_settings_section_fileserver">ファイルサーバー</string>
+    <string name="transfer_settings_from_device">差出人: %1$s</string>
+    <string name="transfer_settings_summary_settings">アプリの設定</string>
+    <string name="transfer_settings_summary_shares">ネットワーク共有</string>
+    <string name="transfer_settings_timeout_countdown">%1$d 秒後に自動終了します…</string>
+    <string name="transfer_settings_success">設定は %1$s に正常に転送されました</string>
+    <string name="transfer_settings_success_count">%1$d 個のアイテムが正常に適用されました</string>
+    <string name="transfer_settings_rejected">転送が拒否されました</string>
+    <string name="transfer_settings_timeout">テレビは時間内に応答しませんでした。もう一度試してください。</string>
+    <string name="transfer_settings_apply_failed">設定を適用できませんでした: %1$s</string>
+    <string name="security_required_title">セキュリティが必要です</string>
+    <string name="security_required_desc">設定を安全に転送するには、Android 設定で画面ロック (PIN、パターン、顔、または指紋) を有効にする必要があります。</string>
+    <string name="general_app_settings">アプリの一般設定</string>
+    <string name="general_setting_prefix">設定: %1$s</string>
+    <string name="smb_share_prefix">SMB 共有: %1$s (%2$s)</string>
+    <string name="ftp_share_prefix">FTP 共有: %1$s (%2$s)</string>
+    <string name="sftp_share_prefix">SFTP 共有: %1$s (%2$s)</string>
+    <string name="scp_share_prefix">SCP シェア: %1$s (%2$s)</string>
+    <string name="file_server_port_item">ファイルサーバーポート (%1$d)</string>
+    <string name="file_server_pin_warning">⚠ ファイルサーバーのPINは転送されません。テレビに新しいPINを設定します。</string>
+    <string name="transfer_to_tv">テレビに転送</string>
+
+    <string name="preparing">準備中…</string>
+    <string name="downloading_netfilename">ダウンロード中: %1$s</string>
+    <string name="downloading_folder_netfilename">ダウンロードフォルダー: %1$s</string>
+    <string name="compression_completed_finalfilename">圧縮が完了しました: %1$s</string>
+    <string name="uploading_to_destsharename">%1$s にアップロードしています…</string>
+    <string name="compression_completed_archivename_destsharename">圧縮が完了しました: %1$s → %2$s</string>
+    <string name="compression_failed_emessage">圧縮に失敗しました: %1$s</string>
+    <string name="compression_cancelled">圧縮がキャンセルされました</string>
+    <string name="delete_completed_with_errors_failcount_failed">削除はエラーありで完了しました (%1$d は失敗しました)</string>
+    <string name="press_cancel_to_stop_the_transfer">転送を中止するには「キャンセル」を押してください</string>
+    <string name="transfer_cancelled">転送がキャンセルされました</string>
+    <string name="file_fileindex_of_totalfiles_filename">ファイル %1$d/%2$d — %3$s</string>
+    <string name="copiedstr_totalstr">%1$s / %2$s</string>
+    <string name="cannot_read_source_file">ソースファイルを読み取れません</string>
+    <string name="encrypted_successcount_files_to_vault">暗号化された %1$d ファイルをボールトに保存しました</string>
+    <string name="failed_to_encrypt_files">ファイルの暗号化に失敗しました</string>
+    <string name="clipboard_1_item">クリップボード (1 件)</string>
+    <string name="clipboard_n_items">クリップボード (%1$d 個のアイテム)</string>
+    <string name="opening_filename">%1$s を開きます…</string>
+    <string name="open_with">…で開く</string>
+    <string name="no_app_found_to_open_this_file_type">このファイルタイプを開くアプリが見つかりませんでした</string>
+    <string name="failed_to_open_file_emessage">ファイルを開けませんでした: %1$s</string>
+    <string name="fetching_filename">%1$s を取得中…</string>
+    <string name="failed_to_download_file_emessage">ファイルのダウンロードに失敗しました: %1$s</string>
+    <string name="uploading_localfilename_to_tv">%1$s をテレビにアップロードしています…</string>
+    <string name="installing_localfilename_on_tv">%1$s をテレビにインストールしています…</string>
+    <string name="apk_install_triggered_on_tv">テレビで APK のインストールがトリガーされる</string>
+    <string name="failed_to_start_xapk_install_on_tv">テレビでの XAPK インストールの開始に失敗しました</string>
+    <string name="extracting_currentfile_currenttotal">%1$s (%2$s/%3$s) を抽出しています…</string>
+    <string name="installing_split_apks_on_tv">分割 APK を TV にインストールしています…</string>
+    <string name="xapk_install_triggered_on_tv_check_the_tv_screen">XAPK インストールがテレビでトリガーされました — テレビ画面を確認してください</string>
+    <string name="xapk_install_failed_error">XAPK インストールに失敗しました: %1$s</string>
+    <string name="sideload_failed_emessage">サイドロードが失敗しました: %1$s</string>
+    <string name="usb_debugging_must_be_enabled_on_the_tv_to_capture_screenshots">スクリーンショットをキャプチャするには、テレビで USB デバッグを有効にする必要があります。</string>
+    <string name="to_enable">有効にするには:</string>
+    <string name="open_settings_on_your_tv">1. テレビの設定を開きます</string>
+    <string name="go_to_device_preferences_developer_options">2. [デバイス設定] &gt; [開発者向けオプション] に移動します。</string>
+    <string name="enable_usb_debugging">3.「USBデバッグ」を有効にする</string>
+    <string name="if_you_dont_see_developer_options_go_to_about_and_tap_build_number_7_times_first">開発者向けオプションが表示されない場合は、「バージョン情報」に移動し、まず「ビルド番号」を 7 回タップします。</string>
+    <string name="connecting_to_tv_the_screenshot_will_be_saved_to_your_phones_screenshots_folder">テレビに接続中… スクリーンショットは携帯電話のスクリーンショット フォルダーに保存されます。</string>
+    <string name="connecting_to_tv_via_adb_please_approve_on_tv_if_prompted">ADB 経由でテレビに接続しています… プロンプトが表示されたら、テレビで承認してください。</string>
+    <string name="screenshot_saved_savedfilename">保存されたスクリーンショット: %1$s</string>
+    <string name="screenshot_failed_emessage">スクリーンショットが失敗しました: %1$s</string>
+    <string name="from_username">(ユーザー名より)</string>
+    <string name="could_not_list_shares_errormsg">共有をリストできませんでした: %1$s</string>
+    <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">「無効なパスです。SMB の場合は共有名を入力してください (例: /ShareName または \\host\\Share\\Folder)。」</string>
+    <string name="testing">テスト中…</string>
+    <string name="accepted_on_formatterformatdatetermstime">%1$s に受け入れられました</string>
+    <string name="accepted_on_formatterformatdateprivacytime">%1$s に受け入れられました</string>
+    <string name="enter_a_4digit_pin_to_secure_remote_access">4 桁の PIN を入力してリモート アクセスを保護します</string>
+    <string name="start_server">サーバーの起動</string>
+    <string name="remove_favoritelabel_from_favorites">%1$s をお気に入りから削除しますか?</string>
+    <string name="hidden_files_are_visible">隠しファイルが表示される</string>
+    <string name="cache_temp_files_junkfilessize">キャッシュおよび一時ファイル (%1$d)</string>
+    <string name="old_files_not_modified_in_180_days_oldfilessize">古いファイル — 180 日以上変更されていない (%1$d)</string>
+    <string name="save_formatterformatfilesizectx_itemestimatedbytes">%1$s を保存</string>
+    <string name="manual_review">手動レビュー</string>
+    <string name="updating_debloat_list">デブロートリストを更新中…</string>
+    <string name="debloat_list_updated">✅ デブロートリストが更新されました</string>
+    <string name="failed_to_update_list">❌ リストの更新に失敗しました</string>
+    <string name="system_apps">システムアプリ</string>
+    <string name="debloater">デブローター</string>
+    <string name="package_apppackagename">パッケージ: %1$s</string>
+    <string name="installed_installedstr">インストール済み: %1$s</string>
+    <string name="app_size_appsizestr">アプリのサイズ: %1$s</string>
+    <string name="data_size_datasizestr">データサイズ: %1$s</string>
+    <string name="app_type_label">タイプ: %1$s</string>
+    <string name="app_type_system">システム</string>
+    <string name="app_type_user">ユーザー</string>
+    <string name="app_count_singular">%1$d アプリ</string>
+    <string name="app_count_plural">%1$d 個のアプリ</string>
+    <string name="debloater_guide">--- デブローターガイド ---</string>
+    <string name="safety_itrecommendation">安全性: %1$s</string>
+    <string name="description_itdescription">説明: %1$s</string>
+    <string name="extract">⬇ 抜粋</string>
+    <string name="app_info">アプリ情報</string>
+    <string name="extracting_appname">⏳ %1$s を抽出中…</string>
+    <string name="extract_failed_emessage">❌ 抽出に失敗しました: %1$s</string>
+    <string name="extracted_as_formatlabel">✅ %1$s として抽出されます</string>
+    <string name="filename_1">📦 %1$s</string>
+    <string name="accessible_via_ufm_app_files_downloads_ufmextracted">📂 UFM経由でアクセス可能 · アプリファイル/ダウンロード/UFM抽出</string>
+    <string name="a_new_tile_called_apk_xapk_extracts_will_appear_on_the">💡 「APK / XAPK Extracts」という新しいタイルが</string>
+    <string name="home_screen_tap_it_to_browse_share_or_install_your_extracted_files">ホーム画面。それをタップして、抽出したファイルを参照、共有、またはインストールします。</string>
+    <string name="the_tile_disappears_automatically_when_the_folder_is_empty">フォルダーが空になると、タイルは自動的に消えます。</string>
+    <string name="got_it_1">わかった</string>
+    <string name="ufe0f_opened_app_info_for_inspection">ℹ️ 検査のためにアプリ情報を開きました</string>
+    <string name="could_not_open_app_info">❌ アプリ情報を開けませんでした</string>
+    <string name="unable_to_open_file_emessage">ファイルを開けません: %1$s</string>
+    <string name="access_to_androiddata_denied">Android/データへのアクセスが拒否されました。</string>
+    <string name="access_to_androidobb_denied">Android/obb へのアクセスが拒否されました。</string>
+    <string name="grant_access_to_app_folder">アプリフォルダーへのアクセスを許可する</string>
+    <string name="grant_access_to_obb_folder">OBB フォルダーへのアクセスを許可する</string>
+    <string name="in_the_picker_navigate_to_android_data_shorttarget_and_select_use_this_folder_or_select_this_folder_if_you_see_a_different_folder_eg_dcimcamera_navigate_up_to_android_data_first_and_then_into_shorttarget">ピッカーで: Android → データ → %1$s に移動し、[このフォルダーを使用する] (または [このフォルダーを選択する]) を選択します。  別のフォルダー (例: DCIM/Camera) が表示される場合は、まず Android → data に移動し、次に %1$s に移動します。</string>
+    <string name="in_the_picker_navigate_to_android_obb_shorttarget_and_select_use_this_folder">ピッカーで: Android → obb → %1$s に移動し、「このフォルダーを使用する」を選択します。</string>
+    <string name="open_picker">ピッカーを開く</string>
+    <string name="use_the_following_folder_as_the_sync_source_path">次のフォルダーを同期ソースとして使用しますか? %1$s</string>
+    <string name="use_following_path_as_sync_destination">同期先として次のパスを使用しますか?\n\n%1$s</string>
+    <string name="save_archive_to_path">アーカイブを次の場所に保存します。\n\n%1$s</string>
+    <string name="files_in_this_folder_will_be_backed_up_to_your_network_share">このフォルダー内のファイルはネットワーク共有にバックアップされます。</string>
+    <string name="saf_create_file_failed">SAF ファイルの作成に失敗しました</string>
+    <string name="saf_output_stream_failed">SAF 出力ストリームの失敗</string>
+    <string name="uploading_to_sharename">%1$s にアップロードしています…</string>
+    <string name="compression_complete_archivename_sharename">圧縮完了: %1$s → %2$s</string>
+    <string name="compression_completed_destfilename">圧縮が完了しました: %1$s</string>
+    <string name="manage_links_with_other_devices">他のデバイスとのリンクを管理する</string>
+    <string name="browse_extracted_apps">抽出されたアプリを参照する</string>
+    <string name="favorite_folder">お気に入りフォルダー</string>
+    <string name="favorite_file">お気に入りのファイル</string>
+    <string name="clear_cache_temp_files">キャッシュと一時ファイルのクリア</string>
+    <string name="found_junkfilecount_cachetemp_files_in_wellknown_junk_folders">%1$d のキャッシュ/一時ファイルが既知のジャンク フォルダーで見つかりました。</string>
+    <string name="remove_duplicate_files">重複ファイルの削除</string>
+    <string name="found_dupgroupssize_duplicate_groups_wasting_space">%1$d 個の重複グループがスペースを無駄にしていることが見つかりました。</string>
+    <string name="review_large_files">大きなファイルを確認する</string>
+    <string name="found_bigfilessize_files_larger_than_512_mb">512 MB を超える %1$d ファイルが見つかりました。</string>
+    <string name="old_unused_files">古い未使用ファイル</string>
+    <string name="connected_tv">コネクテッドテレビ</string>
+    <string name="connected_phone">接続された電話機</string>
+    <string name="usb_drive_filename">USB ドライブ (%1$s)</string>
+    <string name="opening_twin_window">👯 ツインウィンドウを開く</string>
+    <string name="opening_adb_terminal">💻 ADBターミナルを開く</string>
+    <string name="opening_app_manager">📱 アプリマネージャーを開く</string>
+    <string name="opening_search">🔍 検索を開く</string>
+    <string name="opening_storage_analyzer">📊 ストレージ アナライザーを開く</string>
+    <string name="opening_smart_sort">
+🔀 スマートソートを開く
+</string>
+    <string name="opening_vault">🔐 金庫を開ける</string>
+    <string name="opening_folder_sync">🔄 フォルダー同期を開く</string>
+    <string name="no_app_found_to_open_this_file_pattern">このファイルパターンを開くアプリが見つかりませんでした</string>
+
+    <!-- Smart Sort -->
+    <string name="smart_sort_title">
+スマートソート
+</string>
+    <string name="smart_sort_tile_subtitle">
+ファイルをカテゴリに整理する
+</string>
+    <string name="smart_sort_config">
+スマートソート構成
+</string>
+    <string name="smart_sort_here">
+このフォルダーをスマートに並べ替える
+</string>
+    <string name="smart_sort_select_drive">
+ドライブを選択してください
+</string>
+    <string name="smart_sort_scope">
+範囲
+</string>
+    <string name="smart_sort_scope_label">
+ソート範囲
+</string>
+    <string name="smart_sort_root_only">
+ルートのみ
+</string>
+    <string name="smart_sort_recursive">
+再帰的
+</string>
+    <string name="smart_sort_subfolder_mode">
+サブフォルダーモード
+</string>
+    <string name="smart_sort_flatten">
+平らにする
+</string>
+    <string name="smart_sort_preserve">
+構造を保持する
+</string>
+    <string name="smart_sort_mode_label">
+並べ替え
+</string>
+    <string name="smart_sort_mode_type">
+タイプ別
+</string>
+    <string name="smart_sort_mode_size">
+サイズ別
+</string>
+    <string name="smart_sort_mode_date">
+日付別
+</string>
+    <string name="smart_sort_categories">
+カテゴリー
+</string>
+    <string name="smart_sort_category_photos">
+写真
+</string>
+    <string name="smart_sort_category_videos">
+動画
+</string>
+    <string name="smart_sort_category_audio">
+オーディオ
+</string>
+    <string name="smart_sort_category_documents">
+書類
+</string>
+    <string name="smart_sort_category_archives">
+アーカイブ
+</string>
+    <string name="smart_sort_category_apps">
+アプリ
+</string>
+    <string name="smart_sort_category_ebooks">
+電子書籍
+</string>
+    <string name="smart_sort_category_other">
+他の
+</string>
+    <string name="smart_sort_include_other">
+未分類を含む
+</string>
+    <string name="smart_sort_size_tiny">
+小さい (&lt;1MB)
+</string>
+    <string name="smart_sort_size_small">
+小 (1～10MB)
+</string>
+    <string name="smart_sort_size_medium">
+中（10～100MB）
+</string>
+    <string name="smart_sort_size_large">
+大（100MB～1GB）
+</string>
+    <string name="smart_sort_size_huge">
+巨大 (>1GB)
+</string>
+    <string name="smart_sort_date_today">
+今日
+</string>
+    <string name="smart_sort_date_this_week">
+今週
+</string>
+    <string name="smart_sort_date_this_month">
+今月
+</string>
+    <string name="smart_sort_date_this_year">
+今年
+</string>
+    <string name="smart_sort_date_older">
+古い
+</string>
+    <string name="smart_sort_options">
+オプション
+</string>
+    <string name="smart_sort_prefix">
+フォルダーの接頭辞
+</string>
+    <string name="smart_sort_duplicates">
+重複ファイルについて
+</string>
+    <string name="smart_sort_existing_folder">
+カテゴリフォルダが存在する場合
+</string>
+    <string name="smart_sort_strategy_skip">
+スキップ
+</string>
+    <string name="smart_sort_strategy_rename">
+名前の変更
+</string>
+    <string name="smart_sort_strategy_overwrite">
+上書き
+</string>
+    <string name="smart_sort_strategy_merge">
+マージ
+</string>
+    <string name="smart_sort_preview">
+プレビュー
+</string>
+    <string name="smart_sort_preview_title">
+並べ替えプレビュー
+</string>
+    <string name="smart_sort_start">
+並べ替えの開始
+</string>
+    <string name="smart_sort_result_title">
+ソート完了
+</string>
+    <string name="smart_sort_undo">
+並べ替えを元に戻す
+</string>
+    <string name="smart_sort_result_moved">
+移動しました: %1$d
+</string>
+    <string name="smart_sort_result_skipped">
+スキップされました: %1$d
+</string>
+    <string name="smart_sort_result_failed">
+失敗しました: %1$d
+</string>
+    <string name="smart_sort_preview_total">
+合計: %1$d ファイル
+</string>
+    <string name="smart_sort_preview_conflicts">
+%1$d 個の競合が検出されました
+</string>
+    <string name="smart_sort_progress_moving">
+移動中: %1$s (%2$d/%3$d)
+</string>
+    <string name="smart_sort_default_folder">
+デフォルトのフォルダー
+</string>
+    <string name="smart_sort_folder_label">
+フォルダ: %1$s
+</string>
+    <string name="smart_sort_validation_error">
+検証エラー
+</string>
+    <string name="smart_sort_err_no_category">
+少なくとも 1 つのカテゴリを選択するか、「未分類を含める」を有効にしてください。
+</string>
+    <string name="smart_sort_err_scope">
+ソート範囲は「ルートのみ」または「再帰」のいずれかを選択してください。
+</string>
+    <string name="smart_sort_err_subfolder">
+サブフォルダーの処理については、「フラット化」または「構造を保持」のいずれかを選択してください。
+</string>
+    <string name="smart_sort_err_mode">
+並べ替えモードを「タイプ別」、「サイズ別」、または「日付別」から選択してください。
+</string>
+    <string name="smart_sort_err_duplicate">
+重複処理戦略を選択してください。
+</string>
+    <string name="smart_sort_err_existing">
+カテゴリフォルダがすでに存在する場合の対処方法を選択してください。
+</string>
+    <string name="smart_sort_undoing">
+並べ替えを元に戻しています...
+</string>
+    <string name="smart_sort_undone">
+並べ替えが正常に元に戻されました
+</string>
+    <string name="smart_sort_history">
+歴史
+</string>
+    <string name="smart_sort_history_title">
+履歴の並べ替え
+</string>
+    <string name="smart_sort_history_empty">
+以前の並べ替えは見つかりませんでした
+</string>
+    <string name="smart_sort_history_summary">
+移動: %1$d スキップ: %2$d 失敗: %3$d
+</string>
+    <string name="smart_sort_history_delete">
+消去
+</string>
+    <string name="smart_sort_history_clear_all">
+すべてクリア
+</string>
+    <string name="smart_sort_history_clear_all_title">
+履歴をすべてクリアしますか?
+</string>
+    <string name="smart_sort_history_clear_all_msg">
+これにより、すべての並べ替え履歴エントリが削除されます。ソートされたファイルは復元されません。
+</string>
+    <string name="smart_sort_warning_title">
+高リスクフォルダー
+</string>
+    <string name="smart_sort_warning_message">
+このフォルダを並べ替えると、システム障害やアプリの誤動作が発生する可能性があります。\n
+\n
+フォルダ: %1$s\n
+\n
+続行してもよろしいですか?
+</string>
+
+    <!-- Smart Sort hints -->
+    <string name="smart_sort_select_folder">
+フォルダーの選択
+</string>
+    <string name="smart_sort_set_default">
+デフォルトの設定
+</string>
+    <string name="smart_sort_standard">
+標準
+</string>
+    <string name="smart_sort_custom">
+カスタム
+</string>
+    <string name="smart_sort_add_rule">
+ルールの追加
+</string>
+    <string name="smart_sort_rule_description">
+説明
+</string>
+    <string name="smart_sort_add_extension">
+拡張機能の追加
+</string>
+    <string name="smart_sort_edit_rule">
+編集
+</string>
+    <string name="smart_sort_delete_rule">
+消去
+</string>
+    <string name="smart_sort_delete_rule_confirm">
+このルールを削除しますか?
+</string>
+    <string name="smart_sort_extension_already_used">
+拡張子「%1$s」は「%2$s」ですでに使用されています
+</string>
+    <string name="smart_sort_extension_empty">
+拡張子を入力してください
+</string>
+    <string name="smart_sort_description_empty">
+説明を入力してください
+</string>
+    <string name="smart_sort_no_extensions">
+少なくとも 1 つの拡張子を追加してください
+</string>
+    <string name="smart_sort_no_extensions_added">
+拡張機能は追加されていません
+</string>
+    <string name="smart_sort_remove_extension">
+拡張子の削除
+</string>
+    <string name="smart_sort_remove_extensions_title">
+拡張機能の削除
+</string>
+    <string name="smart_sort_extension_removed">
+拡張機能が削除されました
+</string>
+    <string name="smart_sort_no_rules">
+ルールは追加されていません。 「ルールを追加」をタップしてルールを作成します。
+</string>
+    <string name="smart_sort_mode_custom">
+カスタムルールによる
+</string>
+    <string name="smart_sort_save_config">
+設定の保存
+</string>
+    <string name="smart_sort_edit_config">
+保存された設定を編集する
+</string>
+    <string name="smart_sort_save_description">
+説明
+</string>
+    <string name="smart_sort_save_changes">
+変更を保存
+</string>
+    <string name="smart_sort_delete_saved">
+消去
+</string>
+    <string name="smart_sort_delete_saved_confirm_title">
+「%1$s」を削除しますか?
+</string>
+    <string name="smart_sort_delete_saved_confirm_msg">
+保存された構成「%1$s」を削除してもよろしいですか?
+</string>
+    <string name="smart_sort_enter_description">
+説明を入力してください
+</string>
+    <string name="smart_sort_config_saved">
+設定が保存されました
+</string>
+    <string name="smart_sort_config_deleted">
+構成が削除されました
+</string>
+    <string name="smart_sort_recent">
+最近の構成
+</string>
+    <string name="smart_sort_execute">
+実行する
+</string>
+    <string name="smart_sort_widget_empty">
+保存された設定はありません
+</string>
+    <string name="smart_sort_widget_sorting">
+スマートソートが進行中です
+</string>
+    <string name="smart_sort_widget_complete">
+スマートソートが完了しました
+</string>
+    <string name="smart_sort_widget_description">
+保存された Smart Sort 構成を迅速に実行する
+</string>
+    <string name="smart_sort_widget_triggered">
+%1$s がトリガーされました
+</string>
+    <string name="widget_smart_sort_preview_config_1">
+日付ごとの写真
+</string>
+    <string name="widget_smart_sort_preview_path_1">
+/ストレージ/エミュレート/0/DCIM
+</string>
+    <string name="widget_smart_sort_preview_config_2">
+ダウンロードのクリーンアップ
+</string>
+    <string name="widget_smart_sort_preview_path_2">
+/storage/emulated/0/ダウンロード
+</string>
+    <string name="widget_smart_sort_preview_config_3">
+文書の種類別
+</string>
+    <string name="widget_smart_sort_preview_path_3">
+/storage/emulated/0/Documents
+</string>
+    <string name="smart_sort_extensions">
+拡張子: %1$s
+</string>
+    <string name="smart_sort_rule_description_label">
+説明: %1$s
+</string>
+    <string name="smart_sort_hint_scope_root">
+このフォルダーに直接あるファイルのみが並べ替えられます。サブフォルダーはそのまま残ります。
+</string>
+    <string name="smart_sort_hint_scope_recursive">
+すべてのサブフォルダー内のファイルがスキャンされ、カテゴリ フォルダーに分類されます。
+</string>
+    <string name="smart_sort_hint_subfolder_flatten">
+サブフォルダのファイルはカテゴリ フォルダに直接移動されます。元のフォルダー構造が失われます。
+</string>
+    <string name="smart_sort_hint_subfolder_preserve">
+サブフォルダー構造は各カテゴリ フォルダー内に保持されます。
+</string>
+    <string name="smart_sort_hint_mode_type">
+ファイルは、ファイルの種類 (写真、ビデオ、ドキュメントなど) ごとにグループ化されます。
+</string>
+    <string name="smart_sort_hint_mode_size">
+ファイルは、ファイル サイズごとにサイズベースのフォルダーにグループ化されます。
+</string>
+    <string name="smart_sort_hint_mode_date">
+ファイルは最終変更日ごとにグループ化されます。
+</string>
+    <string name="smart_sort_hint_dup_skip">
+ターゲット フォルダー内の同じ名前のファイルは、元の場所に残ります。
+</string>
+    <string name="smart_sort_hint_dup_rename">
+同じ名前のファイルは、数字の接尾辞 (_1、_2 など) を付けて名前変更されます。
+</string>
+    <string name="smart_sort_hint_dup_overwrite">
+同じ名前のファイルは受信ファイルに置き換えられます。
+</string>
+    <string name="smart_sort_hint_existing_merge">
+ファイルは既存のカテゴリ フォルダーに追加されます。
+</string>
+    <string name="smart_sort_hint_existing_skip">
+フォルダーが既に存在する場合、このカテゴリは完全にスキップされます。
+</string>
+    <string name="smart_sort_hint_existing_rename">
+番号の接尾辞が付いた新しいフォルダーが作成されます (例: 「UFM Photos (1)」)。
+</string>
+    <string name="file_not_found">ファイルが見つかりません</string>
+    <string name="tile_order_saved">✓ タイルの順序が保存されました</string>
+    <string name="itemlabel_tile_hidden">「%1$s」タイルが非表示になりました</string>
+    <string name="edit_mode_tap_x_to_hide_drag_to_reorder">編集モード: (X) をタップして非表示にし、ドラッグして並べ替えます。</string>
+    <string name="tile_configuration_saved">✓ タイル構成が保存されました</string>
+    <string name="dpad_moves_tile_ok_saves_back_cancels">↕ 十字キーでタイルを移動 • OK で保存 • 戻るでキャンセル</string>
+    <string name="tile_order_cancelled">✕ タイルの注文がキャンセルされました</string>
+    <string name="apk_xapk_extracts">APK / XAPK 抽出</string>
+    <string name="showing_shown_results_scroll_for_more">%1$d の結果を表示中 (スクロールしてさらに表示)</string>
+    <string name="renamed_to_newname">%1$s に名前変更されました</string>
+    <string name="delete_filename">%1$sを削除しますか?</string>
+    <string name="name_deleted">%1$s が削除されました</string>
+    <string name="failed_to_delete_name">%1$s を削除できませんでした</string>
+    <string name="actionlabel_filessize_items_to_destname">%1$s %2$d アイテムを %3$s に追加しますか?</string>
+    <string name="moving_files">ファイルを移動中…</string>
+    <string name="copying_files_1">ファイルをコピーしています…</string>
+    <string name="item_0_totalfiles">アイテム0 / %1$d</string>
+    <string name="item_index_totalcount">アイテム %1$d / %2$d</string>
+    <string name="copiedmb_mb_totalmb_mb_percent">%1$s MB / %2$s MB (%3$d%%)</string>
+    <string name="move_complete">移動完了</string>
+    <string name="copy_complete">コピーが完了しました</string>
+    <string name="daily">毎日</string>
+    <string name="weekly">毎週</string>
+    <string name="monthly">毎月</string>
+    <string name="monday">月曜日</string>
+    <string name="tuesday">火曜日</string>
+    <string name="wednesday">水曜日</string>
+    <string name="thursday">木曜日</string>
+    <string name="friday">金曜日</string>
+    <string name="saturday">土曜日</string>
+    <string name="sunday">日曜日</string>
+    <string name="select_sync_folder">同期フォルダーを選択</string>
+    <string name="q15_minutes">15分</string>
+    <string name="q30_minutes">30分</string>
+    <string name="q1_hour">1時間</string>
+    <string name="q6_hours">6時間</string>
+    <string name="q12_hours">12時間</string>
+    <string name="q24_hours">24時間</string>
+    <string name="folder_sync_requires_an_smb_or_ftp_network_share_to_be_set_up_first">フォルダー同期では、最初に SMB または FTP ネットワーク共有を設定する必要があります。</string>
+    <string name="please_add_a_share_connection_in_network_shares_then_come_back_to_create_a_sync_profile">ネットワーク共有に共有接続を追加してから、戻って同期プロファイルを作成してください。</string>
+    <string name="set_up_smb_ftp">SMB/FTPの設定</string>
+    <string name="sync_enabled">同期が有効です</string>
+    <string name="sync_disabled">同期は無効です</string>
+    <string name="profile_deleted">プロフィールが削除されました</string>
+    <string name="every_formatintervalprofileintervalminutes">%1$sごと</string>
+    <string name="daily_at_timestr">毎日 %1$s</string>
+    <string name="weekly_on_daystr_at_timestr">毎週 %1$s の %2$s</string>
+    <string name="monthly_on_profilescheduleddayofmonthdaysuffix_at_timestr">毎月、%1$d%2$s、%3$s</string>
+    <string name="scheduled_at_timestr">%1$sに予定されています</string>
+    <string name="last_sync_timestr_profilelastsyncfilecount_files">最終同期: %1$s (%2$d ファイル)</string>
+    <string name="edit">編集</string>
+    <string name="sync_now">今すぐ同期</string>
+    <string name="network_share_not_found_for_profilename">%1$s のネットワーク共有が見つかりません</string>
+    <string name="connection_lost_sync_paused_for_profilename">接続が失われました。 %1$s の同期が一時停止されました。</string>
+    <string name="cannot_read_local_folder_for_profilename">%1$s のローカル フォルダーを読み取れません。</string>
+    <string name="failed_to_access_remote_path_for_profilename">%1$s のリモート パスにアクセスできませんでした。</string>
+    <string name="ufm_sync">UFM同期</string>
+    <string name="syncing_profilename_index_1filestouploadsize">%1$s を同期中: %2$d/%3$d</string>
+    <string name="background_file_synchronization">バックグラウンドでのファイル同期</string>
+    <string name="syncing_title">%1$s を同期中…</string>
+    <string name="ufm_sync_error">UFM同期エラー</string>
+    <string name="no_devices_found">-- デバイスが見つかりません --</string>
+    <string name="scanning_scannedtotal_ips_scanned">スキャン中… %1$d/%2$d IP がスキャンされました</string>
+    <string name="devices_detected_devicesfound_deviceword">検出されたデバイス: %1$d %2$s</string>
+    <string name="hide_pin">PINを隠す</string>
+    <string name="are_you_sure_you_want_to_remove_devicename_from_paired_devices">ペアリングされたデバイスから「%1$s」を削除してもよろしいですか?</string>
+    <string name="ensure_your_phone_is_on_the_same_wifi_network_open_ultimate_file_manager_pro_on_your_phone_click_link_to_tv_and_enter_this_pin_pincode">電話機が同じ WiFi ネットワーク上にあることを確認してください。  携帯電話で Ultimate File Manager Pro を開き、[テレビにリンク] をクリックして、次の PIN を入力します: %1$s</string>
+    <string name="link">リンク</string>
+    <string name="devicetypelabel_connected">%1$s · 接続しました</string>
+    <string name="devicetypelabel_disconnected">%1$s · 切断されました</string>
+    <string name="no_license_information_available">ライセンス情報がありません。</string>
+    <string name="please_build_the_project_once_to_generate_the_license_report">ライセンス レポートを生成するには、プロジェクトを一度ビルドしてください。</string>
+    <string name="see_project_page">プロジェクトページを参照</string>
+    <string name="select_to_copy_link">リンクを選択してコピー →</string>
+    <string name="tap_to_view_full_license">タップして完全なライセンスを表示 →</string>
+    <string name="no_browser_is_installed_on_this_device_visit_this_url_on_another_device_url">このデバイスにはブラウザがインストールされていません。  別のデバイスでこの URL にアクセスしてください: %1$s</string>
+    <string name="copy_link">リンクをコピー</string>
+    <string name="license_url">ライセンスURL</string>
+    <string name="i_have_read_and_accept_the_terms_conditions">利用規約を読んで同意します</string>
+    <string name="i_have_read_and_accept_the_privacy_policy">プライバシーポリシーを読んで同意します</string>
+    <string name="terms_conditions_accepted">利用規約に同意しました</string>
+    <string name="privacy_policy_accepted">プライバシーポリシーに同意しました</string>
+    <string name="terms_accepted">同意された条件</string>
+    <string name="policy_accepted">ポリシーが受け入れられました</string>
+    <string name="terms_conditions_accepted_on_datestring">%1$s で利用規約に同意しました</string>
+    <string name="privacy_policy_accepted_on_datestring">%1$s でプライバシー ポリシーが承認されました</string>
+    <string name="enter_a_file_name">ファイル名を入力してください</string>
+    <string name="save_to">保存先…</string>
+    <string name="terminal_output">端子出力</string>
+    <string name="adb_connection_established_from_pairing_activity">ペアリング アクティビティから ADB 接続が確立されました。</string>
+    <string name="pairing_activity_completed_but_connection_is_not_active">ペアリングアクティビティは完了しましたが、接続はアクティブではありません。</string>
+    <string name="disconnected_from_adb">ADBから切断されました。</string>
+    <string name="welcome_to_ufm_adb_shell">UFM ADB シェルへようこそ。</string>
+    <string name="attempting_to_connect_to_hostport">%1$s:%2$d に接続しようとしています…</string>
+    <string name="pairing_with_device">デバイスとペアリング中…</string>
+    <string name="pairing_failed_attempting_direct_connection">ペアリングに失敗しました。直接接続を試みています…</string>
+    <string name="connecting_without_pairing_usb_debugging">ペアリングせずに接続中（USBデバッグ）…</string>
+    <string name="connected_to_adb_successfully">ADBに正常に接続されました。</string>
+    <string name="approved">承認された！</string>
+    <string name="connection_failed_or_denied">接続が失敗したか、拒否されました。</string>
+    <string name="ufm_file_transfer">UFM ファイル転送</string>
+    <string name="transferring_files_1">ファイルを転送中…</string>
+    <string name="file_transfer">ファイル転送</string>
+    <string name="keeps_file_transfers_alive_during_screenoff">画面オフ中もファイル転送を維持します</string>
+    <string name="open_with_1">で開く</string>
+    <string name="ufm_viewer">UFMビューア</string>
+    <string name="ufm_slideshow">
+UFM スライド ショー
+</string>
+    <string name="ufm_slideshow_desc">
+スライドショーとして再生する
+</string>
+    <string name="open_with_builtin_viewer">内蔵ビューアで開く</string>
+    <string name="ufm_media_player">
+UFMメディアプレーヤー
+</string>
+    <string name="ufm_media_player_desc">
+UFMメディアプレーヤーで遊ぶ
+</string>
+    <string name="ufm_media_player_stream_desc">
+UFMメディアプレーヤーでストリーミング
+</string>
+    <string name="external_app">外部アプリ</string>
+    <string name="choose_another_app_to_open">別のアプリを選択して開く</string>
+    <string name="page_firstvisible_1_total">ページ %1$d / %2$d</string>
+    <string name="page_1_pagecount">ページ 1 / %1$d</string>
+    <string name="error_emessage">エラー: %1$s</string>
+    <string name="archive_1">アーカイブ</string>
+    <string name="error_opening_7z_emessage">7z を開くときにエラーが発生しました: %1$s</string>
+    <string name="error_not_enough_memory">このアーカイブを開くにはメモリが不足しています</string>
+    <string name="invalid_password">無効なパスワード</string>
+    <string name="error_reading_file_emessage">ファイルの読み取りエラー: %1$s</string>
+    <string name="showing_first_limit_1024kb_of_bytessize_1024kb">… (%2$dKB のうち最初の %1$dKB を表示)</string>
+    <string name="error_extracting_word_content_emessage">Word コンテンツの抽出中にエラーが発生しました: %1$s</string>
+    <string name="no_text_content_found">(テキストコンテンツが見つかりません)</string>
+    <string name="error_extracting_excel_content_emessage">Excel コンテンツの抽出中にエラーが発生しました: %1$s</string>
+    <string name="no_content_found">(コンテンツが見つかりませんでした)</string>
+    <string name="error_extracting_powerpoint_content_emessage">PowerPoint コンテンツの抽出中にエラーが発生しました: %1$s</string>
+    <string name="no_text_content_found_in_visio_file">(Visio ファイルにテキスト コンテンツが見つかりません)</string>
+    <string name="error_extracting_visio_content_emessage">Visio コンテンツの抽出中にエラーが発生しました: %1$s</string>
+    <string name="error_opening_archive_emessage">アーカイブを開くときにエラーが発生しました: %1$s</string>
+    <string name="size_compressed_ratio_saved">%1$s → %2$s (%3$d%% 節約)</string>
+
+    <string name="espressoprice">· %1$s</string>
+    <string name="latteprice">· %1$s</string>
+    <string name="beansprice">· %1$s</string>
+    <string name="message">☕ %1$s</string>
+    <string name="xapk_install_status_state">XAPK インストール ステータス: %1$s</string>
+    <string name="error_loading_emessage">読み込みエラー: %1$s</string>
+    <string name="freestr_free_of_totalstr">%1$sは%2$s無料</string>
+    <string name="usedpct_used">%1$d%% 使用済み</string>
+    <string name="nas_media">NASメディア</string>
+    <string name="errormsg">✕ %1$s</string>
+    <string name="android_device">Androidデバイス</string>
+    <string name="storage_segment">ストレージ (%1$s)</string>
+    <string name="no_description_available">説明はありません。</string>
+    <string name="just_now">ちょうど今</string>
+    <string name="files_on_storagelabel">%1$s のファイル</string>
+    <string name="base_indexing">%1$s · インデックス作成中…</string>
+    <string name="compressing_2">圧縮中…</string>
+    <string name="failed_to_enumerate_drive_emessage">ドライブを列挙できませんでした: %1$s</string>
+    <string name="duplicate">重複</string>
+    <string name="whatsapp">ワッツアップ</string>
+    <string name="whatsapp_business">WhatsApp ビジネス</string>
+    <string name="telegram">電報</string>
+    <string name="instagram">インスタグラム</string>
+    <string name="snapchat">スナップチャット</string>
+    <string name="tiktok">TikTok</string>
+    <string name="facebook">フェイスブック</string>
+    <string name="twitter_x">ツイッター / ×</string>
+    <string name="discord">不和</string>
+    <string name="spotify">スポティファイ</string>
+    <string name="netflix">Netflix</string>
+    <string name="youtube">YouTube</string>
+    <string name="signal">信号</string>
+    <string name="viber">バイバー</string>
+    <string name="line">ライン</string>
+    <string name="opening_itemlabel">📂 オープニング %1$s</string>
+    <string name="opening_itemlabel_1">%1$s を開きます…</string>
+    <string name="phone">電話</string>
+    <string name="devicetypelabel_u2022_devicelastip">%1$s \\u2022 %2$s</string>
+    <string name="paired_phones_1">ペアリングされた電話機</string>
+    <string name="paired_tvs_1">ペアリングされたテレビ</string>
+    <string name="root">根</string>
+    <string name="destination_1">行き先</string>
+    <string name="recovery_code">リカバリーコード</string>
+    <string name="no_recovery_code_is_set">リカバリーコードが設定されていません</string>
+    <string name="len_16">%1$d / 16</string>
+    <string name="mon">月</string>
+    <string name="tue">火</string>
+    <string name="wed">水</string>
+    <string name="thu">木</string>
+    <string name="fri">金</string>
+    <string name="sat">土</string>
+    <string name="sun">太陽</string>
+    <string name="dcim_backup">DCIMバックアップ</string>
+    <string name="free">無料</string>
+    <string name="used">使用済み</string>
+    <string name="android_tv">アンドロイドTV</string>
+    <string name="jcifsng_euagno3">jcifs-ng (eu.agno3)</string>
+    <string name="smbj_hierynomus">smbj (ヒエリノムス)</string>
+    <string name="apache_commons_net">Apache Commons Net</string>
+    <string name="apache_commons_compress">Apache Commons 圧縮</string>
+    <string name="zip4j_netlingalazip4j">zip4j (net.lingala.zip4j)</string>
+    <string name="xz_for_java_orgtukaanixz">XZ for Java (org.tukaani.xz)</string>
+    <string name="public_domain">パブリックドメイン</string>
+    <string name="apache_poi">アパッチPOI</string>
+    <string name="nanohttpd">NanoHTTPD</string>
+    <string name="google_firebase_analytics">Google Firebase アナリティクス</string>
+    <string name="google_billing_library">Google 請求ライブラリ</string>
+    <string name="google_play_review_library">Google Play レビュー ライブラリ</string>
+    <string name="androidx_libraries">AndroidX ライブラリ</string>
+    <string name="viewpager2">ViewPager2</string>
+    <string name="libadbandroid_comgithubmuntashirakon">libadb-android (com.github.MuntasirAkon)</string>
+    <string name="bouncycastle_orgbouncycastle">BouncyCastle (org.bouncycastle)</string>
+    <string name="apache_sshd_core">Apache MINA SSHD</string>
+    <string name="eddsa_java">Java 用 EdDSA</string>
+    <string name="slf4j_android">SLF4J アンドロイド</string>
+    <string name="androidsvg_comcaverock">AndroidSVG (com.caverock)</string>
+    <string name="coil_iocoilkt">コイル (io.coil-kt.coil3)</string>
+    <string name="bouncy_castle_license_mitstyle">Bouncy Castle ライセンス (MIT スタイル)</string>
+    <string name="storage_volume">ストレージボリューム</string>
+    <string name="image_3">画像</string>
+    <string name="bytes_b">$bytes B</string>
+    <string name="q1f_mb">%.1f MB</string>
+    <string name="sheet_sheetsheetname">═══ シート: %1$s ═══</string>
+    <string name="sheet_sheetidx_1">═══ シート %1$d ═══</string>
+    <string name="slide_idx_1">═══ スライド %1$d ═══</string>
+    <string name="app_icon">アプリアイコン</string>
+    <string name="unsupported_archive_format_extension">サポートされていないアーカイブ形式: %1$s</string>
+    <string name="getstringrstringtipjarthanksespresso">☕ エスプレッソをありがとう！</string>
+    <string name="getstringrstringtipjarthankslatte">☕ ラテをありがとう！</string>
+    <string name="getstringrstringtipjarthanksbeans">☕ 豆をありがとう！</string>
+    <string name="getstringrstringtipjarthanks">☕ ありがとう！</string>
+    <string name="apng4android_comgithubpenfeizhou">APNG4Android (com.github.penfeizhou.android.animation)</string>
+    <string name="online_storages_title">オンラインストレージ</string>
+    <string name="online_storages_subtitle">OneDrive、Google ドライブなど</string>
+    <string name="opening_online_storages">オンラインストレージを開いています…</string>
+
+    <string name="online_storages_empty_title">アカウントが接続されていません</string>
+    <string name="online_storages_empty_subtitle">+ をタップしてサインインします</string>
+    <string name="online_storages_policy_blocked_toast">ポリシーによりアクセスがブロックされている</string>
+    <string name="add_online_storage_title">オンラインストレージの追加</string>
+    <string name="add_online_storage_provider_label">プロバイダーの選択</string>
+    <string name="add_online_storage_onedrive">OneDrive</string>
+    <string name="add_online_storage_gdrive">Googleドライブ</string>
+    <string name="add_online_storage_auth_onedrive">Microsoftアカウントの認証</string>
+    <string name="onedrive_personal_note">注: 現時点では、個人の OneDrive アカウントのみをリンクできます。</string>
+    <string name="add_online_storage_auth_gdrive">Google経由で認証する</string>
+    <string name="add_online_storage_dropbox">ドロップボックス</string>
+    <string name="add_online_storage_auth_dropbox">Dropbox 経由で認証する</string>
+    <string name="dropbox_device_code_subtitle">別のデバイスを使用してテレビをリンクする</string>
+    <string name="dropbox_device_code_step1">1. 携帯電話またはコンピュータで、次の場所に移動します。</string>
+    <string name="dropbox_device_code_step2">2. ログインし、アクセスを許可します。次に、ここにコードを入力します。</string>
+    <string name="dropbox_device_code_scan_qr">またはQRコードをスキャンしてください</string>
+    <string name="dropbox_auth_waiting">Dropbox に接続中…</string>
+    <string name="dropbox_auth_success">Dropbox に正常に接続されました</string>
+    <string name="dropbox_auth_failed">認証に失敗しました: %1$s</string>
+    <string name="dropbox_auth_verifying">コードを検証中…</string>
+    <string name="gdrive_premium_title">Google ドライブのお知らせ</string>
+    <string name="gdrive_premium_message">Googleのセキュリティポリシーにより、UFM Proはこのアプリ内で作成または開かれたファイルにのみアクセスできます。すべてのGoogleドライブファイルを表示するには、公式のGoogleドライブアプリをご利用ください。\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\n続行しますか？</string>
+    <string name="gdrive_scope_btn_cancel">キャンセル</string>
+    <string name="gdrive_scope_btn_learn_more">詳細を見る</string>
+    <string name="onedrive_device_code_subtitle">別のデバイスを使用してテレビをリンクする</string>
+    <string name="onedrive_device_code_step1">1. 携帯電話またはコンピュータで、次の場所に移動します。</string>
+    <string name="onedrive_device_code_step2">2. 以下に示すコードを入力します。</string>
+    <string name="onedrive_device_code_scan_qr">またはQRコードをスキャンしてください</string>
+    <string name="onedrive_code_expires_in">コードの有効期限は %1$s に切れます</string>
+    <string name="onedrive_code_expired">コードの有効期限が切れました。再起動してください。</string>
+    <string name="onedrive_auth_waiting">ログインを待っています…</string>
+    <string name="onedrive_auth_success">%1$s として接続されています</string>
+    <string name="onedrive_auth_failed">認証の開始に失敗しました: %1$s</string>
+    <string name="onedrive_auth_profile_failed">認証は成功しましたが、アカウントの詳細を取得できませんでした</string>
+    <string name="auth_library_loading">認証ライブラリを読み込み中…</string>
+
+    <!-- Shizuku Manager -->
+    <string name="shizuku_title">しずく</string>
+    <string name="shizuku_subtitle">しずくマネージャー</string>
+    <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
+    <string name="shizuku_usb_access_title">
+USB ドライブ (制限付き)
+</string>
+    <string name="shizuku_usb_access_subtitle">
+Fire TV は直接 USB アクセスを制限します — Shizuku を使用してください
+</string>
+    <string name="shizuku_usb_access_desc">
+このデバイスのセキュリティ ポリシー (SELinux) は、/mnt/media_rw/ にマウントされた USB ドライブへの直接アクセスをブロックします。 USB ストレージにアクセスするには、Shizuku をインストールして認証します。これにより、この制限を回避するために必要な昇格された権限が提供されます。
+</string>
+    <string name="opening_shizuku">雫を開くと…</string>
+    <string name="shizuku_status_label">サービスステータス</string>
+    <string name="shizuku_installed">雫がインストールされています</string>
+    <string name="shizuku_not_installed">しずくはインストールされていません</string>
+    <string name="shizuku_description">Shizuku を使用すると、アプリがシステム レベルの API を直接使用できるようになり、ほとんどの Android バージョンで root を必要とせずに、バックグラウンド ファイル管理やシステム コマンドの実行などの高度な機能が有効になります。</string>
+    <string name="shizuku_service_status">サービスステータス</string>
+    <string name="shizuku_service_running">しずくサービス稼働中</string>
+    <string name="shizuku_service_not_running">しずくサービスが動作していない</string>
+    <string name="shizuku_btn_enable">サービスを有効にする</string>
+    <string name="shizuku_authorized">認可された</string>
+    <string name="shizuku_not_authorized">認可されていません</string>
+    <string name="shizuku_installed_msg">Shizuku がインストールされ、使用できるようになります。</string>
+    <string name="shizuku_download_hint">Shizuku の最新バージョンは、公式 GitHub リポジトリからダウンロードできます。</string>
+    <string name="shizuku_download_link">雫をダウンロード</string>
+    <string name="shizuku_tv_download_title">雫をダウンロード</string>
+    <string name="shizuku_tv_download_msg">この端末にはShizukuはインストールされていません。\n\n携帯電話またはコンピュータで次の URL にアクセスして最新の APK をダウンロードし、このテレビにサイドロードしてください。\n\n%s</string>
+    <string name="shizuku_copy_link">リンクをコピー</string>
+    <string name="shizuku_link_copied">リンクがクリップボードにコピーされました</string>
+    <string name="shizuku_auth_title">雫を認可する</string>
+    <string name="shizuku_auth_msg">UFM では、高度なファイル操作を実行するために Shizuku 認証が必要です。以下のシステムダイアログで許可を与えてください。</string>
+    <string name="shizuku_btn_authorize">承認する</string>
+    <string name="shizuku_btn_start_service">雫を有効にする</string>
+    <string name="shizuku_starting_service">シズクのサービスを開始します...</string>
+    <string name="shizuku_starting_msg">ブロードキャストインテント経由でShizukuサービスを開始しようとしています。お待ちください…</string>
+    <string name="shizuku_start_failed">雫の起動に失敗しました。ワイヤレス デバッグが有効になっていることを確認するか、手動で開始してください。</string>
+    <string name="shizuku_enabled_and_active">雫は有効でアクティブです</string>
+    <string name="shizuku_adb_not_connected">ADBが接続されていません。 ADB ターミナル経由で接続すると、Shizuku が自動的に有効になります。</string>
+    <string name="shizuku_manager_open_error">雫マネージャーを開けませんでした。まずアプリをインストールしてください。</string>
+
+    <!-- Media Player errors -->
+    <string name="playback_error_source">再生エラー: ファイルを開けません</string>
+    <string name="playback_error_server">再生エラー: メディアサーバーが停止しました</string>
+
+    <!-- File Server (FTP/SFTP Hosting) -->
+    <string name="file_server_title">ファイルサーバー</string>
+    <string name="file_server_subtitle">
+ホスト FTP / SFTP およびDLNAサーバー
+</string>
+    <string name="file_server_tile_subtitle">
+FTP / SFTP / DLNA サーバーをホストする
+</string>
+    <string name="ftp_server_label">FTPサーバー</string>
+    <string name="sftp_server_label">SFTPサーバー</string>
+    <string name="ftp_port_info">ポート 2121 · 暗号化されていないファイル転送</string>
+    <string name="sftp_port_info">ポート 2222 · 暗号化ファイル転送 (SSH)</string>
+
+    <!-- DLNA Media Server & Renderer -->
+    <string name="dlna_server_title">
+DLNAメディアサーバー
+</string>
+    <string name="dlna_server_description">
+ネットワーク上のテレビや他のデバイスとメディア ファイルを共有する
+</string>
+    <string name="dlna_renderer_title">
+DLNAメディアレンダラー
+</string>
+    <string name="dlna_renderer_description">
+他のデバイスが再生のためにメディアを UFM にプッシュできるようにする
+</string>
+    <string name="dlna_server_name_label">
+サーバー名
+</string>
+    <string name="dlna_server_name_default">
+UFM メディアサーバー
+</string>
+    <string name="dlna_renderer_name_label">
+レンダラー名
+</string>
+    <string name="dlna_renderer_name_default">
+UFMプレーヤー
+</string>
+    <string name="dlna_shared_folders_label">
+共有フォルダー
+</string>
+    <string name="dlna_add_folder">
+フォルダーの追加
+</string>
+    <string name="dlna_no_folders_configured">
+フォルダが設定されていません。サーバーを有効にするには、少なくとも 1 つのフォルダーを追加します。
+</string>
+    <string name="dlna_no_shared_folders">
+DLNA サーバーを有効にする前に、少なくとも 1 つのフォルダーを追加してください
+</string>
+    <string name="dlna_server_settings">
+DLNA設定
+</string>
+    <string name="dlna_server_running">
+DLNA: %1$s:%2$d
+</string>
+    <string name="dlna_renderer_running">
+DLNA レンダラー: %1$s
+</string>
+    <string name="dlna_new_server_found">
+新しい DLNA サーバーが見つかりました: %2$s で %1$s。信頼できるサーバーにのみ接続してください。
+</string>
+    <string name="dlna_unsolicited_playback_title">
+再生リクエスト
+</string>
+    <string name="dlna_unsolicited_playback_message">
+%1$s は %2$s をプレイしたいと考えています。許可する？
+</string>
+    <string name="dlna_allow">
+許可する
+</string>
+    <string name="dlna_deny">
+拒否
+</string>
+    <string name="dlna_security_warning">
+DLNA は暗号化されていません - 信頼できるネットワークでのみ使用してください
+</string>
+    <string name="dlna_wifi_required">
+DLNAを使用するにはWi-Fiが必要です
+</string>
+    <string name="dlna_read_only">
+DLNAサーバーは読み取り専用です
+</string>
+    <string name="dlna_discovering">
+DLNAサーバーを検索中…
+</string>
+    <string name="dlna_no_servers_found">
+ネットワーク上に DLNA サーバーが見つかりません
+</string>
+    <string name="dlna_manual_entry_hint">
+サーバーIPまたはホスト名
+</string>
+    <string name="dlna_url_rejected">
+URL がブロックされました: ローカル ネットワーク外のポイント
+</string>
+    <string name="dlna_scan_network">
+スキャンネットワーク
+</string>
+    <string name="dlna_enter_ip_manually">
+IPを手動で入力する
+</string>
+    <string name="dlna_port_info">
+ポート 8200 · 暗号化されていないメディア ストリーミング
+</string>
+
+    <!-- DLNA Quick Settings Tile -->
+    <string name="settings_dlna_tile_title">
+DLNAサーバー
+</string>
+    <string name="settings_dlna_tile_summary">
+クイック設定タイルを表示して DLNA サーバーを切り替えます
+</string>
+
+    <!-- DLNA Icon (for icon customization system) -->
+    <string name="icon_network_dlna">
+DLNA
+</string>
+
+    <!-- DLNA Host Activity (dedicated DLNA screen) -->
+    <string name="dlna_host_title">
+DLNA
+</string>
+    <string name="dlna_host_subtitle">
+メディアサーバーとレンダラー
+</string>
+    <string name="dlna_tile_subtitle_active">
+アクティブ
+</string>
+    <string name="dlna_tile_subtitle_inactive">
+タップして設定します
+</string>
+    <string name="dlna_settings_row_label">
+DLNA設定
+</string>
+    <string name="dlna_settings_row_subtitle">
+共有フォルダー、サーバー名
+</string>
+
+    <string name="anonymous_access">匿名アクセス</string>
+    <string name="anonymous_access_desc">資格情報なしで接続を許可する</string>
+    <string name="server_profiles">サーバープロファイル</string>
+    <string name="no_profiles_yet">まだプロファイルが設定されていません。\n+ をタップして作成します。</string>
+    <string name="create_profile">プロファイルの作成</string>
+    <string name="edit_profile">プロフィールの編集</string>
+    <string name="delete_profile">プロフィールの削除</string>
+    <string name="delete_profile_confirm">プロフィール「%1$s」を削除しますか?これを元に戻すことはできません。</string>
+    <string name="profile_saved">プロファイルが保存されました</string>
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="confirm_password">パスワードを認証する</string>
+    <string name="passwords_do_not_match">パスワードが一致しません</string>
+    <string name="username_required">ユーザー名は必須です</string>
+    <string name="username_already_exists">このユーザー名はすでに使用されています</string>
+    <string name="password_required">新しいプロファイルにはパスワードが必要です</string>
+    <string name="read_only">読み取り専用</string>
+    <string name="read_only_desc">このプロファイルを参照のみのアクセスに制限する</string>
+    <string name="authorized_keys_label">
+認可された SSH キー
+</string>
+    <string name="authorized_keys_hint">
+公開キーを貼り付けるか (1 行に 1 つ)、ファイルを選択します
+</string>
+    <string name="authorized_keys_desc">
+Linux ~/.ssh/authorized_keys と同様、SFTP 接続にのみ適用されます。一致する秘密キーを持つユーザーは、パスワードなしで接続できます。
+</string>
+    <string name="authorized_keys_pick">
+公開鍵ファイルの選択
+</string>
+    <string name="error_reading_key_file">
+キーファイルの読み取りに失敗しました
+</string>
+    <string name="use_this_key_file">
+このキー ファイルを使用する
+</string>
+    <string name="use_key_file_confirm">
+このファイルを承認された SSH キーとして使用しますか?\n
+\n
+%1$s
+</string>
+    <string name="auth_type_password">
+パスワード
+</string>
+    <string name="auth_type_ssh_key">
+SSHキー
+</string>
+    <string name="auth_type_both">
+パスワード + SSH キー
+</string>
+    <string name="ftp_needs_password_title">
+FTPサーバーにはパスワードが必要です
+</string>
+    <string name="ftp_needs_password_msg">
+FTP は SSH キー認証をサポートしていません。最初にユーザー名とパスワードを使用してプロファイルを作成するか、既存のプロファイルを編集してパスワードを追加してください。
+</string>
+    <string name="authorized_keys_invalid_title">
+無効なキーファイル
+</string>
+    <string name="authorized_keys_is_private">
+これはプライベートキーファイルです。公開キー ファイルには、「ssh-rsa」、「ssh-ed25519」などで始まる行が含まれています。代わりに .pub ファイルを選択してください。
+</string>
+    <string name="authorized_keys_bad_format" formatted="false">
+%d 行目の SSH 公開キーの形式が無効です: \"%s\"
+</string>
+    <string name="authorized_keys_invalid_key">
+このファイルには有効な SSH 公開キーが含まれていません。
+</string>
+    <string name="read_only_badge">読み取り専用</string>
+    <string name="default_location">デフォルトの場所</string>
+    <string name="select_default_location">デフォルトの場所を選択</string>
+    <string name="please_select_location">デフォルトの場所を選択してください</string>
+    <string name="file_server_ftp_running">FTPサーバーの実行中</string>
+    <string name="file_server_sftp_running">SFTPサーバーの実行中</string>
+    <string name="file_server_ftp_sftp_running">FTP および SFTP サーバーの実行</string>
+    <string name="file_server_notification_desc">FTP または SFTP サーバーがアクティブであることを示します</string>
+    <string name="file_server_notification_stop">
+停止
+</string>
+    <string name="file_server_notification_open">
+タップして管理
+</string>
+    <string name="opening_file_server">ファイルサーバーを開いています…</string>
+    <string name="select">選択</string>
+    <string name="browse_for_folder">📂 フォルダーを参照…</string>
+    <string name="usb_drive">USBドライブ</string>
+    <string name="no_locations_available">利用できる場所がありません</string>
+
+    <!-- Supporter Loyalty Card -->
+    <string name="loyalty_card_title">サポーターポイントカード</string>
+    <string name="loyalty_amount_tipped_label">チップ金額</string>
+    <string name="loyalty_goal_static">目標: $15</string>
+    <string name="loyalty_goal_format">目標: $%1$d</string>
+    <string name="loyalty_tipped_format">$%1$d がチップを払いました</string>
+    <string name="loyalty_to_go_format">残り $%1$d</string>
+    <string name="loyalty_beyond_goal_format">+$%1$d 目標を超えました!</string>
+    <string name="loyalty_stat_total_label">チップ総額</string>
+    <string name="loyalty_stat_coffees_label">コーヒー</string>
+    <string name="loyalty_stat_to_goal_label">ゴールへ</string>
+    <string name="loyalty_stat_beyond_goal_label">ゴールを超えて</string>
+    <string name="loyalty_status_label">会員ステータス</string>
+    <string name="loyalty_tier_legend">伝説</string>
+    <string name="loyalty_tier_champion">チャンピオン</string>
+    <string name="loyalty_tier_supporter">サポーター</string>
+    <string name="loyalty_tier_free">無料ユーザー</string>
+    <string name="loyalty_tier_badge_format">階層 %1$d</string>
+    <string name="loyalty_disclaimer">ロイヤルティの進行状況はこのデバイスにローカルに保存され、アプリがアンインストールされるかデータが消去されるとリセットされます。</string>
+    <string name="loyalty_currency_format">$%1$d</string>
+    <string name="loyalty_value_format">%1$d</string>
+    <string name="loyalty_price_separator_format"> · %1$s</string>
+    <string name="nt_use_this_folder_for_caching">このフォルダーをネットワーク キャッシュに使用します</string>
+    <string name="nt_confirm_cache_folder_msg">ネットワーク ファイルのサムネイルは次のフォルダに保存されます: %s</string>
+    <string name="nt_limit_custom">カスタム...</string>
+    <string name="nt_custom_value_hint">値を入力してください</string>
+    <string name="nt_custom_unit_mb">MB</string>
+    <string name="nt_custom_unit_gb">GB</string>
+    <string name="nt_custom_save">保存</string>
+    <string name="nt_custom_cancel">キャンセル</string>
+    <string name="nt_custom_hint_example">例えば3.5</string>
+
+    <!-- AWS S3 / IDrive e2 — Add Online Storage chips -->
+    <string name="add_online_storage_auth_aws_s3">AWS S3に接続する</string>
+    <string name="add_online_storage_auth_idrive_e2">IDrive e2に接続する</string>
+    <!-- Short provider labels used in S3SetupActivity title -->
+    <string name="add_online_storage_aws_s3">AWS S3</string>
+    <string name="add_online_storage_idrive_e2">S3ストレージ</string>
+
+    <!-- S3 Setup Activity — titles & subtitle -->
+    <string name="s3_setup_title">%1$s セットアップ</string>
+    <string name="s3_setup_title_default">S3 ストレージのセットアップ</string>
+    <string name="s3_setup_subtitle">S3 互換ストレージの認証情報を入力してください</string>
+
+    <!-- S3 Setup Activity — field hints -->
+    <string name="s3_setup_label_hint">表示名 (例: My S3 Bucket)</string>
+    <string name="s3_setup_endpoint_hint">エンドポイント URL (例: s3.amazonaws.com)</string>
+    <string name="s3_setup_endpoint_hint_idrive">エンドポイント URL (e2.idrive.com など)</string>
+    <string name="s3_setup_bucket_hint">バケット名</string>
+    <string name="s3_setup_region_hint">リージョン (例: us-east-1)</string>
+    <string name="s3_setup_access_key_hint">アクセスキーID</string>
+    <string name="s3_setup_secret_key_hint">シークレットアクセスキー</string>
+
+    <!-- S3 Setup Activity — button -->
+    <string name="s3_setup_connect">テストと接続</string>
+
+    <!-- S3 Setup Activity — status messages -->
+    <string name="s3_setup_error_empty_fields">すべての必須フィールドに入力してください</string>
+    <string name="s3_setup_error_bad_endpoint">エンドポイントは有効なホスト名または URL である必要があります</string>
+    <string name="s3_setup_success">無事接続されました！</string>
+    <string name="s3_setup_error_connection">接続に失敗しました: %1$s</string>
+
+    <!-- WebDAV — Add Online Storage chip + auth button -->
+    <string name="add_online_storage_webdav">
+WebDAV
+</string>
+    <string name="add_online_storage_auth_webdav">
+WebDAVサーバーのセットアップ
+</string>
+
+    <!-- WebDAV Setup Activity — title &amp; subtitle -->
+    <string name="webdav_setup_title">
+WebDAVのセットアップ
+</string>
+    <string name="webdav_setup_subtitle">
+WebDAV互換サーバーに接続する
+</string>
+
+    <!-- WebDAV Setup Activity — server-type hint chips / spinner -->
+    <string name="webdav_hint_label">
+クイックフィルサーバータイプ
+</string>
+    <string name="webdav_hint_nextcloud">
+ネクストクラウド
+</string>
+    <string name="webdav_hint_owncloud">
+自分のクラウド
+</string>
+    <string name="webdav_hint_box">
+箱
+</string>
+    <string name="webdav_hint_generic">
+汎用 WebDAV
+</string>
+    <string name="webdav_tv_server_type_prompt">
+サーバーの種類
+</string>
+
+    <!-- WebDAV Setup Activity — field hints -->
+    <string name="webdav_setup_label_hint">
+表示名 (例: My Nextcloud)
+</string>
+    <string name="webdav_setup_url_hint">
+サーバー URL (例: https://cloud.example.com/…)
+</string>
+    <string name="webdav_setup_username_hint">
+ユーザー名 (匿名の場合は空白のままにします)
+</string>
+    <string name="webdav_setup_password_hint">
+パスワード
+</string>
+
+    <!-- WebDAV Setup Activity — button -->
+    <string name="webdav_setup_connect">
+テストとテスト接続する
+</string>
+
+    <!-- WebDAV Setup Activity — status messages -->
+    <string name="webdav_setup_success">
+無事接続されました！
+</string>
+    <string name="webdav_setup_error_empty_fields">
+表示名とサーバー URL を入力してください
+</string>
+    <string name="webdav_setup_error_bad_url">
+URL は http:// または https:// で始まる必要があります
+</string>
+    <string name="webdav_setup_error_connection">
+接続に失敗しました: %1$s
+</string>
+    <string name="webdav_setup_error_server_rejected">
+サーバーが有効な WebDAV 応答を返しませんでした
+</string>
+
+    <!-- WebDAV Setup Activity — plain-HTTP warning dialog -->
+    <string name="webdav_setup_http_warning_title">
+安全でない接続
+</string>
+    <string name="webdav_setup_http_warning_msg">
+プレーン HTTP 経由で接続しています。資格情報は暗号化されずに送信されます。可能な限り HTTPS を使用してください。
+</string>
+    <string name="webdav_setup_http_warning_continue">
+とにかく続けてください
+</string>
+    <string name="webdav_setup_http_warning_cancel">
+キャンセル
+</string>
+
+    <!-- About Section -->
+    <string name="about_title">について</string>
+    <string name="about_app_name">究極のファイルマネージャープロ</string>
+    <string name="about_email">support@kilowatch.co.za</string>
+    <string name="about_more_info_title">詳細情報</string>
+    <string name="about_thanks_title">謝辞</string>
+    <string name="about_thanks_desc">ロゴとバナーの概念的なアイデアを提供してくれた u/Basic_Instinct_79 に感謝します。</string>
+    <string name="about_app_description">高度なクロスプラットフォームのファイル管理および共有ソリューションは、プレミアムなグラスモーフィズムの美しさを考慮して設計されています。モバイル デバイス、Android TV、Fire TV にわたるローカル ストレージとネットワーク ストレージをシームレスに管理します。</string>
+    <string name="about_version_format">バージョン: %1$s (%2$s)</string>
+    <string name="flavor_mobile">携帯</string>
+    <string name="flavor_tv">アンドロイドTV</string>
+    <string name="about_tile_subtitle">アプリ情報と詳細</string>
+
+    <!-- Convert to PDF dialog -->
+    <string name="pdf_convert_title">PDFに変換</string>
+    <string name="pdf_convert_filename_hint">ファイル名</string>
+    <string name="pdf_convert_encrypt">パスワードで暗号化する</string>
+    <string name="pdf_convert_password_hint">パスワード</string>
+    <string name="pdf_convert_confirm_hint">パスワードを認証する</string>
+    <string name="pdf_convert_btn">変換する</string>
+    <string name="pdf_convert_pwd_mismatch">パスワードが一致しないか、空です</string>
+    <string name="pdf_convert_converting">PDF に変換中…</string>
+    <string name="pdf_convert_success">保存された PDF: %1$s</string>
+    <string name="pdf_convert_failed">変換に失敗しました</string>
+    <string name="pdf_converting_title">PDFへの変換</string>
+    <string name="pdf_converting_desc">[[Ph 0]]</string>
+    <string name="pdf_password_prompt_title">パスワードで保護されています</string>
+    <string name="pdf_password_prompt_hint">PDFのパスワードを入力してください</string>
+    <string name="pdf_password_incorrect">パスワードが間違っています</string>
+
+    <!-- Bluetooth Remote -->
+    <string name="error">エラー</string>
+    <string name="bt_remote_unsupported_title">
+サポートされていないデバイス
+</string>
+    <string name="bt_remote_unsupported_message">
+Bluetooth リモートには Android 9 (Pie) 以降が必要です。お使いのデバイスでは古いバージョンの Android が実行されているため、この機能を使用できません。
+</string>
+    <string name="permission_denied">許可が拒否されました</string>
+    <string name="bluetooth_disabled">Bluetoothが無効になっています</string>
+    <string name="enable_bluetooth">Bluetooth を有効にする</string>
+    <string name="bluetooth_must_be_enabled_to_use_remote">リモコンとしてブロードキャストするには、Bluetooth をオンにする必要があります。</string>
+    <string name="turn_on">オンにする</string>
+    <string name="recents_not_supported_on_bluetooth">最近のキーは標準の Bluetooth リモコンではサポートされていません</string>
+    <string name="connected">接続済み</string>
+    <string name="select_tv_to_connect">接続するテレビを選択してください</string>
+    <string name="open_bluetooth_settings">Bluetooth設定を開く</string>
+    <string name="waiting_for_tv_to_pair">テレビを待っています… (上の「テレビに接続」をタップ)</string>
+    
+    <string name="home">家</string>
+    <string name="bt_remote_volume_on">音量：オン</string>
+    <string name="bt_remote_volume_off">音量：オフ</string>
+    <string name="bt_remote_select_tv">接続するテレビを選択してください</string>
+    <string name="bt_remote_pair_new_tv">新しいテレビをペアリングする</string>
+    <string name="bt_remote_set_default">デフォルトとして設定</string>
+    <string name="bt_remote_remove_default">デフォルトとして削除</string>
+    <string name="bt_remote_connect_now">今すぐ接続</string>
+    <string name="bt_remote_back">戻る</string>
+    <string name="bt_remote_cancel">キャンセル</string>
+    <string name="bt_remote_tv_options">%1$s オプション</string>
+    <string name="bt_remote_bluetooth_settings">Bluetooth設定</string>
+    <string name="bt_remote_footer_text">Bluetooth キーイベントを送信 · すべての TV アプリでシステム全体で動作します</string>
+    <string name="bt_remote_select_device">
+テレビの追加/選択
+</string>
+    <string name="bt_remote_add_device">
+デバイスの追加
+</string>
+    <string name="bt_remote_add_tv">
+テレビを追加する
+</string>
+    <string name="bt_remote_connect_set_default">デフォルトとして設定</string>
+    <string name="bt_remote_disconnected_snackbar">リモートが切断されました</string>
+    <string name="bt_remote_add_tv_picker_title">
+テレビを UFM リモコンに追加する
+</string>
+    <string name="bt_remote_no_new_devices_found">
+新しいデバイスは見つかりませんでした。まず Bluetooth 設定でテレビをペアリングしてから、ここに戻ります。
+</string>
+
+    <!-- BT Remote Foreground Service Notification -->
+    <string name="bt_remote_notification_channel_name">Bluetooth リモート</string>
+    <string name="bt_remote_notification_channel_desc">テレビのリモコンの接続状態を表示します</string>
+    <string name="bt_remote_notification_starting">リモートを開始しています…</string>
+    <string name="bt_remote_notification_connecting">テレビに接続中…</string>
+    <string name="bt_remote_notification_connected">%1$s に接続しました</string>
+    <string name="bt_remote_notification_waiting">テレビの接続を待っています…</string>
+
+    <!-- BT Remote Status Card States -->
+    <string name="bt_remote_card_no_tvs_title">テレビをペアリングする</string>
+    <string name="bt_remote_card_no_tvs_subtitle">テレビで Bluetooth 設定を開き、「UFM リモート」をペアリングします。</string>
+    <string name="bt_remote_card_disconnected_title">接続されていません</string>
+    <string name="bt_remote_card_disconnected_subtitle">「接続」をタップして %1$s に再接続します</string>
+    <string name="bt_remote_card_connecting_title">%1$s に接続中…</string>
+    <string name="bt_remote_card_connecting_subtitle">お待ちください</string>
+    <string name="bt_remote_card_connected_title">%1$s に接続しました</string>
+    <string name="bt_remote_card_bt_off_title">Bluetoothがオフになっています</string>
+    <string name="bt_remote_card_bt_off_subtitle">リモコンを使用するにはBluetoothがオンになっている必要があります</string>
+    <string name="bt_remote_card_no_permission_title">許可が必要です</string>
+    <string name="bt_remote_card_no_permission_subtitle">リモコンを使用するにはBluetoothの許可が必要です</string>
+    <string name="bt_remote_card_action_open_bt_settings">BT設定を開く</string>
+    <string name="bt_remote_card_action_pair_tv">テレビをペアリングする</string>
+    <string name="bt_remote_card_action_connect">接続する</string>
+    <string name="bt_remote_card_action_connect_to">
+%1$s に接続します
+</string>
+    <string name="bt_remote_card_action_disconnect">切断する</string>
+    <string name="bt_remote_card_action_turn_on">オンにする</string>
+    <string name="bt_remote_card_action_grant_permission">許可を与える</string>
+
+    <!-- BT Remote Keyboard Mode -->
+    <string name="bt_remote_keyboard_mode">キーボードモード</string>
+    <string name="bt_remote_remote_mode">リモートモード</string>
+    <string name="bt_remote_keyboard_hint">ここに入力します — テレビに送信します</string>
+    <string name="bt_remote_keyboard_select_all">すべて選択</string>
+    <string name="bt_remote_keyboard_clear">クリア</string>
+    <string name="bt_remote_keyboard_switch_to_remote">リモートに切り替える</string>
+    <string name="bt_remote_saved_device_suffix">(保存済み)</string>
+    <string name="bt_remote_keyboard_backspace">⌫</string>
+    <string name="bt_remote_keyboard_tab">タブ</string>
+    <string name="bt_remote_keyboard_enter">↩</string>
+
+    <string name="unknown_device">不明なデバイス</string>
+    <string name="bt_remote_connecting_guidance">自動的に接続されない場合は、テレビの Bluetooth 設定から「UFM リモート」を選択してください</string>
+    <string name="bt_remote_use_phone_volume">電話の音量ボタンを使用する</string>
+    <string name="bt_remote_volume_phone_hint">電話ボタンで音量をコントロール</string>
+
+    <!-- WiFi ADB Remote Transport -->
+    <string name="remote_transport_picker_title">
+テレビに接続する
+</string>
+    <string name="remote_transport_bt_option">
+Bluetooth経由で接続する
+</string>
+    <string name="remote_transport_wifi_option">
+WiFi / ADB経由で接続する
+</string>
+    <string name="remote_transport_bt_connecting">
+Bluetooth 経由で %1$s に接続しています…
+</string>
+    <string name="remote_transport_wifi_connecting">
+WiFi 経由で %1$s に接続しています…
+</string>
+    <string name="remote_connect_via_bt">
+Bluetooth 経由で %1$s に接続します
+</string>
+    <string name="remote_connect_via_wifi">
+WiFi 経由で %1$s に接続します
+</string>
+    <string name="remote_device_bt_suffix">
+ - ブルートゥース
+</string>
+    <string name="remote_device_wifi_suffix">
+ - Wi-Fi
+</string>
+    <string name="remote_transport_no_wifi_tvs_title">
+リモコンが有効になっているテレビはありません
+</string>
+    <string name="remote_transport_no_wifi_tvs_message">
+WiFi リモコンを使用するには、まず [ペアリングされたテレビ] 画面でペアリングされたテレビを開き、次に [リモートを使用] オプションを有効にします。\n
+\n
+テレビで ADB (USB デバッグ) が有効になっている場合は、IP アドレスによってテレビを手動で追加することもできます。
+</string>
+    <string name="manual_entry_title">
+テレビを手動で追加する
+</string>
+    <string name="manual_entry_name_hint">
+テレビ名
+</string>
+    <string name="manual_entry_ip_hint">
+IP アドレス (例: 192.168.1.100)
+</string>
+    <string name="manual_entry_info">
+TV で ADB (USB デバッグ) が有効になっていて、ADB ポートが 5555 に設定されていることを確認します。
+</string>
+    <string name="manual_entry_add">
+追加
+</string>
+    <string name="manual_entry_duplicate_title">
+すでに追加されています
+</string>
+    <string name="manual_entry_duplicate_message">
+この IP アドレスはすでにデバイス リストに含まれています。代わりにリストから既存のテレビを選択してください。
+</string>
+    <string name="manual_entry_invalid_ip">
+有効な IP アドレスを入力してください
+</string>
+    <string name="manual_device_suffix">
+ — マニュアル
+</string>
+    <string name="remote_remove_manual_title">
+手動テレビを取り外します
+</string>
+    <string name="remote_remove_manual_confirm_title">
+テレビを削除する
+</string>
+    <string name="remote_remove_manual_confirm_message">
+%1$s をリモート デバイスから削除してもよろしいですか?
+</string>
+    <string name="remote_remove_manual_proceed">
+進む
+</string>
+    <string name="remote_no_tvs_add_manual_button">
+手動で追加
+</string>
+    <string name="remote_select_tv_add_manual">
+手動で追加
+</string>
+    <string name="use_remote_disabled">
+WiFi リモートを有効にする
+</string>
+    <string name="use_remote_enabled">
+WiFiリモートが有効になりました
+</string>
+    <string name="use_remote_disabled_subtitle">
+このテレビをリモコン オプションとして使用できるようにします
+</string>
+    <string name="use_remote_enabled_subtitle">
+このテレビはリモコンオプションとして利用可能です
+</string>
+    <string name="use_remote_auth_title">
+テレビで受け入れられる
+</string>
+    <string name="use_remote_auth_message">
+%1$s をリモコンとして使用するには、テレビで ADB 接続プロンプトを受け入れる必要があります。\n
+\n
+テレビの電源が入っていることを確認し、ダイアログが表示されたら「許可」をタップしてください。以前にすでに受け入れている場合、接続は自動的に成功します。
+</string>
+    <string name="use_remote_failed_title">
+接続に失敗しました
+</string>
+    <string name="use_remote_failed_message">
+ADB経由でテレビに接続できませんでした。次のことを確認してください:\n
+\n
+• テレビで USB デバッグが有効になっていること\n
+• テレビが同じ WiFi ネットワーク上にある\n
+• テレビで ADB 認証プロンプトに同意したこと\n
+\n
+その後、もう一度お試しください。
+</string>
+    <string name="adb_remote_notification_channel_name">
+WiFiリモート
+</string>
+    <string name="adb_remote_notification_channel_desc">
+WiFi ADB リモートの接続ステータスを表示します。
+</string>
+    <string name="adb_remote_notification_connecting">
+WiFi 経由で %1$s に接続しています…
+</string>
+    <string name="adb_remote_notification_connected">
+WiFi 経由で %1$s に接続しました
+</string>
+    <string name="adb_remote_notification_disconnected">
+WiFi リモコンが切断されました
+</string>
+    <string name="adb_remote_notification_reconnecting">
+%1$s に再接続中…
+</string>
+    <string name="icon_remote_enabled">
+リモート有効
+</string>
+    <string name="icon_remote_disabled">
+リモートが無効です
+</string>
+
+    <string name="ufm_first_tv_setup_guide">
+<![CDATA[<b>始める前に</b><br>続行する前に、携帯電話とテレビの両方で以前にペアリングしたデバイスのリンクを解除してください。<br><br><b>ステップ 1 — リストでテレビを見つけます。</b><br>テレビが画面に自動的に表示されるはずです。<br>テレビが表示されませんか?テレビで、[リモコンとアクセサリ] → [アクセサリの追加] に移動して検出可能にし、リストを再度確認します。<br><br><b>ステップ 2 — テレビをペアリングする</b><br>リスト内のテレビをタップします。接続を確認するには、携帯電話とテレビの両方でペアリング コードを受け入れます。<br><br><b>ステップ 3 — 接続を確認します。</b><br>携帯電話の戻るボタンを押します。テレビに接続済みと表示されるはずです。<br>まだ接続されていませんか? [接続] を押します。複数のテレビを接続している場合は、[テレビの追加 / 選択] をタップし、ペアリングされたテレビを選択すると、自動的に接続されます。<br><br><b>📝 ご注意ください。</b><br>テレビが UFM Pro 以外でペアリングされた場合 (携帯電話の Bluetooth 設定など)、リモコンは機能しません。必ず上記の手順に従って、UFM Pro 経由でテレビをペアリングしてください。<br>特定のテレビまたは Android / Google ボックスでは、ペアリング後の最初の接続で、最大 4 回接続と切断が行われることがあります。これは、初回ペアリングでは通常の動作であり、2 回目の接続は瞬時に行われます。]]>
+</string>
+
+    <!-- Viewer Editor (TextViewerActivity) -->
+    <string name="btn_edit_toggle">
+編集モードの切り替え
+</string>
+    <string name="btn_save">
+ファイルの保存
+</string>
+    <string name="save_dialog_title">
+ファイルの保存
+</string>
+    <string name="save_dialog_filename_hint">
+ファイル名
+</string>
+    <string name="overwrite_dialog_title">
+ファイルが存在します
+</string>
+    <string name="overwrite_dialog_message">
+%1$s はすでに存在します。上書きしますか?
+</string>
+    <string name="unsaved_changes_title">
+未保存の変更
+</string>
+    <string name="unsaved_changes_message">
+未保存の変更があります。出発前に保存しますか？
+</string>
+    <string name="btn_discard">
+破棄
+</string>
+    <string name="file_saved">
+保存されたファイル: %1$s
+</string>
+    <string name="file_save_error">
+ファイルの保存中にエラーが発生しました: %1$s
+</string>
+    <string name="office_save_warning">
+これは Office ドキュメントです。コンテンツはフォーマットされずに保存されます。
+</string>
+    <string name="edit_mode_enabled">
+編集モードが有効になっています
+</string>
+    <string name="edit_mode_disabled">
+編集モードが無効になっています
+</string>
+
+    <!-- Image Viewer Editor -->
+    <string name="btn_draw_toggle">
+描画モードを切り替える
+</string>
+    <string name="btn_draw_save">
+画像の保存
+</string>
+    <string name="draw_color">
+色を描く
+</string>
+    <string name="btn_crop_toggle">
+クロップモードの切り替え
+</string>
+    <string name="crop_mode_active">
+クロップモード - 角をドラッグします
+</string>
+    <string name="crop_mode_off">
+クロップモードオフ
+</string>
+    <string name="btn_clear_drawing">
+鮮明な描画
+</string>
+    <string name="drawing_mode">
+描画モード
+</string>
+    <string name="image_saved">
+保存された画像: %1$s
+</string>
+    <string name="image_save_error">
+画像保存エラー: %1$s
+</string>
+
+    <!-- PDF Viewer -->
+    <string name="zoom_level">
+ズーム: %1$d%%
+</string>
+
+    <!-- Notepad -->
+    <string name="notepad">
+メモ帳
+</string>
+    <string name="notepad_tile_subtitle">
+メモを書いて保存する
+</string>
+    <string name="opening_notepad">
+メモ帳を開く
+</string>
+    <string name="notepad_default_name">
+メモ帳.txt
+</string>
+    <string name="save_note">
+保存
+</string>
+    <string name="words_count">
+%1$d 単語
+</string>
+    <string name="characters_count">
+%1$d 文字
+</string>
+    <string name="export_pdf">
+PDF
+</string>
+    <string name="export_csv">
+CSV
+</string>
+    <string name="export_txt">
+TXT
+</string>
+    <string name="note_saved">
+保存されたメモ: %1$s
+</string>
+    <string name="note_save_error">
+メモの保存中にエラーが発生しました: %1$s
+</string>
+    <string name="note_empty_warning">
+メモは空です
+</string>
+    <string name="notes_folder_title">
+私のメモ
+</string>
+    <string name="notepad_select_export_format">
+名前を付けて保存
+</string>
+    <string name="clear_text">
+すべてのテキストをクリア
+</string>
+    <string name="clear_text_confirm_title">
+すべてのテキストを消去しますか?
+</string>
+    <string name="clear_text_confirm_message">
+これにより、エディタ内のすべてのテキストが消去されます。これを元に戻すことはできません。
+</string>
+    <string name="filename_empty_error">
+ファイル名を空にすることはできません
+</string>
+    <string name="cannot_save_empty_file">
+空のファイルを保存できません
+</string>
+    <string name="notepad_filename_hint">
+ファイル名
+</string>
+    <string name="notepad_select_folder">
+フォルダーの選択
+</string>
+    <string name="notepad_folder_picker_title">
+保存先フォルダを選択
+</string>
+    <string name="notepad_save_as_title">
+名前を付けて保存
+</string>
+    <string name="notepad_saved_path">
+保存先: %1$s
+</string>
+    <string name="new_document">
+新しいドキュメント
+</string>
+    <string name="new_document_warning_title">
+保存されていない作業内容
+</string>
+    <string name="new_document_warning_message">
+保存されていない変更は失われます。続く？
+</string>
+    <string name="file_saved_inplace">
+ファイルが保存されました
+</string>
+
+    <!-- APK / XAPK Extract Settings -->
+    <string name="settings_apk_extract_title">
+APK / XAPK 抽出
+</string>
+    <string name="settings_apk_extract_subtitle_off">
+標準抽出のみ
+</string>
+    <string name="settings_apk_extract_subtitle_on">
+強化された
+</string>
+    <string name="apk_extract_master_title">
+強化された APK/XAPK 抽出
+</string>
+    <string name="apk_extract_master_summary">
+APK/XAPKと一緒にアイコンとメタデータを抽出します
+</string>
+    <string name="apk_extract_master_subtitle_on">
+有効 — タップしてフィールドを変更します
+</string>
+    <string name="apk_extract_master_subtitle_off">
+無効
+</string>
+    <string name="apk_extract_icon_title">
+アプリアイコンを抽出する
+</string>
+    <string name="apk_extract_icon_summary">
+{appname}-icon.png を APK の隣に保存します
+</string>
+    <string name="apk_extract_fields_title">
+JSON に含めるメタデータ フィールド
+</string>
+    <string name="field_extracted_date">
+抽出された日付
+</string>
+    <string name="field_package_name">
+パッケージ名
+</string>
+    <string name="field_version_name">
+バージョン名
+</string>
+    <string name="field_version_code">
+バージョンコード
+</string>
+    <string name="field_label">
+アプリラベル
+</string>
+    <string name="field_install_time">
+インストール日
+</string>
+    <string name="field_last_update_time">
+最終更新日
+</string>
+    <string name="field_target_sdk">
+ターゲットSDK
+</string>
+    <string name="field_min_sdk">
+最小 SDK
+</string>
+    <string name="field_app_size">
+アプリのサイズ
+</string>
+    <string name="field_source_dir">
+ソースディレクトリ
+</string>
+    <string name="field_split_apks">
+分割APK
+</string>
+    <string name="field_has_obb">
+OBBあり
+</string>
+    <string name="field_permissions">
+権限
+</string>
+    <string name="extracts_subtitle_files">
+    Datei(en)
+</string>
+    <string name="export_format">
+形式
+</string>
+
+    <!-- Document Scanner -->
+    <string name="scanner_title">
+ドキュメントスキャナ
+</string>
+    <string name="scanner_tile_subtitle">
+ドキュメントをスキャンして PDF または画像に変換する
+</string>
+    <string name="opening_scanner">
+ドキュメントスキャナーを開く
+</string>
+    <string name="scanner_save">
+保存
+</string>
+    <string name="scanner_filename_hint">
+ファイル名
+</string>
+    <string name="scanner_save_path">
+保存先: %1$s
+</string>
+    <string name="scanner_select_folder">
+フォルダーの選択
+</string>
+    <string name="scanner_pages">
+%1$d ページ
+</string>
+    <string name="scanner_format_jpeg">
+JPEG
+</string>
+    <string name="scanner_format_png">
+PNG
+</string>
+    <string name="scanner_format_pdf">
+PDF
+</string>
+    <string name="scanner_format_only_pdf">
+PDF (複数ページのみ)
+</string>
+    <string name="scanner_scan_new_page">
+ページをスキャン
+</string>
+    <string name="scanner_saved">
+スキャンが保存されました: %1$s
+</string>
+    <string name="scanner_save_error">
+スキャン保存エラー: %1$s
+</string>
+    <string name="scanner_use_this_folder">
+このフォルダを使用する
+</string>
+    <string name="scanner_folder_picker_title">
+スキャンを保存するフォルダーを選択してください
+</string>
+    <string name="scanner_no_pages">
+まだスキャンされたページはありません
+</string>
+    <string name="scanner_default_filename">
+スキャン
+</string>
+    <string name="scanner_capture_camera">
+カメラ
+</string>
+    <string name="scanner_capture_gallery">
+ギャラリーから選ぶ
+</string>
+    <string name="scanner_saving_title">
+文書の保存
+</string>
+    <string name="scanner_saving_message">
+ドキュメントが保存されるまでお待ちください…
+</string>
+    <!-- Backup & Restore -->
+    <string name="backup_restore_title">
+バックアップとバックアップ復元する
+</string>
+    <string name="backup_restore_subtitle">
+アプリ設定のエクスポートまたはインポート
+</string>
+    <string name="backup_action_required_warning">
+必要なアクション: 資格情報が必要です
+</string>
+    <string name="backup_export_btn">
+設定のエクスポート
+</string>
+    <string name="backup_import_btn">
+インポート設定
+</string>
+    <string name="backup_export_success">
+設定は正常にエクスポートされました
+</string>
+    <string name="backup_export_error">
+設定のエクスポートに失敗しました
+</string>
+    <string name="backup_import_success">
+設定が正常にインポートされました
+</string>
+    <string name="backup_import_error">
+設定のインポートに失敗しました
+</string>
+    <string name="backup_import_decrypt_error">
+設定バックアップの復号化に失敗しました。ファイルが破損しているか改ざんされている可能性があります。
+</string>
+    <string name="backup_import_invalid_error">
+無効なバックアップ ファイル形式です
+</string>
+    <string name="backup_select_items">
+エクスポートする項目を選択してください
+</string>
+    <string name="backup_confirm_import_title">
+インポートの確認
+</string>
+    <string name="backup_confirm_import_message">
+これらの設定をインポートすると、現在の設定、ネットワーク共有、オンライン ストレージ構成が置き換えられます。\n
+\n
+機密の認証情報 (パスワード、秘密キー) はバックアップには保存されないため、再構成する必要があります。\n
+\n
+インポートが完了すると、アプリは自動的に再起動します。続く？
+</string>
+    <string name="backup_cat_shared_prefs">
+ユーザー設定とカスタマイズ
+</string>
+    <string name="backup_cat_network_shares">
+ネットワーク共有
+</string>
+    <string name="backup_cat_online_storages">
+オンラインストレージアカウント
+</string>
+    <string name="backup_cat_ftp_server_profiles">
+FTPサーバープロファイル
+</string>
+    <string name="backup_cat_storage_renames">
+カスタムパーティション/ドライブ名
+</string>
+    <string name="backup_cat_smart_sort">
+スマートソートフォルダーの構成
+</string>
+    <string name="backup_import_details_title">
+インポートプレビュー
+</string>
+
+    <!-- Icon Customization -->
+    <string name="icons_settings_title">
+アイコン
+</string>
+    <string name="icons_settings_subtitle">
+すべてのアプリアイコンをカスタマイズする
+</string>
+    <string name="category_file_types">
+ファイルの種類
+</string>
+    <string name="category_folders">
+フォルダー
+</string>
+    <string name="category_toolbar">
+ツールバーのアクション
+</string>
+    <string name="category_navigation">
+ナビゲーション
+</string>
+    <string name="category_settings">
+設定と設定設定
+</string>
+    <string name="category_main_menu_tiles">
+メインメニュータイル
+</string>
+    <string name="icon_file_generic">
+汎用ファイル
+</string>
+    <string name="icon_file_image">
+画像
+</string>
+    <string name="icon_file_video">
+ビデオ
+</string>
+    <string name="icon_file_audio">
+オーディオ
+</string>
+    <string name="icon_file_pdf">
+PDFドキュメント
+</string>
+    <string name="icon_file_word">
+Word文書
+</string>
+    <string name="icon_file_spreadsheet">
+スプレッドシート
+</string>
+    <string name="icon_file_presentation">
+プレゼンテーション
+</string>
+    <string name="icon_file_apk">
+APK / アプリ
+</string>
+    <string name="icon_file_archive">
+アーカイブ
+</string>
+    <string name="icon_file_code">
+コードファイル
+</string>
+    <string name="icon_file_xml">
+XML / マークアップ
+</string>
+    <string name="icon_file_text">
+テキストファイル
+</string>
+    <string name="icon_file_font">
+フォント
+</string>
+    <string name="icon_file_ebook">
+電子書籍
+</string>
+    <string name="icon_file_iso">
+ディスクイメージ
+</string>
+    <string name="icon_file_database">
+データベース
+</string>
+    <string name="icon_file_torrent">
+トレント
+</string>
+    <string name="icon_file_subtitle">
+字幕
+</string>
+    <string name="icon_file_3d">
+3Dモデル
+</string>
+    <string name="icon_file_backup">
+バックアップファイル
+</string>
+    <string name="icon_folder_default">
+フォルダ
+</string>
+    <string name="icon_folder_network">
+ネットワークフォルダー
+</string>
+    <string name="icon_toolbar_copy">
+コピー
+</string>
+    <string name="icon_toolbar_move">
+動く
+</string>
+    <string name="icon_toolbar_rename">
+名前の変更
+</string>
+    <string name="icon_toolbar_share">
+共有
+</string>
+    <string name="icon_toolbar_copy_encrypt">
+暗号化されたコピー
+</string>
+    <string name="icon_toolbar_move_encrypt">
+暗号化して移動
+</string>
+    <string name="icon_toolbar_favorite">
+お気に入り
+</string>
+    <string name="icon_toolbar_hide">
+隠れる
+</string>
+    <string name="icon_toolbar_unhide">
+再表示
+</string>
+    <string name="icon_toolbar_select_all">
+すべて選択
+</string>
+    <string name="icon_toolbar_compress">
+圧縮する
+</string>
+    <string name="icon_toolbar_image_compress">
+画像を圧縮する
+</string>
+    <string name="icon_toolbar_delete">
+消去
+</string>
+    <string name="export_pack">
+エクスポートパック
+</string>
+    <string name="import_pack">
+インポートパック
+</string>
+    <string name="reset_all_icons">
+すべてのアイコンをリセット
+</string>
+    <string name="reset_icon">
+リセット
+</string>
+    <string name="reset_all_confirm_title">
+すべてのアイコンをリセット
+</string>
+    <string name="reset_all_confirm_message">
+すべてのアイコンをデフォルトにリセットしてもよろしいですか?これを元に戻すことはできません。
+</string>
+    <string name="pick_builtin_icon">
+内蔵アイコン
+</string>
+    <string name="browse_icon_file">
+ファイルの参照
+</string>
+    <string name="reset_icon_to_default">
+デフォルトにリセットする
+</string>
+    <string name="icon_pack_export_title">
+アイコンパックをエクスポート
+</string>
+    <string name="icon_pack_export_subtitle">
+含めるアイコン カテゴリを選択してください
+</string>
+    <string name="icon_pack_import_title">
+アイコンパックをインポート
+</string>
+    <string name="icon_pack_import_subtitle">
+アイコンパックの内容をプレビューする
+</string>
+    <string name="icon_pack_export_warning">
+アイコン パックには、カスタム アイコン イメージと組み込みの選択内容が含まれます。 UFM を実行している任意のデバイスにインポートできます。
+</string>
+    <string name="icon_pack_import_confirm">
+これらのアイコンをインポートしてもよろしいですか?選択したアイコンの現在のカスタマイズは置き換えられます。
+</string>
+    <string name="icon_pack_export_success">
+アイコンパックが正常にエクスポートされました
+</string>
+    <string name="icon_pack_export_error">
+アイコンパックのエクスポートに失敗しました
+</string>
+    <string name="icon_pack_import_success">
+アイコンパックが正常にインポートされました
+</string>
+    <string name="icon_pack_import_error">
+アイコンパックのインポートに失敗しました。ファイルが破損しているか改ざんされている可能性があります。
+</string>
+    <string name="icon_pack_invalid_error">
+アイコン パック ファイルが無効または破損しています
+</string>
+    <string name="icon_pack_import_btn">
+アイコンをインポートする
+</string>
+
+    <!-- New Icon Categories -->
+    <string name="category_media_player">
+メディアプレーヤー
+</string>
+    <string name="category_utility">
+ユーティリティ/アクション
+</string>
+    <string name="category_status">
+ステータス/アラート
+</string>
+    <string name="category_view_modes">
+表示モード
+</string>
+    <string name="category_feature_tiles">
+機能タイル
+</string>
+    <string name="category_misc">
+その他
+</string>
+    <string name="icon_media_play">
+遊ぶ
+</string>
+    <string name="icon_media_pause">
+一時停止
+</string>
+    <string name="icon_media_skip_next">
+次へスキップ
+</string>
+    <string name="icon_media_skip_previous">
+前へスキップ
+</string>
+    <string name="icon_media_shuffle">
+シャッフル
+</string>
+    <string name="icon_media_repeat">
+繰り返す
+</string>
+    <string name="icon_media_fullscreen">
+全画面表示
+</string>
+    <string name="icon_media_fullscreen_exit">
+全画面表示の終了
+</string>
+    <string name="icon_media_volume">
+音量
+</string>
+    <string name="icon_media_volume_off">
+音量オフ
+</string>
+    <string name="icon_action_add">
+追加
+</string>
+    <string name="icon_action_close">
+近い
+</string>
+    <string name="icon_action_edit">
+編集
+</string>
+    <string name="icon_action_refresh">
+リフレッシュ
+</string>
+    <string name="icon_action_save">
+保存
+</string>
+    <string name="icon_action_paste">
+ペースト
+</string>
+    <string name="icon_action_undo">
+元に戻す
+</string>
+    <string name="icon_action_duplicate">
+重複
+</string>
+    <string name="icon_action_crop">
+作物
+</string>
+    <string name="icon_action_zoom_in">
+ズームイン
+</string>
+    <string name="icon_action_zoom_out">
+ズームアウト
+</string>
+    <string name="icon_action_fit_screen">
+画面に合わせる
+</string>
+    <string name="icon_status_warning">
+警告
+</string>
+    <string name="icon_status_warning_badge">
+警告バッジ
+</string>
+    <string name="icon_status_check_circle">
+チェックサークル
+</string>
+    <string name="icon_status_shield_check">
+シールドチェック
+</string>
+    <string name="icon_status_shield_alert">
+シールドアラート
+</string>
+    <string name="icon_view_grid_small">
+グリッド小
+</string>
+    <string name="icon_view_grid_medium">
+グリッド中
+</string>
+    <string name="icon_view_grid_large">
+グリッド大
+</string>
+
+    <!-- Icon navigation labels -->
+    <string name="icon_nav_back">
+戻る
+</string>
+    <string name="icon_nav_forward">
+フォワード
+</string>
+    <string name="icon_nav_up">
+上
+</string>
+
+    <!-- Icon settings labels -->
+    <string name="icon_settings_default_start_screen">
+デフォルトのスタート画面
+</string>
+    <string name="icon_settings_language">
+言語
+</string>
+    <string name="icon_settings_appearance">
+外観
+</string>
+    <string name="icon_settings_icons">
+アイコン
+</string>
+    <string name="icon_settings_backup_restore">
+バックアップとバックアップ復元する
+</string>
+    <string name="icon_settings_main_menu_layout">
+メインメニューのレイアウト
+</string>
+    <string name="icon_settings_twin_window_layout">
+ツインウィンドウレイアウト
+</string>
+    <string name="icon_settings_twin_window_startup">
+デフォルトのツインウィンドウ
+</string>
+    <string name="icon_settings_side_by_side_video">
+サイドバイサイドビデオ
+</string>
+    <string name="icon_settings_breadcrumbs">
+ブレッドクラム
+</string>
+    <string name="icon_settings_default_apps">
+デフォルトのアプリ
+</string>
+    <string name="icon_settings_font_size">
+フォントサイズ
+</string>
+    <string name="icon_settings_apk_extract">
+APK/XAPK 抽出
+</string>
+    <string name="icon_settings_long_press">
+長押し時間
+</string>
+    <string name="icon_settings_toolbar_icons">
+ツールバーのアイコン
+</string>
+    <string name="icon_settings_favorites">
+お気に入り
+</string>
+    <string name="icon_settings_custom_drive_names">
+カスタムドライブ名
+</string>
+    <string name="icon_settings_file_server_tiles">
+ファイルサーバータイル
+</string>
+    <string name="icon_settings_hidden_files">
+隠しファイル
+</string>
+    <string name="icon_settings_recycle_bin">
+ごみ箱
+</string>
+    <string name="icon_settings_media_thumbnails">
+メディアのサムネイル
+</string>
+    <string name="icon_settings_video_thumbnail_time">
+動画のサムネイル時間
+</string>
+    <string name="icon_settings_network_thumbnails">
+ネットワークサムネイル
+</string>
+    <string name="icon_settings_cache_copy">
+キャッシュコピー
+</string>
+    <string name="icon_settings_quick_transfer">
+クイックコピー/移動
+</string>
+    <string name="icon_settings_network_open_cache">
+ネットワークオープンキャッシュ
+</string>
+    <string name="icon_settings_storage_indexer">
+ストレージインデクサー
+</string>
+    <string name="icon_settings_analytics">
+分析
+</string>
+
+    <!-- Icon feature tile labels -->
+    <string name="icon_tile_indexed_badge">
+インデックス付きバッジ
+</string>
+    <string name="icon_tile_remove_circle">
+円を削除
+</string>
+    <string name="icon_tile_more">
+もっと
+</string>
+    <string name="icon_tile_history">
+歴史
+</string>
+    <string name="icon_tile_import_code">
+コードをインポートする
+</string>
+    <string name="icon_tile_refresh_custom">
+カスタムをリフレッシュ
+</string>
+    <string name="icon_tile_search_off">
+検索オフ
+</string>
+    <string name="icon_tile_twin_window_off">
+ツインウィンドウオフ
+</string>
+    <string name="icon_tile_vpn_warning">
+VPN の警告
+</string>
+    <string name="icon_tile_saf">
+SAF
+</string>
+    <string name="icon_tile_visibility_off">
+可視性オフ
+</string>
+
+    <string name="backup_import_details_subtitle">
+復元する項目を確認する
+</string>
+    <string name="backup_import_action_btn">
+インポートと再起動
+</string>
+    <string name="backup_import_details_empty">
+バックアップファイルに設定が見つかりません
+</string>
+    <string name="backup_no_exportable_items">
+エクスポートするためのカスタマイズ可能な設定が見つかりません
+</string>
+    <string name="backup_notification_file_saved">
+バックアップ ファイルの保存場所: %1$s
+</string>
+    <string name="backup_toast_please_fill_credentials">
+この接続のロックを解除するには、資格情報を入力してください
+</string>
+    <string name="backup_select_config_file">
+.UFMConfig バックアップ ファイルを選択します
+</string>
+    <string name="backup_export_details_title">
+エクスポートプレビュー
+</string>
+    <string name="backup_export_details_subtitle">
+保存する構成を選択してください
+</string>
+    <string name="backup_export_warning_message">
+機密の資格情報 (パスワード、秘密キー) はバックアップには保存されません。 OAuth を使用するクラウド ドライブ (Google Drive、Dropbox、OneDrive) はバックアップから完全に除外されます。
+</string>
+    <string name="backup_export_desc">
+選択した構成を安全にパッケージ化してストレージに暗号化します
+</string>
+    <string name="backup_import_desc">
+UFM ブラウザを使用して .UFMConfig バックアップ ファイルを選択し、設定を復元します
+</string>
+    <string name="backup_pref_tile_colors">
+タイルの色とタイル美学
+</string>
+    <string name="backup_pref_theme_sort">
+一般的なテーマ、フォント サイズ、および並べ替え設定
+</string>
+    <string name="backup_pref_hidden_files">
+隠しファイルを表示
+</string>
+    <string name="backup_pref_main_menu">
+メインメニューのレイアウト
+</string>
+    <string name="backup_pref_long_press">
+編集モードの長押し時間
+</string>
+    <string name="backup_pref_date_group">
+日付グループ化ルール
+</string>
+    <string name="backup_pref_default_start">
+デフォルトの起動画面
+</string>
+    <string name="backup_pref_toolbar_icons">
+ツールバーのレイアウトとアイコンの可視性
+</string>
+    <string name="backup_pref_twin_window">
+ツインウィンドウレイアウト＆起動する
+</string>
+    <string name="backup_pref_tile_order">
+メインメニューのタイルの順序と隠しタイル
+</string>
+    <string name="backup_pref_favorites">
+お気に入りの道
+</string>
+    <string name="backup_pref_default_apps">
+デフォルトのアプリケーション
+</string>
+    <string name="backup_pref_thumbnails">
+メディアのサムネイル
+</string>
+    <string name="backup_pref_network_thumbnails">
+ネットワークサムネイルとサイズ
+</string>
+    <string name="backup_pref_network_cache">
+ネットワーク ファイル キャッシュの設定
+</string>
+    <string name="backup_pref_side_by_side">
+デュアル再生の設定
+</string>
+    <string name="backup_pref_quick_transfer">
+クイックファイル転送設定
+</string>
+    <string name="backup_pref_recycle_bin">
+ごみ箱の保存設定
+</string>
+    <string name="backup_pref_apk_extract">
+APK抽出設定
+</string>
+    <string name="backup_pref_cache_copy">
+セキュアキャッシュコピー設定
+</string>
+    <string name="backup_pref_video_thumb_time">
+動画のサムネイル時間
+</string>
+    <string name="backup_format_type_host">
+%1$s - %2$s
+</string>
+    <string name="backup_format_location">
+場所: %1$s
+</string>
+    <string name="backup_format_original">
+オリジナル: %1$s
+</string>
+    <string name="backup_path_internal_storage">
+内部ストレージ/UFM/%1$s
+</string>
+
+    <!-- Premium Share General -->
+    <string name="share_dialog_title">
+共有方法の選択
+</string>
+    <string name="share_option_standard">
+標準 Android 共有
+</string>
+    <string name="share_option_standard_desc">
+標準の Android アプリ (Bluetooth、電子メールなど) を使用してファイルを送信します。
+</string>
+    <string name="share_option_premium">
+UFM プレミアム ローカル コピー
+</string>
+    <string name="share_option_premium_desc">
+Wi-Fi プッシュ経由でテレビに直接コピーするか、Web 共有ポータル経由で PC/電話にコピー
+</string>
+    <string name="premium_share_title">
+UFM ローカル コピー センター
+</string>
+    <string name="premium_share_subtitle">
+ファイルを他のデバイスに直接コピーする
+</string>
+    <string name="select_target_device">
+ターゲット デバイス タイプを選択します:
+</string>
+    <string name="target_tv">
+Android TV / Fire TV
+</string>
+    <string name="target_tv_desc">
+ワイヤレス ADB プッシュを使用してファイルを Android TV に直接コピーする
+</string>
+    <string name="target_mobile_pc">
+電話/タブレット/PC
+</string>
+    <string name="target_mobile_pc_desc">
+安全なローカル ポータルをホストして、任意のブラウザでファイルをダウンロードする
+</string>
+    <string name="discovered_devices">
+発見されたテレビとテレビデバイス
+</string>
+    <string name="web_portal_card">
+ウェブ共有ポータル
+</string>
+    <string name="web_portal_desc">
+ブラウザを搭載した PC、タブレット、またはモバイルの場合:
+</string>
+    <string name="web_portal_pin">
+セッションPIN
+</string>
+    <string name="adb_device_badge">
+アンドロイドTV（ADB）
+</string>
+    <string name="connecting_to_device">
+%1$s に接続中…
+</string>
+    <string name="developer_options_warning">
+重要: スキャンする前に、ターゲット TV/デバイスで開発者向けオプションと USB/ワイヤレス デバッグを有効にする必要があります。
+</string>
+    <string name="adb_prompt_warning">
+テレビ画面に「USB デバッグを許可する」というプロンプトが表示された場合は、これを承認してください。
+</string>
+    <string name="transferring_file">
+%1$s を送信中: %2$d%% (%3$.1f MB/秒)
+</string>
+    <string name="transfer_complete">
+転送完了！
+</string>
+    <string name="stop_sharing">
+共有を停止する
+</string>
+    <string name="custom_port_hint">
+ポート (例: 5555)
+</string>
+    <string name="confirm_transfer_title">
+転送の確認
+</string>
+    <string name="confirm_transfer_message">
+%1$d ファイル (%2$s) をターゲット デバイスの %3$s に転送してもよろしいですか?
+</string>
+    <string name="default_destination_path">
+内部ストレージ/ダウンロード
+</string>
+
+    <!-- APK Actions -->
+    <string name="apk_action_title">
+APK転送アクション
+</string>
+    <string name="apk_action_message">
+%1$s をターゲット デバイスにインストールしますか、それとも単にコピーしますか?
+</string>
+    <string name="apk_action_install">
+APKをインストールする
+</string>
+    <string name="apk_action_copy">
+コピーのみ
+</string>
+    <string name="installing_apk">
+%1$s をターゲットにインストールしています…
+</string>
+    <string name="installation_success">
+インストールが成功しました！
+</string>
+
+    <!-- Web Share Portal HTML strings -->
+    <string name="web_portal_html_title">
+UFM ウェブ共有
+</string>
+    <string name="web_portal_html_header">
+究極のファイルマネージャープロ
+</string>
+    <string name="web_portal_html_subtitle">
+%1$s から共有されたファイル
+</string>
+    <string name="web_portal_html_destination_notice">
+ファイルはデバイスのデフォルトのダウンロード フォルダーに保存されます。
+</string>
+    <string name="web_portal_html_enter_pin">
+セッションPINを入力してください
+</string>
+    <string name="web_portal_html_verify">
+確認する
+</string>
+    <string name="web_portal_html_invalid_pin">
+PIN が無効です。もう一度試してください。
+</string>
+    <string name="web_portal_html_download_list">
+ダウンロード可能なファイル
+</string>
+    <string name="web_portal_html_download_button">
+ダウンロード
+</string>
+    <string name="web_portal_html_download_all">
+すべてダウンロード (ZIP)
+</string>
+    <string name="web_portal_html_empty_list">
+現在共有されているファイルはありません。
+</string>
+
+    <!-- TV Premium Share Specific -->
+    <string name="tv_share_step_connect">
+1. 受信デバイスを同じ Wi-Fi ネットワークに接続します。
+</string>
+    <string name="tv_share_step_browser">
+2. デバイス上で任意のブラウザ (Chrome、Safari など) を開きます。
+</string>
+    <string name="tv_share_step_url">
+3. 次の URL を入力します。
+</string>
+    <string name="tv_share_step_pin">
+4. セッション PIN を入力します。
+</string>
+    <string name="tv_share_status_waiting">
+Web サーバーが実行中です。接続を待っています…
+</string>
+    <string name="connect_manually">
+手動で接続する
+</string>
+    <string name="sending_file">
+ファイルを送信中…
+</string>
+    <string name="pro_badge">
+プロ
+</string>
+</resources>
+

@@ -1,0 +1,16 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# PLACEHOLDER — THIS FILE MUST BE REPLACED BEFORE RELEASING TO THE AMAZON APPSTORE
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Steps to get the real key:
+#   1. Sign in to https://developer.amazon.com/
+#   2. Open your app listing → App Services → Appstore SDK → Security Profile
+#   3. Download "AppstoreAuthenticationKey.pem"
+#   4. Replace this entire file with the downloaded PEM content
+#
+# ⚠️  SECURITY WARNING:
+#   • Add this file to your .gitignore so the real key is NEVER committed to git.
+#   • Keep this placeholder committed so the build doesn't fail on CI.
+#   • The Amazon SDK will operate in sandbox / test mode while this placeholder is present.
+#
+# ══════════════════════════════════════════════════════════════════════════════

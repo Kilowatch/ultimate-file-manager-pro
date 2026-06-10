@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium mobile Policy Blocked dialog.
+     Uses dark glassmorphism to match the mobile design language. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_glass_card_dark"
+    android:clipToOutline="true"
+    android:padding="0dp">
+
+    <!-- Red accent top bar indicating restriction -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#FFFF5252" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Centered restricted icon -->
+        <FrameLayout
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_denied_circle">
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_lock"
+                android:tint="@color/white"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/txtPolicyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/policy_blocked_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/policy_blocked_subtitle"
+            android:textColor="#FFFF5252"
+            android:textSize="12sp"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginTop="4dp" />
+
+        <!-- Body -->
+        <TextView
+            android:id="@+id/txtPolicyMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/policy_blocked_message"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:lineSpacingExtra="3dp" />
+            
+        <!-- Technical Details (Optional/Scrollable if needed) -->
+        <TextView
+            android:id="@+id/txtPolicyDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:background="#20FFFFFF"
+            android:textColor="#80FFFFFF"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:visibility="gone" />
+
+        <!-- OK button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPolicyOk"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/btn_ok"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:backgroundTint="#FFFF5252"
+            app:cornerRadius="14dp"
+            app:elevation="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

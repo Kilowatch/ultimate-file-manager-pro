@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:background="@color/tv_bg_gradient_end">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtConflictTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Filename -->
+    <TextView
+        android:id="@+id/txtConflictFileName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="filename.txt"
+        android:textStyle="bold"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:ellipsize="middle"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Info line -->
+    <TextView
+        android:id="@+id/txtConflictInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_message_file"
+        android:textColor="@color/tv_text_hint"
+        android:textSize="13sp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- 0-byte warning (hidden by default) -->
+    <TextView
+        android:id="@+id/txtZeroByteWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/conflict_zero_byte_warning"
+        android:textColor="@color/ufm_denied"
+        android:textSize="13sp"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33FFFFFF"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Overwrite -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictOverwrite"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/conflict_overwrite"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="@color/ufm_denied"
+        style="@style/Widget.Material3.Button" />
+
+    <!-- Skip -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictSkip"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/conflict_skip"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="#26FFFFFF"
+        style="@style/Widget.Material3.Button" />
+
+    <!-- Keep Both -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictKeepBoth"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/conflict_keep_both"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginBottom="8dp"
+        app:backgroundTint="#26FFFFFF"
+        style="@style/Widget.Material3.Button" />
+
+    <!-- Cancel -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConflictCancel"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/cancel"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="15sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginBottom="12dp"
+        app:backgroundTint="#1AFFFFFF"
+        style="@style/Widget.Material3.Button" />
+
+    <!-- Apply to all toggle -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApplyToAll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/conflict_apply_to_all"
+        android:textColor="@color/tv_text_hint"
+        android:textSize="13sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:backgroundTint="#0AFFFFFF"
+        app:strokeColor="#33FFFFFF"
+        app:strokeWidth="1dp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
+
+</LinearLayout>

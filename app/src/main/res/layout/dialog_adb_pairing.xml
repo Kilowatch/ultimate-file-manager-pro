@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="28dp"
+    android:paddingBottom="16dp">
+
+    <!-- Icon -->
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_terminal"
+        app:tint="@color/ufm_primary" />
+
+    <!-- Title & Step-by-step -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_pairing_title"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/txtAdbStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ufm_error"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Auto-Discovery Section -->
+    <Button
+        android:id="@+id/btnScanDevices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_scan_devices"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Scan Progress Container -->
+    <LinearLayout
+        android:id="@+id/scanProgressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+
+        <ProgressBar
+            android:id="@+id/scanProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/scanProgressText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/scanning"
+            android:textColor="@color/ufm_text_secondary"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/devicesDetectedText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/devices_detected_0"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Device Spinner -->
+    <Spinner
+        android:id="@+id/spinnerDevices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Port Input -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_port_label"
+        android:textColor="@color/ufm_text_secondary"
+        android:textSize="12sp"
+        android:layout_gravity="start"
+        android:layout_marginStart="8dp" />
+    
+    <EditText
+        android:id="@+id/editAdbPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/port"
+        android:inputType="number"
+        android:maxLength="5"
+        android:background="@drawable/bg_url_box"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Connection Mode Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnConnectNoPIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="@string/connect_without_pin" />
+
+        <Button
+            android:id="@+id/btnTogglePIN"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="@string/use_pin" />
+    </LinearLayout>
+
+    <!-- 6 PIN Boxes Container (Initially Hidden) -->
+    <LinearLayout
+        android:id="@+id/pinContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/adb_pin_label"
+            android:textColor="@color/ufm_text_secondary"
+            android:textSize="12sp"
+            android:layout_gravity="start"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText android:id="@+id/pin_1" style="@style/AdbPinBox" />
+            <EditText android:id="@+id/pin_2" style="@style/AdbPinBox" />
+            <EditText android:id="@+id/pin_3" style="@style/AdbPinBox" />
+            <EditText android:id="@+id/pin_4" style="@style/AdbPinBox" />
+            <EditText android:id="@+id/pin_5" style="@style/AdbPinBox" />
+            <EditText android:id="@+id/pin_6" style="@style/AdbPinBox" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

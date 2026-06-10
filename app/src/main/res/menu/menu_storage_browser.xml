@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Storage Browser toolbar menu.
+    The Manage Tiles action is implemented as a custom ImageView inside the
+    MaterialToolbar layout rather than as a menu item, because it needs
+    dynamic show/hide behaviour controlled by the edit-mode state machine.
+    Keep this file so app:menu="" on the toolbar inflates cleanly.
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- No standard menu items — managed via btnManageTiles custom view -->
+</menu>

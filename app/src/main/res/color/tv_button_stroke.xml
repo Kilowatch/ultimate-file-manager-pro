@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Stroke color for TV buttons: transparent when focused (bg is solid yellow), visible border when default -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true"  android:color="#00000000" />
+    <item android:color="@color/tv_glass_border_strong" />
+</selector>

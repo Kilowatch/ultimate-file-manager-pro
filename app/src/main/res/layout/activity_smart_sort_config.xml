@@ -1,0 +1,1391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".smartsort.SmartSortTvActivity">
+
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingVertical="14dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_icon_circle_accent"
+            app:tint="@color/mobile_icon_tint" />
+
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#990284C7" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_config"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtTvPath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="/storage/emulated/0/DCIM" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSaveConfig"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_save"
+            android:contentDescription="@string/smart_sort_save_config"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginTop="@dimen/margin_md"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toTopOf="@id/layoutActions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_glass_card"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_scope"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgScope"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_xs">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRootOnly"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_root_only"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRecursive"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_recursive" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/txtHintScope"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/margin_sm"
+                android:maxLines="2"
+                tools:text="Only files directly in this folder will be sorted." />
+
+            <LinearLayout
+                android:id="@+id/layoutRecursiveOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_sm">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgSubfolderMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="false"
+                    android:layout_marginBottom="@dimen/margin_xs">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFlatten"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_flatten"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPreserve"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_preserve" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <TextView
+                    android:id="@+id/txtHintSubfolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:maxLines="2"
+                    tools:text="Files from subfolders are moved directly into category folders." />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtPrefixLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="@dimen/margin_md"
+                app:boxStrokeColor="@color/ufm_accent"
+                app:hintTextColor="@color/ufm_text_hint"
+                        android:hint="@string/smart_sort_default_folder">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrefix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UFM"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_scope"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortStandard"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_standard"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortCustom"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_custom" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:id="@+id/layoutStandardOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card_dark"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_mode_label"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_xs">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeType"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_type"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeSize"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_size" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeDate"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_date" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/txtHintMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:maxLines="2"
+                tools:text="Files are grouped by their file type." />
+
+                            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_categories"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <LinearLayout
+                android:id="@+id/layoutTypeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card_dark"
+                android:padding="16dp"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatPhotos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_photos"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatPhotos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatPhotosFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatPhotosReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatVideos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_videos"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatVideos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatVideosFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatVideosReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatAudio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_audio"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatAudio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatAudioFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatAudioReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatDocuments"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_documents"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatDocuments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatDocumentsFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatDocumentsReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatArchives"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_archives"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatArchives"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatArchivesFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatArchivesReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatApps"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_apps"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatApps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatAppsFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatAppsReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/chkCatEbooks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_ebooks"
+                            android:checked="false"
+                            style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                        <TextView
+                            android:id="@+id/lblCatEbooks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/mobile_text_secondary" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="8dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatEbooksFolder"
+                                style="@style/Widget.Material3.Button.TonalButton"
+                                android:layout_width="0dp"
+                                  android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp" />
+                            <ImageView
+                                android:id="@+id/btnCatEbooksReset"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutSizeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card_dark"
+                android:padding="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeTiny"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_tiny"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblSizeTiny"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Tiny" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeTinyFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnSizeTinyReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeSmall"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_small"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblSizeSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Small" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeSmallFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnSizeSmallReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_medium"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblSizeMedium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Medium" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeMediumFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnSizeMediumReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_large"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblSizeLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Large" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeLargeFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnSizeLargeReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkSizeHuge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_size_huge"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblSizeHuge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Huge" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSizeHugeFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnSizeHugeReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutDateCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card_dark"
+                android:padding="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateToday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_today"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblDateToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Today" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateTodayFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnDateTodayReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_week"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblDateWeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM This Week" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateWeekFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnDateWeekReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_month"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblDateMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM This Month" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateMonthFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnDateMonthReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateYear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_this_year"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblDateYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM This Year" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateYearFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnDateYearReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/chkDateOlder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_date_older"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox" />
+                    <TextView
+                        android:id="@+id/lblDateOlder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:layout_marginBottom="4dp"
+                        android:text="UFM Older" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp">
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDateOlderFolder"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                                  android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_select_folder"
+                            android:textSize="12sp" />
+                        <ImageView
+                            android:id="@+id/btnDateOlderReset"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@null" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipIncludeOther"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_include_other" />
+
+                <TextView
+                    android:id="@+id/lblCatOther"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:paddingStart="8dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOtherFolder"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                                  android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_select_folder"
+                        android:textSize="12sp" />
+                    <ImageView
+                        android:id="@+id/btnOtherReset"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                                  android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_delete"
+                                  app:tint="@color/ufm_error"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutCustomOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_glass_card_dark"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddRule"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_add_rule"
+                    android:textColor="@color/ufm_accent"
+                    android:layout_marginTop="@dimen/margin_sm"
+                    app:icon="@drawable/ic_add"
+                    app:iconTint="@color/ufm_accent"
+                    android:layout_marginBottom="@dimen/margin_md" />
+
+                <TextView
+                    android:id="@+id/txtCustomRulesEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_no_rules"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="13sp"
+                    android:paddingStart="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutCustomRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/mobile_glass_stroke"
+                android:layout_marginVertical="@dimen/margin_md" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_duplicates"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgDuplicateStrategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_xs">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupSkip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_skip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupRename"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_rename"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupOverwrite"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_overwrite" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/txtHintDuplicate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:maxLines="2"
+                tools:text="Files with the same name are renamed with a number suffix." />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_existing_folder"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgExistingFolderStrategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_xs">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingMerge"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_merge"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingSkip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_skip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingRename"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_rename" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/txtHintExisting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:maxLines="2"
+                tools:text="Files are added to the existing category folder." />
+            </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/margin_md"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPreview"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:text="@string/smart_sort_preview"
+            android:textColor="@color/ufm_accent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartSort"
+            style="@style/ContinueButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/continue_button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_start" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTvHistory"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_history"
+            android:textColor="@color/ufm_text_hint"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+

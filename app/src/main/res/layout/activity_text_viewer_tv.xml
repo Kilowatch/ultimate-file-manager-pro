@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Text Viewer — dark theme with D-pad scroll support -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".viewer.TextViewerActivity">
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <ImageView
+            android:id="@+id/btnConvertToPdf"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_file_pdf"
+            android:contentDescription="@string/pdf_convert_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <!-- Edit button (TV) -->
+        <ImageView
+            android:id="@+id/btnEdit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_edit"
+            android:contentDescription="@string/btn_edit_toggle"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <!-- Save button (TV, hidden by default) -->
+        <ImageView
+            android:id="@+id/btnSave"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_save"
+            android:contentDescription="@string/btn_save"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:visibility="gone"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="document.txt" />
+    </LinearLayout>
+
+    <!-- Loading progress -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:progressTint="@color/tv_accent"
+        android:visibility="gone" />
+
+    <!-- Scrollable Content with Focus Border -->
+    <FrameLayout
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:layout_marginBottom="16dp"
+        android:padding="4dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:background="@drawable/selector_tv_policy_scroll">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:clipToPadding="false"
+            android:paddingBottom="48dp"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarThumbVertical="@color/tv_button_focused_yellow"
+            android:focusable="false">
+
+            <HorizontalScrollView
+                android:id="@+id/hScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                android:focusable="false">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+                    <TextView
+                        android:id="@+id/txtLineNumbers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="8dp"
+                        android:paddingVertical="12dp"
+                        android:fontFamily="monospace"
+                        android:textSize="14sp"
+                        android:textColor="#55FFFFFF"
+                        android:gravity="end"
+                        android:background="#10FFFFFF"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/txtContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:fontFamily="monospace"
+                        android:textSize="14sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:background="@null"
+                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Pagination bar — hidden when file fits in one page -->
+    <LinearLayout
+        android:id="@+id/paginationBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/tv_glass_white_10">
+
+        <ImageView
+            android:id="@+id/btnPrevPage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <TextView
+            android:id="@+id/txtPageIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="16sp"
+            tools:text="Page 1 / 5" />
+
+        <ImageView
+            android:id="@+id/btnNextPage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_forward"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+    </LinearLayout>
+
+</LinearLayout>

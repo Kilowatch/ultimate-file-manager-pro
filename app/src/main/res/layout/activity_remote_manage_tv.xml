@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".remote.RemoteManageActivity">
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:nextFocusDown="@+id/btnStopServer"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margin_md"
+            android:text="@string/remote_manage_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black" />
+
+    </LinearLayout>
+
+    <!-- Server Info Card -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardServerInfo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_xl"
+        android:background="@drawable/bg_glass_card"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.60" />
+
+        <!-- Status Badge -->
+        <LinearLayout
+            android:id="@+id/layoutStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="6dp"
+            android:background="@drawable/bg_status_badge"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/txtOpenBrowser"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0.5">
+
+            <View
+                android:id="@+id/viewStatusDot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/bg_status_dot"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_server_running"
+                android:textColor="@color/ufm_granted"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1" />
+        </LinearLayout>
+
+        <!-- Open Browser Label -->
+        <TextView
+            android:id="@+id/txtOpenBrowser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_open_browser"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="16sp"
+            android:layout_marginTop="@dimen/margin_xl"
+            app:layout_constraintTop_toBottomOf="@id/layoutStatus"
+            app:layout_constraintBottom_toTopOf="@id/txtServerUrl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical" />
+
+        <!-- URL Display -->
+        <TextView
+            android:id="@+id/txtServerUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_accent"
+            android:textSize="20sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_md"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:elevation="2dp"
+            app:layout_constraintTop_toBottomOf="@id/txtOpenBrowser"
+            app:layout_constraintBottom_toTopOf="@id/txtWarning"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
+            tools:text="http://192.168.1.100:8080" />
+
+        <!-- Warning text -->
+        <TextView
+            android:id="@+id/txtWarning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_warning_screen"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:alpha="0.8"
+            android:layout_marginTop="@dimen/margin_xl"
+            android:layout_marginHorizontal="@dimen/margin_lg"
+            app:layout_constraintTop_toBottomOf="@id/txtServerUrl"
+            app:layout_constraintBottom_toTopOf="@id/txtFingerprintLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical" />
+
+        <!-- Fingerprint Label -->
+        <TextView
+            android:id="@+id/txtFingerprintLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_fingerprint_label"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="13sp"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_md"
+            app:layout_constraintTop_toBottomOf="@id/txtWarning"
+            app:layout_constraintBottom_toTopOf="@id/txtFingerprint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical" />
+
+        <!-- Fingerprint Value -->
+        <TextView
+            android:id="@+id/txtFingerprint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_accent"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:visibility="gone"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="10dp"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:elevation="1dp"
+            app:layout_constraintTop_toBottomOf="@id/txtFingerprintLabel"
+            app:layout_constraintBottom_toTopOf="@id/txtVerifyFingerprint"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical" />
+
+        <!-- Verify hint -->
+        <TextView
+            android:id="@+id/txtVerifyFingerprint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_verify_fingerprint"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:alpha="0.6"
+            android:visibility="gone"
+            android:paddingHorizontal="@dimen/margin_md"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:layout_marginHorizontal="@dimen/margin_lg"
+            app:layout_constraintTop_toBottomOf="@id/txtFingerprint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_vertical" />
+
+        <!-- CA Trust Status Badge -->
+        <LinearLayout
+            android:id="@+id/layoutCaStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp"
+            android:background="@drawable/bg_input_field"
+            android:layout_marginHorizontal="@dimen/margin_xl"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnStopServer"
+            app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0.5">
+
+            <ImageView
+                android:id="@+id/imgCaShield"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_shield_alert"
+                android:contentDescription="@null"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/txtCaStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium" />
+
+        </LinearLayout>
+
+        <!-- Stop button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStopServer"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tv_button_height"
+            android:text="@string/remote_stop_server"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:nextFocusUp="@id/btnBack"
+            android:nextFocusDown="@+id/btnUseCA"
+            android:backgroundTint="@color/tv_button_bg_tint"
+            android:layout_marginTop="@dimen/margin_xl"
+            android:layout_marginHorizontal="@dimen/margin_xl"
+            app:cornerRadius="@dimen/card_radius_lg"
+            app:icon="@drawable/ic_close"
+            app:iconSize="20dp"
+            app:iconGravity="textStart"
+            app:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/layoutCaStatus"
+            app:layout_constraintBottom_toTopOf="@id/btnUseCA"
+            app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Import / Remove CA button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUseCA"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/tv_button_height"
+            android:text="@string/remote_ca_action_import"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:nextFocusUp="@id/btnStopServer"
+            android:background="@drawable/bg_btn_ca_import"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:layout_marginHorizontal="@dimen/margin_xl"
+            app:cornerRadius="@dimen/card_radius_lg"
+            app:icon="@drawable/ic_lock"
+            app:iconSize="20dp"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:elevation="6dp"
+            app:layout_constraintTop_toBottomOf="@id/btnStopServer"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

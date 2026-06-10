@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:background="@drawable/bg_glass_card">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_pairing_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_pairing_steps"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="16sp"
+        android:layout_marginBottom="32dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/adb_port_label"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/editAdbPort"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_field"
+            android:padding="16dp"
+            android:inputType="number"
+            android:textColor="@color/tv_text_primary"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/adb_pin_label"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText android:id="@+id/pin_1" style="@style/TvAdbPinBox" />
+            <EditText android:id="@+id/pin_2" style="@style/TvAdbPinBox" />
+            <EditText android:id="@+id/pin_3" style="@style/TvAdbPinBox" />
+            <EditText android:id="@+id/pin_4" style="@style/TvAdbPinBox" />
+            <EditText android:id="@+id/pin_5" style="@style/TvAdbPinBox" />
+            <EditText android:id="@+id/pin_6" style="@style/TvAdbPinBox" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

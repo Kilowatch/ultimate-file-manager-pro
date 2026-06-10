@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Use a solid background drawable to ensure TV launchers show the icon -->
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <!-- Foreground: direct reference to avoid layer indirection -->
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <!-- Monochrome layer helps some TV launchers and theming engines -->
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

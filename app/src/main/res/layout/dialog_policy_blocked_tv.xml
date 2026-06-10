@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium TV Policy Blocked dialog.
+     Uses yellow-focused indicators for interactive elements. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_glass_card"
+    android:padding="32dp">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:id="@+id/imgPolicyIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_lock"
+        android:tint="@color/tv_button_focused_yellow"
+        android:contentDescription="@null"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/policy_blocked_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/policy_blocked_subtitle"
+        android:textColor="@color/tv_button_focused_yellow"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginTop="4dp" />
+
+    <!-- Body text -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/policy_blocked_message"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp" />
+
+    <!-- Technical Details (Optional) -->
+    <TextView
+        android:id="@+id/txtPolicyDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:padding="12dp"
+        android:background="#20FFFFFF"
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:visibility="gone" />
+
+    <!-- OK Button (TV focusable) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPolicyOk"
+        android:layout_width="200dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/btn_ok"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
+        app:backgroundTint="@color/tv_glass_white_10"
+        app:cornerRadius="12dp"
+        app:elevation="0dp"
+        android:focusable="true"
+        android:nextFocusUp="@+id/btnPolicyOk"
+        android:nextFocusDown="@+id/btnPolicyOk"
+        android:nextFocusLeft="@+id/btnPolicyOk"
+        android:nextFocusRight="@+id/btnPolicyOk" />
+
+</LinearLayout>

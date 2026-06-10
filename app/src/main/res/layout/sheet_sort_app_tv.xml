@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_lg"
+    android:background="@color/ufm_surface">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtSortTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33FFFFFF"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <!-- TV 2-Column Layout for options to prevent vertical squashing -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <!-- Column 1: Sort By Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="@dimen/margin_md">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortName"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name_1"
+                    android:focusable="true"
+                    android:textColor="@color/tv_text_primary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortSize"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_size"
+                    android:focusable="true"
+                    android:textColor="@color/tv_text_primary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortDate"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/install_date"
+                    android:focusable="true"
+                    android:textColor="@color/tv_text_primary" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+
+        <!-- Column 2: Order Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAscending"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ascending"
+                    android:focusable="true"
+                    android:textColor="@color/tv_text_primary" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDescending"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/descending"
+                    android:focusable="true"
+                    android:textColor="@color/tv_text_primary" />
+            </com.google.android.material.chip.ChipGroup>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Apply Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApplySort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/apply"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:focusable="true"
+        app:backgroundTint="#FF0284C7"
+        app:cornerRadius="8dp"
+        android:layout_marginTop="@dimen/margin_lg" />
+
+</LinearLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardStorage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="0dp"
+    android:layout_marginVertical="@dimen/margin_sm"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="@dimen/card_radius_lg"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/margin_xl"
+        android:paddingVertical="@dimen/margin_lg">
+
+        <!-- Storage Icon (Left) -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:background="@drawable/bg_glass_card"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imgStorageIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cd_storage_icon"
+                app:tint="@color/white"
+                tools:src="@drawable/ic_storage_internal" />
+        </FrameLayout>
+
+        <!-- Content Section (Center) -->
+        <TextView
+            android:id="@+id/txtStorageLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="24dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-black"
+            android:maxLines="1"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/txtStorageCapacity"
+            app:layout_constraintEnd_toStartOf="@id/circularProgress"
+            app:layout_constraintStart_toEndOf="@id/iconContainer"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Internal Storage" />
+
+        <TextView
+            android:id="@+id/txtStorageCapacity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/progressStorage"
+            app:layout_constraintEnd_toStartOf="@id/circularProgress"
+            app:layout_constraintStart_toEndOf="@id/iconContainer"
+            app:layout_constraintTop_toBottomOf="@id/txtStorageLabel"
+            tools:text="2.45 GB free of 5.42 GB" />
+
+        <!-- Thin usage progress bar at bottom of text area -->
+        <ProgressBar
+            android:id="@+id/progressStorage"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="24dp"
+            android:progressTint="@color/tv_accent"
+            android:progressBackgroundTint="@color/tv_glass_white_15"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/circularProgress"
+            app:layout_constraintStart_toEndOf="@id/iconContainer"
+            app:layout_constraintTop_toBottomOf="@id/txtStorageCapacity"
+            tools:progress="55" />
+
+        <!-- Progress (Right) -->
+        <za.kilowatch.ultimatefilemanager.ui.CircularProgressView
+            android:id="@+id/circularProgress"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Hide Button (X) — top right, visible in Edit Mode -->
+        <ImageView
+            android:id="@+id/btnHideTile"
+            android:layout_width="32sp"
+            android:layout_height="32sp"
+            android:src="@drawable/ic_remove_circle"
+            android:visibility="gone"
+            android:contentDescription="@string/hide_tile"
+            android:elevation="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="-4sp"
+            android:layout_marginEnd="-4sp"
+            tools:visibility="visible" />
+
+        <!-- NEW Badge (Top-Right Corner) -->
+        <TextView
+            android:id="@+id/txtNewBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_new"
+            android:fontFamily="sans-serif-black"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="@string/storage_new_badge"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

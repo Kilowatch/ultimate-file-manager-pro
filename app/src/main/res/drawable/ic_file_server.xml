@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Server/hosting icon: stacked server with upload arrow -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M4,1h16c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2H4C2.9,9 2,8.1 2,7V3C2,1.9 2.9,1 4,1zM4,3v4h16V3H4zM9,5h2v1H9V5zM6,5a1,1 0,1 1,0 2,1 1,0 0,1 0,-2z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M4,11h16c1.1,0 2,0.9 2,2v4c0,1.1 -0.9,2 -2,2H4c-1.1,0 -2,-0.9 -2,-2v-4c0,-1.1 0.9,-2 2,-2zM4,13v4h16v-4H4zM9,15h2v1H9v-1zM6,15a1,1 0,1 1,0 2,1 1,0 0,1 0,-2z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M12,20v3" 
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000" />
+</vector>

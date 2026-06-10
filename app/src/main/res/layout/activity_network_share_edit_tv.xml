@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- TV Header -->
+    <LinearLayout
+        android:id="@+id/layerHeader"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:clickable="true"
+            app:tint="@color/tv_text_primary" />
+
+        <TextView
+            android:id="@+id/txtToolbarTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:text="@string/network_edit_title_add"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black" />
+    </LinearLayout>
+
+    <!-- Two-column scrollable form on TV -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="32dp"
+        android:paddingBottom="16dp"
+        android:gravity="top"
+        app:layout_constraintTop_toBottomOf="@id/layerHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Left column: type + connection fields -->
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/bg_glass_card_dark">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/network_field_type"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp"/>
+
+                <RadioGroup android:id="@+id/rgType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+                    <RadioButton android:id="@+id/rbSmb"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_smb"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_network"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true" android:checked="true"/>
+                    <RadioButton android:id="@+id/rbFtp"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_ftp"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_remote_manage"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true"/>
+                    <RadioButton android:id="@+id/rbSftp"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_sftp"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_lock"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true"/>
+                    <RadioButton android:id="@+id/rbScp"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_scp"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_terminal"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true"/>
+                    <RadioButton android:id="@+id/rbNfs"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_nfs"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_nfs"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true"/>
+                </RadioGroup>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/network_field_name"
+                    android:textColorHint="@color/tv_text_primary"
+                    app:hintTextColor="@color/tv_text_primary"
+                    app:boxStrokeColor="@color/tv_accent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_primary"
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:focusable="true" android:imeOptions="actionNext"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Host field + Scan button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/network_field_host"
+                        android:textColorHint="@color/tv_text_primary"
+                        app:hintTextColor="@color/tv_text_primary"
+                        app:boxStrokeColor="@color/tv_accent">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_primary"
+                            android:id="@+id/etHost"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:focusable="true"
+                            android:imeOptions="actionNext"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageButton
+                        android:id="@+id/btnScanHosts"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        android:src="@drawable/ic_search"
+                        android:contentDescription="@string/smb_cd_scan"
+                        android:focusable="true"
+                        app:tint="@color/selector_tv_smb_icon_tint" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/network_field_port"
+                    android:textColorHint="@color/tv_text_primary"
+                    app:hintTextColor="@color/tv_text_primary"
+                    app:boxStrokeColor="@color/tv_accent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_primary"
+                        android:id="@+id/etPort"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:focusable="true" android:imeOptions="actionNext"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Remote path field + Browse button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/network_field_path"
+                        android:textColorHint="@color/tv_text_primary"
+                        app:hintTextColor="@color/tv_text_primary"
+                        app:boxStrokeColor="@color/tv_accent">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_primary"
+                            android:id="@+id/etPath"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textUri"
+                            android:focusable="true"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <ImageButton
+                        android:id="@+id/btnBrowseShares"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        android:src="@drawable/ic_folder"
+                        android:contentDescription="@string/smb_cd_browse_shares"
+                        android:focusable="true"
+                        app:tint="@color/selector_tv_smb_icon_tint" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Right column: credentials + access + test + save -->
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/bg_glass_card_dark">
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilUsername"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/network_field_username"
+                    android:textColorHint="@color/tv_text_primary"
+                    app:hintTextColor="@color/tv_text_primary"
+                    app:boxStrokeColor="@color/tv_accent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_primary"
+                        android:id="@+id/etUsername"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:focusable="true" android:imeOptions="actionNext"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/network_field_password"
+                    app:endIconMode="password_toggle"
+                    android:textColorHint="@color/tv_text_primary"
+                    app:hintTextColor="@color/tv_text_primary"
+                    app:boxStrokeColor="@color/tv_accent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_primary"
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:focusable="true" android:imeOptions="actionNext"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilDomain"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/network_field_domain"
+                    android:textColorHint="@color/tv_text_primary"
+                    app:hintTextColor="@color/tv_text_primary"
+                    app:boxStrokeColor="@color/tv_accent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_primary"
+                        android:id="@+id/etDomain"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:focusable="true"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- SSH Auth Toggle -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleSshAuth"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/network_btn_show_ssh_auth"
+                    android:textColor="@color/tv_accent"
+                    android:focusable="true"
+                    android:visibility="gone" />
+
+                <!-- SSH Authentication card -->
+                <LinearLayout
+                    android:id="@+id/cardSshAuth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_header_ssh_auth"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-black"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/network_field_private_key"
+                            android:textColorHint="@color/tv_text_primary"
+                            app:hintTextColor="@color/tv_text_primary"
+                            app:boxStrokeColor="@color/tv_accent">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etPrivateKey"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/tv_text_primary"
+                                android:inputType="text"
+                                android:focusable="true"
+                                android:clickable="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnPickKey"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="@string/network_btn_pick_key"
+                            android:textColor="@color/tv_accent"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <com.google.android.material.checkbox.MaterialCheckBox
+                        android:id="@+id/cbUseKeychain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_label_use_keychain"
+                        android:textColor="@color/tv_text_primary"
+                        android:focusable="true"
+                        app:buttonTint="@color/tv_accent" />
+
+                </LinearLayout>
+
+                <!-- SMB Protocol Selection -->
+                <LinearLayout
+                    android:id="@+id/layerSmbProtocol"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="@string/network_field_smb_protocol"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp"/>
+                    <RadioGroup android:id="@+id/rgSmbProtocol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <RadioButton android:id="@+id/rbSmbAuto"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="@string/network_smb_protocol_auto"
+                            android:textColor="@color/tv_text_primary"
+                            android:focusable="true" android:checked="true"/>
+                        <RadioButton android:id="@+id/rbSmb2"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/network_smb_protocol_smb2"
+                            android:textColor="@color/tv_text_primary"
+                            android:focusable="true"/>
+                        <RadioButton android:id="@+id/rbSmb3"
+                            android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/network_smb_protocol_smb3"
+                            android:textColor="@color/tv_text_primary"
+                            android:focusable="true"/>
+                    </RadioGroup>
+                </LinearLayout>
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/network_field_access"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="4dp"/>
+                <RadioGroup android:id="@+id/rgAccess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="12dp">
+                    <RadioButton android:id="@+id/rbReadOnly"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="@string/network_access_readonly"
+                        android:textColor="@color/tv_text_primary"
+                        android:focusable="true" android:checked="true"/>
+                    <RadioButton android:id="@+id/rbReadWrite"
+                        android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/network_access_readwrite"
+                        android:textColor="@color/tv_text_primary"
+                        android:focusable="true"/>
+                </RadioGroup>
+
+                <!-- Test Connection result -->
+                <TextView
+                    android:id="@+id/txtTestResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:padding="8dp"
+                    android:textSize="13sp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_glass_card_dark"/>
+
+                <!-- Test Connection -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTest"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/network_btn_test"
+                    android:focusable="true" />
+
+                <!-- Save -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSave"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="@string/network_btn_save"
+                    android:textColor="@color/btn_save_text_color"
+                    android:focusable="true"
+                    app:backgroundTint="@color/btn_save_bg_tint"
+                    app:cornerRadius="12dp"
+                    app:elevation="0dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

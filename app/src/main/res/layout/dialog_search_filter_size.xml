@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File Size filter dialog — min + max each with KB/MB/GB unit spinner -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_size_title"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Min size row -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_size_min_label"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/editMinSize"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:hint="@string/search_filter_size_min_hint"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textColorHint="@color/mobile_text_secondary"
+            android:backgroundTint="@color/mobile_glass_stroke"
+            android:paddingHorizontal="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerMinUnit"
+            android:layout_width="90dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/mobile_glass_card"
+            android:popupBackground="@color/mobile_glass_card" />
+
+    </LinearLayout>
+
+    <!-- Max size row -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_size_max_label"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <EditText
+            android:id="@+id/editMaxSize"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:hint="@string/search_filter_size_max_hint"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textColorHint="@color/mobile_text_secondary"
+            android:backgroundTint="@color/mobile_glass_stroke"
+            android:paddingHorizontal="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerMaxUnit"
+            android:layout_width="90dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="8dp"
+            android:background="@color/mobile_glass_card"
+            android:popupBackground="@color/mobile_glass_card" />
+
+    </LinearLayout>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnSizeCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary" />
+
+        <Button
+            android:id="@+id/btnSizeApply"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/search_filter_apply"
+            android:backgroundTint="@color/tv_accent"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

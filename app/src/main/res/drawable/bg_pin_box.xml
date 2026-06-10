@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Active box: currently receiving input (selected state used by TextViews) -->
+    <item android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/ufm_surface" />
+            <corners android:radius="12dp" />
+            <stroke android:width="2dp" android:color="@color/ufm_primary" />
+        </shape>
+    </item>
+    <!-- Focused EditText box (legacy; kept for back-compat) -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/ufm_surface" />
+            <corners android:radius="12dp" />
+            <stroke android:width="2dp" android:color="@color/ufm_primary" />
+        </shape>
+    </item>
+    <!-- Default / filled box -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/ufm_background" />
+            <corners android:radius="12dp" />
+            <stroke android:width="2dp" android:color="@color/ufm_surface_variant" />
+        </shape>
+    </item>
+</selector>

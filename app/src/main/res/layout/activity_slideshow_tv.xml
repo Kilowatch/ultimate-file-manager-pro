@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF0D0D1A">
+
+    <!-- ViewPager2 for swiping images & videos -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false" />
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="#99000000"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            app:tint="@color/tv_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnConvertToPdf"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_file_pdf"
+            android:contentDescription="@string/pdf_convert_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:visibility="gone"
+            app:tint="@color/tv_icon_tint" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFFFF"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="photo.jpg" />
+
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#99FFFFFF"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:visibility="gone"
+                tools:text="3840 × 2160  •  2.4 MB" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Controls Overlay (Bottom) for TV - Video Controls -->
+    <LinearLayout
+        android:id="@+id/controlsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="48dp"
+        android:background="@drawable/gradient_bottom_shadow"
+        android:visibility="gone"
+        android:elevation="4dp">
+
+        <!-- Seek Bar Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            
+            <TextView
+                android:id="@+id/txtElapsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp" />
+                
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="16dp"
+                android:splitTrack="false"
+                android:focusable="true"
+                android:progressDrawable="@drawable/tv_seek_bar_progress"
+                android:thumbTint="#FBBF24"
+                android:progressTint="#FBBF24" />
+                
+            <TextView
+                android:id="@+id/txtRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-00:00"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Buttons Row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_shuffle"
+                android:focusable="true"
+                android:nextFocusRight="@+id/btnPrev" />
+
+            <ImageButton
+                android:id="@+id/btnPrev"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="24dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_skip_previous"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnShuffle"
+                android:nextFocusRight="@+id/btnPlayPause" />
+
+            <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginHorizontal="32dp"
+                android:src="@drawable/ic_pause"
+                android:background="@drawable/tv_button_selector_primary"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnPrev"
+                android:nextFocusRight="@+id/btnNext" />
+
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_skip_next"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnPlayPause"
+                android:nextFocusRight="@+id/btnRepeat" />
+
+            <ImageButton
+                android:id="@+id/btnRepeat"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="24dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_repeat"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnNext" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Controls Overlay (Bottom) for TV - Image D-pad control bar -->
+    <LinearLayout
+        android:id="@+id/tvImageControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="12dp"
+        android:background="#CC000000"
+        android:elevation="4dp"
+        android:visibility="gone">
+
+        <!-- Pan Left -->
+        <LinearLayout
+            android:id="@+id/btnPanLeft"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/pan_left"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Up -->
+        <LinearLayout
+            android:id="@+id/btnPanUp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_up"
+                android:contentDescription="@string/pan_up"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Down -->
+        <LinearLayout
+            android:id="@+id/btnPanDown"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_down"
+                android:contentDescription="@string/pan_down"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Right -->
+        <LinearLayout
+            android:id="@+id/btnPanRight"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_forward"
+                android:contentDescription="@string/pan_right"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Zoom In -->
+        <LinearLayout
+            android:id="@+id/btnZoomIn"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_zoom_in"
+                android:contentDescription="@string/zoom_in"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Zoom Out -->
+        <LinearLayout
+            android:id="@+id/btnZoomOut"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_zoom_out"
+                android:contentDescription="@string/zoom_out"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Rotate Left -->
+        <LinearLayout
+            android:id="@+id/btnRotateLeft"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_rotate_left"
+                android:contentDescription="@string/rotate_left"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Rotate Right -->
+        <LinearLayout
+            android:id="@+id/btnRotateRight"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_rotate_right"
+                android:contentDescription="@string/rotate_right"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Fit / Reset -->
+        <LinearLayout
+            android:id="@+id/btnFitReset"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_fit_screen"
+                android:contentDescription="@string/fit_to_screen"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Draw toggle (TV) -->
+        <LinearLayout
+            android:id="@+id/btnDrawToggleTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/btn_draw_toggle"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Crop toggle (TV) -->
+        <LinearLayout
+            android:id="@+id/btnCropToggleTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_crop"
+                android:contentDescription="@string/btn_crop_toggle"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Image Save (TV) -->
+        <LinearLayout
+            android:id="@+id/btnImageSaveTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_save"
+                android:contentDescription="@string/btn_draw_save"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

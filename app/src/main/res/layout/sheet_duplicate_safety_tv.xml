@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="16dp"
+    android:background="@drawable/bg_dialog_glass"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:id="@+id/imgWarning"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        app:srcCompat="@drawable/ic_warning_badge"
+        app:tint="@color/tv_error" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/analyzer_duplicate_all_selected_warning"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/analyzer_duplicate_all_selected_msg"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="150dp"
+        android:layout_marginBottom="32dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+        <TextView
+            android:id="@+id/txtDangerousFiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_error"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:gravity="center" />
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDeleteAnyway"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="@string/analyzer_delete_anyway"
+        android:textColor="@color/selector_tv_btn_error_text"
+        app:backgroundTint="@color/selector_tv_btn_error_bg"
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="12dp"
+        android:nextFocusDown="@id/btnCancel" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="@string/cancel"
+        android:textColor="@color/selector_tv_btn_secondary_text"
+        android:background="@drawable/selector_tv_button_yellow"
+        app:cornerRadius="12dp"
+        android:nextFocusUp="@id/btnDeleteAnyway" />
+
+</LinearLayout>

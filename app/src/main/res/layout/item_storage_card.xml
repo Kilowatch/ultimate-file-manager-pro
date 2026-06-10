@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile Storage Card — premium dark glassmorphism design.
+    Used for BOTH real storage volumes (with circular progress) AND feature
+    shortcut tiles (App Manager, Remote, Search, etc.).
+    Full width single-column vertical list — no grid, no truncation.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardStorage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_md"
+    android:layout_marginVertical="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:rippleColor="@color/mobile_glass_ripple">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_md">
+
+            <!-- Accent circle icon -->
+            <FrameLayout
+                android:id="@+id/iconContainer"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/bg_icon_circle_accent">
+
+                <ImageView
+                    android:id="@+id/imgStorageIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/cd_storage_icon"
+                    app:tint="@color/mobile_icon_tint"
+                    tools:src="@drawable/ic_storage_internal" />
+            </FrameLayout>
+
+            <!-- Label + Capacity text column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="14dp">
+
+                <TextView
+                    android:id="@+id/txtStorageLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Internal Storage" />
+
+                <TextView
+                    android:id="@+id/txtStorageCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    tools:text="View installed apps" />
+
+                <!-- Usage progress bar — only visible for real storage volumes -->
+                <ProgressBar
+                    android:id="@+id/progressStorage"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="8dp"
+                    android:progressTint="?attr/colorPrimary"
+                    android:progressBackgroundTint="@color/mobile_glass_stroke"
+                    android:visibility="gone"
+                    tools:progress="55"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Circular Progress — for real storage volumes only -->
+            <za.kilowatch.ultimatefilemanager.ui.CircularProgressView
+                android:id="@+id/circularProgress"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <!-- NEW Badge — shown in top-right corner when newly mounted -->
+            <TextView
+                android:id="@+id/txtNewBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_badge_accent"
+                android:fontFamily="sans-serif-black"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="@string/storage_new_badge"
+                android:textColor="#FF0284C7"
+                android:textSize="10sp"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Hide Button (X) — top right, visible in Edit Mode -->
+        <ImageView
+            android:id="@+id/btnHideTile"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="6dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_remove_circle"
+            android:visibility="gone"
+            android:contentDescription="@string/hide_tile"
+            android:elevation="8dp"
+            tools:visibility="visible" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

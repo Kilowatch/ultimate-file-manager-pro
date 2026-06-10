@@ -1,0 +1,1321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/ufm_surface">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_lg">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_config"
+                android:textColor="@color/ufm_text_primary"
+                android:textSize="@dimen/text_lg"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_md" />
+
+            <TextView
+                android:id="@+id/txtSelectedFolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:maxLines="1"
+                android:ellipsize="middle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_scope"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgScope"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_sm">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRootOnly"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_root_only" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipRecursive"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_recursive" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:id="@+id/layoutRecursiveOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:visibility="gone">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgSubfolderMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    android:layout_marginBottom="@dimen/margin_sm">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFlatten"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_flatten" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPreserve"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/smart_sort_preserve" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_scope"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="false"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortStandard"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_standard"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortCustom"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_custom" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:id="@+id/layoutStandardOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_mode_label"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeType"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_type" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeSize"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_size" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipModeDate"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_mode_date" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <LinearLayout
+                android:id="@+id/layoutTypeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_categories"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatPhotos"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_photos" />
+                        <TextView
+                            android:id="@+id/lblCatPhotos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatPhotosFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatPhotosReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatVideos"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_videos" />
+                        <TextView
+                            android:id="@+id/lblCatVideos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatVideosFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatVideosReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatAudio"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_audio" />
+                        <TextView
+                            android:id="@+id/lblCatAudio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatAudioFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatAudioReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatDocuments"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_documents" />
+                        <TextView
+                            android:id="@+id/lblCatDocuments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatDocumentsFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatDocumentsReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatArchives"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_archives" />
+                        <TextView
+                            android:id="@+id/lblCatArchives"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatArchivesFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatArchivesReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatApps"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_apps" />
+                        <TextView
+                            android:id="@+id/lblCatApps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatAppsFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatAppsReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipCatEbooks"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_category_ebooks" />
+                        <TextView
+                            android:id="@+id/lblCatEbooks"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCatEbooksFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnCatEbooksReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipIncludeOther"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_include_other" />
+                        <TextView
+                            android:id="@+id/lblCatOther"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnOtherFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnOtherReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutSizeCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_categories"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSizeTiny"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_size_tiny" />
+                        <TextView
+                            android:id="@+id/lblSizeTiny"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Tiny" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSizeTinyFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnSizeTinyReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSizeSmall"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_size_small" />
+                        <TextView
+                            android:id="@+id/lblSizeSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Small" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSizeSmallFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnSizeSmallReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSizeMedium"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_size_medium" />
+                        <TextView
+                            android:id="@+id/lblSizeMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Medium" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSizeMediumFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnSizeMediumReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSizeLarge"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_size_large" />
+                        <TextView
+                            android:id="@+id/lblSizeLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Large" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSizeLargeFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnSizeLargeReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSizeHuge"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_size_huge" />
+                        <TextView
+                            android:id="@+id/lblSizeHuge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Huge" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSizeHugeFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnSizeHugeReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutDateCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/margin_md"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_categories"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateToday"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_date_today" />
+                        <TextView
+                            android:id="@+id/lblDateToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Today" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDateTodayFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnDateTodayReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateWeek"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_date_this_week" />
+                        <TextView
+                            android:id="@+id/lblDateWeek"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM This Week" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDateWeekFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnDateWeekReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateMonth"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_date_this_month" />
+                        <TextView
+                            android:id="@+id/lblDateMonth"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM This Month" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDateMonthFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnDateMonthReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateYear"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_date_this_year" />
+                        <TextView
+                            android:id="@+id/lblDateYear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM This Year" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDateYearFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnDateYearReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipDateOlder"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/smart_sort_date_older" />
+                        <TextView
+                            android:id="@+id/lblDateOlder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/ufm_text_hint"
+                            android:paddingStart="24dp"
+                            android:text="UFM Older" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingStart="24dp">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDateOlderFolder"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/smart_sort_select_folder"
+                                android:textSize="12sp"
+                                android:paddingVertical="2dp"
+                                android:minHeight="0dp" />
+                            <ImageView
+                                android:id="@+id/btnDateOlderReset"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@null" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_options"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtPrefixLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="@dimen/margin_md"
+                app:boxStrokeColor="@color/ufm_accent"
+                app:hintTextColor="@color/ufm_text_hint">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtPrefix"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UFM"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutCustomOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAddRule"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_add_rule"
+                    android:textColor="@color/ufm_accent"
+                    app:icon="@drawable/ic_add"
+                    app:iconTint="@color/ufm_accent"
+                    android:layout_marginBottom="@dimen/margin_md" />
+
+                <TextView
+                    android:id="@+id/txtCustomRulesEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_no_rules"
+                    android:textColor="@color/ufm_text_hint"
+                    android:textSize="13sp"
+                    android:paddingStart="8dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutCustomRules"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_duplicates"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgDuplicateStrategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupSkip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_skip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupRename"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_rename" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDupOverwrite"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_overwrite" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/smart_sort_existing_folder"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgExistingFolderStrategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_lg">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingMerge"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_merge" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingSkip"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_skip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipExistingRename"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_strategy_rename" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Preview area (hidden until preview is run) -->
+            <LinearLayout
+                android:id="@+id/layoutPreviewResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/smart_sort_preview_title"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textSize="@dimen/text_md"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <TextView
+                    android:id="@+id/txtPreviewContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm" />
+            </LinearLayout>
+
+            <!-- Progress area (shown during sort) -->
+            <LinearLayout
+                android:id="@+id/layoutProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:id="@+id/txtProgressLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <android.widget.ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:max="100" />
+            </LinearLayout>
+
+            <!-- Results area (shown after sort) -->
+            <LinearLayout
+                android:id="@+id/layoutResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:id="@+id/txtResultSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textSize="@dimen/text_sm" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnUndoSort"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="@dimen/margin_sm"
+                    android:text="@string/smart_sort_undo"
+                    android:textColor="@color/ufm_accent"
+                    app:icon="@drawable/ic_undo"
+                    app:iconTint="@color/ufm_accent" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/margin_md">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPreview"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:text="@string/smart_sort_preview"
+            android:textColor="@color/ufm_accent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartSort"
+            style="@style/ContinueButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/continue_button_height"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_start" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnHistory"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/margin_sm"
+            android:text="@string/smart_sort_history"
+            android:textColor="@color/ufm_text_hint"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

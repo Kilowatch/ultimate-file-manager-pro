@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Widget preview drawable — shown in the Android home-screen widget picker.
+    Mimics the real widget: dark card, header with star + "Favorites" label,
+    and three placeholder rows with folder icons.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background card -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="#1C1C2E" />
+        </shape>
+    </item>
+
+    <!-- Subtle top gradient highlight -->
+    <item
+        android:bottom="200dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="16dp"
+                android:topRightRadius="16dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <gradient
+                android:startColor="#2A2A4A"
+                android:endColor="#1C1C2E"
+                android:angle="270" />
+        </shape>
+    </item>
+
+    <!-- Header accent bar -->
+    <item
+        android:top="0dp"
+        android:bottom="220dp"
+        android:left="0dp"
+        android:right="0dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="16dp"
+                android:topRightRadius="16dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp" />
+            <solid android:color="#252540" />
+        </shape>
+    </item>
+
+    <!-- Left accent stripe -->
+    <item
+        android:top="0dp"
+        android:bottom="220dp"
+        android:right="330dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="16dp"
+                android:bottomLeftRadius="0dp" />
+            <gradient
+                android:startColor="#FFFFFF"
+                android:endColor="#CCCCCC"
+                android:angle="90" />
+        </shape>
+    </item>
+
+</layer-list>

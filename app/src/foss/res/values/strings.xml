@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- FOSS About Strings -->
+    <string name="about_foss_gpl_notice">This is a Free and Open Source software (FOSS) build of Ultimate File Manager.\n\nLicensed under the GNU General Public License v3.0 (GPL-3.0). You can view, modify, and redistribute the source code on GitHub.\n\nSource: %s</string>
+    <string name="about_source_code">Source Code</string>
+    <string name="about_report_bug">Report a Bug</string>
+
+    <!-- FOSS Donation Strings -->
+    <string name="foss_donation_title">Support UFM</string>
+    <string name="foss_donation_subtitle">Donate to open-source development</string>
+    <string name="foss_donation_explanation">This is a Free and Open Source (FOSS) build of Ultimate File Manager. Google Play Billing and Amazon IAP are disabled.\n\nIf you find this app helpful, please consider supporting the project with a donation. Your support helps keep UFM active and ad-free!</string>
+    <string name="foss_donation_btn_kofi">Support on Ko-fi</string>
+    <string name="foss_donation_btn_github">Sponsor on GitHub</string>
+    <string name="foss_donation_version_format">Android SDK Version: %1$d (FOSS Build)</string>
+
+    <!-- FOSS Online Storages Strings -->
+    <string name="online_storages_subtitle_foss">WebDAV, AWS and more</string>
+
+    <!-- FOSS Rate Us Overrides -->
+    <string name="rate_us_screen_body_foss">Your feedback helps us improve and directly supports the development of the app.\n\nCould you take a moment to leave a review on F-Droid?</string>
+    <string name="rate_us_button_play_foss">Rate on F-Droid</string>
+</resources>

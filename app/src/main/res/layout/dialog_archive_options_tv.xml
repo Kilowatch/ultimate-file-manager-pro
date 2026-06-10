@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TV Archive Options Dialog — two-column design:
+  Left column : filename + format selection + password toggle  (always visible)
+  Right column: password fields                                 (shown/hidden by code)
+
+  This way the dialog height never changes when password is enabled, so nothing is cut off.
+  Dialog is centered on screen; width is 680dp to use TV landscape space comfortably.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="900dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/compress_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Two-column body -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20dp">
+
+        <!-- LEFT: filename + format + password toggle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="12dp">
+
+            <EditText
+                android:id="@+id/edtFilename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/compress_filename_hint"
+                android:inputType="text"
+                android:padding="14dp"
+                android:background="@drawable/bg_input_field"
+                android:textColor="@color/tv_text_primary"
+                android:textColorHint="@color/tv_text_hint"
+                android:layout_marginBottom="14dp"
+                android:focusable="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/compress_format"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rgFormat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="14dp">
+
+                <RadioButton
+                    android:id="@+id/rbZip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/zip"
+                    android:checked="true"
+                    android:textColor="@color/tv_text_primary"
+                    android:buttonTint="@color/tv_accent"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button"
+                    android:padding="12dp" />
+
+                <Space android:layout_width="8dp" android:layout_height="wrap_content" />
+
+                <RadioButton
+                    android:id="@+id/rb7z"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/s_7z"
+                    android:textColor="@color/tv_text_primary"
+                    android:buttonTint="@color/tv_accent"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button"
+                    android:padding="12dp" />
+            </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/switchPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/compress_password_protect"
+                android:textColor="@color/tv_text_primary"
+                android:buttonTint="@color/tv_accent"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_button"
+                android:padding="12dp" />
+
+        </LinearLayout>
+
+        <!-- RIGHT: password fields — hidden until checkbox checked -->
+        <LinearLayout
+            android:id="@+id/layoutPasswordFields"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingStart="12dp"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/compress_password_hint"
+                android:inputType="textPassword"
+                android:padding="14dp"
+                android:background="@drawable/bg_input_field"
+                android:textColor="@color/tv_text_primary"
+                android:textColorHint="@color/tv_text_hint"
+                android:layout_marginBottom="12dp"
+                android:focusable="true" />
+
+            <EditText
+                android:id="@+id/edtConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/compress_password_confirm_hint"
+                android:inputType="textPassword"
+                android:padding="14dp"
+                android:background="@drawable/bg_input_field"
+                android:textColor="@color/tv_text_primary"
+                android:textColorHint="@color/tv_text_hint"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Buttons row — Compress left, Cancel right -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="@string/compress_btn_start"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:focusable="true"
+            android:layout_marginEnd="10dp" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:background="@drawable/selector_tv_button"
+            android:textColor="@color/tv_text_primary"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

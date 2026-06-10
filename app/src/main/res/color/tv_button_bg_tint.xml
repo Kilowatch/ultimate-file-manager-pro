@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- backgroundTint for TV buttons: yellow when focused, glass-white when default -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true"  android:color="@color/tv_button_focused_yellow" />
+    <item android:state_enabled="false" android:color="#33FFFFFF" />
+    <item android:color="#26FFFFFF" />
+</selector>

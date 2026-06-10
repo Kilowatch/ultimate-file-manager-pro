@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="ic_launcher_background">#FF12306C</color>
+
+
+    <!-- Premium Light Theme Palette -->
+    <color name="ufm_primary">#FF00897B</color>
+    <color name="ufm_primary_dark">#FF00695C</color>
+    <color name="ufm_primary_light">#FF4DB6AC</color>
+    <color name="ufm_accent">#FF1565C0</color>
+    <color name="ufm_accent_light">#FF42A5F5</color>
+    <color name="ufm_active_blue">#FF1565C0</color>
+
+    <!-- Backgrounds (Light) -->
+    <color name="ufm_background">#FFF5F5F5</color>
+    <color name="ufm_surface">#FFFFFFFF</color>
+    <color name="ufm_surface_variant">#FFECEFF1</color>
+    <color name="ufm_card_background">#FFFFFFFF</color>
+
+    <!-- Text (Dark on Light) -->
+    <color name="ufm_text_primary">#FF1B1B1F</color>
+    <color name="ufm_text_secondary">#FF49454F</color>
+    <color name="ufm_text_hint">#FF79747E</color>
+
+    <!-- Status Colors -->
+    <color name="ufm_granted">#FF2E7D32</color>
+    <color name="ufm_denied">#FFC62828</color>
+    <color name="ufm_pending">#FFE65100</color>
+    <color name="ufm_optional">#FF1565C0</color>
+
+    <color name="status_error">@color/ufm_denied</color>
+    <color name="status_success">@color/ufm_granted</color>
+
+    <!-- Gradient (Welcome Header) -->
+    <color name="ufm_gradient_start">#FF1565C0</color>
+    <color name="ufm_gradient_end">#FF00897B</color>
+
+    <!-- Focus (TV) -->
+    <color name="ufm_focus_border">#FF00897B</color>
+    <color name="ufm_focus_glow">#3300897B</color>
+
+    <!-- Progress Bar -->
+    <color name="ufm_progress_bg">#FFE0E0E0</color>
+    <color name="ufm_progress_fill">#FF00897B</color>
+    <color name="ufm_progress_warning">#FFEF6C00</color>
+    <color name="ufm_progress_critical">#FFC62828</color>
+
+    <!-- Selection -->
+    <color name="ufm_selection_highlight">#2200897B</color>
+    <color name="ufm_delete_tint">#1AC62828</color>
+
+    <!-- Analyzer Category Colors -->
+    <color name="ufm_analyzer_images">#FF42A5F5</color>
+    <color name="ufm_analyzer_videos">#FFEF5350</color>
+    <color name="ufm_analyzer_audio">#FFAB47BC</color>
+    <color name="ufm_analyzer_documents">#FF66BB6A</color>
+    <color name="ufm_analyzer_apks">#FFFFA726</color>
+    <color name="ufm_analyzer_other">#FF78909C</color>
+
+    <!-- Analyzer Risk Level Colors -->
+    <color name="ufm_risk_safe">#FF2E7D32</color>       <!-- green -->
+    <color name="ufm_risk_moderate">#FFEF6C00</color>   <!-- amber -->
+    <color name="ufm_risk_manual">#FFC62828</color>     <!-- red -->
+    <color name="ufm_error">#FFC62828</color>
+    <color name="tv_error">#FFFF5252</color>
+
+    <!-- TV Premium — Light mode (day) palette -->
+    <color name="tv_bg_gradient_start">#FFF0F4FF</color>
+    <color name="tv_bg_gradient_end">#FFE8F0FE</color>
+    <color name="tv_glass_white_10">#1A000000</color>
+    <color name="tv_glass_white_20">#33000000</color>
+    <color name="tv_glass_white_30">#4D000000</color>
+    <color name="tv_glass_border">#26000000</color>
+    <color name="tv_glass_highlight">#1A000000</color>
+    <color name="tv_text_primary">#FF111827</color>
+    <color name="tv_text_secondary">#FF374151</color>
+    <color name="tv_text_hint">#FF6B7280</color>
+    <color name="tv_accent">#FF0284C7</color>
+    <color name="tv_accent_glow">#660284C7</color>
+    <color name="tv_focus_glow">#4D0284C7</color>
+    <color name="tv_focus_border_strong">#FF0284C7</color>
+    <color name="tv_focus_glow_outer">#800284C7</color>
+    <color name="tv_glass_white_15">#26000000</color>
+    <color name="tv_surface_focused">#330284C7</color>
+    <color name="tv_icon_tint">#FF111827</color>
+    <color name="tv_error_red">#FF5252</color>
+    <!-- Dialog / sheet surface background -->
+    <color name="tv_dialog_background">#F2F4F8</color>
+    <!-- Selector button default background (glass dark on light theme) -->
+    <color name="tv_button_default_bg">#1A000000</color>
+    <!-- Theme-aware media/image button surface: clearly visible in light mode -->
+    <color name="tv_btn_default_surface">#FFE8EDF2</color>  <!-- light grey card -->
+    <color name="tv_btn_default_border">#FF9AAAB8</color>  <!-- visible grey stroke -->
+    <!-- Media player overlay backgrounds (header bar + controls bar) -->
+    <color name="tv_media_header_bg">#E6FFFFFF</color>    <!-- 90% white glass —light mode -->
+    <color name="mobile_media_bg">#FFF5F5F5</color>       <!-- light grey — audio bg -->
+    <color name="mobile_media_overlay">#E6FFFFFF</color>  <!-- header+controls in light -->
+    <color name="tv_button_focused_bg">#FF0284C7</color>
+    <color name="tv_button_focused_text">#FFFFFFFF</color>
+    <color name="tv_glass_border_strong">#40000000</color>
+    <color name="tv_divider">#1A000000</color>
+    <!-- Yellow/Amber high-visibility focus for buttons (same on both themes) -->
+    <color name="tv_button_focused_yellow">#FFFBBF24</color>
+    <color name="tv_button_focused_yellow_70">#B3FBBF24</color>
+    <color name="tv_button_focused_yellow_glow">#99FBBF24</color>
+    <color name="tv_button_focused_yellow_text">#FF0F0F0F</color>
+    <color name="tv_button_focused_blue">#FF3B82F6</color>
+    <color name="tv_button_focused_blue_glow">#993B82F6</color>
+
+    <!-- Mobile Glass UI — Light Theme (deep gradient bg, white glass cards) -->
+    <!-- Header bar: semi-transparent light gray on light gradient -->
+    <color name="mobile_glass_header">#1A000000</color>
+    <!-- Solid opaque toolbar for screens where content scrolls underneath -->
+    <color name="mobile_toolbar_solid">#FFF0F4FF</color>
+    <!-- Card background: crisp white frosted surface -->
+    <color name="mobile_glass_card">#DDFFFFFF</color>
+    <!-- Thicker glass overlay (selection bar, modals) -->
+    <color name="mobile_glass_card_thick">#EEFFFFFF</color>
+    <!-- Card stroke / border: subtle gray edge -->
+    <color name="mobile_glass_stroke">#26000000</color>
+    <!-- Primary text: slate/ink (toolbar sits on light gradient) -->
+    <color name="mobile_text_primary">#FF1C2B3A</color>
+    <!-- Secondary text: slate (on light background) -->
+    <color name="mobile_text_secondary">#FF546E7A</color>
+    <!-- Icons on header: slate -->
+    <color name="mobile_icon_tint">#FF1C2B3A</color>
+    <!-- Card primary text: near-black (on white card surface) -->
+    <color name="mobile_card_text_primary">#FF0D1B2A</color>
+    <!-- Card secondary text: dark grey -->
+    <color name="mobile_card_text_secondary">#99000000</color>
+    <!-- Dimmed empty-state icon tint -->
+    <color name="mobile_empty_icon_tint">#66FFFFFF</color>
+    <!-- Ripple on glass cards -->
+    <color name="mobile_glass_ripple">#33000000</color>
+    <color name="mobile_glass_white_10">#1A000000</color>
+    <color name="mobile_glass_white_20">#33000000</color>
+    <!-- Stop/danger button: dark red in light theme -->
+    <color name="mobile_stop_btn">#FFB71C1C</color>
+
+    <!-- Policy Screen Colors (Light Theme) -->
+    <color name="policy_bg">#FFF5F5F5</color>
+    <color name="policy_surface">#FFFFFFFF</color>
+    <color name="policy_toolbar_bg">#FF0D1B3E</color>
+    <color name="policy_toolbar_text">#FFFFFFFF</color>
+    <color name="policy_accent">#FF1565C0</color>
+    <color name="policy_accent_light">#FFE3F2FD</color>
+    <color name="policy_ink">#FF1C2B3A</color>
+    <color name="policy_slate">#FF546E7A</color>
+    <color name="policy_border">#FFDDE6EF</color>
+    <color name="policy_green">#FF2E7D32</color>
+    <color name="policy_green_bg">#FFE8F5E9</color>
+    <color name="policy_red">#FFC62828</color>
+    <color name="policy_red_bg">#FFFFEBEE</color>
+    <color name="policy_row_alt">#FFF5F8FC</color>
+    <color name="policy_chip_bg">#FFE3F2FD</color>
+    <color name="policy_chip_text">#FF1565C0</color>
+
+    <!-- TV Alert Glass Backgrounds (10% opacity of accent colors) -->
+    <color name="tv_glass_green">#1A2E7D32</color>
+    <color name="tv_glass_red">#1AC62828</color>
+    <color name="tv_glass_blue">#1A1565C0</color>
+
+    <!-- VPN Warning -->
+    <color name="vpn_warning_amber">#FFFFA726</color>
+    <color name="tv_glass_amber">#1AFFA726</color>
+
+    <!-- Rate Us tile — Amber / Gold (light theme) -->
+    <color name="tile_rate_us_accent">#FFC300</color>
+    <color name="tile_rate_us_icon_bg">#FFF9C234</color>
+    <color name="tile_rate_us_stroke">#4DFFC300</color>
+
+    <!-- Fuel the Developer tile — Violet / Purple (light theme) -->
+    <color name="tile_tip_jar_accent">#FF8B2FC9</color>
+    <color name="tile_tip_jar_icon_bg">#FFB95CE8</color>
+    <color name="tile_tip_jar_stroke">#4D8B2FC9</color>
+
+    <!-- Disabled button states (light theme) -->
+    <color name="btn_disabled_bg">#FFB0BEC5</color>   <!-- blue-grey 200, clearly muted on light bg -->
+    <color name="btn_disabled_text">#FF607D8B</color> <!-- blue-grey 600 -->
+
+    <!-- Dialog / Premium Gloss Surface (95% opaque white) -->
+    <color name="dialog_glass_bg">#F2FFFFFF</color>
+
+    <!-- Online Storages Tile Reactive Theme Colors -->
+    <color name="tile_online_storages_accent">#0078D4</color>
+    <color name="tile_online_storages_icon_bg">#1A0078D4</color>
+    <color name="tile_online_storages_stroke">#330078D4</color>
+
+    <!-- Note colors for visibility -->
+    <color name="tv_note_color">#FFB45309</color> <!-- Dark Amber for Light mode -->
+    <color name="mobile_note_color">#FFB45309</color>
+
+    <!-- Shizuku Status Colors -->
+    <color name="shizuku_status_ok">#FF1B5E20</color>
+    <color name="shizuku_status_error">#FFD32F2F</color>
+
+    <color name="ufm_success">#4CAF50</color>
+
+    <!-- Date Group Header Banner — Light Theme -->
+    <!-- Solid background: teal-tinted frosted surface -->
+    <color name="date_group_header_bg">#FFEAF6F4</color>
+    <!-- Left accent stripe -->
+    <color name="date_group_header_stripe">#FF00897B</color>
+    <!-- Year text: bold near-black -->
+    <color name="date_group_header_year_text">#FF1B1B1F</color>
+    <!-- Month text: teal primary -->
+    <color name="date_group_header_month_text">#FF00695C</color>
+    <!-- Count badge text: secondary slate -->
+    <color name="date_group_header_count_text">#FF49454F</color>
+    <!-- Card stroke -->
+    <color name="date_group_header_stroke">#2600897B</color>
+
+</resources>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Data Extraction Rules (Android 12 / API 31+).
+   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
+
+   H-3: Server credential files are excluded from both cloud backup and device
+   transfer to prevent accidental exfiltration of encrypted password blobs
+   and the SFTP host private key.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="sharedpref" path="acceptance_prefs.xml"/>
+        <exclude domain="sharedpref" path="vault_prefs.xml"/>
+        <exclude domain="sharedpref" path="analytics_prefs.xml"/>
+        <!-- H-3: Exclude server credential and key files -->
+        <exclude domain="sharedpref" path="file_server_prefs.xml"/>
+        <exclude domain="file" path="ftp_server_profiles.json"/>
+        <exclude domain="file" path="sftp_host_key.ser"/>
+        <!-- SEC-MED-7: Exclude all files containing credentials or encrypted user data -->
+        <exclude domain="file" path="network_shares.json"/>
+        <exclude domain="file" path="vault/"/>
+        <exclude domain="file" path="vault_mirror/"/>
+        <exclude domain="file" path="ssh_keys/"/>
+    </cloud-backup>
+    <device-transfer>
+        <exclude domain="sharedpref" path="acceptance_prefs.xml"/>
+        <exclude domain="sharedpref" path="vault_prefs.xml"/>
+        <exclude domain="sharedpref" path="analytics_prefs.xml"/>
+        <!-- H-3: Exclude server credential and key files -->
+        <exclude domain="sharedpref" path="file_server_prefs.xml"/>
+        <exclude domain="file" path="ftp_server_profiles.json"/>
+        <exclude domain="file" path="sftp_host_key.ser"/>
+        <!-- SEC-MED-7: Exclude all files containing credentials or encrypted user data -->
+        <exclude domain="file" path="network_shares.json"/>
+        <exclude domain="file" path="vault/"/>
+        <exclude domain="file" path="vault_mirror/"/>
+        <exclude domain="file" path="ssh_keys/"/>
+    </device-transfer>
+</data-extraction-rules>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV App Item — TV-specific design with focus states
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardApp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/margin_md"
+    android:layout_marginVertical="3dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_white_15"
+    app:rippleColor="@color/tv_glass_white_20">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_md">
+
+        <!-- App Icon -->
+        <ImageView
+            android:id="@+id/imgAppIcon"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/cd_storage_icon"
+            tools:src="@drawable/ic_apps" />
+
+        <!-- App Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtAppName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Chrome" />
+
+            <TextView
+                android:id="@+id/txtAppPackage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/tv_text_hint"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="com.android.chrome" />
+
+        </LinearLayout>
+        
+        <!-- Debloat Badge -->
+        <TextView
+            android:id="@+id/txtDebloatBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_md"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:background="@drawable/bg_badge"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:textAllCaps="true"
+            android:fontFamily="sans-serif-black"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Recommended"
+            tools:backgroundTint="#4CAF50" />
+
+        <!-- App Size -->
+        <TextView
+            android:id="@+id/txtAppSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="145 MB" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Remote body (rounded rectangle outline) -->
+    <path
+        android:pathData="M8,2 L16,2 C17.105,2 18,2.895 18,4 L18,20 C18,21.105 17.105,22 16,22 L8,22 C6.895,22 6,21.105 6,20 L6,4 C6,2.895 6.895,2 8,2 Z"
+        android:strokeColor="#FF1B1B1F"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000" />
+
+    <!-- D-Pad Up arrow -->
+    <path
+        android:pathData="M12,8 L10.5,10 L13.5,10 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Down arrow -->
+    <path
+        android:pathData="M12,16 L10.5,14 L13.5,14 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Left arrow -->
+    <path
+        android:pathData="M8,12 L10,10.5 L10,13.5 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- D-Pad Right arrow -->
+    <path
+        android:pathData="M16,12 L14,10.5 L14,13.5 Z"
+        android:fillColor="#FF1B1B1F" />
+
+    <!-- Checkmark badge (bottom-right corner) -->
+    <path
+        android:pathData="M17,17 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"
+        android:fillColor="#FF00897B" />
+    <path
+        android:pathData="M15.5,17 L16.8,18.3 L19,16"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>

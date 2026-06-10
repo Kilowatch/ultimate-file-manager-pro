@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    App Storage Usage Row — Mobile
+    Shows app name, total size, and file count.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="4dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/margin_md"
+            android:src="@drawable/ic_apps"
+            app:tint="@color/tv_accent"
+            android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/txtAppName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="WhatsApp" />
+
+    <TextView
+        android:id="@+id/txtAppFileCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_md"
+        android:textColor="@color/mobile_card_text_secondary"
+        android:textSize="12sp"
+        tools:text="3,421 files" />
+
+    <TextView
+        android:id="@+id/txtAppSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_accent"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="2.1 GB" />
+
+</LinearLayout>

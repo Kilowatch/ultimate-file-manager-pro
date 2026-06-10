@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_lg"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtSortTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/ufm_surface_variant"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <!-- Sort By Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_by"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/margin_sm" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgSortMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        android:layout_marginBottom="@dimen/margin_md">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSortName"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name_1"
+            android:textColor="@color/mobile_text_primary" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSortSize"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_size"
+            android:textColor="@color/mobile_text_primary" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipSortDate"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/install_date"
+            android:textColor="@color/mobile_text_primary" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Order Section -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/margin_sm" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgSortOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        android:layout_marginBottom="@dimen/margin_md">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipAscending"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ascending"
+            android:textColor="@color/mobile_text_primary" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDescending"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/descending"
+            android:textColor="@color/mobile_text_primary" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Apply Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApplySort"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="@string/apply"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:backgroundTint="#FF0284C7"
+        app:cornerRadius="12dp"
+        android:layout_marginTop="@dimen/margin_md" />
+
+</LinearLayout>

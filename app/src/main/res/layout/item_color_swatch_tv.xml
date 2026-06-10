@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/selector_tv_color_swatch">
+
+    <!-- The colour fill view -->
+    <View
+        android:id="@+id/swatchColor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Selected check mark -->
+    <ImageView
+        android:id="@+id/swatchCheck"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_check"
+        android:visibility="gone"
+        android:contentDescription="@null" />
+
+</FrameLayout>

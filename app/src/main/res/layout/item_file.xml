@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile File Item — premium dark glassmorphism design
+    Matches the theme of activity_welcome and activity_storage_browser.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardFile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/mob_file_item_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/selector_tv_list_item">
+
+    <LinearLayout
+        android:id="@+id/layoutFileRow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:gravity="center_vertical">
+
+        <!-- Selection Checkbox (hidden by default) -->
+        <CheckBox
+            android:id="@+id/checkSelect"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:buttonTint="?attr/colorPrimary"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            tools:visibility="visible" />
+
+        <!-- File/Folder Icon in accent circle.
+             transitionName is set dynamically by the adapter per position,
+             so each item has a unique name ("file_icon_<position>"). -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:layout_marginVertical="6dp"
+            android:transitionName="file_icon_placeholder">
+
+            <ImageView
+                android:id="@+id/imgFileIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="11dp"
+                android:contentDescription="@string/cd_file_icon"
+                app:tint="@color/mobile_icon_tint"
+                tools:src="@drawable/ic_folder" />
+
+            <!-- Indexed Badge (Lightning Bolt) -->
+            <ImageView
+                android:id="@+id/imgIndexedBadge"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_lightning"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <!-- Name + Info + (optional) Disk Usage -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Documents" />
+
+            <TextView
+                android:id="@+id/txtFileInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="12 items · Modified 2 hours ago" />
+
+            <!-- Disk usage bar (shown only for drive entries) -->
+            <ProgressBar
+                android:id="@+id/progressDiskUsage"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="1dp"
+                android:max="100"
+                android:progressTint="@color/ufm_primary"
+                android:progressBackgroundTint="@color/ufm_surface_variant"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:progress="65" />
+
+            <TextView
+                android:id="@+id/txtDiskUsage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11sp"
+                android:layout_marginBottom="2dp"
+                android:visibility="gone"
+                tools:text="65% used · 14.2 GB free of 40.5 GB"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- Size -->
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:layout_marginEnd="@dimen/margin_sm"
+            tools:text="4.2 MB" />
+
+        <!-- Toggle switch (shown only for toggle items, right side) -->
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Hidden Badge -->
+        <ImageView
+            android:id="@+id/imgHiddenBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_eye_off"
+            android:alpha="0.5"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:visibility="gone"
+            app:tint="@color/mobile_text_secondary"
+            tools:visibility="visible" />
+
+        <!-- Circular disk usage (shown only for drive entries, right side) -->
+        <za.kilowatch.ultimatefilemanager.ui.CircularProgressView
+            android:id="@+id/circularDiskUsage"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="6dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Chevron (hidden for toggle items) -->
+        <ImageView
+            android:id="@+id/imgChevron"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_arrow_back"
+            android:rotation="180"
+            android:alpha="0.4"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+
+    <!-- Bottom divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/mobile_glass_header" />
+
+</FrameLayout>

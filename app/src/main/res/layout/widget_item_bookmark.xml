@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Single row in the Bookmark Launcher widget ListView.
+    RemoteViews-compatible: LinearLayout + ImageView + TextViews only.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="14dp"
+    android:paddingEnd="12dp"
+    android:background="@drawable/widget_item_selector">
+
+    <!-- Type icon: folder / file / network — tint set programmatically in BookmarkWidgetFactory -->
+    <ImageView
+        android:id="@+id/widget_item_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_folder"
+        android:contentDescription="@string/widget_bookmark_cd_icon" />
+
+    <!-- Label -->
+    <TextView
+        android:id="@+id/widget_item_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:textColor="#E2E8F0"
+        android:textSize="13sp"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Chevron — tint set programmatically in BookmarkWidgetProvider -->
+    <ImageView
+        android:id="@+id/widget_item_chevron"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:src="@drawable/ic_arrow_forward"
+        android:contentDescription="@null" />
+
+</LinearLayout>

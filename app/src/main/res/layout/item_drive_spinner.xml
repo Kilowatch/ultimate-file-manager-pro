@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Premium Drive Spinner Item — for dropdown display
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:background="?attr/colorSurface">
+
+    <ImageView
+        android:id="@+id/imgDriveIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_storage_internal"
+        android:contentDescription="@null"
+        android:alpha="0.8" />
+
+    <TextView
+        android:id="@+id/txtDriveName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Internal Storage" />
+
+    <ImageView
+        android:id="@+id/imgIndexingBolt"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_lightning"
+        app:tint="@color/tv_button_focused_yellow"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</LinearLayout>

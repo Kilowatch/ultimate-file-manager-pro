@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SHARED
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="policy_app_name">Administrador de archivos definitivo Pro</string>
+    <string name="policy_company">KiloWatch</string>
+    <string name="policy_last_updated">Última actualización: abril de 2026</string>
+    <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
+    <string name="policy_contact_email">soporte@kilowatch.co.za</string>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         TERMS AND CONDITIONS
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="tc_screen_title">Términos y condiciones</string>
+    <string name="tc_summary">Al descargar o utilizar Ultimate File Manager Pro, acepta estos Términos. Los hemos escrito para que sean lo más claros y libres de jerga posible.</string>
+
+    <!-- Section titles -->
+    <string name="tc_s1_title">1. Lo que estás aceptando</string>
+    <string name="tc_s2_title">2. Qué hace la aplicación</string>
+    <string name="tc_s3_title">3. Riesgo y responsabilidad: la verdad honesta</string>
+    <string name="tc_s3a_title">3a. Compras y facturación dentro de la aplicación</string>
+    <string name="tc_s4_title">4. Tus responsabilidades</string>
+    <string name="tc_s5_title">5. Permisos que necesitamos y por qué</string>
+    <string name="tc_s6_title">6. ¿Quién posee qué?</string>
+    <string name="tc_s7_title">7. Componentes de código abierto que utilizamos</string>
+    <string name="tc_s8_title">8. Cambios a estos términos</string>
+    <string name="tc_s9_title">9. Si las cosas van mal</string>
+    <string name="tc_s10_title">10. Ley aplicable</string>
+    <string name="tc_s11_title">11. ¿Preguntas? Ponte en contacto</string>
+
+    <!-- Section body text -->
+    <string name="tc_s1_body">Al descargar o abrir Ultimate File Manager Pro desde Google Play Store, acepta estos Términos. Si prefiere no aceptarlas, simplemente no instale ni utilice la aplicación.</string>
+
+    <string name="tc_s2_body">Ultimate File Manager Pro es una aplicación gratuita para Android, disponible tanto en teléfonos como en Android TV, repleta de herramientas para mantener sus archivos organizados y seguros.</string>
+
+    <string name="tc_s3_body">Hemos creado esta aplicación con cuidado, pero aquí hay algunas realidades importantes que debes conocer antes de usarla.</string>
+
+    <string name="tc_s3a_body">La aplicación ofrece un tarro de sugerencias opcional \"Fuel the Developer\": tres compras voluntarias únicas que apoyan el desarrollo. Los consejos no le ofrecen funciones adicionales; la aplicación es siempre totalmente gratuita.</string>
+    <string name="tc_s3a_payment">Todas las transacciones pasan por Google Play Billing. Nunca vemos su tarjeta o datos bancarios.</string>
+    <string name="tc_s3a_refunds">Las compras de propinas son voluntarias y procesadas por Google Play. Google Play maneja las solicitudes de reembolso directamente de acuerdo con su política de reembolso y la ley aplicable, incluida la Ley de Protección al Consumidor de Sudáfrica. KiloWatch no procesa reembolsos de forma independiente.</string>
+    <string name="tc_s3a_recurring">No hay suscripciones. Cada punta es una compra única de consumibles. Nunca se le cobrará automáticamente.</string>
+    <string name="tc_s3a_no_obligation">La propina es completamente opcional. Todas las funciones permanecen disponibles sin costo alguno, para siempre.</string>
+
+    <string name="tc_s4_body">El uso de esta aplicación conlleva algunas responsabilidades simples de su parte.</string>
+
+    <string name="tc_s5_body">La aplicación solicita ciertos permisos de Android para funcionar correctamente. Esto es exactamente para qué sirve cada uno.</string>
+
+    <string name="tc_s6_body">Puedes utilizar la aplicación libremente; simplemente no está permitido copiarlo, redistribuirlo ni venderlo.</string>
+
+    <string name="tc_s7_body">Nos basamos en algunos grandes proyectos de código abierto. Cada una se rige por su propia licencia: puede ver el texto completo de la licencia de cada biblioteca dentro de la aplicación en Configuración → Legal → Licencias de código abierto.</string>
+
+    <string name="tc_s8_body">Podemos actualizar estos Términos de vez en cuando. Cuando lo hagamos, actualizaremos la fecha en la parte superior de este documento. Continuar usando la aplicación después de cualquier cambio significa que acepta los Términos actualizados.</string>
+
+    <string name="tc_s9_body">Nos reservamos el derecho de suspender o cancelar el acceso a la aplicación si se violan estos Términos, por ejemplo, si la aplicación se utiliza para actividades ilegales o para acceder al dispositivo de otra persona sin consentimiento.</string>
+
+    <string name="tc_s10_body">Estos Términos se rigen por las leyes de Sudáfrica. Cualquier disputa se resolverá bajo la jurisdicción sudafricana, sin tener en cuenta las disposiciones sobre conflicto de leyes.</string>
+
+    <string name="tc_s11_body">Si algo aquí no está claro o tiene preguntas sobre sus derechos, comuníquese con nosotros.</string>
+
+    <string name="tc_footer">Al utilizar Ultimate File Manager Pro, confirma que ha leído y comprendido estos Términos y condiciones.</string>
+
+    <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>Explorador de archivos: explore, copie, mueva, cambie el nombre y elimine archivos en cualquier lugar de su dispositivo.</item>
+        <item>Bóveda cifrada: bloquee archivos confidenciales con cifrado AES-256-GCM con su propio PIN.</item>
+        <item>Servidor de archivos: aloje un servidor FTP o SFTP seguro directamente en su dispositivo para compartir archivos a través de su red local.</item>
+        <item>Administración remota: administre archivos a través de su Wi-Fi local a través de un servidor HTTP integrado que admite la carga, descarga e instalación de APK de forma remota.</item>
+        <item>Recursos compartidos de red: conéctese a servidores SMB y FTP en su red local para explorar, descargar y administrar archivos remotos.</item>
+        <item>Sincronización de carpetas: realice automáticamente una copia de seguridad de las carpetas del teléfono local en un recurso compartido de red SMB o FTP en el horario que usted elija (intervalo o hora específica diaria, semanal o mensual).</item>
+        <item>Emparejamiento de dispositivos: empareje su teléfono móvil y Android TV a través de Wi-Fi local para transferir e instalar archivos.</item>
+        <item>Terminal ADB: conéctese a dispositivos Android en modo desarrollador a través de su Wi-Fi local usando ADB (Android Debug Bridge) para acceso directo al shell y solución avanzada de problemas.</item>
+        <item>Visores integrados: vea archivos de texto, PDF, imágenes animadas (APNG, GIF, WebP animado, SVG y más), archivos y otros formatos directamente dentro de la aplicación.</item>
+        <item>Compatibilidad avanzada con ZIP: cree y extraiga archivos ZIP protegidos con contraseña y cifrados con AES.</item>
+        <item>Capturas de pantalla remotas: captura la pantalla de tu Android TV emparejado a través de Wi-Fi local a través de ADB y guárdala directamente en el almacenamiento de tu teléfono.</item>
+        <item>Compatibilidad con archivos 7Z: extraiga archivos 7Z con compresión LZMA/LZMA2.</item>
+        <item>Búsqueda de archivos: encuentre rápidamente archivos y carpetas en el almacenamiento de su dispositivo.</item>
+        <item>Analizador de almacenamiento: vea un desglose visual de lo que utiliza su espacio de almacenamiento.</item>
+        <item>Administrador de aplicaciones: vea y administre todas las aplicaciones instaladas en su dispositivo, con recomendaciones de eliminación de aplicaciones preinstaladas.</item>
+        <item>Instalador de APK: instale aplicaciones de Android y divida APK (XAPK) directamente desde archivos guardados localmente.</item>
+        <item>Acceso elevado (Shizuku y ADB): obtenga acceso tipo root para administrar archivos del sistema y directorios restringidos sin tener que rootear su dispositivo.</item>
+        <item>Storage Indexer: cree un índice local de metadatos de archivos para realizar búsquedas instantáneas y una navegación increíblemente rápida.</item>
+        <item>Marco de acceso al almacenamiento: otras aplicaciones pueden acceder a sus archivos a través del proveedor de documentos de UFM.</item>
+        <item>Tip Jar: compras únicas opcionales para ayudar al desarrollador; La aplicación siempre es gratuita sin propinas.</item>
+    </string-array>
+
+    <!-- Risk table (Section 3) — label|detail pairs -->
+    <string-array name="tc_risk_labels">
+        <item>Pérdida de datos</item>
+        <item>PIN de bóveda</item>
+        <item>Archivos APK</item>
+        <item>Seguridad del servidor de archivos</item>
+        <item>Credenciales de recursos compartidos de red</item>
+        <item>Sincronización de carpetas</item>
+        <item>Eliminación de aplicaciones del sistema</item>
+        <item>Emparejamiento del BAD</item>
+        <item>Shizuku y acceso elevado</item>
+        <item>Capturas de pantalla de televisión</item>
+        <item>Precisión del indexador</item>
+        <item>Errores y errores</item>
+        <item>Nuestra Responsabilidad</item>
+    </string-array>
+    <string-array name="tc_risk_details">
+        <item>No podemos garantizar cero pérdida de datos. Mantenga siempre copias de seguridad de los archivos que le importan.</item>
+        <item>Si olvida su PIN y su código de recuperación, nadie podrá recuperar sus archivos cifrados.</item>
+        <item>La instalación de APK de fuentes desconocidas conlleva riesgos de seguridad. Usted asume toda la responsabilidad por cualquier archivo APK que instale.</item>
+        <item>Al alojar un servidor de archivos, las conexiones FTP transmiten datos y credenciales en texto sin formato. Utilice siempre SFTP si necesita transferencias seguras y cifradas.</item>
+        <item>Las credenciales de su recurso compartido de red (host, nombre de usuario, contraseña) se almacenan localmente en su dispositivo. Usted es responsable de mantener su dispositivo seguro.</item>
+        <item>Las operaciones de sincronización se ejecutan en segundo plano y pueden consumir batería y datos. Verifique siempre su ruta remota antes de habilitar la sincronización: la sincronización con una carpeta incorrecta puede sobrescribir archivos en su recurso compartido de red.</item>
+        <item>Eliminar aplicaciones del sistema según las recomendaciones de eliminación puede afectar la estabilidad del dispositivo. Proceda con precaución.</item>
+        <item>El emparejamiento ADB requiere el intercambio de certificados entre su dispositivo y el dispositivo de destino a través de su Wi-Fi local. Conéctese únicamente a dispositivos de su propiedad o que tenga permiso para acceder. Cualquier persona en su red que capture su PIN de emparejamiento puede acceder a su dispositivo; mantenga este PIN privado.</item>
+        <item>El uso de Shizuku o ADB para acceso elevado permite que la aplicación modifique archivos protegidos por el sistema. El mal uso de estas funciones podría afectar la estabilidad o la seguridad del dispositivo. Úselo con precaución y solo otorgue acceso a esta aplicación.</item>
+        <item>Las capturas de pantalla de los televisores emparejados se capturan a través de ADB a través de su red local y se guardan directamente en el almacenamiento de su teléfono. No transmitimos, vemos ni cargamos sus capturas de pantalla. Asegúrese de capturar solo pantallas en dispositivos de su propiedad o que tenga permiso para acceder.</item>
+        <item>El índice refleja el estado de su almacenamiento en el momento del escaneo. Es posible que deba actualizar el índice si otras aplicaciones modifican los archivos.</item>
+        <item>Ningún software es perfecto. No podemos prometer que la aplicación estará siempre libre de errores o será ininterrumpida.</item>
+        <item>Nuestra responsabilidad total tiene un límite al monto total que pagó por compras dentro de la aplicación en los 30 días anteriores a cualquier reclamo. No somos responsables de la pérdida de datos, daños al dispositivo o pérdida de beneficios que surjan de las funciones gratuitas.</item>
+    </string-array>
+
+    <!-- Responsibilities list (Section 4) -->
+    <string-array name="tc_responsibilities">
+        <item>Mantenga copias de seguridad periódicas de archivos importantes antes de realizar operaciones masivas.</item>
+        <item>Guarde su PIN de Vault y su código de recuperación en un lugar seguro; no podemos recuperarlos por usted.</item>
+        <item>Mantenga su PIN privado. Cualquiera que lo sepa puede acceder a su Bóveda.</item>
+        <item>Mantenga seguras las credenciales de su recurso compartido de red: se almacenan localmente en su dispositivo.</item>
+        <item>Revise cuidadosamente las rutas remotas de Folder Sync: la sincronización con una carpeta de red incorrecta puede sobrescribir los archivos existentes.</item>
+        <item>Tenga cuidado al eliminar aplicaciones del sistema según las recomendaciones de eliminación.</item>
+        <item>Conéctese únicamente a través de ADB Terminal a dispositivos de su propiedad o que tenga permiso explícito para acceder. No utilice ADB Terminal para obtener acceso no autorizado a ningún dispositivo.</item>
+        <item>Mantenga privados los PIN de emparejamiento de ADB o Shizuku; compártalos solo con personas en las que confíe para que tengan acceso a su dispositivo.</item>
+        <item>Proteja su Shizuku Manager: otorgarle a UFM acceso elevado a través de Shizuku le otorga poder sobre archivos restringidos. Solo concede este acceso si confías en la aplicación.</item>
+        <item>Utilice la aplicación únicamente para fines legales. No almacene, comparta ni distribuya contenido ilegal.</item>
+        <item>No utilices la Gestión remota para acceder al dispositivo de otra persona sin su permiso.</item>
+        <item>No intente realizar ingeniería inversa, descompilar ni alterar la aplicación.</item>
+        <item>Administre sus registros indexados de manera responsable: puede eliminar registros o ignorar unidades específicas en cualquier momento a través de Configuración -&gt; Indexador de almacenamiento.</item>
+        <item>Verifique la autenticidad y seguridad de cualquier archivo APK antes de instalarlo.</item>
+    </string-array>
+
+    <!-- Permissions table (Section 5) — label|detail pairs -->
+    <string-array name="tc_permission_labels">
+        <item>Acceso a todos los archivos</item>
+        <item>Acceso a los medios</item>
+        <item>Notificaciones</item>
+        <item>Red / Wi-Fi</item>
+        <item>Multidifusión</item>
+        <item>Estado de la red</item>
+        <item>Consulta de paquete</item>
+        <item>Instalar paquetes</item>
+        <item>Facturación</item>
+        <item>Puente de depuración ADB</item>
+        <item>Acceso elevado (Shizuku)</item>
+        <item>Inicio de arranque</item>
+        <item>Optimización de la batería</item>
+        <item>Servicio de primer plano</item>
+        <item>Bloqueo de activación</item>
+        <item>Indexador de almacenamiento</item>
+        <item>bluetooth</item>
+        <item>Vibrar</item>
+    </string-array>
+    <string-array name="tc_permission_details">
+        <item>Esencial para explorar, copiar, mover y eliminar archivos en todo su almacenamiento.</item>
+        <item>Necesario para organizar y administrar sus fotos, videos y archivos de audio.</item>
+        <item>Se utiliza para avisarle cuando se completan las operaciones de archivos o cuando el almacenamiento se está agotando.</item>
+        <item>Permite la administración remota de archivos, el acceso a recursos compartidos de red (SMB/FTP/SFTP/SCP), la sincronización de carpetas, el emparejamiento de dispositivos y el acceso a terminales ADB en su red local. La detección de red escanea dispositivos en su subred local (hasta 254 IP) en los puertos ADB 5555, 5037 y 5038 para encontrar dispositivos habilitados para ADB.</item>
+        <item>Se utiliza para el descubrimiento de dispositivos de red local (NSD/mDNS) al emparejar dispositivos.</item>
+        <item>Detecta conexiones VPN durante la administración remota y el acceso a recursos compartidos de red.</item>
+        <item>Permite que el Administrador de aplicaciones enumere las aplicaciones instaladas en su dispositivo.</item>
+        <item>Requerido para instalar archivos APK que elija ejecutar desde el almacenamiento local.</item>
+        <item>Procesa compras opcionales de Tip Jar a través de Google Play.</item>
+        <item>Permite una conexión segura a dispositivos Android para acceso avanzado al shell. Genera un certificado RSA único en su dispositivo para el emparejamiento; no se transmiten certificados a servidores externos.</item>
+        <item>Permite que la aplicación utilice la API de Shizuku (incluida la configuración segura) para administrar archivos en directorios restringidos del sistema sin necesidad de rootear.</item>
+        <item>Permite que los servicios de Shizuku se inicien automáticamente cuando su dispositivo se inicia para garantizar una disponibilidad inmediata.</item>
+        <item>Le permite optar por mantener activos los servicios de Shizuku en segundo plano para un rendimiento confiable.</item>
+        <item>Necesario para ejecutar Folder Sync y transferencias de archivos como servicio en primer plano para que se completen de manera confiable incluso cuando la pantalla está apagada.</item>
+        <item>Mantiene la CPU y Wi-Fi activos durante transferencias de archivos grandes para que se completen de manera confiable incluso cuando la pantalla se apaga.</item>
+        <item>Utiliza permisos de almacenamiento para escanear e indexar metadatos de archivos para mejorar el rendimiento; se administra a través de Configuración -&gt; Indexador de almacenamiento.</item>
+        <item>Se conecta a su Android TV emparejado para actuar como un teclado y un mouse Bluetooth para control remoto.</item>
+        <item>Proporciona retroalimentación háptica al presionar botones en el control remoto del televisor.</item>
+    </string-array>
+
+    <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>NanoHTTPD: servidor HTTP liviano que impulsa la administración remota. (BSD-3-Cláusula)</item>
+        <item>jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng): biblioteca cliente SMB2/SMB3 para exploración de recursos compartidos de red y sincronización de carpetas. (LGPL-2.1)</item>
+        <item>smbj (hierynomus/smbj): implementación Java SMB2/SMB3 utilizada para el acceso a recursos compartidos de red. (Apache-2.0)</item>
+        <item>Apache MINA SSHD (org.apache.sshd): biblioteca completa de cliente SSHD core, SFTP y SCP para alojamiento y acceso seguro a recursos compartidos de red. (Apache-2.0)</item>
+        <item>Apache FtpServer (org.apache.ftpserver): servidor FTP 100% Java puro. (Apache-2.0)</item>
+        <item>Apache POI: biblioteca de procesamiento de documentos para ver archivos de Office. (Apache-2.0)</item>
+        <item>Firebase Analytics: la plataforma de análisis de Google que nos ayuda a comprender el uso de las aplicaciones. (Apache-2.0)</item>
+        <item>Bibliotecas AndroidX (incluido Leanback para Android TV): componentes Jetpack de Google para el desarrollo moderno de Android. (Apache-2.0)</item>
+        <item>Componentes de Material Design: biblioteca de interfaz de usuario de Google para una interfaz limpia y consistente. (Apache-2.0)</item>
+        <item>Biblioteca de persistencia de habitaciones: capa de abstracción SQLite para indexación de metadatos locales. (Apache-2.0)</item>
+        <item>zip4j (net.lingala.zip4j): biblioteca ZIP avanzada para archivos protegidos con contraseña y cifrados con AES. (Apache-2.0)</item>
+        <item>Apache Commons Compress: biblioteca para leer y escribir varios formatos de archivo (7z, zip, tar, etc.). (Apache-2.0)</item>
+        <item>XZ para Java (org.tukaani.xz): implementación de la compresión XZ y LZMA. (Dominio público)</item>
+        <item>libadb-android (com.github.MuntashirAkon): biblioteca de Android Debug Bridge que permite conexiones seguras a dispositivos habilitados para ADB para acceso remoto a shell y emparejamiento basado en certificados. (Apache-2.0)</item>
+        <item>Apache MINA SSHD (org.apache.sshd): biblioteca completa de cliente SSHD core, SFTP y SCP para acceso seguro a recursos compartidos de red. (Apache-2.0)</item>
+        <item>EdDSA para Java (net.i2p.crypto:eddsa): implementación de EdDSA (algoritmo de firma digital de curva de Edwards) para claves SSH Ed25519. (CC0-1.0)</item>
+        <item>SLF4J Android (uk.uuid.slf4j:slf4j-android): enlace de registro para Android utilizado por la biblioteca SSHD. (MIT)</item>
+        <item>BouncyCastle (org.bouncycastle): biblioteca de criptografía para la generación de pares de claves RSA/EdDSA y la creación de certificados X.509; versión 1.83. (Licencia estilo MIT)</item>
+        <item>Biblioteca de facturación de Google Play: procesa compras de propinas opcionales dentro de la aplicación; regido por la Política de Privacidad de Google Play. (Apache-2.0)</item>
+        <item>Biblioteca de reseñas de Google Play: potencia la funcionalidad de revisión y calificación dentro de la aplicación. (Apache-2.0)</item>
+        <item>Coil (io.coil-kt.coil3): biblioteca de carga de imágenes que potencia la representación de imágenes animadas (APNG, GIF, WebP animada, SVG) en el visor de imágenes integrado. (Apache-2.0)</item>
+        <item>APNG4Android (com.github.penfeizhou.android.animation): biblioteca principal para decodificar y renderizar archivos PNG animados en Android. (Apache-2.0)</item>
+        <item>API de Shizuku (dev.rikka.shizuku:api &amp; proveedor): biblioteca y proveedor que permite acceso elevado al sistema de archivos a través de la aplicación Shizuku Manager. (Apache-2.0)</item>
+        <item>ViewPager2: biblioteca de Android para deslizarse entre fragmentos y diseños. (Apache-2.0)</item>
+        <item>Lottie (com.airbnb.android:lottie) v6.3.0: biblioteca de animación para renderizar animaciones de Adobe After Effects de forma nativa en Android, utilizada para animaciones de UI fluidas en toda la aplicación. (Apache-2.0)</item>
+        <item>Ktor (io.ktor): marco web liviano utilizado para alimentar el servidor de archivos local. (Apache-2.0)</item>
+        <item>PDFBox-Android (com.tom-roush:pdfbox-android): biblioteca para renderizar y ver documentos PDF de forma nativa. (Apache-2.0)</item>
+        <item>ExoPlayer / Media3 (androidx.media3): reproductor multimedia avanzado para una reproducción sólida de vídeo y audio. (Apache-2.0)</item>
+        <item>Biblioteca de autenticación de Microsoft (MSAL): maneja la autenticación de la API de OneDrive de forma nativa. (MIT)</item>
+        <item>OkHttp (com.squareup.okhttp3): cliente HTTP y HTTP/2 robusto para solicitudes de red de almacenamiento en la nube. (Apache-2.0)</item>
+        <item>Gson (com.google.code.gson): biblioteca de procesamiento JSON utilizada para la integración del almacenamiento en la nube. (Apache-2.0)</item>
+        <item>Navegador AndroidX (androidx.browser): compatibilidad con pestañas personalizadas de Chrome para la autenticación API de Google Drive. (Apache-2.0)</item>
+        <item>ZXing (com.google.zxing:core): biblioteca de procesamiento de imágenes de códigos de barras. (Apache-2.0)</item>
+        <item>SDK de Amazon Appstore: procesa compras opcionales de propinas dentro de la aplicación en dispositivos Amazon. (Propiedad)</item>
+        <item>
+SDK de Amazon Appstore: procesa compras opcionales de propinas dentro de la aplicación en dispositivos Amazon. (Propiedad)
+</item>
+        <item>
+SDK de Amazon Appstore: procesa compras opcionales de propinas dentro de la aplicación en dispositivos Amazon. (Propiedad)
+</item>
+    </string-array>
+
+    <!-- Contact items (Section 11) -->
+    <string-array name="tc_contact_labels">
+        <item>Correo electrónico</item>
+    </string-array>
+    <string-array name="tc_contact_values">
+        <item>soporte@kilowatch.co.za</item>
+    </string-array>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PRIVACY POLICY
+    ═══════════════════════════════════════════════════════════ -->
+    <string name="pp_screen_title">política de privacidad</string>
+    <string name="pp_summary">Tus archivos permanecen en tu dispositivo; nunca los vemos. Solo recopilamos análisis de uso anónimos a través de Firebase para mejorar la aplicación. Sin anuncios, sin venta de datos, sin negocios divertidos.</string>
+
+    <!-- Section titles -->
+    <string name="pp_s1_title">1. Introducción</string>
+    <string name="pp_s2_title">2. Información que recopilamos</string>
+    <string name="pp_s3_title">3. Cómo utilizamos su información</string>
+    <string name="pp_s4_title">4. Permisos y por qué los necesitamos</string>
+    <string name="pp_s5_title">5. Seguridad de los datos</string>
+    <string name="pp_s6_title">6. Servicios API de Google: divulgación de uso limitado</string>
+    <string name="pp_s7_title">7. Intercambio de datos y terceros</string>
+    <string name="pp_s8_title">8. ¿Cuánto tiempo conservamos los datos?</string>
+    <string name="pp_s9_title">9. Tus derechos</string>
+    <string name="pp_s10_title">10. Privacidad de los niños</string>
+    <string name="pp_s11_title">11. Usuarios internacionales</string>
+    <string name="pp_s12_title">12. Cambios a esta Política de Privacidad</string>
+    <string name="pp_s13_title">13. Cumplimiento de la política de Google Play</string>
+    <string name="pp_s14_title">14. Contáctenos</string>
+
+    <!-- Section body text -->
+    <string name="pp_s1_body">Ultimate File Manager Pro es una aplicación de Android independiente y no está afiliada, autorizada, patrocinada ni respaldada por el proyecto Ultimate File Manager para Windows (ultimatefilemanager.pl) ni ningún otro producto que utilice un nombre similar. Todos los demás nombres de productos y marcas comerciales son propiedad de sus respectivos dueños.\n\nEsta Política de Privacidad explica qué información recopilamos cuando utiliza Ultimate File Manager Pro, cómo la usamos y cómo la mantenemos segura. Al utilizar la aplicación, acepta las prácticas que se describen aquí.</string>
+
+    <string name="pp_s2_local_heading">Almacenado localmente solo en su dispositivo</string>
+    <string name="pp_s2_local_body">Los siguientes datos se guardan en su dispositivo y nunca salen de él. No tenemos acceso a nada de esto.</string>
+    <string name="pp_s2_local_alert">No tenemos acceso a su PIN, código de recuperación, claves de cifrado ni a ningún archivo almacenado en su Bóveda, nunca.</string>
+
+    <string name="pp_s2_analytics_heading">Recopilado a través de Firebase Analytics (anónimo)</string>
+    <string name="pp_s2_analytics_body">Utilizamos Google Firebase Analytics para recopilar datos anónimos para mejorar la aplicación. Los datos analíticos nunca están vinculados a su identidad personal. Puede optar por no participar en cualquier momento usando la opción Análisis de uso en la Configuración de la aplicación o mediante la configuración de su dispositivo Android.</string>
+
+    <string name="pp_s2_billing_heading">Procesado a través de facturación de Google Play (solo sugerencias opcionales)</string>
+    <string name="pp_s2_billing_body">Cuando realizas una compra opcional de Tip Jar, Google Play procesa la transacción. Nunca vemos su tarjeta o datos bancarios. Recibimos temporalmente un token de compra y el ID del producto, ambos manejados únicamente en el dispositivo y nunca almacenados en nuestros servidores.</string>
+    <string name="pp_s2_billing_note">Los tokens de compra anónimos de Google Play Billing se procesan temporalmente en el dispositivo para confirmar su sugerencia; nunca los almacenamos y no están vinculados a su identidad.</string>
+
+    <string name="pp_s2_nocollect_heading">Lo que nunca recopilamos</string>
+
+    <string name="pp_s3_local_heading">Los datos locales se utilizan para</string>
+    <string name="pp_s3_analytics_heading">Los datos analíticos se utilizan para</string>
+
+    <string name="pp_s4_storage_heading">Permisos de almacenamiento</string>
+    <string name="pp_s4_network_heading">Permisos de red</string>
+    <string name="pp_s4_network_alert">El servidor de administración remota, el alojamiento del servidor de archivos, las conexiones compartidas de red SMB/FTP/SFTP/SCP, la sincronización de carpetas, el emparejamiento de dispositivos y las conexiones de terminales ADB funcionan solo en su red Wi-Fi local. Los servidores FTP y de gestión remota utilizan protocolos no cifrados; Las conexiones SFTP y ADB Terminal utilizan protocolos cifrados seguros. Las API de almacenamiento en la nube (Google Drive, OneDrive, Dropbox, compatibles con S3) se comunican de forma segura con sus respectivos servidores a través de HTTPS cifrado. No se transmiten otros datos a servidores externos.</string>
+    <string name="pp_s4_other_heading">Otros permisos</string>
+
+    <string name="pp_s5_vault_heading">Cifrado de bóveda</string>
+    <string name="pp_s5_vault_body">Encrypted Vault utiliza cifrado de grado militar para proteger sus archivos.</string>
+    <string name="pp_s5_vault_alert">Si olvida tanto su PIN como su código de recuperación, sus datos cifrados quedarán permanentemente inaccesibles; ni siquiera nosotros podremos recuperarlos. Manténgalos almacenados en un lugar seguro.</string>
+    <string name="pp_s5_local_heading">Protección de datos locales</string>
+    <string name="pp_s5_remote_heading">Seguridad de gestión remota</string>
+
+    <!-- Section 6 — Google API Limited Use -->
+    <string name="pp_s6_compliance_banner">El uso que hace Ultimate File Manager Pro de la información recibida de las API de Google se adhiere a la Política de datos de usuario de los servicios API de Google, incluidos los requisitos de uso limitado.</string>
+    <string name="pp_s6_intro">Cuando conecta su cuenta de Google Drive, la aplicación accede a sus datos de usuario de Google solo para proporcionar las funciones de administración de archivos que utiliza directamente dentro de la aplicación.</string>
+    <string name="pp_s6_google_data_heading">Datos de usuario de Google: API de Google Drive</string>
+    <string name="pp_s6_google_never_heading">A qué nunca accedemos desde su cuenta de Google</string>
+    <string name="pp_s6_google_never">No accedemos a su Gmail, Contactos de Google, Calendario de Google, Fotos de Google (fuera de Drive) ni a ningún otro dato del servicio de Google. Solo se accede a los datos mínimos del archivo de Drive necesarios para la acción solicitada.</string>
+    <string name="pp_s6_permitted_heading">Usos permitidos de los datos de usuario de Google</string>
+    <string name="pp_s6_prohibited_heading">Usos prohibidos: nunca utilizamos los datos de los usuarios de Google para</string>
+    <string name="pp_s6_minimum_access">Ultimate File Manager Pro solicita solo los permisos mínimos de Google Drive necesarios para realizar las acciones de administración de archivos que elija. Nunca solicitamos acceso a su Gmail, Contactos de Google, Calendario de Google ni a ningún otro dato de servicio de Google.</string>
+    <!-- Section 7 — Data Sharing -->
+    <string name="pp_s7_nosell_alert">No vendemos, alquilamos, comercializamos, transferimos ni divulgamos su información personal o datos de usuario de Google a ningún tercero para ningún propósito que no esté directamente relacionado con el suministro de las funciones de administración de archivos de Ultimate File Manager Pro, punto.</string>
+    <string name="pp_s7_third_heading">Servicios de terceros que utilizamos</string>
+    <string name="pp_s7_saf_note">Cuando elige abrir o compartir un archivo con otra aplicación, incluso a través del proveedor de documentos Storage Access Framework (SAF), la política de privacidad de esa aplicación rige lo que hace con el archivo.</string>
+    <string name="pp_s7_legal_note">También podemos divulgar información si así lo exige la ley, una orden judicial o una solicitud gubernamental, en la medida permitida por la ley aplicable. No transferimos ni revelamos su información personal ni sus datos de usuario de Google a terceros para fines distintos a los descritos en esta Política de Privacidad.</string>
+
+    <string name="pp_s9_body">Tú tienes el control de tus datos. Esto es lo que puedes hacer en cualquier momento.</string>
+    <string name="pp_s9_delete_heading">Cómo eliminar todos los datos de la aplicación</string>
+    <string name="pp_s9_delete_alert">Al borrar los datos o desinstalarlos, se eliminará su PIN de Vault, su código de recuperación y sus claves de cifrado, lo que hará que el contenido de Vault sea permanentemente inaccesible. Descifre todo lo que quiera conservar primero.</string>
+
+    <string name="pp_s10_body">Ultimate File Manager Pro no está destinado a niños menores de 13 años. No recopilamos intencionalmente información personal de niños menores de 13 años. Si usted es padre o tutor y cree que su hijo ha proporcionado información personal, comuníquese con nosotros.</string>
+
+    <string name="pp_s11_body">Ultimate File Manager Pro está desarrollado en Sudáfrica. Si está utilizando la aplicación desde otro país, tenga en cuenta que cualquier información puede procesarse en Sudáfrica o en países donde operan nuestros proveedores de servicios externos (como Google).</string>
+
+    <string name="pp_s12_body">Podemos actualizar esta Política de Privacidad de vez en cuando. Cuando lo hagamos, actualizaremos la fecha en la parte superior. En caso de cambios importantes, también te lo notificaremos en la aplicación. Continuar usando la aplicación después de los cambios significa que acepta la Política actualizada.</string>
+
+    <string name="pp_s13_body">Esta aplicación está diseñada para cumplir con los estándares de Google Play. Todos los permisos solicitados son necesarios para la funcionalidad principal de la aplicación. Antes de solicitar cualquier permiso confidencial, la aplicación explica claramente por qué es necesario y cómo se utilizará. Con respecto a las actualizaciones de la política de fotografías y videos de octubre de 2024: es necesario un acceso amplio porque se trata de un administrador de archivos integral diseñado para operaciones masivas (mover, cambiar nombres y sincronizar) en todos los volúmenes de almacenamiento, que no se pueden realizar de manera eficiente utilizando selectores de sistema estándar.</string>
+
+    <string name="pp_s14_body">Si tiene alguna pregunta o inquietud sobre esta Política de privacidad, comuníquese con nosotros.</string>
+
+    <string name="pp_footer">Al utilizar Ultimate File Manager Pro, confirma que ha leído y comprendido esta Política de privacidad.</string>
+
+    <!-- Local storage table (Section 2) -->
+    <string-array name="pp_local_data_labels">
+        <item>PIN de la bóveda (en hash)</item>
+        <item>Código de recuperación (hash)</item>
+        <item>Metadatos de la bóveda</item>
+        <item>Claves de cifrado</item>
+        <item>Preferencias de la aplicación</item>
+        <item>Perfiles del servidor de archivos</item>
+        <item>Credenciales de recursos compartidos de red</item>
+        <item>Información del dispositivo emparejado</item>
+        <item>Claves de autenticación ADB</item>
+        <item>Estado de autorización de Shizuku</item>
+        <item>Capturas de pantalla de televisión</item>
+        <item>Sincronizar perfiles</item>
+        <item>Tokens de almacenamiento en la nube (Google Drive, OneDrive, Dropbox)</item>
+        <item>Credenciales de almacenamiento compatibles con S3/S3 (AWS S3, MinIO, IDrive E2, etc.)</item>
+        <item>Metadatos de archivos indexados (SQLite/Room)</item>
+        <item>Selección de idioma (Cookie)</item>
+    </string-array>
+    <string-array name="pp_local_data_details">
+        <item>Acceso seguro a archivos cifrados · Android SharedPreferences</item>
+        <item>Recuperación de cuenta si se olvida el PIN · Android SharedPreferences</item>
+        <item>Lista de tus carpetas y archivos cifrados · Almacenamiento privado de la aplicación</item>
+        <item>Cifrado AES-256-GCM para Vault · Almacén de claves de Android (respaldado por hardware)</item>
+        <item>Tema, configuración de clasificación, preferencias de visualización · Android SharedPreferences</item>
+        <item>Configuraciones (nombre de usuario, directorio, contraseña hash) para el servidor de archivos alojado · Almacenamiento privado de la aplicación</item>
+        <item>Conexión a sus recursos compartidos SMB/FTP (host, nombre de usuario, contraseña) · Almacenamiento privado de la aplicación</item>
+        <item>Nombre del dispositivo, ID e IP para emparejar el dispositivo · Almacenamiento privado de la aplicación</item>
+        <item>Claves RSA y certificados generados para conexiones ADB seguras · Almacenamiento privado de aplicaciones</item>
+        <item>Estado de la concesión de acceso elevado desde la aplicación Shizuku Manager · Almacenamiento privado de la aplicación</item>
+        <item>Capturas de pantalla capturadas desde un televisor emparejado a través de ADB · La carpeta Imágenes/Capturas de pantalla locales de tu teléfono</item>
+        <item>URI de carpeta local y ruta remota para cada perfil de sincronización · Almacenamiento privado de la aplicación</item>
+        <item>Tokens de OAuth para acceder a Google Drive, OneDrive y Dropbox · Almacenamiento privado de aplicaciones</item>
+        <item>ID de clave de acceso y clave de acceso secreta para conectarse a depósitos S3 · Almacenamiento privado de la aplicación</item>
+        <item>Metadatos de archivos (nombres, tamaños, fechas) para una navegación y búsqueda rápidas almacenados en una base de datos SQLite/Room local; se pueden administrar a través de Configuración -&gt; Indexador de almacenamiento · Almacenamiento privado de la aplicación</item>
+        <item>Una cookie (ufm_lang) recuerda su elección de idioma durante la sesión y cuando se reinicia el navegador · Almacenamiento del navegador web</item>
+    </string-array>
+
+    <!-- Analytics table (Section 2) -->
+    <string-array name="pp_analytics_labels">
+        <item>Información del dispositivo</item>
+        <item>Datos de uso de la aplicación</item>
+        <item>Ubicación General</item>
+    </string-array>
+    <string-array name="pp_analytics_details">
+        <item>Modelo de dispositivo, versión del sistema operativo, tamaño de pantalla</item>
+        <item>Funciones utilizadas, duración de la sesión, informes de fallos</item>
+        <item>País/región según IP, no su ubicación precisa</item>
+    </string-array>
+
+    <!-- What we never collect (Section 2) -->
+    <string-array name="pp_never_collect">
+        <item>Sus archivos, documentos, fotos, videos o cualquier medio</item>
+        <item>El contenido de su bóveda o sus claves de cifrado</item>
+        <item>Su PIN o código de recuperación</item>
+        <item>Tu ubicación precisa</item>
+        <item>Tus contactos, mensajes o registros de llamadas</item>
+        <item>Información de identificación personal (nombre, correo electrónico, número de teléfono)</item>
+        <item>Cualquier dato de la cuenta de Google más allá de lo que solicita explícitamente en el explorador de archivos</item>
+    </string-array>
+
+    <!-- How we use data (Section 3) -->
+    <string-array name="pp_use_local">
+        <item>Autenticar el acceso a la bóveda cifrada</item>
+        <item>Cifra y descifra tus archivos privados</item>
+        <item>Recuerda tus preferencias y configuraciones</item>
+        <item>Utilice acceso elevado (Shizuku/ADB) para administrar archivos protegidos por el sistema en directorios restringidos</item>
+        <item>Cree y mantenga la indexación de archivos para una navegación y búsqueda rápidas (administrable a través de Configuración -&gt; Indexador de almacenamiento)</item>
+        <item>Proporcionar la funcionalidad principal de la aplicación</item>
+    </string-array>
+    <string-array name="pp_use_analytics">
+        <item>Comprender cómo se utilizan las funciones</item>
+        <item>Identificar y corregir errores y fallas</item>
+        <item>Mejorar las funciones y la experiencia del usuario</item>
+        <item>Tome decisiones de desarrollo informadas</item>
+    </string-array>
+
+    <!-- Storage permissions (Section 4) -->
+    <string-array name="pp_storage_perm_labels">
+        <item>Administrar almacenamiento externo</item>
+        <item>Leer almacenamiento externo</item>
+        <item>Escribir almacenamiento externo</item>
+    </string-array>
+    <string-array name="pp_storage_perm_details">
+        <item>API 30+ · Gestión completa de archivos en todo el almacenamiento</item>
+        <item>Por debajo de API 33 · Acceso a archivos heredados en dispositivos más antiguos</item>
+        <item>Debajo de API 29 · Modificación de archivos heredados en dispositivos más antiguos</item>
+    </string-array>
+
+    <!-- Network permissions (Section 4) -->
+    <string-array name="pp_network_perm_labels">
+        <item>INTERNET</item>
+        <item>Acceder al estado de Wifi</item>
+        <item>Estado de la red de acceso</item>
+        <item>Cambiar el estado de multidifusión Wifi</item>
+    </string-array>
+    <string-array name="pp_network_perm_details">
+        <item>Permite la administración remota de archivos, alojamiento de servidores de archivos locales, acceso a recursos compartidos de red SMB/FTP/SFTP/SCP y emparejamiento de dispositivos.</item>
+        <item>Muestra su dirección IP local para acceso remoto</item>
+        <item>Detecta la red activa y el estado de VPN para administración remota y recursos compartidos de red.</item>
+        <item>Permite el descubrimiento de dispositivos de red local (NSD/mDNS) para el emparejamiento de dispositivos</item>
+    </string-array>
+
+    <!-- Other permissions (Section 4) -->
+    <string-array name="pp_other_perm_labels">
+        <item>Notificaciones de publicaciones</item>
+        <item>moe.shizuku.manager.permission.API_V23</item>
+        <item>Recibir arranque completado</item>
+        <item>Solicitar ignorar optimizaciones de batería</item>
+        <item>Solicitar paquetes de instalación</item>
+        <item>Consultar todos los paquetes</item>
+        <item>Servicio en primer plano/Sincronización de datos del servicio en primer plano</item>
+        <item>Bloqueo de activación</item>
+    </string-array>
+    <string-array name="pp_other_perm_details">
+        <item>Le avisa cuando finalizan las operaciones de archivos o el almacenamiento es bajo</item>
+        <item>Permite la comunicación con Shizuku Manager para acceso elevado a archivos.</item>
+        <item>Permite que los servicios de Shizuku se inicien automáticamente al arrancar para disponibilidad inmediata</item>
+        <item>Le permite optar por mantener Shizuku activo en segundo plano para un rendimiento confiable</item>
+        <item>Permite la instalación de archivos APK que elijas</item>
+        <item>Enumera las aplicaciones instaladas para la función Administrador de aplicaciones</item>
+        <item>Ejecuta Folder Sync y transferencias de archivos como un servicio en primer plano para que se completen de manera confiable incluso cuando la pantalla está apagada.</item>
+        <item>Mantiene la CPU y Wi-Fi activos durante transferencias de archivos grandes para que se completen de manera confiable incluso cuando la pantalla se apaga</item>
+    </string-array>
+
+    <!-- Encryption spec (Section 5) -->
+    <string-array name="pp_encryption_labels">
+        <item>Algoritmo</item>
+        <item>Almacenamiento de claves</item>
+        <item>Tamaño de clave</item>
+        <item>Autenticación</item>
+    </string-array>
+    <string-array name="pp_encryption_details">
+        <item>AES-256-GCM (Estándar de cifrado avanzado con modo Galois/Contador)</item>
+        <item>Android Keystore: almacenamiento seguro respaldado por hardware</item>
+        <item>256 bits</item>
+        <item>PIN definido por el usuario</item>
+    </string-array>
+
+    <!-- Local data protection (Section 5) -->
+    <string-array name="pp_local_protection">
+        <item>Todos los datos locales se almacenan en el área de almacenamiento privada de la aplicación; otras aplicaciones no pueden acceder a ellos.</item>
+        <item>Su PIN se codifica antes del almacenamiento; nunca lo vemos en texto sin formato.</item>
+        <item>Las credenciales de recursos compartidos de red se almacenan en el almacenamiento privado de la aplicación y nunca se transmiten externamente.</item>
+        <item>Los tokens de OAuth para Google Drive, OneDrive y Dropbox se almacenan en el almacenamiento privado de la aplicación y nunca se transmiten a nuestros servidores ni a terceros.</item>
+        <item>Las credenciales de acceso compatibles con S3/S3 (ID de clave de acceso y clave de acceso secreta) se almacenan en el almacenamiento privado de la aplicación y se utilizan exclusivamente para autenticar solicitudes a su punto final configurado; nunca se transmiten a nuestros servidores.</item>
+        <item>Existen procedimientos de seguridad para proteger la confidencialidad de todos los datos almacenados localmente.</item>
+        <item>Todos los datos se eliminan automáticamente cuando desinstalas la aplicación.</item>
+    </string-array>
+
+    <!-- Remote security (Section 5) -->
+    <string-array name="pp_remote_security">
+        <item>Acceso protegido con PIN: solo las personas que usted autorice pueden conectarse.</item>
+        <item>Autenticación basada en sesiones en cada conexión.</item>
+        <item>Funciona únicamente en su red local, sin acceso a Internet externo.</item>
+        <item>El servidor se apaga automáticamente cuando sale de la pantalla de Administración remota.</item>
+        <item>Importante: La administración remota utiliza HTTP sin cifrar. El acceso a la bóveda a través de la administración remota (incluida la entrada de PIN) se transmite sin cifrar a través de su red local. Úselo solo en redes de confianza, como el Wi-Fi de su hogar.</item>
+    </string-array>
+
+    <!-- Google Drive user data table (Section 6) -->
+    <string-array name="pp_google_data_labels">
+        <item>Metadatos de archivos y carpetas (nombre, tamaño, tipo MIME, fecha de modificación, ID de unidad)</item>
+        <item>Archivo de contenido binario</item>
+        <item>Token de acceso de OAuth y token de actualización</item>
+    </string-array>
+    <string-array name="pp_google_data_when">
+        <item>Cuando navegas por tu Google Drive dentro de la aplicación</item>
+        <item>Solo cuando abre, descarga, carga, copia, mueve o sincroniza explícitamente un archivo</item>
+        <item>Almacenado localmente después de iniciar sesión en Google Drive</item>
+    </string-array>
+    <string-array name="pp_google_data_purposes">
+        <item>Mostrar el contenido de Drive en el explorador de archivos</item>
+        <item>Realizar la operación de archivo específica que solicitó</item>
+        <item>Mantener su sesión autenticada sin necesidad de inicios de sesión repetidos</item>
+    </string-array>
+    <!-- Permitted uses of Google data (Section 6) -->
+    <string-array name="pp_google_permitted">
+        <item>Navegando por su Drive: Obteniendo metadatos de archivos y carpetas para mostrar el contenido de su Drive.</item>
+        <item>Subir archivos: enviar un archivo local a su Drive cuando lo solicite explícitamente.</item>
+        <item>Descargar archivos: recuperar un archivo de Drive en su dispositivo cuando lo solicite explícitamente.</item>
+        <item>Mover y copiar archivos: realizar operaciones de archivos en el lado de la unidad que usted inicie explícitamente.</item>
+        <item>Eliminar archivos: eliminar archivos de Drive que seleccione explícitamente para su eliminación.</item>
+        <item>Sincronización de carpetas: sincronizar una carpeta local con una carpeta de Drive según el perfil de sincronización que haya configurado.</item>
+    </string-array>
+    <!-- Prohibited uses of Google data (Section 6) -->
+    <string-array name="pp_google_prohibited">
+        <item>Publicidad dirigida, personalizada, reorientada o basada en intereses</item>
+        <item>Vender a intermediarios de datos o proporcionar a revendedores de información.</item>
+        <item>Determinación de la solvencia crediticia o para cualquier propósito crediticio.</item>
+        <item>Entrenamiento de modelos de inteligencia artificial o aprendizaje automático</item>
+        <item>Creación de bases de datos o perfiles de usuarios no relacionados con la gestión de archivos.</item>
+        <item>Cualquier extracción, extracción o agregación de datos para fines externos.</item>
+        <item>Transferir datos de usuario de Google a cualquier tercero por cualquier motivo que no sea proporcionar o mejorar las funciones de administración de archivos de la aplicación, o según lo exija la ley.</item>
+    </string-array>
+    <!-- Third parties (Section 7) -->
+    <string-array name="pp_third_party_names">
+        <item>Análisis de base de fuego</item>
+        <item>Servicios de Google Play</item>
+        <item>Facturación de Google Play</item>
+        <item>API de Microsoft OneDrive</item>
+        <item>API de Google Drive</item>
+        <item>API de Dropbox</item>
+        <item>API compatibles con AWS S3/S3 (por ejemplo, AWS S3, MinIO, IDrive E2)</item>
+    </string-array>
+    <string-array name="pp_third_party_providers">
+        <item>Google LLC</item>
+        <item>Google LLC</item>
+        <item>Google LLC</item>
+        <item>Corporación Microsoft</item>
+        <item>Google LLC</item>
+        <item>Dropbox, Inc.</item>
+        <item>Servicios web de Amazon y proveedores compatibles</item>
+    </string-array>
+    <string-array name="pp_third_party_purposes">
+        <item>Análisis de uso anónimo</item>
+        <item>Distribución de aplicaciones, actualizaciones y revisiones dentro de la aplicación</item>
+        <item>Procesa compras opcionales de propinas dentro de la aplicación (solo tokens de compra, en el dispositivo)</item>
+        <item>Autentica y procesa solicitudes de usuarios para la integración de Microsoft OneDrive</item>
+        <item>Autentica y procesa solicitudes de administración de archivos iniciadas por el usuario para la integración de Google Drive</item>
+        <item>Autentica y procesa solicitudes de usuarios para la integración de Dropbox</item>
+        <item>Autentica y procesa solicitudes de administración de archivos iniciadas por el usuario para almacenamiento en la nube compatible con S3 a través del punto final que configure</item>
+    </string-array>
+
+    <!-- Data retention (Section 8) -->
+    <string-array name="pp_retention_labels">
+        <item>Datos de aplicaciones locales</item>
+        <item>Claves de cifrado de bóveda</item>
+        <item>Metadatos de archivos indexados</item>
+        <item>Tokens OAuth de Google Drive/OneDrive/Dropbox</item>
+        <item>Credenciales de acceso compatibles con S3/S3</item>
+        <item>Datos de análisis de Firebase</item>
+    </string-array>
+    <string-array name="pp_retention_details">
+        <item>Hasta que desinstales la aplicación</item>
+        <item>Hasta que desinstales la aplicación</item>
+        <item>Hasta que se elimine a través de Configuración -&gt; Indexador de almacenamiento, o hasta que se desinstale la aplicación</item>
+        <item>Hasta que desconectes la cuenta en Configuración, o hasta que se desinstale la aplicación</item>
+        <item>Hasta que elimine el perfil S3 en Configuración o hasta que se desinstale la aplicación</item>
+        <item>14 meses (período de retención predeterminado de Google)</item>
+    </string-array>
+
+    <!-- Your rights (Section 9) -->
+    <string-array name="pp_rights">
+        <item>Acceda a sus datos almacenados localmente directamente a través de la aplicación.</item>
+        <item>Elimine los datos de Vault eliminando elementos de Vault.</item>
+        <item>Administre y elimine metadatos de archivos indexados a través de Configuración -&gt; Indexador de almacenamiento.</item>
+        <item>Desconecte su cuenta de Google Drive, OneDrive o Dropbox en cualquier momento para revocar el acceso y eliminar los tokens OAuth almacenados.</item>
+        <item>Elimine sus perfiles de almacenamiento compatibles con S3/S3 en cualquier momento a través de Configuración para eliminar las credenciales de acceso almacenadas.</item>
+        <item>Exporte sus archivos utilizando las funciones de compartir o copiar.</item>
+        <item>Opte por no participar en Firebase Analytics en cualquier momento a través de Configuración → Análisis de uso dentro de la aplicación; alternativamente, use la configuración de su dispositivo Android.</item>
+    </string-array>
+
+    <!-- Delete steps (Section 8) -->
+    <string-array name="pp_delete_steps">
+        <item>Abra Configuración de Android y vaya a Aplicaciones.</item>
+        <item>Busque y toque Ultimate File Manager Pro.</item>
+        <item>Toque Almacenamiento → Borrar datos, o simplemente desinstale la aplicación.</item>
+    </string-array>
+
+    <!-- Play Store compliance table (Section 12) -->
+    <string-array name="pp_compliance_labels">
+        <item>Permisos de almacenamiento</item>
+        <item>Permisos de red</item>
+        <item>Estado de la red</item>
+        <item>Multidifusión</item>
+        <item>Notificaciones</item>
+        <item>Instalar paquetes</item>
+        <item>Acceso elevado (Shizuku)</item>
+        <item>Indexador de almacenamiento</item>
+        <item>Paquetes de consulta</item>
+        <item>Reseñas en la aplicación</item>
+        <item>Animaciones de Lottie</item>
+    </string-array>
+    <string-array name="pp_compliance_details">
+        <item>Exploración y gestión de archivos</item>
+        <item>Gestión remota de archivos, recursos compartidos de red SMB/FTP/SFTP/SCP y emparejamiento de dispositivos a través de Wi-Fi local</item>
+        <item>Detección de VPN para gestión remota y conectividad de red compartida</item>
+        <item>Descubrimiento de dispositivos de red local (NSD/mDNS) para emparejamiento de dispositivos</item>
+        <item>Alertas de finalización de operación y advertencias de almacenamiento</item>
+        <item>Instalación de APK desde almacenamiento local</item>
+        <item>Gestión avanzada de archivos en directorios restringidos del sistema a través de la API de Shizuku</item>
+        <item>Indexa metadatos de archivos localmente para una búsqueda rápida</item>
+        <item>Función de administrador de aplicaciones</item>
+        <item>API de revisión en la aplicación de Google Play para recopilar comentarios de los usuarios</item>
+        <item>Representa animaciones de interfaz de usuario fluidas en toda la aplicación a través de la biblioteca Lottie v6.3.0 (com.airbnb.android:lottie)</item>
+    </string-array>
+
+    <!-- Contact (Section 13) -->
+    <string-array name="pp_contact_labels">
+        <item>Correo electrónico</item>
+    </string-array>
+    <string-array name="pp_contact_values">
+        <item>soporte@kilowatch.co.za</item>
+    </string-array>
+
+</resources>

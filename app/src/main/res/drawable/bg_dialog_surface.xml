@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dialog card background — uses ufm_surface color which has a values-night
+     override (#FF1E1E1E dark, #FFFFFFFF light). ?attr cannot be used here. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/ufm_surface" />
+    <corners android:radius="20dp" />
+</shape>

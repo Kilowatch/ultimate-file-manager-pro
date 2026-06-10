@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV: File Type filter dialog — checkboxes for multiple selection, D-pad focusable -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:background="@color/tv_bg_gradient_end">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_type_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp" />
+
+    <CheckBox
+        android:id="@+id/checkImages"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_images"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false" />
+
+    <CheckBox
+        android:id="@+id/checkVideos"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_videos"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false" />
+
+    <CheckBox
+        android:id="@+id/checkAudio"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_audio"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false" />
+
+    <CheckBox
+        android:id="@+id/checkDocs"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_documents"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false" />
+
+    <CheckBox
+        android:id="@+id/checkApk"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_apk"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false" />
+
+    <CheckBox
+        android:id="@+id/checkArchives"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/search_chip_archives"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="16sp"
+        android:buttonTint="@color/selector_tv_icon_tint_yellow"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnTypeCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/cancel"
+            android:paddingHorizontal="24dp"
+            android:textColor="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:focusable="true"
+            android:focusableInTouchMode="false" />
+
+        <Button
+            android:id="@+id/btnTypeApply"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_marginStart="12dp"
+            android:text="@string/search_filter_apply"
+            android:paddingHorizontal="24dp"
+            android:textColor="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:focusable="true"
+            android:focusableInTouchMode="false" />
+
+    </LinearLayout>
+
+</LinearLayout>

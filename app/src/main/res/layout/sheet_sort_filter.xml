@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/ufm_surface">
+
+    <!-- Scrollable content area — grows to fill available space above the button -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_lg">
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/txtSortTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_title"
+                android:textColor="@color/ufm_text_primary"
+                android:textSize="@dimen/text_lg"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="@dimen/margin_md" />
+
+            <!-- Sort By -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by_1"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortName"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_by_name" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortSize"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_by_size" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortDate"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_by_date" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSortType"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_by_type" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Sort Order -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgSortOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAscending"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_ascending" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDescending"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_descending" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Filter -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_lg">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_all"
+                    android:checked="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipImages"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_images" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipVideos"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_videos" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAudio"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_audio" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDocuments"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_documents" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipApks"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_apks" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Show Hidden Files -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_hidden_files"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgHiddenFiles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_lg">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipHiddenEnabled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_twin_window_startup_subtitle_on" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipHiddenDisabled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_twin_window_startup_subtitle_off" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Group by Date -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_by_date"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="@dimen/text_sm"
+                android:layout_marginBottom="@dimen/margin_sm" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgGroupByDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                android:layout_marginBottom="@dimen/margin_lg">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGroupDateEnabled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_twin_window_startup_subtitle_on" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGroupDateDisabled"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_twin_window_startup_subtitle_off" />
+            </com.google.android.material.chip.ChipGroup>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Apply button pinned outside the scroll area — always visible -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApplySort"
+        style="@style/ContinueButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/continue_button_height"
+        android:layout_marginStart="@dimen/margin_lg"
+        android:layout_marginEnd="@dimen/margin_lg"
+        android:layout_marginBottom="@dimen/margin_lg"
+        android:text="@string/apply" />
+
+</LinearLayout>

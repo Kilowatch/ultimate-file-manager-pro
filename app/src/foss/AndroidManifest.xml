@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    FOSS source-set manifest.
+    Removes the Dropbox and Google Drive OAuth redirect URI intent-filter schemes
+    that are declared in the google/ source-set manifest. Those schemes reference
+    API keys (DROPBOX_APP_KEY, GOOGLE_DRIVE_MOBILE_CLIENT_ID) that are not present
+    in the FOSS build, so their activity entries must be stripped out entirely.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Remove the Dropbox OAuth callback activity (requires DROPBOX_APP_KEY) -->
+    <application>
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            tools:node="remove" />
+
+        <!-- Remove the Google Drive mobile OAuth redirect activity (requires GOOGLE_DRIVE_MOBILE_CLIENT_ID) -->
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            tools:node="remove" />
+    </application>
+
+</manifest>

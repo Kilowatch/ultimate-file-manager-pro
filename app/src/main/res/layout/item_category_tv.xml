@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selector_tv_storage_category_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_xl"
+        android:paddingVertical="@dimen/margin_md"
+        android:duplicateParentState="true">
+
+        <!-- Category Icon -->
+        <ImageView
+            android:id="@+id/imgCategoryIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/margin_lg"
+            android:contentDescription="@null"
+            android:duplicateParentState="true"
+            app:tint="@color/selector_tv_storage_category_icon_tint"
+            tools:src="@drawable/ic_photo_video" />
+
+        <!-- Name + Count -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:duplicateParentState="true">
+
+            <TextView
+                android:id="@+id/txtCategoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:duplicateParentState="true"
+                tools:text="Images" />
+
+            <TextView
+                android:id="@+id/txtFileCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:duplicateParentState="true"
+                tools:text="1,234 files" />
+        </LinearLayout>
+
+        <!-- Size -->
+        <TextView
+            android:id="@+id/txtCategorySize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tv_storage_category_text_accent"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black"
+            android:duplicateParentState="true"
+            tools:text="12.4 GB" />
+
+    </LinearLayout>
+
+    <!-- Bottom divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/tv_divider" />
+
+</FrameLayout>

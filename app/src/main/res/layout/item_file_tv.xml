@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardFile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/tv_file_item_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selector_tv_list_item">
+
+    <LinearLayout
+        android:id="@+id/layoutFileRow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:gravity="center_vertical">
+
+        <!-- Selection Checkbox (hidden by default) -->
+        <CheckBox
+            android:id="@+id/checkSelect"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:buttonTint="@color/tv_accent"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            tools:visibility="visible" />
+
+        <!-- File/Folder Icon in glass circle -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_glass_card"
+            android:padding="8dp"
+            android:transitionName="file_icon_placeholder">
+
+            <ImageView
+                android:id="@+id/imgFileIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cd_file_icon"
+                app:tint="@color/tv_accent"
+                tools:src="@drawable/ic_folder" />
+
+            <!-- Indexed Badge (Lightning Bolt) -->
+            <ImageView
+                android:id="@+id/imgIndexedBadge"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_lightning"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <!-- Name + Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-medium"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Documents" />
+
+            <TextView
+                android:id="@+id/txtFileInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="12 items · Modified 2 hours ago" />
+        </LinearLayout>
+
+        <!-- Size -->
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="16sp"
+            android:layout_marginEnd="@dimen/margin_sm"
+            tools:text="4.2 MB" />
+
+        <!-- Hidden Badge -->
+        <ImageView
+            android:id="@+id/imgHiddenBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_eye_off"
+            android:alpha="0.5"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:visibility="gone"
+            app:tint="@color/tv_text_secondary"
+            tools:visibility="visible" />
+
+        <!-- Indexed badge removed: folder shows only indexed items -->
+
+        <!-- Focus chevron (always visible, highlights on focus) -->
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_arrow_back"
+            android:rotation="180"
+            android:alpha="0.4"
+            app:tint="@color/tv_text_secondary"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+
+    <!-- Bottom divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/tv_divider" />
+
+</FrameLayout>

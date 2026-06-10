@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile Category Item — premium dark glassmorphism design
+    Matches the theme of activity_welcome and activity_storage_analyzer.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:rippleColor="@color/mobile_glass_ripple">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_md">
+
+        <!-- Category Icon -->
+        <ImageView
+            android:id="@+id/imgCategoryIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/margin_md"
+            android:contentDescription="@null"
+            app:tint="@color/tv_accent"
+            tools:src="@drawable/ic_photo_video" />
+
+        <!-- Category Name -->
+        <TextView
+            android:id="@+id/txtCategoryName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="Images" />
+
+        <!-- File Count -->
+        <TextView
+            android:id="@+id/txtFileCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_md"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="13sp"
+            tools:text="1,234 files" />
+
+        <!-- Size -->
+        <TextView
+            android:id="@+id/txtCategorySize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            tools:text="12.4 GB" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

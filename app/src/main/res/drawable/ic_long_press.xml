@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Long-press / hold gesture icon.
+    A hand with a finger extended and a pulse ring beneath, indicating a
+    sustained touch interaction. Matches the app's 24×24 dp icon style.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+
+    <!-- Outer pulse ring (faint circle around fingertip area) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.35"
+        android:pathData="M12,2 A4.5,4.5 0 1 0 12,11 A4.5,4.5 0 0 0 12,2 Z
+                          M12,9.5 A3,3 0 1 1 12,3.5 A3,3 0 0 1 12,9.5 Z"/>
+
+    <!-- Finger / pointer -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,3.5 A3,3 0 1 0 12,9.5 A3,3 0 0 0 12,3.5 Z"/>
+
+    <!-- Hand body — palm and extended index finger -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M15.5,11.5 L15.5,8 A1.5,1.5 0 0 0 12.5,8 L12.5,11
+                          A1.5,1.5 0 0 0 9.5,12.5 L9.5,16
+                          C9.5,19.09 11.91,21.5 15,21.5
+                          C18.09,21.5 20.5,19.09 20.5,16 L20.5,13
+                          A1.5,1.5 0 0 0 17.5,13 L17.5,11.5
+                          A1,1 0 0 0 15.5,11.5 Z"/>
+
+    <!-- Pulse / ripple arc — indicates hold gesture -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.5"
+        android:pathData="M7.05,16.95 A7,7 0 0 1 7.05,7.05 L5.64,5.64
+                          A9,9 0 0 0 5.64,18.36 Z"/>
+
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.25"
+        android:pathData="M4.22,19.78 A11,11 0 0 1 4.22,4.22 L2.81,2.81
+                          A13,13 0 0 0 2.81,21.19 Z"/>
+</vector>

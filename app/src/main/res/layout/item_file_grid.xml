@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardFile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1.5dp"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutFileRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Image Preview / Icon Area (takes 100% of the square card) -->
+        <FrameLayout
+            android:id="@+id/frameIcon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/imgFileIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/cd_file_icon"
+                tools:src="@drawable/ic_folder" />
+
+            <!-- Dark overlay for better text contrast if needed or for selection -->
+            <View
+                android:id="@+id/viewSelectionOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#440284C7"
+                android:visibility="gone" />
+
+            <!-- Indexed Badge (Lightning Bolt) -->
+            <ImageView
+                android:id="@+id/imgIndexedBadge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="4dp"
+                android:src="@drawable/ic_lightning"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </FrameLayout>
+
+        <!-- Overlay Text at the Bottom of the Card -->
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="8dp"
+            android:gravity="center"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:background="@drawable/gradient_bottom_shadow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Video_001.mp4" />
+
+        <CheckBox
+            android:id="@+id/checkSelect"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_margin="6dp"
+            android:buttonTint="#FF0284C7"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+        <!-- Mock fields for layout compatibility with List ViewHolder -->
+        <TextView android:id="@+id/txtFileInfo" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <TextView android:id="@+id/txtFileSize" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        
+        <!-- Disk usage fields (Network only) -->
+        <ProgressBar android:id="@+id/progressDiskUsage" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <TextView android:id="@+id/txtDiskUsage" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <za.kilowatch.ultimatefilemanager.ui.CircularProgressView android:id="@+id/circularDiskUsage" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

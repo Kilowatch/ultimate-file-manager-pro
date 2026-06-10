@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ufm_background">
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/playerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:use_controller="false"
+        app:surface_type="texture_view"
+        app:resize_mode="fit"
+        android:focusable="false" />
+
+    <ImageView
+        android:id="@+id/audioPoster"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/audioPosterScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/audioPlaceholder"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/ic_audio"
+        app:tint="@color/tv_text_secondary"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/bufferingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/buffering_background"
+        android:elevation="12dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/loadingSpinner"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminateTint="#FBBF24" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Buffering..."
+            android:textColor="@color/tv_text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@drawable/gradient_top_shadow">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_button_blue"
+            app:tint="@android:color/white"
+            android:nextFocusRight="@+id/btnRepeat"
+            android:nextFocusDown="@+id/seekBar" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:scrollHorizontally="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnRepeat"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_repeat"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_button_blue"
+            app:tint="@android:color/white"
+            android:nextFocusLeft="@+id/btnBack"
+            android:nextFocusRight="@+id/btnFullscreen"
+            android:nextFocusDown="@+id/seekBar" />
+
+        <ImageView
+            android:id="@+id/btnFullscreen"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_fullscreen"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_button_blue"
+            app:tint="@android:color/white"
+            android:nextFocusLeft="@+id/btnRepeat"
+            android:nextFocusDown="@+id/seekBar" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/controlsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@drawable/gradient_bottom_shadow">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/txtElapsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="12dp"
+                android:splitTrack="false"
+                android:focusable="true"
+                android:progressDrawable="@drawable/tv_seek_bar_progress"
+                android:thumbTint="#FBBF24"
+                android:progressTint="#FBBF24"
+                android:nextFocusUp="@+id/btnFullscreen"
+                android:nextFocusDown="@+id/btnPlayPause" />
+
+            <TextView
+                android:id="@+id/txtRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-00:00"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnRewind"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/selector_tv_button_blue"
+                android:src="@drawable/ic_skip_previous"
+                android:focusable="true"
+                android:nextFocusRight="@+id/btnPlayPause"
+                android:nextFocusUp="@+id/seekBar" />
+
+            <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/ic_pause"
+                android:background="@drawable/selector_tv_button_blue"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnRewind"
+                android:nextFocusRight="@+id/btnForward"
+                android:nextFocusUp="@+id/seekBar" />
+
+            <ImageButton
+                android:id="@+id/btnForward"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/selector_tv_button_blue"
+                android:src="@drawable/ic_skip_next"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnPlayPause"
+                android:nextFocusRight="@+id/btnMute"
+                android:nextFocusUp="@+id/seekBar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnMute"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/selector_tv_button_blue"
+                android:src="@drawable/ic_volume_down"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnForward"
+                android:nextFocusRight="@+id/volumeSeekBar" />
+
+            <SeekBar
+                android:id="@+id/volumeSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:max="100"
+                android:progress="100"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnMute"
+                android:progressDrawable="@drawable/tv_seek_bar_progress"
+                android:thumbTint="#FBBF24"
+                android:progressTint="#FBBF24" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

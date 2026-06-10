@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Recovery code entry dialog — for when the user forgets their PIN. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="20dp">
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/vault_recovery_entry_subtitle"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="13sp"
+        android:alpha="0.7"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Code input, max 16 chars, monospace — outlined box -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etRecoveryCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:textSize="18sp"
+            android:textColor="?attr/colorOnSurface"
+            android:hint="@string/vault_recovery_entry_hint"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:inputType="textVisiblePassword"
+            android:maxLength="16"
+            android:importantForAutofill="no" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Character counter -->
+    <TextView
+        android:id="@+id/txtCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/s_0_16"
+        android:textColor="?attr/colorOnSurface"
+        android:alpha="0.5"
+        android:textSize="11sp"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Error message -->
+    <TextView
+        android:id="@+id/txtRecoveryError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ufm_denied"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -1,0 +1,4783 @@
+<resources>
+    <string name="app_name">최고의 파일 관리자 Pro</string>
+    <string name="settings_language">언어</string>
+    <string name="language_english">영어</string>
+    <string name="language_german">독일어(독일어)</string>
+    <string name="language_japanese">일본어(日本語)</string>
+    <string name="language_arabic">아랍어(العربية)</string>
+    <string name="language_spanish">스페인어(Español)</string>
+    <string name="language_french">프랑스어(Français)</string>
+    <string name="language_hindi">힌디어(हिन्दी)</string>
+    <string name="language_indonesian">인도네시아어(Bahasa Indonesia)</string>
+    <string name="language_korean">한국어(한국어)</string>
+    <string name="language_portuguese">포르투갈어(Português)</string>
+    <string name="language_russian">러시아어(Русский)</string>
+    <string name="language_turkish">터키어(Türkçe)</string>
+    <string name="select_language">언어 선택</string>
+    <string name="language_system_default">시스템 기본값</string>
+
+    <!-- Spreadsheet Viewer -->
+    <string name="view_mode_list">
+초상화
+</string>
+    <string name="view_mode_grid">
+풍경
+</string>
+    <string name="dialog_view_mode_title">
+보기 모드 선택
+</string>
+    <string name="view_mode_list_small">
+목록 보기 -> 작음
+</string>
+    <string name="view_mode_list_medium">
+목록 보기 -> 중간
+</string>
+    <string name="view_mode_list_large">
+목록보기 -> 큰
+</string>
+    <string name="view_mode_list_xlarge">
+목록 보기 -> 초대형
+</string>
+    <string name="view_mode_grid_small">
+그리드뷰 -> 작게
+</string>
+    <string name="view_mode_grid_medium">
+그리드뷰 -> 중간
+</string>
+    <string name="view_mode_grid_large">
+그리드뷰 -> 대형
+</string>
+    <string name="spreadsheet_viewer_fallback_title">
+스프레드시트
+</string>
+    <string name="spreadsheet_performance_warning">
+성능 경고: 큰 문서가 첫 번째 %1$d 행에서 잘렸습니다.
+</string>
+    <string name="spreadsheet_error_parsing">
+파일 구문 분석 중 오류 발생: %1$s
+</string>
+    <string name="spreadsheet_portrait_toast">
+인물 모드
+</string>
+    <string name="spreadsheet_landscape_toast">
+가로 모드
+</string>
+    <string name="spreadsheet_rotate_screen">
+화면 회전
+</string>
+
+    <!-- Welcome & Language Selection -->
+    <string name="welcome_tagline">고급 사용자를 위해 구축된 최고의 파일 관리 환경입니다.</string>
+    <string name="welcome_select_language">선호하는 언어를 선택하세요.</string>
+    <string name="welcome_translation_disclaimer">모든 번역은 최선의 노력을 바탕으로 이루어졌으며 오류가 있을 수 있습니다.</string>
+    <string name="welcome_change_later_hint">나중에 설정 -&gt; 언어에서 언어를 변경할 수 있습니다.</string>
+    <string name="btn_set_default_language">기본 언어 설정</string>
+
+    <string name="welcome_title">Ultimate File Manager Pro에 오신 것을 환영합니다.</string>
+    <string name="welcome_subtitle">모든 파일을 쉽게 관리하세요.\n시작하려면 필요한 권한을 부여하세요.</string>
+    <string name="welcome_subtitle_tv">모든 파일을 쉽게 관리하세요. 허락해 주세요\n시작하는 데 필요한 권한.</string>
+    <string name="btn_continue">계속하다</string>
+    <string name="welcome_footer_hint">계속하려면 필요한 모든 권한을 부여하세요.</string>
+    <string name="btn_grant">승인하다</string>
+    <string name="btn_enable">할 수 있게 하다</string>
+    <string name="btn_open_settings">설정 열기</string>
+
+    <!-- Permission Titles -->
+    <string name="perm_notifications_title">알림</string>
+    <string name="perm_audio_title">음악 및 오디오</string>
+    <string name="perm_photos_videos_title">사진 및 동영상</string>
+    <string name="perm_media_title">미디어 액세스</string>
+    <string name="perm_all_files_title">모든 파일 액세스</string>
+    <string name="perm_install_apps_title">앱 설치</string>
+    <string name="perm_query_apps_title">앱 액세스</string>
+
+    <!-- Permission Descriptions (Policy-Aligned) -->
+    <string name="perm_notifications_desc">파일 전송이 완료되거나, USB 드라이브가 연결되거나, 저장 공간이 부족해지면 알림을 받습니다.</string>
+    <string name="perm_audio_desc">모든 저장 장치에서 음악 및 오디오 파일을 탐색, 복사, 이동 및 구성합니다.</string>
+    <string name="perm_photos_videos_desc">모든 저장 장치에서 사진과 비디오 파일을 보고, 복사하고, 이동하고, 관리합니다.</string>
+    <string name="perm_media_desc">모든 저장 장치에서 음악, 사진, 비디오 파일을 찾아보고 복사하고 이동하고 정리하세요.</string>
+    <string name="perm_all_files_desc">전체 파일 관리: 장치의 모든 파일 또는 폴더 생성, 이름 바꾸기, 복사, 이동 및 삭제.</string>
+    <string name="perm_install_apps_desc">선택적으로 저장소에 있는 APK 파일을 설치합니다. 각 설치를 확인하라는 메시지가 항상 표시됩니다.</string>
+    <string name="perm_query_apps_desc">원격 관리 및 ADB 터미널을 위해 설치된 앱 보기 - 장치의 애플리케이션을 나열하고 검사할 수 있습니다.</string>
+
+    <!-- Permission Status -->
+    <string name="status_granted">부여된</string>
+    <string name="status_denied">거부됨</string>
+    <string name="status_required">필수의</string>
+    <string name="status_optional">선택 과목</string>
+    <string name="status_not_requested">요청되지 않음</string>
+
+    <!-- Storage Browser -->
+    <string name="storage">저장</string>
+    <string name="storage_title">최고의 파일 관리자 프로</string>
+    <string name="storage_internal">내부 저장소</string>
+    <string name="storage_sd_card">SD 카드</string>
+    <string name="storage_usb">USB 드라이브</string>
+    <string name="storage_unknown">알 수 없는 저장소</string>
+    <string name="showing_results_count">%1$d 결과 표시 중</string>
+    <string name="storage_unknown_pattern">저장소(%1$s)</string>
+    <string name="storage_new_badge">새로운</string>
+    <string name="apps_tile_subtitle">설치된 앱 보기</string>
+    <string name="remote_tile_subtitle">원격으로 파일 관리</string>
+    <string name="storage_free_format">%1$s %2$s 없음</string>
+    <string name="storage_no_storages">저장 장치를 찾을 수 없습니다</string>
+    <string name="storage_browser_subtitle">어디서나 파일을 탐색하세요. 드라이브를 탭하여 탐색하세요.</string>
+    <string name="twin_window_title">트윈 윈도우</string>
+    <string name="twin_window_subtitle">이중 창 파일 관리</string>
+    <string name="twin_window">트윈 윈도우</string>
+    <string name="close_twin_window">
+트윈 창 닫기
+</string>
+    <string name="settings_twin_window_layout_title">트윈 창 레이아웃</string>
+    <string name="settings_twin_window_layout_subtitle_horizontal">수평 분할</string>
+    <string name="settings_twin_window_layout_subtitle_vertical">수직 분할</string>
+    <string name="settings_twin_window_startup_title">트윈 패널에서 시작</string>
+    <string name="settings_twin_window_startup_subtitle_on">활성화됨</string>
+    <string name="settings_twin_window_startup_subtitle_off">장애가 있는</string>
+    <string name="settings_side_by_side_video_title">
+병렬 비디오
+</string>
+    <string name="settings_side_by_side_video_subtitle_on">
+활성화됨 - 창에서 재생
+</string>
+    <string name="settings_side_by_side_video_subtitle_off">
+비활성화됨 - 전체 화면
+</string>
+    <string name="settings_breadcrumbs_title">
+경로 이동 경로
+</string>
+    <string name="settings_breadcrumbs_subtitle_on">
+도구 모음 아래에 경로 탐색 모음 표시
+</string>
+    <string name="settings_breadcrumbs_subtitle_off">
+경로 탐색 모음 숨기기
+</string>
+    <string name="settings_scrolling_text_title">
+스크롤링 텍스트
+</string>
+    <string name="settings_scrolling_text_subtitle_on">
+파일 이름이 오버플로되면 스크롤됩니다.
+</string>
+    <string name="settings_scrolling_text_subtitle_off">
+파일 이름이 잘립니다.
+</string>
+    <string name="audio_conflict_title">
+오디오 경고
+</string>
+    <string name="audio_conflict_message">
+다른 창에서는 이미 비디오가 재생 중입니다. 둘 다 동시에 오디오를 재생합니다.
+</string>
+    <string name="player_mute">
+무음
+</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_app_icon">Ultimate File Manager Pro 아이콘</string>
+    <string name="cd_permission_icon">권한 아이콘</string>
+    <string name="cd_storage_icon">저장 장치 아이콘</string>
+    <string name="cd_settings">설정</string>
+    <string name="cd_menu">메뉴</string>
+    <string name="cd_file_icon">파일 아이콘</string>
+    <string name="cd_back">돌아가기</string>
+    <string name="cd_new_folder">새 폴더 만들기</string>
+    <string name="cd_view_toggle">보기 모드 전환</string>
+
+    <!-- Settings: Favorites -->
+    <string name="settings_favorites_title">즐겨찾기 관리</string>
+    <string name="settings_favorites_subtitle">즐겨찾는 항목 보기 및 제거</string>
+    <string name="manage_favorites_title">즐겨찾기</string>
+    <string name="manage_favorites_empty">아직 즐겨찾기를 추가하지 않았습니다.\n\n파일이나 폴더를 길게 누르고 별표 아이콘을 탭하여 여기에 추가하세요.</string>
+    <string name="manage_favorites_removed">%1$s이(가) 즐겨찾기에서 삭제되었습니다.</string>
+
+    <!-- Bookmark Launcher Widget -->
+    <string name="widget_bookmark_title">즐겨찾기</string>
+    <string name="widget_bookmark_empty">아직 즐겨찾기가 없습니다.\n앱에서 일부를 추가하세요.</string>
+    <string name="widget_bookmark_open_app">열려 있는</string>
+    <string name="widget_bookmark_cd_icon">북마크 아이콘</string>
+    <string name="widget_bookmark_description">즐겨찾는 파일 및 폴더에 빠르게 액세스</string>
+    <string name="widget_ftp_sftp_title">
+FTP/SFTP 서버
+</string>
+    <string name="widget_ftp_sftp_description">
+FTP 및 SFTP 서버에 대한 빠른 전환
+</string>
+    <string name="widget_ftp_sftp_ftp_label">
+FTP
+</string>
+    <string name="widget_ftp_sftp_sftp_label">
+SFTP
+</string>
+    <string name="widget_ftp_sftp_running">
+달리기
+</string>
+    <string name="widget_ftp_sftp_stopped">
+중지됨
+</string>
+    <string name="widget_ftp_sftp_start">
+시작
+</string>
+    <string name="widget_ftp_sftp_stop">
+멈추다
+</string>
+    <string name="widget_ftp_sftp_ip">
+IP: %1$s
+</string>
+    <string name="file_server_tiles_title">
+파일 서버 시스템 타일
+</string>
+    <string name="file_server_tiles_screen_subtitle">
+빠른 설정 패널 타일 활성화 또는 비활성화
+</string>
+    <string name="settings_file_server_tiles_title">
+파일 서버 시스템 타일
+</string>
+    <string name="settings_file_server_tiles_subtitle">
+FTP 및 SFTP에 대한 빠른 설정 타일 구성
+</string>
+    <string name="settings_ftp_tile_title">
+FTP 타일
+</string>
+    <string name="settings_ftp_tile_subtitle_on">
+활성화됨 - 타일 사용 가능
+</string>
+    <string name="settings_ftp_tile_subtitle_off">
+비활성화됨 - 타일이 숨겨짐
+</string>
+    <string name="settings_sftp_tile_title">
+SFTP 타일
+</string>
+    <string name="settings_sftp_tile_subtitle_on">
+활성화됨 - 타일 사용 가능
+</string>
+    <string name="settings_sftp_tile_subtitle_off">
+비활성화됨 - 타일이 숨겨짐
+</string>
+    <string name="toast_profile_required_ftp">
+먼저 FTP 서버 프로필을 만드세요.
+</string>
+    <string name="toast_profile_required_sftp">
+먼저 SFTP 서버 프로필을 만드세요.
+</string>
+    <string name="toast_tile_enabled_old_api">
+Tile enabled. 빠른 설정 패널을 편집하여 추가하세요.
+</string>
+    <string name="widget_preview_mock_1">다운로드</string>
+    <string name="widget_preview_mock_2">서류</string>
+    <string name="widget_preview_mock_3">DCIM</string>
+    <string name="widget_preview_mock_network">홈 NAS</string>
+    <string name="network_connection_restored_first">연결 실패\n\n장치가 네트워크에 연결되어 있는지 또는 TV가 켜져 있는지 확인하고 다시 시도하십시오.</string>
+
+    <!-- Storage Browser Section -->
+    <string name="storage_section_devices">장치 및 기능</string>
+
+    <!-- File Browser -->
+    <string name="file_empty_folder">이 폴더는 비어 있습니다.</string>
+
+    <!-- Selection Actions -->
+    <string name="action_select_all">모두 선택</string>
+    <string name="action_deselect_all">모두 선택 해제</string>
+    <string name="action_clear_selection">선택 취소</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_done">완료</string>
+    <string name="selection_count">%1$d 선택됨</string>
+    <string name="selection_prompt_select_item">
+작업을 수행할 파일 선택
+</string>
+
+    <!-- Delete Confirmation -->
+    <string name="delete_confirm_single">%1$s을(를) 삭제하시겠습니까?</string>
+    <string name="delete_confirm_multiple">%1$d 항목을 삭제하시겠습니까?</string>
+    <string name="delete_title">영구적으로 삭제하시겠습니까?</string>
+    <string name="delete_message_mixed">%1$d 폴더와 %2$d 파일을 영구적으로 삭제하려고 합니다.\n\n이 작업은 취소할 수 없습니다.</string>
+    <string name="delete_message_folders">%1$d 폴더와 모든 콘텐츠를 영구적으로 삭제하려고 합니다.\n\n이 작업은 취소할 수 없습니다.</string>
+    <string name="delete_message_files">%1$d 파일을 영구적으로 삭제하려고 합니다.\n\n이 작업은 취소할 수 없습니다.</string>
+    <string name="delete_confirm">영원히 삭제</string>
+    <string name="delete_cancel">취소</string>
+    <string name="adb_required_title">ADB 필수</string>
+    <string name="adb_required_to_take_screenshots">\"스크린샷을 캡처하려면 TV에서 USB 디버깅을 활성화해야 합니다.\n\n활성화하려면:\n1. TV에서 설정을 엽니다.\n2. 장치 기본 설정 &gt; 개발자 옵션으로 이동합니다.\n3. \"USB 디버깅\" 활성화\n\n개발자 옵션이 표시되지 않으면 먼저 정보로 이동하여 \'빌드 번호\'를 7번 탭하세요.\"</string>
+    <string name="adb_pairing_required">ADB 페어링 필요</string>
+    <string name="pairing_required_to_take_screenshots">이 TV는 아직 ADB와 페어링되지 않았습니다. 먼저 메인 화면에서 페어링해주세요.</string>
+    <string name="failed_to_capture_screenshot">스크린샷을 캡처하지 못했습니다.</string>
+    <string name="screenshot_saved_to_path">스크린샷 저장 위치: %1$s</string>
+    <string name="connected_capturing_screen">연결되었습니다. 화면 캡처 중...</string>
+    <string name="adb_connection_denied_or_failed">ADB 연결이 거부되거나 실패했습니다.</string>
+    <string name="screenshot_failed_no_data_received">스크린샷 실패: 데이터가 수신되지 않았습니다.</string>
+    <string name="saving_screenshot">스크린샷 저장 중...</string>
+    <string name="delete_success">%1$d개 항목을 삭제했습니다.</string>
+    <string name="delete_error">일부 항목을 삭제하지 못했습니다.</string>
+    <string name="delete_error_shizuku_required">
+삭제 실패: 보호된 Android/data 또는 Android/obb 폴더의 파일을 수정하려면 Shizuku가 필요합니다.
+</string>
+    <string name="deleting_items">삭제 중…</string>
+    <string name="cleaning_up_index">색인 정리 중…</string>
+    <string name="deleting_folder_progress">\'%1$s\' 삭제 중… 색인 데이터베이스를 삭제하는 중입니다. 잠시 기다려 주세요.</string>
+    <string name="deleting_folder_only_progress">\'%1$s\' 삭제 중… 잠시 기다려 주세요.</string>
+    <string name="deleting_items_progress">항목 삭제 중... 잠시 기다려 주세요.</string>
+
+    <!-- Remote Manage -->
+    <string name="remote_manage_title">원격 관리</string>
+    <string name="remote_manage_btn">원격 관리</string>
+    <string name="remote_server_starting_title">
+서버 시작
+</string>
+    <string name="remote_server_starting_msg">
+사용 가능한 포트를 찾는 중...
+</string>
+    <string name="remote_server_running">서버 실행 중</string>
+    <string name="remote_server_error">서버를 시작하지 못했습니다.</string>
+    <string name="remote_open_browser">네트워크의 어느 브라우저에서나 다음 URL을 엽니다.</string>
+    <string name="remote_warning_screen">⚠️ 이 화면을 벗어나면 서버가 정지됩니다</string>
+    <string name="remote_stop_server">중지하고 돌아가기</string>
+    <string name="remote_fingerprint_label">
+인증서 지문(SHA-256):
+</string>
+    <string name="remote_verify_fingerprint">
+브라우저에 표시되는 내용과 일치하는지 확인하세요(자물쇠 아이콘 클릭).
+</string>
+    <string name="remote_pin_label">PIN 액세스</string>
+    <string name="remote_use_ca">
+CA 인증서 가져오기
+</string>
+    <string name="remote_cert_active">
+사용자 정의 CA 제거
+</string>
+    <string name="remote_ca_status_unverified">
+확인되지 않음 — 자동 생성된 CA
+</string>
+    <string name="remote_ca_status_verified">
+확인됨 - 사용자 정의 CA
+</string>
+    <string name="remote_ca_action_import">
+CA 인증서 가져오기
+</string>
+    <string name="remote_ca_action_remove">
+사용자 정의 CA 제거
+</string>
+    <string name="remote_ca_info_title">
+사용자 정의 CA 인증서
+</string>
+    <string name="remote_ca_info_message">
+기본적으로 원격 관리는 자동으로 생성된 자체 서명 인증서를 사용합니다. 이 인증서를 확인할 수 없기 때문에 브라우저에 보안 경고가 표시됩니다.\n
+\n
+신뢰할 수 있는 CA 인증서(예: 조직 또는 자체 호스팅 CA)가 있는 경우 여기에서 가져올 수 있습니다. 이렇게 하면 브라우저 경고가 제거되고 신뢰할 수 있는 자체 CA가 연결을 확인할 수 있습니다.\n
+\n
+지원되는 형식: .p12 / .pfx(PKCS12) 또는 .pem / .crt + .key(PEM + 개인 키 쌍).
+</string>
+    <string name="remote_ca_info_browse">
+인증서 찾아보기
+</string>
+    <string name="remote_cert_confirm">
+인증서 사용
+</string>
+    <string name="remote_cert_import_title">
+이 인증서 사용
+</string>
+    <string name="remote_cert_import_msg">
+이 파일을 원격 관리 서버의 사용자 정의 HTTPS 인증서로 사용하시겠습니까?
+</string>
+    <string name="remote_cert_notice">
+인증서가 장치의 IP 주소를 포함하는지 확인하세요.
+</string>
+    <string name="remote_cert_imported">
+인증서를 가져왔습니다.
+</string>
+    <string name="remote_cert_failed">
+인증서를 가져오지 못했습니다.
+</string>
+    <string name="remote_cert_remove_title">
+사용자 정의 인증서 제거
+</string>
+    <string name="remote_cert_remove_msg">
+이렇게 하면 사용자 정의 인증서가 제거되고 서버는 자동 생성된 CA로 되돌아갑니다.
+</string>
+    <string name="remote_cert_remove">
+제거하다
+</string>
+    <string name="remote_cert_pick_key">
+개인 키 선택
+</string>
+    <string name="remote_cert_pick_key_msg">
+이제 일치하는 개인 키 파일(.pem 또는 .key)을 선택하세요.
+</string>
+    <string name="remote_cert_password_hint">
+PKCS12 비밀번호
+</string>
+    <string name="remote_cert_password_title">
+인증서 비밀번호
+</string>
+
+    <!-- VPN Warning -->
+    <string name="vpn_warning_title">VPN 활성</string>
+    <string name="vpn_warning_subtitle">원격 관리자를 사용할 수 없습니다.</string>
+    <string name="vpn_warning_message">VPN이 활성화된 동안에는 원격 관리자가 작동할 수 없습니다. VPN은 로컬 네트워크 IP 주소 감지를 방지합니다.\n\n실제 VPN 대신 로컬 DNS 차단기 또는 광고 차단기(예: AdGuard)를 사용하는 경우 이 경고를 무시하고 계속할 수 있습니다.\n\n그렇지 않은 경우 VPN 연결을 끊고 다시 시도하세요.</string>
+    <string name="vpn_warning_close">닫다</string>
+    <string name="vpn_warning_continue">무시하고 계속</string>
+    <string name="policy_blocked_title">접근이 제한됨</string>
+    <string name="policy_blocked_subtitle">기업 정책이 감지되었습니다.</string>
+    <string name="policy_blocked_message">\"귀하의 장치 또는 조직이 이 저장소 제공자에 대한 액세스를 제한한 것 같습니다.\n\n일반적인 이유는 다음과 같습니다.\n• Intune/MDM 정책\n• 조건부 액세스 규칙\n• 네트워크 수준 블록\n\n클라우드 스토리지 액세스를 위해 \"Ultimate File Manager Pro\"를 허용하려면 IT 관리자에게 문의하세요.\"</string>
+    <string name="policy_blocked_details">기술적인 세부사항</string>
+
+    <!-- Search -->
+    <string name="search_title">파일 검색</string>
+    <string name="search_tile_subtitle">저장소 전체에서 파일 찾기</string>
+    <string name="search_hint">파일 이름으로 검색...</string>
+    <string name="search_results_count">%1$d 결과를 찾았습니다.</string>
+    <string name="search_no_results">파일을 찾을 수 없습니다</string>
+    <string name="search_searching">수색...</string>
+    <string name="search_chip_images">이미지</string>
+    <string name="search_chip_videos">비디오</string>
+    <string name="search_chip_audio">오디오</string>
+    <string name="search_chip_documents">서류</string>
+    <string name="search_chip_apk">APK</string>
+    <string name="search_chip_archives">아카이브</string>
+    <string name="search_filter_hint">팁: 크기&gt;5MB · 확장:pdf · 유형:비디오 · 날짜:7일</string>
+    <string name="search_recent_header">최근 검색</string>
+    <string name="search_load_more">더 많은 결과 로드</string>
+    <!-- Filter pills -->
+    <string name="search_pill_size">파일 크기</string>
+    <string name="search_pill_type">파일 유형</string>
+    <string name="search_pill_extension">확대</string>
+    <string name="search_pill_date">날짜</string>
+    <!-- Filter dialog labels -->
+    <string name="search_filter_apply">적용하다</string>
+    <string name="search_filter_size_title">파일 크기로 필터링</string>
+    <string name="search_filter_size_min_label">최소 크기(선택 사항)</string>
+    <string name="search_filter_size_max_label">최대 크기(선택 사항)</string>
+    <string name="search_filter_size_min_hint">예를 들어 1</string>
+    <string name="search_filter_size_max_hint">예를 들어 100</string>
+    <string name="search_filter_type_title">파일 형식으로 필터링</string>
+    <string name="search_filter_ext_title">확장자로 필터링</string>
+    <string name="search_filter_ext_hint">예를 들어 pdf, jpg, mp4</string>
+    <string name="search_filter_date_title">수정된 날짜로 필터링</string>
+    <string name="search_filter_date_body">지난 N일 동안 수정된 파일만 표시합니다.</string>
+    <string name="search_filter_date_hint">예를 들어 7</string>
+    <string name="search_clear">분명한</string>
+
+    <!-- Storage Analyzer -->
+    <string name="analyzer_title">스토리지 분석기</string>
+    <string name="analyzer_subtitle">디스크 사용량 시각화</string>
+    <string name="analyzer_tile_subtitle">디스크 사용량 시각화</string>
+    <string name="analyzer_scanning">저장소 검색 중...</string>
+    <string name="analyzer_category_images">이미지</string>
+    <string name="analyzer_category_videos">비디오</string>
+    <string name="analyzer_category_audio">오디오</string>
+    <string name="analyzer_category_documents">서류</string>
+    <string name="analyzer_category_apks">APK</string>
+    <string name="analyzer_category_other">다른</string>
+    <string name="analyzer_largest_files">가장 큰 파일</string>
+    <string name="analyzer_total_used">%1$s는 %2$s 중 사용됨</string>
+    <!-- Tabs -->
+    <string name="analyzer_tab_overview">개요</string>
+    <string name="analyzer_tab_large">대용량 파일</string>
+    <string name="analyzer_tab_duplicates">중복</string>
+    <string name="analyzer_tab_junk">정크&amp;오래된 것</string>
+    <string name="analyzer_tab_suggestions">제안</string>
+    <string name="analyzer_old_files_desc">%1$d 파일이 180일 이상 수정되지 않았습니다.</string>
+    <string name="analyzer_file_count_singular">%1$d 파일</string>
+    <string name="analyzer_file_count_plural">%1$d 파일</string>
+    <string name="analyzer_duplicate_copy_singular">%1$d 사본</string>
+    <string name="analyzer_duplicate_copy_plural">%1$d개 사본</string>
+    <string name="analyzer_duplicate_saves">%1$s 저장</string>
+    <!-- Section headers inside Overview -->
+    <string name="analyzer_top_folders">크기별 상위 폴더</string>
+    <string name="analyzer_app_usage">앱 저장 공간 사용량</string>
+    <!-- Non-indexed banners -->
+    <string name="analyzer_not_indexed_banner">⚡ 고급 보고서를 위해 이 스토리지를 색인화합니다. 개요만 사용할 수 있습니다.</string>
+    <string name="analyzer_not_indexed_tab">⚡ 이 탭에 대한 고급 분석을 잠금 해제하려면 이 스토리지를 인덱싱하세요.</string>
+    <!-- Duplicate delete -->
+    <string name="analyzer_delete_selected">선택 항목 삭제</string>
+    <string name="analyzer_delete_confirm_title">%1$d 파일을 삭제하시겠습니까?</string>
+    <string name="analyzer_delete_confirm_msg">이러한 파일은 영구적으로 삭제되고 색인에서 제거됩니다.</string>
+    <string name="analyzer_duplicate_all_selected_warning">경고: 중요 삭제</string>
+    <string name="analyzer_duplicate_all_selected_msg">이러한 중복 그룹에 대해 모든 복사본을 선택했습니다. 계속 진행하면 다음 파일의 복사본이 남지 않게 됩니다.</string>
+    <string name="analyzer_delete_anyway">모든 복사본 삭제</string>
+    <!-- Common aliases used in activity -->
+    <string name="internal_storage">내부 저장소</string>
+    <string name="delete">삭제</string>
+
+    <!-- Theme -->
+    <string name="theme_title">모습</string>
+    <string name="theme_tile_subtitle">밝음, 어두움, AMOLED, 또는 자동</string>
+    <string name="vault_title">암호화된 금고</string>
+    <string name="vault_tile_subtitle">안전한 개인 폴더</string>
+    <string name="vault_subtitle">PIN으로 보호됨</string>
+    <string name="vault_empty">아직 Vault 항목이 없습니다.</string>
+    <string name="vault_unlock_title">금고 잠금 해제</string>
+    <string name="vault_unlock_subtitle">금고에 액세스하려면 4자리 PIN을 입력하세요.</string>
+    <string name="vault_set_pin_title">Vault PIN 설정</string>
+    <string name="vault_set_pin_subtitle">금고를 보호하려면 4자리 PIN을 만드세요.</string>
+    <string name="vault_pin_saved">Vault PIN이 저장되었습니다.</string>
+    <string name="vault_pin_invalid">잘못된 PIN</string>
+    <string name="vault_pin_mismatch">PIN이 일치하지 않습니다. 다시 시도해 주세요.</string>
+    <string name="vault_confirm_pin_title">PIN을 확인하세요</string>
+    <string name="vault_confirm_pin_subtitle">확인을 위해 4자리 PIN을 다시 입력하세요.</string>
+    <string name="vault_pin_warning_title">중요 – PIN을 기억하세요</string>
+    <string name="vault_pin_warning_message">PIN을 저장하면 복구 코드가 표시됩니다. 안전한 곳에 저장하세요(예: 적어 두거나 비밀번호 관리자에 보관). 다시는 표시되지 않습니다.\n\nPIN을 잊어버린 경우 복구 코드만이 액세스 권한을 다시 얻을 수 있는 유일한 방법입니다. 둘 다 손실되면 Vault 데이터에 영구적으로 액세스할 수 없습니다.</string>
+    <string name="vault_pin_warning_message_change">귀하의 PIN이 업데이트됩니다. 기존 복구 코드는 유효한 상태로 유지됩니다. 아직 저장되어 있는지 확인하세요.\n\nPIN과 복구 코드를 모두 분실하면 저장소 데이터에 영구적으로 액세스할 수 없습니다.</string>
+    <string name="vault_pin_warning_confirm">이해했습니다. PIN을 저장합니다.</string>
+    <string name="vault_recovery_code_title">복구 코드</string>
+    <string name="vault_recovery_code_body">이 코드를 안전한 곳에 저장하세요. 다시는 표시되지 않습니다. PIN을 잊어버린 경우 이 코드가 저장소에 다시 액세스할 수 있는 유일한 방법입니다.</string>
+    <string name="vault_recovery_code_copy">코드 복사</string>
+    <string name="vault_recovery_code_done">완료 — 저장했습니다</string>
+    <string name="vault_recovery_code_copied">복구 코드가 클립보드에 복사되었습니다.</string>
+    <string name="vault_recovery_entry_title">복구 코드 입력</string>
+    <string name="vault_recovery_entry_subtitle">PIN을 재설정하려면 16자리 복구 코드를 입력하세요.</string>
+    <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXX</string>
+    <string name="vault_recovery_invalid">잘못된 복구 코드</string>
+    <string name="vault_recovery_confirm">PIN 확인 및 재설정</string>
+    <string name="vault_add_folder">폴더 추가</string>
+    <string name="vault_remove">Vault에서 제거</string>
+    <string name="vault_confirm_remove">저장소에서 %1$s을(를) 제거하시겠습니까?</string>
+    <string name="vault_change_pin">PIN 변경</string>
+    <string name="vault_verify_pin_title">PIN 확인</string>
+    <string name="vault_verify_pin_subtitle">계속하려면 현재 PIN을 입력하세요.</string>
+    <string name="vault_select_folder">폴더 선택</string>
+    <string name="vault_select_current">이 폴더를 선택하세요</string>
+    <string name="vault_encrypt">Vault로 암호화</string>
+    <string name="vault_decrypt">암호 해독</string>
+    <string name="vault_open">금고 열기</string>
+    <string name="vault_encryption_failed">항목을 암호화하지 못했습니다.</string>
+    <string name="vault_decryption_failed">항목을 해독하지 못했습니다.</string>
+    <string name="vault_empty_subtitle">암호화된 항목이 저장됨</string>
+    <string name="vault_decrypting">%1$d/%2$d 암호 해독 중...</string>
+    <string name="vault_decrypt_complete">복호화 완료</string>
+    <string name="vault_opening">저장소 %1$d/%2$d 준비 중...</string>
+    <string name="vault_reencrypting">저장소 %1$d/%2$d 보안 중...</string>
+    <string name="vault_delete_title">Vault에서 삭제하시겠습니까?</string>
+    <string name="vault_delete_message">암호화된 파일은 영구적으로 삭제되며 취소할 수 없습니다.</string>
+    <string name="vault_delete_confirm">영구적으로 삭제</string>
+
+    <string name="theme_light">빛</string>
+    <string name="theme_dark">어두운</string>
+    <string name="theme_system">시스템 기본값</string>
+    <string name="theme_amoled">아몰레드 블랙</string>
+    <string name="theme_amoled_desc">퓨어 블랙 — OLED 화면에서 배터리 절약</string>
+    <string name="theme_applied">테마 적용됨</string>
+
+    <!-- Font Size / Settings Tile -->
+    <string name="font_size_title">설정</string>
+    <string name="font_size_tile_subtitle">경험을 최적화하세요</string>
+    <string name="font_size_screen_subtitle">전체 앱의 텍스트 크기 조정</string>
+    <string name="font_size_small">작은</string>
+    <string name="font_size_normal">정상</string>
+    <string name="font_size_large">크기가 큰</string>
+    <string name="font_size_applied">글꼴 크기 적용됨</string>
+    <string name="font_size_preview">재빠른 갈색여우는 점프한다</string>
+
+    <!-- Storage Renaming -->
+    <string name="settings_storage_rename_title">사용자 정의 드라이브 이름</string>
+    <string name="settings_storage_rename_subtitle">USB 및 로컬 저장소 드라이브의 이름 바꾸기</string>
+    <string name="rename_drive_dialog_title">드라이브 이름 바꾸기</string>
+    <string name="custom_name_hint">새 드라이브 이름</string>
+    <string name="reset_action">다시 놓기</string>
+    <string name="status_online">온라인</string>
+    <string name="status_offline">오프라인</string>
+    <string name="rename_action">이름 바꾸기</string>
+
+
+    <!-- Settings Hub -->
+    <string name="settings_title">설정</string>
+    <string name="settings_subtitle">앱 환경설정</string>
+    <string name="font_size_title_row">글꼴 크기</string>
+
+    <!-- Default Start Screen -->
+    <string name="settings_default_start_screen_title">
+기본 시작 화면
+</string>
+    <string name="settings_default_start_screen_subtitle">
+실행 시 열리는 화면 선택
+</string>
+    <string name="start_screen_storage_browser">
+메인 메뉴(기본값)
+</string>
+    <string name="start_screen_twin_window">
+트윈 윈도우
+</string>
+    <string name="start_screen_file_server">
+파일 서버
+</string>
+
+    <!-- Analytics Toggle -->
+    <string name="settings_analytics_title">사용량 분석</string>
+    <string name="settings_analytics_subtitle_on">활성화됨 - 앱을 개선하는 데 도움이 됩니다.</string>
+    <string name="settings_analytics_subtitle_off">비활성화됨 - 데이터가 수집되지 않습니다.</string>
+
+    <!-- Cache Copying Toggle -->
+    <string name="settings_cache_copy_title">캐시 복사</string>
+    <string name="settings_cache_copy_subtitle_on">활성화됨 - 보안 복사, 속도가 느려질 수 있음</string>
+    <string name="settings_cache_copy_subtitle_off">비활성화됨 — 표준 사본(기본값)</string>
+    <string name="settings_cache_copy_note">파일은 대상에 배치되기 전에 임시 캐시에 기록됩니다. 이는 보다 안전한 복사 방법이지만 시간이 더 추가될 수 있습니다.</string>
+
+    <!-- Quick Copy / Move (direct-destination transfer) -->
+    <string name="settings_quick_transfer_title">빠른 복사/이동</string>
+    <string name="settings_quick_transfer_subtitle_on">활성화됨 - 한 단계로 복사 대상/이동 대상</string>
+    <string name="settings_quick_transfer_subtitle_off">비활성화됨 — 표준 클립보드(기본값)</string>
+    <string name="settings_quick_transfer_note">활성화되면 복사 및 이동이 대상 폴더 선택기를 직접 엽니다. 클립보드 단계가 필요하지 않습니다.</string>
+    <string name="action_copy_to">복사 대상…</string>
+    <string name="action_move_to">다음으로 이동…</string>
+    <string name="quick_transfer_select_dest">대상 폴더 선택</string>
+    <string name="quick_transfer_copy_confirm">%1$d 항목을 여기에 복사하시겠습니까?</string>
+    <string name="quick_transfer_move_confirm">%1$d 항목을 여기로 이동하시겠습니까?</string>
+    <string name="quick_transfer_copy_here">여기에 복사하세요</string>
+    <string name="quick_transfer_move_here">여기로 이동</string>
+
+    <!-- Network Open Cache Toggle -->
+    <string name="settings_network_open_cache_title">네트워크 파일 캐싱</string>
+    <string name="settings_network_open_cache_subtitle_on">활성화됨 — 열기 전에 캐시</string>
+    <string name="settings_network_open_cache_subtitle_off">비활성화됨 - 직접 스트림(기본값)</string>
+
+    <!-- Open Source Licenses -->
+    <string name="policy_licenses_button">오픈 소스 라이선스</string>
+    <string name="policy_selection_subtitle2">T&amp;C, 개인정보 보호정책 및 라이선스</string>
+    <string name="no_browser_installed_dialog_message">이 기기에는 브라우저가 설치되어 있지 않습니다.\n\n다른 기기에서 다음 URL을 방문하세요.\n\n%1$s</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_title">정렬 및 필터</string>
+    <string name="sort_by_name">이름</string>
+    <string name="sort_by_size">크기</string>
+    <string name="sort_by_date">수정된 날짜</string>
+    <string name="sort_by_type">유형</string>
+    <string name="sort_ascending">오름차순</string>
+    <string name="sort_descending">내림차순</string>
+    <string name="filter_all">모두</string>
+    <string name="filter_images">이미지</string>
+    <string name="filter_videos">비디오</string>
+    <string name="filter_audio">오디오</string>
+    <string name="filter_documents">서류</string>
+    <string name="filter_apks">APK</string>
+    <string name="group_by_date">
+날짜별로 그룹화
+</string>
+    <string name="group_header_format_files">
+%d 파일
+</string>
+
+    <!-- File Operations -->
+    <string name="action_copy">복사</string>
+    <string name="action_move">이동하다</string>
+    <string name="action_rename">이름 바꾸기</string>
+    <string name="action_share">공유하다</string>
+    <string name="action_open">열려 있는</string>
+    <string name="action_paste">여기에 붙여넣기</string>
+    <string name="action_copy_encrypt">복사 및 암호화</string>
+    <string name="action_move_encrypt">이동 및 암호화</string>
+    <string name="clipboard_copied">%1$d 항목이 클립보드에 복사되었습니다.</string>
+    <string name="clipboard_cut">%1$d 항목을 클립보드로 잘라냈습니다.</string>
+    <string name="paste_success">%1$d개 항목을 성공적으로 붙여넣었습니다.</string>
+    <string name="paste_error">일부 항목을 붙여넣지 못했습니다.</string>
+
+    <!-- Transfer Conflict Resolution -->
+    <string name="conflict_title">이미 존재합니다</string>
+    <string name="conflict_message_file">\'%1$s\'이(가) 목적지에 이미 존재합니다.</string>
+    <string name="conflict_message_folder">\'%1$s\' 폴더가 이미 존재합니다. 콘텐츠가 병합되고 충돌이 개별적으로 해결됩니다.</string>
+    <string name="conflict_overwrite">덮어쓰기</string>
+    <string name="conflict_skip">건너뛰다</string>
+    <string name="conflict_keep_both">둘 다 유지</string>
+    <string name="conflict_apply_to_all">나머지 모든 충돌에 적용</string>
+    <string name="remember_my_choice">내 선택을 기억해</string>
+    <string name="settings_default_apps_title">기본 애플리케이션</string>
+    <string name="settings_default_apps_subtitle">파일 형식에 대한 기본 앱 관리</string>
+    <string name="default_apps_empty">기본 애플리케이션이 설정되지 않았습니다.</string>
+    <string name="default_apps_clear_all">모든 기본값 지우기</string>
+    <string name="default_apps_extension_label">파일 형식: %1$s</string>
+    <string name="default_apps_action_internal">내부 뷰어</string>
+    <string name="default_apps_action_external">외부 앱</string>
+    <string name="default_apps_action_player">UFM 플레이어</string>
+    <string name="default_apps_action_slideshow">
+UFM 슬라이드 쇼
+</string>
+    <string name="default_apps_context_local">현지의</string>
+    <string name="default_apps_context_network">클라우드/네트워크</string>
+    <string name="action_clear">분명한</string>
+    <string name="conflict_zero_byte_warning">⚠ 대상은 0B입니다. 덮어쓰기는 안전하지만 먼저 소스 무결성을 확인하세요.</string>
+    <string name="conflict_skipped_n">건너뛴 %1$d 파일 — 대상에 이미 존재함</string>
+    <string name="action_favorite">가장 좋아하는</string>
+    <string name="favorite_name_title">이름 즐겨찾기</string>
+    <string name="favorite_name_hint">좋아하는 이름</string>
+    <string name="favorite_name_empty">이름은 비워둘 수 없습니다.</string>
+    <string name="favorite_added">즐겨찾기가 추가되었습니다</string>
+
+    <string name="rename_title">이름 바꾸기</string>
+    <string name="rename_hint">새 이름</string>
+    <string name="rename_confirm">이름 바꾸기</string>
+    <string name="rename_success">이름이 변경되었습니다.</string>
+    <string name="rename_error">이름을 바꾸지 못했습니다.</string>
+    <string name="share_error">파일을 공유할 수 없습니다</string>
+    <string name="rename_single_only">이름을 바꾸려면 항목을 하나만 선택하세요.</string>
+
+    <!-- Batch Rename -->
+    <string name="batch_rename_title">
+일괄 이름 바꾸기
+</string>
+    <string name="batch_rename_subtitle_tv">
+선택한 파일 및 폴더에 패턴 이름 변경 미리보기 및 적용
+</string>
+    <string name="batch_rename_hint">
+새 이름을 입력하세요…
+</string>
+    <string name="batch_rename_option_original">
+원본 텍스트 유지
+</string>
+    <string name="batch_rename_option_padding">
+숫자 패딩 추가
+</string>
+    <string name="batch_rename_padding_length_label">
+패딩 길이(최대 9)
+</string>
+    <string name="batch_rename_padding_start_label">
+시작 번호
+</string>
+    <string name="batch_rename_preview_header">
+시사
+</string>
+    <string name="batch_rename_preview_invalid">
+(유효하지 않은)
+</string>
+    <string name="batch_rename_cancel">
+취소
+</string>
+    <string name="batch_rename_confirm">
+이름 바꾸기
+</string>
+    <string name="batch_rename_error_empty_pattern">
+이름을 입력하거나 토큰을 선택하세요.
+</string>
+    <string name="batch_rename_confirm_title">
+이름 변경 확인
+</string>
+    <string name="batch_rename_confirm_body">
+%1$d 폴더와 %2$d 파일의 이름이 변경됩니다. 이 작업은 취소할 수 없습니다.
+</string>
+    <string name="batch_rename_confirm_accept">
+이름 바꾸기
+</string>
+    <string name="batch_rename_confirm_cancel">
+취소
+</string>
+    <string name="batch_rename_result_success">
+%1$d 항목의 이름이 성공적으로 변경되었습니다.
+</string>
+    <string name="batch_rename_result_partial">
+%1$d 항목의 이름이 변경되었습니다. %2$d 실패했습니다.
+</string>
+    <string name="batch_rename_back_discard_title">
+변경사항을 취소하시겠습니까?
+</string>
+    <string name="batch_rename_back_discard_body">
+이름 바꾸기 패턴을 입력했습니다. 삭제하고 닫으시겠습니까?
+</string>
+    <string name="batch_rename_back_discard_confirm">
+버리다
+</string>
+    <string name="batch_rename_back_discard_cancel">
+계속 편집하세요
+</string>
+    <string name="batch_rename_error_provider_unavailable">
+저장소 제공업체를 사용할 수 없습니다. 일부 항목의 이름을 바꿀 수 없습니다.
+</string>
+
+    <string name="toast_hidden_success">%1$d 항목이 숨겨졌습니다.</string>
+    <string name="toast_unhidden_success">%1$d 항목이 숨김 해제되었습니다.</string>
+
+    <!-- New Folder -->
+    <string name="action_new_folder">새 폴더</string>
+    <string name="new_folder_title">새 폴더</string>
+    <string name="new_folder_hint">폴더 이름</string>
+    <string name="new_folder_create">만들다</string>
+    <string name="new_folder_success">폴더가 생성되었습니다.</string>
+    <string name="new_folder_error">폴더를 생성하지 못했습니다.</string>
+    <string name="new_folder_exists">해당 이름의 폴더가 이미 존재합니다.</string>
+    <string name="new_folder_empty">폴더 이름은 비워둘 수 없습니다.</string>
+
+    <!-- Encrypt to Vault -->
+    <string name="encrypt_select_vault">Vault 폴더 선택</string>
+    <string name="encrypt_no_vaults">Vault 폴더가 없습니다.</string>
+    <string name="encrypt_create_first">먼저 Vault 폴더를 만들어야 합니다.</string>
+    <string name="encrypt_create_vault">Vault 폴더 생성</string>
+    <string name="encrypt_copy_title">Vault에 복사 및 암호화</string>
+    <string name="encrypt_move_title">Vault로 이동 및 암호화</string>
+    <string name="encrypt_progress">%2$d개 파일 중 %1$d개를 암호화하는 중...</string>
+    <string name="encrypt_success">%1$d 파일을 성공적으로 암호화했습니다.</string>
+    <string name="encrypt_error">일부 파일을 암호화하지 못했습니다.</string>
+    <string name="vault_folder_encrypt_title">폴더를 Vault로 암호화</string>
+    <string name="vault_folder_encrypt_warning">폴더(%1$s)가 암호화되고 원본은 영구적으로 제거됩니다.\n\n이 작업은 취소할 수 없습니다.</string>
+    <string name="vault_folder_encrypt_confirm">암호화 및 제거</string>
+
+    <!-- Drive Picker -->
+    <string name="select_drive">드라이브 선택</string>
+    <string name="all_drives">모든 드라이브</string>
+
+    <!-- Category detail -->
+    <string name="category_files_title">%1$s 파일</string>
+
+    <!-- Search long-press -->
+    <string name="action_open_folder">폴더 위치 열기</string>
+
+    <!-- Policy Selection -->
+    <string name="policy_selection_title">합법적인</string>
+    <string name="policy_selection_subtitle">법률 및 정책</string>
+    <string name="policy_button">이용약관 / 개인정보 보호정책</string>
+    <string name="policy_terms_button">이용약관</string>
+    <string name="policy_privacy_button">개인 정보 보호 정책</string>
+
+    <!-- Rate Us -->
+    <string name="rate_us_title">우리를 평가해 주세요</string>
+    <string name="rate_us_subtitle">앱을 즐기고 계시나요?</string>
+    <string name="rate_us_screen_title">Ultimate File Manager Pro를 즐기고 계시나요?</string>
+    <string name="rate_us_screen_body">귀하의 의견은 앱 개발을 개선하고 직접적으로 지원하는 데 도움이 됩니다.\n\n잠시 시간을 내어 Google Play에 리뷰를 남겨주시겠어요?</string>
+    <!-- Amazon Store rating strings -->
+    <string name="rating_unavailable_amazon_msg">Amazon 기기에서는 아직 평가할 수 없습니다. 양해해 주셔서 감사합니다!</string>
+    <string name="rate_us_button_play">Google Play에서 평가하기</string>
+    <string name="rate_us_button_amazon">Amazon Appstore에서 평가하기</string>
+
+    <!-- SAF / File Picker -->
+    <string name="saf_tile_title">UFM으로 열기</string>
+    <string name="saf_tile_subtitle">파일 선택기에 표시</string>
+    <string name="saf_info_title">UFM으로 열기</string>
+    <string name="saf_info_subtitle">저장소 액세스 프레임워크</string>
+    <string name="saf_info_heading">UFM을 파일 소스로 사용</string>
+    <string name="saf_info_body">UFM은 이 장치에 파일 공급자로 등록되어 있습니다.\n\n미디어 플레이어, Daijisho와 같은 실행기, 클라우드 백업 도구 등 Android의 파일 선택기를 사용하는 모든 앱은 이제 UFM을 통해 저장소를 탐색할 수 있습니다.\n\nAndroid TV의 경우 앱에서 파일 선택기를 실행하고 사용 가능한 소스 목록에서 \'Ultimate File Manager Pro\'를 선택하세요.</string>
+    <string name="saf_info_how_title">사용방법</string>
+    <string name="saf_info_step1">1. \'찾아보기\' 또는 \'라이브러리 추가\' 옵션이 있는 앱을 엽니다.</string>
+    <string name="saf_info_step2">2. 파일 선택기가 나타나면 사이드바에서 \'Ultimate File Manager Pro\'를 찾습니다.</string>
+    <string name="saf_info_step3">3. 저장소를 탐색하고 파일이나 폴더를 선택합니다.</string>
+    <string name="saf_info_status_active">✓ 공급자 활성 — 모든 파일 선택기에서 UFM을 사용할 수 있습니다.</string>
+    <string name="saf_info_close">뒤쪽에</string>
+
+    <string name="refresh">새로 고치다</string>
+    <string name="reindexing_title">
+폴더 색인 재지정
+</string>
+    <string name="reindexing_msg">
+이 폴더와 하위 폴더의 변경사항을 검색하는 중…
+</string>
+    <string name="reindexing_complete">
+재색인 완료됨
+</string>
+    <string name="reindex_scope_title">
+폴더 재색인
+</string>
+    <string name="reindex_scope_msg">
+이 폴더의 재색인 범위를 선택하세요:
+</string>
+    <string name="reindex_option_shallow">
+이 폴더만
+</string>
+    <string name="reindex_option_shallow_desc">
+이 디렉터리에 있는 파일만 빠르게 검사합니다.
+</string>
+    <string name="reindex_option_recursive">
+하위 폴더 포함
+</string>
+    <string name="reindex_option_recursive_desc">
+모든 파일 및 하위 폴더에 대한 전체 재귀 검사
+</string>
+
+    <!-- Network Shares -->
+    <string name="network_tile_title">네트워크 공유</string>
+    <string name="network_tile_subtitle">SMB, FTP 등</string>
+    <string name="network_shares_title">네트워크 공유</string>
+    <string name="network_shares_subtitle">SMB · FTP</string>
+    <string name="network_add_share">공유 추가</string>
+    <string name="network_empty_title">네트워크 공유가 구성되지 않았습니다.</string>
+    <string name="network_empty_body">+ 버튼을 눌러 SMB 또는 FTP 공유를 추가하세요.\n구성된 공유는 모든 앱의 파일 선택기에 표시됩니다.</string>
+    <string name="network_edit_title_add">공유 추가</string>
+    <string name="network_edit_title_edit">공유 수정</string>
+    <string name="network_field_type">규약</string>
+    <string name="network_type_smb">중소기업 / 삼바</string>
+    <string name="network_type_ftp">FTP</string>
+    <string name="network_type_sftp">SFTP(SSH)</string>
+    <string name="network_type_scp">SCP(SSH 셸)</string>
+    <string name="network_type_nfs">
+NFS
+</string>
+    <string name="network_type_dlna">
+DLNA
+</string>
+    <string name="network_field_name">공유 이름(예: 기본 NAS)</string>
+    <string name="network_field_host">호스트/IP 주소</string>
+    <string name="network_field_port">포트(기본값을 사용하려면 비워두세요)</string>
+    <string name="network_field_username">사용자 이름(공백 = 게스트)</string>
+    <string name="network_field_password">비밀번호</string>
+    <string name="network_field_domain">도메인(SMB만 해당)</string>
+    <string name="network_field_private_key">개인 키 경로</string>
+    <string name="network_btn_pick_key">키 파일 선택</string>
+    <string name="network_btn_show_ssh_auth">SSH 키 인증 표시</string>
+    <string name="network_btn_hide_ssh_auth">SSH 키 인증 숨기기</string>
+    <string name="network_header_ssh_auth">SSH 키 인증</string>
+    <string name="network_label_use_keychain">키체인에 암호를 안전하게 저장</string>
+    <string name="network_field_path">원격 경로(예: /Media 또는 공백으로 남겨두기)</string>
+    <string name="network_btn_test">연결 테스트</string>
+    <string name="network_btn_save">구하다</string>
+    <string name="network_testing">연결 테스트 중...</string>
+    <string name="network_test_ok">성공적으로 연결되었습니다</string>
+    <string name="network_test_fail">연결 실패 - 호스트, 자격 증명 및 네트워크를 확인하세요.</string>
+    <string name="network_error_required">이름과 호스트가 필요합니다</string>
+    <string name="network_delete_confirm_title">공유 삭제</string>
+    <string name="network_delete_confirm_body">목록에서 \"%1$s\"을(를) 제거하시겠습니까? 파일 선택기에서도 제거됩니다.</string>
+    <string name="network_delete_confirm_yes">제거하다</string>
+    <!-- TV share item action dialog options -->
+    <string name="network_action_browse">📂 공유 탐색</string>
+    <string name="network_action_edit">✏️ 공유 수정</string>
+    <string name="network_action_delete">🗑️ 공유 삭제</string>
+    <string name="network_field_access">액세스 모드</string>
+    <string name="network_access_readonly">읽기 전용 — 미디어 탐색 및 재생</string>
+    <string name="network_access_readwrite">읽기 및 쓰기 — 찾아보기, 업로드, 삭제, 이름 바꾸기</string>
+    
+    <!-- SMB Protocol Selection -->
+    <string name="network_field_smb_protocol">SMB 프로토콜 버전(SMB만 해당)</string>
+    <string name="network_smb_protocol_auto">자동 기본값(SMB2/SMB3 최소)</string>
+    <string name="network_smb_protocol_smb2">SMB2 전용(레거시 NAS/라우터)</string>
+    <string name="network_smb_protocol_smb3">SMB3 전용(최신 보안)</string>
+
+    <!-- Connection Success Dialog -->
+    <string name="network_dialog_success_title">연결 성공</string>
+    <string name="network_dialog_success_body">귀하의 공유에 도달할 수 있습니다. 지금 저장하시겠습니까?</string>
+    <string name="network_dialog_success_save">저장 및 종료</string>
+    <string name="network_dialog_success_cancel">계속 편집하세요</string>
+
+    <!-- Tip Jar — Fuel the Developer -->
+    <string name="tip_jar_title">개발자에게 힘을 실어주세요</string>
+    <string name="tip_jar_subtitle">개발자에게 활력을 불어넣으세요 찻잔</string>
+    <string name="tip_jar_header_sub">에스프레소를 골라보세요</string>
+    <string name="tip_jar_loading">Google Play에서 가격을 로드하는 중...</string>
+    <string name="tip_jar_transparency">UFM은 광고 없이 완전히 무료로 제작되었으며 항상 그 상태를 유지할 것입니다. 팁 제공은 전적으로 선택 사항입니다. 팁은 커피를 계속 마시고 새로운 기능을 제공하는 데 도움이 됩니다! 찻잔</string>
+    <string name="tip_jar_espresso_title">빠른 에스프레소</string>
+    <string name="tip_jar_espresso_desc">짜증나는 버그 하나를 없애는 데 도움이 되는 작은 에너지 충격입니다.</string>
+    <string name="tip_jar_latte_title">풀라떼</string>
+    <string name="tip_jar_latte_desc">완벽하게 균형 잡힌 연료 - 완전히 새로운 기능을 구축하기에 충분합니다!</string>
+    <string name="tip_jar_beans_title">커피빈백</string>
+    <string name="tip_jar_beans_desc">전설적인 지원. 한 달간 심야 코딩을 위해 식료품 저장실을 비축합니다.</string>
+    <string name="tip_jar_thanks">매우 감사합니다! 🔥 당신은 정말 대단해요!</string>
+    <string name="tip_jar_thanks_espresso">작은 에스프레소가 나오는 중입니다. 정말 감사합니다!</string>
+    <string name="tip_jar_thanks_latte">라떼 한 잔이 들어오면 코드가 그대로 유지됩니다!</string>
+    <string name="tip_jar_thanks_beans">전설적! 이제 식료품 저장실이 완전히 비축되었습니다. 감사합니다! 찻잔</string>
+    <string name="tip_jar_footer">Google Play를 통해 안전하게 처리되었습니다. · 감사합니다! 찻잔</string>
+    <string name="purchase_failed_code">구매 실패(코드 %1$d)</string>
+    <string name="billing_unavailable">결제 불가: %1$s</string>
+    <string name="product_not_found">제품을 찾을 수 없습니다. 인터넷 연결을 확인하세요.</string>
+    <string name="tip_celebrate_espresso_title">에스프레소 샷 배달 완료! 😄⚡</string>
+    <string name="tip_celebrate_latte_title">라떼 온! 🔥💛</string>
+    <string name="tip_celebrate_beans_title">당신은 전설입니다! 🔥🏆✨</string>
+    <string name="tip_celebrate_subtitle">정말 감사합니다. 방금 내 하루를 보냈어! 🙌</string>
+    <string name="google_play_store">구글 플레이 스토어</string>
+    <!-- Amazon IAP Tip Jar strings -->
+    <!-- Shown when AMAZON_IAP_ENABLED = false (feature not yet live on the Amazon Appstore) -->
+    <string name="billing_unavailable_amazon_msg">Amazon 기기에서는 인앱 팁 기능을 사용할 수 없습니다.</string>
+    <string name="billing_unavailable_amazon_coming_soon">Amazon Tip Jar가 곧 출시됩니다. 기다려주셔서 감사합니다! 찻잔</string>
+    <!-- Shown in txtLoading while Amazon product prices are being fetched -->
+    <string name="tip_jar_loading_amazon">Amazon Appstore에서 가격을 로드하는 중…</string>
+    <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
+    <string name="amazon_iap_error">Amazon 구매 오류: %1$s</string>
+    <string name="tile_hidden_with_name">\"%1$s\" 타일이 숨겨졌습니다.</string>
+
+    <!-- Folder Sync -->
+    <string name="sync_title">폴더 동기화</string>
+    <string name="sync_subtitle">네트워크 공유에 백업</string>
+
+    <!-- Generic -->
+    <string name="cancel">취소</string>
+    <string name="close">닫다</string>
+
+    <!-- SMB Network Discovery -->
+    <string name="smb_scan_title">SMB 호스트 검색</string>
+    <string name="smb_scan_searching">SMB 호스트에 대한 로컬 네트워크 검색 중...</string>
+    <string name="smb_scan_none_found">이 네트워크에서 SMB 호스트를 찾을 수 없습니다.</string>
+    <string name="smb_credentials_header">호스트에 연결</string>
+    <string name="smb_shares_title_generic">사용 가능한 주식</string>
+    <string name="smb_shares_loading">공유 로드 중...</string>
+    <string name="smb_shares_none">액세스 가능한 공유를 찾을 수 없습니다.</string>
+    <string name="smb_btn_connect">연결하다</string>
+    <string name="smb_cd_scan">SMB 호스트 검색</string>
+    <string name="smb_cd_browse_shares">사용 가능한 공유 찾아보기</string>
+    <string name="smb_error_max_connections">SMB 서버가 최대 연결 수에 도달했습니다. 나중에 다시 시도하거나 이 서버에서 다른 장치를 연결 해제하세요.</string>
+
+    <!-- NFS Error Messages -->
+    <string name="nfs_error_stale_handle">
+NFS 서버가 연결을 거부했습니다(부실 파일 핸들). 이는 일반적으로 서버에 권한 있는 포트가 필요함을 의미합니다. NFS 서버의 내보내기 구성에서 \"비보안\" 옵션을 활성화하여 Android 장치에서의 연결을 허용하세요.
+</string>
+    <string name="nfs_error_portmapper_unreachable">
+NFS 서버에서 Portmapper(포트 111)에 연결할 수 없습니다. Portmapper/rpcbind 서비스가 실행 중이고 포트 111이 방화벽에 열려 있는지 확인하세요.
+</string>
+    <string name="nfs_error_permission_denied">
+NFS 서버가 액세스를 거부했습니다. 내보내기 경로가 올바른지, 서버가 이 장치로부터의 연결을 허용하는지 확인하세요.
+</string>
+
+    <!-- Tile Reorder -->
+    <string name="tile_reorder_title">타일 ​​이동</string>
+    <string name="tile_move_up">▲ 위로 이동</string>
+    <string name="tile_move_down">▼ 아래로 이동</string>
+    <string name="tile_locked_toast">✦ 이 타일은 하단에 고정되어 이동할 수 없습니다.</string>
+
+    <!-- Tile Hide / Unhide -->
+    <string name="fab_hide_tile">타일 ​​숨기기</string>
+    <string name="cd_hide_tile">이 타일을 숨기려면 여기에 드롭하세요.</string>
+    <string name="hide_zone_label">타일을 숨기려면 여기로 드래그하세요.</string>
+    <string name="cd_manage_tiles">타일 ​​관리</string>
+    <string name="tile_hidden_snackbar">타일 ​​숨김 — 복원하려면 ⚙를 탭하세요.</string>
+    <string name="manage_tiles_title">타일 ​​관리</string>
+    <string name="manage_tiles_hidden_section">숨겨진 타일</string>
+    <string name="manage_tiles_visible_section">보이는 타일</string>
+    <string name="manage_tiles_restore">복원하다</string>
+    <string name="manage_tiles_restore_all">모두 복원</string>
+    <string name="manage_tiles_no_hidden">현재 숨겨진 타일이 없습니다.</string>
+    <string name="manage_tiles_restored_snackbar">타일 ​​복원됨</string>
+    <string name="manage_tiles_all_restored_snackbar">모든 타일이 복원되었습니다.</string>
+    <string name="tile_color_title">
+타일 ​​색상
+</string>
+    <string name="tile_color_ring">
+외부 링
+</string>
+    <string name="tile_color_icon_bg">
+아이콘 배경
+</string>
+    <string name="tile_color_tile_bg">
+타일 ​​배경
+</string>
+    <string name="tile_color_copy_to">
+복사 위치\\u2026
+</string>
+    <string name="tile_copy_title">
+타일에 색상 적용
+</string>
+    <string name="tile_copy_apply_selected">
+선택 항목에 적용
+</string>
+    <string name="tile_copy_apply_all">
+모두에게 적용
+</string>
+    <string name="tile_copy_select_all">
+모두 선택
+</string>
+    <string name="tile_copy_deselect_all">
+모두 선택 취소
+</string>
+    <string name="tile_copy_confirm_count">
+%d 타일이 업데이트됩니다.
+</string>
+    <string name="tile_copy_confirm_subtitle">
+다음과 같은 모습이 적용됩니다:
+</string>
+    <string name="tile_copy_confirm_apply">
+적용하다
+</string>
+    <string name="tile_copy_confirm_cancel">
+취소
+</string>
+    <string name="tile_color_custom">
+사용자 정의 색상
+</string>
+    <string name="tile_color_hue">
+색조
+</string>
+    <string name="tile_color_saturation">
+포화
+</string>
+    <string name="tile_color_brightness">
+명도
+</string>
+    <string name="tile_color_icon">
+상
+</string>
+    <string name="tile_color_preview_label">
+타일 ​​미리보기: %s
+</string>
+    <string name="tile_color_label">
+텍스트
+</string>
+    <string name="tile_color_reset">
+기본값으로 재설정
+</string>
+    <string name="tile_color_select_tile">
+타일을 탭하여 색상을 맞춤설정하세요.
+</string>
+    <string name="tile_color_title_select">
+색칠할 타일을 선택하세요.
+</string>
+    <string name="tile_color_message_select">
+선택을 누른 후 타일을 탭하면 색상 선택기가 열립니다.
+</string>
+    <string name="tile_color_button_select">
+타일 ​​선택
+</string>
+    <string name="tile_color_done">
+완료
+</string>
+    <string name="tile_color_cancel">
+취소
+</string>
+    <string name="tile_color_current">
+현재: %s
+</string>
+
+    <!-- Tile Color Export / Import Code -->
+    <string name="tile_color_export">
+내보내다
+</string>
+    <string name="tile_color_import">
+가져오기 코드
+</string>
+    <string name="tile_color_export_title">
+타일 ​​색상 공유
+</string>
+    <string name="tile_color_import_title">
+타일 ​​색상 가져오기
+</string>
+    <string name="tile_color_import_hint">
+여기에 UFM Pro 색상 코드를 붙여넣으세요...
+</string>
+    <string name="tile_color_import_invalid">
+유효하지 않거나 변조된 코드 - UFM 생성 코드만 허용됩니다.
+</string>
+    <string name="tile_color_export_copy">
+코드 복사
+</string>
+    <string name="tile_color_export_copied">
+복사되었습니다!
+</string>
+    <string name="tile_color_import_apply">
+색상 적용
+</string>
+    <string name="tile_color_code_icon">
+상
+</string>
+    <string name="tile_color_code_tile_bg">
+타일 ​​배경
+</string>
+    <string name="tile_color_code_ring">
+외부 링
+</string>
+    <string name="tile_color_code_icon_bg">
+아이콘 배경
+</string>
+    <string name="tile_color_code_label">
+텍스트
+</string>
+    <string name="tile_color_export_none">
+색상 없음
+</string>
+    <string name="tile_color_code_copied_toast">
+색상 코드가 클립보드에 복사되었습니다.
+</string>
+    <string name="tile_color_export_desc_tv">
+동일한 타일 색상을 적용하려면 이 코드를 다른 장치와 공유하세요.
+</string>
+    <string name="tile_color_export_desc_mobile">
+이 코드를 공유하면 다른 기기에서도 동일한 타일 색상을 적용할 수 있습니다.
+</string>
+    <string name="tile_color_code_clipboard_label">
+UFM 색상 코드
+</string>
+    <string name="tile_color_preview_example_label">
+예시 라벨
+</string>
+    <string name="tile_color_preview_example_subtitle">
+예시 부제
+</string>
+
+    <!-- Tile Icons -->
+    <string name="tile_icon_title">
+상
+</string>
+    <string name="tile_icon_pick_builtin">
+내장 아이콘
+</string>
+    <string name="tile_icon_browse">
+파일 찾아보기…
+</string>
+    <string name="tile_icon_reset_default">
+기본
+</string>
+    <string name="tile_icon_file_too_large">
+파일이 너무 큽니다. 최대 1MB.
+</string>
+    <string name="tile_icon_invalid_file">
+이미지를 로드할 수 없습니다.
+</string>
+    <string name="tile_icon_picker_title">
+아이콘 파일 선택
+</string>
+    <string name="tile_icon_saved">
+아이콘이 설정되었습니다.
+</string>
+
+    <!-- Storage Indexer -->
+    <string name="storage_indexer_title">스토리지 인덱서</string>
+    <string name="storage_indexer_subtitle">모든 드라이브에 대한 파일 인덱싱 관리</string>
+    <string name="storage_indexer_detail_title">인덱서 세부정보</string>
+    <string name="storage_indexer_delete_records">색인화된 레코드 삭제</string>
+    <string name="storage_indexer_not_now">이 저장소 무시(지금은 아님)</string>
+    <string name="storage_indexer_delete_confirm_title">색인화된 레코드를 삭제하시겠습니까?</string>
+    <string name="storage_indexer_delete_confirm_message">이렇게 하면 이 저장소에 대한 모든 색인화된 파일 기록이 제거됩니다. 엄청나게 빠른 로딩을 위해서는 다시 인덱싱해야 합니다.</string>
+    <string name="storage_indexer_mark_not_now_message">이 저장소를 \"지금 아님\"으로 표시하면 브라우저에서 열 때 색인을 생성하라는 메시지가 더 이상 표시되지 않습니다.</string>
+    <string name="storage_indexer_indexed_count">%1$s 색인화된 레코드</string>
+    <string name="storage_indexer_status_ready">완전히 색인화됨 ⚡</string>
+    <string name="storage_indexer_status_never">색인이 생성되지 않음</string>
+    <string name="storage_indexer_premium_title">프리미엄 기능: 빠른 인덱싱</string>
+    <string name="storage_indexer_premium_message">이 저장소를 인덱싱하면 즉시 검색하고 더 빠르게 탐색할 수 있습니다. 지금 활성화하시겠습니까?</string>
+    <string name="storage_indexer_btn_continue">계속하다</string>
+    <string name="storage_indexer_btn_exit">출구</string>
+    <string name="storage_indexer_reminder_title">인덱싱 비활성화됨</string>
+    <string name="storage_indexer_reminder_message">설정 -&gt; 스토리지 인덱서로 이동하여 언제든지 이 드라이브에 대한 인덱싱을 활성화할 수 있습니다.</string>
+    <string name="btn_ok">좋아요</string>
+
+    <!-- Compression & Archives -->
+    <string name="action_compress">압박 붕대</string>
+    <string name="compress_title">압축 선택</string>
+    <string name="compress_format">아카이브 형식</string>
+    <string name="compress_password_protect">비밀번호 보호</string>
+    <string name="compress_password_hint">비밀번호를 입력하세요</string>
+    <string name="compress_password_confirm_hint">비밀번호 확인</string>
+    <string name="compress_password_mismatch">비밀번호가 일치하지 않습니다.</string>
+    <string name="compress_password_too_short">비밀번호가 너무 짧습니다(최소 4자).</string>
+    <string name="compress_destination">목적지 선택</string>
+    <string name="compress_btn_start">압박 붕대</string>
+    <string name="compress_filename_label">아카이브 파일 이름</string>
+    <string name="compress_filename_hint">아카이브 이름을 입력하세요</string>
+    <string name="compress_filename_empty">파일 이름은 비워둘 수 없습니다.</string>
+    <string name="compress_progress_title">압축 중...</string>
+    <string name="compress_success">생성된 아카이브: %1$s</string>
+    <string name="compress_error">압축 실패: %1$s</string>
+
+    <!-- Image Compression -->
+    <string name="action_compress_image">
+이미지 압축
+</string>
+    <string name="compress_image_title">
+이미지 압축
+</string>
+    <string name="compress_image_count">
+%1$d 이미지가 선택됨
+</string>
+    <string name="compress_image_quality">
+품질
+</string>
+    <string name="compress_image_resize">
+크기 조정
+</string>
+    <string name="compress_image_width">
+너비
+</string>
+    <string name="compress_image_height">
+키
+</string>
+    <string name="compress_image_format">
+출력 형식
+</string>
+    <string name="compress_image_format_original">
+원본 유지
+</string>
+    <string name="compress_image_output">
+출력 위치
+</string>
+    <string name="compress_image_output_same">
+같은 폴더
+</string>
+    <string name="compress_image_btn_compress">
+압박 붕대
+</string>
+    <string name="compress_image_progress">
+%2$d 중 %1$d 압축 중…
+</string>
+    <string name="compress_image_complete">
+압축 완료
+</string>
+    <string name="compress_image_result">
+%1$s → %2$s (%3$d%% 저장됨)
+</string>
+    <string name="compress_image_total_saved">
+전체: %1$s → %2$s (%3$d%% 저장됨)
+</string>
+    <string name="compress_image_no_images">
+선택한 이미지 파일이 없습니다.
+</string>
+    <string name="compress_image_error">
+%1$s 압축 오류: %2$s
+</string>
+    <string name="use_this_folder_image">
+이 폴더를 사용하세요
+</string>
+    <string name="archive_password_required">이 아카이브는 비밀번호로 보호되어 있습니다</string>
+    <string name="change">
+변화
+</string>
+    <string name="archive_invalid_password">잘못된 비밀번호</string>
+    <string name="archive_extract_all">모두 추출</string>
+    <string name="archive_extracting">적출...</string>
+    <string name="archive_extract_success">%1$s로 추출됨</string>
+    <string name="archive_extract_error">추출 실패</string>
+    <string name="extract_location_title">추출 위치 선택</string>
+    <string name="extract_location_body">콘텐츠가 추출될 폴더를 선택합니다.</string>
+    <string name="extract_set_location">추출 위치 설정</string>
+
+    <!-- Main Menu Layout Settings -->
+    <string name="settings_main_menu_layout_title">메인 메뉴 레이아웃</string>
+    <string name="settings_main_menu_layout_subtitle">목록 또는 그리드 보기</string>
+    <string name="layout_list">목록</string>
+    <string name="layout_grid">그리드</string>
+    <string name="column_count">열</string>
+    <string name="columns_4">4개의 칼럼</string>
+    <string name="columns_3">3개의 칼럼</string>
+
+    <!-- Long Press Duration Settings -->
+    <string name="settings_long_press_title">편집 모드 보류 기간</string>
+    <string name="settings_long_press_subtitle">편집 모드로 들어가기 위해 타일을 유지하는 데 걸리는 시간</string>
+
+    <string name="settings_toolbar_icons_title">
+길게 누르기 도구 모음 아이콘
+</string>
+    <string name="settings_toolbar_icons_subtitle">
+선택 작업 표시줄 사용자 정의
+</string>
+    <string name="long_press_duration_seconds">%1$.1f초</string>
+    <string name="long_press_duration_value">%1$.1f초</string>
+    <string name="long_press_faster">더 빠르게(0.5초)</string>
+    <string name="long_press_slower">더 느리게(5.0초)</string>
+    <string name="long_press_hint">이 시간 동안 메인 화면의 타일을 누르고 있으면 타일 편집 모드로 들어가 타일을 재배열하거나 숨길 수 있습니다.</string>
+    <string name="long_press_decrease">보유 기간 감소</string>
+    <string name="long_press_increase">보유 기간 증가</string>
+    <string name="save">구하다</string>
+
+    <!-- ADB Terminal -->
+    <string name="adb_terminal_title">ADB 터미널</string>
+    <string name="adb_terminal_subtitle">ADB를 통해 쉘 명령 실행</string>
+    <string name="adb_terminal_status_disconnected">연결이 끊김</string>
+    <string name="adb_terminal_status_connected">연결됨</string>
+    <string name="adb_terminal_status_connecting">연결 중...</string>
+    <string name="adb_terminal_connect">연결하다</string>
+    <string name="adb_terminal_disconnect">연결 끊기</string>
+    <string name="adb_terminal_send">보내다</string>
+    <string name="adb_terminal_hint">명령을 입력하세요...</string>
+    <string name="adb_pairing_title">ADB 페어링 필요</string>
+    <string name="adb_pairing_steps">자리 표시자</string>
+    <string name="adb_port_label">포트(예: 37815)</string>
+    <string name="adb_pin_label">6자리 PIN</string>
+    <string name="adb_scan_devices">장치 검색</string>
+    <string name="adb_pairing_error">연결에 실패했습니다. 포트/PIN을 확인하고 무선 디버깅이 활성화되어 있는지 확인하세요.</string>
+    <string name="adb_status_awaiting">연결하려는 기기에서 승인을 기다리는 중...</string>
+    <string name="adb_status_denied">원격 장치에 의해 연결이 거부되었습니다.</string>
+    <string name="adb_status_approved">연결이 승인되었습니다!</string>
+    <string name="adb_shell_closed">셸 닫힘: %1$s</string>
+    <string name="adb_pairing">ADB 페어링</string>
+    <string name="scanning">스캐닝...</string>
+    <string name="devices_detected_0">감지된 장치: 0</string>
+    <string name="select_device">장치 선택</string>
+    <string name="s_5555">5555</string>
+    <string name="connect_without_pin">PIN 없이 연결</string>
+    <string name="use_pin_pairing">PIN 사용(페어링)</string>
+    <string name="pair_and_connect">페어링 및 연결</string>
+    <string name="connect_to_android_device">안드로이드 기기에 연결</string>
+    <string name="search_apps">앱 검색...</string>
+    <string name="no_apps_found">앱을 찾을 수 없습니다.</string>
+    <string name="paired_tvs">페어링된 TV</string>
+    <string name="manage_tv_connections">TV 연결 관리</string>
+    <string name="no_devices_paired_yetntap_to">아직 페어링된 기기가 없습니다.\n+를 눌러 TV를 연결하세요.</string>
+    <string name="paired_phones">페어링된 휴대폰</string>
+    <string name="rename_tv">TV 이름 바꾸기</string>
+    <string name="link_mobile_app">모바일 앱 연결</string>
+    <string name="manage_connected_phones_or_tablets">연결된 휴대폰 또는 태블릿 관리</string>
+    <string name="no_devices_connected">연결된 기기 없음</string>
+    <string name="tv_pairing_title">모바일 앱 연결</string>
+    <string name="bt_remote_volume_guidance_title">전화 볼륨 조절</string>
+    <string name="bt_remote_volume_guidance_message">활성화되면 휴대폰의 하드웨어 볼륨 버튼이 TV 볼륨을 제어합니다. 화면 볼륨 버튼은 숨겨지지만 음소거는 계속 사용할 수 있습니다.</string>
+    <string name="bt_remote_volume_guidance_dont_show">다시 표시하지 않음</string>
+    <string name="tv_pairing_subtitle">모바일 장치를 사용하여 TV를 연결하세요</string>>
+    <string name="tv_pairing_step1">1. 휴대폰에서 \'페어링된 TV\'로 이동하세요.</string>
+    <string name="tv_pairing_step2">2. 오른쪽 상단의 \"+\" 아이콘을 클릭하여 &lt;font color=\'#0284C7\'&gt;%1$s&lt;/font&gt;를 검색하세요.</string>
+    <string name="tv_pairing_step3">3. &lt;font color=\'#0284C7\'&gt;%1$s&lt;/font&gt;을 선택하세요.</string>
+    <string name="tv_pairing_step4">4. 아래 표시된 코드를 입력하세요.</string>
+    <string name="tv_pairing_step5">5. 코드를 입력한 후 \"링크\"를 누르세요.</string>
+    <string name="tv_pairing_waiting">페어링을 기다리는 중…</string>
+    <string name="tv_pairing_linked">%s과(와) 연결됨</string>
+    <string name="type_here_to_search">검색하려면 여기에 입력하세요.</string>
+    <string name="a">에이</string>
+    <string name="hello_world">안녕하세요 월드!</string>
+    <string name="view_mode">보기 모드</string>
+    <string name="single_column_list_view">단일 열 목록 보기</string>
+    <string name="multicolumn_grid_view">다중 열 그리드 보기</string>
+    <string name="clipboard">클립보드</string>
+    <string name="clear_all">모두 지우기</string>
+    <string name="paste_here">여기에 붙여넣으세요</string>
+    <string name="thirdparty_library_attributions">타사 라이브러리 속성</string>
+    <string name="legal_amp_policy">법률 및 정책</string>
+    <string name="please_review_the_terms_before">계속하기 전에 약관을 검토하세요.</string>
+    <string name="terms_amp_conditions">이용약관</string>
+    <string name="privacy_policy">개인 정보 보호 정책</string>
+    <string name="welcome_to_ultimate_file_manager">Ultimate File Manager Pro에 오신 것을 환영합니다.</string>
+    <string name="legal_requirements">법적 요구사항</string>
+    <string name="please_review_and_accept_our">계속하기 전에 정책을 검토하고 동의하시기 바랍니다.</string>
+    <string name="required">필수의</string>
+    <string name="read_and_approve_the_policies">계속하려면 정책을 읽고 승인하세요.</string>
+    <string name="file_name">파일 이름</string>
+    <string name="select_this_folder">이 폴더를 선택하세요</string>
+    <string name="empty_folder">빈 폴더</string>
+    <string name="some_storages_are_not_indexed">일부 저장소는 인덱싱되지 않습니다. 검색이 느릴 수 있습니다.</string>
+    <string name="notice_some_storage_areas_are">주의 사항: 일부 저장 영역은 색인이 생성되지 않습니다.</string>
+    <string name="show_hidden_files">숨겨진 파일 표시</string>
+    <string name="hidden_files_are_not_visible">숨겨진 파일은 보이지 않습니다</string>
+    <string name="settings_media_thumbnails_title">미디어 썸네일</string>
+    <string name="settings_media_thumbnails_subtitle_on">활성화됨 — 이미지 및 비디오에 미리보기가 표시됩니다.</string>
+    <string name="settings_media_thumbnails_subtitle_off">비활성화됨 — 일반 아이콘이 표시됩니다.</string>
+    <string name="video_thumbnail_time_title">
+비디오 썸네일 시간
+</string>
+    <string name="video_thumbnail_time_subtitle">
+비디오 썸네일에 사용할 프레임 선택
+</string>
+    <string name="vtt_percent_0">
+첫 번째 프레임(0%)
+</string>
+    <string name="vtt_percent_10">
+비디오에 10%
+</string>
+    <string name="vtt_percent_25">
+비디오에 25%
+</string>
+    <string name="vtt_percent_50">
+비디오에 50%
+</string>
+    <string name="vtt_percent_75">
+비디오에 75%
+</string>
+    <string name="done">완료</string>
+    <string name="select_a_storage_device_to">파일을 탐색하려면 저장 장치를 선택하세요.</string>
+    <string name="storage_details">스토리지 세부정보</string>
+    <string name="edit_sync_profile">동기화 프로필 편집</string>
+    <string name="profile_name_eg_dcim_backup">프로필 이름(예: DCIM 백업)</string>
+    <string name="source_phone">출처(전화)</string>
+    <string name="not_selected">선택되지 않음</string>
+    <string name="select_folder">폴더 선택</string>
+    <string name="use_folder_as_default_location">\"%1$s\"를 기본 위치로 사용하시겠습니까?</string>
+    <string name="use_network_folder_as_default_location">네트워크 폴더 \"%1$s\"을(를) 기본 위치로 사용하시겠습니까?</string>
+    <string name="destination_network_share">대상(네트워크 공유)</string>
+    <string name="select_share">공유를 선택하세요</string>
+    <string name="remote_folder">원격 폴더</string>
+    <string name="browse_remote">원격 찾아보기</string>
+    <string name="settings">설정</string>
+    <string name="every_x_minshrs">X분/시간마다</string>
+    <string name="scheduled_time">예정된 시간</string>
+    <string name="sync_frequency">동기화 빈도</string>
+    <string name="repeat">반복하다</string>
+    <string name="day_of_week">요일</string>
+    <string name="day_of_month">날짜</string>
+    <string name="sync_time">동기화 시간</string>
+    <string name="show_sync_notifications">동기화 알림 표시</string>
+    <string name="delete_1">삭제</string>
+    <string name="save_profile">프로필 저장</string>
+    <string name="folder_sync">폴더 동기화</string>
+    <string name="backup_sync_between_mobile_and">모바일과 네트워크 간의 백업 동기화</string>
+    <string name="automatic_folder_sync">자동 폴더 동기화</string>
+    <string name="keep_your_important_files_backed">중요한 파일을 자동으로 백업하세요. 폴더 동기화는 선택한 전화 폴더가 네트워크 공유에 안전하게 동기화되도록 백그라운드에서 실행됩니다.</string>
+    <string name="sync_from_any_phone_folder">모든 전화 폴더에서 동기화</string>
+    <string name="backup_to_smb_or_ftp">SMB 또는 FTP 공유에 백업</string>
+    <string name="set_your_own_schedule">나만의 일정 설정</string>
+    <string name="add_profile">프로필 추가</string>
+    <string name="setup">설정</string>
+    <string name="grant_permissions">권한 부여</string>
+    <string name="setup_1">설정</string>
+    <string name="grant_all_required_permissions_to">계속하려면 필요한 모든 권한을 부여하세요.</string>
+    <string name="extract_all">모두 추출</string>
+    <string name="tap_a_tile_to_open">타일을 탭하여 엽니다. · 복원을 탭하여 메인 화면에 표시합니다.</string>
+    <string name="port">포트</string>
+    <string name="use_pin">PIN 사용</string>
+    <string name="zip">지퍼</string>
+    <string name="s_7z">7Z</string>
+    <string name="optimizing_storage">스토리지 최적화</string>
+    <string name="we_are_indexing_your_files">즉각적인 검색과 매우 빠른 탐색을 위해 파일을 색인화하고 있습니다.</string>
+    <string name="indexed_0_files">색인화된 파일 0개</string>
+    <string name="run_in_background">백그라운드에서 실행</string>
+    <string name="select_a_tile_ok_to">타일 ​​선택 · 작업을 선택하려면 확인</string>
+    <string name="open">열려 있는</string>
+    <string name="cancel_1">취소</string>
+    <string name="restore">복원하다</string>
+    <string name="enter_the_4digit_pin_shown">TV에 표시된 4자리 PIN을 입력하세요.</string>
+    <string name="set_access_pin">액세스 PIN 설정</string>
+    <string name="enter_a_4digit_pin">4자리 PIN을 입력하세요.</string>
+    <string name="change_pin">PIN 변경</string>
+    <string name="use_recovery_code">복구 코드 사용</string>
+    <string name="s_0_16">0 / 16</string>
+    <string name="hey_got_a_minute">잠깐 시간 좀 있어? 😊</string>
+    <string name="youve_been_using_the_app">귀하는 한동안 이 앱을 사용해 왔으며 이는 우리에게 큰 의미가 있습니다. 마음에 드셨다면 빠른 평가를 통해 다른 사람들이 해당 콘텐츠를 발견하는 데 큰 도움이 됩니다. 단 1초도 걸리지 않습니다!</string>
+    <string name="rate_the_app">⭐ 앱 평가</string>
+    <string name="maybe_later">🕐 나중에</string>
+    <string name="no_thanks">✖ 아니요, 감사합니다</string>
+    <string name="theres_also_a_tiny_coffee">🔥 프로젝트를 지원하고 싶다면 작은 커피 기금도 있습니다.</string>
+    <string name="no_thanks_1">✖ 아니요, 감사합니다</string>
+    <string name="copying_files">파일 복사 중…</string>
+    <string name="item_00">항목 0/0</string>
+    <string name="filenameext">파일 이름.ext</string>
+    <string name="s_0_mb_0_mb_0">0MB / 0MB(0%)</string>
+    <string name="tv_edit_mode">TV 편집 모드</string>
+    <string name="ok">좋아요</string>
+    <string name="short_press_to_hide_tile">타일을 숨기려면 짧게 누르기</string>
+    <string name="long_ok">오랫동안 알았어</string>
+    <string name="long_press_to_move_tile">타일을 이동하려면 길게 누르세요.</string>
+    
+    <!-- Network Thumbnails -->
+    <string name="settings_network_thumbnails_title">네트워크 축소판</string>
+    <string name="settings_network_thumbnails_subtitle">클라우드 및 네트워크 스토리지를 위한 지속적인 캐싱</string>
+    <string name="nt_enable_title">원격 썸네일 활성화</string>
+    <string name="nt_enable_desc">네트워크 공유, Google Drive 및 OneDrive에 있는 파일의 썸네일을 생성하고 캐시합니다.</string>
+    <string name="nt_cache_limit_title">캐시 크기 제한</string>
+    <string name="nt_cache_limit_desc">썸네일 캐싱에 사용할 최대 저장 공간입니다.</string>
+    <string name="nt_cache_folder_title">캐시 디렉토리</string>
+    <string name="nt_cache_folder_desc">썸네일 캐시 파일을 저장할 위치(내부 또는 SD 카드)를 선택합니다.</string>
+    <string name="nt_clear_cache_title">모든 캐시 지우기</string>
+    <string name="nt_clear_cache_desc">캐시된 썸네일을 모두 삭제하고 매핑 데이터베이스를 재설정합니다.</string>
+    <string name="nt_clear_cache_confirm_title">캐시를 지우시겠습니까?</string>
+    <string name="nt_clear_cache_confirm_msg">이렇게 하면 네트워크 드라이브에 대해 캐시된 모든 썸네일이 영구적으로 삭제됩니다. 탐색하는 동안 해당 항목이 다시 생성됩니다.</string>
+    <string name="nt_stats_title">캐시 통계</string>
+    <string name="nt_stats_size">현재 사용량: %1$s / %2$dMB</string>
+    <string name="nt_folder_not_selected">선택한 디렉터리가 없습니다.</string>
+    <string name="nt_select_folder">캐시 폴더 선택</string>
+    <string name="nt_limit_500mb">500MB</string>
+    <string name="nt_limit_1gb">1GB</string>
+    <string name="nt_limit_2gb">2GB</string>
+    <string name="nt_limit_5gb">5GB</string>
+
+    <string name="got_it">알았어요</string>
+    <string name="decrypting_00">0/0 해독 중…</string>
+    <string name="extracted_str">•</string>
+    <string name="extracted_str_1">›</string>
+    <string name="connect">연결하다</string>
+    <string name="disconnect">연결 끊기</string>
+    <string name="s_45_gb_128_gb">45GB / 128GB</string>
+    <string name="s_new">새로운</string>
+    <string name="ready_for_indexing">인덱싱 준비 완료</string>
+    <string name="s_0_files_indexed">색인이 생성된 파일 0개</string>
+    <string name="never_indexed">색인이 생성되지 않음</string>
+    <string name="sort_by">정렬 기준</string>
+    <string name="app_name_1">Ultimate File Manager Pro</string>
+    <string name="app_size">앱 크기</string>
+    <string name="install_date">설치 날짜</string>
+    <string name="order">주문하다</string>
+    <string name="ascending">오름차순</string>
+    <string name="descending">내림차순</string>
+    <string name="apply">적용하다</string>
+    <string name="sort_by_1">정렬 기준</string>
+    <string name="filter">필터</string>
+    <string name="please_fill_all_required_fields">필수 입력란을 모두 작성해 주세요.</string>
+    <string name="please_select_a_network_share">먼저 네트워크 공유를 선택하세요.</string>
+    <string name="preparing_installation">설치 준비 중...</string>
+    <string name="installation_failed">설치 실패</string>
+    <string name="unknown_error">알 수 없는 오류</string>
+    <string name="error_failed_open_uri">Uri를 열지 못했습니다.</string>
+    <string name="error_no_apk_in_archive">아카이브 내부에 APK 파일이 없습니다.</string>
+    <string name="error_no_splits_matched">필터링 후 일치하는 APK 분할이 없습니다.</string>
+    <string name="error_staging_failed">파일을 준비하지 못했습니다: %1$s</string>
+    <string name="error_trigger_install_failed">설치를 트리거하지 못했습니다.</string>
+    <string name="error_not_apk_xapk">XAPK/APKS 파일이 아닙니다.</string>
+    <string name="error_not_apk">APK 파일이 아닙니다.</string>
+    <string name="error_job_not_found">채용정보를 찾을 수 없습니다.</string>
+    <string name="error_manifest_not_found">Manifest.json 없음(APKS 형식에는 메타데이터가 없음)</string>
+    <string name="error_parse_failed">구문 분석 실패</string>
+    <string name="error_read_failed">읽기 실패</string>
+    <string name="error_install_unknown_apps_instruction">\"\"알 수 없는 앱 설치\"는 UFM에 대해 활성화되어 있지 않습니다. 설정 화면이 열렸습니다. 활성화하고 다시 시도하십시오.\"</string>
+    <string name="error_install_unknown_apps_remote_instruction">\"\"알 수 없는 앱 설치\"가 UFM에 대해 활성화되어 있지 않습니다. 장치에 설정 화면이 열렸습니다. 거기서 활성화한 다음 다시 시도하세요.\"</string>
+    <string name="notif_apk_ready_title">APK 설치 준비 완료</string>
+    <string name="notif_apk_ready_desc">기기에 설치를 확인하려면 탭하세요.</string>
+    <string name="notif_channel_apk_install_name">APK 설치</string>
+    <string name="notif_channel_apk_install_desc">원격 파일 관리자에서 APK 설치를 확인하라는 메시지를 표시합니다.</string>
+    <string name="error_no_apk_in_xapk">XAPK 내부에 APK 파일이 없습니다.</string>
+    <string name="error_no_splits_extracted">XAPK에서 추출된 APK 분할이 없습니다.</string>
+    <string name="error_missing_path">누락된 경로</string>
+    <string name="error_file_not_found">파일을 찾을 수 없습니다</string>
+    <string name="error_missing_job_id">누락된 작업 ID</string>
+    <string name="error_missing_filename">파일 이름이 없습니다.</string>
+    <string name="error_no_file_uploaded">업로드된 파일이 없습니다.</string>
+    <string name="sync_triggered_locally_background_job">동기화가 로컬에서 실행되었습니다. 백그라운드 작업이 대기열에 추가되었습니다.</string>
+    <string name="no_adb_devices_found">ADB 장치를 찾을 수 없습니다.</string>
+    <string name="scan_failed_emessage">스캔 실패: %1$s</string>
+    <string name="please_enter_a_6digit_pin">6자리 PIN을 입력하세요.</string>
+    <string name="linked_with_newdevice">%1$s과(와) 연결됨</string>
+    <string name="connection_failed_make_sure_the">연결에 실패했습니다. 다른 장치가 온라인 상태인지 확인하세요.</string>
+    <string name="generating_pin">PIN 생성 중…</string>
+    <string name="tv_renamed_to_newname">TV 이름이 %1$s로 변경되었습니다.</string>
+    <string name="no_tvs_found_make_sure">TV를 찾을 수 없습니다. TV에 앱이 열려 있는지 확인하세요.</string>
+    <string name="please_enter_all_4_digits">4자리를 모두 입력해주세요.</string>
+    <string name="paired_successfully">성공적으로 페어링되었습니다!</string>
+    <string name="pairing_failed_incorrect_pin">페어링에 실패했습니다. PIN이 잘못되었나요?</string>
+    <string name="copied_all_output_to_clipboard">모든 출력을 클립보드에 복사했습니다.</string>
+    <string name="connect_to_adb_first">먼저 ADB에 연결</string>
+    <string name="no_adb_devices_found_on">네트워크에서 ADB 장치를 찾을 수 없습니다.</string>
+    <string name="back">뒤쪽에</string>
+    <string name="refresh_debloat_list">Debloat 목록 새로 고침</string>
+    <string name="toggle_options">토글 옵션</string>
+    <string name="sort_and_filter">정렬 및 필터링</string>
+    <string name="search">찾다</string>
+    <string name="hide">숨다</string>
+    <string name="unhide">숨기기 해제</string>
+    <string name="new_folder">새 폴더</string>
+    <string name="rotate_left">왼쪽으로 회전</string>
+    <string name="rotate_right">오른쪽으로 회전</string>
+    <string name="image_preview">이미지 미리보기</string>
+    <string name="pan_left">왼쪽으로 이동</string>
+    <string name="pan_up">위로 이동</string>
+    <string name="pan_down">아래로 이동</string>
+    <string name="pan_right">오른쪽으로 이동</string>
+    <string name="zoom_in">확대</string>
+    <string name="zoom_out">축소</string>
+    <string name="fit_to_screen">화면에 맞추기</string>
+    <string name="audio">오디오</string>
+    <string name="rewind_10_seconds">10초 되감기</string>
+    <string name="play_pause">재생/일시 정지</string>
+    <string name="forward_10_seconds">10초 앞으로</string>
+    <!-- Audio & Subtitle Track Selection -->
+    <string name="audio_track">
+오디오 트랙
+</string>
+    <string name="subtitles">
+자막
+</string>
+    <string name="subtitles_off">
+끄다
+</string>
+    <string name="no_subtitles_available">
+자막이 없습니다
+</string>
+    <string name="no_alternate_audio">
+대체 오디오 트랙 없음
+</string>
+    <string name="track_embedded">
+임베디드
+</string>
+    <string name="track_srt">
+SRT
+</string>
+    <string name="track_vtt">
+VTT
+</string>
+    <string name="track_ass">
+나귀
+</string>
+    <string name="subtitle_rendering">
+자막 렌더링
+</string>
+    <string name="icon">상</string>
+    <string name="show_hidden_files_1">숨겨진 파일 표시</string>
+    <string name="database_viewer">데이터베이스 뷰어</string>
+    <string name="select_storage">스토리지 선택</string>
+    <string name="remove_from_clipboard">클립보드에서 제거</string>
+    <string name="favorite_icon">즐겨찾는 아이콘</string>
+    <string name="remove_favorite">즐겨찾기 제거</string>
+    <string name="pdf_page">PDF 페이지</string>
+    <string name="hide_tile">타일 ​​숨기기</string>
+    <string name="file_icon">파일 아이콘</string>
+    <string name="blazingfast_browsing">⚡ 눈부시게 빠른 탐색</string>
+    <string name="continue_anyway">계속 진행</string>
+    <string name="compress_here">여기에 압축하시겠습니까?</string>
+    <string name="confirm_sync_folder">동기화 폴더 확인</string>
+    <string name="compressing_network_files">네트워크 파일 압축</string>
+    <string name="transferring_files">파일 전송 중</string>
+    <string name="usb_debugging_required">USB 디버깅 필요</string>
+
+    <string name="take_screenshot">스크린샷 찍기</string>
+
+    <!-- TV Remote -->
+    <string name="tv_remote">원격</string>
+    <string name="tv_remote_title">TV 리모콘</string>
+    <string name="tv_remote_subtitle">
+Bluetooth 또는 WiFi를 통해 TV 제어
+</string>
+    <string name="tv_remote_connected_to">%1$s에 연결됨</string>
+    <string name="tv_remote_connecting">%1$s에 연결 중…</string>
+    <string name="tv_remote_failed">TV 리모컨에 연결하지 못했습니다.</string>
+    <string name="tv_remote_adb_required">리모컨을 사용하려면 TV에서 ADB(USB 디버깅)가 활성화되어 있어야 합니다.\n\n활성화하려면:\n1. TV에서 설정을 엽니다.\n2. 장치 기본 설정 &gt; 개발자 옵션으로 이동합니다.\n3. \"USB 디버깅\" 활성화</string>
+    <string name="tv_remote_not_paired">이 TV는 아직 ADB와 페어링되지 않았습니다. 먼저 메인 화면에서 페어링해주세요.</string>
+    <string name="tv_remote_disconnected">원격 연결이 끊어졌습니다.</string>
+    <string name="tv_remote_reconnecting">다시 연결 중…</string>
+
+    <string name="use_this_folder">이 폴더 사용</string>
+    <string name="compressing">압축 중…</string>
+    <string name="saving">절약…</string>
+    <string name="extracted_str_2">✓</string>
+    <string name="extract_here">여기서 추출하시겠습니까?</string>
+    <string name="folder_not_supported">지원되지 않는 폴더</string>
+    <string name="confirm_source_folder">소스 폴더 확인</string>
+    <string name="compressing_uploading">압축 및 업로드</string>
+    <string name="compressing_files">파일 압축</string>
+    <string name="ufm_does_not_support_selecting">UFM은 시스템 선택기를 통해 이러한 폴더를 선택하는 것을 지원하지 않습니다.</string>
+    <string name="extract_here_1">여기서 추출하세요</string>
+    <string name="extract_contents_to_path">내용을 추출하여:\n\n%1$s</string>
+    <string name="use_folder_as_sync_source">다음 폴더를 동기화 소스로 사용하시겠습니까?\n\n%1$s</string>
+    <string name="processing">처리 중…</string>
+    <string name="code_must_be_exactly_16">코드는 정확히 16자여야 합니다.</string>
+    <string name="network_share_required">네트워크 공유 필요</string>
+    <string name="never_synced">동기화되지 않음</string>
+    <string name="scanning_0254_ips_scanned">검색 중… 0/254개의 IP가 검색되었습니다.</string>
+    <string name="rename_device">장치 이름 바꾸기</string>
+    <string name="remove_device">장치 제거</string>
+    <string name="searching_for_tvs">TV 검색 중…</string>
+    <string name="select_tv_to_link">연결할 TV를 선택하세요.</string>
+    <string name="enter_pin">PIN 입력</string>
+    <string name="looking_for_tvs_on_local">로컬 네트워크에서 TV를 찾는 중…</string>
+    <string name="save_here">여기에 저장하세요</string>
+    <!-- Share Receiver -->
+    <string name="share_receive_title">
+UFM에 저장
+</string>
+    <string name="share_receive_from">
+%s에서 파일 수신 중
+</string>
+    <string name="share_receive_select_destination">
+목적지 선택
+</string>
+    <string name="share_receive_save_here">
+여기에 저장
+</string>
+    <string name="share_receive_saving">
+파일 저장 중…
+</string>
+    <string name="share_receive_success">
+파일이 성공적으로 저장되었습니다.
+</string>
+    <string name="share_receive_error">
+파일을 저장하지 못했습니다.
+</string>
+    <string name="share_receive_confirm">
+%s에 파일을 저장하시겠습니까?
+</string>
+    <string name="share_receive_browse">
+찾아보기 &amp; 폴더 선택
+</string>
+    <string name="share_receive_selected">
+목적지: %s
+</string>
+    <string name="share_receive_save_to_path">
+%s에 저장
+</string>
+    <string name="share_receive_multiple_files">
+%d 파일
+</string>
+    <string name="choose_a_volume_to_browse">찾아볼 볼륨을 선택하세요</string>
+    <string name="unable_to_decode_image">이미지를 디코딩할 수 없습니다.</string>
+    <string name="folder">접는 사람</string>
+
+    <!-- Recycle Bin -->
+    <string name="recycle_bin_title">
+휴지통
+</string>
+    <string name="recycle_bin_empty">
+휴지통이 비어 있습니다.
+</string>
+    <string name="recycle_bin_restore">
+복원하다
+</string>
+    <string name="recycle_bin_delete_perm">
+영구적으로 삭제
+</string>
+    <string name="recycle_bin_clear_title">
+휴지통을 비우시겠어요?
+</string>
+    <string name="recycle_bin_clear_confirm">
+%d 파일이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.
+</string>
+    <string name="recycle_bin_cleared">
+%d 파일이 영구적으로 삭제되었습니다.
+</string>
+    <string name="recycle_bin_restored_count">
+%d 파일이 복원되었습니다.
+</string>
+    <string name="recycle_bin_deleted_count">
+%d 파일이 영구적으로 삭제되었습니다.
+</string>
+    <string name="recycle_bin_delete_perm_title">
+영구적으로 삭제하시겠습니까?
+</string>
+    <string name="recycle_bin_delete_perm_confirm">
+%d 파일이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없습니다.
+</string>
+    <string name="recycle_bin_file_missing">
+파일이 더 이상 휴지통에 존재하지 않습니다.
+</string>
+    <string name="recycle_bin_network_restore_hint">
+복원을 사용하여 파일을 원래 위치로 되돌리기
+</string>
+    <string name="recycle_bin_share_offline">
+저장소가 오프라인 상태입니다. 복원하거나 삭제할 수 없습니다.
+</string>
+    <string name="recycle_bin_move_confirm">
+%d 파일을 휴지통으로 이동하시겠습니까?
+</string>
+    <string name="recycle_bin_move_success">
+%d 파일이 휴지통으로 이동되었습니다.
+</string>
+    <string name="move_to_bin">
+빈으로 이동
+</string>
+    <string name="settings_recycle_bin">
+휴지통
+</string>
+    <string name="settings_recycle_bin_summary">
+삭제된 파일을 영구삭제 대신 휴지통으로 이동
+</string>
+    <string name="opening_recycle_bin">
+휴지통 열기
+</string>
+    <string name="recycle_bin_expires_in">
+%d일 후에 만료됩니다.
+</string>
+    <string name="recycle_bin_expires_today">
+오늘 만료됨
+</string>
+    <string name="recycle_bin_expired">
+삭제 대기 중
+</string>
+    <string name="recycle_bin_auto_delete">
+자동 삭제
+</string>
+    <string name="recycle_bin_auto_delete_duration">
+자동 삭제 기간
+</string>
+    <string name="recycle_bin_auto_delete_disabled">
+장애가 있는
+</string>
+    <string name="recycle_bin_auto_delete_days">
+%d일
+</string>
+    <string name="recycle_bin_auto_delete_subtitle">
+이보다 오래된 파일은 영구적으로 삭제됩니다.
+</string>
+    <string name="recycle_bin_auto_delete_hint">
+자동 삭제를 비활성화하려면 0으로 설정합니다. 기본값은 30일입니다.
+</string>
+    <string name="recycle_bin_auto_delete_fewer">
+일수 감소
+</string>
+    <string name="recycle_bin_auto_delete_more">
+더 많은 일
+</string>
+    <string name="recycle_bin_auto_delete_decrease">
+자동 삭제 일수 줄이기
+</string>
+    <string name="recycle_bin_auto_delete_increase">
+자동 삭제 일수 늘리기
+</string>
+    <string name="cd_recycle_bin_auto_delete">
+자동 삭제 설정
+</string>
+    <string name="opening_recycle_bin_settings">
+휴지통 설정 열기
+</string>
+
+    <!-- Remote Manager Web Interface -->
+    <string name="remote_title">Ultimate File Manager Pro 원격</string>
+    <string name="remote_subtitle_login">보안 액세스 - 4자리 PIN을 입력하세요.</string>
+    <string name="remote_btn_unlock">대시보드 잠금 해제</string>
+    <string name="remote_btn_disconnect">연결 끊기</string>
+    <string name="remote_vault">둥근 천장</string>
+    <string name="remote_vault_subtitle">암호화된 폴더를 보호하세요</string>
+    <string name="remote_user_apps">사용자 앱</string>
+    <string name="user_apps">사용자 앱</string>
+    <string name="remote_default_apps">기본 앱</string>
+    <string name="remote_search_apps">앱 검색…</string>
+    <string name="remote_back">돌아가기</string>
+    <string name="remote_add_to_vault">Vault에 추가</string>
+    <string name="remote_install_apk">APK 설치</string>
+    <string name="remote_install_xapk">XAPK 설치</string>
+    <string name="remote_new_folder">새 폴더</string>
+    <string name="remote_upload">업로드</string>
+    <string name="remote_items_selected">선택한 항목</string>
+    <string name="remote_btn_copy">복사</string>
+    <string name="remote_btn_cut">자르다</string>
+    <string name="remote_btn_delete">삭제</string>
+    <string name="remote_btn_cancel">취소</string>
+    <string name="remote_btn_paste">%d 항목 붙여넣기</string>
+    <string name="remote_uploading">업로드 중…</string>
+    <string name="remote_prep_download">다운로드 준비 중</string>
+    <string name="remote_analyzing_folder">폴더 분석 중…</string>
+    <string name="remote_cancel_download">다운로드 취소</string>
+    <string name="remote_remote_install">원격 설치</string>
+    <string name="remote_preparing">준비 중…</string>
+    <string name="remote_confirm_device">설치 메시지를 확인하려면 Android 장치를 살펴보십시오.</string>
+    <string name="remote_install_splits">분할 APK 설치</string>
+    <string name="remote_analysing_splits">분할 분석 중…</string>
+    <string name="remote_select_density">밀도 리소스 선택:</string>
+    <string name="remote_abi">ABI(아키텍처):</string>
+    <string name="remote_btn_install_splits">선택한 분할로 설치</string>
+    <string name="remote_opened_device">기기에서 열림</string>
+    <string name="remote_vault_setup">볼트 설정</string>
+    <string name="remote_vault_setup_sub">금고를 보호하려면 4자리 PIN을 만드세요.</string>
+    <string name="remote_not_configured">구성되지 않음</string>
+    <string name="remote_btn_set_vault_pin">Vault PIN 설정</string>
+    <string name="remote_unlock_vault">금고 잠금 해제</string>
+    <string name="remote_enter_vault_pin">금고 PIN을 입력하세요</string>
+    <string name="remote_btn_lock">잠그다</string>
+    <string name="remote_btn_add_folder">폴더 추가</string>
+    <string name="remote_no_encrypted">아직 암호화된 폴더가 없습니다.</string>
+    <string name="remote_status_open">열려 있는</string>
+    <string name="remote_item">목</string>
+    <string name="remote_items">아이템</string>
+    <string name="remote_reencrypt">닫기/재암호화</string>
+    <string name="remote_open_mirror">미러로 열기/암호 해독</string>
+    <string name="remote_decrypt_original">원래 위치로 암호 해독</string>
+    <string name="remote_encrypt_success">%d 파일을 성공적으로 암호화했습니다.</string>
+    <string name="remote_skipped">파일을 건너뛰었습니다.</string>
+    <string name="remote_btn_done">완료</string>
+    <string name="remote_delete_title">항목을 삭제하시겠습니까?</string>
+    <string name="remote_delete_msg">정말로 삭제하시겠습니까?</string>
+    <string name="remote_btn_yes_delete">예, 삭제합니다</string>
+    <string name="remote_btn_no_cancel">아니요, 취소합니다.</string>
+    <string name="remote_rename_title">이름 바꾸기</string>
+    <string name="remote_rename_msg">항목의 새 이름을 입력합니다.</string>
+    <string name="remote_select_vault_folder">Vault 폴더 선택</string>
+    <string name="remote_choose_vault_folder">파일을 암호화할 Vault 폴더를 선택하세요:</string>
+    <string name="remote_no_vault_folders">Vault 폴더가 없습니다.</string>
+    <string name="remote_add_vault_first">Vault 항목을 생성하려면 먼저 Vault에 폴더를 추가하세요.</string>
+    <string name="remote_close">닫다</string>
+    <string name="remote_locked">잠김</string>
+    <string name="remote_unlocked">잠금 해제됨</string>
+    <string name="remote_create_vault_pin">볼트 PIN 생성</string>
+    <string name="remote_invalid_pin">잘못된 PIN</string>
+    <string name="remote_invalid_pin_msg">유효한 4자리 PIN을 입력하세요.</string>
+    <string name="remote_verifying_pin">PIN 확인 중…</string>
+    <string name="remote_access_granted">액세스 권한이 부여됨</string>
+    <string name="remote_access_denied">접근 불가</string>
+    <string name="remote_incorrect_vault_pin">잘못된 금고 PIN</string>
+    <string name="remote_adding_to_vault">Vault에 추가</string>
+    <string name="remote_encrypting_folder_msg">폴더 암호화 중…</string>
+    <string name="remote_added_to_vault_success">폴더가 암호화되어 볼트에 추가됨</string>
+    <string name="remote_failed_add_vault">Vault에 폴더를 추가하지 못했습니다.</string>
+    <string name="remote_opening_vault_entry">금고 항목 열기</string>
+    <string name="remote_decrypting_files_mirror">미러 위치로 파일을 복호화하는 중…</string>
+    <string name="remote_vault_entry_opened">금고 항목 열림</string>
+    <string name="remote_files_decrypted_success">파일이 성공적으로 해독되었습니다.</string>
+    <string name="remote_browsing_mirror">미러 위치 탐색 중…</string>
+    <string name="remote_failed_open_vault">Vault 항목을 열지 못했습니다.</string>
+    <string name="remote_closing_vault_entry">금고 진입 종료</string>
+    <string name="remote_reencrypting_files_msg">파일을 다시 암호화하는 중…</string>
+    <string name="remote_vault_entry_closed">금고 입장 폐쇄</string>
+    <string name="remote_files_reencrypted_success">파일이 성공적으로 다시 암호화되었습니다.</string>
+    <string name="remote_failed_close_vault">Vault 항목을 닫지 못했습니다.</string>
+    <string name="remote_decrypt_to_original_title">원본으로 복호화</string>
+    <string name="remote_decrypting_original_msg">파일을 원래 위치로 다시 복호화하는 중…</string>
+    <string name="remote_decryption_complete">복호화 완료</string>
+    <string name="remote_files_restored_original">원래 위치로 복원된 파일</string>
+    <string name="remote_entry_removed_vault">Vault에서 항목이 제거되었습니다.</string>
+    <string name="remote_failed_decrypt_original">원본의 암호를 해독하지 못했습니다.</string>
+    <string name="remote_vault_not_configured">Vault가 구성되지 않았습니다.</string>
+    <string name="remote_setup_vault_pin_q">금고 PIN을 설정하시겠습니까?</string>
+    <string name="remote_secure_files_msg">이렇게 하면 암호화된 파일이 보호됩니다</string>
+    <string name="remote_setup_vault">Vault 설정</string>
+    <string name="remote_unlock_vault_q">금고를 잠금 해제하시겠습니까?</string>
+    <string name="remote_enter_pin_to_add">폴더를 추가하려면 PIN을 입력하세요.</string>
+    <string name="remote_encrypt_folder_q">이 폴더를 암호화하고 Vault에 추가하시겠습니까?</string>
+    <string name="remote_moving_encrypting">이동 및 암호화</string>
+    <string name="remote_copying_encrypting">복사 및 암호화</string>
+    <string name="remote_processing_files">파일 처리 중…</string>
+    <string name="remote_encryption_failed">암호화 실패</string>
+    <string name="remote_no_vault_folders_yet">아직 Vault 폴더가 없습니다.</string>
+
+    <!-- Remote Manager Final Localization -->
+    <string name="remote_volume_internal">내부 공유 저장소</string>
+    <string name="remote_volume_sdcard">SD 카드</string>
+    <string name="remote_volume_network">네트워크 공유</string>
+    <string name="remote_status_readonly">읽기 전용</string>
+    <string name="remote_status_shared">공유됨</string>
+    <string name="remote_tooltip_back">돌아가기</string>
+    <string name="remote_tooltip_refresh">파일 목록 새로 고침</string>
+    <string name="remote_tooltip_new_folder">새 폴더 만들기</string>
+    <string name="remote_tooltip_upload">파일 업로드</string>
+    <string name="remote_modal_new_folder_title">새 폴더</string>
+    <string name="remote_modal_new_folder_desc">현재 경로에 새 디렉터리를 만듭니다.</string>
+    <string name="remote_modal_new_folder_placeholder">폴더 이름</string>
+    <string name="remote_modal_cancel">취소</string>
+    <string name="remote_modal_continue">계속하다</string>
+    <string name="remote_tooltip_download">다운로드</string>
+    <string name="remote_tooltip_install">장치에 설치</string>
+    <string name="remote_tooltip_rename">이름 바꾸기</string>
+    <string name="remote_tooltip_delete">삭제</string>
+    <string name="remote_tooltip_close_reencrypt">닫기/재암호화</string>
+    <string name="remote_tooltip_open_decrypt">미러로 열기/암호 해독</string>
+    <string name="remote_tooltip_decrypt_original">원래 위치로 암호 해독</string>
+    <string name="remote_tooltip_copy_encrypt">Vault에 복사 및 암호화</string>
+    <string name="remote_tooltip_move_encrypt">Vault로 이동 및 암호화</string>
+    <string name="remote_tooltip_extract_app">%s 추출</string>
+    <string name="remote_modal_rename_placeholder">새 이름</string>
+    <string name="remote_btn_rename">이름 바꾸기</string>
+    <string name="remote_btn_encrypt">암호화</string>
+    <string name="remote_btn_encrypt_add">암호화 및 추가</string>
+    <string name="remote_btn_extract">발췌</string>
+    <string name="remote_btn_info">추가 정보</string>
+    <string name="remote_modal_delete_confirm">%d 선택한 항목을 삭제하시겠습니까?</string>
+    <string name="remote_vol_used">%d%% 사용됨</string>
+    <string name="remote_vol_free_of">%1$s %2$s 없음</string>
+    <string name="remote_vol_shared_folder">공유 폴더</string>
+    <string name="remote_vol_manager">관리자</string>
+    <string name="remote_vol_apps">앱</string>
+    <string name="remote_vol_view_apps">설치된 애플리케이션 보기</string>
+    <string name="remote_vol_vault">둥근 천장</string>
+    <string name="remote_vol_vault_secure">안전한</string>
+    <string name="remote_vol_vault_info">암호화된 폴더</string>
+    <string name="remote_modal_delete_permanently">\'%s\'을(를) 영구적으로 삭제하시겠습니까?</string>
+    <string name="remote_parent_dir">부모 디렉토리</string>
+    <string name="remote_folder_empty">폴더가 비어 있습니다.</string>
+    <string name="remote_msg_enter_4_digits">4자리를 모두 입력해주세요.</string>
+    <string name="remote_msg_incorrect_pin">잘못된 PIN — 다시 시도해 주세요.</string>
+    <string name="remote_msg_server_error">서버에 연결할 수 없습니다.</string>
+    <string name="remote_msg_rename_failed">이름 바꾸기 실패</string>
+    <string name="remote_msg_transfer_complete_err">전송이 완료되었지만 %d개 항목이 실패했습니다.</string>
+    <string name="remote_msg_transfer_failed">전송 실패</string>
+    <string name="remote_msg_delete_failed_count">%d 항목을 삭제할 수 없습니다.</string>
+    <string name="remote_msg_upload_complete">업로드 완료</string>
+    <string name="remote_msg_uploading_count">%2$d 중 %1$d 업로드 중</string>
+    <string name="remote_msg_upload_failed_http">업로드 실패(HTTP %d)</string>
+    <string name="remote_msg_network_error">네트워크 오류</string>
+    <string name="remote_msg_preparing_download">다운로드 준비 중</string>
+    <string name="remote_msg_starting_compression">압축 시작 중…</string>
+    <string name="remote_msg_compressing_name">\"%s\" 압축 중</string>
+    <string name="remote_msg_zip_progress">%1$d / %2$d 파일이 압축됨</string>
+    <string name="remote_msg_zip_wait">서버가 ZIP 아카이브를 생성하는 동안 잠시 기다려 주십시오…</string>
+    <string name="remote_msg_starting_download">다운로드 시작 중…</string>
+    <string name="remote_msg_download_complete">다운로드 완료</string>
+    <string name="remote_msg_download_failed">다운로드 실패</string>
+    <string name="remote_downloading_zip">ZIP 다운로드 중</string>
+    <string name="remote_msg_current_file">현재: %1$s</string>
+    <string name="remote_msg_downloading_pct">다운로드 중… %1$d%%</string>
+    <string name="remote_msg_of">%2$s 중 %1$s</string>
+    <string name="remote_msg_files_compressed_saved">%1$d 파일이 압축되어 저장되었습니다.</string>
+    <string name="remote_msg_no_dpi_match">정확한 DPI 일치 없음 - 분할 선택:</string>
+    <string name="remote_msg_upload_complete_extracting">업로드가 완료되었습니다. 분할 추출 중…</string>
+    <string name="remote_msg_starting_extraction">추출 시작 중…</string>
+    <string name="remote_msg_could_not_start_compression">압축을 시작할 수 없습니다.</string>
+    <string name="remote_msg_compression_failed">압축 실패</string>
+    <string name="remote_msg_splits_extracted">%1$d / %2$d 분할 추출됨</string>
+    <string name="remote_msg_streaming_installer">Android 설치 프로그램으로 스트리밍하는 중…</string>
+    <string name="remote_msg_waiting_install_prompt">OS 설치 프롬프트를 기다리는 중…</string>
+    <string name="remote_msg_extracting_name">\"%s\" 추출 중</string>
+    <string name="remote_msg_uploading_name">\'%s\' 업로드 중…</string>
+    <string name="remote_msg_remote_xapk_install">원격 XAPK 설치</string>
+    <string name="remote_msg_xapk_install_failed">XAPK 설치 실패</string>
+    <string name="remote_msg_apk_install_failed">APK 설치 실패</string>
+    <string name="remote_msg_upload_failed">업로드 실패</string>
+    <string name="remote_msg_network_error_title">네트워크 오류</string>
+    <string name="remote_vault_operation">금고 운영</string>
+    <string name="remote_processing">처리 중…</string>
+    <string name="remote_no_folder_selected">선택된 폴더 없음</string>
+    <string name="remote_browse_to_folder_first">먼저 폴더를 찾아보세요.</string>
+    <string name="remote_msg_loading_apps">앱 로드 중…</string>
+    <string name="remote_msg_failed_load_apps">앱을 로드하지 못했습니다.</string>
+    <string name="remote_msg_no_apps_found">앱을 찾을 수 없습니다.</string>
+    <string name="remote_msg_app_singular">%d 앱</string>
+    <string name="remote_msg_apps_plural">%d 앱</string>
+    <string name="remote_msg_item_singular">%d 항목</string>
+    <string name="remote_msg_items_plural">%d 항목</string>
+    <string name="remote_msg_items_uploaded">%d 항목이 업로드됨</string>
+    <string name="remote_msg_paste_items">%d 항목 붙여넣기</string>
+    <string name="remote_msg_paste_item">%d 항목 붙여넣기</string>
+    <string name="remote_msg_look_at_device">설치 메시지를 확인하려면 Android 장치를 살펴보십시오.</string>
+    <string name="remote_msg_select_density">밀도 리소스 선택:</string>
+    <string name="remote_msg_abi_architecture">ABI(아키텍처):</string>
+    <string name="remote_btn_install_selected">선택한 분할로 설치</string>
+    <string name="remote_msg_loading_vault_folders">Vault 폴더 로드 중…</string>
+    <string name="remote_msg_error_prefix">오류: %s</string>
+    <string name="remote_msg_chunk_failed">청크 실패(HTTP %d)</string>
+    <string name="remote_msg_network_error_label">네트워크 오류</string>
+    <string name="remote_msg_folder_label">접는 사람</string>
+    <string name="remote_msg_split_apk_label">APK 분할</string>
+    <string name="remote_msg_skipped">건너뛰었습니다</string>
+    <string name="remote_msg_opened_on_device">기기에서 열림</string>
+    <string name="remote_msg_installing_split_apk">분할 APK 설치</string>
+    <string name="remote_msg_vault_locked">금고가 잠겼습니다</string>
+    <string name="remote_msg_vault_unlocked">금고 잠금 해제</string>
+    <string name="remote_msg_vault_title">둥근 천장</string>
+    <string name="remote_msg_scanning_vault">금고 항목 스캔 중…</string>
+    <string name="remote_msg_reading_package">패키지 콘텐츠를 읽는 중…</string>
+    <string name="remote_msg_upload_complete_prompting">업로드 완료! 기기에 메시지 표시 중…</string>
+    <string name="remote_msg_failed_trigger_install">설치를 트리거하지 못했습니다.</string>
+    <string name="remote_recommended">추천</string>
+    <string name="remote_msg_install_permission_denied">설치할 수 없음: 기기에 \'알 수 없는 앱 설치\' 권한이 부여되어 있지 않습니다.</string>
+    <string name="remote_msg_installing_apk">APK 설치</string>
+    <string name="remote_msg_triggering_installer">설치 프로그램 실행 중…</string>
+    <string name="remote_msg_prompt_sent">기기로 메시지가 전송됨</string>
+    <string name="remote_msg_confirm_on_device">Android 화면에서 확인해 주세요.</string>
+    <string name="remote_msg_remote_install">원격 설치</string>
+    <string name="remote_msg_uploading_apk">APK 업로드 중…</string>
+    <string name="remote_vault_pin_title">금고 PIN</string>
+    <string name="remote_vault_pin_subtitle">4자리 PIN을 입력하세요.</string>
+    <string name="remote_vault_add_title">Vault에 추가</string>
+    <string name="remote_vault_add_msg">이 폴더를 암호화하고 Vault에 추가하시겠습니까?</string>
+    <string name="remote_vault_add_warning">⚠ 이렇게 하면 폴더의 모든 파일이 암호화되고 원본이 제거됩니다.</string>
+    <string name="remote_root">뿌리</string>
+    <string name="remote_badge_remote">원격</string>
+    <string name="remote_app_installed_date">설치 날짜</string>
+    <string name="remote_app_size">애플리케이션 크기</string>
+    <string name="remote_app_package">패키지 이름</string>
+    <string name="remote_app_cache_data">캐시/데이터 크기</string>
+    <string name="remote_vault_no_folders">Vault 폴더가 없습니다.</string>
+    <string name="remote_vault_add_first">Vault 항목을 생성하려면 먼저 Vault에 폴더를 추가하세요.</string>
+    <string name="indexed_current_files">색인화된 %1$d 파일</string>
+    <string name="practical_advice">실용적인 조언</string>
+    <string name="before_using_any_file_manager_back_up_your_important_files_this_is_good_practice_regardless_of_which_app_you_use">파일 관리자를 사용하기 전에 중요한 파일을 백업하십시오. 이는 어떤 앱을 사용하든 관계없이 좋은 습관입니다.</string>
+    <string name="payment_processor">결제 처리자</string>
+    <string name="refunds">환불</string>
+    <string name="recurring_charges">반복 청구</string>
+    <string name="no_obligation">의무 없음</string>
+    <string name="plainenglish_summary">일반 영어 요약</string>
+    <string name="tips_are_processed_safely_by_google_we_never_see_your_payment_details_you_will_never_be_charged_without_tapping_a_button_yourself">팁은 Google에서 안전하게 처리하므로 결제 세부정보는 절대 볼 수 없습니다. 버튼을 직접 누르지 않으면 요금이 청구되지 않습니다.</string>
+    <string name="your_privacy_is_protected">귀하의 개인 정보는 보호됩니다</string>
+    <string name="a_note_on_billing">청구에 관한 참고 사항</string>
+    <string name="about_remote_management">원격 관리 정보</string>
+    <string name="important_warning">중요한 경고</string>
+    <string name="we_do_not_sell_your_data">우리는 귀하의 데이터를 판매하지 않습니다</string>
+    <string name="before_you_clear_data">데이터를 지우기 전에</string>
+    <string name="purchase_failed_code_result_responsecode">구매 실패(코드 %1$d)</string>
+    <string name="billing_unavailable_result_debugmessage">결제 불가(%1$s)</string>
+    <string name="product_not_found_check_your_internet_connection_and_try_again">제품을 찾을 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
+    <string name="indexing_storagelabel_enables">\"%1$s\" 색인을 생성하면 다음이 가능합니다.</string>
+    <string name="instant_search_across_all_files">• 모든 파일에 대한 즉각적인 검색</string>
+    <string name="faster_folder_loading">• 더 빠른 폴더 로드</string>
+    <string name="duplicate_file_detection">• 중복 파일 감지</string>
+    <string name="this_only_needs_to_be_done_once_future_opens_are_always_incremental">이 작업은 한 번만 수행하면 됩니다. 향후 열기는 항상 증분됩니다.</string>
+    <string name="index_now_recommended">지금 색인 생성(권장)</string>
+    <string name="not_now">지금은 아님</string>
+    <string name="device_disconnected">장치 연결이 끊어졌습니다.</string>
+    <string name="please_wait_for_the_transfer_to_finish_or_press_cancel_on_the_dialog">전송이 완료될 때까지 기다리거나 대화상자에서 취소를 누르세요.</string>
+    <string name="select_files_not_folders_to_share">공유할 파일(폴더 아님) 선택</string>
+    <string name="select_files_not_folders_to_encrypt">암호화할 파일(폴더 아님) 선택</string>
+    <string name="save_archive_to_displaypath">다음 위치에 아카이브 저장: %1$s</string>
+    <string name="use_the_following_path_as_the_sync_destination_displaypath">다음 경로를 동기화 대상으로 사용하시겠습니까? %1$s</string>
+    <string name="folder_sync_will_back_up_to_this_location_on_the_network_share">폴더 동기화는 네트워크 공유의 이 위치에 백업합니다.</string>
+    <string name="clipboard_1_file">클립보드(파일 1개)</string>
+    <string name="clipboard_total_files">클립보드(%1$d 파일)</string>
+    <string name="error_loading_directory_errmessage">디렉터리 로드 중 오류 발생: %1$s</string>
+    <string name="sideload_apk">사이드로드 APK</string>
+    <string name="sideload_xapk">사이드로드 XAPK</string>
+
+    <!-- Transfer Settings Feature -->
+    <string name="transfer_settings">전송 설정</string>
+    <string name="transfer_settings_select_all">모두 선택</string>
+    <string name="transfer_settings_subtitle">%1$s → %2$s에서</string>
+    <string name="transfer_settings_biometric_subtitle">설정을 TV로 안전하게 전송하려면 인증하세요.</string>
+    <string name="transfer_settings_section_network">네트워크 공유</string>
+    <string name="transfer_settings_section_fileserver">파일 서버</string>
+    <string name="transfer_settings_from_device">보낸 사람: %1$s</string>
+    <string name="transfer_settings_summary_settings">앱 설정</string>
+    <string name="transfer_settings_summary_shares">네트워크 공유</string>
+    <string name="transfer_settings_timeout_countdown">%1$d초 후에 자동 종료…</string>
+    <string name="transfer_settings_success">설정이 %1$s로 성공적으로 전송되었습니다.</string>
+    <string name="transfer_settings_success_count">%1$d 항목이 성공적으로 적용되었습니다.</string>
+    <string name="transfer_settings_rejected">이전이 거부됨</string>
+    <string name="transfer_settings_timeout">TV가 제때에 응답하지 않았습니다. 다시 시도해 주세요.</string>
+    <string name="transfer_settings_apply_failed">설정을 적용하지 못했습니다: %1$s</string>
+    <string name="security_required_title">보안 필요</string>
+    <string name="security_required_desc">설정을 안전하게 전송하려면 Android 설정에서 화면 잠금(PIN, 패턴, 얼굴 또는 지문)을 활성화해야 합니다.</string>
+    <string name="general_app_settings">일반 앱 설정</string>
+    <string name="general_setting_prefix">설정: %1$s</string>
+    <string name="smb_share_prefix">SMB 공유: %1$s (%2$s)</string>
+    <string name="ftp_share_prefix">FTP 공유: %1$s (%2$s)</string>
+    <string name="sftp_share_prefix">SFTP 공유: %1$s (%2$s)</string>
+    <string name="scp_share_prefix">SCP 공유: %1$s (%2$s)</string>
+    <string name="file_server_port_item">파일 서버 포트(%1$d)</string>
+    <string name="file_server_pin_warning">⚠ 파일 서버 PIN은 전송되지 않습니다. TV에 새 PIN을 설정하세요.</string>
+    <string name="transfer_to_tv">TV로 전송</string>
+
+    <string name="preparing">준비 중…</string>
+    <string name="downloading_netfilename">다운로드 중: %1$s</string>
+    <string name="downloading_folder_netfilename">다운로드 폴더: %1$s</string>
+    <string name="compression_completed_finalfilename">압축 완료: %1$s</string>
+    <string name="uploading_to_destsharename">%1$s에 업로드하는 중…</string>
+    <string name="compression_completed_archivename_destsharename">압축 완료: %1$s → %2$s</string>
+    <string name="compression_failed_emessage">압축 실패: %1$s</string>
+    <string name="compression_cancelled">압축이 취소되었습니다.</string>
+    <string name="delete_completed_with_errors_failcount_failed">오류가 발생하여 삭제가 완료되었습니다(%1$d 실패).</string>
+    <string name="press_cancel_to_stop_the_transfer">전송을 중지하려면 취소를 누르세요.</string>
+    <string name="transfer_cancelled">이전이 취소되었습니다.</string>
+    <string name="file_fileindex_of_totalfiles_filename">%2$d의 파일 %1$d — %3$s</string>
+    <string name="copiedstr_totalstr">%1$s / %2$s</string>
+    <string name="cannot_read_source_file">소스 파일을 읽을 수 없습니다</string>
+    <string name="encrypted_successcount_files_to_vault">%1$d 파일을 암호화하여 Vault에 보관했습니다.</string>
+    <string name="failed_to_encrypt_files">파일을 암호화하지 못했습니다.</string>
+    <string name="clipboard_1_item">클립보드(1개 항목)</string>
+    <string name="clipboard_n_items">클립보드(%1$d개 항목)</string>
+    <string name="opening_filename">%1$s 여는 중…</string>
+    <string name="open_with">다음 앱으로 열기…</string>
+    <string name="no_app_found_to_open_this_file_type">이 파일 형식을 열 수 있는 앱을 찾을 수 없습니다.</string>
+    <string name="failed_to_open_file_emessage">파일을 열지 못했습니다: %1$s</string>
+    <string name="fetching_filename">%1$s 가져오는 중…</string>
+    <string name="failed_to_download_file_emessage">파일 다운로드 실패: %1$s</string>
+    <string name="uploading_localfilename_to_tv">%1$s을(를) TV에 업로드하는 중…</string>
+    <string name="installing_localfilename_on_tv">TV에 %1$s 설치 중…</string>
+    <string name="apk_install_triggered_on_tv">TV에서 APK 설치가 실행됨</string>
+    <string name="failed_to_start_xapk_install_on_tv">TV에서 XAPK 설치를 시작하지 못했습니다.</string>
+    <string name="extracting_currentfile_currenttotal">%1$s (%2$s/%3$s) 추출 중…</string>
+    <string name="installing_split_apks_on_tv">TV에 분할 APK 설치 중…</string>
+    <string name="xapk_install_triggered_on_tv_check_the_tv_screen">TV에서 XAPK 설치가 트리거됨 - TV 화면 확인</string>
+    <string name="xapk_install_failed_error">XAPK 설치 실패: %1$s</string>
+    <string name="sideload_failed_emessage">사이드로드 실패: %1$s</string>
+    <string name="usb_debugging_must_be_enabled_on_the_tv_to_capture_screenshots">스크린샷을 캡처하려면 TV에서 USB 디버깅을 활성화해야 합니다.</string>
+    <string name="to_enable">활성화하려면:</string>
+    <string name="open_settings_on_your_tv">1. TV에서 설정을 엽니다.</string>
+    <string name="go_to_device_preferences_developer_options">2. 장치 기본 설정 &gt; 개발자 옵션으로 이동합니다.</string>
+    <string name="enable_usb_debugging">3. \"USB 디버깅\" 활성화</string>
+    <string name="if_you_dont_see_developer_options_go_to_about_and_tap_build_number_7_times_first">개발자 옵션이 표시되지 않으면 먼저 정보로 이동하여 \'빌드 번호\'를 7번 탭하세요.</string>
+    <string name="connecting_to_tv_the_screenshot_will_be_saved_to_your_phones_screenshots_folder">TV에 연결 중… 스크린샷이 휴대폰의 스크린샷 폴더에 저장됩니다.</string>
+    <string name="connecting_to_tv_via_adb_please_approve_on_tv_if_prompted">ADB를 통해 TV에 연결하는 중… 메시지가 나타나면 TV에서 승인해 주세요.</string>
+    <string name="screenshot_saved_savedfilename">저장된 스크린샷: %1$s</string>
+    <string name="screenshot_failed_emessage">스크린샷 실패: %1$s</string>
+    <string name="from_username">(사용자 이름에서)</string>
+    <string name="could_not_list_shares_errormsg">공유를 나열할 수 없습니다: %1$s</string>
+    <string name="invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder">\"잘못된 경로입니다. SMB의 경우 공유 이름을 입력하세요(예: /ShareName 또는 \\host\\Share\\Folder).\"</string>
+    <string name="testing">테스트 중…</string>
+    <string name="accepted_on_formatterformatdatetermstime">%1$s에 수락됨</string>
+    <string name="accepted_on_formatterformatdateprivacytime">%1$s에 수락됨</string>
+    <string name="enter_a_4digit_pin_to_secure_remote_access">원격 액세스를 보호하려면 4자리 PIN을 입력하세요.</string>
+    <string name="start_server">서버 시작</string>
+    <string name="remove_favoritelabel_from_favorites">즐겨찾기에서 %1$s을(를) 제거하시겠습니까?</string>
+    <string name="hidden_files_are_visible">숨겨진 파일이 보입니다</string>
+    <string name="cache_temp_files_junkfilessize">캐시 및 임시 파일(%1$d)</string>
+    <string name="old_files_not_modified_in_180_days_oldfilessize">오래된 파일 — 180일 이상 수정되지 않음(%1$d)</string>
+    <string name="save_formatterformatfilesizectx_itemestimatedbytes">%1$s 저장</string>
+    <string name="manual_review">수동 검토</string>
+    <string name="updating_debloat_list">디블로트 목록 업데이트 중…</string>
+    <string name="debloat_list_updated">✅ Debloat 목록이 업데이트되었습니다.</string>
+    <string name="failed_to_update_list">❌ 목록 업데이트 실패</string>
+    <string name="system_apps">시스템 앱</string>
+    <string name="debloater">디블로터</string>
+    <string name="package_apppackagename">패키지: %1$s</string>
+    <string name="installed_installedstr">설치됨: %1$s</string>
+    <string name="app_size_appsizestr">앱 크기: %1$s</string>
+    <string name="data_size_datasizestr">데이터 크기: %1$s</string>
+    <string name="app_type_label">유형: %1$s</string>
+    <string name="app_type_system">체계</string>
+    <string name="app_type_user">사용자</string>
+    <string name="app_count_singular">%1$d 앱</string>
+    <string name="app_count_plural">%1$d 앱</string>
+    <string name="debloater_guide">--- 디블로터 가이드 ---</string>
+    <string name="safety_itrecommendation">안전: %1$s</string>
+    <string name="description_itdescription">설명: %1$s</string>
+    <string name="extract">⬇ 추출</string>
+    <string name="app_info">앱 정보</string>
+    <string name="extracting_appname">⏳ %1$s 추출 중…</string>
+    <string name="extract_failed_emessage">❌ 추출 실패: %1$s</string>
+    <string name="extracted_as_formatlabel">✅ %1$s로 추출됨</string>
+    <string name="filename_1">📦 %1$s</string>
+    <string name="accessible_via_ufm_app_files_downloads_ufmextracted">📂 UFM · 앱 파일/다운로드/UFM 추출을 통해 액세스 가능</string>
+    <string name="a_new_tile_called_apk_xapk_extracts_will_appear_on_the">💡 \"APK / XAPK 추출\"이라는 새 타일이 나타납니다.</string>
+    <string name="home_screen_tap_it_to_browse_share_or_install_your_extracted_files">홈 화면. 추출된 파일을 탐색, 공유 또는 설치하려면 탭하세요.</string>
+    <string name="the_tile_disappears_automatically_when_the_folder_is_empty">폴더가 비어 있으면 타일이 자동으로 사라집니다.</string>
+    <string name="got_it_1">알았어요</string>
+    <string name="ufe0f_opened_app_info_for_inspection">ℹ️ 검사를 위해 앱 정보 열림</string>
+    <string name="could_not_open_app_info">❌ 앱 정보를 열 수 없습니다</string>
+    <string name="unable_to_open_file_emessage">파일을 열 수 없습니다: %1$s</string>
+    <string name="access_to_androiddata_denied">Android/데이터에 대한 액세스가 거부되었습니다.</string>
+    <string name="access_to_androidobb_denied">Android/obb에 대한 액세스가 거부되었습니다.</string>
+    <string name="grant_access_to_app_folder">앱 폴더에 대한 액세스 권한 부여</string>
+    <string name="grant_access_to_obb_folder">OBB 폴더에 대한 액세스 권한 부여</string>
+    <string name="in_the_picker_navigate_to_android_data_shorttarget_and_select_use_this_folder_or_select_this_folder_if_you_see_a_different_folder_eg_dcimcamera_navigate_up_to_android_data_first_and_then_into_shorttarget">선택기에서: Android → data → %1$s로 이동하여 \'이 폴더 사용\'(또는 \'이 폴더 선택\')을 선택합니다.  다른 폴더(예: DCIM/Camera)가 보이면 먼저 Android → data로 이동한 다음 %1$s로 이동하세요.</string>
+    <string name="in_the_picker_navigate_to_android_obb_shorttarget_and_select_use_this_folder">선택기에서: Android → obb → %1$s로 이동하여 \'이 폴더 사용\'을 선택하세요.</string>
+    <string name="open_picker">선택기 열기</string>
+    <string name="use_the_following_folder_as_the_sync_source_path">다음 폴더를 동기화 소스로 사용하시겠습니까? %1$s</string>
+    <string name="use_following_path_as_sync_destination">다음 경로를 동기화 대상으로 사용하시겠습니까?\n\n%1$s</string>
+    <string name="save_archive_to_path">다음 위치에 아카이브 저장:\n\n%1$s</string>
+    <string name="files_in_this_folder_will_be_backed_up_to_your_network_share">이 폴더의 파일은 네트워크 공유에 백업됩니다.</string>
+    <string name="saf_create_file_failed">SAF 파일 생성 실패</string>
+    <string name="saf_output_stream_failed">SAF 출력 스트림 실패</string>
+    <string name="uploading_to_sharename">%1$s에 업로드하는 중…</string>
+    <string name="compression_complete_archivename_sharename">압축 완료: %1$s → %2$s</string>
+    <string name="compression_completed_destfilename">압축 완료: %1$s</string>
+    <string name="manage_links_with_other_devices">다른 장치와의 링크 관리</string>
+    <string name="browse_extracted_apps">추출된 앱 찾아보기</string>
+    <string name="favorite_folder">즐겨찾는 폴더</string>
+    <string name="favorite_file">즐겨찾는 파일</string>
+    <string name="clear_cache_temp_files">캐시 및 임시 파일 지우기</string>
+    <string name="found_junkfilecount_cachetemp_files_in_wellknown_junk_folders">잘 알려진 정크 폴더에서 %1$d개의 캐시/임시 파일을 찾았습니다.</string>
+    <string name="remove_duplicate_files">중복 파일 제거</string>
+    <string name="found_dupgroupssize_duplicate_groups_wasting_space">공간을 낭비하는 중복 그룹 %1$d개가 발견되었습니다.</string>
+    <string name="review_large_files">대용량 파일 검토</string>
+    <string name="found_bigfilessize_files_larger_than_512_mb">512MB보다 큰 %1$d 파일을 찾았습니다.</string>
+    <string name="old_unused_files">사용되지 않은 오래된 파일</string>
+    <string name="connected_tv">커넥티드 TV</string>
+    <string name="connected_phone">연결된 전화</string>
+    <string name="usb_drive_filename">USB 드라이브(%1$s)</string>
+    <string name="opening_twin_window">👯 트윈 창 열기</string>
+    <string name="opening_adb_terminal">💻 ADB 터미널 열기</string>
+    <string name="opening_app_manager">📱 앱 관리자 열기</string>
+    <string name="opening_search">🔍 검색 열기</string>
+    <string name="opening_storage_analyzer">📊 저장소 분석기 열기</string>
+    <string name="opening_smart_sort">
+🔀 스마트 정렬 열기
+</string>
+    <string name="opening_vault">🔐 금고 열기</string>
+    <string name="opening_folder_sync">🔄 폴더 동기화 열기</string>
+    <string name="no_app_found_to_open_this_file_pattern">이 파일 패턴을 여는 앱을 찾을 수 없습니다.</string>
+
+    <!-- Smart Sort -->
+    <string name="smart_sort_title">
+스마트 정렬
+</string>
+    <string name="smart_sort_tile_subtitle">
+파일을 카테고리로 구성
+</string>
+    <string name="smart_sort_config">
+스마트 정렬 구성
+</string>
+    <string name="smart_sort_here">
+이 폴더의 스마트 정렬
+</string>
+    <string name="smart_sort_select_drive">
+드라이브 선택
+</string>
+    <string name="smart_sort_scope">
+범위
+</string>
+    <string name="smart_sort_scope_label">
+범위 정렬
+</string>
+    <string name="smart_sort_root_only">
+루트만
+</string>
+    <string name="smart_sort_recursive">
+재귀적
+</string>
+    <string name="smart_sort_subfolder_mode">
+하위 폴더 모드
+</string>
+    <string name="smart_sort_flatten">
+단조롭게 하다
+</string>
+    <string name="smart_sort_preserve">
+구조 보존
+</string>
+    <string name="smart_sort_mode_label">
+정렬 기준
+</string>
+    <string name="smart_sort_mode_type">
+유형별
+</string>
+    <string name="smart_sort_mode_size">
+크기별
+</string>
+    <string name="smart_sort_mode_date">
+날짜별
+</string>
+    <string name="smart_sort_categories">
+카테고리
+</string>
+    <string name="smart_sort_category_photos">
+사진
+</string>
+    <string name="smart_sort_category_videos">
+비디오
+</string>
+    <string name="smart_sort_category_audio">
+오디오
+</string>
+    <string name="smart_sort_category_documents">
+서류
+</string>
+    <string name="smart_sort_category_archives">
+아카이브
+</string>
+    <string name="smart_sort_category_apps">
+앱
+</string>
+    <string name="smart_sort_category_ebooks">
+전자책
+</string>
+    <string name="smart_sort_category_other">
+다른
+</string>
+    <string name="smart_sort_include_other">
+분류되지 않은 항목 포함
+</string>
+    <string name="smart_sort_size_tiny">
+매우 작음(&amp;lt;1MB)
+</string>
+    <string name="smart_sort_size_small">
+작음(1-10MB)
+</string>
+    <string name="smart_sort_size_medium">
+중간(10-100MB)
+</string>
+    <string name="smart_sort_size_large">
+대형(100MB-1GB)
+</string>
+    <string name="smart_sort_size_huge">
+대용량(&amp;gt;1GB)
+</string>
+    <string name="smart_sort_date_today">
+오늘
+</string>
+    <string name="smart_sort_date_this_week">
+이번 주
+</string>
+    <string name="smart_sort_date_this_month">
+이번 달
+</string>
+    <string name="smart_sort_date_this_year">
+올해
+</string>
+    <string name="smart_sort_date_older">
+이전
+</string>
+    <string name="smart_sort_options">
+옵션
+</string>
+    <string name="smart_sort_prefix">
+폴더 접두어
+</string>
+    <string name="smart_sort_duplicates">
+중복된 파일에
+</string>
+    <string name="smart_sort_existing_folder">
+카테고리 폴더가 존재하는 경우
+</string>
+    <string name="smart_sort_strategy_skip">
+건너뛰다
+</string>
+    <string name="smart_sort_strategy_rename">
+이름 바꾸기
+</string>
+    <string name="smart_sort_strategy_overwrite">
+덮어쓰기
+</string>
+    <string name="smart_sort_strategy_merge">
+병합
+</string>
+    <string name="smart_sort_preview">
+시사
+</string>
+    <string name="smart_sort_preview_title">
+미리보기 정렬
+</string>
+    <string name="smart_sort_start">
+정렬 시작
+</string>
+    <string name="smart_sort_result_title">
+정렬 완료
+</string>
+    <string name="smart_sort_undo">
+정렬 취소
+</string>
+    <string name="smart_sort_result_moved">
+이동됨: %1$d
+</string>
+    <string name="smart_sort_result_skipped">
+건너뛴 날짜: %1$d
+</string>
+    <string name="smart_sort_result_failed">
+실패: %1$d
+</string>
+    <string name="smart_sort_preview_total">
+전체: %1$d개 파일
+</string>
+    <string name="smart_sort_preview_conflicts">
+%1$d 충돌이 감지되었습니다.
+</string>
+    <string name="smart_sort_progress_moving">
+이동 중: %1$s (%2$d/%3$d)
+</string>
+    <string name="smart_sort_default_folder">
+기본 폴더
+</string>
+    <string name="smart_sort_folder_label">
+폴더: %1$s
+</string>
+    <string name="smart_sort_validation_error">
+검증 오류
+</string>
+    <string name="smart_sort_err_no_category">
+카테고리를 하나 이상 선택하거나 \'분류되지 않은 항목 포함\'을 활성화하세요.
+</string>
+    <string name="smart_sort_err_scope">
+정렬 범위로 \"루트만\" 또는 \"재귀\"를 선택하십시오.
+</string>
+    <string name="smart_sort_err_subfolder">
+하위 폴더를 처리하려면 \"평탄화\" 또는 \"구조 유지\"를 선택하십시오.
+</string>
+    <string name="smart_sort_err_mode">
+정렬 모드를 \"유형별\", \"크기별\", \"날짜별\" 중에서 선택하세요.
+</string>
+    <string name="smart_sort_err_duplicate">
+중복 처리 전략을 선택하세요.
+</string>
+    <string name="smart_sort_err_existing">
+카테고리 폴더가 이미 존재하는 경우 어떻게 해야 하는지 선택하세요.
+</string>
+    <string name="smart_sort_undoing">
+정렬을 취소하는 중...
+</string>
+    <string name="smart_sort_undone">
+정렬이 성공적으로 취소되었습니다
+</string>
+    <string name="smart_sort_history">
+역사
+</string>
+    <string name="smart_sort_history_title">
+정렬 기록
+</string>
+    <string name="smart_sort_history_empty">
+이전 정렬을 찾을 수 없습니다.
+</string>
+    <string name="smart_sort_history_summary">
+이동됨: %1$d 건너뛰음: %2$d 실패: %3$d
+</string>
+    <string name="smart_sort_history_delete">
+삭제
+</string>
+    <string name="smart_sort_history_clear_all">
+모두 지우기
+</string>
+    <string name="smart_sort_history_clear_all_title">
+모든 기록을 삭제하시겠습니까?
+</string>
+    <string name="smart_sort_history_clear_all_msg">
+그러면 모든 정렬 기록 항목이 제거됩니다. 정렬된 파일은 복원되지 않습니다.
+</string>
+    <string name="smart_sort_warning_title">
+고위험 폴더
+</string>
+    <string name="smart_sort_warning_message">
+이 폴더를 정렬하면 시스템 오류나 앱 오작동이 발생할 수 있습니다.\n
+\n
+폴더: %1$s\n
+\n
+계속하시겠습니까?
+</string>
+
+    <!-- Smart Sort hints -->
+    <string name="smart_sort_select_folder">
+폴더 선택
+</string>
+    <string name="smart_sort_set_default">
+기본값 설정
+</string>
+    <string name="smart_sort_standard">
+기준
+</string>
+    <string name="smart_sort_custom">
+관습
+</string>
+    <string name="smart_sort_add_rule">
+규칙 추가
+</string>
+    <string name="smart_sort_rule_description">
+설명
+</string>
+    <string name="smart_sort_add_extension">
+확장자 추가
+</string>
+    <string name="smart_sort_edit_rule">
+편집하다
+</string>
+    <string name="smart_sort_delete_rule">
+삭제
+</string>
+    <string name="smart_sort_delete_rule_confirm">
+이 규칙을 삭제하시겠습니까?
+</string>
+    <string name="smart_sort_extension_already_used">
+확장자 \"%1$s\"은(는) \"%2$s\"에서 이미 사용되었습니다.
+</string>
+    <string name="smart_sort_extension_empty">
+확장자를 입력하세요.
+</string>
+    <string name="smart_sort_description_empty">
+설명을 입력하세요.
+</string>
+    <string name="smart_sort_no_extensions">
+확장 프로그램을 하나 이상 추가하세요.
+</string>
+    <string name="smart_sort_no_extensions_added">
+추가된 확장 프로그램 없음
+</string>
+    <string name="smart_sort_remove_extension">
+확장 프로그램 제거
+</string>
+    <string name="smart_sort_remove_extensions_title">
+확장 프로그램 제거
+</string>
+    <string name="smart_sort_extension_removed">
+확장 프로그램이 삭제되었습니다.
+</string>
+    <string name="smart_sort_no_rules">
+추가된 규칙이 없습니다. 규칙을 만들려면 \'규칙 추가\'를 탭하세요.
+</string>
+    <string name="smart_sort_mode_custom">
+맞춤 규칙별
+</string>
+    <string name="smart_sort_save_config">
+구성 저장
+</string>
+    <string name="smart_sort_edit_config">
+저장된 구성 편집
+</string>
+    <string name="smart_sort_save_description">
+설명
+</string>
+    <string name="smart_sort_save_changes">
+변경 사항 저장
+</string>
+    <string name="smart_sort_delete_saved">
+삭제
+</string>
+    <string name="smart_sort_delete_saved_confirm_title">
+\'%1$s\'을 삭제하시겠습니까?
+</string>
+    <string name="smart_sort_delete_saved_confirm_msg">
+저장된 구성 \"%1$s\"을 삭제하시겠습니까?
+</string>
+    <string name="smart_sort_enter_description">
+설명을 입력하세요
+</string>
+    <string name="smart_sort_config_saved">
+구성이 저장되었습니다.
+</string>
+    <string name="smart_sort_config_deleted">
+구성이 삭제되었습니다.
+</string>
+    <string name="smart_sort_recent">
+최근 구성
+</string>
+    <string name="smart_sort_execute">
+실행하다
+</string>
+    <string name="smart_sort_widget_empty">
+저장된 구성이 없습니다.
+</string>
+    <string name="smart_sort_widget_sorting">
+스마트 정렬 진행 중
+</string>
+    <string name="smart_sort_widget_complete">
+스마트 정렬 완료
+</string>
+    <string name="smart_sort_widget_description">
+저장된 스마트 정렬 구성을 빠르게 실행
+</string>
+    <string name="smart_sort_widget_triggered">
+%1$s이(가) 트리거되었습니다.
+</string>
+    <string name="widget_smart_sort_preview_config_1">
+날짜별 사진
+</string>
+    <string name="widget_smart_sort_preview_path_1">
+/스토리지/에뮬레이션/0/DCIM
+</string>
+    <string name="widget_smart_sort_preview_config_2">
+다운로드 정리
+</string>
+    <string name="widget_smart_sort_preview_path_2">
+/저장소/에뮬레이트/0/다운로드
+</string>
+    <string name="widget_smart_sort_preview_config_3">
+유형별 문서
+</string>
+    <string name="widget_smart_sort_preview_path_3">
+/storage/에뮬레이션/0/문서
+</string>
+    <string name="smart_sort_extensions">
+확장자: %1$s
+</string>
+    <string name="smart_sort_rule_description_label">
+설명: %1$s
+</string>
+    <string name="smart_sort_hint_scope_root">
+이 폴더에 직접 있는 파일만 정렬됩니다. 하위 폴더는 그대로 유지됩니다.
+</string>
+    <string name="smart_sort_hint_scope_recursive">
+모든 하위 폴더의 파일이 검색되어 카테고리 폴더로 정렬됩니다.
+</string>
+    <string name="smart_sort_hint_subfolder_flatten">
+하위 폴더의 파일은 카테고리 폴더로 직접 이동됩니다. 원래 폴더 구조가 손실됩니다.
+</string>
+    <string name="smart_sort_hint_subfolder_preserve">
+하위 폴더 구조는 각 카테고리 폴더 내에 유지됩니다.
+</string>
+    <string name="smart_sort_hint_mode_type">
+파일은 파일 유형(사진, 비디오, 문서 등)별로 그룹화됩니다.
+</string>
+    <string name="smart_sort_hint_mode_size">
+파일은 파일 크기에 따라 크기 기반 폴더로 그룹화됩니다.
+</string>
+    <string name="smart_sort_hint_mode_date">
+파일은 마지막 수정 날짜를 기준으로 그룹화됩니다.
+</string>
+    <string name="smart_sort_hint_dup_skip">
+대상 폴더에 동일한 이름을 가진 파일은 원래 위치에 남아 있습니다.
+</string>
+    <string name="smart_sort_hint_dup_rename">
+동일한 이름을 가진 파일은 숫자 접미사(_1, _2 등)를 붙여 이름이 변경됩니다.
+</string>
+    <string name="smart_sort_hint_dup_overwrite">
+동일한 이름을 가진 파일은 수신 파일로 대체됩니다.
+</string>
+    <string name="smart_sort_hint_existing_merge">
+기존 카테고리 폴더에 파일이 추가됩니다.
+</string>
+    <string name="smart_sort_hint_existing_skip">
+폴더가 이미 존재하는 경우 이 범주를 완전히 건너뜁니다.
+</string>
+    <string name="smart_sort_hint_existing_rename">
+숫자 접미사가 붙은 새 폴더가 생성됩니다(예: \"UFM Photos (1)\").
+</string>
+    <string name="file_not_found">파일을 찾을 수 없습니다</string>
+    <string name="tile_order_saved">✓ 타일 순서가 저장되었습니다.</string>
+    <string name="itemlabel_tile_hidden">\"%1$s\" 타일이 숨겨졌습니다.</string>
+    <string name="edit_mode_tap_x_to_hide_drag_to_reorder">편집 모드: 숨기려면 (X)를 탭하고, 재정렬하려면 드래그하세요.</string>
+    <string name="tile_configuration_saved">✓ 타일 구성이 저장되었습니다.</string>
+    <string name="dpad_moves_tile_ok_saves_back_cancels">↕ D-패드 타일 이동 • 확인 저장 • 뒤로 취소</string>
+    <string name="tile_order_cancelled">✕ 타일 주문 취소됨</string>
+    <string name="apk_xapk_extracts">APK / XAPK 추출</string>
+    <string name="showing_shown_results_scroll_for_more">%1$d 결과 표시 중(더 보려면 스크롤하세요)</string>
+    <string name="renamed_to_newname">%1$s로 이름이 변경됨</string>
+    <string name="delete_filename">%1$s을(를) 삭제하시겠습니까?</string>
+    <string name="name_deleted">%1$s 삭제됨</string>
+    <string name="failed_to_delete_name">%1$s을(를) 삭제하지 못했습니다.</string>
+    <string name="actionlabel_filessize_items_to_destname">%1$s %2$d 항목을 %3$s로 보내시겠습니까?</string>
+    <string name="moving_files">파일 이동 중…</string>
+    <string name="copying_files_1">파일 복사 중…</string>
+    <string name="item_0_totalfiles">항목 0 / %1$d</string>
+    <string name="item_index_totalcount">항목 %1$d / %2$d</string>
+    <string name="copiedmb_mb_totalmb_mb_percent">%1$s MB / %2$s MB (%3$d%%)</string>
+    <string name="move_complete">이동 완료</string>
+    <string name="copy_complete">복사 완료</string>
+    <string name="daily">일일</string>
+    <string name="weekly">주간</string>
+    <string name="monthly">월간 간행물</string>
+    <string name="monday">월요일</string>
+    <string name="tuesday">화요일</string>
+    <string name="wednesday">수요일</string>
+    <string name="thursday">목요일</string>
+    <string name="friday">금요일</string>
+    <string name="saturday">토요일</string>
+    <string name="sunday">일요일</string>
+    <string name="select_sync_folder">동기화 폴더 선택</string>
+    <string name="q15_minutes">15분</string>
+    <string name="q30_minutes">30분</string>
+    <string name="q1_hour">1시간</string>
+    <string name="q6_hours">6시간</string>
+    <string name="q12_hours">12시간</string>
+    <string name="q24_hours">24시간</string>
+    <string name="folder_sync_requires_an_smb_or_ftp_network_share_to_be_set_up_first">폴더 동기화를 사용하려면 먼저 SMB 또는 FTP 네트워크 공유를 설정해야 합니다.</string>
+    <string name="please_add_a_share_connection_in_network_shares_then_come_back_to_create_a_sync_profile">네트워크 공유에 공유 연결을 추가한 후 다시 돌아와서 동기화 프로필을 만드세요.</string>
+    <string name="set_up_smb_ftp">SMB/FTP 설정</string>
+    <string name="sync_enabled">동기화가 활성화되었습니다.</string>
+    <string name="sync_disabled">동기화가 비활성화되었습니다.</string>
+    <string name="profile_deleted">프로필이 삭제되었습니다.</string>
+    <string name="every_formatintervalprofileintervalminutes">%1$s마다</string>
+    <string name="daily_at_timestr">매일 %1$s에</string>
+    <string name="weekly_on_daystr_at_timestr">매주 %1$s %2$s</string>
+    <string name="monthly_on_profilescheduleddayofmonthdaysuffix_at_timestr">매월 %1$d%2$s %3$s에</string>
+    <string name="scheduled_at_timestr">%1$s에 예정됨</string>
+    <string name="last_sync_timestr_profilelastsyncfilecount_files">마지막 동기화: %1$s (%2$d 파일)</string>
+    <string name="edit">편집하다</string>
+    <string name="sync_now">지금 동기화</string>
+    <string name="network_share_not_found_for_profilename">%1$s에 대한 네트워크 공유를 찾을 수 없습니다.</string>
+    <string name="connection_lost_sync_paused_for_profilename">연결이 끊겼습니다. %1$s에 대한 동기화가 일시중지되었습니다.</string>
+    <string name="cannot_read_local_folder_for_profilename">%1$s에 대한 로컬 폴더를 읽을 수 없습니다.</string>
+    <string name="failed_to_access_remote_path_for_profilename">%1$s에 대한 원격 경로에 액세스하지 못했습니다.</string>
+    <string name="ufm_sync">UFM 동기화</string>
+    <string name="syncing_profilename_index_1filestouploadsize">%1$s 동기화 중: %2$d/%3$d</string>
+    <string name="background_file_synchronization">배경 파일 동기화</string>
+    <string name="syncing_title">%1$s 동기화 중…</string>
+    <string name="ufm_sync_error">UFM 동기화 오류</string>
+    <string name="no_devices_found">-- 장치를 찾을 수 없습니다 --</string>
+    <string name="scanning_scannedtotal_ips_scanned">검색 중… %1$d/%2$d IP 검색됨</string>
+    <string name="devices_detected_devicesfound_deviceword">감지된 기기: %1$d %2$s</string>
+    <string name="hide_pin">PIN 숨기기</string>
+    <string name="are_you_sure_you_want_to_remove_devicename_from_paired_devices">페어링된 기기에서 \'%1$s\'을(를) 삭제하시겠습니까?</string>
+    <string name="ensure_your_phone_is_on_the_same_wifi_network_open_ultimate_file_manager_pro_on_your_phone_click_link_to_tv_and_enter_this_pin_pincode">휴대폰이 동일한 WiFi 네트워크에 있는지 확인하세요.  휴대폰에서 Ultimate File Manager Pro를 열고 \'TV에 연결\'을 클릭한 후 다음 PIN을 입력하세요: %1$s</string>
+    <string name="link">링크</string>
+    <string name="devicetypelabel_connected">%1$s · 연결됨</string>
+    <string name="devicetypelabel_disconnected">%1$s · 연결이 끊어졌습니다.</string>
+    <string name="no_license_information_available">라이센스 정보가 없습니다.</string>
+    <string name="please_build_the_project_once_to_generate_the_license_report">라이센스 보고서를 생성하려면 프로젝트를 한 번 빌드하십시오.</string>
+    <string name="see_project_page">프로젝트 페이지 보기</string>
+    <string name="select_to_copy_link">링크를 복사하려면 선택 →</string>
+    <string name="tap_to_view_full_license">전체 라이선스를 보려면 누르세요 →</string>
+    <string name="no_browser_is_installed_on_this_device_visit_this_url_on_another_device_url">이 기기에는 브라우저가 설치되어 있지 않습니다.  다른 기기에서 다음 URL을 방문하세요: %1$s</string>
+    <string name="copy_link">링크 복사</string>
+    <string name="license_url">라이선스 URL</string>
+    <string name="i_have_read_and_accept_the_terms_conditions">이용약관을 읽었으며 이에 동의합니다.</string>
+    <string name="i_have_read_and_accept_the_privacy_policy">개인정보 보호정책을 읽었으며 이에 동의합니다.</string>
+    <string name="terms_conditions_accepted">이용약관에 동의함</string>
+    <string name="privacy_policy_accepted">개인 정보 보호 정책에 동의함</string>
+    <string name="terms_accepted">동의한 조건</string>
+    <string name="policy_accepted">정책이 승인됨</string>
+    <string name="terms_conditions_accepted_on_datestring">%1$s에 동의한 이용약관</string>
+    <string name="privacy_policy_accepted_on_datestring">%1$s에 동의한 개인정보 보호정책</string>
+    <string name="enter_a_file_name">파일 이름을 입력하세요.</string>
+    <string name="save_to">다음에 저장…</string>
+    <string name="terminal_output">터미널 출력</string>
+    <string name="adb_connection_established_from_pairing_activity">페어링 활동으로 ADB 연결이 설정되었습니다.</string>
+    <string name="pairing_activity_completed_but_connection_is_not_active">페어링 활동이 완료되었지만 연결이 활성화되지 않았습니다.</string>
+    <string name="disconnected_from_adb">ADB에서 연결이 끊어졌습니다.</string>
+    <string name="welcome_to_ufm_adb_shell">UFM ADB 쉘에 오신 것을 환영합니다.</string>
+    <string name="attempting_to_connect_to_hostport">%1$s:%2$d에 연결을 시도하는 중…</string>
+    <string name="pairing_with_device">기기와 페어링 중…</string>
+    <string name="pairing_failed_attempting_direct_connection">페어링에 실패했습니다. 직접 연결을 시도 중입니다...</string>
+    <string name="connecting_without_pairing_usb_debugging">페어링하지 않고 연결하는 중(USB 디버깅)…</string>
+    <string name="connected_to_adb_successfully">ADB에 성공적으로 연결되었습니다.</string>
+    <string name="approved">승인되었습니다!</string>
+    <string name="connection_failed_or_denied">연결이 실패했거나 거부되었습니다.</string>
+    <string name="ufm_file_transfer">UFM 파일 전송</string>
+    <string name="transferring_files_1">파일 전송 중…</string>
+    <string name="file_transfer">파일 전송</string>
+    <string name="keeps_file_transfers_alive_during_screenoff">화면이 꺼진 동안에도 파일 전송을 유지합니다.</string>
+    <string name="open_with_1">다음으로 열기</string>
+    <string name="ufm_viewer">UFM 뷰어</string>
+    <string name="ufm_slideshow">
+UFM 슬라이드 쇼
+</string>
+    <string name="ufm_slideshow_desc">
+슬라이드쇼로 재생
+</string>
+    <string name="open_with_builtin_viewer">내장 뷰어로 열기</string>
+    <string name="ufm_media_player">
+UFM 미디어 플레이어
+</string>
+    <string name="ufm_media_player_desc">
+UFM 미디어 플레이어로 플레이
+</string>
+    <string name="ufm_media_player_stream_desc">
+UFM 미디어 플레이어로 스트리밍
+</string>
+    <string name="external_app">외부 앱</string>
+    <string name="choose_another_app_to_open">열려는 다른 앱을 선택하세요</string>
+    <string name="page_firstvisible_1_total">페이지 %1$d / %2$d</string>
+    <string name="page_1_pagecount">페이지 1 / %1$d</string>
+    <string name="error_emessage">오류: %1$s</string>
+    <string name="archive_1">보관소</string>
+    <string name="error_opening_7z_emessage">7z를 여는 중 오류 발생: %1$s</string>
+    <string name="error_not_enough_memory">이 아카이브를 열려면 메모리가 부족합니다.</string>
+    <string name="invalid_password">잘못된 비밀번호</string>
+    <string name="error_reading_file_emessage">파일 읽기 오류: %1$s</string>
+    <string name="showing_first_limit_1024kb_of_bytessize_1024kb">… (%2$dKB 중 처음 %1$dKB 표시)</string>
+    <string name="error_extracting_word_content_emessage">Word 콘텐츠 추출 오류: %1$s</string>
+    <string name="no_text_content_found">(텍스트 콘텐츠를 찾을 수 없습니다)</string>
+    <string name="error_extracting_excel_content_emessage">Excel 콘텐츠 추출 오류: %1$s</string>
+    <string name="no_content_found">(콘텐츠를 찾을 수 없습니다)</string>
+    <string name="error_extracting_powerpoint_content_emessage">PowerPoint 콘텐츠 추출 중 오류 발생: %1$s</string>
+    <string name="no_text_content_found_in_visio_file">(Visio 파일에 텍스트 콘텐츠가 없습니다.)</string>
+    <string name="error_extracting_visio_content_emessage">Visio 콘텐츠 추출 오류: %1$s</string>
+    <string name="error_opening_archive_emessage">아카이브 열기 오류: %1$s</string>
+    <string name="size_compressed_ratio_saved">%1$s → %2$s (%3$d%% 저장됨)</string>
+
+    <string name="espressoprice">· %1$s</string>
+    <string name="latteprice">· %1$s</string>
+    <string name="beansprice">· %1$s</string>
+    <string name="message">☕ %1$s</string>
+    <string name="xapk_install_status_state">XAPK 설치 상태: %1$s</string>
+    <string name="error_loading_emessage">로드 중 오류 발생: %1$s</string>
+    <string name="freestr_free_of_totalstr">%1$s %2$s 없음</string>
+    <string name="usedpct_used">%1$d%% 사용됨</string>
+    <string name="nas_media">NAS 미디어</string>
+    <string name="errormsg">✕ %1$s</string>
+    <string name="android_device">안드로이드 장치</string>
+    <string name="storage_segment">저장소(%1$s)</string>
+    <string name="no_description_available">설명이 없습니다.</string>
+    <string name="just_now">방금</string>
+    <string name="files_on_storagelabel">%1$s에 있는 파일</string>
+    <string name="base_indexing">%1$s · 색인 생성 중…</string>
+    <string name="compressing_2">압축 중…</string>
+    <string name="failed_to_enumerate_drive_emessage">드라이브를 열거하지 못했습니다: %1$s</string>
+    <string name="duplicate">복제하다</string>
+    <string name="whatsapp">왓츠앱</string>
+    <string name="whatsapp_business">WhatsApp 비즈니스</string>
+    <string name="telegram">전보</string>
+    <string name="instagram">인스타그램</string>
+    <string name="snapchat">스냅챗</string>
+    <string name="tiktok">틱톡</string>
+    <string name="facebook">페이스북</string>
+    <string name="twitter_x">트위터 / X</string>
+    <string name="discord">불화</string>
+    <string name="spotify">스포티파이</string>
+    <string name="netflix">넷플릭스</string>
+    <string name="youtube">유튜브</string>
+    <string name="signal">신호</string>
+    <string name="viber">바이버</string>
+    <string name="line">선</string>
+    <string name="opening_itemlabel">📂 %1$s 열기</string>
+    <string name="opening_itemlabel_1">%1$s 여는 중…</string>
+    <string name="phone">핸드폰</string>
+    <string name="devicetypelabel_u2022_devicelastip">%1$s \\u2022 %2$s</string>
+    <string name="paired_phones_1">페어링된 휴대폰</string>
+    <string name="paired_tvs_1">페어링된 TV</string>
+    <string name="root">뿌리</string>
+    <string name="destination_1">목적지</string>
+    <string name="recovery_code">복구 코드</string>
+    <string name="no_recovery_code_is_set">복구 코드가 설정되지 않았습니다</string>
+    <string name="len_16">%1$d / 16</string>
+    <string name="mon">월</string>
+    <string name="tue">화요일</string>
+    <string name="wed">수요일</string>
+    <string name="thu">목</string>
+    <string name="fri">금</string>
+    <string name="sat">앉았다</string>
+    <string name="sun">해</string>
+    <string name="dcim_backup">DCIM 백업</string>
+    <string name="free">무료</string>
+    <string name="used">사용된</string>
+    <string name="android_tv">안드로이드 TV</string>
+    <string name="jcifsng_euagno3">jcifs-ng(eu.agno3)</string>
+    <string name="smbj_hierynomus">smbj (히에리노무스)</string>
+    <string name="apache_commons_net">아파치 커먼즈 넷</string>
+    <string name="apache_commons_compress">아파치 커먼즈 압축</string>
+    <string name="zip4j_netlingalazip4j">zip4j (net.lingala.zip4j)</string>
+    <string name="xz_for_java_orgtukaanixz">Java용 XZ(org.tukaani.xz)</string>
+    <string name="public_domain">공개 도메인</string>
+    <string name="apache_poi">아파치 POI</string>
+    <string name="nanohttpd">나노HTTPD</string>
+    <string name="google_firebase_analytics">구글 파이어베이스 분석</string>
+    <string name="google_billing_library">Google 결제 라이브러리</string>
+    <string name="google_play_review_library">Google Play 리뷰 라이브러리</string>
+    <string name="androidx_libraries">AndroidX 라이브러리</string>
+    <string name="viewpager2">ViewPager2</string>
+    <string name="libadbandroid_comgithubmuntashirakon">libadb-안드로이드 (com.github.MuntashirAkon)</string>
+    <string name="bouncycastle_orgbouncycastle">BouncyCastle(org.bouncycastle)</string>
+    <string name="apache_sshd_core">아파치 MINA SSHD</string>
+    <string name="eddsa_java">Java용 EdDSA</string>
+    <string name="slf4j_android">SLF4J 안드로이드</string>
+    <string name="androidsvg_comcaverock">AndroidSVG(com.caverock)</string>
+    <string name="coil_iocoilkt">코일(io.coil-kt.coil3)</string>
+    <string name="bouncy_castle_license_mitstyle">Bouncy Castle 라이센스(MIT 스타일)</string>
+    <string name="storage_volume">저장량</string>
+    <string name="image_3">영상</string>
+    <string name="bytes_b">$bytes B</string>
+    <string name="q1f_mb">%.1fMB</string>
+    <string name="sheet_sheetsheetname">=== 시트: %1$s ===</string>
+    <string name="sheet_sheetidx_1">=== 시트 %1$d ===</string>
+    <string name="slide_idx_1">=== 슬라이드 %1$d ===</string>
+    <string name="app_icon">앱 아이콘</string>
+    <string name="unsupported_archive_format_extension">지원되지 않는 아카이브 형식: %1$s</string>
+    <string name="getstringrstringtipjarthanksespresso">😄 에스프레소 고마워요!</string>
+    <string name="getstringrstringtipjarthankslatte">😄 라떼 고마워요!</string>
+    <string name="getstringrstringtipjarthanksbeans">😄 콩 고마워요!</string>
+    <string name="getstringrstringtipjarthanks">lf 감사합니다!</string>
+    <string name="apng4android_comgithubpenfeizhou">APNG4Android(com.github.penfeizhou.android.animation)</string>
+    <string name="online_storages_title">온라인 저장소</string>
+    <string name="online_storages_subtitle">OneDrive, Google 드라이브 등</string>
+    <string name="opening_online_storages">온라인 저장소를 여는 중…</string>
+
+    <string name="online_storages_empty_title">연결된 계정이 없습니다</string>
+    <string name="online_storages_empty_subtitle">+를 탭하여 로그인하세요.</string>
+    <string name="online_storages_policy_blocked_toast">정책에 따라 액세스가 차단됨</string>
+    <string name="add_online_storage_title">온라인 스토리지 추가</string>
+    <string name="add_online_storage_provider_label">제공업체 선택</string>
+    <string name="add_online_storage_onedrive">원드라이브</string>
+    <string name="add_online_storage_gdrive">구글 드라이브</string>
+    <string name="add_online_storage_auth_onedrive">Microsoft 계정 인증</string>
+    <string name="onedrive_personal_note">참고: 현재는 개인 OneDrive 계정만 연결할 수 있습니다.</string>
+    <string name="add_online_storage_auth_gdrive">Google을 통해 인증</string>
+    <string name="add_online_storage_dropbox">드롭박스</string>
+    <string name="add_online_storage_auth_dropbox">Dropbox를 통해 인증</string>
+    <string name="dropbox_device_code_subtitle">다른 장치를 사용하여 TV 연결</string>
+    <string name="dropbox_device_code_step1">1. 휴대폰이나 컴퓨터에서 다음으로 이동합니다.</string>
+    <string name="dropbox_device_code_step2">2. 로그인하고 접근을 허용하세요. 그런 다음 여기에 코드를 입력하세요.</string>
+    <string name="dropbox_device_code_scan_qr">또는 QR 코드를 스캔하세요.</string>
+    <string name="dropbox_auth_waiting">Dropbox에 연결하는 중…</string>
+    <string name="dropbox_auth_success">Dropbox에 성공적으로 연결되었습니다</string>
+    <string name="dropbox_auth_failed">인증 실패: %1$s</string>
+    <string name="dropbox_auth_verifying">코드 확인 중…</string>
+    <string name="gdrive_premium_title">Google 드라이브 알림</string>
+    <string name="gdrive_premium_message">Google 보안 정책으로 인해 UFM Pro는 이 앱 내에서 생성되거나 열린 파일에만 액세스할 수 있습니다. 모든 Google Drive 파일을 보려면 공식 Google Drive 앱을 사용하세요.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\n계속하시겠습니까?</string>
+    <string name="gdrive_scope_btn_cancel">취소</string>
+    <string name="gdrive_scope_btn_learn_more">자세히 알아보기</string>
+    <string name="onedrive_device_code_subtitle">다른 장치를 사용하여 TV 연결</string>
+    <string name="onedrive_device_code_step1">1. 휴대폰이나 컴퓨터에서 다음으로 이동합니다.</string>
+    <string name="onedrive_device_code_step2">2. 아래 표시된 코드를 입력하세요.</string>
+    <string name="onedrive_device_code_scan_qr">또는 QR 코드를 스캔하세요.</string>
+    <string name="onedrive_code_expires_in">코드는 %1$s 후에 만료됩니다.</string>
+    <string name="onedrive_code_expired">코드가 만료되었습니다. 다시 시작하세요.</string>
+    <string name="onedrive_auth_waiting">로그인을 기다리는 중…</string>
+    <string name="onedrive_auth_success">%1$s로 연결됨</string>
+    <string name="onedrive_auth_failed">인증 시작 실패: %1$s</string>
+    <string name="onedrive_auth_profile_failed">인증에 성공했지만 계정 세부정보를 가져오지 못했습니다.</string>
+    <string name="auth_library_loading">인증 라이브러리 로드 중…</string>
+
+    <!-- Shizuku Manager -->
+    <string name="shizuku_title">시즈쿠</string>
+    <string name="shizuku_subtitle">시즈쿠 매니저</string>
+    <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
+    <string name="shizuku_usb_access_title">
+USB 드라이브(제한됨)
+</string>
+    <string name="shizuku_usb_access_subtitle">
+Fire TV는 USB 직접 액세스를 제한합니다. Shizuku를 사용하세요.
+</string>
+    <string name="shizuku_usb_access_desc">
+이 장치의 보안 정책(SELinux)은 /mnt/media_rw/에 마운트된 USB 드라이브에 대한 직접 액세스를 차단합니다. USB 저장소에 액세스하려면 이 제한을 우회하는 데 필요한 높은 권한을 제공하는 Shizuku를 설치하고 승인하십시오.
+</string>
+    <string name="opening_shizuku">시즈쿠를 여는 중...</string>
+    <string name="shizuku_status_label">서비스 현황</string>
+    <string name="shizuku_installed">시즈쿠가 설치되었습니다</string>
+    <string name="shizuku_not_installed">시즈쿠가 설치되지 않았습니다.</string>
+    <string name="shizuku_description">Shizuku를 사용하면 앱이 시스템 수준 API를 직접 사용할 수 있으므로 대부분의 Android 버전에서 루트가 필요 없이 백그라운드 파일 관리 및 시스템 명령 실행과 같은 고급 기능을 사용할 수 있습니다.</string>
+    <string name="shizuku_service_status">서비스 현황</string>
+    <string name="shizuku_service_running">시즈쿠 서비스가 실행 중입니다</string>
+    <string name="shizuku_service_not_running">Shizuku 서비스가 실행되고 있지 않습니다</string>
+    <string name="shizuku_btn_enable">서비스 활성화</string>
+    <string name="shizuku_authorized">인정 받은</string>
+    <string name="shizuku_not_authorized">승인되지 않음</string>
+    <string name="shizuku_installed_msg">시즈쿠가 설치되어 사용이 가능해집니다.</string>
+    <string name="shizuku_download_hint">공식 GitHub 저장소에서 최신 버전의 Shizuku를 다운로드할 수 있습니다.</string>
+    <string name="shizuku_download_link">시즈쿠 다운로드</string>
+    <string name="shizuku_tv_download_title">시즈쿠 다운로드</string>
+    <string name="shizuku_tv_download_msg">이 기기에는 Shizuku가 설치되어 있지 않습니다.\n\n휴대폰이나 컴퓨터에서 다음 URL을 방문하여 최신 APK를 다운로드한 후 이 TV에 사이드로드하세요.\n\n%s</string>
+    <string name="shizuku_copy_link">링크 복사</string>
+    <string name="shizuku_link_copied">링크가 클립보드에 복사되었습니다.</string>
+    <string name="shizuku_auth_title">시즈쿠 승인</string>
+    <string name="shizuku_auth_msg">UFM은 고급 파일 작업을 수행하려면 Shizuku 인증이 필요합니다. 다음 시스템 대화상자에서 권한을 부여해 주세요.</string>
+    <string name="shizuku_btn_authorize">승인하다</string>
+    <string name="shizuku_btn_start_service">시즈쿠 활성화</string>
+    <string name="shizuku_starting_service">시즈쿠 서비스 시작 중...</string>
+    <string name="shizuku_starting_msg">방송 의도를 통해 Shizuku 서비스를 시작하려고 합니다. 기다리세요…</string>
+    <string name="shizuku_start_failed">시즈쿠를 시작하지 못했습니다. 무선 디버깅이 활성화되어 있는지 확인하거나 수동으로 시작하십시오.</string>
+    <string name="shizuku_enabled_and_active">Shizuku가 활성화되어 활성 상태입니다.</string>
+    <string name="shizuku_adb_not_connected">ADB가 연결되지 않았습니다. ADB 터미널을 통해 연결하면 Shizuku가 자동으로 활성화됩니다.</string>
+    <string name="shizuku_manager_open_error">시즈쿠 관리자를 열 수 없습니다. 먼저 앱을 설치해주세요.</string>
+
+    <!-- Media Player errors -->
+    <string name="playback_error_source">재생 오류: 파일을 열 수 없습니다.</string>
+    <string name="playback_error_server">재생 오류: 미디어 서버가 종료되었습니다.</string>
+
+    <!-- File Server (FTP/SFTP Hosting) -->
+    <string name="file_server_title">파일 서버</string>
+    <string name="file_server_subtitle">
+호스트 FTP / SFTP &amp; DLNA 서버
+</string>
+    <string name="file_server_tile_subtitle">
+호스트 FTP/SFTP/DLNA 서버
+</string>
+    <string name="ftp_server_label">FTP 서버</string>
+    <string name="sftp_server_label">SFTP 서버</string>
+    <string name="ftp_port_info">포트 2121 · 암호화되지 않은 파일 전송</string>
+    <string name="sftp_port_info">포트 2222 · 암호화된 파일 전송(SSH)</string>
+
+    <!-- DLNA Media Server & Renderer -->
+    <string name="dlna_server_title">
+DLNA 미디어 서버
+</string>
+    <string name="dlna_server_description">
+네트워크의 TV 및 기타 장치와 미디어 파일 공유
+</string>
+    <string name="dlna_renderer_title">
+DLNA 미디어 렌더러
+</string>
+    <string name="dlna_renderer_description">
+다른 장치가 재생을 위해 미디어를 UFM으로 푸시하도록 허용
+</string>
+    <string name="dlna_server_name_label">
+서버 이름
+</string>
+    <string name="dlna_server_name_default">
+UFM 미디어 서버
+</string>
+    <string name="dlna_renderer_name_label">
+렌더러 이름
+</string>
+    <string name="dlna_renderer_name_default">
+UFM 플레이어
+</string>
+    <string name="dlna_shared_folders_label">
+공유 폴더
+</string>
+    <string name="dlna_add_folder">
+폴더 추가
+</string>
+    <string name="dlna_no_folders_configured">
+구성된 폴더가 없습니다. 서버를 활성화하려면 폴더를 하나 이상 추가하세요.
+</string>
+    <string name="dlna_no_shared_folders">
+DLNA 서버를 활성화하기 전에 폴더를 하나 이상 추가하세요.
+</string>
+    <string name="dlna_server_settings">
+DLNA 설정
+</string>
+    <string name="dlna_server_running">
+DLNA: %1$s:%2$d
+</string>
+    <string name="dlna_renderer_running">
+DLNA 렌더러: %1$s
+</string>
+    <string name="dlna_new_server_found">
+%2$s에서 새 DLNA 서버를 찾았습니다: %1$s. 신뢰할 수 있는 서버에만 연결하세요.
+</string>
+    <string name="dlna_unsolicited_playback_title">
+재생 요청
+</string>
+    <string name="dlna_unsolicited_playback_message">
+%1$s이(가) %2$s을(를) 플레이하고 싶어합니다. 허용하다?
+</string>
+    <string name="dlna_allow">
+허용하다
+</string>
+    <string name="dlna_deny">
+부인하다
+</string>
+    <string name="dlna_security_warning">
+DLNA는 암호화되지 않습니다. 신뢰할 수 있는 네트워크에서만 사용하세요
+</string>
+    <string name="dlna_wifi_required">
+DLNA를 사용하려면 Wi-Fi가 필요합니다.
+</string>
+    <string name="dlna_read_only">
+DLNA 서버는 읽기 전용입니다.
+</string>
+    <string name="dlna_discovering">
+DLNA 서버 검색 중…
+</string>
+    <string name="dlna_no_servers_found">
+네트워크에서 DLNA 서버를 찾을 수 없습니다.
+</string>
+    <string name="dlna_manual_entry_hint">
+서버 IP 또는 호스트 이름
+</string>
+    <string name="dlna_url_rejected">
+차단된 URL: 로컬 네트워크 외부를 가리킵니다.
+</string>
+    <string name="dlna_scan_network">
+네트워크 스캔
+</string>
+    <string name="dlna_enter_ip_manually">
+IP를 수동으로 입력하세요
+</string>
+    <string name="dlna_port_info">
+포트 8200 · 암호화되지 않은 미디어 스트리밍
+</string>
+
+    <!-- DLNA Quick Settings Tile -->
+    <string name="settings_dlna_tile_title">
+DLNA 서버
+</string>
+    <string name="settings_dlna_tile_summary">
+DLNA 서버를 전환하려면 빠른 설정 타일을 표시하세요.
+</string>
+
+    <!-- DLNA Icon (for icon customization system) -->
+    <string name="icon_network_dlna">
+DLNA
+</string>
+
+    <!-- DLNA Host Activity (dedicated DLNA screen) -->
+    <string name="dlna_host_title">
+DLNA
+</string>
+    <string name="dlna_host_subtitle">
+미디어 서버 &amp; 렌더러
+</string>
+    <string name="dlna_tile_subtitle_active">
+활동적인
+</string>
+    <string name="dlna_tile_subtitle_inactive">
+구성하려면 탭하세요.
+</string>
+    <string name="dlna_settings_row_label">
+DLNA 설정
+</string>
+    <string name="dlna_settings_row_subtitle">
+공유 폴더, 서버 이름
+</string>
+
+    <string name="anonymous_access">익명 액세스</string>
+    <string name="anonymous_access_desc">자격 증명 없이 연결 허용</string>
+    <string name="server_profiles">서버 프로필</string>
+    <string name="no_profiles_yet">아직 구성된 프로필이 없습니다.\n+를 탭하여 계정을 만드세요.</string>
+    <string name="create_profile">프로필 만들기</string>
+    <string name="edit_profile">프로필 편집</string>
+    <string name="delete_profile">프로필 삭제</string>
+    <string name="delete_profile_confirm">\'%1$s\' 프로필을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.</string>
+    <string name="profile_saved">프로필이 저장되었습니다</string>
+    <string name="username">사용자 이름</string>
+    <string name="password">비밀번호</string>
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="passwords_do_not_match">비밀번호가 일치하지 않습니다.</string>
+    <string name="username_required">사용자 이름이 필요합니다</string>
+    <string name="username_already_exists">이 사용자 이름은 이미 사용 중입니다.</string>
+    <string name="password_required">새 프로필에는 비밀번호가 필요합니다.</string>
+    <string name="read_only">읽기 전용</string>
+    <string name="read_only_desc">이 프로필을 탐색 전용 액세스로 제한하세요.</string>
+    <string name="authorized_keys_label">
+승인된 SSH 키
+</string>
+    <string name="authorized_keys_hint">
+공개 키(한 줄에 하나씩)를 붙여넣거나 파일을 선택하세요.
+</string>
+    <string name="authorized_keys_desc">
+Linux ~/.ssh/authorized_keys와 마찬가지로 — SFTP 연결에만 적용됩니다. 일치하는 개인 키를 가진 사용자는 비밀번호 없이 연결할 수 있습니다.
+</string>
+    <string name="authorized_keys_pick">
+공개 키 파일 선택
+</string>
+    <string name="error_reading_key_file">
+키 파일을 읽지 못했습니다.
+</string>
+    <string name="use_this_key_file">
+이 키 파일 사용
+</string>
+    <string name="use_key_file_confirm">
+이 파일을 승인된 SSH 키로 사용하시겠습니까?\n
+\n
+%1$s
+</string>
+    <string name="auth_type_password">
+비밀번호
+</string>
+    <string name="auth_type_ssh_key">
+SSH 키
+</string>
+    <string name="auth_type_both">
+비밀번호 + SSH 키
+</string>
+    <string name="ftp_needs_password_title">
+FTP 서버에 비밀번호가 필요함
+</string>
+    <string name="ftp_needs_password_msg">
+FTP는 SSH 키 인증을 지원하지 않습니다. 먼저 사용자 이름과 비밀번호로 프로필을 생성하거나 기존 프로필을 편집하여 비밀번호를 추가하세요.
+</string>
+    <string name="authorized_keys_invalid_title">
+잘못된 키 파일
+</string>
+    <string name="authorized_keys_is_private">
+이것은 개인 키 파일입니다. 공개 키 파일에는 \"ssh-rsa\", \"ssh-ed25519\" 등으로 시작하는 줄이 포함되어 있습니다. 대신 .pub 파일을 선택하세요.
+</string>
+    <string name="authorized_keys_bad_format" formatted="false">
+%d 행의 SSH 공개 키 형식이 잘못되었습니다: \"%s\"
+</string>
+    <string name="authorized_keys_invalid_key">
+이 파일에는 유효한 SSH 공개 키가 포함되어 있지 않습니다.
+</string>
+    <string name="read_only_badge">읽기 전용</string>
+    <string name="default_location">기본 위치</string>
+    <string name="select_default_location">기본 위치 선택</string>
+    <string name="please_select_location">기본 위치를 선택하세요.</string>
+    <string name="file_server_ftp_running">FTP 서버 실행 중</string>
+    <string name="file_server_sftp_running">SFTP 서버 실행 중</string>
+    <string name="file_server_ftp_sftp_running">FTP 및 SFTP 서버 실행 중</string>
+    <string name="file_server_notification_desc">FTP 또는 SFTP 서버가 활성화된 시기를 표시합니다.</string>
+    <string name="file_server_notification_stop">
+멈추다
+</string>
+    <string name="file_server_notification_open">
+관리하려면 탭하세요.
+</string>
+    <string name="opening_file_server">파일 서버를 여는 중…</string>
+    <string name="select">선택하다</string>
+    <string name="browse_for_folder">📂 폴더 찾아보기…</string>
+    <string name="usb_drive">USB 드라이브</string>
+    <string name="no_locations_available">사용 가능한 위치가 없습니다.</string>
+
+    <!-- Supporter Loyalty Card -->
+    <string name="loyalty_card_title">서포터 로열티 카드</string>
+    <string name="loyalty_amount_tipped_label">팁 금액</string>
+    <string name="loyalty_goal_static">목표: $15</string>
+    <string name="loyalty_goal_format">목표: $%1$d</string>
+    <string name="loyalty_tipped_format">$%1$d 팁을 받았습니다</string>
+    <string name="loyalty_to_go_format">$%1$d 이동</string>
+    <string name="loyalty_beyond_goal_format">목표를 넘어 +$%1$d!</string>
+    <string name="loyalty_stat_total_label">총 팁</string>
+    <string name="loyalty_stat_coffees_label">커피</string>
+    <string name="loyalty_stat_to_goal_label">목표로</string>
+    <string name="loyalty_stat_beyond_goal_label">목표 너머</string>
+    <string name="loyalty_status_label">회원상태</string>
+    <string name="loyalty_tier_legend">전설</string>
+    <string name="loyalty_tier_champion">챔피언</string>
+    <string name="loyalty_tier_supporter">서포터</string>
+    <string name="loyalty_tier_free">무료 사용자</string>
+    <string name="loyalty_tier_badge_format">등급 %1$d</string>
+    <string name="loyalty_disclaimer">로열티 진행 상황은 이 기기에 로컬로 저장되며 앱이 제거되거나 해당 데이터가 삭제되면 재설정됩니다.</string>
+    <string name="loyalty_currency_format">$%1$d</string>
+    <string name="loyalty_value_format">%1$d</string>
+    <string name="loyalty_price_separator_format"> · %1$s</string>
+    <string name="nt_use_this_folder_for_caching">네트워크 캐싱에 이 폴더를 사용하세요.</string>
+    <string name="nt_confirm_cache_folder_msg">네트워크 파일의 미리보기 이미지는 다음 폴더에 저장됩니다: %s</string>
+    <string name="nt_limit_custom">관습...</string>
+    <string name="nt_custom_value_hint">값을 입력하세요</string>
+    <string name="nt_custom_unit_mb">MB</string>
+    <string name="nt_custom_unit_gb">GB</string>
+    <string name="nt_custom_save">구하다</string>
+    <string name="nt_custom_cancel">취소</string>
+    <string name="nt_custom_hint_example">예를 들어 3.5</string>
+
+    <!-- AWS S3 / IDrive e2 — Add Online Storage chips -->
+    <string name="add_online_storage_auth_aws_s3">AWS S3에 연결</string>
+    <string name="add_online_storage_auth_idrive_e2">IDrive e2에 연결</string>
+    <!-- Short provider labels used in S3SetupActivity title -->
+    <string name="add_online_storage_aws_s3">AWS S3</string>
+    <string name="add_online_storage_idrive_e2">S3 스토리지</string>
+
+    <!-- S3 Setup Activity — titles & subtitle -->
+    <string name="s3_setup_title">%1$s 설정</string>
+    <string name="s3_setup_title_default">S3 스토리지 설정</string>
+    <string name="s3_setup_subtitle">S3 호환 스토리지 자격 증명을 입력하세요</string>
+
+    <!-- S3 Setup Activity — field hints -->
+    <string name="s3_setup_label_hint">표시 이름(예: 내 S3 버킷)</string>
+    <string name="s3_setup_endpoint_hint">엔드포인트 URL(예: s3.amazonaws.com)</string>
+    <string name="s3_setup_endpoint_hint_idrive">엔드포인트 URL(예: e2.idrive.com)</string>
+    <string name="s3_setup_bucket_hint">버킷 이름</string>
+    <string name="s3_setup_region_hint">지역(예: us-east-1)</string>
+    <string name="s3_setup_access_key_hint">액세스 키 ID</string>
+    <string name="s3_setup_secret_key_hint">비밀 액세스 키</string>
+
+    <!-- S3 Setup Activity — button -->
+    <string name="s3_setup_connect">테스트 및 연결</string>
+
+    <!-- S3 Setup Activity — status messages -->
+    <string name="s3_setup_error_empty_fields">필수 입력란을 모두 작성해 주세요.</string>
+    <string name="s3_setup_error_bad_endpoint">엔드포인트는 유효한 호스트 이름 또는 URL이어야 합니다.</string>
+    <string name="s3_setup_success">성공적으로 연결되었습니다!</string>
+    <string name="s3_setup_error_connection">연결 실패: %1$s</string>
+
+    <!-- WebDAV — Add Online Storage chip + auth button -->
+    <string name="add_online_storage_webdav">
+웹DAV
+</string>
+    <string name="add_online_storage_auth_webdav">
+WebDAV 서버 설정
+</string>
+
+    <!-- WebDAV Setup Activity — title &amp; subtitle -->
+    <string name="webdav_setup_title">
+WebDAV 설정
+</string>
+    <string name="webdav_setup_subtitle">
+WebDAV 호환 서버에 연결
+</string>
+
+    <!-- WebDAV Setup Activity — server-type hint chips / spinner -->
+    <string name="webdav_hint_label">
+빠른 채우기 서버 유형
+</string>
+    <string name="webdav_hint_nextcloud">
+넥스트클라우드
+</string>
+    <string name="webdav_hint_owncloud">
+ownCloud
+</string>
+    <string name="webdav_hint_box">
+상자
+</string>
+    <string name="webdav_hint_generic">
+일반 WebDAV
+</string>
+    <string name="webdav_tv_server_type_prompt">
+서버 유형
+</string>
+
+    <!-- WebDAV Setup Activity — field hints -->
+    <string name="webdav_setup_label_hint">
+표시 이름(예: My Nextcloud)
+</string>
+    <string name="webdav_setup_url_hint">
+서버 URL(예: https://cloud.example.com/…)
+</string>
+    <string name="webdav_setup_username_hint">
+사용자 이름(익명의 경우 비워 두세요)
+</string>
+    <string name="webdav_setup_password_hint">
+비밀번호
+</string>
+
+    <!-- WebDAV Setup Activity — button -->
+    <string name="webdav_setup_connect">
+테스트 &amp; 연결하다
+</string>
+
+    <!-- WebDAV Setup Activity — status messages -->
+    <string name="webdav_setup_success">
+성공적으로 연결되었습니다!
+</string>
+    <string name="webdav_setup_error_empty_fields">
+표시 이름과 서버 URL을 입력하세요.
+</string>
+    <string name="webdav_setup_error_bad_url">
+URL은 http:// 또는 https://로 시작해야 합니다.
+</string>
+    <string name="webdav_setup_error_connection">
+연결 실패: %1$s
+</string>
+    <string name="webdav_setup_error_server_rejected">
+서버가 유효한 WebDAV 응답을 반환하지 않았습니다.
+</string>
+
+    <!-- WebDAV Setup Activity — plain-HTTP warning dialog -->
+    <string name="webdav_setup_http_warning_title">
+안전하지 않은 연결
+</string>
+    <string name="webdav_setup_http_warning_msg">
+일반 HTTP를 통해 연결하고 있습니다. 귀하의 자격 증명은 암호화되지 않은 상태로 전송됩니다. 가능하면 HTTPS를 사용하세요.
+</string>
+    <string name="webdav_setup_http_warning_continue">
+무시하고 계속
+</string>
+    <string name="webdav_setup_http_warning_cancel">
+취소
+</string>
+
+    <!-- About Section -->
+    <string name="about_title">에 대한</string>
+    <string name="about_app_name">최고의 파일 관리자 프로</string>
+    <string name="about_email">support@kilowatch.co.za</string>
+    <string name="about_more_info_title">추가 정보</string>
+    <string name="about_thanks_title">감사의 말</string>
+    <string name="about_thanks_desc">로고와 배너 개념 아이디어를 제공해 주신 u/Basic_Instinct_79에게 감사드립니다.</string>
+    <string name="about_app_description">프리미엄 글래스모피즘 미학으로 설계된 고급 크로스 플랫폼 파일 관리 및 공유 솔루션입니다. 모바일 장치, Android TV, Fire TV 전반에서 로컬 및 네트워크 스토리지를 원활하게 관리합니다.</string>
+    <string name="about_version_format">버전: %1$s (%2$s)</string>
+    <string name="flavor_mobile">이동하는</string>
+    <string name="flavor_tv">안드로이드 TV</string>
+    <string name="about_tile_subtitle">앱 정보 및 세부정보</string>
+
+    <!-- Convert to PDF dialog -->
+    <string name="pdf_convert_title">PDF로 변환</string>
+    <string name="pdf_convert_filename_hint">파일 이름</string>
+    <string name="pdf_convert_encrypt">비밀번호로 암호화</string>
+    <string name="pdf_convert_password_hint">비밀번호</string>
+    <string name="pdf_convert_confirm_hint">비밀번호 확인</string>
+    <string name="pdf_convert_btn">전환하다</string>
+    <string name="pdf_convert_pwd_mismatch">비밀번호가 일치하지 않거나 비어 있습니다.</string>
+    <string name="pdf_convert_converting">PDF로 변환 중…</string>
+    <string name="pdf_convert_success">PDF 저장됨: %1$s</string>
+    <string name="pdf_convert_failed">변환 실패</string>
+    <string name="pdf_converting_title">PDF로 변환</string>
+    <string name="pdf_converting_desc">[[Ph 0]]</string>
+    <string name="pdf_password_prompt_title">비밀번호로 보호됨</string>
+    <string name="pdf_password_prompt_hint">PDF 비밀번호를 입력하세요</string>
+    <string name="pdf_password_incorrect">잘못된 비밀번호</string>
+
+    <!-- Bluetooth Remote -->
+    <string name="error">오류</string>
+    <string name="bt_remote_unsupported_title">
+지원되지 않는 장치
+</string>
+    <string name="bt_remote_unsupported_message">
+블루투스 리모컨을 사용하려면 Android 9(Pie) 이상이 필요합니다. 귀하의 기기는 이전 버전의 Android를 실행 중이므로 이 기능을 사용할 수 없습니다.
+</string>
+    <string name="permission_denied">허가가 거부되었습니다</string>
+    <string name="bluetooth_disabled">블루투스가 비활성화되었습니다.</string>
+    <string name="enable_bluetooth">블루투스 활성화</string>
+    <string name="bluetooth_must_be_enabled_to_use_remote">리모컨으로 방송하려면 블루투스가 켜져 있어야 합니다.</string>
+    <string name="turn_on">켜다</string>
+    <string name="recents_not_supported_on_bluetooth">최근 키는 표준 Bluetooth 리모컨에서 지원되지 않습니다.</string>
+    <string name="connected">연결됨</string>
+    <string name="select_tv_to_connect">연결할 TV를 선택하세요</string>
+    <string name="open_bluetooth_settings">블루투스 설정 열기</string>
+    <string name="waiting_for_tv_to_pair">TV를 기다리는 중… (위의 \'TV에 연결\'을 탭하세요)</string>
+    
+    <string name="home">집</string>
+    <string name="bt_remote_volume_on">볼륨: 켜짐</string>
+    <string name="bt_remote_volume_off">볼륨: 꺼짐</string>
+    <string name="bt_remote_select_tv">연결할 TV를 선택하세요</string>
+    <string name="bt_remote_pair_new_tv">새 TV 페어링</string>
+    <string name="bt_remote_set_default">기본값으로 설정</string>
+    <string name="bt_remote_remove_default">기본값으로 제거</string>
+    <string name="bt_remote_connect_now">지금 연결하세요</string>
+    <string name="bt_remote_back">뒤쪽에</string>
+    <string name="bt_remote_cancel">취소</string>
+    <string name="bt_remote_tv_options">%1$s 옵션</string>
+    <string name="bt_remote_bluetooth_settings">블루투스 설정</string>
+    <string name="bt_remote_footer_text">Bluetooth 키 이벤트 전송 · 모든 TV 앱에서 시스템 전반에 걸쳐 작동</string>
+    <string name="bt_remote_select_device">
+TV 추가/선택
+</string>
+    <string name="bt_remote_add_device">
+TV 추가
+</string>
+    <string name="bt_remote_add_tv">
+TV 추가
+</string>
+    <string name="bt_remote_connect_set_default">기본값으로 설정</string>
+    <string name="bt_remote_disconnected_snackbar">원격 연결이 끊어졌습니다.</string>
+    <string name="bt_remote_add_tv_picker_title">
+UFM 리모컨에 TV 추가
+</string>
+    <string name="bt_remote_no_new_devices_found">
+새 장치를 찾을 수 없습니다. 먼저 Bluetooth 설정에서 TV를 페어링한 다음 여기로 돌아오세요.
+</string>
+
+    <!-- BT Remote Foreground Service Notification -->
+    <string name="bt_remote_notification_channel_name">블루투스 리모콘</string>
+    <string name="bt_remote_notification_channel_desc">TV 리모컨의 연결 상태를 표시합니다.</string>
+    <string name="bt_remote_notification_starting">원격 시작 중…</string>
+    <string name="bt_remote_notification_connecting">TV에 연결 중…</string>
+    <string name="bt_remote_notification_connected">%1$s에 연결됨</string>
+    <string name="bt_remote_notification_waiting">TV가 연결되기를 기다리는 중…</string>
+
+    <!-- BT Remote Status Card States -->
+    <string name="bt_remote_card_no_tvs_title">TV를 페어링하세요</string>
+    <string name="bt_remote_card_no_tvs_subtitle">TV에서 Bluetooth 설정을 열고 \'UFM Remote\'를 페어링하세요.</string>
+    <string name="bt_remote_card_disconnected_title">연결되지 않음</string>
+    <string name="bt_remote_card_disconnected_subtitle">%1$s에 다시 연결하려면 연결을 탭하세요.</string>
+    <string name="bt_remote_card_connecting_title">%1$s에 연결 중…</string>
+    <string name="bt_remote_card_connecting_subtitle">기다리세요</string>
+    <string name="bt_remote_card_connected_title">%1$s에 연결됨</string>
+    <string name="bt_remote_card_bt_off_title">블루투스가 꺼져 있습니다</string>
+    <string name="bt_remote_card_bt_off_subtitle">리모컨을 사용하려면 블루투스가 켜져 있어야 합니다.</string>
+    <string name="bt_remote_card_no_permission_title">권한이 필요합니다</string>
+    <string name="bt_remote_card_no_permission_subtitle">리모컨을 사용하려면 블루투스 권한이 필요합니다</string>
+    <string name="bt_remote_card_action_open_bt_settings">블루투스 설정 열기</string>
+    <string name="bt_remote_card_action_pair_tv">TV 페어링</string>
+    <string name="bt_remote_card_action_connect">연결하다</string>
+    <string name="bt_remote_card_action_connect_to">
+%1$s에 연결
+</string>
+    <string name="bt_remote_card_action_disconnect">연결 끊기</string>
+    <string name="bt_remote_card_action_turn_on">켜다</string>
+    <string name="bt_remote_card_action_grant_permission">권한 부여</string>
+
+    <!-- BT Remote Keyboard Mode -->
+    <string name="bt_remote_keyboard_mode">키보드 모드</string>
+    <string name="bt_remote_remote_mode">원격 모드</string>
+    <string name="bt_remote_keyboard_hint">여기에 입력하세요 — TV로 전송됩니다</string>
+    <string name="bt_remote_keyboard_select_all">모두 선택</string>
+    <string name="bt_remote_keyboard_clear">분명한</string>
+    <string name="bt_remote_keyboard_switch_to_remote">원격으로 전환</string>
+    <string name="bt_remote_saved_device_suffix">(저장됨)</string>
+    <string name="bt_remote_keyboard_backspace">⌫</string>
+    <string name="bt_remote_keyboard_tab">꼬리표</string>
+    <string name="bt_remote_keyboard_enter">↩</string>
+
+    <string name="unknown_device">알 수 없는 장치</string>
+    <string name="bt_remote_connecting_guidance">자동으로 연결되지 않으면 TV 블루투스 설정에서 \'UFM Remote\'를 선택하세요.</string>
+    <string name="bt_remote_use_phone_volume">전화 볼륨 버튼 사용</string>
+    <string name="bt_remote_volume_phone_hint">전화 버튼으로 볼륨 조절</string>
+
+    <!-- WiFi ADB Remote Transport -->
+    <string name="remote_transport_picker_title">
+TV에 연결
+</string>
+    <string name="remote_transport_bt_option">
+블루투스를 통해 연결
+</string>
+    <string name="remote_transport_wifi_option">
+WiFi/ADB를 통해 연결
+</string>
+    <string name="remote_transport_bt_connecting">
+블루투스를 통해 %1$s에 연결하는 중…
+</string>
+    <string name="remote_transport_wifi_connecting">
+Wi-Fi를 통해 %1$s에 연결하는 중…
+</string>
+    <string name="remote_connect_via_bt">
+블루투스를 통해 %1$s에 연결
+</string>
+    <string name="remote_connect_via_wifi">
+Wi-Fi를 통해 %1$s에 연결
+</string>
+    <string name="remote_device_bt_suffix">
+ — 블루투스
+</string>
+    <string name="remote_device_wifi_suffix">
+ — WiFi
+</string>
+    <string name="remote_transport_no_wifi_tvs_title">
+원격으로 활성화된 TV가 없습니다.
+</string>
+    <string name="remote_transport_no_wifi_tvs_message">
+WiFi 리모컨을 사용하려면 먼저 페어링된 TV 화면에서 페어링된 TV를 연 다음 \"리모컨 사용\" 옵션을 활성화하세요.\n
+\n
+또는 TV에서 ADB(USB 디버깅)가 활성화된 경우 IP 주소로 TV를 수동으로 추가할 수 있습니다.
+</string>
+    <string name="manual_entry_title">
+TV를 수동으로 추가
+</string>
+    <string name="manual_entry_name_hint">
+TV 이름
+</string>
+    <string name="manual_entry_ip_hint">
+IP 주소(예: 192.168.1.100)
+</string>
+    <string name="manual_entry_info">
+TV에서 ADB(USB 디버깅)가 활성화되어 있고 ADB 포트가 5555로 설정되어 있는지 확인하세요.
+</string>
+    <string name="manual_entry_add">
+추가하다
+</string>
+    <string name="manual_entry_duplicate_title">
+이미 추가됨
+</string>
+    <string name="manual_entry_duplicate_message">
+이 IP 주소는 이미 장치 목록에 있습니다. 대신 목록에서 기존 TV를 선택하세요.
+</string>
+    <string name="manual_entry_invalid_ip">
+유효한 IP 주소를 입력하세요.
+</string>
+    <string name="manual_device_suffix">
+ - 수동
+</string>
+    <string name="remote_remove_manual_title">
+수동 TV 제거
+</string>
+    <string name="remote_remove_manual_confirm_title">
+TV 제거
+</string>
+    <string name="remote_remove_manual_confirm_message">
+원격 장치에서 %1$s을(를) 제거하시겠습니까?
+</string>
+    <string name="remote_remove_manual_proceed">
+진행하다
+</string>
+    <string name="remote_no_tvs_add_manual_button">
+수동으로 추가
+</string>
+    <string name="remote_select_tv_add_manual">
+수동으로 추가
+</string>
+    <string name="use_remote_disabled">
+WiFi 원격 활성화
+</string>
+    <string name="use_remote_enabled">
+WiFi 원격 활성화됨
+</string>
+    <string name="use_remote_disabled_subtitle">
+이 TV를 리모컨 옵션으로 사용하려면 활성화하세요.
+</string>
+    <string name="use_remote_enabled_subtitle">
+이 TV는 리모컨 옵션으로 제공됩니다.
+</string>
+    <string name="use_remote_auth_title">
+TV에서 수락
+</string>
+    <string name="use_remote_auth_message">
+%1$s을(를) 리모컨으로 사용하려면 TV에서 ADB 연결 프롬프트를 수락해야 합니다.\n
+\n
+TV가 켜져 있는지 확인하고 대화상자가 나타나면 \'허용\'을 탭하세요. 이전에 이미 수락한 경우 자동으로 연결이 성공합니다.
+</string>
+    <string name="use_remote_failed_title">
+연결 실패
+</string>
+    <string name="use_remote_failed_message">
+ADB를 통해 TV에 연결할 수 없습니다. 다음 사항을 확인하세요.\n
+\n
+• TV에서 USB 디버깅이 활성화되어 있습니다.\n
+• TV가 동일한 Wi-Fi 네트워크에 있습니다.\n
+• TV에서 ADB 인증 메시지를 수락했습니다.\n
+\n
+그런 다음 다시 시도하세요.
+</string>
+    <string name="adb_remote_notification_channel_name">
+WiFi 원격
+</string>
+    <string name="adb_remote_notification_channel_desc">
+WiFi ADB Remote의 연결 상태를 표시합니다.
+</string>
+    <string name="adb_remote_notification_connecting">
+Wi-Fi를 통해 %1$s에 연결하는 중…
+</string>
+    <string name="adb_remote_notification_connected">
+Wi-Fi를 통해 %1$s에 연결됨
+</string>
+    <string name="adb_remote_notification_disconnected">
+WiFi 리모컨 연결이 끊겼습니다.
+</string>
+    <string name="adb_remote_notification_reconnecting">
+%1$s에 다시 연결하는 중…
+</string>
+    <string name="icon_remote_enabled">
+원격 활성화
+</string>
+    <string name="icon_remote_disabled">
+원격 비활성화
+</string>
+
+    <string name="ufm_first_tv_setup_guide">
+<![CDATA[<b>시작하기 전에</b><br>계속하기 전에 휴대전화와 TV 모두에서 이전에 페어링된 기기의 연결을 해제하세요.<br><br><b>1단계 — 목록에서 TV를 찾습니다.</b><br>TV가 자동으로 화면에 나타납니다.<br>TV가 표시되지 않나요? TV에서 리모컨 및 액세서리 → 액세서리 추가로 이동하여 검색 가능하게 한 다음 목록을 다시 확인하세요.<br><br><b>2단계 - TV 페어링</b><br>목록에서 TV를 탭하세요. 휴대전화와 TV 모두에서 페어링 코드를 수락하여 연결을 확인하세요.<br><br><b>3단계 - 연결 확인</b><br>휴대전화의 뒤로 버튼을 누르세요. 이제 TV가 연결된 것으로 표시됩니다.<br>아직 연결되지 않으셨나요? 연결을 누르고, 두 대 이상의 TV를 연결한 경우 TV 추가/선택을 탭하고 페어링된 TV를 선택하면 자동으로 연결됩니다.<br><br><b>📝 참고하세요</b><br>TV가 UFM Pro 외부에서 페어링된 경우(예: 휴대폰의 Bluetooth 설정을 통해) 리모컨이 작동하지 않습니다. 항상 위의 단계를 사용하여 UFM Pro를 통해 TV를 페어링하세요.<br>특정 TV 또는 Android/Google 박스에서는 페어링 후 첫 번째 연결 시 최대 4번까지 연결 및 연결 해제가 발생할 수 있습니다. 이는 첫 번째 페어링의 정상적인 동작이며 두 번째 연결은 즉시 이루어집니다.]]>
+</string>
+
+    <!-- Viewer Editor (TextViewerActivity) -->
+    <string name="btn_edit_toggle">
+편집 모드 전환
+</string>
+    <string name="btn_save">
+파일 저장
+</string>
+    <string name="save_dialog_title">
+파일 저장
+</string>
+    <string name="save_dialog_filename_hint">
+파일 이름
+</string>
+    <string name="overwrite_dialog_title">
+파일이 존재함
+</string>
+    <string name="overwrite_dialog_message">
+%1$s이(가) 이미 존재합니다. 덮어쓰시겠습니까?
+</string>
+    <string name="unsaved_changes_title">
+저장되지 않은 변경사항
+</string>
+    <string name="unsaved_changes_message">
+저장되지 않은 변경사항이 있습니다. 떠나기 전에 저장하시겠습니까?
+</string>
+    <string name="btn_discard">
+버리다
+</string>
+    <string name="file_saved">
+저장된 파일: %1$s
+</string>
+    <string name="file_save_error">
+파일 저장 오류: %1$s
+</string>
+    <string name="office_save_warning">
+이것은 Office 문서입니다. 콘텐츠는 서식 없이 저장됩니다.
+</string>
+    <string name="edit_mode_enabled">
+수정 모드가 활성화되었습니다.
+</string>
+    <string name="edit_mode_disabled">
+편집 모드가 비활성화되었습니다.
+</string>
+
+    <!-- Image Viewer Editor -->
+    <string name="btn_draw_toggle">
+그리기 모드 전환
+</string>
+    <string name="btn_draw_save">
+이미지 저장
+</string>
+    <string name="draw_color">
+색상 그리기
+</string>
+    <string name="btn_crop_toggle">
+자르기 모드 전환
+</string>
+    <string name="crop_mode_active">
+자르기 모드 - 모서리 드래그
+</string>
+    <string name="crop_mode_off">
+자르기 모드 꺼짐
+</string>
+    <string name="btn_clear_drawing">
+도면 지우기
+</string>
+    <string name="drawing_mode">
+그리기 모드
+</string>
+    <string name="image_saved">
+저장된 이미지: %1$s
+</string>
+    <string name="image_save_error">
+이미지 저장 오류: %1$s
+</string>
+
+    <!-- PDF Viewer -->
+    <string name="zoom_level">
+확대/축소: %1$d%%
+</string>
+
+    <!-- Notepad -->
+    <string name="notepad">
+메모장
+</string>
+    <string name="notepad_tile_subtitle">
+메모 작성 및 저장
+</string>
+    <string name="opening_notepad">
+메모장 열기
+</string>
+    <string name="notepad_default_name">
+메모장.txt
+</string>
+    <string name="save_note">
+구하다
+</string>
+    <string name="words_count">
+%1$d 단어
+</string>
+    <string name="characters_count">
+%1$d자
+</string>
+    <string name="export_pdf">
+PDF
+</string>
+    <string name="export_csv">
+CSV
+</string>
+    <string name="export_txt">
+TXT
+</string>
+    <string name="note_saved">
+저장된 메모: %1$s
+</string>
+    <string name="note_save_error">
+메모 저장 오류: %1$s
+</string>
+    <string name="note_empty_warning">
+메모가 비어 있습니다.
+</string>
+    <string name="notes_folder_title">
+내 노트
+</string>
+    <string name="notepad_select_export_format">
+다른 이름으로 저장
+</string>
+    <string name="clear_text">
+모든 텍스트 지우기
+</string>
+    <string name="clear_text_confirm_title">
+모든 텍스트를 지우시겠습니까?
+</string>
+    <string name="clear_text_confirm_message">
+그러면 편집기의 모든 텍스트가 지워집니다. 이 작업은 취소할 수 없습니다.
+</string>
+    <string name="filename_empty_error">
+파일 이름은 비워둘 수 없습니다.
+</string>
+    <string name="cannot_save_empty_file">
+빈 파일을 저장할 수 없습니다
+</string>
+    <string name="notepad_filename_hint">
+파일 이름
+</string>
+    <string name="notepad_select_folder">
+폴더 선택
+</string>
+    <string name="notepad_folder_picker_title">
+대상 폴더 선택
+</string>
+    <string name="notepad_save_as_title">
+다른 이름으로 저장
+</string>
+    <string name="notepad_saved_path">
+저장 위치: %1$s
+</string>
+    <string name="new_document">
+새 문서
+</string>
+    <string name="new_document_warning_title">
+저장되지 않은 작업
+</string>
+    <string name="new_document_warning_message">
+저장되지 않은 변경사항은 모두 손실됩니다. 계속하다?
+</string>
+    <string name="file_saved_inplace">
+파일이 저장되었습니다
+</string>
+
+    <!-- APK / XAPK Extract Settings -->
+    <string name="settings_apk_extract_title">
+APK / XAPK 추출
+</string>
+    <string name="settings_apk_extract_subtitle_off">
+표준 추출만
+</string>
+    <string name="settings_apk_extract_subtitle_on">
+향상된
+</string>
+    <string name="apk_extract_master_title">
+향상된 APK/XAPK 추출
+</string>
+    <string name="apk_extract_master_summary">
+APK/XAPK와 함께 아이콘 및 메타데이터 추출
+</string>
+    <string name="apk_extract_master_subtitle_on">
+활성화됨 - 필드를 변경하려면 탭하세요.
+</string>
+    <string name="apk_extract_master_subtitle_off">
+장애가 있는
+</string>
+    <string name="apk_extract_icon_title">
+앱 아이콘 추출
+</string>
+    <string name="apk_extract_icon_summary">
+APK 옆에 {appname}-icon.png를 저장합니다.
+</string>
+    <string name="apk_extract_fields_title">
+JSON에 포함할 메타데이터 필드
+</string>
+    <string name="field_extracted_date">
+추출된 날짜
+</string>
+    <string name="field_package_name">
+패키지 이름
+</string>
+    <string name="field_version_name">
+버전 이름
+</string>
+    <string name="field_version_code">
+버전 코드
+</string>
+    <string name="field_label">
+앱 라벨
+</string>
+    <string name="field_install_time">
+설치 날짜
+</string>
+    <string name="field_last_update_time">
+마지막 업데이트 날짜
+</string>
+    <string name="field_target_sdk">
+대상 SDK
+</string>
+    <string name="field_min_sdk">
+최소 SDK
+</string>
+    <string name="field_app_size">
+앱 크기
+</string>
+    <string name="field_source_dir">
+소스 디렉터리
+</string>
+    <string name="field_split_apks">
+APK 분할
+</string>
+    <string name="field_has_obb">
+OBB 있음
+</string>
+    <string name="field_permissions">
+권한
+</string>
+    <string name="extracts_subtitle_files">
+    Datei(en)
+</string>
+    <string name="export_format">
+체재
+</string>
+
+    <!-- Document Scanner -->
+    <string name="scanner_title">
+문서 스캐너
+</string>
+    <string name="scanner_tile_subtitle">
+문서를 PDF 또는 이미지로 스캔
+</string>
+    <string name="opening_scanner">
+문서 스캐너 열기
+</string>
+    <string name="scanner_save">
+구하다
+</string>
+    <string name="scanner_filename_hint">
+파일 이름
+</string>
+    <string name="scanner_save_path">
+저장 위치: %1$s
+</string>
+    <string name="scanner_select_folder">
+폴더 선택
+</string>
+    <string name="scanner_pages">
+%1$d 페이지
+</string>
+    <string name="scanner_format_jpeg">
+JPEG
+</string>
+    <string name="scanner_format_png">
+PNG
+</string>
+    <string name="scanner_format_pdf">
+PDF
+</string>
+    <string name="scanner_format_only_pdf">
+PDF(여러 페이지만 해당)
+</string>
+    <string name="scanner_scan_new_page">
+스캔 페이지
+</string>
+    <string name="scanner_saved">
+스캔이 저장되었습니다: %1$s
+</string>
+    <string name="scanner_save_error">
+스캔 저장 오류: %1$s
+</string>
+    <string name="scanner_use_this_folder">
+이 폴더 사용
+</string>
+    <string name="scanner_folder_picker_title">
+스캔을 저장할 폴더를 선택하세요
+</string>
+    <string name="scanner_no_pages">
+아직 스캔한 페이지가 없습니다.
+</string>
+    <string name="scanner_default_filename">
+주사
+</string>
+    <string name="scanner_capture_camera">
+카메라
+</string>
+    <string name="scanner_capture_gallery">
+갤러리에서 선택
+</string>
+    <string name="scanner_saving_title">
+문서 저장 중
+</string>
+    <string name="scanner_saving_message">
+문서가 저장되는 동안 잠시 기다려 주십시오…
+</string>
+    <!-- Backup & Restore -->
+    <string name="backup_restore_title">
+백업 및 복원하다
+</string>
+    <string name="backup_restore_subtitle">
+앱 설정 내보내기 또는 가져오기
+</string>
+    <string name="backup_action_required_warning">
+필요한 조치: 자격 증명 필요
+</string>
+    <string name="backup_export_btn">
+내보내기 설정
+</string>
+    <string name="backup_import_btn">
+가져오기 설정
+</string>
+    <string name="backup_export_success">
+설정을 성공적으로 내보냈습니다.
+</string>
+    <string name="backup_export_error">
+설정을 내보내지 못했습니다.
+</string>
+    <string name="backup_import_success">
+설정을 성공적으로 가져왔습니다.
+</string>
+    <string name="backup_import_error">
+설정을 가져오지 못했습니다.
+</string>
+    <string name="backup_import_decrypt_error">
+설정 백업의 암호를 해독하지 못했습니다. 파일이 손상되었거나 변조되었을 수 있습니다.
+</string>
+    <string name="backup_import_invalid_error">
+잘못된 백업 파일 형식
+</string>
+    <string name="backup_select_items">
+내보낼 항목 선택
+</string>
+    <string name="backup_confirm_import_title">
+가져오기 확인
+</string>
+    <string name="backup_confirm_import_message">
+이러한 설정을 가져오면 현재 설정, 네트워크 공유 및 온라인 저장소 구성이 대체됩니다.\n
+\n
+중요한 자격 증명(비밀번호, 개인 키)은 백업에 저장되지 않으며 다시 구성해야 합니다.\n
+\n
+가져오기가 완료되면 앱이 자동으로 다시 시작됩니다. 계속하다?
+</string>
+    <string name="backup_cat_shared_prefs">
+사용자 설정 &amp; 사용자 정의
+</string>
+    <string name="backup_cat_network_shares">
+네트워크 공유
+</string>
+    <string name="backup_cat_online_storages">
+온라인 스토리지 계정
+</string>
+    <string name="backup_cat_ftp_server_profiles">
+FTP 서버 프로필
+</string>
+    <string name="backup_cat_storage_renames">
+사용자 정의 파티션/드라이브 이름
+</string>
+    <string name="backup_cat_smart_sort">
+스마트 정렬 폴더 구성
+</string>
+    <string name="backup_import_details_title">
+가져오기 미리보기
+</string>
+
+    <!-- Icon Customization -->
+    <string name="icons_settings_title">
+아이콘
+</string>
+    <string name="icons_settings_subtitle">
+모든 앱 아이콘 맞춤설정
+</string>
+    <string name="category_file_types">
+파일 유형
+</string>
+    <string name="category_folders">
+폴더
+</string>
+    <string name="category_toolbar">
+도구 모음 작업
+</string>
+    <string name="category_navigation">
+항해
+</string>
+    <string name="category_settings">
+설정 &amp; 환경설정
+</string>
+    <string name="category_main_menu_tiles">
+메인 메뉴 타일
+</string>
+    <string name="icon_file_generic">
+일반 파일
+</string>
+    <string name="icon_file_image">
+영상
+</string>
+    <string name="icon_file_video">
+동영상
+</string>
+    <string name="icon_file_audio">
+오디오
+</string>
+    <string name="icon_file_pdf">
+PDF 문서
+</string>
+    <string name="icon_file_word">
+워드 문서
+</string>
+    <string name="icon_file_spreadsheet">
+스프레드시트
+</string>
+    <string name="icon_file_presentation">
+프레젠테이션
+</string>
+    <string name="icon_file_apk">
+APK/앱
+</string>
+    <string name="icon_file_archive">
+보관소
+</string>
+    <string name="icon_file_code">
+코드 파일
+</string>
+    <string name="icon_file_xml">
+XML/마크업
+</string>
+    <string name="icon_file_text">
+텍스트 파일
+</string>
+    <string name="icon_file_font">
+세례반
+</string>
+    <string name="icon_file_ebook">
+전자책
+</string>
+    <string name="icon_file_iso">
+디스크 이미지
+</string>
+    <string name="icon_file_database">
+데이터 베이스
+</string>
+    <string name="icon_file_torrent">
+급류
+</string>
+    <string name="icon_file_subtitle">
+부제
+</string>
+    <string name="icon_file_3d">
+3D 모델
+</string>
+    <string name="icon_file_backup">
+백업 파일
+</string>
+    <string name="icon_folder_default">
+접는 사람
+</string>
+    <string name="icon_folder_network">
+네트워크 폴더
+</string>
+    <string name="icon_toolbar_copy">
+복사
+</string>
+    <string name="icon_toolbar_move">
+이동하다
+</string>
+    <string name="icon_toolbar_rename">
+이름 바꾸기
+</string>
+    <string name="icon_toolbar_share">
+공유하다
+</string>
+    <string name="icon_toolbar_copy_encrypt">
+암호화된 사본
+</string>
+    <string name="icon_toolbar_move_encrypt">
+암호화된 상태로 이동
+</string>
+    <string name="icon_toolbar_favorite">
+가장 좋아하는
+</string>
+    <string name="icon_toolbar_hide">
+숨다
+</string>
+    <string name="icon_toolbar_unhide">
+숨기기 해제
+</string>
+    <string name="icon_toolbar_select_all">
+모두 선택
+</string>
+    <string name="icon_toolbar_compress">
+압박 붕대
+</string>
+    <string name="icon_toolbar_image_compress">
+이미지 압축
+</string>
+    <string name="icon_toolbar_delete">
+삭제
+</string>
+    <string name="export_pack">
+수출 팩
+</string>
+    <string name="import_pack">
+가져오기 팩
+</string>
+    <string name="reset_all_icons">
+모든 아이콘 재설정
+</string>
+    <string name="reset_icon">
+다시 놓기
+</string>
+    <string name="reset_all_confirm_title">
+모든 아이콘 재설정
+</string>
+    <string name="reset_all_confirm_message">
+모든 아이콘을 기본값으로 재설정하시겠습니까? 이 작업은 취소할 수 없습니다.
+</string>
+    <string name="pick_builtin_icon">
+내장 아이콘
+</string>
+    <string name="browse_icon_file">
+파일 찾아보기
+</string>
+    <string name="reset_icon_to_default">
+기본값으로 재설정
+</string>
+    <string name="icon_pack_export_title">
+아이콘 팩 내보내기
+</string>
+    <string name="icon_pack_export_subtitle">
+포함할 아이콘 카테고리를 선택하세요.
+</string>
+    <string name="icon_pack_import_title">
+아이콘 팩 가져오기
+</string>
+    <string name="icon_pack_import_subtitle">
+아이콘 팩 콘텐츠 미리보기
+</string>
+    <string name="icon_pack_export_warning">
+아이콘 팩에는 사용자 정의 아이콘 이미지와 기본 제공 선택 항목이 포함됩니다. UFM을 실행하는 모든 장치에서 가져올 수 있습니다.
+</string>
+    <string name="icon_pack_import_confirm">
+이 아이콘을 가져오시겠습니까? 선택한 아이콘의 현재 맞춤설정이 대체됩니다.
+</string>
+    <string name="icon_pack_export_success">
+아이콘 팩을 성공적으로 내보냈습니다.
+</string>
+    <string name="icon_pack_export_error">
+아이콘 팩을 내보내지 못했습니다.
+</string>
+    <string name="icon_pack_import_success">
+아이콘 팩을 성공적으로 가져왔습니다.
+</string>
+    <string name="icon_pack_import_error">
+아이콘 팩을 가져오지 못했습니다. 파일이 손상되었거나 변조되었을 수 있습니다.
+</string>
+    <string name="icon_pack_invalid_error">
+유효하지 않거나 손상된 아이콘 팩 파일
+</string>
+    <string name="icon_pack_import_btn">
+아이콘 가져오기
+</string>
+
+    <!-- New Icon Categories -->
+    <string name="category_media_player">
+미디어 플레이어
+</string>
+    <string name="category_utility">
+유틸리티/액션
+</string>
+    <string name="category_status">
+상태/경고
+</string>
+    <string name="category_view_modes">
+보기 모드
+</string>
+    <string name="category_feature_tiles">
+기능 타일
+</string>
+    <string name="category_misc">
+여러 가지 잡다한
+</string>
+    <string name="icon_media_play">
+놀다
+</string>
+    <string name="icon_media_pause">
+정지시키다
+</string>
+    <string name="icon_media_skip_next">
+다음 건너뛰기
+</string>
+    <string name="icon_media_skip_previous">
+이전 건너뛰기
+</string>
+    <string name="icon_media_shuffle">
+혼합
+</string>
+    <string name="icon_media_repeat">
+반복하다
+</string>
+    <string name="icon_media_fullscreen">
+전체 화면
+</string>
+    <string name="icon_media_fullscreen_exit">
+전체 화면 종료
+</string>
+    <string name="icon_media_volume">
+용량
+</string>
+    <string name="icon_media_volume_off">
+볼륨 끄기
+</string>
+    <string name="icon_action_add">
+추가하다
+</string>
+    <string name="icon_action_close">
+닫다
+</string>
+    <string name="icon_action_edit">
+편집하다
+</string>
+    <string name="icon_action_refresh">
+새로 고치다
+</string>
+    <string name="icon_action_save">
+구하다
+</string>
+    <string name="icon_action_paste">
+반죽
+</string>
+    <string name="icon_action_undo">
+끄르다
+</string>
+    <string name="icon_action_duplicate">
+복제하다
+</string>
+    <string name="icon_action_crop">
+수확고
+</string>
+    <string name="icon_action_zoom_in">
+확대
+</string>
+    <string name="icon_action_zoom_out">
+축소
+</string>
+    <string name="icon_action_fit_screen">
+화면 맞춤
+</string>
+    <string name="icon_status_warning">
+경고
+</string>
+    <string name="icon_status_warning_badge">
+경고배지
+</string>
+    <string name="icon_status_check_circle">
+서클 확인
+</string>
+    <string name="icon_status_shield_check">
+쉴드 체크
+</string>
+    <string name="icon_status_shield_alert">
+쉴드 경고
+</string>
+    <string name="icon_view_grid_small">
+작은 그리드
+</string>
+    <string name="icon_view_grid_medium">
+그리드 매체
+</string>
+    <string name="icon_view_grid_large">
+그리드 대형
+</string>
+
+    <!-- Icon navigation labels -->
+    <string name="icon_nav_back">
+뒤쪽에
+</string>
+    <string name="icon_nav_forward">
+앞으로
+</string>
+    <string name="icon_nav_up">
+위로
+</string>
+
+    <!-- Icon settings labels -->
+    <string name="icon_settings_default_start_screen">
+기본 시작 화면
+</string>
+    <string name="icon_settings_language">
+언어
+</string>
+    <string name="icon_settings_appearance">
+모습
+</string>
+    <string name="icon_settings_icons">
+아이콘
+</string>
+    <string name="icon_settings_backup_restore">
+백업 및 복원하다
+</string>
+    <string name="icon_settings_main_menu_layout">
+메인 메뉴 레이아웃
+</string>
+    <string name="icon_settings_twin_window_layout">
+트윈 창 레이아웃
+</string>
+    <string name="icon_settings_twin_window_startup">
+기본 트윈 창
+</string>
+    <string name="icon_settings_side_by_side_video">
+병렬 비디오
+</string>
+    <string name="icon_settings_breadcrumbs">
+이동 경로
+</string>
+    <string name="icon_settings_default_apps">
+기본 앱
+</string>
+    <string name="icon_settings_font_size">
+글꼴 크기
+</string>
+    <string name="icon_settings_apk_extract">
+APK/XAPK 추출
+</string>
+    <string name="icon_settings_long_press">
+길게 누르는 시간
+</string>
+    <string name="icon_settings_toolbar_icons">
+도구 모음 아이콘
+</string>
+    <string name="icon_settings_favorites">
+즐겨찾기
+</string>
+    <string name="icon_settings_custom_drive_names">
+사용자 정의 드라이브 이름
+</string>
+    <string name="icon_settings_file_server_tiles">
+파일 서버 타일
+</string>
+    <string name="icon_settings_hidden_files">
+숨겨진 파일
+</string>
+    <string name="icon_settings_recycle_bin">
+휴지통
+</string>
+    <string name="icon_settings_media_thumbnails">
+미디어 썸네일
+</string>
+    <string name="icon_settings_video_thumbnail_time">
+비디오 썸네일 시간
+</string>
+    <string name="icon_settings_network_thumbnails">
+네트워크 축소판
+</string>
+    <string name="icon_settings_cache_copy">
+캐시 복사
+</string>
+    <string name="icon_settings_quick_transfer">
+빠른 복사/이동
+</string>
+    <string name="icon_settings_network_open_cache">
+네트워크 오픈 캐시
+</string>
+    <string name="icon_settings_storage_indexer">
+스토리지 인덱서
+</string>
+    <string name="icon_settings_analytics">
+해석학
+</string>
+
+    <!-- Icon feature tile labels -->
+    <string name="icon_tile_indexed_badge">
+색인화된 배지
+</string>
+    <string name="icon_tile_remove_circle">
+원 제거
+</string>
+    <string name="icon_tile_more">
+더
+</string>
+    <string name="icon_tile_history">
+역사
+</string>
+    <string name="icon_tile_import_code">
+가져오기 코드
+</string>
+    <string name="icon_tile_refresh_custom">
+사용자 정의 새로 고침
+</string>
+    <string name="icon_tile_search_off">
+검색 끄기
+</string>
+    <string name="icon_tile_twin_window_off">
+트윈 윈도우 끄기
+</string>
+    <string name="icon_tile_vpn_warning">
+VPN 경고
+</string>
+    <string name="icon_tile_saf">
+SAF
+</string>
+    <string name="icon_tile_visibility_off">
+가시성 끄기
+</string>
+
+    <string name="backup_import_details_subtitle">
+복원할 항목 검토
+</string>
+    <string name="backup_import_action_btn">
+수입 &amp; 다시 시작
+</string>
+    <string name="backup_import_details_empty">
+백업 파일에서 설정을 찾을 수 없습니다.
+</string>
+    <string name="backup_no_exportable_items">
+내보낼 수 있는 사용자 정의 설정이 없습니다.
+</string>
+    <string name="backup_notification_file_saved">
+백업 파일 저장 위치: %1$s
+</string>
+    <string name="backup_toast_please_fill_credentials">
+이 연결을 잠금 해제하려면 자격 증명을 입력하세요
+</string>
+    <string name="backup_select_config_file">
+.UFMConfig 백업 파일을 선택하세요.
+</string>
+    <string name="backup_export_details_title">
+미리보기 내보내기
+</string>
+    <string name="backup_export_details_subtitle">
+저장할 구성을 선택하세요.
+</string>
+    <string name="backup_export_warning_message">
+민감한 자격 증명(비밀번호, 개인 키)은 백업에 저장되지 않습니다. OAuth를 사용하는 클라우드 드라이브(Google Drive, Dropbox, OneDrive)는 백업에서 완전히 제외됩니다.
+</string>
+    <string name="backup_export_desc">
+선택한 구성을 스토리지에 안전하게 패키징하고 암호화합니다.
+</string>
+    <string name="backup_import_desc">
+설정을 복원하려면 UFM 브라우저를 사용하여 .UFMConfig 백업 파일을 선택하세요.
+</string>
+    <string name="backup_pref_tile_colors">
+타일 ​​색상 &amp; 미학
+</string>
+    <string name="backup_pref_theme_sort">
+일반 테마, 글꼴 크기 및amp; 환경설정 정렬
+</string>
+    <string name="backup_pref_hidden_files">
+숨겨진 파일 표시
+</string>
+    <string name="backup_pref_main_menu">
+메인 메뉴 레이아웃
+</string>
+    <string name="backup_pref_long_press">
+편집 모드 길게 누르는 시간
+</string>
+    <string name="backup_pref_date_group">
+날짜 그룹화 규칙
+</string>
+    <string name="backup_pref_default_start">
+기본 시작 화면
+</string>
+    <string name="backup_pref_toolbar_icons">
+툴바 레이아웃 &amp; 아이콘 가시성
+</string>
+    <string name="backup_pref_twin_window">
+트윈 창 레이아웃 &amp; 시작
+</string>
+    <string name="backup_pref_tile_order">
+메인 메뉴 타일 순서 &amp; 숨겨진 타일
+</string>
+    <string name="backup_pref_favorites">
+즐겨찾는 경로
+</string>
+    <string name="backup_pref_default_apps">
+기본 애플리케이션
+</string>
+    <string name="backup_pref_thumbnails">
+미디어 썸네일
+</string>
+    <string name="backup_pref_network_thumbnails">
+네트워크 썸네일 &amp; 크기
+</string>
+    <string name="backup_pref_network_cache">
+네트워크 파일 캐시 기본 설정
+</string>
+    <string name="backup_pref_side_by_side">
+듀얼 재생 기본 설정
+</string>
+    <string name="backup_pref_quick_transfer">
+빠른 파일 전송 설정
+</string>
+    <string name="backup_pref_recycle_bin">
+휴지통 보관 설정
+</string>
+    <string name="backup_pref_apk_extract">
+APK 추출 설정
+</string>
+    <string name="backup_pref_cache_copy">
+보안 캐시 복사 설정
+</string>
+    <string name="backup_pref_video_thumb_time">
+비디오 썸네일 시간
+</string>
+    <string name="backup_format_type_host">
+%1$s - %2$s
+</string>
+    <string name="backup_format_location">
+위치: %1$s
+</string>
+    <string name="backup_format_original">
+원본: %1$s
+</string>
+    <string name="backup_path_internal_storage">
+내부 저장소/UFM/%1$s
+</string>
+
+    <!-- Premium Share General -->
+    <string name="share_dialog_title">
+공유 방법 선택
+</string>
+    <string name="share_option_standard">
+표준 Android 공유
+</string>
+    <string name="share_option_standard_desc">
+표준 Android 앱(블루투스, 이메일 등)을 사용하여 파일 보내기
+</string>
+    <string name="share_option_premium">
+UFM 프리미엄 로컬 카피
+</string>
+    <string name="share_option_premium_desc">
+Wi-Fi 푸시를 통해 TV에 직접 복사하거나 웹 공유 포털을 통해 PC/휴대폰에 직접 복사
+</string>
+    <string name="premium_share_title">
+UFM 로컬 복사 센터
+</string>
+    <string name="premium_share_subtitle">
+파일을 다른 장치에 직접 복사
+</string>
+    <string name="select_target_device">
+대상 장치 유형 선택:
+</string>
+    <string name="target_tv">
+안드로이드 TV / 파이어 TV
+</string>
+    <string name="target_tv_desc">
+무선 ADB 푸시를 사용하여 Android TV에 직접 파일 복사
+</string>
+    <string name="target_mobile_pc">
+휴대폰/태블릿/PC
+</string>
+    <string name="target_mobile_pc_desc">
+모든 브라우저에서 파일을 다운로드할 수 있는 보안 로컬 포털 호스팅
+</string>
+    <string name="discovered_devices">
+발견된 TV &amp; 장치
+</string>
+    <string name="web_portal_card">
+웹 공유 포털
+</string>
+    <string name="web_portal_desc">
+브라우저가 있는 PC, 태블릿 또는 모바일의 경우:
+</string>
+    <string name="web_portal_pin">
+세션 PIN
+</string>
+    <string name="adb_device_badge">
+안드로이드 TV(ADB)
+</string>
+    <string name="connecting_to_device">
+%1$s에 연결 중…
+</string>
+    <string name="developer_options_warning">
+중요: 스캔하기 전에 대상 TV/장치에서 개발자 옵션 및 USB/무선 디버깅을 활성화해야 합니다.
+</string>
+    <string name="adb_prompt_warning">
+TV 화면에 \"USB 디버깅 허용\" 메시지가 나타나면 승인해 주세요.
+</string>
+    <string name="transferring_file">
+%1$s 전송 중: %2$d%% (%3$.1f MB/s)
+</string>
+    <string name="transfer_complete">
+전송 완료!
+</string>
+    <string name="stop_sharing">
+공유 중지
+</string>
+    <string name="custom_port_hint">
+포트(예: 5555)
+</string>
+    <string name="confirm_transfer_title">
+전송 확인
+</string>
+    <string name="confirm_transfer_message">
+%1$d 파일(%2$s)을 대상 기기의 %3$s에 전송하시겠습니까?
+</string>
+    <string name="default_destination_path">
+내부 저장소/다운로드
+</string>
+
+    <!-- APK Actions -->
+    <string name="apk_action_title">
+APK 전송 작업
+</string>
+    <string name="apk_action_message">
+%1$s을(를) 대상 장치에 설치하시겠습니까, 아니면 복사하시겠습니까?
+</string>
+    <string name="apk_action_install">
+APK 설치
+</string>
+    <string name="apk_action_copy">
+복사만
+</string>
+    <string name="installing_apk">
+대상에 %1$s 설치 중…
+</string>
+    <string name="installation_success">
+설치가 성공했습니다!
+</string>
+
+    <!-- Web Share Portal HTML strings -->
+    <string name="web_portal_html_title">
+UFM 웹 공유
+</string>
+    <string name="web_portal_html_header">
+최고의 파일 관리자 프로
+</string>
+    <string name="web_portal_html_subtitle">
+%1$s에서 공유된 파일
+</string>
+    <string name="web_portal_html_destination_notice">
+파일은 장치의 기본 다운로드 폴더에 저장됩니다.
+</string>
+    <string name="web_portal_html_enter_pin">
+세션 PIN 입력
+</string>
+    <string name="web_portal_html_verify">
+확인하다
+</string>
+    <string name="web_portal_html_invalid_pin">
+PIN이 잘못되었습니다. 다시 시도해 주세요.
+</string>
+    <string name="web_portal_html_download_list">
+다운로드 가능한 파일
+</string>
+    <string name="web_portal_html_download_button">
+다운로드
+</string>
+    <string name="web_portal_html_download_all">
+모두 다운로드(ZIP)
+</string>
+    <string name="web_portal_html_empty_list">
+현재 공유 중인 파일이 없습니다.
+</string>
+
+    <!-- TV Premium Share Specific -->
+    <string name="tv_share_step_connect">
+1. 수신 장치를 동일한 Wi-Fi 네트워크에 연결합니다.
+</string>
+    <string name="tv_share_step_browser">
+2. 장치에서 브라우저(Chrome, Safari 등)를 엽니다.
+</string>
+    <string name="tv_share_step_url">
+3. 다음 URL을 입력하세요.
+</string>
+    <string name="tv_share_step_pin">
+4. 세션 PIN을 입력하세요:
+</string>
+    <string name="tv_share_status_waiting">
+웹 서버가 실행 중입니다. 연결을 기다리는 중…
+</string>
+    <string name="connect_manually">
+수동으로 연결
+</string>
+    <string name="sending_file">
+파일을 보내는 중…
+</string>
+    <string name="pro_badge">
+찬성
+</string>
+</resources>
+

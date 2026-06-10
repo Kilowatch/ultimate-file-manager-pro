@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- TV Header -->
+    <LinearLayout
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:contentDescription="@string/back" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="@string/adb_pairing"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black" />
+
+        <TextView
+            android:id="@+id/txtHeaderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/connect_to_android_device"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:layout_marginEnd="16dp" />
+    </LinearLayout>
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingVertical="24dp">
+
+            <!-- Device Scan Section -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnScanDevices"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="@string/adb_scan_devices"
+                android:focusable="true"
+                style="@style/Widget.MaterialComponents.Button"
+                app:backgroundTint="@color/tv_button_bg_tint"
+                android:textColor="@color/tv_text_primary"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Scan Progress -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/scanProgressContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <ProgressBar
+                        android:id="@+id/scanProgressBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginBottom="16dp"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:indeterminate="true" />
+
+                    <TextView
+                        android:id="@+id/scanProgressText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scanning"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/devicesDetectedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/devices_detected_0"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Settings Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <!-- Device Spinner -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_device"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@drawable/bg_input_field"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="4dp">
+
+                        <Spinner
+                            android:id="@+id/spinnerDevices"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:focusable="true"
+                            android:background="@null" />
+                    </LinearLayout>
+
+                    <!-- Port Input -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adb_port_label"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintEnabled="false"
+                        app:boxBackgroundMode="none">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editAdbPort"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="52dp"
+                            android:hint="@string/s_5555"
+                            android:background="@drawable/bg_input_field"
+                            android:paddingHorizontal="24dp"
+                            android:paddingVertical="8dp"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:focusable="true"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Status Message -->
+                    <TextView
+                        android:id="@+id/txtAdbStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:textColor="@color/ufm_error"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:layout_marginTop="16dp" />
+
+                    <!-- Connection Buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginTop="24dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnConnectNoPIN"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="@string/connect_without_pin"
+                            android:focusable="true"
+                            style="@style/Widget.MaterialComponents.Button"
+                            app:backgroundTint="@color/tv_button_bg_tint"
+                            android:textColor="@color/tv_text_primary"
+                            android:layout_marginBottom="12dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTogglePIN"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="@string/use_pin_pairing"
+                            android:focusable="true"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:textColor="@color/tv_text_primary"
+                            app:backgroundTint="@color/tv_button_bg_tint" />
+                    </LinearLayout>
+                                        
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- PIN Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/pinContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/adb_pin_label"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <EditText
+                            android:id="@+id/pin_1"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                        <EditText
+                            android:id="@+id/pin_2"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                        <EditText
+                            android:id="@+id/pin_3"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                        <EditText
+                            android:id="@+id/pin_4"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                        <EditText
+                            android:id="@+id/pin_5"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                        <EditText
+                            android:id="@+id/pin_6"
+                            style="@style/AdbPinBox"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnConnectWithPin"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/pair_and_connect"
+                        android:focusable="true"
+                        style="@style/Widget.MaterialComponents.Button"
+                        app:backgroundTint="@color/tv_button_bg_tint"
+                        android:textColor="@color/tv_text_primary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

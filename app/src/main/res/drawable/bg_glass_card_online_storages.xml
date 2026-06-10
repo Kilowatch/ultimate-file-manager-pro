@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV glass card background for the "Online Storages" tile.
+    Cloned from bg_glass_card.xml with an extra azure blue tint overlay.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Glass Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/tv_glass_white_10" />
+            <corners android:radius="@dimen/card_radius_lg" />
+        </shape>
+    </item>
+    <!-- Blue tint wash (left-to-right fade, very subtle) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="0"
+                android:startColor="#140078D4"
+                android:endColor="#000078D4" />
+            <corners android:radius="@dimen/card_radius_lg" />
+        </shape>
+    </item>
+    <!-- Top Highlight (Inner Glow Effect) -->
+    <item android:bottom="9dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:endColor="@android:color/transparent"
+                android:startColor="@color/tv_glass_highlight" />
+            <corners android:radius="@dimen/card_radius_lg" />
+        </shape>
+    </item>
+</layer-list>

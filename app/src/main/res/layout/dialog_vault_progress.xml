@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/tv_bg_gradient_end">
+
+    <TextView
+        android:id="@+id/txtVaultProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="@dimen/text_sm"
+        android:text="@string/decrypting_00" />
+
+    <ProgressBar
+        android:id="@+id/progressVault"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="12dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressTint="@color/tv_button_focused_yellow"
+        android:progressBackgroundTint="#33FFFFFF" />
+
+</LinearLayout>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Import Dialog — full-screen semi-transparent overlay.
+    User pastes a UFM color code; validated in real-time.
+    On valid code: color preview rows appear. Apply → TileCopyTvActivity.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000">
+
+    <LinearLayout
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/bg_tv_dialog_surface"
+        android:padding="24dp">
+
+        <!-- Title row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_import_code"
+                app:tint="@color/tv_accent"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tile_color_import_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tv_glass_border"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Code input field -->
+        <EditText
+            android:id="@+id/etImportCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tile_color_import_hint"
+            android:textColor="@color/tv_text_primary"
+            android:textColorHint="@color/tv_text_hint"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:inputType="text"
+            android:maxLines="2"
+            android:padding="12dp"
+            android:background="@drawable/bg_tv_input_field"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Validation error message -->
+        <TextView
+            android:id="@+id/tvImportError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFEF5350"
+            android:textSize="13sp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone" />
+
+        <!-- Color preview panel — hidden until code is valid -->
+        <LinearLayout
+            android:id="@+id/importPreviewPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_tv_code_surface"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Row: Icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View android:id="@+id/dotImportIcon"
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_marginEnd="12dp" />
+                <TextView android:id="@+id/lblImportIcon"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tile_color_code_icon"
+                    android:textColor="@color/tv_text_secondary" android:textSize="14sp" />
+                <TextView android:id="@+id/hexImportIcon"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:fontFamily="monospace" android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint" />
+            </LinearLayout>
+
+            <!-- Row: Tile Background -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View android:id="@+id/dotImportTileBg"
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_marginEnd="12dp" />
+                <TextView android:id="@+id/lblImportTileBg"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tile_color_code_tile_bg"
+                    android:textColor="@color/tv_text_secondary" android:textSize="14sp" />
+                <TextView android:id="@+id/hexImportTileBg"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:fontFamily="monospace" android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint" />
+            </LinearLayout>
+
+            <!-- Row: Outer Ring -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View android:id="@+id/dotImportRing"
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_marginEnd="12dp" />
+                <TextView android:id="@+id/lblImportRing"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tile_color_code_ring"
+                    android:textColor="@color/tv_text_secondary" android:textSize="14sp" />
+                <TextView android:id="@+id/hexImportRing"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:fontFamily="monospace" android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint" />
+            </LinearLayout>
+
+            <!-- Row: Icon Background -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <View android:id="@+id/dotImportIconBg"
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_marginEnd="12dp" />
+                <TextView android:id="@+id/lblImportIconBg"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tile_color_code_icon_bg"
+                    android:textColor="@color/tv_text_secondary" android:textSize="14sp" />
+                <TextView android:id="@+id/hexImportIconBg"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:fontFamily="monospace" android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint" />
+            </LinearLayout>
+
+            <!-- Row: Text / Label -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <View android:id="@+id/dotImportLabel"
+                    android:layout_width="20dp" android:layout_height="20dp"
+                    android:layout_marginEnd="12dp" />
+                <TextView android:id="@+id/lblImportLabel"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/tile_color_code_label"
+                    android:textColor="@color/tv_text_secondary" android:textSize="14sp" />
+                <TextView android:id="@+id/hexImportLabel"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:fontFamily="monospace" android:textSize="12sp"
+                    android:textColor="@color/tv_text_hint" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnImportCancel"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/tile_color_cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnImportApply"
+                style="@style/TvGrantButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:enabled="false"
+                android:text="@string/tile_color_import_apply" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

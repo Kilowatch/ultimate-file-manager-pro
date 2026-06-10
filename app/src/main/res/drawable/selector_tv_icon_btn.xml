@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Background selector for TV icon ImageView buttons.
+     Uses background (not foreground) so the icon is always visible on top. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Focused: solid yellow circle with outer glow ring -->
+    <item android:state_focused="true">
+        <layer-list>
+            <!-- Outer glow -->
+            <item android:top="-5dp" android:bottom="-5dp" android:left="-5dp" android:right="-5dp">
+                <shape android:shape="oval">
+                    <solid android:color="@color/tv_button_focused_yellow_glow" />
+                </shape>
+            </item>
+            <!-- Yellow fill circle -->
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/tv_button_focused_yellow" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Pressed: slightly dimmed yellow (alpha baked into color to avoid "Bad element under <shape>") -->
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/tv_button_focused_yellow_70" />
+        </shape>
+    </item>
+
+    <!-- Default: transparent (no background) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#00000000" />
+        </shape>
+    </item>
+
+</selector>

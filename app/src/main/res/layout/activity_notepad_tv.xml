@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Notepad — dark theme with D-pad scroll support -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".notepad.NotepadActivity">
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/margin_md"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            tools:text="Notepad.txt" />
+
+        <!-- New Document button (TV) -->
+        <ImageView
+            android:id="@+id/btnNewDoc"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_file_text"
+            android:contentDescription="@string/new_document"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <!-- Save button (TV) -->
+        <ImageView
+            android:id="@+id/btnSave"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_save"
+            android:contentDescription="@string/save_note"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+
+        <!-- Clear text button (TV) -->
+        <ImageView
+            android:id="@+id/btnClear"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="@string/clear_text"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:tint="@color/tv_text_primary"
+            android:background="@drawable/selector_tv_icon_btn" />
+    </LinearLayout>
+
+    <!-- Loading progress -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:indeterminate="true"
+        android:progressTint="@color/tv_accent"
+        android:visibility="gone" />
+
+    <!-- Word/Character count bar -->
+    <LinearLayout
+        android:id="@+id/countBar"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="#0DFFFFFF">
+
+        <TextView
+            android:id="@+id/txtWordCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#66FFFFFF"
+            android:textSize="13sp"
+            android:gravity="center"
+            tools:text="0 words" />
+
+        <TextView
+            android:id="@+id/txtCharCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#66FFFFFF"
+            android:textSize="13sp"
+            android:gravity="center"
+            tools:text="0 characters" />
+    </LinearLayout>
+
+    <!-- Scrollable Content with Focus Border -->
+    <FrameLayout
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:layout_marginBottom="16dp"
+        android:padding="4dp"
+        android:focusable="true"
+        android:focusableInTouchMode="false"
+        android:background="@drawable/selector_tv_policy_scroll">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:background="@null"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:textColor="@color/tv_text_primary"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:gravity="start|top"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            android:scrollbarThumbVertical="@color/tv_button_focused_yellow"
+            android:focusable="true" />
+    </FrameLayout>
+
+</LinearLayout>

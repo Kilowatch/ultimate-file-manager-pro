@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Export Dialog — full-screen semi-transparent overlay.
+    Shows the generated UFM color code with a Copy and Close button.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000">
+
+    <LinearLayout
+        android:layout_width="560dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/bg_tv_dialog_surface"
+        android:padding="32dp">
+
+        <!-- Title row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_palette"
+                app:tint="@color/tv_accent"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tile_color_export_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="24sp"
+                android:fontFamily="sans-serif-black" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tv_glass_border"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tile_color_export_desc_tv"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="16sp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- The code itself — monospace, selectable, with glass background -->
+        <TextView
+            android:id="@+id/tvExportCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:textIsSelectable="true"
+            android:letterSpacing="0.05"
+            android:background="@drawable/bg_tv_code_surface"
+            android:layout_marginBottom="28dp" />
+
+        <!-- Action buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExportClose"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/close" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExportCopy"
+                style="@style/TvGrantButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/tile_color_export_copy" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

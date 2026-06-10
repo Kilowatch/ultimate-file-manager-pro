@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Theme Palette Overrides -->
+    <color name="ufm_primary">#FF26A69A</color>
+    <color name="ufm_primary_dark">#FF00897B</color>
+    <color name="ufm_primary_light">#FF80CBC4</color>
+    <color name="ufm_accent">#FF42A5F5</color>
+    <color name="ufm_accent_light">#FF90CAF9</color>
+
+    <!-- Backgrounds (Dark) -->
+    <color name="ufm_background">#FF121212</color>
+    <color name="ufm_surface">#FF1E1E1E</color>
+    <color name="ufm_surface_variant">#FF2D2D2D</color>
+    <color name="ufm_card_background">#FF1E1E1E</color>
+
+    <!-- Text (Light on Dark) -->
+    <color name="ufm_text_primary">#FFE8E8E8</color>
+    <color name="ufm_text_secondary">#FFB0B0B0</color>
+    <color name="ufm_text_hint">#FF757575</color>
+
+    <!-- Status Colors (slightly brighter for dark backgrounds) -->
+    <color name="ufm_granted">#FF4CAF50</color>
+    <color name="ufm_denied">#FFEF5350</color>
+    <color name="ufm_pending">#FFFFA726</color>
+    <color name="ufm_optional">#FF42A5F5</color>
+
+    <!-- Gradient -->
+    <color name="ufm_gradient_start">#FF1565C0</color>
+    <color name="ufm_gradient_end">#FF00897B</color>
+
+    <!-- Focus (TV) -->
+    <color name="ufm_focus_border">#FF26A69A</color>
+    <color name="ufm_focus_glow">#3326A69A</color>
+
+    <!-- Progress -->
+    <color name="ufm_progress_bg">#FF383838</color>
+    <color name="ufm_progress_fill">#FF26A69A</color>
+    <color name="ufm_progress_warning">#FFFFA726</color>
+    <color name="ufm_progress_critical">#FFEF5350</color>
+
+    <!-- Selection -->
+    <color name="ufm_selection_highlight">#3326A69A</color>
+    <color name="ufm_delete_tint">#33EF5350</color>
+
+    <!-- Analyzer Category Colors -->
+    <color name="ufm_analyzer_images">#FF42A5F5</color>
+    <color name="ufm_analyzer_videos">#FFEF5350</color>
+    <color name="ufm_analyzer_audio">#FFAB47BC</color>
+    <color name="ufm_analyzer_documents">#FF66BB6A</color>
+    <color name="ufm_analyzer_apks">#FFFFA726</color>
+    <color name="ufm_analyzer_other">#FF78909C</color>
+
+    <!-- TV Premium — Dark mode (night) palette -->
+    <color name="tv_bg_gradient_start">#FF0F172A</color>
+    <color name="tv_bg_gradient_end">#FF1E293B</color>
+    <color name="tv_glass_white_10">#1AFFFFFF</color>
+    <color name="tv_glass_white_20">#33FFFFFF</color>
+    <color name="tv_glass_white_30">#4DFFFFFF</color>
+    <color name="tv_glass_border">#26FFFFFF</color>
+    <color name="tv_glass_highlight">#1AFFFFFF</color>
+    <color name="tv_text_primary">#FFF8FAFC</color>
+    <color name="tv_text_secondary">#FFCBD5E1</color>
+    <color name="tv_text_hint">#FF94A3B8</color>
+    <color name="tv_accent">#FF38BDF8</color>
+    <color name="tv_accent_glow">#6638BDF8</color>
+    <color name="tv_focus_glow">#4D38BDF8</color>
+    <color name="tv_focus_border_strong">#FF38BDF8</color>
+    <color name="tv_focus_glow_outer">#8038BDF8</color>
+    <color name="tv_glass_white_15">#26FFFFFF</color>
+    <color name="tv_surface_focused">#3338BDF8</color>
+    <color name="tv_button_focused_bg">#FF38BDF8</color>
+    <color name="tv_button_focused_text">#FF0F172A</color>
+    <color name="tv_glass_border_strong">#40FFFFFF</color>
+    <color name="tv_divider">#1AFFFFFF</color>
+    <!-- Yellow focus same on dark theme -->
+    <color name="tv_button_focused_yellow">#FFFBBF24</color>
+    <color name="tv_button_focused_yellow_glow">#99FBBF24</color>
+    <color name="tv_button_focused_yellow_text">#FF0F0F0F</color>
+    <!-- Night-mode dialog background -->
+    <color name="tv_dialog_background">#EE1A1C1E</color>
+    <color name="tv_icon_tint">#FFFFFFFF</color>
+    <!-- Selector button default background (glass white on dark theme) -->
+    <color name="tv_button_default_bg">#1AFFFFFF</color>
+    <!-- Theme-aware media/image button surface: visible glass in dark mode -->
+    <color name="tv_btn_default_surface">#33FFFFFF</color>  <!-- white glass -->
+    <color name="tv_btn_default_border">#55FFFFFF</color>  <!-- white stroke -->
+    <!-- Media player overlay backgrounds -->
+    <color name="tv_media_header_bg">#CC000000</color>    <!-- 80% black —dark mode -->
+    <color name="mobile_media_bg">#FF0D0D1A</color>       <!-- near-black —video bg -->
+    <color name="mobile_media_overlay">#CC000000</color> <!-- header+controls in dark -->
+
+    <!-- Mobile Glass UI — Dark Theme Overrides -->
+    <color name="mobile_glass_header">#22FFFFFF</color>
+    <!-- Solid opaque toolbar for screens where content scrolls underneath -->
+    <color name="mobile_toolbar_solid">#FF1E293B</color>
+    <color name="mobile_glass_card">#22FFFFFF</color>
+    <color name="mobile_glass_card_thick">#26FFFFFF</color>
+    <color name="mobile_glass_stroke">#33FFFFFF</color>
+    <color name="mobile_text_primary">#FFFFFFFF</color>
+    <color name="mobile_text_secondary">#99FFFFFF</color>
+    <color name="mobile_icon_tint">#FFFFFFFF</color>
+    <color name="mobile_card_text_primary">#FFFFFFFF</color>
+    <color name="mobile_card_text_secondary">#99FFFFFF</color>
+    <color name="mobile_empty_icon_tint">#66FFFFFF</color>
+    <color name="mobile_glass_ripple">#33FFFFFF</color>
+    <!-- Stop button: accent blue in dark theme (red only needed in light) -->
+    <color name="mobile_stop_btn">#FF0284C7</color>
+
+    <!-- Rate Us tile — Brighter gold for dark bg -->
+    <color name="tile_rate_us_accent">#FFFFCC02</color>
+    <color name="tile_rate_us_icon_bg">#80FFCC02</color>
+    <color name="tile_rate_us_stroke">#66FFCC02</color>
+
+    <!-- Fuel the Developer tile — Lavender for dark bg -->
+    <color name="tile_tip_jar_accent">#FFBE85F5</color>
+    <color name="tile_tip_jar_icon_bg">#80BE85F5</color>
+    <color name="tile_tip_jar_stroke">#668B2FC9</color>
+
+    <!-- Policy Screen Colors (Dark Theme Overrides) -->
+    <color name="policy_bg">#FF121212</color>
+    <color name="policy_surface">#FF1E293B</color>
+    <color name="policy_ink">#FFFFFFFF</color>
+    <color name="policy_slate">#FFCBD5E1</color>
+    <color name="policy_border">#FF334155</color>
+    <!-- Accent: light blue for readability on dark surface -->
+    <color name="policy_accent">#FF60A5FA</color>
+    <color name="policy_accent_light">#1A38BDF8</color>
+    <color name="policy_chip_text">#FF60A5FA</color>
+    <color name="policy_row_alt">#FF253347</color>
+    <color name="policy_toolbar_bg">#FF1565C0</color>
+    <color name="policy_toolbar_text">#FFFFFFFF</color>
+    <!-- Alert box backgrounds: dark semi-transparent instead of light pastels -->
+    <color name="policy_green_bg">#1A4CAF50</color>
+    <color name="policy_red_bg">#1AEF5350</color>
+    <color name="policy_chip_bg">#1A38BDF8</color>
+
+    <!-- Disabled button states (dark theme) -->
+    <color name="btn_disabled_bg">#FF37474F</color>   <!-- blue-grey 800, visible on dark glass bg -->
+    <color name="btn_disabled_text">#FF78909C</color> <!-- blue-grey 400 -->
+
+    <!-- Dialog / Premium Gloss Surface (95% opaque dark slate) -->
+    <color name="dialog_glass_bg">#F21E293B</color>
+
+    <!-- Note colors for visibility -->
+    <color name="tv_note_color">@color/tv_button_focused_yellow</color>
+    <color name="mobile_note_color">@color/ufm_pending</color>
+
+    <!-- Date Group Header Banner — Dark Theme Overrides -->
+    <color name="date_group_header_bg">#FF1E2D2B</color>
+    <color name="date_group_header_stripe">#FF26A69A</color>
+    <color name="date_group_header_year_text">#FFE8E8E8</color>
+    <color name="date_group_header_month_text">#FF4DB6AC</color>
+    <color name="date_group_header_count_text">#FFB0B0B0</color>
+    <color name="date_group_header_stroke">#3326A69A</color>
+
+</resources>

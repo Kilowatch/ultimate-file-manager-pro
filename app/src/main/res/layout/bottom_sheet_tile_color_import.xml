@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="32dp">
+
+    <!-- Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_import_code"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/tile_color_import_title"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-black" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/mobile_glass_stroke"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Code input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="8dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etImportCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/tile_color_import_hint"
+            android:inputType="text"
+            android:maxLines="2"
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Error text -->
+    <TextView
+        android:id="@+id/tvImportError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:textColor="#FFEF5350"
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
+
+    <!-- Colour preview panel -->
+    <LinearLayout
+        android:id="@+id/importPreviewPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_dialog_code_surface"
+        android:visibility="gone">
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <View android:id="@+id/dotImportIcon" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/tile_color_code_icon" android:textColor="?attr/colorOnSurfaceVariant" android:textSize="14sp" />
+            <TextView android:id="@+id/hexImportIcon" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:fontFamily="monospace" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <View android:id="@+id/dotImportTileBg" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/tile_color_code_tile_bg" android:textColor="?attr/colorOnSurfaceVariant" android:textSize="14sp" />
+            <TextView android:id="@+id/hexImportTileBg" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:fontFamily="monospace" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <View android:id="@+id/dotImportRing" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/tile_color_code_ring" android:textColor="?attr/colorOnSurfaceVariant" android:textSize="14sp" />
+            <TextView android:id="@+id/hexImportRing" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:fontFamily="monospace" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+            <View android:id="@+id/dotImportIconBg" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/tile_color_code_icon_bg" android:textColor="?attr/colorOnSurfaceVariant" android:textSize="14sp" />
+            <TextView android:id="@+id/hexImportIconBg" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:fontFamily="monospace" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="36dp"
+            android:orientation="horizontal" android:gravity="center_vertical">
+            <View android:id="@+id/dotImportLabel" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp" />
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+                android:text="@string/tile_color_code_label" android:textColor="?attr/colorOnSurfaceVariant" android:textSize="14sp" />
+            <TextView android:id="@+id/hexImportLabel" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:fontFamily="monospace" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnImportApply"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/tile_color_import_apply"
+            style="@style/Widget.Material3.Button" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,2858 @@
+package za.kilowatch.ultimatefilemanager.storage
+
+import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
+
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.util.Log
+import android.os.Looper
+import android.os.StatFs
+
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import android.os.storage.StorageManager
+import android.os.storage.StorageVolume
+import android.view.KeyEvent
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.doOnLayout
+import kotlin.math.roundToInt
+import com.google.android.material.snackbar.Snackbar
+import za.kilowatch.ultimatefilemanager.BuildConfig
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
+import za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity
+import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
+import za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity
+import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
+import za.kilowatch.ultimatefilemanager.settings.ThemeActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
+import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import java.io.File
+import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
+import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
+import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
+import za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper
+import za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity
+
+/**
+ * Displays all available storage volumes (internal, SD card, USB) as cards.
+ * Dynamically updates when new storage is mounted or removed.
+ *
+ * Uses three detection mechanisms:
+ * 1. StorageVolume callback (API 30+) — immediate, most reliable
+ * 2. BroadcastReceiver for media/USB events — classic approach
+ * 3. onResume auto-refresh — catches anything missed
+ */
+class StorageBrowserActivity : AppCompatActivity() {
+
+    private lateinit var recyclerStorage: RecyclerView
+    private lateinit var layoutEmptyStorage: android.view.ViewGroup
+    
+    private var isPickerMode = false
+    private var isKeyfilePickerMode = false
+    private var isCertPickerMode = false
+    private var pickerExtensions: String? = null
+    private var isSyncFolderPickerMode = false
+    private var isCompressDestPickerMode = false
+    private var isExtractDestPickerMode = false
+    private var isImageCompressDestPickerMode = false
+    private var isDrivePicker = false
+    private var isLocationPickerMode = false
+    private var isNetworkCachePickerMode = false
+    private var isQuickTransferPickerMode = false
+    private var isShareDestPickerMode = false
+    private var isNotepadFolderPicker = false
+    private var isScannerFolderPicker = false
+    private var isTileIconPickerMode = false
+    private var activeTileIdForIcon: String? = null
+    
+    // Result launcher to forward picker selection back to caller
+    private val pickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            setResult(RESULT_OK, result.data)
+            finish()
+        }
+    }
+
+    // Result launcher for tile icon file picker
+    private var activeColorSheet: TileColorBottomSheet? = null
+    private val iconPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedPath = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+            if (selectedPath != null) {
+                val tileId = activeTileIdForIcon ?: return@registerForActivityResult
+                val sourceFile = java.io.File(selectedPath)
+                if (sourceFile.exists() && sourceFile.length() > TileIconManager.MAX_SIZE_BYTES) {
+                    androidx.core.content.ContextCompat.getString(this, R.string.tile_icon_file_too_large)
+                        .let { msg -> android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show() }
+                } else {
+                    val privatePath = TileIconManager.copyToPrivateStorage(this, tileId, selectedPath)
+                    if (privatePath != null) {
+                        activeColorSheet?.onIconPicked(privatePath)
+                    } else {
+                        androidx.core.content.ContextCompat.getString(this, R.string.tile_icon_invalid_file)
+                            .let { msg -> android.widget.Toast.makeText(this, msg, android.widget.Toast.LENGTH_SHORT).show() }
+                    }
+                }
+            }
+        }
+        activeTileIdForIcon = null
+    }
+    private lateinit var storageAdapter: StorageAdapter
+    private val updateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            loadStorageVolumes()
+        }
+    }
+
+    private var isTv = false
+    private var isAmazon = false
+    private val storageReceiver = StorageEventReceiver()
+    private val knownMountPaths = mutableSetOf<String>()
+    private val handler = Handler(Looper.getMainLooper())
+    private var lastShizukuLaunchTime = 0L
+
+
+    private var tvSnapHelper: androidx.recyclerview.widget.SnapHelper? = null
+
+
+    companion object {
+        private const val TAG = "StorageBrowser"
+        /** Max time (ms) to spend on a single StatFs call during the TV USB fallback scan. */
+        private const val STAT_TIMEOUT_MS = 300L
+
+        /**
+         * Set to true when USB storage is detected at /mnt/media_rw/ but SELinux
+         * (or another platform restriction) blocks access.  The display code reads this
+         * flag and shows a Shizuku-guidance card in place of the invisible USB volume.
+         */
+        var usbSelinuxBlocked = false
+        /** When true, the user is picking a source folder for Folder Sync */
+        const val EXTRA_SYNC_FOLDER_PICKER = "extra_sync_folder_picker"
+        /** When true, the user is picking a destination folder for Compress */
+        const val EXTRA_COMPRESS_DEST_PICKER = "extra_compress_dest_picker"
+        /** When true, the user is picking a destination folder for Extract */
+        const val EXTRA_EXTRACT_DEST_PICKER = "extra_extract_dest_picker"
+        /** When true, the user is picking a destination folder for Image Compress */
+        const val EXTRA_IMAGE_COMPRESS_DEST_PICKER = "extra_image_compress_dest_picker"
+        /** When true, the user is picking a drive (e.g. for Twin Window) */
+        const val EXTRA_DRIVE_PICKER = "extra_drive_picker"
+        /** Returned by child activity when the user confirms a sync folder */
+        const val RESULT_SELECTED_SYNC_PATH = "result_selected_sync_path"
+        /** Returned by child activity — the absolute path of the selected local folder */
+        const val RESULT_SELECTED_LOCAL_PATH = "result_selected_local_path"
+        
+        /** When true, the user is picking a tile icon file from any storage */
+        const val EXTRA_TILE_ICON_PICKER = "extra_tile_icon_picker"
+        /** When true, the user is picking a full location (URI, label, type, meta) */
+        const val EXTRA_LOCATION_PICKER = "extra_location_picker"
+        /** When true, the user is picking a local folder for network thumbnail caching */
+        const val EXTRA_NETWORK_CACHE_PICKER = "extra_network_cache_picker"
+        /** When true, the user is picking a public key file for SSH authentication */
+        const val EXTRA_KEYFILE_PICKER = "extra_keyfile_picker"
+        /** When true, the user is picking a certificate file for Remote Manage HTTPS */
+        const val EXTRA_CERT_PICKER = "extra_cert_picker"
+        
+        /** Result keys for location picker */
+        const val RESULT_URI = "result_uri"
+        const val RESULT_LABEL = "result_label"
+        const val RESULT_TYPE = "result_type"
+        const val RESULT_META_ID = "result_meta_id"
+
+        /** When true, the user is picking a destination folder for Share Receive */
+        const val EXTRA_SHARE_DEST_PICKER = "extra_share_dest_picker"
+        /** Returned when the user picks a local folder as share destination */
+        const val RESULT_SELECTED_SHARE_ID = "result_selected_share_id"
+        /** Returned when the user picks a network folder as share destination */
+        const val RESULT_SELECTED_NET_PATH = "result_selected_net_path"
+
+        /**
+         * Static utility to get only physical connected storages (Internal, SD, USB).
+         */
+        fun getConnectedStorages(context: Context, localOnly: Boolean = false): List<StorageItem> {
+            val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val volumes = storageManager.storageVolumes
+            val storageItems = mutableListOf<StorageItem>()
+            
+            for (volume in volumes) {
+                val item = volumeToItem(context, volume) ?: continue
+                storageItems.add(item)
+            }
+
+            // USB scan for TV
+            if (DeviceUtils.isTvDevice(context)) {
+                val discovered = storageItems.map { it.mountPath }.toSet()
+                scanExtraPaths(context, storageItems, discovered)
+            }
+
+            // On Amazon FireOS, if USB drives at /mnt/media_rw/ exist but SELinux blocks
+            // access, add a guidance card pointing users to Shizuku as a workaround.
+            if (usbSelinuxBlocked) {
+                storageItems.add(StorageItem(
+                    id = "shizuku_usb_access",
+                    label = context.getString(R.string.shizuku_usb_access_title),
+                    iconRes = R.drawable.ic_shizuku_logo,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isShizukuTile = true,
+                    subtitle = context.getString(R.string.shizuku_usb_access_subtitle)
+                ))
+            }
+
+            if (localOnly) return storageItems
+
+            // Add Network Shares (SMB/FTP)
+            val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
+            repo.getAll().forEach { share ->
+                storageItems.add(StorageItem(
+                    id = share.id,
+                    label = share.name,
+                    iconRes = R.drawable.ic_network,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = share.docIdPrefix,
+                    isNetworkRoot = true,
+                    networkShare = share
+                ))
+            }
+
+            // Add Paired Devices (TV/Phone)
+            val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(context)
+            pairingManager.getAllPairedDevices().forEach { device ->
+                if (device.isConnected) {
+                    val iconRes = if (device.isTv) R.drawable.ic_remote_manage else R.drawable.ic_phone
+                    storageItems.add(StorageItem(
+                        id = "tv_${device.deviceId}",
+                        label = device.name.ifEmpty { if (device.isTv) context.getString(R.string.connected_tv) else context.getString(R.string.connected_phone) },
+                        iconRes = iconRes,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "tv://${device.deviceId}",
+                        isNetworkRoot = true,
+                        networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                            id = device.deviceId,
+                            name = device.name,
+                            type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                            host = device.lastIp,
+                            port = device.lastPort,
+                            readOnly = false
+                        )
+                    ))
+                }
+            }
+
+            // Add discovered DLNA servers
+            val dlnaServers = za.kilowatch.ultimatefilemanager.network.DlnaDiscovery.getDiscoveredServers()
+            for (server in dlnaServers) {
+                storageItems.add(StorageItem(
+                    id = "dlna_${server.ip}:${server.port}",
+                    label = server.friendlyName,
+                    iconRes = R.drawable.ic_dlna,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "dlna://${server.ip}:${server.port}",
+                    isNetworkRoot = true,
+                    subtitle = server.ip,
+                    networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                        type = za.kilowatch.ultimatefilemanager.network.ShareType.DLNA,
+                        host = server.ip,
+                        port = server.port,
+                        name = server.friendlyName
+                    )
+                ))
+            }
+
+            return storageItems
+        }
+
+        private fun volumeToItem(context: Context, volume: StorageVolume): StorageItem? {
+            val path = volume.safeDirectoryPath ?: return null
+            if (volume.state != android.os.Environment.MEDIA_MOUNTED && 
+                volume.state != android.os.Environment.MEDIA_MOUNTED_READ_ONLY) return null
+            
+            val total: Long
+            val used: Long
+            try {
+                val stats = StatFs(path)
+                total = stats.totalBytes
+                used = total - stats.availableBytes
+            } catch (e: SecurityException) {
+                if (path.contains("media_rw") || path.contains("/mnt/media_rw")) {
+                    Log.w(TAG, "SELinux blocked StatFs for $path — USB drive inaccessible on this platform.")
+                    // On Amazon FireOS, flag for Shizuku guidance card
+                    if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(context)) {
+                        usbSelinuxBlocked = true
+                    }
+                }
+                return null
+            } catch (e: Exception) {
+                return null
+            }
+
+            // Same Shield USB heuristic as volumeToStorageItem(): some TV firmware marks
+            // a USB dongle as isPrimary=true, isRemovable=false. Detect it by path + UUID.
+            val looksLikeUsb = path.contains("/mnt/media_rw/", ignoreCase = true)
+                            || path.contains("/mnt/usb",        ignoreCase = true)
+                            || path.contains("/storage/usb",    ignoreCase = true)
+            val hasUuid = volume.uuid != null
+            val treatAsRemovable = volume.isRemovable || (looksLikeUsb && hasUuid)
+
+            val label = volume.getDescription(context)
+            val icon = StorageItem.iconForType(treatAsRemovable, label)
+            
+            return StorageItem(
+                id = volume.uuid ?: "internal",
+                label = label,
+                iconRes = icon,
+                totalBytes = total,
+                usedBytes = used,
+                mountPath = path,
+                isRemovable = treatAsRemovable
+            )
+        }
+
+        private fun scanExtraPaths(context: Context, items: MutableList<StorageItem>, discovered: Set<String>) {
+            val commonPaths = arrayOf("/mnt/media_rw", "/storage", "/mnt/usb", "/mnt/sda", "/mnt/sdb")
+            for (root in commonPaths) {
+                val rootFile = File(root)
+                if (!rootFile.exists() || !rootFile.isDirectory) continue
+                rootFile.listFiles()?.forEach { file ->
+                    if (file.isDirectory && !discovered.contains(file.absolutePath)) {
+                        // Skip system/hidden folders
+                        if (file.name.startsWith(".") || file.name == "self" || file.name == "emulated") return@forEach
+                        
+                        try {
+                            val stats = StatFs(file.absolutePath)
+                            if (stats.totalBytes > 0) {
+                                items.add(StorageItem(
+                                    id = file.absolutePath,
+                                    label = context.getString(R.string.usb_drive_filename),
+                                    iconRes = R.drawable.ic_storage_usb,
+                                    totalBytes = stats.totalBytes,
+                                    usedBytes = stats.totalBytes - stats.availableBytes,
+                                    mountPath = file.absolutePath,
+                                    isRemovable = true
+                                ))
+                            }
+                        } catch (e: SecurityException) {
+                            if (root.contains("media_rw") && za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(context)) {
+                                Log.w(TAG, "SELinux blocked access to " + file.absolutePath + " on FireOS. USB drives at /mnt/media_rw/ restricted by platform policy.")
+                                usbSelinuxBlocked = true
+                            }
+                        } catch (_: Exception) { }
+                    }
+                }
+            }
+        }
+    }
+
+    // StorageVolume callback for API 30+
+    private var storageVolumeCallback: Any? = null
+
+    // Mobile drag-and-drop
+    private lateinit var itemTouchHelper: ItemTouchHelper
+
+    private lateinit var btnManageTiles: android.widget.ImageView
+    private var btnColorTile: android.widget.ImageView? = null
+    private var btnImportColorCode: android.widget.ImageView? = null
+    private var toolbar: MaterialToolbar? = null
+    private var btnDoneTv: com.google.android.material.button.MaterialButton? = null
+    private var draggedItem: StorageItem? = null
+
+    private var isEditMode = false
+
+    // TV D-Pad reorder mode
+    private var reorderModeItemId: String? = null
+    private var reorderModeOriginalList: List<StorageItem>? = null
+
+    // Snapshot of all tiles (even hidden ones) for the Manage Tiles sheet
+    private var lastFullTileList: List<StorageItem> = emptyList()
+
+    private val tileColorTvLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data ?: return@registerForActivityResult
+                val config = TileColorConfig(
+                    ringColor   = data.getIntExtra(TileColorTvActivity.RESULT_RING_COLOR,   android.graphics.Color.TRANSPARENT),
+                    iconColor   = data.getIntExtra(TileColorTvActivity.RESULT_ICON_COLOR,   android.graphics.Color.TRANSPARENT),
+                    iconBgColor = data.getIntExtra(TileColorTvActivity.RESULT_ICON_BG,      android.graphics.Color.TRANSPARENT),
+                    tileBgColor = data.getIntExtra(TileColorTvActivity.RESULT_TILE_BG,      android.graphics.Color.TRANSPARENT),
+                    labelColor  = data.getIntExtra(TileColorTvActivity.RESULT_LABEL_COLOR,  android.graphics.Color.TRANSPARENT)
+                )
+                val tileId = TvTileDataHolder.sourceTileId
+                TileColorManager.saveTileColor(this, tileId, config)
+                storageAdapter.setTileColors(TileColorManager.loadTileColors(this))
+                storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
+        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+                loadStorageVolumes()  // re-read full list to include any TV icon changes
+            }
+        }
+
+    private val tvTileCopyLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                storageAdapter.setTileColors(TileColorManager.loadTileColors(this))
+                storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
+        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+            }
+        }
+    
+    private var lottieEmptyStorage: com.airbnb.lottie.LottieAnimationView? = null
+
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        isTv = DeviceUtils.isTvDevice(this)
+        isAmazon = DeviceUtils.isAmazonDevice(this)
+        if (isTv) {
+            setContentView(R.layout.activity_storage_browser_tv)
+        } else {
+            setContentView(R.layout.activity_storage_browser)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        // Picker mode configuration
+        isPickerMode = intent.getBooleanExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_PICKER_MODE, false)
+        isKeyfilePickerMode = intent.getBooleanExtra(EXTRA_KEYFILE_PICKER, false)
+        isCertPickerMode = intent.getBooleanExtra(EXTRA_CERT_PICKER, false)
+        pickerExtensions = intent.getStringExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_PICKER_EXTENSIONS)
+        isSyncFolderPickerMode = intent.getBooleanExtra(EXTRA_SYNC_FOLDER_PICKER, false)
+        isCompressDestPickerMode = intent.getBooleanExtra(EXTRA_COMPRESS_DEST_PICKER, false)
+        isExtractDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, false)
+        isImageCompressDestPickerMode = intent.getBooleanExtra(EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
+        isDrivePicker = intent.getBooleanExtra(EXTRA_DRIVE_PICKER, false)
+        isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
+        isNetworkCachePickerMode = intent.getBooleanExtra(EXTRA_NETWORK_CACHE_PICKER, false)
+        isQuickTransferPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, false)
+        isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
+        isNotepadFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, false)
+        isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
+        isTileIconPickerMode = intent.getBooleanExtra(EXTRA_TILE_ICON_PICKER, false)
+
+        if (isTileIconPickerMode) {
+            isPickerMode = true  // reuse picker routing
+            pickerExtensions = "ico,png"
+        }
+
+        setupViews()
+        loadStorageVolumes()
+        registerStorageReceiver()
+        registerStorageVolumeCallback()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter("za.kilowatch.ufm.PAIRING_UPDATED")
+        Log.d(TAG, "Registering pairing update receiver")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(updateReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(updateReceiver, filter)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(updateReceiver)
+    }
+
+    private var hasShownReviewPopupThisSession = false
+    /** Timestamp of the last background device-ping pass. Prevents hammering the OEM
+     *  Kumiho telemetry hook (and the network) every time onResume fires. */
+    private var lastDevicePingMs = 0L
+    private val DEVICE_PING_INTERVAL_MS = 30_000L
+
+    override fun onResume() {
+        super.onResume()
+        // Reload in onResume to pick up new network shares or USB mounts instantly
+        loadStorageVolumes()
+        Log.d(TAG, "onResume: Refreshing storage volumes")
+        applyViewMode()
+
+        
+        // Background check: ping TV devices and refresh UI if online status changes.
+        // Debounced to at most once per DEVICE_PING_INTERVAL_MS to prevent the OEM
+        // Kumiho telemetry hook from firing on every resume (e.g. dialog dismiss, focus change).
+        val now = System.currentTimeMillis()
+        if (now - lastDevicePingMs >= DEVICE_PING_INTERVAL_MS) {
+            lastDevicePingMs = now
+            GlobalScope.launch(Dispatchers.IO) {
+                val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@StorageBrowserActivity)
+                val devices = pairingManager.getAllPairedDevices()
+                var changed = false
+                for (device in devices) {
+                    val wasConnected = device.isConnected
+
+                    // 1. Explicit Manual Override: User-triggered disconnects MUST be honored first.
+                    // This prevents background pings from auto-reconnecting a device the user chose to disconnect.
+                    if (device.manuallyDisconnected) {
+                        if (wasConnected) {
+                            device.isConnected = false
+                            pairingManager.addOrUpdateDevice(device)
+                            changed = true
+                        }
+                        continue
+                    }
+
+                    // 2. Network Check: Only ping if not manually disconnected.
+                    val isOnline = pairingManager.pingDevice(device)
+                    if (wasConnected != isOnline) {
+                        device.isConnected = isOnline
+                        pairingManager.addOrUpdateDevice(device)
+                        changed = true
+                    }
+                }
+                if (changed) {
+                    withContext(Dispatchers.Main) {
+                        loadStorageVolumes()
+                    }
+                }
+            }
+        }
+
+        // Show "Rate Us" popup if eligible
+        if (!hasShownReviewPopupThisSession) {
+            val shouldShow = za.kilowatch.ultimatefilemanager.util.ReviewPrefs.shouldShowPopup(this)
+            android.util.Log.d("GoRoRating", "StorageBrowserActivity onResume: Checking eligibility. result=$shouldShow")
+            if (shouldShow) {
+                hasShownReviewPopupThisSession = true
+                za.kilowatch.ultimatefilemanager.util.ReviewUiHelper.showReviewPopup(this)
+            }
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        // TV: when window regains focus (returning from child screen), focus first item
+        if (hasFocus && isTv) {
+            recyclerStorage.postDelayed({
+                // Try the first child view directly
+                val firstChild = recyclerStorage.getChildAt(0)
+                if (firstChild != null) {
+                    firstChild.requestFocus()
+                } else {
+                    // Fallback: focus the RecyclerView itself — descendantFocusability
+                    // will pass it down to the first focusable child
+                    recyclerStorage.requestFocus()
+                }
+            }, 300)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
+        try {
+            unregisterReceiver(storageReceiver)
+        } catch (_: Exception) { }
+        unregisterStorageVolumeCallback()
+    }
+
+    private fun setupViews() {
+        recyclerStorage = findViewById(R.id.recyclerStorage)
+        layoutEmptyStorage = findViewById(R.id.layoutEmptyStorage)
+        lottieEmptyStorage = findViewById(R.id.lottieEmptyStorage)
+
+        // Mobile: wire up the MaterialToolbar
+        if (!isTv) {
+            toolbar = findViewById<MaterialToolbar>(R.id.toolbar)?.also { tb ->
+                setSupportActionBar(tb)
+                supportActionBar?.setDisplayShowTitleEnabled(false) // Prevent default title hijacking
+            }
+        }
+
+        // Mobile/TV: Manage Tiles / Edit Mode buttons
+        btnManageTiles = findViewById(R.id.btnManageTiles)
+        btnColorTile = findViewById(R.id.btnColorTile)
+        btnImportColorCode = findViewById(R.id.btnImportColorCode)
+        if (isTv) {
+            btnDoneTv = findViewById(R.id.btnDone)
+            btnDoneTv?.setOnClickListener { exitEditMode() }
+        }
+
+        btnManageTiles.setOnClickListener {
+            if (isEditMode) {
+                exitEditMode()
+            } else {
+                ManageTilesBottomSheet
+                    .newInstance()
+                    .withTiles(buildAllTilesForSheet())
+                    .withTileIcons(TileIconManager.getAllTileIcons(this))
+                    .withTileIconRes(TileIconManager.getAllTileIconRes(this))
+                    .apply {
+                        onRestored  = { loadStorageVolumes() }
+                        onTileClick = { item -> onStorageTileClicked(item) }
+                    }
+                    .show(supportFragmentManager, ManageTilesBottomSheet.TAG)
+            }
+        }
+
+        updateHiddenBadge()
+
+        storageAdapter = StorageAdapter(
+            isTv = isTv,
+            onStorageClick = { item -> onStorageTileClicked(item) },
+            onLongPress = { item, viewHolder ->
+                if (isTv) {
+                    // TV: long press enters Edit Mode first.
+                    // If ALREADY in Edit Mode, it starts reorder move (non-locked only).
+                    if (isEditMode) {
+                        if (!item.isLocked) enterTvReorderMode(item)
+                    } else {
+                        enterEditMode()
+                    }
+                } else {
+                    // Mobile: enter Edit Mode (pulse/jiggle)
+                    if (!isEditMode) {
+                        enterEditMode()
+                    }
+                    // Start live drag only for non-locked tiles (locked tiles are position-pinned)
+                    if (!item.isLocked) {
+                        itemTouchHelper.startDrag(viewHolder)
+                    }
+                }
+            }
+        ).apply {
+            onHideClick = { item -> hideTile(item) }
+            onEditModeClick = { item ->
+                if (isSelectingTileForColor) {
+                    isSelectingTileForColor = false
+                    storageAdapter.isColorPickMode = false
+                    selectedTileId = item.id
+                    showColorPickerForTile(item)
+                } else {
+                    showPremiumSnackbar(getString(R.string.tile_color_title_select))
+                }
+            }
+        }
+
+        applyViewMode()
+        recyclerStorage.adapter = storageAdapter
+
+        // Load custom tile colors and icons
+        val colors = TileColorManager.loadTileColors(this)
+        storageAdapter.setTileColors(colors)
+        storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
+        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+
+        // Palette button — TV sets colour-selection mode directly (no dialog); mobile uses popup
+        btnColorTile?.setOnClickListener {
+            if (isEditMode) {
+                if (isTv) {
+                    isSelectingTileForColor = true
+                    selectedTileId = null
+                    storageAdapter.isColorPickMode = true
+                    showPremiumSnackbar(getString(R.string.tile_color_select_tile))
+                    // Pulse the button to signal active mode
+                    btnColorTile?.animate()?.scaleX(1.2f)?.scaleY(1.2f)?.setDuration(150)
+                        ?.withEndAction {
+                            btnColorTile?.animate()?.scaleX(1f)?.scaleY(1f)?.setDuration(150)?.start()
+                        }?.start()
+                } else {
+                    showColorSelectionPopup()
+                }
+            }
+        }
+
+        btnImportColorCode?.setOnClickListener {
+            if (isEditMode) {
+                if (isTv) {
+                    // Start the new Activity instead of showing a dialog
+                    val copyIsListView = MainMenuViewModeManager.loadViewMode(this@StorageBrowserActivity) == MainMenuViewModeManager.ViewMode.LIST
+                    TvTileDataHolder.tiles = lastFullTileList
+                    TvTileDataHolder.isListView = copyIsListView
+                    
+                    val importIntent = Intent(this, TileColorImportTvActivity::class.java)
+                    tvTileCopyLauncher.launch(importIntent)
+                } else {
+                    TileColorImportBottomSheet()
+                        .setOnApplyListener { config ->
+                            val copyIsListView = MainMenuViewModeManager.loadViewMode(this) == MainMenuViewModeManager.ViewMode.LIST
+                            TileCopyBottomSheet.newInstance(
+                                sourceConfig = config,
+                                sourceTileId = "imported",
+                                tiles        = lastFullTileList,
+                                isListView   = copyIsListView
+                            ).apply {
+                                onApply = { targetIds ->
+                                    targetIds.forEach { id ->
+                                        TileColorManager.saveTileColor(this@StorageBrowserActivity, id, config)
+                                    }
+                                    storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
+                                }
+                            }.show(supportFragmentManager, TileCopyBottomSheet.TAG)
+                        }
+                        .show(supportFragmentManager, TileColorImportBottomSheet.TAG)
+                }
+            }
+        }
+
+        // Attach ItemTouchHelper for mobile drag-and-drop (no-op on TV)
+        if (!isTv) setupItemTouchHelper()
+    }
+
+    private var selectedTileId: String? = null
+    private var isSelectingTileForColor = false
+
+
+
+    private fun showColorSelectionPopup() {
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setMessage(getString(R.string.tile_color_message_select))
+            .setPositiveButton(getString(R.string.tile_color_button_select)) { _, _ ->
+                isSelectingTileForColor = true
+                selectedTileId = null
+                showPremiumSnackbar(getString(R.string.tile_color_select_tile))
+            }
+            .setNegativeButton(getString(R.string.tile_color_cancel), null)
+            .create()
+        dialog.setTitle(getString(R.string.tile_color_title_select))
+        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        dialog.show()
+    }
+
+    private fun showColorPickerForTile(item: StorageItem) {
+        val config = storageAdapter.getTileColor(item.id)
+        // Resolve the subtitle the same way StorageAdapter.bind() does, so the preview
+        // tile shows the correct capacity or description text.
+        val resolvedSubtitle: String = when {
+            item.subtitle != null                -> item.subtitle
+            item.isTwinWindowTile              -> getString(R.string.twin_window_subtitle)
+             item.isNotepadTile                 -> getString(R.string.notepad_tile_subtitle)
+             item.isScannerTile                 -> getString(R.string.scanner_tile_subtitle)
+            item.isSmartSortTile               -> getString(R.string.smart_sort_tile_subtitle)
+            item.isTerminalTile                 -> getString(R.string.adb_terminal_subtitle)
+            item.isPairedDevicesTile            -> getString(R.string.manage_links_with_other_devices)
+            item.isSettingsTile                 -> getString(R.string.font_size_tile_subtitle)
+            item.isAppsTile                     -> getString(R.string.apps_tile_subtitle)
+            item.isRemoteTile                   -> getString(R.string.remote_tile_subtitle)
+            item.isSearchTile                   -> getString(R.string.search_tile_subtitle)
+            item.isAnalyzerTile                 -> getString(R.string.analyzer_tile_subtitle)
+            item.isVaultTile                    -> getString(R.string.vault_tile_subtitle)
+            item.isLegalTile                    -> getString(R.string.policy_selection_subtitle)
+            item.isRateUsTile                   -> getString(R.string.rate_us_subtitle)
+            item.isAboutTile                    -> getString(R.string.about_tile_subtitle)
+            item.isSafTile                      -> getString(R.string.saf_tile_subtitle)
+            item.isNetworkTile                  -> getString(R.string.network_tile_subtitle)
+            item.isOnlineStoragesTile           -> DeviceUtils.getOnlineStoragesSubtitle(this)
+            item.isTipJarTile                   -> getString(R.string.tip_jar_subtitle)
+            item.isSyncTile                     -> getString(R.string.sync_subtitle)
+            item.isExtractsTile                 -> getString(R.string.browse_extracted_apps)
+            item.isFavoriteTile                 -> if (item.favoriteIsFolder) getString(R.string.favorite_folder) else getString(R.string.favorite_file)
+            item.isFileServerTile               -> getString(R.string.file_server_tile_subtitle)
+            item.isNetworkRoot                  -> {
+                val share = item.networkShare
+                if (share != null) {
+                    val typeLabel = when (share.type) {
+                        za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3    -> getString(R.string.add_online_storage_aws_s3)
+                        za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> getString(R.string.add_online_storage_idrive_e2)
+                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS       -> share.type.name
+                        else -> share.type.name
+                    }
+                    "$typeLabel \u2022 ${share.host}"
+                } else ""
+            }
+            item.totalBytes > 0                 -> {
+                // Real storage volume: show "X free of Y"
+                val free  = android.text.format.Formatter.formatFileSize(this, item.freeBytes)
+                val total = android.text.format.Formatter.formatFileSize(this, item.totalBytes)
+                getString(R.string.storage_free_format, free, total)
+            }
+            else -> ""
+        }
+        val isList = MainMenuViewModeManager.loadViewMode(this) == MainMenuViewModeManager.ViewMode.LIST
+
+        if (isTv) {
+            // TV: launch full-screen activity via TvTileDataHolder singleton
+            TvTileDataHolder.tiles        = lastFullTileList
+            TvTileDataHolder.sourceConfig = config
+            TvTileDataHolder.sourceTileId = item.id
+            TvTileDataHolder.isListView   = isList
+            // Patch resolved subtitle back onto item so TileColorTvActivity can read it
+            val tvItem = item.copy(subtitle = resolvedSubtitle)
+            TvTileDataHolder.tiles = lastFullTileList.map {
+                if (it.id == item.id) tvItem else it
+            }
+            tileColorTvLauncher.launch(
+                TileColorTvActivity.createIntent(this, isListView = isList)
+            )
+        } else {
+            // Mobile: bottom sheet flow
+            val existingIconPath = TileIconManager.getTileIcon(this, item.id)
+            val sheet = TileColorBottomSheet.newInstance(
+                tileId = item.id,
+                tileName = item.label,
+                tileIconRes = item.iconRes,
+                tileSubtitle = resolvedSubtitle,
+                config = config,
+                isListView = isList,
+                customIconPath = existingIconPath
+            )
+            activeColorSheet = sheet
+            sheet
+                .setOnColorChangedListener { newConfig ->
+                    TileColorManager.saveTileColor(this, item.id, newConfig)
+                    val updatedColors = TileColorManager.loadTileColors(this)
+                    storageAdapter.setTileColors(updatedColors)
+                }
+                .setOnIconChangedListener { iconConfig ->
+                    TileIconManager.saveTileIconRes(this, item.id, iconConfig.selectedIconRes)
+                    if (iconConfig.hasCustomIcon && iconConfig.customIconPath != null) {
+                        TileIconManager.saveTileIcon(this, item.id, iconConfig.customIconPath)
+                    } else if (!iconConfig.isBuiltinSelection) {
+                        TileIconManager.clearTileIcon(this, item.id)
+                    }
+                    storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
+        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+                    storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
+                }
+                .setOnBrowseIconClickedListener {
+                    launchTileIconPicker(item.id)
+                }
+                .setOnCopyToListener { sourceConfig ->
+                    val copyIsListView = MainMenuViewModeManager.loadViewMode(this) ==
+                        MainMenuViewModeManager.ViewMode.LIST
+                    TileCopyBottomSheet.newInstance(
+                        sourceConfig = sourceConfig,
+                        sourceTileId = item.id,
+                        tiles        = lastFullTileList,
+                        isListView   = copyIsListView
+                    ).apply {
+                        onApply = { targetIds ->
+                            targetIds.forEach { id ->
+                                TileColorManager.saveTileColor(
+                                    this@StorageBrowserActivity, id, sourceConfig
+                                )
+                            }
+                            storageAdapter.setTileColors(
+                                TileColorManager.loadTileColors(this@StorageBrowserActivity)
+                            )
+                        }
+                    }.show(supportFragmentManager, TileCopyBottomSheet.TAG)
+                }
+                .show(supportFragmentManager, TileColorBottomSheet.TAG)
+        }
+    }
+
+    /**
+     * Launches the activity in icon-picker mode so the user can browse
+     * local, network, or online storage for an .ico/.png file.
+     */
+    private fun launchTileIconPicker(tileId: String) {
+        activeTileIdForIcon = tileId
+        val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+            putExtra(EXTRA_TILE_ICON_PICKER, true)
+        }
+        iconPickerLauncher.launch(intent)
+    }
+
+    /**
+     * In tile icon picker mode, filters out feature tiles so only
+     * storage-selector tiles (drives, network roots, online storages,
+     * favorites, paired devices) are shown.
+     */
+    private fun List<StorageItem>.filterForTileIconPicker(): List<StorageItem> {
+        if (!isTileIconPickerMode) return this
+        return this.filter { item ->
+            item.isNetworkRoot || item.isOnlineStorage ||
+            item.isFavoriteTile || item.isPairedDevicesTile ||
+            (!item.isAppsTile && !item.isSearchTile && !item.isAnalyzerTile &&
+             !item.isVaultTile && !item.isSafTile && !item.isNetworkTile &&
+             !item.isExtractsTile && !item.isSyncTile && !item.isSettingsTile &&
+             !item.isTwinWindowTile && !item.isTerminalTile && !item.isShizukuTile &&
+             !item.isFileServerTile && !item.isAboutTile && !item.isNotepadTile &&
+             !item.isScannerTile && !item.isSmartSortTile && !item.isRecycleBinTile &&
+             !item.isTvRemoteTile && !item.isRemoteTile &&
+             !item.isOnlineStoragesTile && !item.isLegalTile &&
+             !item.isRateUsTile && !item.isTipJarTile)
+        }
+    }
+
+    /**
+     * Central tile-click router used by both the main screen adapter
+     * and the [ManageTilesBottomSheet] (for clicking on hidden tiles).
+     */
+    fun onStorageTileClicked(item: StorageItem) {
+        when {
+            item.isTwinWindowTile -> {
+                startActivity(Intent(this, TwinWindowActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_twin_window))
+            }
+            item.isNotepadTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.notepad.NotepadActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_notepad))
+            }
+            item.isScannerTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.scanner.DocumentScannerActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_scanner))
+            }
+            item.isExtractsTile -> checkAndNavigateToFileBrowser(item)
+            item.isPairedDevicesTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.ui.DevicePairingActivity::class.java))
+            }
+            item.isTerminalTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.ui.TerminalActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_adb_terminal))
+            }
+            item.isShizukuTile -> {
+                // Prevent double-launching / flickering
+                val now = System.currentTimeMillis()
+                if (now - lastShizukuLaunchTime < 1000) return
+                lastShizukuLaunchTime = now
+
+                val intent = if (isTv) {
+                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
+                } else {
+                    Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
+                }
+                startActivity(intent)
+                showPremiumSnackbar(getString(R.string.opening_shizuku))
+            }
+            item.isAppsTile -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_apps", true)
+                        putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                } else {
+                    startActivity(Intent(this, AppManagerActivity::class.java))
+                    showPremiumSnackbar(getString(R.string.opening_app_manager))
+                }
+            }
+            item.isRemoteTile -> {
+                if (VpnWarningHelper.isVpnActive(this)) {
+                    VpnWarningHelper.showVpnWarningDialog(this) {
+                        PinDialogHelper.showPinDialog(this, onCancel = {}) { pin ->
+                            val intent = Intent(this, RemoteManageActivity::class.java).apply {
+                                putExtra(RemoteManageActivity.EXTRA_PIN, pin)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                } else {
+                    PinDialogHelper.showPinDialog(this, onCancel = {}) { pin ->
+                        val intent = Intent(this, RemoteManageActivity::class.java).apply {
+                            putExtra(RemoteManageActivity.EXTRA_PIN, pin)
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+            item.isSearchTile -> {
+                startActivity(Intent(this, SearchActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_search))
+            }
+            item.isAnalyzerTile -> {
+                startActivity(Intent(this, StorageAnalyzerActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_storage_analyzer))
+            }
+            item.isSmartSortTile -> {
+                startActivity(Intent(this, SmartSortActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_smart_sort))
+            }
+            item.isTvRemoteTile -> {
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.P) {
+                    com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                        .setTitle(R.string.bt_remote_unsupported_title)
+                        .setMessage(R.string.bt_remote_unsupported_message)
+                        .setPositiveButton(R.string.got_it_1) { d, _ -> d.dismiss() }
+                        .setCancelable(true)
+                        .show()
+                } else {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.TvRemoteActivity::class.java))
+                    showPremiumSnackbar(getString(R.string.opening_itemlabel, getString(R.string.tv_remote)))
+                }
+            }
+
+            item.isSettingsTile -> startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.SettingsActivity::class.java))
+            item.isLegalTile    -> PolicySelectionActivity.start(this)
+            item.isNetworkTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.NetworkShareManagerActivity::class.java))
+            }
+            item.isOnlineStoragesTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.network.OnlineStorageManagerActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_online_storages))
+            }
+            item.isVaultTile -> {
+                startActivity(Intent(this, VaultActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_vault))
+            }
+            item.isRecycleBinTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.recycle.RecycleBinActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_recycle_bin))
+            }
+            item.isSyncTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.sync.SyncManagerActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_folder_sync))
+            }
+            item.isFileServerTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.server.ServerHostActivity::class.java))
+                showPremiumSnackbar(getString(R.string.opening_file_server))
+            }
+            item.isRateUsTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.RateUsActivity::class.java))
+            }
+            item.isAboutTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.AboutActivity::class.java))
+            }
+            item.isTipJarTile -> {
+                if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
+                    // Tip Jar not yet available on Amazon — show notice and don't open the activity
+                    android.widget.Toast.makeText(
+                        this,
+                        getString(R.string.billing_unavailable_amazon_coming_soon),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    val intent = Intent(this, SupporterLoyaltyActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            item.isNetworkRoot -> {
+                if (isKeyfilePickerMode || isCertPickerMode) {
+                    pickerLauncher.launch(
+                        Intent(this, NetworkBrowserActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                            } else {
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                            }
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                        }
+                    )
+                } else if (isPickerMode) {
+                    if (isDrivePicker) {
+                        val data = Intent().apply {
+                            putExtra("is_network", true)
+                            putExtra("share_id", item.networkShare?.id)
+                            putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        }
+                        setResult(RESULT_OK, data)
+                        finish()
+                    } else {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                            } else {
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                            }
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                        }
+                        pickerLauncher.launch(intent)
+                    }
+                } else if (isQuickTransferPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                            this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isLocationPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        // TV/paired-device items must use EXTRA_PAIRED_DEVICE_ID so
+                        // NetworkBrowserActivity opens the peer connection instead of
+                        // treating it as a regular SMB/FTP share (which would just refresh).
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(NetworkBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isShareDestPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isScannerFolderPicker) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isImageCompressDestPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else {
+                    val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+                    if (isDefaultTwinWindow && !isCompressDestPickerMode && !isQuickTransferPickerMode) {
+                        val intent = Intent(this, TwinWindowActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                // For TV we pass it via EXTRA_TOP_SHARE_ID, assuming NetworkBrowserFragment can resolve it.
+                                putExtra(TwinWindowActivity.EXTRA_TOP_SHARE_ID, item.networkShare?.id)
+                            } else {
+                                putExtra(TwinWindowActivity.EXTRA_TOP_SHARE_ID, item.networkShare?.id)
+                            }
+                        }
+                        startActivity(intent)
+                        showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                    } else {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                            } else {
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                            }
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            if (isCompressDestPickerMode) {
+                                putExtra(NetworkBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                            }
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+            item.isOnlineStorage -> {
+                if (isKeyfilePickerMode || isCertPickerMode) {
+                    pickerLauncher.launch(
+                        Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                        }
+                    )
+                } else if (isPickerMode) {
+                    if (isDrivePicker) {
+                        val data = Intent().apply {
+                            putExtra("is_network", true)
+                            putExtra("isOnlineStorage", true)
+                            putExtra("share_id", item.onlineStorage?.id)
+                            putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        }
+                        setResult(RESULT_OK, data)
+                        finish()
+                    } else {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                        }
+                        pickerLauncher.launch(intent)
+                    }
+                } else if (isQuickTransferPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                            this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isLocationPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(NetworkBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isShareDestPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isScannerFolderPicker) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isImageCompressDestPickerMode) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else {
+                    val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+                    if (isDefaultTwinWindow && !isCompressDestPickerMode && !isQuickTransferPickerMode) {
+                        val intent = Intent(this, TwinWindowActivity::class.java).apply {
+                            putExtra(TwinWindowActivity.EXTRA_TOP_SHARE_ID, item.onlineStorage?.id)
+                        }
+                        startActivity(intent)
+                        showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                    } else {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                            if (isCompressDestPickerMode) {
+                                putExtra(NetworkBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                            }
+                        }
+                        startActivity(intent)
+                    }
+                }
+            }
+            item.isFavoriteTile -> {
+                if (item.favoriteIsFolder) {
+                    val intent = if (item.favoriteIsNetwork) {
+                        Intent(this, NetworkBrowserActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare.id)
+                            } else {
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                                if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE || item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE) {
+                                    putExtra("isOnlineStorage", true)
+                                }
+                            }
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, item.favoritePath)
+                            if (isPickerMode) {
+                                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                            }
+                            if (isCompressDestPickerMode) {
+                                putExtra(NetworkBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                            }
+                        }
+                    } else {
+                        Intent(this, FileBrowserActivity::class.java).apply {
+                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            
+                            val (sid, stype) = IndexingRepository.resolveStorageForPath(item.favoritePath ?: "")
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+                        }
+                    }
+                    
+                    startActivity(intent)
+                    showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+                } else {
+                    // It's a file
+                    if (item.favoriteIsNetwork) {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                                putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare.id)
+                            } else {
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                                if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE || item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE) {
+                                    putExtra("isOnlineStorage", true)
+                                }
+                            }
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                            
+                            val parentPath = item.favoritePath?.substringBeforeLast("/", "") ?: ""
+                            val fileName = item.favoritePath?.substringAfterLast("/") ?: ""
+                            
+                            putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, parentPath)
+                            putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_PATH, item.favoritePath)
+                            putExtra(NetworkBrowserActivity.EXTRA_OPEN_FILE_NAME, fileName)
+                        }
+                        startActivity(intent)
+                        showPremiumSnackbar(getString(R.string.opening_itemlabel_1, item.label))
+                    } else {
+                        val file = File(item.favoritePath ?: "")
+                        if (file.exists()) {
+                            if (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.openFile(this, file)) return
+                            
+                            val uri = androidx.core.content.FileProvider.getUriForFile(
+                                this,
+                                "${packageName}.fileprovider",
+                                file
+                            )
+                            val intent = Intent(Intent.ACTION_VIEW).apply {
+                                val ext = file.extension.lowercase()
+                                val mimeType = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+                                setDataAndType(uri, mimeType)
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            }
+                            try {
+                                if (intent.resolveActivity(packageManager) != null) {
+                                    startActivity(intent)
+                                } else {
+                                    showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_pattern))
+                                }
+                            } catch (e: Exception) {
+                                showPremiumSnackbar(getString(R.string.unable_to_open_file_emessage))
+                            }
+                        } else {
+                            showPremiumSnackbar(getString(R.string.file_not_found))
+                        }
+                    }
+                }
+            }
+            else -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", false)
+                        putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                } else if (isKeyfilePickerMode) {
+                    val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_KEYFILE_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isCertPickerMode) {
+                    val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_CERT_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isLocationPickerMode) {
+                    val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                        // Local storage ID/Type
+                        val (sid, stype) = IndexingRepository.resolveStorageForPath(item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isImageCompressDestPickerMode) {
+                    val intent = Intent(this, FileBrowserActivity::class.java).apply {
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else {
+                    checkAndNavigateToFileBrowser(item)
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the storage needs to be indexed before navigating.
+     *
+     *  - Already indexed       → navigate directly (fast path, no dialog)
+     *  - User declined before  → navigate directly (respect the choice)
+     *  - Never indexed         → show the indexing offer dialog first
+     */
+    private fun checkAndNavigateToFileBrowser(item: StorageItem) {
+        val storageId = IndexingRepository.resolveStorageForPath(item.mountPath).first
+        val storageType = IndexingRepository.resolveStorageForPath(item.mountPath).second
+        val repo = IndexingRepository.getInstance(this)
+
+        if (repo.isStorageFullyIndexed(storageId) || repo.hasUserDeclinedIndexing(storageId)) {
+            navigateToFileBrowser(item, storageId, storageType)
+        } else {
+            showIndexingOfferDialog(item, storageId, storageType)
+        }
+    }
+
+    /**
+     * Asks the user whether they want to index this storage before browsing.
+     * "Index Now" → starts the full index via the progress dialog.
+     * "Not Now"   → saves a declined preference so we don't ask again, then navigates.
+     */
+    private fun showIndexingOfferDialog(item: StorageItem, storageId: String, storageType: String) {
+        IndexingUiHelper.showIndexingOfferDialog(
+            activity = this,
+            storageLabel = item.label,
+            storageId = storageId,
+            onIndexNow = { showIndexingProgressDialog(item, storageId, storageType) },
+            onNotNow = { navigateToFileBrowser(item, storageId, storageType) }
+        )
+    }
+
+    private fun showIndexingProgressDialog(item: StorageItem, storageId: String, storageType: String) {
+        IndexingUiHelper.showIndexingProgressDialog(
+            activity = this,
+            storageLabel = item.label,
+            storageId = storageId,
+            storagePath = item.mountPath,
+            storageType = storageType,
+            onComplete = { navigateToFileBrowser(item, storageId, storageType) },
+            onCancel = { /* Just dismissed */ }
+        )
+    }
+
+    /**
+     * Navigates to the file browser for the selected storage volume.
+     */
+    private fun navigateToFileBrowser(item: StorageItem, storageId: String, storageType: String) {
+        val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+        
+        if (isDefaultTwinWindow && !isPickerMode && !isSyncFolderPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker) {
+            val intent = Intent(this, TwinWindowActivity::class.java).apply {
+                putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_PATH, item.mountPath)
+                putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, item.label)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, storageId)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, storageType)
+            }
+            startActivity(intent)
+            showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+            return
+        }
+
+        val intent = Intent(this, FileBrowserActivity::class.java).apply {
+            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, storageId)
+            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, storageType)
+            if (isPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+            }
+            if (isSyncFolderPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
+            }
+            if (isCompressDestPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+            }
+            if (isImageCompressDestPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+            }
+            if (isExtractDestPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
+            }
+            if (isNetworkCachePickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
+            }
+            if (isQuickTransferPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                    intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+            }
+            if (isShareDestPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+            }
+            if (isNotepadFolderPicker) {
+                putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
+            }
+            if (isScannerFolderPicker) {
+                putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+            }
+        }
+        if (isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker) {
+            pickerLauncher.launch(intent)
+        } else {
+            startActivity(intent)
+            showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
+        }
+    }
+
+
+    /**
+     * Sets up the [ItemTouchHelper] for mobile drag-and-drop tile reordering.
+     * - Long-press (2 s) on any tile calls [ItemTouchHelper.startDrag].
+     * - The dragged tile scales to 1.1× with elevated shadow.
+     * - Dropping is blocked on/after locked tiles.
+     * - Order is persisted to [TileOrderManager] when the finger lifts.
+     * - Dragging over the [fabHideTile] drop-zone hides the tile.
+     */
+    private fun setupItemTouchHelper() {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
+        ) {
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
+                    ?: return makeMovementFlags(0, 0)
+                // Only locked tiles cannot be moved at all
+                return if (item.isLocked) makeMovementFlags(0, 0)
+                else makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val from = viewHolder.bindingAdapterPosition
+                val to   = target.bindingAdapterPosition
+                val firstLocked = storageAdapter.getItems().indexOfFirst { it.isLocked }
+                // Do not allow dropping on or after a locked tile
+                if (firstLocked >= 0 && to >= firstLocked) return false
+                storageAdapter.moveItem(from, to)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) { /* disabled */ }
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
+                    // Scale up the dragged tile
+                    viewHolder.itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).start()
+                    viewHolder.itemView.elevation = 24f
+
+                    val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
+                    draggedItem = item
+                } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+                    draggedItem = null
+                }
+            }
+
+            override fun onChildDraw(
+                c: android.graphics.Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float, dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+                viewHolder.itemView.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
+                viewHolder.itemView.elevation = 0f
+
+                // Normal reorder drop — persist the new order
+                val orderedIds = storageAdapter.getItems().filterNot { it.isLocked }.map { it.id }
+                TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
+                showPremiumSnackbar(getString(R.string.tile_order_saved))
+            }
+
+            /** We manage long-press ourselves (2 s hold) — disable the system default. */
+            override fun isLongPressDragEnabled() = false
+
+            override fun canDropOver(
+                recyclerView: RecyclerView,
+                current: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val targetItem = storageAdapter.getItems().getOrNull(target.bindingAdapterPosition)
+                return targetItem?.isLocked == false
+            }
+        }
+        itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(recyclerStorage)
+    }
+
+    // ── Tile hide / unhide helpers ─────────────────────────────────────────
+
+    /**
+     * Marks [item] as hidden: persists its ID to [TileOrderManager], removes it
+     * from the adapter immediately, and updates the badge dot.
+     *
+     * On TV this also:
+     *  - Shows a Snackbar naming the tile that was removed.
+     *  - Refocuses the next available tile (or the previous one if the hidden tile was last),
+     *    preventing focus from jumping to the Done button.
+     */
+    private fun hideTile(item: StorageItem) {
+        // Remember the current focused position so we can restore focus after the list refreshes.
+        val currentPos = storageAdapter.getItems().indexOfFirst { it.id == item.id }
+
+        val hidden = TileOrderManager.loadHidden(this).toMutableSet()
+        hidden.add(item.id)
+        TileOrderManager.saveHidden(this, hidden)
+
+        // Show a toast naming the tile that was hidden
+        showPremiumSnackbar("\"${item.label}\" tile hidden")
+
+        // Refresh local items immediately so they disappear (and 'lastFullTileList' stays fresh)
+        loadStorageVolumes()
+
+        // On TV: restore focus to the next tile (or previous if we just hid the last one)
+        if (isTv && currentPos >= 0) {
+            recyclerStorage.postDelayed({
+                val newCount = storageAdapter.itemCount
+                if (newCount == 0) return@postDelayed
+                // Target the same position, clamped to the new list size
+                val targetPos = currentPos.coerceAtMost(newCount - 1)
+                recyclerStorage.scrollToPosition(targetPos)
+                recyclerStorage.post {
+                    recyclerStorage.findViewHolderForAdapterPosition(targetPos)
+                        ?.itemView?.requestFocus()
+                }
+            }, 120)
+        }
+    }
+
+    /** Shows or hides the Manage Tiles button (only visible when there are hidden tiles). */
+    private fun updateHiddenBadge() {
+        val hiddenCount = TileOrderManager.loadHidden(this).size
+        
+        if (isEditMode) {
+            // In Edit Mode
+            if (isTv) {
+                btnDoneTv?.visibility = View.VISIBLE
+                // Show palette button in TV edit mode
+                btnColorTile?.visibility = View.VISIBLE
+                btnImportColorCode?.visibility = View.VISIBLE
+                // On TV, hide the Gear icon when in Edit Mode for a cleaner look
+                btnManageTiles.visibility = View.GONE
+            } else {
+                btnManageTiles.setImageResource(R.drawable.ic_check)
+                btnManageTiles.visibility = View.VISIBLE
+                btnManageTiles.clearColorFilter()
+                btnManageTiles.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                // Show color button in edit mode
+                btnColorTile?.visibility = View.VISIBLE
+                btnImportColorCode?.visibility = View.VISIBLE
+            }
+        } else {
+            // Normal Mode
+            if (isTv) {
+                btnDoneTv?.visibility = View.GONE
+                btnColorTile?.visibility = View.GONE
+                btnImportColorCode?.visibility = View.GONE
+                isSelectingTileForColor = false
+                if (::storageAdapter.isInitialized) storageAdapter.isColorPickMode = false
+                btnManageTiles.setImageResource(R.drawable.ic_tune)
+                btnManageTiles.visibility = if (hiddenCount > 0) View.VISIBLE else View.GONE
+            } else {
+                btnManageTiles.setImageResource(R.drawable.ic_tune)
+                btnManageTiles.visibility = if (hiddenCount > 0) View.VISIBLE else View.GONE
+                btnManageTiles.clearColorFilter()
+                btnManageTiles.setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                // Hide color button in normal mode
+                btnColorTile?.visibility = View.GONE
+                btnImportColorCode?.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun enterEditMode() {
+        if (isEditMode) return
+        isEditMode = true
+        storageAdapter.isEditMode = true
+        updateHiddenBadge()
+        
+        if (isTv) {
+            showTvEditInstructions()
+        } else {
+            showPremiumSnackbar(getString(R.string.edit_mode_tap_x_to_hide_drag_to_reorder))
+            // Vibrate for feedback
+            recyclerStorage.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS)
+        }
+    }
+
+    private fun showTvEditInstructions() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_tv_edit_instructions, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        
+        val btnGotIt = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnGotIt)
+        btnGotIt.setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        // Ensure "Got It" button is focused for D-pad accessibility
+        dialog.setOnShowListener {
+            btnGotIt.requestFocus()
+        }
+
+        dialog.show()
+    }
+
+    private fun exitEditMode() {
+        if (!isEditMode) return
+        isEditMode = false
+        storageAdapter.isEditMode = false
+        updateHiddenBadge()
+        showPremiumSnackbar(getString(R.string.tile_configuration_saved))
+    }
+
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        if (isEditMode) {
+            exitEditMode()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    /**
+     * Builds the complete natural tile list (ignoring hidden filter) so
+     * [ManageTilesBottomSheet] can show both hidden and visible tiles.
+     * This is a lightweight snapshot — no storage I/O, just the current adapter list
+     * combined with hidden tiles reconstructed from saved IDs.
+     */
+    private fun buildAllTilesForSheet(): List<StorageItem> {
+        return lastFullTileList
+    }
+
+
+
+    // ── TV D-Pad reorder mode ──────────────────────────────────────────────
+
+    /**
+     * Enters TV reorder mode for [item]: snapshot the list, mark the tile visually,
+     * and show a hint Snackbar. D-Pad UP/DOWN then moves the tile; OK saves; Back cancels.
+     */
+    private fun enterTvReorderMode(item: StorageItem) {
+        reorderModeOriginalList = storageAdapter.getItems().toList()
+        reorderModeItemId       = item.id
+        storageAdapter.reorderModeId = item.id
+        storageAdapter.notifyDataSetChanged()
+        showPremiumSnackbar(getString(R.string.dpad_moves_tile_ok_saves_back_cancels))
+    }
+
+    /**
+     * Exits TV reorder mode.
+     * @param save If true, persists the current order; if false, restores the snapshot.
+     */
+    private fun exitTvReorderMode(save: Boolean) {
+        if (!save) {
+            reorderModeOriginalList?.let { storageAdapter.submitList(it) }
+            showPremiumSnackbar(getString(R.string.tile_order_cancelled))
+        } else {
+            val orderedIds = storageAdapter.getItems().filterNot { it.isLocked }.map { it.id }
+            TileOrderManager.save(this, orderedIds)
+            showPremiumSnackbar(getString(R.string.tile_order_saved))
+        }
+        reorderModeItemId       = null
+        reorderModeOriginalList = null
+        storageAdapter.reorderModeId = null
+        storageAdapter.notifyDataSetChanged()
+    }
+
+    /**
+     * Moves the tile currently in reorder mode by [direction] (-1 up, +1 down).
+     * Clamps to the boundary above the first locked tile.
+     * Refocuses the tile after the layout settles.
+     */
+    private fun moveTileInReorderMode(direction: Int) {
+        val id = reorderModeItemId ?: return
+        val list = storageAdapter.getItems().toMutableList()
+        val fromIndex = list.indexOfFirst { it.id == id }
+        if (fromIndex < 0) return
+
+        val firstLocked    = list.indexOfFirst { it.isLocked }
+        val maxMovable     = if (firstLocked > 0) firstLocked - 1 else list.lastIndex
+        val toIndex        = (fromIndex + direction).coerceIn(0, maxMovable)
+        if (toIndex == fromIndex) return
+
+        list.add(toIndex, list.removeAt(fromIndex))
+        storageAdapter.submitList(list)
+
+        // Restore visual reorder state (submitList calls notifyDataSetChanged)
+        storageAdapter.reorderModeId = id
+
+        // Refocus the moved tile after RecyclerView settles
+        recyclerStorage.postDelayed({
+            val newPos = storageAdapter.getItems().indexOfFirst { it.id == id }
+            if (newPos >= 0) {
+                recyclerStorage.scrollToPosition(newPos)
+                recyclerStorage.findViewHolderForAdapterPosition(newPos)?.itemView?.requestFocus()
+            }
+        }, 80)
+    }
+
+    /**
+     * Intercepts D-Pad keys while the TV reorder mode is active:
+     * UP/DOWN move the tile, OK saves and exits, Back cancels.
+     */
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (isTv && reorderModeItemId != null) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                val cols = if (storageAdapter.viewMode == MainMenuViewModeManager.ViewMode.GRID) {
+                    MainMenuViewModeManager.loadColumnCount(this)
+                } else 1
+
+                when (event.keyCode) {
+                    KeyEvent.KEYCODE_DPAD_UP    -> { moveTileInReorderMode(-cols); return true }
+                    KeyEvent.KEYCODE_DPAD_DOWN  -> { moveTileInReorderMode(cols);  return true }
+                    KeyEvent.KEYCODE_DPAD_LEFT  -> { moveTileInReorderMode(-1);    return true }
+                    KeyEvent.KEYCODE_DPAD_RIGHT -> { moveTileInReorderMode(1);     return true }
+                    KeyEvent.KEYCODE_DPAD_CENTER,
+                    KeyEvent.KEYCODE_ENTER     -> { 
+                        // Only save if it's a NEW press (not a repeat of the entering long-press)
+                        if (event.repeatCount == 0 && !event.isLongPress) {
+                            exitTvReorderMode(save = true)
+                            return true 
+                        }
+                    }
+                    KeyEvent.KEYCODE_BACK      -> { exitTvReorderMode(save = false); return true }
+                }
+            } else if (event.action == KeyEvent.ACTION_UP) {
+                // Consume the UP action for our handled keys so nothing else fires
+                when (event.keyCode) {
+                    KeyEvent.KEYCODE_DPAD_UP,
+                    KeyEvent.KEYCODE_DPAD_DOWN,
+                    KeyEvent.KEYCODE_DPAD_LEFT,
+                    KeyEvent.KEYCODE_DPAD_RIGHT,
+                    KeyEvent.KEYCODE_DPAD_CENTER,
+                    KeyEvent.KEYCODE_ENTER,
+                    KeyEvent.KEYCODE_BACK -> return true
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    /**
+     * Shows a modern Material Snackbar with premium styling.
+     */
+    private fun showPremiumSnackbar(message: String) {
+        val rootView = findViewById<View>(R.id.main)
+        Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
+            .setBackgroundTint(getColor(R.color.ufm_surface_variant))
+            .setTextColor(getColor(R.color.ufm_text_primary))
+            .setActionTextColor(getColor(R.color.ufm_primary))
+            .show()
+    }
+
+    /**
+     * Re-orders [allItems] according to the user's saved tile order.
+     *
+     * Algorithm:
+     * 1. Splits list into [nonLocked] + [locked] (locked always stays at bottom).
+     * 2. Loads the saved order from [TileOrderManager].
+     * 3. Calls [TileOrderManager.mergeWithNatural] which:
+     *    - Drops saved IDs that no longer exist.
+     *    - Inserts new IDs after the last tile of the same category.
+     * 4. Returns reordered non-locked tiles followed by locked tiles.
+     */
+    private fun applyTileOrder(allItems: List<StorageItem>): List<StorageItem> {
+        val locked    = allItems.filter { it.isLocked }
+        val nonLocked = allItems.filter { !it.isLocked }
+
+        val saved  = TileOrderManager.load(this)
+        if (saved.isEmpty()) return allItems  // No saved order yet — use natural list
+
+        val mergedIds   = TileOrderManager.mergeWithNatural(saved, nonLocked)
+        val byId        = nonLocked.associateBy { it.id }
+        val reordered   = mergedIds.mapNotNull { byId[it] }
+
+        return reordered + locked
+    }
+
+    /**
+     * Enumerates all mounted storage volumes using [StorageManager].
+     *
+     * All blocking I/O (StatFs, filesystem scans) is dispatched to [Dispatchers.IO]
+     * so the main thread is never stalled. Results are applied on the main thread
+     * once the background work completes.
+     */
+    private fun loadStorageVolumes() {
+        // Capture values needed on the background thread before leaving the main thread.
+        val previousPaths = knownMountPaths.toSet()
+        val capturedIsTv = isTv
+        val capturedIsAmazon = isAmazon
+        val capturedIsDrivePicker = isDrivePicker
+        val capturedIsSyncFolderPickerMode = isSyncFolderPickerMode
+        val capturedIsPickerMode = isPickerMode
+        val capturedIsCompressDestPickerMode = isCompressDestPickerMode
+        val capturedIsLocationPickerMode = isLocationPickerMode
+        val capturedIsNetworkCachePickerMode = isNetworkCachePickerMode
+        val capturedIsQuickTransferPickerMode = isQuickTransferPickerMode
+        val capturedIsShareDestPickerMode = isShareDestPickerMode
+        val capturedIsNotepadFolderPicker = isNotepadFolderPicker
+        val capturedIsKeyfilePickerMode = isKeyfilePickerMode
+        val capturedIsCertPickerMode = isCertPickerMode
+        val capturedIsScannerFolderPicker = isScannerFolderPicker
+        val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
+
+        GlobalScope.launch(Dispatchers.IO) {
+            val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val volumes = storageManager.storageVolumes
+            val storageItems = mutableListOf<StorageItem>()
+            val discoveredPaths = mutableSetOf<String>()
+            val newKnownPaths = mutableSetOf<String>()
+
+            // Reset SELinux-blocked detection for this scan cycle
+            usbSelinuxBlocked = false
+
+            Log.d(TAG, "StorageManager reports ${volumes.size} volume(s)")
+            for (volume in volumes) {
+                val item = volumeToStorageItem(volume) ?: continue
+                storageItems.add(item)
+                newKnownPaths.add(item.mountPath)
+                discoveredPaths.add(item.mountPath)
+            }
+
+            // Add Twin Window tile at the very top (first in list)
+            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+                storageItems.add(0, StorageItem(
+                    id = "twin_window_tile",
+                    label = getString(R.string.twin_window_title),
+                    iconRes = R.drawable.ic_twin_window,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isTwinWindowTile = true
+                ))
+            }
+
+            // Add Notepad tile (after twin window)
+            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+                storageItems.add(StorageItem(
+                    id = "notepad_tile",
+                    label = getString(R.string.notepad),
+                    iconRes = R.drawable.ic_notepad,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isNotepadTile = true,
+                    subtitle = getString(R.string.notepad_tile_subtitle)
+                ))
+            }
+
+            // Add Document Scanner tile (mobile only, after notepad)
+            if (!capturedIsTv && !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+                storageItems.add(StorageItem(
+                    id = "scanner_tile",
+                    label = getString(R.string.scanner_title),
+                    iconRes = R.drawable.ic_scanner,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isScannerTile = true,
+                    subtitle = getString(R.string.scanner_tile_subtitle)
+                ))
+            }
+
+            // Fallback: scan common USB mount paths that StorageManager may miss on TV.
+            // Each StatFs call is capped at STAT_TIMEOUT_MS to avoid slow USB controllers
+            // blocking the whole scan.
+            if (capturedIsTv) {
+                scanExtraMountPaths(storageItems, discoveredPaths)
+            }
+
+            // On Amazon FireOS, if USB drives at /mnt/media_rw/ are blocked by SELinux,
+            // add a Shizuku guidance card so the user knows how to access their USB storage.
+            if (usbSelinuxBlocked && !capturedIsImageCompressDestPickerMode) {
+                storageItems.add(StorageItem(
+                    id = "shizuku_usb_access",
+                    label = getString(R.string.shizuku_usb_access_title),
+                    iconRes = R.drawable.ic_shizuku_logo,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isShizukuTile = true,
+                    subtitle = getString(R.string.shizuku_usb_access_subtitle)
+                ))
+            }
+
+            // In sync/notepad/network-cache folder picker mode only show local device storage — no network shares or tiles
+            if (capturedIsSyncFolderPickerMode || capturedIsNotepadFolderPicker || capturedIsNetworkCachePickerMode) {
+                withContext(Dispatchers.Main) {
+                    knownMountPaths.clear()
+                    knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.submitList(storageItems.filterForTileIconPicker())
+                    updateEmptyState(storageItems.isEmpty())
+                }
+                return@launch
+            }
+
+            // Add configured online storages
+            val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@StorageBrowserActivity)
+            val onlineStorages = onlineRepo.getAll()
+            for (storage in onlineStorages) {
+                if (storage.isCredentialsStripped) continue
+                storageItems.add(StorageItem(
+                    id = storage.id,
+                    label = storage.displayName,
+                    iconRes = R.drawable.ic_cloud,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = storage.email,
+                    isOnlineStorage = true,
+                    onlineStorage = storage,
+                    subtitle = storage.email
+                ))
+            }
+
+            // Add configured network shares (SMB/FTP) right below local storage
+            val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@StorageBrowserActivity)
+            val shares = repo.getAll()
+            for (share in shares) {
+                if (share.isCredentialsStripped) continue
+                val icon = if (share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SMB) {
+                    R.drawable.ic_network
+                } else {
+                    R.drawable.ic_network
+                }
+                storageItems.add(StorageItem(
+                    id = share.id,
+                    label = share.name,
+                    iconRes = icon,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = share.docIdPrefix, // use docIdPrefix as mountPath for network roots
+                    isNetworkRoot = true,
+                    networkShare = share
+                ))
+            }
+
+            val pairedDevices = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@StorageBrowserActivity).getAllPairedDevices()
+            for (device in pairedDevices) {
+                if (device.isConnected) {
+                    val defaultLabel = if (device.isTv) getString(R.string.connected_tv) else getString(R.string.connected_phone)
+                    val iconRes = if (device.isTv) R.drawable.ic_remote_manage else R.drawable.ic_phone
+                    val deviceTypeLabel = if (device.isTv) getString(R.string.android_tv) else getString(R.string.phone)
+
+                    storageItems.add(StorageItem(
+                        id = "tv_${device.deviceId}", // Keep ID prefix identical for backward compatibility
+                        label = device.name.ifEmpty { defaultLabel },
+                        iconRes = iconRes,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "tv://${device.deviceId}",
+                        isNetworkRoot = true,
+                        subtitle = getString(R.string.devicetypelabel_u2022_devicelastip, deviceTypeLabel, device.lastIp),
+                        networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                            id = device.deviceId,
+                            name = device.name,
+                            type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                            host = device.lastIp,
+                            port = device.lastPort,
+                            readOnly = false
+                        )
+                    ))
+                }
+            }
+
+            // Add discovered DLNA servers
+            val dlnaServers = za.kilowatch.ultimatefilemanager.network.DlnaDiscovery.getDiscoveredServers()
+            for (server in dlnaServers) {
+                storageItems.add(StorageItem(
+                    id = "dlna_${server.ip}:${server.port}",
+                    label = server.friendlyName,
+                    iconRes = R.drawable.ic_dlna,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "dlna://${server.ip}:${server.port}",
+                    isNetworkRoot = true,
+                    subtitle = server.ip,
+                    networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                        type = za.kilowatch.ultimatefilemanager.network.ShareType.DLNA,
+                        host = server.ip,
+                        port = server.port,
+                        name = server.friendlyName
+                    )
+                ))
+            }
+
+            // Apply custom drive names from Room DB
+            val renameMap = za.kilowatch.ultimatefilemanager.settings.renamer.StorageRenameManager.getInstance(this@StorageBrowserActivity).getRenameMap()
+            for (i in storageItems.indices) {
+                val item = storageItems[i]
+                if (item.isRemovable || item.id == "internal") {
+                    val hashedId = za.kilowatch.ultimatefilemanager.settings.renamer.StorageRenameManager.hashDeviceId(item.id)
+                    renameMap[hashedId]?.let { customName ->
+                        storageItems[i] = item.copy(label = customName)
+                    }
+                }
+            }
+
+            // Detect newly mounted devices
+            if (previousPaths.isNotEmpty()) {
+                storageItems.forEach { item ->
+                    if (item.mountPath !in previousPaths) {
+                        item.isNewlyMounted = true
+                    }
+                }
+            }
+
+            // Scanner folder picker: show local + network + online storages — no feature/favorites tiles
+            if (capturedIsScannerFolderPicker) {
+                withContext(Dispatchers.Main) {
+                    knownMountPaths.clear()
+                    knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.submitList(storageItems.filterForTileIconPicker())
+                    updateEmptyState(storageItems.isEmpty())
+                }
+                return@launch
+            }
+
+            if (capturedIsPickerMode || capturedIsKeyfilePickerMode) {
+                withContext(Dispatchers.Main) {
+                    knownMountPaths.clear()
+                    knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.submitList(storageItems.filterForTileIconPicker())
+                    updateEmptyState(storageItems.isEmpty())
+                }
+                return@launch
+            }
+
+            // Cert picker: show all real storage + network shares — no feature tiles
+            if (capturedIsCertPickerMode) {
+                withContext(Dispatchers.Main) {
+                    knownMountPaths.clear()
+                    knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.submitList(storageItems.filterForTileIconPicker())
+                    updateEmptyState(storageItems.isEmpty())
+                }
+                return@launch
+            }
+            val favorites = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(this@StorageBrowserActivity)
+            val networkShareRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@StorageBrowserActivity)
+            val pairedDeviceRepo = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@StorageBrowserActivity)
+            for (fav in favorites) {
+                if (fav.isNetwork && fav.shareId != null) {
+                    if (!fav.shareId.startsWith("tv_")) {
+                        val netShare = networkShareRepo.getById(fav.shareId)
+                        if (netShare != null && netShare.isCredentialsStripped) {
+                            continue
+                        }
+                        val onlineShare = onlineRepo.getById(fav.shareId)
+                        if (onlineShare != null && onlineShare.isCredentialsStripped) {
+                            continue
+                        }
+                    }
+                }
+                storageItems.add(StorageItem(
+                    id = fav.id,
+                    label = fav.label,
+                    iconRes = R.drawable.ic_star,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isFavoriteTile = true,
+                    favoritePath = fav.path,
+                    favoriteIsFolder = fav.isFolder,
+                    favoriteIsNetwork = fav.isNetwork,
+                    networkShare = if (fav.isNetwork && fav.shareId != null) {
+                        if (fav.shareId.startsWith("tv_")) {
+                            val deviceId = fav.shareId.removePrefix("tv_")
+                            val device = pairedDeviceRepo.getAllPairedDevices().find { it.deviceId == deviceId }
+                            if (device != null) {
+                                za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                    id = device.deviceId,
+                                    name = device.name,
+                                    type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                                    host = device.lastIp,
+                                    port = device.lastPort,
+                                    readOnly = false
+                                )
+                            } else null
+                        } else {
+                            val netShare = networkShareRepo.getById(fav.shareId)
+                            if (netShare != null) {
+                                netShare
+                            } else {
+                                val onlineShare = onlineRepo.getById(fav.shareId)
+                                if (onlineShare != null) {
+                                    za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                        id = onlineShare.id,
+                                        name = onlineShare.displayName,
+                                        type = when (onlineShare.provider) {
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                        },
+                                        host = onlineShare.email,
+                                        port = 0,
+                                        username = onlineShare.email,
+                                        password = "",
+                                        remotePath = "/",
+                                        readOnly = false
+                                    )
+                                } else null
+                            }
+                        }
+                    } else null
+                ))
+            }
+
+            if (!capturedIsImageCompressDestPickerMode) {
+                // Add APK / XAPK Extracts tile — only if the folder is non-empty
+                val extractsDir = File(
+                    getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),
+                    "UFM-Extracted"
+                )
+                if (extractsDir.exists() && extractsDir.listFiles()?.isNotEmpty() == true) {
+                    val fileCount = extractsDir.listFiles()?.size ?: 0
+                    storageItems.add(StorageItem(
+                        id = "extracts_tile",
+                        label = getString(R.string.apk_xapk_extracts),
+                        iconRes = R.drawable.ic_apps,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = extractsDir.absolutePath,
+                        isExtractsTile = true,
+                        subtitle = "$fileCount ${getString(R.string.extracts_subtitle_files)}"
+                    ))
+                }
+
+                // Add Recycle Bin tile (only when enabled)
+                if (za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager.isEnabled(this@StorageBrowserActivity)) {
+                    storageItems.add(StorageItem(
+                        id = "recycle_bin_tile",
+                        label = getString(R.string.recycle_bin_title),
+                        iconRes = R.drawable.ic_delete,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isRecycleBinTile = true
+                    ))
+                }
+
+                // Add the Paired Devices tile (above App Access)
+                storageItems.add(StorageItem(
+                    id = "paired_devices_tile",
+                    label = if (capturedIsTv) getString(R.string.paired_phones_1) else getString(R.string.paired_tvs_1),
+                    iconRes = R.drawable.ic_tv,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isPairedDevicesTile = true
+                ))
+
+                // Add the TV Remote tile (Mobile only)
+                if (!capturedIsTv) {
+                    storageItems.add(StorageItem(
+                        id = "tv_remote_tile",
+                        label = getString(R.string.tv_remote),
+                        iconRes = R.drawable.ic_tv_remote,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isTvRemoteTile = true,
+                        subtitle = getString(R.string.tv_remote_subtitle)
+                    ))
+                }
+
+                // Add the ADB Terminal tile
+                storageItems.add(StorageItem(
+                    id = "terminal_tile",
+                    label = getString(R.string.adb_terminal_title),
+                    iconRes = R.drawable.ic_terminal,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isTerminalTile = true
+                ))
+
+                // Add the Shizuku tile
+                storageItems.add(StorageItem(
+                    id = "shizuku_tile",
+                    label = getString(R.string.shizuku_title),
+                    iconRes = R.drawable.ic_shizuku_logo,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isShizukuTile = true,
+                    subtitle = getString(R.string.shizuku_subtitle)
+                ))
+
+                // Add the Apps tile
+                storageItems.add(StorageItem(
+                    id = "apps_tile",
+                    label = getString(R.string.perm_query_apps_title),
+                    iconRes = R.drawable.ic_apps,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isAppsTile = true
+                ))
+
+                // Add the Remote Manage tile
+                storageItems.add(StorageItem(
+                    id = "remote_tile",
+                    label = getString(R.string.remote_manage_btn),
+                    iconRes = R.drawable.ic_remote_manage,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isRemoteTile = true
+                ))
+
+                // Add the File Server tile (FTP/SFTP hosting)
+                storageItems.add(StorageItem(
+                    id = "file_server_tile",
+                    label = getString(R.string.file_server_title),
+                    iconRes = R.drawable.ic_file_server,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isFileServerTile = true
+                ))
+
+                // Add the Encrypted Vault tile
+                storageItems.add(StorageItem(
+                    id = "vault_tile",
+                    label = getString(R.string.vault_title),
+                    iconRes = R.drawable.ic_lock,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isVaultTile = true
+                ))
+
+                // Add the Search tile
+                storageItems.add(StorageItem(
+                    id = "search_tile",
+                    label = getString(R.string.search_title),
+                    iconRes = R.drawable.ic_search,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isSearchTile = true
+                ))
+
+                // Add the Storage Analyzer tile
+                storageItems.add(StorageItem(
+                    id = "analyzer_tile",
+                    label = getString(R.string.analyzer_title),
+                    iconRes = R.drawable.ic_analyzer,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isAnalyzerTile = true
+                ))
+
+                // Add the Smart Sort tile
+                storageItems.add(StorageItem(
+                    id = "smart_sort_tile",
+                    label = getString(R.string.smart_sort_title),
+                    iconRes = R.drawable.ic_sort,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isSmartSortTile = true
+                ))
+            }
+
+            if (!capturedIsImageCompressDestPickerMode) {
+                // Add the Network Shares tile — above SAF tile
+                storageItems.add(StorageItem(
+                    id = "network_tile",
+                    label = getString(R.string.network_tile_title),
+                    iconRes = R.drawable.ic_network,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isNetworkTile = true
+                ))
+            }
+
+            if (!capturedIsImageCompressDestPickerMode) {
+                // Add the Online Storages tile
+                storageItems.add(StorageItem(
+                    id = "online_storages_tile",
+                    label = getString(R.string.online_storages_title),
+                    iconRes = R.drawable.ic_cloud,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isOnlineStoragesTile = true
+                ))
+            }
+
+            if (!capturedIsImageCompressDestPickerMode) {
+                // Add the Folder Sync tile — mobile only, directly below the Network Shares manager tile
+                if (!capturedIsTv) {
+                    storageItems.add(StorageItem(
+                        id = "sync_tile",
+                        label = getString(R.string.sync_title),
+                        iconRes = R.drawable.ic_sync,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isSyncTile = true
+                    ))
+                }
+
+                // Add the Settings tile (Font Size etc.) — just above Legal
+                storageItems.add(StorageItem(
+                    id = "settings_tile",
+                    label = getString(R.string.font_size_title),
+                    iconRes = R.drawable.ic_font_size,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isSettingsTile = true
+                ))
+
+                // Add the Legal tile
+                storageItems.add(StorageItem(
+                    id = "legal_tile",
+                    label = getString(R.string.policy_selection_title),
+                    iconRes = R.drawable.ic_policy,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isLegalTile = true
+                ))
+
+                // Add the Rate Us tile — shown on all devices
+                storageItems.add(StorageItem(
+                    id = "rate_us_tile",
+                    label = getString(R.string.rate_us_title),
+                    iconRes = R.drawable.ic_star,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isRateUsTile = true
+                ))
+
+                // Add the Tip Jar tile — shown on ALL devices including Amazon.
+                if (isInternetAvailable()) {
+                    storageItems.add(StorageItem(
+                        id = "tip_jar_tile",
+                        label = getString(R.string.tip_jar_title),
+                        iconRes = R.drawable.ic_coffee,
+                        totalBytes = 0,
+                        usedBytes = 0,
+                        mountPath = "",
+                        isTipJarTile = true
+                    ))
+                }
+
+                // Add the About tile
+                storageItems.add(StorageItem(
+                    id = "about_tile",
+                    label = getString(R.string.about_title),
+                    iconRes = R.drawable.ic_about,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isAboutTile = true
+                ))
+            }
+
+            // Filter out any tiles the user has chosen to hide, then publish on main thread.
+            val fullList = storageItems.toList()
+            val hidden = TileOrderManager.loadHidden(this@StorageBrowserActivity)
+            storageItems.removeAll { it.id in hidden }
+            val orderedItems = applyTileOrder(storageItems)
+
+            // In tile icon picker mode, show only storage-selector tiles
+            val displayItems = orderedItems.filterForTileIconPicker()
+
+            withContext(Dispatchers.Main) {
+                knownMountPaths.clear()
+                knownMountPaths.addAll(newKnownPaths)
+                lastFullTileList = fullList
+                updateHiddenBadge()
+                storageAdapter.submitList(displayItems)
+                updateEmptyState(storageItems.isEmpty())
+            }
+        }
+    }
+
+
+    /**
+     * Scans common mount directories for USB/removable storage that
+     * StorageManager doesn't report. Common on Android TV devices.
+     *
+     * Each [StatFs] call is run on a separate thread with a [STAT_TIMEOUT_MS] deadline
+     * so a slow or unresponsive USB controller can never stall the whole scan.
+     */
+    private fun scanExtraMountPaths(
+        items: MutableList<StorageItem>,
+        discoveredPaths: MutableSet<String>
+    ) {
+        val mountDirs = listOf(
+            File("/storage"),
+            File("/mnt/media_rw"),
+            File("/mnt/usb")
+        )
+
+        val executor = java.util.concurrent.Executors.newSingleThreadExecutor()
+
+        for (mountDir in mountDirs) {
+            if (!mountDir.exists() || !mountDir.isDirectory) continue
+            val children = mountDir.listFiles() ?: continue
+
+            for (child in children) {
+                // Skip emulated (internal) and self
+                if (child.name == "emulated" || child.name == "self") continue
+                if (!child.isDirectory) continue
+
+                val path = child.absolutePath
+
+                // On Amazon FireOS, /mnt/media_rw/ exists but SELinux blocks child.canRead().
+                // Detect this case so we can offer Shizuku guidance later.
+                if (!child.canRead()) {
+                    if (path.contains("media_rw") && za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+                        Log.w(TAG, "SELinux blocked read access to $path on FireOS — USB not accessible without Shizuku.")
+                        usbSelinuxBlocked = true
+                    }
+                    continue
+                }
+
+                if (path in discoveredPaths) continue
+
+                Log.d(TAG, "  Fallback scan found: $path")
+
+                // Run StatFs on a worker thread with a hard timeout so a hung USB
+                // controller can't block the coroutine for seconds at a time.
+                val future = executor.submit<StatFs?> {
+                    try { StatFs(path) } catch (_: Exception) { null }
+                }
+                val stat = try {
+                    future.get(STAT_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS)
+                } catch (_: Exception) {
+                    future.cancel(true)
+                    Log.w(TAG, "  StatFs timed out or failed for $path — skipping")
+                    null
+                } ?: continue
+
+                val totalBytes = stat.totalBytes
+                if (totalBytes <= 0) continue // Not a real mount
+
+                val freeBytes = stat.freeBytes
+                val usedBytes = totalBytes - freeBytes
+
+                val label = when {
+                    path.contains("usb", ignoreCase = true) -> getString(R.string.storage_usb)
+                    else -> getString(R.string.storage_usb) + " (${child.name})"
+                }
+
+                val item = StorageItem(
+                    id = child.name,
+                    label = label,
+                    iconRes = R.drawable.ic_storage_usb,
+                    totalBytes = totalBytes,
+                    usedBytes = usedBytes,
+                    mountPath = path,
+                    isRemovable = true,
+                    isNewlyMounted = false
+                )
+
+                items.add(item)
+                discoveredPaths.add(path)
+                knownMountPaths.add(path)
+            }
+        }
+
+        executor.shutdown()
+    }
+
+    /**
+     * Converts a [StorageVolume] to a [StorageItem], calculating size info.
+     */
+    private fun volumeToStorageItem(volume: StorageVolume): StorageItem? {
+        val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            volume.safeDirectoryPath
+        } else {
+            try {
+                val method = volume.javaClass.getMethod("getPath")
+                method.invoke(volume) as? String
+            } catch (e: Exception) {
+                null
+            }
+        } ?: return null
+
+        val statFs = try {
+            StatFs(path)
+        } catch (e: SecurityException) {
+            if (path.contains("media_rw")) {
+                Log.w(TAG, "SELinux blocked StatFs for $path — USB inaccessible on this platform.")
+                if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+                    usbSelinuxBlocked = true
+                }
+            }
+            return null
+        } catch (e: Exception) {
+            return null
+        }
+
+        val totalBytes = statFs.totalBytes
+        val freeBytes = statFs.freeBytes
+        val usedBytes = totalBytes - freeBytes
+
+        val description = volume.getDescription(this) ?: ""
+
+        // On some TV/set-top firmware (e.g. NVIDIA Shield), a large USB dongle can be
+        // reported as isPrimary=true and isRemovable=false. Detect this via a path heuristic:
+        //   • Mount path contains a known USB directory segment, AND
+        //   • A UUID is present — real internal eMMC is always UUID-less on Android.
+        // This keeps normal phones/tablets unaffected (their eMMC is at /storage/emulated/0
+        // and has no UUID).
+        val looksLikeUsb = path.contains("/mnt/media_rw/", ignoreCase = true)
+                        || path.contains("/mnt/usb",        ignoreCase = true)
+                        || path.contains("/storage/usb",    ignoreCase = true)
+        val hasUuid = volume.uuid != null
+        val treatAsRemovable = volume.isRemovable || (looksLikeUsb && hasUuid)
+
+        val label = when {
+            treatAsRemovable && description.lowercase().contains("usb") -> getString(R.string.storage_usb)
+            treatAsRemovable -> getString(R.string.storage_sd_card)
+            volume.isPrimary -> getString(R.string.storage_internal)
+            else             -> description.ifEmpty { getString(R.string.storage_unknown) }
+        }
+
+        val iconRes = StorageItem.iconForType(treatAsRemovable, description)
+        val id = volume.uuid ?: "internal"
+
+        return StorageItem(
+            id = id,
+            label = label,
+            iconRes = iconRes,
+            totalBytes = totalBytes,
+            usedBytes = usedBytes,
+            mountPath = path,
+            isRemovable = treatAsRemovable,
+            isNewlyMounted = false
+        )
+    }
+
+    /**
+     * Registers the [StorageEventReceiver] for dynamic storage events.
+     */
+    private fun registerStorageReceiver() {
+        storageReceiver.onStorageChanged = {
+            // Debounce: delay 500ms to let mount settle before reading
+            handler.removeCallbacksAndMessages(null)
+            handler.postDelayed({
+                runOnUiThread { loadStorageVolumes() }
+            }, 500)
+        }
+
+        val filter = IntentFilter().apply {
+            StorageEventReceiver.STORAGE_ACTIONS.forEach { action ->
+                addAction(action)
+            }
+            addDataScheme("file")
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(storageReceiver, filter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(storageReceiver, filter)
+        }
+    }
+
+    /**
+     * Registers a StorageVolume callback (API 30+) for reliable mount/unmount events.
+     * This is the most reliable method on modern Android, especially TV.
+     */
+    private fun registerStorageVolumeCallback() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val callback = object : StorageManager.StorageVolumeCallback() {
+                override fun onStateChanged(volume: StorageVolume) {
+                    handler.removeCallbacksAndMessages(null)
+                    handler.postDelayed({
+                        runOnUiThread { loadStorageVolumes() }
+                    }, 500)
+                }
+            }
+            storageManager.registerStorageVolumeCallback(mainExecutor, callback)
+            storageVolumeCallback = callback
+        }
+    }
+
+    private fun unregisterStorageVolumeCallback() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && storageVolumeCallback != null) {
+            val storageManager = getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            storageManager.unregisterStorageVolumeCallback(
+                storageVolumeCallback as StorageManager.StorageVolumeCallback
+            )
+            storageVolumeCallback = null
+        }
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        if (isEmpty) {
+            layoutEmptyStorage.visibility = View.VISIBLE
+            recyclerStorage.visibility = View.GONE
+            lottieEmptyStorage?.playAnimation()
+        } else {
+            layoutEmptyStorage.visibility = View.GONE
+            recyclerStorage.visibility = View.VISIBLE
+            lottieEmptyStorage?.cancelAnimation()
+        }
+    }
+
+    /**
+     * Returns true if the device has an active internet connection.
+     * Used to conditionally show the Tip Jar tile (Google Play Billing requires internet).
+     */
+    private fun isInternetAvailable(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    private fun applyViewMode() {
+        val mode = MainMenuViewModeManager.loadViewMode(this)
+        val cols = MainMenuViewModeManager.loadColumnCount(this)
+        val size = MainMenuViewModeManager.loadItemSize(this)
+
+        if (::storageAdapter.isInitialized) {
+            storageAdapter.viewMode = mode
+            storageAdapter.itemSize = size
+            storageAdapter.gridColumnCount = cols
+        }
+
+        // Remove any previously attached TV grid listeners before switching mode
+
+        tvSnapHelper?.attachToRecyclerView(null)
+        tvSnapHelper = null
+
+        if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+            recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            // Clear any dynamic height previously set for TV grid mode
+            if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+            
+
+        } else {
+            recyclerStorage.layoutManager = GridLayoutManager(this, cols)
+
+            if (isTv) {
+                // After the RecyclerView has a real measured height, calculate the exact inner-tile
+                // height that makes exactly 2 complete rows visible — no partial rows on 4K TV.
+                recyclerStorage.doOnLayout {
+                    val density = resources.displayMetrics.density
+                    val rvH = recyclerStorage.height
+                    val pTop = recyclerStorage.paddingTop
+                    val pBot = recyclerStorage.paddingBottom
+                    val marginPx = (16f * density).toInt() * 4 // 16dp top/bottom margin per item * 2 items
+
+                    val availableHeight = rvH - pTop - pBot - marginPx
+                    val itemInnerHeightPx = availableHeight / 2 // Exact integer division ensures no overflowing scroll jumps!
+                    
+                    if (::storageAdapter.isInitialized && itemInnerHeightPx > 0) {
+                        // Forcing adapter to use this exact height for TV grid mode (3-grid and 4-grid)
+                        storageAdapter.gridItemHeightPx = itemInnerHeightPx
+                    }
+
+                }
+
+                // Re-enable TopSnapHelper ONLY for grid view perfectly clean cuts
+                // ListView has small items, so TopSnapHelper pushes the bottom-most focused items out of bounds
+                if (mode == MainMenuViewModeManager.ViewMode.GRID) {
+                    val snapHelper = TopSnapHelper()
+                    snapHelper.attachToRecyclerView(recyclerStorage)
+                    tvSnapHelper = snapHelper
+                }
+
+
+        }
+    }
+}
+
+
+
+
+
+    /**
+     * Custom SnapHelper to snap tiles to the top boundary automatically.
+     */
+    class TopSnapHelper : androidx.recyclerview.widget.LinearSnapHelper() {
+        private var verticalHelper: androidx.recyclerview.widget.OrientationHelper? = null
+
+        private fun getHelper(manager: RecyclerView.LayoutManager): androidx.recyclerview.widget.OrientationHelper {
+            if (verticalHelper == null) {
+                verticalHelper = androidx.recyclerview.widget.OrientationHelper.createVerticalHelper(manager)
+            }
+            return verticalHelper!!
+        }
+
+        override fun calculateDistanceToFinalSnap(
+            layoutManager: RecyclerView.LayoutManager,
+            targetView: android.view.View
+        ): IntArray {
+            val out = IntArray(2)
+            val helper = getHelper(layoutManager)
+            val viewTop = helper.getDecoratedStart(targetView)
+            val containerTop = helper.startAfterPadding
+            out[1] = viewTop - containerTop
+            return out
+        }
+
+        override fun findSnapView(layoutManager: RecyclerView.LayoutManager): android.view.View? {
+            val helper = getHelper(layoutManager)
+            val childCount = layoutManager.childCount
+            if (childCount == 0) return null
+
+            var closestChild: android.view.View? = null
+            var closestDistance = Int.MAX_VALUE
+
+            val containerTop = helper.startAfterPadding
+
+            for (i in 0 until childCount) {
+                val child = layoutManager.getChildAt(i) ?: continue
+                val viewTop = helper.getDecoratedStart(child)
+                val distance = Math.abs(viewTop - containerTop)
+                if (distance < closestDistance) {
+                    closestDistance = distance
+                    closestChild = child
+                }
+            }
+            return closestChild
+        }
+    }
+}

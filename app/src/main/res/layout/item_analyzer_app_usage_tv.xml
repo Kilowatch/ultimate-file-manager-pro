@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    App Storage Usage Row — TV
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selector_tv_storage_category_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:duplicateParentState="true">
+
+        <TextView
+            android:id="@+id/txtAppName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/selector_tv_storage_category_text_primary"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-medium"
+            android:duplicateParentState="true"
+            tools:text="WhatsApp" />
+
+        <TextView
+            android:id="@+id/txtAppFileCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:textColor="@color/selector_tv_storage_category_text_secondary"
+            android:textSize="14sp"
+            android:duplicateParentState="true"
+            tools:text="3,421 files" />
+
+        <TextView
+            android:id="@+id/txtAppSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tv_storage_category_text_accent"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-black"
+            android:duplicateParentState="true"
+            tools:text="2.1 GB" />
+
+    </LinearLayout>
+</FrameLayout>

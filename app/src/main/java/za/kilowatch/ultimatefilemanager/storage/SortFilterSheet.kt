@@ -1,0 +1,268 @@
+package za.kilowatch.ultimatefilemanager.storage
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.button.MaterialButton
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+
+/**
+ * Bottom sheet dialog for sorting and filtering files.
+ * Supports sort by name/size/date/type with ascending/descending order,
+ * and filter by file category.
+ */
+class SortFilterSheet : BottomSheetDialogFragment() {
+
+    enum class SortMode { NAME, SIZE, DATE, TYPE }
+    enum class SortOrder { ASC, DESC }
+    enum class FilterType { ALL, IMAGES, VIDEOS, AUDIO, DOCUMENTS, APKS, OTHER }
+
+    var currentSortMode = SortMode.NAME
+    var currentSortOrder = SortOrder.ASC
+    var currentFilterType = FilterType.ALL
+    var currentShowHidden = false
+    var currentGroupByDate = false
+    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean) -> Unit)? = null
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            if (bottomSheet != null) {
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.skipCollapsed = true
+            }
+        }
+        return dialog
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
+        val isTv = DeviceUtils.isTvDevice(requireContext())
+        val layoutRes = if (isTv) R.layout.sheet_sort_filter_tv else R.layout.sheet_sort_filter
+        val view = inflater.inflate(layoutRes, container, false)
+
+        val txtTitle = view.findViewById<TextView>(R.id.txtSortTitle)
+        txtTitle.text = getString(R.string.sort_title)
+
+        // Sort mode chips
+        val cgSort = view.findViewById<ChipGroup>(R.id.cgSortMode)
+        val chipName = view.findViewById<Chip>(R.id.chipSortName)
+        val chipSize = view.findViewById<Chip>(R.id.chipSortSize)
+        val chipDate = view.findViewById<Chip>(R.id.chipSortDate)
+        val chipType = view.findViewById<Chip>(R.id.chipSortType)
+
+        when (currentSortMode) {
+            SortMode.NAME -> chipName.isChecked = true
+            SortMode.SIZE -> chipSize.isChecked = true
+            SortMode.DATE -> chipDate.isChecked = true
+            SortMode.TYPE -> chipType.isChecked = true
+        }
+
+        // Sort order chips
+        val cgOrder = view.findViewById<ChipGroup>(R.id.cgSortOrder)
+        val chipAsc = view.findViewById<Chip>(R.id.chipAscending)
+        val chipDesc = view.findViewById<Chip>(R.id.chipDescending)
+
+        when (currentSortOrder) {
+            SortOrder.ASC -> chipAsc.isChecked = true
+            SortOrder.DESC -> chipDesc.isChecked = true
+        }
+
+        // Filter chips
+        val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroupFilter)
+        val chipAll = view.findViewById<Chip>(R.id.chipAll)
+        val chipImages = view.findViewById<Chip>(R.id.chipImages)
+        val chipVideos = view.findViewById<Chip>(R.id.chipVideos)
+        val chipAudio = view.findViewById<Chip>(R.id.chipAudio)
+        val chipDocs = view.findViewById<Chip>(R.id.chipDocuments)
+        val chipApks = view.findViewById<Chip>(R.id.chipApks)
+
+        when (currentFilterType) {
+            FilterType.ALL -> chipAll.isChecked = true
+            FilterType.IMAGES -> chipImages.isChecked = true
+            FilterType.VIDEOS -> chipVideos.isChecked = true
+            FilterType.AUDIO -> chipAudio.isChecked = true
+            FilterType.DOCUMENTS -> chipDocs.isChecked = true
+            FilterType.APKS -> chipApks.isChecked = true
+            FilterType.OTHER -> { /* No specific chip for Other in this sheet yet */ }
+        }
+
+        // Show hidden files chips
+        val cgHidden = view.findViewById<ChipGroup>(R.id.cgHiddenFiles)
+        val chipHiddenEnabled = view.findViewById<Chip>(R.id.chipHiddenEnabled)
+        val chipHiddenDisabled = view.findViewById<Chip>(R.id.chipHiddenDisabled)
+
+        if (currentShowHidden) {
+            chipHiddenEnabled.isChecked = true
+        } else {
+            chipHiddenDisabled.isChecked = true
+        }
+
+        // Group by Date chips
+        val cgGroupByDate = view.findViewById<ChipGroup>(R.id.cgGroupByDate)
+        val chipGroupDateEnabled = view.findViewById<Chip>(R.id.chipGroupDateEnabled)
+        val chipGroupDateDisabled = view.findViewById<Chip>(R.id.chipGroupDateDisabled)
+
+        if (currentGroupByDate) {
+            chipGroupDateEnabled.isChecked = true
+        } else {
+            chipGroupDateDisabled.isChecked = true
+        }
+
+        // Apply button
+        view.findViewById<View>(R.id.btnApplySort).setOnClickListener {
+            val sortMode = when (cgSort.checkedChipId) {
+                R.id.chipSortName -> SortMode.NAME
+                R.id.chipSortSize -> SortMode.SIZE
+                R.id.chipSortDate -> SortMode.DATE
+                R.id.chipSortType -> SortMode.TYPE
+                else -> SortMode.NAME
+            }
+            val sortOrder = when (cgOrder.checkedChipId) {
+                R.id.chipAscending -> SortOrder.ASC
+                R.id.chipDescending -> SortOrder.DESC
+                else -> SortOrder.ASC
+            }
+            val filterType = when (chipGroup.checkedChipId) {
+                R.id.chipImages -> FilterType.IMAGES
+                R.id.chipVideos -> FilterType.VIDEOS
+                R.id.chipAudio -> FilterType.AUDIO
+                R.id.chipDocuments -> FilterType.DOCUMENTS
+                R.id.chipApks -> FilterType.APKS
+                else -> FilterType.ALL
+            }
+            val showHidden = when (cgHidden.checkedChipId) {
+                R.id.chipHiddenEnabled -> true
+                else -> false
+            }
+            val groupByDate = when (cgGroupByDate.checkedChipId) {
+                R.id.chipGroupDateEnabled -> true
+                else -> false
+            }
+            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate)
+            dismiss()
+        }
+        
+        // Setup TV focus states
+        if (DeviceUtils.isTvDevice(requireContext())) {
+            setupTvFocus(view)
+        }
+
+        return view
+    }
+
+    private fun setupTvFocus(view: View) {
+        val yellowBg = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow))
+        val glassBg = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_glass_white_10))
+        val yellowText = requireContext().getColor(R.color.tv_button_focused_yellow_text)
+        val whiteText = requireContext().getColor(R.color.tv_text_primary)
+        val accentText = requireContext().getColor(R.color.tv_accent)
+
+        // For RadioButtons and Chips, we want yellow background + black text when focused.
+        // When unfocused, they should look default.
+        fun applyFocusListener(v: View, defaultBgTint: android.content.res.ColorStateList? = null, defaultTextColor: Int? = null) {
+            v.setOnFocusChangeListener { _, hasFocus ->
+                if (v is RadioButton) {
+                    if (hasFocus) {
+                        v.backgroundTintList = yellowBg
+                        v.setTextColor(yellowText)
+                    } else {
+                        v.backgroundTintList = defaultBgTint ?: android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                        v.setTextColor(defaultTextColor ?: whiteText)
+                    }
+                } else if (v is Chip) {
+                    if (hasFocus) {
+                        v.chipBackgroundColor = yellowBg
+                        v.setTextColor(yellowText)
+                    } else {
+                        // The default chip background depends on checked state. We let the style handle it by restoring default behavior,
+                        // or we can set it back to the default glass. Usually for chips, we can just clear the explicit tint.
+                        v.chipBackgroundColor = null // fall back to style
+                        v.setTextColor(whiteText)
+                    }
+                } else if (v is MaterialButton) {
+                    if (hasFocus) {
+                        v.backgroundTintList = yellowBg
+                        v.setTextColor(yellowText)
+                    } else {
+                        v.backgroundTintList = defaultBgTint ?: android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                        v.setTextColor(defaultTextColor ?: accentText)
+                    }
+                }
+            }
+        }
+
+        // Apply to Chips
+        val chips = listOf(
+            R.id.chipSortName, R.id.chipSortSize, R.id.chipSortDate, R.id.chipSortType,
+            R.id.chipAscending, R.id.chipDescending,
+            R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipApks,
+            R.id.chipHiddenEnabled, R.id.chipHiddenDisabled,
+            R.id.chipGroupDateEnabled, R.id.chipGroupDateDisabled
+        )
+        for (id in chips) {
+            val chip = view.findViewById<Chip>(id)
+            applyFocusListener(chip, defaultTextColor = whiteText)
+        }
+
+        // Apply to Apply Button
+        val btnApply = view.findViewById<MaterialButton>(R.id.btnApplySort)
+        val defaultBtnBg = btnApply.backgroundTintList
+        applyFocusListener(btnApply, defaultBgTint = defaultBtnBg, defaultTextColor = whiteText)
+    }
+
+    companion object {
+        const val TAG = "SortFilterSheet"
+
+        val IMAGE_EXTENSIONS = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif")
+        val VIDEO_EXTENSIONS = setOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v")
+        val AUDIO_EXTENSIONS = setOf("mp3", "wav", "aac", "flac", "ogg", "wma", "m4a", "opus")
+        val DOCUMENT_EXTENSIONS = setOf(
+            "pdf", "doc", "docx", "docm", "dot", "dotx", "dotm",
+            "xls", "xlsx", "xlsm", "xlt", "xltx", "xltm", "xlsb",
+            "ppt", "pptx", "pptm", "pps", "ppsx", "pot", "potx", "potm",
+            "txt", "csv", "rtf", "odt", "dat",
+            "vsd", "vsdx", "pub", "accdb", "mdb"
+        )
+        val APK_EXTENSIONS = setOf("apk", "xapk", "apks")
+        val TEXT_EXTENSIONS = setOf(
+            "txt", "log", "ini", "cfg", "conf", "json", "xml", "yaml", "yml", "md",
+            "sh", "bat", "py", "js", "html", "css", "java", "kt", "c", "cpp", "h",
+            "sql", "gradle", "properties", "csv", "rtf"
+        )
+        val ARCHIVE_EXTENSIONS = setOf("zip")
+
+        fun matchesFilter(file: java.io.File, filter: FilterType): Boolean {
+            if (filter == FilterType.ALL) return true
+            if (file.isDirectory) return true // Always show folders
+            val ext = file.extension.lowercase()
+            return when (filter) {
+                FilterType.IMAGES -> ext in IMAGE_EXTENSIONS
+                FilterType.VIDEOS -> ext in VIDEO_EXTENSIONS
+                FilterType.AUDIO -> ext in AUDIO_EXTENSIONS
+                FilterType.DOCUMENTS -> ext in DOCUMENT_EXTENSIONS
+                FilterType.APKS -> ext in APK_EXTENSIONS
+                FilterType.OTHER -> {
+                    ext !in IMAGE_EXTENSIONS && ext !in VIDEO_EXTENSIONS &&
+                    ext !in AUDIO_EXTENSIONS && ext !in DOCUMENT_EXTENSIONS &&
+                    ext !in APK_EXTENSIONS
+                }
+                else -> true
+            }
+        }
+    }
+}

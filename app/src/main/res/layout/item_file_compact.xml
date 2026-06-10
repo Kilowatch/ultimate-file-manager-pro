@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Compact File Item — used in vertical-split (side-by-side) Twin Window mode on Mobile.
+    Tighter layout to fit within a 50%-width pane.
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardFile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="54dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/selector_tv_list_item">
+
+    <LinearLayout
+        android:id="@+id/layoutFileRow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:gravity="center_vertical">
+
+        <!-- Selection Checkbox (hidden by default) -->
+        <CheckBox
+            android:id="@+id/checkSelect"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginEnd="4dp"
+            android:buttonTint="?attr/colorPrimary"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            tools:visibility="visible" />
+
+        <!-- File/Folder Icon — smaller circle for compact pane -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:layout_marginVertical="5dp"
+            android:transitionName="file_icon_placeholder">
+
+            <ImageView
+                android:id="@+id/imgFileIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="7dp"
+                android:contentDescription="@string/cd_file_icon"
+                app:tint="@color/mobile_icon_tint"
+                tools:src="@drawable/ic_folder" />
+
+            <!-- Indexed Badge -->
+            <ImageView
+                android:id="@+id/imgIndexedBadge"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_lightning"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </FrameLayout>
+
+        <!-- Name + Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="7dp">
+
+            <TextView
+                android:id="@+id/txtFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:ellipsize="end"
+                android:maxLines="1"
+                tools:text="Documents" />
+
+            <TextView
+                android:id="@+id/txtFileInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="10sp"
+                android:layout_marginTop="1dp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="12 items · Mar 2026" />
+
+            <!-- Disk usage bar (shown only for drive entries) -->
+            <ProgressBar
+                android:id="@+id/progressDiskUsage"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="1dp"
+                android:max="100"
+                android:progressTint="@color/ufm_primary"
+                android:progressBackgroundTint="@color/ufm_surface_variant"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:progress="65" />
+
+            <TextView
+                android:id="@+id/txtDiskUsage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="9sp"
+                android:layout_marginBottom="1dp"
+                android:visibility="gone"
+                tools:text="65% used · 14.2 GB free"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <!-- Size -->
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="10sp"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            tools:text="4.2 MB" />
+
+        <!-- Hidden Badge -->
+        <ImageView
+            android:id="@+id/imgHiddenBadge"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_eye_off"
+            android:alpha="0.5"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            app:tint="@color/mobile_text_secondary"
+            tools:visibility="visible" />
+
+        <!-- Circular disk usage (drive entries) -->
+        <za.kilowatch.ultimatefilemanager.ui.CircularProgressView
+            android:id="@+id/circularDiskUsage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <!-- Chevron -->
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_arrow_back"
+            android:rotation="180"
+            android:alpha="0.4"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+
+    <!-- Bottom divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/mobile_glass_header" />
+
+</FrameLayout>

@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?android:attr/textColorPrimary"
+            app:titleTextColor="?android:attr/textColorPrimary"
+            app:subtitleTextColor="?android:attr/textColorSecondary">
+
+            <!-- Toolbar Status Row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="start">
+
+                <View
+                    android:id="@+id/viewStatusDot"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/bg_status_dot"
+                    android:backgroundTint="?attr/colorSecondary"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/txtStatusLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    tools:text="Connected to TV" />
+
+                <ProgressBar
+                    android:id="@+id/progressConnecting"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="8dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="?android:attr/textColorSecondary"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Scrollable remote body -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="96dp">
+
+            <!-- ═══ Status Action Button (Directly on Background) ═══ -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStatusAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="@string/bt_remote_card_action_connect"
+                android:visibility="gone"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:strokeColor="?attr/colorPrimary" />
+
+            <!-- ═══ NAV ROW: Back | Home (above D-pad, matching Google TV layout) ═══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="8dp">
+
+                <!-- Back -->
+                <LinearLayout
+                    android:id="@+id/btnNavBack"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="?android:attr/textColorPrimary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/back"
+                        android:textSize="10sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="6sp"
+                        app:autoSizeMaxTextSize="10sp" />
+
+                </LinearLayout>
+
+                <!-- Home -->
+                <LinearLayout
+                    android:id="@+id/btnNavHome"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_launcher_monochrome"
+                        app:tint="?android:attr/textColorPrimary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home"
+                        android:textSize="10sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="6sp"
+                        app:autoSizeMaxTextSize="10sp" />
+
+                </LinearLayout>
+
+                <!-- Phone Volume Toggle -->
+                <LinearLayout
+                    android:id="@+id/btnTogglePhoneVolume"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/bg_remote_toggle_btn"
+                    android:layout_marginHorizontal="6dp"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:id="@+id/imgToggleVolume"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_phone"
+                        app:tint="@color/selector_tv_remote_toggle_icon" />
+
+                    <TextView
+                        android:id="@+id/txtToggleVolume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/bt_remote_volume_off"
+                        android:textSize="10sp"
+                        android:textColor="@color/selector_tv_remote_toggle_text"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="6sp"
+                        app:autoSizeMaxTextSize="10sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ═══ D-PAD SECTION ═══ -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <!-- D-Pad ring background -->
+                <View
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_remote_dpad_ring" />
+
+                <!-- Grid containing the 5 D-pad buttons -->
+                <GridLayout
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_gravity="center"
+                    android:columnCount="3"
+                    android:rowCount="3">
+
+                    <!-- Row 0: [empty] [UP] [empty] -->
+                    <Space
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_row="0"
+                        android:layout_column="0" />
+
+                    <ImageButton
+                        android:id="@+id/btnDpadUp"
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:src="@drawable/ic_arrow_up"
+                        app:tint="?android:attr/textColorPrimary"
+                        android:background="@drawable/bg_remote_dpad_btn"
+                        android:contentDescription="@string/pan_up"
+                        android:scaleType="center"
+                        android:padding="20dp" />
+
+                    <Space
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_row="0"
+                        android:layout_column="2" />
+
+                    <!-- Row 1: [LEFT] [OK] [RIGHT] -->
+                    <ImageButton
+                        android:id="@+id/btnDpadLeft"
+                        android:layout_width="72dp"
+                        android:layout_height="76dp"
+                        android:layout_row="1"
+                        android:layout_column="0"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="?android:attr/textColorPrimary"
+                        android:background="@drawable/bg_remote_dpad_btn"
+                        android:contentDescription="@string/pan_left"
+                        android:scaleType="center"
+                        android:padding="20dp" />
+
+                    <!-- Center OK button -->
+                    <FrameLayout
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:layout_row="1"
+                        android:layout_column="1">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDpadOk"
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:text="OK"
+                            android:textSize="14sp"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:backgroundTint="?attr/colorPrimary"
+                            app:autoSizeTextType="uniform"
+                            app:autoSizeMinTextSize="10sp"
+                            app:autoSizeMaxTextSize="14sp"
+                            app:cornerRadius="32dp"
+                            android:elevation="4dp"
+                            android:contentDescription="OK" />
+
+                    </FrameLayout>
+
+                    <ImageButton
+                        android:id="@+id/btnDpadRight"
+                        android:layout_width="72dp"
+                        android:layout_height="76dp"
+                        android:layout_row="1"
+                        android:layout_column="2"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="?android:attr/textColorPrimary"
+                        android:background="@drawable/bg_remote_dpad_btn"
+                        android:contentDescription="@string/pan_right"
+                        android:scaleType="center"
+                        android:padding="20dp" />
+
+                    <!-- Row 2: [empty] [DOWN] [empty] -->
+                    <Space
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_row="2"
+                        android:layout_column="0" />
+
+                    <ImageButton
+                        android:id="@+id/btnDpadDown"
+                        android:layout_width="76dp"
+                        android:layout_height="72dp"
+                        android:layout_row="2"
+                        android:layout_column="1"
+                        android:src="@drawable/ic_arrow_down"
+                        app:tint="?android:attr/textColorPrimary"
+                        android:background="@drawable/bg_remote_dpad_btn"
+                        android:contentDescription="@string/pan_down"
+                        android:scaleType="center"
+                        android:padding="20dp" />
+
+                    <Space
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_row="2"
+                        android:layout_column="2" />
+
+                </GridLayout>
+
+            </FrameLayout>
+
+
+            <!-- ═══ VOLUME ROW (always visible, no tab required) ═══ -->
+            <LinearLayout
+                android:id="@+id/layoutVolumeRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="12dp">
+
+                <!-- Vol Down -->
+                <ImageButton
+                    android:id="@+id/btnVolDown"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_volume_down"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:contentDescription="Volume Down"
+                    android:scaleType="center"
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="10dp" />
+
+                <!-- Mute -->
+                <ImageButton
+                    android:id="@+id/btnMute"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_volume_off"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:background="@drawable/bg_remote_mute_btn"
+                    android:contentDescription="Mute"
+                    android:scaleType="center"
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="10dp" />
+
+                <!-- Vol Up -->
+                <ImageButton
+                    android:id="@+id/btnVolUp"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_add"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:contentDescription="Volume Up"
+                    android:scaleType="center"
+                    android:padding="12dp"
+                    android:layout_marginHorizontal="10dp" />
+
+            </LinearLayout>
+
+            <!-- ═══ MEDIA CONTROLS ROW (always visible — 3 buttons, no Stop) ═══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
+
+                <!-- Rewind (sends Left Arrow — universal seek back) -->
+                <ImageButton
+                    android:id="@+id/btnRewind"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_replay_10"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:contentDescription="Rewind"
+                    android:scaleType="center"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="12dp" />
+
+                <!-- Play / Pause (sends Enter — universal across all apps) -->
+                <ImageButton
+                    android:id="@+id/btnPlayPause"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:src="@drawable/ic_play"
+                    app:tint="?attr/colorOnPrimary"
+                    android:background="@drawable/bg_remote_playpause"
+                    android:contentDescription="@string/play_pause"
+                    android:scaleType="center"
+                    android:padding="16dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:elevation="4dp" />
+
+                <!-- Fast Forward (sends Right Arrow — universal seek forward) -->
+                <ImageButton
+                    android:id="@+id/btnFastForward"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/ic_forward_10"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:background="@drawable/bg_remote_nav_btn"
+                    android:contentDescription="Fast Forward"
+                    android:scaleType="center"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="12dp" />
+
+            </LinearLayout>
+
+            <!-- ═══ KEYBOARD PANEL (hidden by default, toggled via toolbar icon) ═══ -->
+            <LinearLayout
+                android:id="@+id/layoutKeyboardPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <!-- Keyboard input field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etKeyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Type to send text to TV"
+                        android:inputType="text"
+                        android:imeOptions="flagNoExtractUi" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Keyboard action buttons row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnKbBackspace"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="⌫"
+                        android:textSize="16sp"
+                        android:layout_marginHorizontal="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnKbClear"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Clear"
+                        android:layout_marginHorizontal="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnKbEnter"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="↵"
+                        android:textSize="16sp"
+                        android:layout_marginHorizontal="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Keyboard FAB — floats bottom-right, toggles the keyboard panel -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabKeyboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_keyboard"
+        app:tint="?attr/colorOnPrimary"
+        android:contentDescription="Toggle Keyboard"
+        app:backgroundTint="?attr/colorPrimary"
+        app:fabSize="normal"
+        android:elevation="8dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

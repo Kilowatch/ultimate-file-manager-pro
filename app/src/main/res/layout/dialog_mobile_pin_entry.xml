@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="28dp"
+    android:paddingBottom="8dp">
+
+    <!-- Icon -->
+    <ImageView
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_tv"
+        android:tint="@color/ufm_primary" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="28dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/enter_the_4digit_pin_shown"
+        android:textColor="@color/ufm_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center" />
+
+    <!-- 4 PIN Boxes -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/pin_digit_1"
+            android:layout_width="56dp"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="6dp"
+            android:background="@drawable/bg_mobile_pin_digit"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:cursorVisible="false"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/pin_digit_2"
+            android:layout_width="56dp"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="6dp"
+            android:background="@drawable/bg_mobile_pin_digit"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:cursorVisible="false"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/pin_digit_3"
+            android:layout_width="56dp"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="6dp"
+            android:background="@drawable/bg_mobile_pin_digit"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:cursorVisible="false"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/pin_digit_4"
+            android:layout_width="56dp"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="6dp"
+            android:background="@drawable/bg_mobile_pin_digit"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="26sp"
+            android:fontFamily="sans-serif-medium"
+            android:cursorVisible="false"
+            android:importantForAutofill="no" />
+
+    </LinearLayout>
+
+</LinearLayout>

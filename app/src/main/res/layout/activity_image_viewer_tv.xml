@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Image Viewer — D-pad button row for zoom/pan. Image itself is NOT focusable. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FF0D0D1A"
+    tools:context=".viewer.ImageViewerActivity">
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="#33000000"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            app:tint="@color/tv_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnConvertToPdf"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_file_pdf"
+            android:contentDescription="@string/pdf_convert_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            app:tint="@color/tv_icon_tint" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFFFF"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="photo.jpg" />
+
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#99FFFFFF"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:visibility="gone"
+                tools:text="3840 × 2160  •  2.4 MB" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Loading progress -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/tv_accent"
+        android:visibility="gone"
+        android:layout_gravity="center" />
+
+    <!-- Image display — NOT focusable; panning/zooming driven by buttons below -->
+    <FrameLayout
+        android:id="@+id/scrollContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:background="#FF0D0D1A">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="matrix"
+            android:contentDescription="@string/image_preview"
+            android:focusable="false" />
+
+        <za.kilowatch.ultimatefilemanager.viewer.DrawingOverlayView
+            android:id="@+id/drawingOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:focusable="false" />
+    </FrameLayout>
+
+    <!-- ── D-pad control bar ── -->
+    <LinearLayout
+        android:id="@+id/tvControlBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="12dp"
+        android:background="#CC000000">
+
+        <!-- Pan Left -->
+        <LinearLayout
+            android:id="@+id/btnPanLeft"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/pan_left"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Up -->
+        <LinearLayout
+            android:id="@+id/btnPanUp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_up"
+                android:contentDescription="@string/pan_up"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Down -->
+        <LinearLayout
+            android:id="@+id/btnPanDown"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_down"
+                android:contentDescription="@string/pan_down"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Pan Right -->
+        <LinearLayout
+            android:id="@+id/btnPanRight"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_arrow_forward"
+                android:contentDescription="@string/pan_right"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Zoom In -->
+        <LinearLayout
+            android:id="@+id/btnZoomIn"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_zoom_in"
+                android:contentDescription="@string/zoom_in"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Zoom Out -->
+        <LinearLayout
+            android:id="@+id/btnZoomOut"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_zoom_out"
+                android:contentDescription="@string/zoom_out"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Rotate Left -->
+        <LinearLayout
+            android:id="@+id/btnRotateLeft"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="8dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_rotate_left"
+                android:contentDescription="@string/rotate_left"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Rotate Right -->
+        <LinearLayout
+            android:id="@+id/btnRotateRight"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:layout_marginEnd="24dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_rotate_right"
+                android:contentDescription="@string/rotate_right"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Fit / Reset -->
+        <LinearLayout
+            android:id="@+id/btnFitReset"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_fit_screen"
+                android:contentDescription="@string/fit_to_screen"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Draw toggle (TV) -->
+        <LinearLayout
+            android:id="@+id/btnDrawToggleTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="@string/btn_draw_toggle"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Crop toggle (TV) -->
+        <LinearLayout
+            android:id="@+id/btnCropToggleTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_crop"
+                android:contentDescription="@string/btn_crop_toggle"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Image Save (TV) -->
+        <LinearLayout
+            android:id="@+id/btnImageSaveTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_save"
+                android:contentDescription="@string/btn_draw_save"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Premium Drive Spinner Selected Item — for the spinner display when collapsed
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/imgDriveIcon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_storage_internal"
+        android:contentDescription="@null"
+        android:duplicateParentState="true"
+        android:alpha="0.9"
+        app:tint="@color/selector_tv_icon_tint_yellow" />
+
+    <TextView
+        android:id="@+id/txtDriveName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/selector_tv_button_text_yellow"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:duplicateParentState="true"
+        tools:text="All Drives" />
+
+    <ImageView
+        android:id="@+id/imgIndexingBolt"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_lightning"
+        app:tint="@color/tv_button_focused_yellow"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- Dropdown arrow -->
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_arrow_back"
+        android:rotation="270"
+        android:alpha="0.6"
+        android:contentDescription="@null"
+        android:duplicateParentState="true"
+        android:tint="@color/selector_tv_icon_tint_yellow" />
+
+</LinearLayout>

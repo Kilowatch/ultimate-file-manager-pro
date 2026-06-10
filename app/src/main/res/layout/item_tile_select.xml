@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Checkbox -->
+    <CheckBox
+        android:id="@+id/chkTile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:clickable="false"
+        android:focusable="false" />
+
+    <!-- Icon circle -->
+    <FrameLayout
+        android:id="@+id/tileIconContainer"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/bg_icon_circle_accent">
+
+        <ImageView
+            android:id="@+id/tileIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            app:tint="@color/mobile_icon_tint" />
+    </FrameLayout>
+
+    <!-- Tile name -->
+    <TextView
+        android:id="@+id/tileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="14sp" />
+
+    <!-- Source colour dot (ring colour that will be applied) -->
+    <View
+        android:id="@+id/tileColorDot"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:background="@drawable/bg_color_swatch" />
+
+</LinearLayout>

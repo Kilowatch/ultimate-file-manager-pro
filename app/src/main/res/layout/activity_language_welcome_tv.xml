@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="64dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp"
+            android:gravity="center_horizontal">
+
+            <!-- App Icon (Small) -->
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@mipmap/ic_launcher"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/app_name_1"
+                android:textColor="@color/white"
+                android:textSize="36sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:id="@+id/txtTagline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/welcome_tagline"
+                android:textColor="#DDFFFFFF"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/welcome_select_language"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- Premium Language Selection Button -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLanguageSelector"
+                android:layout_width="600dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#22FFFFFF"
+                app:strokeWidth="2dp"
+                app:strokeColor="#44FFFFFF"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingHorizontal="32dp">
+                    
+                    <ImageView
+                        android:id="@+id/imgSelectedFlag"
+                        android:layout_width="48dp"
+                        android:layout_height="36dp"
+                        android:scaleType="fitCenter" />
+                        
+                    <TextView
+                        android:id="@+id/txtSelectedLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="24sp"
+                        android:fontFamily="sans-serif-medium"
+                        tools:text="English" />
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="24dp"
+                        android:src="@drawable/ic_arrow_down"
+                        app:tint="#FFFFFF" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Disclaimer & Hint -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/welcome_translation_disclaimer"
+                android:textColor="#BBFFFFFF"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/welcome_change_later_hint"
+                android:textColor="#BBFFFFFF"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-italic" />
+
+            <!-- Action Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSetDefault"
+                style="@style/TvContinueButton"
+                android:layout_width="400dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/btn_set_default_language"
+                android:focusable="true"
+                android:clickable="true" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

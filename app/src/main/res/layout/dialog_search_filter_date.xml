@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Date filter dialog — user enters number of days e.g. 7 = "last 7 days" -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_date_title"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_filter_date_body"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/editDays"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:hint="@string/search_filter_date_hint"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textColorHint="@color/mobile_text_secondary"
+        android:backgroundTint="@color/mobile_glass_stroke"
+        android:paddingHorizontal="8dp"
+        android:inputType="number"
+        android:singleLine="true"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnDateCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/mobile_text_secondary" />
+
+        <Button
+            android:id="@+id/btnDateApply"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/search_filter_apply"
+            android:backgroundTint="@color/tv_accent"
+            android:textColor="@android:color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

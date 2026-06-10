@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused (Yellow Background): Text should be black -->
+    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow_text" />
+    <!-- Unfocused (Glass Background): Text should be theme-aware -->
+    <item android:color="@color/tv_text_primary" />
+</selector>

@@ -1,0 +1,108 @@
+# ============================================================
+# UFM — GitHub .gitignore
+# Files listed here are NEVER uploaded to GitHub.
+# ============================================================
+
+# ── Android / Gradle Build Outputs ───────────────────────────
+*.iml
+.gradle/
+/local.properties
+local.properties
+/build/
+build/
+/captures/
+.externalNativeBuild/
+.cxx/
+app/release/
+app/.cxx/
+*.apk
+*.aab
+*.dex
+*.class
+
+# ── Android Studio / IntelliJ IDEA ───────────────────────────
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+
+# ── 🔴 SENSITIVE: API Keys & Signing Credentials ─────────────
+# Firebase project config (contains API key + project number)
+app/google-services.json
+# Signing keystore files (contain your private signing key)
+*.jks
+*.keystore
+*.p12
+*.pfx
+# Keys folder (review before publishing — may contain secrets)
+Keys/
+# Amazon store files
+Amazon/
+Amazon Store/
+
+# ── 🔴 SENSITIVE: Signing Configuration ──────────────────────
+# If you have a keystore.properties or signing.properties, block them:
+keystore.properties
+signing.properties
+release.properties
+
+# ── 🔴 Non-FOSS: Compiled Release & Distribution Files ───────
+app/store/
+*.7z
+*.zip
+
+# ── AI / IDE Workspace Files (Not Part of Source Code) ───────
+.claude/
+.opencode/
+.vscode/
+.plans/
+.approval/
+approval-ui/
+__pycache__/
+*.pyc
+
+# ── Log & Debug Files ────────────────────────────────────────
+*.log
+log.txt
+app_log.txt
+error.txt
+build_output.txt
+
+# ── Large Binary & Image Files (Not Source Code) ─────────────
+# Uncomment if you want to exclude large images from the repo:
+# *.png
+# *.jpg
+# *.jpeg
+# NewBanner.png
+# NewBannerClean.png
+# tv_promo_1280x720.png
+# Roboto-Bold.ttf
+
+# ── Python / Scripts (Internal Dev Tools) ────────────────────
+# Comment these out if you WANT to include your helper scripts:
+translate_strings*.py
+translate_release_notes.py
+phone_mockup_generator*.py
+reorder.py
+restore.py
+extract.py
+modify_dts.py
+test_regex.py
+test_smb.kts
+
+# ── Personal Notes / Internal Docs (Optional to Exclude) ─────
+# Uncomment these if you don't want your internal notes public:
+# Mouse.md
+# securityfinds.md
+# batch_rename.md
+# RedditPost.md
+# bin.md
+# plan.txt
+
+# ── Miscellaneous ─────────────────────────────────────────────
+*.bak
+*.tmp
+Thumbs.db

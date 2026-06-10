@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Hidden Tile Row — consistent height, icon + label only.
+    Selecting with OK reveals Restore/Open in the dialog's action panel.
+    Yellow-on-focus highlight via selector_tv_button_yellow drawable background.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="32dp"
+    android:paddingVertical="12dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/selector_tv_item_row"
+    android:descendantFocusability="blocksDescendants">
+
+    <!-- Tile icon -->
+    <ImageView
+        android:id="@+id/imgTileIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="10dp"
+        android:background="@drawable/bg_icon_circle"
+        android:backgroundTint="@color/tv_glass_white_30"
+        android:contentDescription="@null"
+        app:tint="@color/tv_icon_tint" />
+
+    <!-- Tile label -->
+    <TextView
+        android:id="@+id/txtTileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="24dp"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Chevron hint -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/extracted_str_1"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="28sp" />
+
+</LinearLayout>

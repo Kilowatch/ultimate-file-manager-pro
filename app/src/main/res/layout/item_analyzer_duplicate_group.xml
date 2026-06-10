@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Duplicate Group Header — Mobile
+    Expandable header showing hash fingerprint + wasted space badge + collapse toggle.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/margin_md"
+    android:paddingVertical="4dp"
+    android:background="@color/mobile_glass_card"
+    android:clickable="true"
+    android:focusable="true">
+
+    <TextView
+        android:id="@+id/txtDupToggle"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:textColor="@color/tv_accent"
+        android:textSize="13sp"
+        android:layout_marginEnd="@dimen/margin_sm"
+        tools:text="▼" />
+
+    <TextView
+        android:id="@+id/txtDupHash"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/mobile_card_text_primary"
+        android:textSize="13sp"
+        android:fontFamily="monospace"
+        tools:text="⋯a3f9c12b0d4e" />
+
+    <TextView
+        android:id="@+id/txtDupWasted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ufm_risk_moderate"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        tools:text="3 copies · saves 48 MB" />
+
+</LinearLayout>

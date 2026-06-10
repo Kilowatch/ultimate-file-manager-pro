@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Item row for a single hidden tile inside the Manage Tiles bottom sheet.
+    Shows the tile icon on the left, name in the middle, and a Restore chip on the right.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="10dp">
+
+    <!-- Tile icon -->
+    <ImageView
+        android:id="@+id/imgTileIcon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:padding="7dp"
+        android:background="@drawable/bg_icon_circle"
+        android:contentDescription="@null"
+        app:tint="@color/ufm_primary" />
+
+    <!-- Tile label -->
+    <TextView
+        android:id="@+id/txtTileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="14dp"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Restore chip button -->
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chipRestore"
+        style="@style/Widget.MaterialComponents.Chip.Action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_tiles_restore"
+        android:textColor="@color/ufm_primary"
+        app:chipBackgroundColor="@color/ufm_surface_variant"
+        app:chipStrokeColor="@color/ufm_primary"
+        app:chipStrokeWidth="1dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

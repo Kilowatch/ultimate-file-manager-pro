@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile Storage Browser — premium glassmorphism design.
+    Header upgraded to MaterialToolbar (M3) — supports elevation, scroll behaviour,
+    and Dynamic Color. Background stays on the custom gradient.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".storage.StorageBrowserActivity">
+
+    <!-- ══════════════════════════════════════════════════
+         HEADER BAR — MaterialToolbar (M3) replaces the legacy LinearLayout.
+         Transparent background so the gradient background shows through.
+         The subtitle is driven programmatically via toolbar.subtitle.
+         ══════════════════════════════════════════════════ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mobile_glass_header"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/recyclerStorage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:menu="@menu/menu_storage_browser">
+
+            <!-- Custom Title Layout inside Toolbar to guarantee alignment -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="start">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_storage_browser_logo"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@string/app_name" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/storage_title"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="@color/mobile_text_primary"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.01" />
+
+            </LinearLayout>
+
+            <!-- Manage Tiles button — placed inside the toolbar as an action -->
+            <ImageView
+                android:id="@+id/btnManageTiles"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_tune"
+                android:contentDescription="@string/cd_manage_tiles"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+            <!-- Color button — visible only in Edit Mode -->
+            <ImageView
+                android:id="@+id/btnColorTile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_palette"
+                android:contentDescription="@string/tile_color_title"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+            <!-- Import Code button — visible only in Edit Mode -->
+            <ImageView
+                android:id="@+id/btnImportColorCode"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_import_code"
+                android:contentDescription="@string/tile_color_import"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!-- ══════════════════════════════════════════════════
+         SECTION HEADING
+         ══════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutSectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginTop="@dimen/margin_md"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/storage_section_devices"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.01" />
+
+        <!-- Accent underline bar — uses ?attr/colorPrimary to honour Dynamic Colors -->
+        <View
+            android:layout_width="36dp"
+            android:layout_height="3dp"
+            android:layout_marginTop="6dp"
+            android:background="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════
+         STORAGE LIST — vertical full-width cards
+         ══════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerStorage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/margin_sm"
+        android:paddingBottom="@dimen/margin_xl"
+        app:layout_constraintTop_toBottomOf="@id/layoutSectionHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_storage_card" />
+
+    <!-- Empty State — Lottie animation + label, shown when no storage volumes are found -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieEmptyStorage"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:contentDescription="@null"
+            app:lottie_rawRes="@raw/anim_empty_storage"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/txtEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:text="@string/storage_no_storages"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

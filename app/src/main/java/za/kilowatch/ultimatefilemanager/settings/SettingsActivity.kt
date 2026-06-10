@@ -1,0 +1,862 @@
+package za.kilowatch.ultimatefilemanager.settings
+
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.switchmaterial.SwitchMaterial
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+
+/**
+ * Settings hub screen.
+ * Shows Font Size and Analytics toggle.
+ */
+class SettingsActivity : AppCompatActivity() {
+
+    private var isTv = false
+    // Persisted through recreate() to prevent looping when restartPending is still true.
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
+    private lateinit var switchAnalytics: SwitchMaterial
+    private lateinit var txtAnalyticsSubtitle: TextView
+
+    private lateinit var switchHiddenFiles: SwitchMaterial
+    private lateinit var txtHiddenFilesSubtitle: TextView
+
+    private lateinit var switchMediaThumbnails: SwitchMaterial
+    private lateinit var txtMediaThumbnailsSubtitle: TextView
+
+    private lateinit var switchCacheCopy: SwitchMaterial
+    private lateinit var txtCacheCopySubtitle: TextView
+
+    private lateinit var switchQuickTransfer: SwitchMaterial
+    private lateinit var txtQuickTransferSubtitle: TextView
+
+    private lateinit var switchNetworkOpenCache: SwitchMaterial
+    private lateinit var txtNetworkOpenCacheSubtitle: TextView
+
+    private lateinit var switchRecycleBin: SwitchMaterial
+    private lateinit var txtRecycleBinSubtitle: TextView
+
+    private var switchTwinWindowLayout: SwitchMaterial? = null
+    private var txtTwinWindowLayoutSubtitle: TextView? = null
+
+    private var switchTwinWindowStartup: SwitchMaterial? = null
+    private var txtTwinWindowStartupSubtitle: TextView? = null
+
+    private var switchSideBySideVideo: SwitchMaterial? = null
+    private var txtSideBySideVideoSubtitle: TextView? = null
+
+    private var switchBreadcrumbs: SwitchMaterial? = null
+    private var txtBreadcrumbsSubtitle: TextView? = null
+
+    private lateinit var switchScrollingText: SwitchMaterial
+    private lateinit var txtScrollingTextSubtitle: TextView
+
+    private lateinit var cardNetworkThumbnails: MaterialCardView
+    private lateinit var txtVideoThumbnailTimeSubtitle: TextView
+    private lateinit var txtApkExtractSubtitle: TextView
+
+
+
+    companion object {
+        private const val PREFS_ANALYTICS = "analytics_prefs"
+        private const val KEY_ANALYTICS_ENABLED = "analytics_enabled"
+
+        fun start(context: android.content.Context) =
+            context.startActivity(Intent(context, SettingsActivity::class.java))
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeHelper.applyTheme(this)
+        super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
+        enableEdgeToEdge()
+
+        isTv = DeviceUtils.isTvDevice(this)
+        if (isTv) {
+            setContentView(R.layout.activity_settings_tv)
+        } else {
+            setContentView(R.layout.activity_settings)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val tvPad = if (isTv) (27 * resources.displayMetrics.density).toInt() else 0
+            v.setPadding(
+                systemBars.left + tvPad, systemBars.top + tvPad,
+                systemBars.right + tvPad, systemBars.bottom + tvPad
+            )
+            insets
+        }
+
+        // Back button
+        val btnBack = findViewById<ImageView?>(R.id.btnBack)
+        if (isTv) {
+            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            btnBack?.imageTintList = whiteCsl
+            btnBack?.setOnFocusChangeListener { _, hasFocus ->
+                btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
+            }
+        }
+        btnBack?.setOnClickListener { finish() }
+
+        // Font Size row
+        val cardFontSize = findViewById<MaterialCardView>(R.id.cardFontSize)
+        cardFontSize.setOnClickListener {
+            startActivity(Intent(this, FontSizeActivity::class.java))
+        }
+
+        // Analytics toggle
+        val cardAnalytics = findViewById<MaterialCardView>(R.id.cardAnalytics)
+        switchAnalytics = findViewById(R.id.switchAnalytics)
+        txtAnalyticsSubtitle = findViewById(R.id.txtAnalyticsSubtitle)
+
+        val prefs = getSharedPreferences(PREFS_ANALYTICS, Context.MODE_PRIVATE)
+        val analyticsEnabled = prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
+        switchAnalytics.isChecked = analyticsEnabled
+        updateAnalyticsSubtitle(analyticsEnabled)
+
+        // Tapping the whole card or just the switch both toggle it
+        cardAnalytics.setOnClickListener { toggleAnalytics(prefs) }
+        switchAnalytics.setOnCheckedChangeListener(null) // avoid double-fire; card handles it
+
+        // Hidden Files toggle
+        val cardHiddenFiles = findViewById<MaterialCardView>(R.id.cardHiddenFiles)
+        switchHiddenFiles = findViewById(R.id.switchHiddenFiles)
+        txtHiddenFilesSubtitle = findViewById(R.id.txtHiddenFilesSubtitle)
+
+        val hiddenFilesEnabled = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        switchHiddenFiles.isChecked = hiddenFilesEnabled
+        updateHiddenFilesSubtitle(hiddenFilesEnabled)
+
+        cardHiddenFiles.setOnClickListener { toggleHiddenFiles() }
+        switchHiddenFiles.setOnCheckedChangeListener(null)
+
+        // Recycle Bin toggle
+        val cardRecycleBin = findViewById<MaterialCardView>(R.id.cardRecycleBin)
+        switchRecycleBin = findViewById(R.id.switchRecycleBin)
+        txtRecycleBinSubtitle = findViewById(R.id.txtRecycleBinSubtitle)
+
+        val recycleBinEnabled = za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager.isEnabled(this)
+        switchRecycleBin.isChecked = recycleBinEnabled
+        updateRecycleBinSubtitle(recycleBinEnabled)
+
+        cardRecycleBin.setOnClickListener { toggleRecycleBin() }
+        switchRecycleBin.setOnCheckedChangeListener(null)
+
+        // Media Thumbnails toggle
+        val cardMediaThumbnails = findViewById<MaterialCardView>(R.id.cardMediaThumbnails)
+        switchMediaThumbnails = findViewById(R.id.switchMediaThumbnails)
+        txtMediaThumbnailsSubtitle = findViewById(R.id.txtMediaThumbnailsSubtitle)
+
+        val thumbnailsEnabled = za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.isEnabled(this)
+        switchMediaThumbnails.isChecked = thumbnailsEnabled
+        updateThumbnailsSubtitle(thumbnailsEnabled)
+
+        cardMediaThumbnails.setOnClickListener { toggleMediaThumbnails() }
+        switchMediaThumbnails.setOnCheckedChangeListener(null)
+
+        // Cache Copying toggle
+        val cardCacheCopy = findViewById<MaterialCardView>(R.id.cardCacheCopy)
+        switchCacheCopy = findViewById(R.id.switchCacheCopy)
+        txtCacheCopySubtitle = findViewById(R.id.txtCacheCopySubtitle)
+
+        val cacheCopyEnabled = za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(this)
+        switchCacheCopy.isChecked = cacheCopyEnabled
+        updateCacheCopySubtitle(cacheCopyEnabled)
+
+        cardCacheCopy.setOnClickListener { toggleCacheCopy() }
+        switchCacheCopy.setOnCheckedChangeListener(null)
+
+        // Quick Transfer toggle
+        val cardQuickTransfer = findViewById<MaterialCardView>(R.id.cardQuickTransfer)
+        switchQuickTransfer = findViewById(R.id.switchQuickTransfer)
+        txtQuickTransferSubtitle = findViewById(R.id.txtQuickTransferSubtitle)
+
+        val quickTransferEnabled = za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)
+        switchQuickTransfer.isChecked = quickTransferEnabled
+        updateQuickTransferSubtitle(quickTransferEnabled)
+
+        cardQuickTransfer.setOnClickListener { toggleQuickTransfer() }
+        switchQuickTransfer.setOnCheckedChangeListener(null)
+
+        // Network Open Cache toggle
+        val cardNetworkOpenCache = findViewById<MaterialCardView>(R.id.cardNetworkOpenCache)
+        switchNetworkOpenCache = findViewById(R.id.switchNetworkOpenCache)
+        txtNetworkOpenCacheSubtitle = findViewById(R.id.txtNetworkOpenCacheSubtitle)
+
+        val networkOpenCacheEnabled = za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager.isEnabled(this)
+        switchNetworkOpenCache.isChecked = networkOpenCacheEnabled
+        updateNetworkOpenCacheSubtitle(networkOpenCacheEnabled)
+
+        cardNetworkOpenCache.setOnClickListener { toggleNetworkOpenCache() }
+        switchNetworkOpenCache.setOnCheckedChangeListener(null)
+
+        // Twin Window Layout toggle
+        val cardTwinWindowLayout = findViewById<MaterialCardView?>(R.id.cardTwinWindowLayout)
+        if (cardTwinWindowLayout != null) {
+            switchTwinWindowLayout = findViewById(R.id.switchTwinWindowLayout)
+            txtTwinWindowLayoutSubtitle = findViewById(R.id.txtTwinWindowLayoutSubtitle)
+
+            val twinWindowVerticalEnabled = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
+            switchTwinWindowLayout?.isChecked = twinWindowVerticalEnabled
+            updateTwinWindowLayoutSubtitle(twinWindowVerticalEnabled)
+
+            cardTwinWindowLayout.setOnClickListener { toggleTwinWindowLayout() }
+            switchTwinWindowLayout?.setOnCheckedChangeListener(null)
+        }
+
+        // Twin Window Default Startup toggle
+        val cardTwinWindowStartup = findViewById<MaterialCardView?>(R.id.cardTwinWindowStartup)
+        if (cardTwinWindowStartup != null) {
+            switchTwinWindowStartup = findViewById(R.id.switchTwinWindowStartup)
+            txtTwinWindowStartupSubtitle = findViewById(R.id.txtTwinWindowStartupSubtitle)
+
+            val twinWindowStartupEnabled = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+            switchTwinWindowStartup?.isChecked = twinWindowStartupEnabled
+            updateTwinWindowStartupSubtitle(twinWindowStartupEnabled)
+
+            cardTwinWindowStartup.setOnClickListener { toggleTwinWindowStartup() }
+            switchTwinWindowStartup?.setOnCheckedChangeListener(null)
+        }
+
+        // Side-by-Side Video toggle
+        val cardSideBySideVideo = findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)
+        if (cardSideBySideVideo != null) {
+            switchSideBySideVideo = findViewById(R.id.switchSideBySideVideo)
+            txtSideBySideVideoSubtitle = findViewById(R.id.txtSideBySideVideoSubtitle)
+
+            val sideBySideEnabled = SideBySideVideoPreferenceManager.isEnabled(this)
+            switchSideBySideVideo?.isChecked = sideBySideEnabled
+            updateSideBySideVideoSubtitle(sideBySideEnabled)
+
+            cardSideBySideVideo.setOnClickListener { toggleSideBySideVideo() }
+            switchSideBySideVideo?.setOnCheckedChangeListener(null)
+        }
+
+        // Breadcrumbs toggle (mobile only)
+        val cardBreadcrumbs = findViewById<MaterialCardView?>(R.id.cardBreadcrumbs)
+        if (cardBreadcrumbs != null) {
+            switchBreadcrumbs = findViewById(R.id.switchBreadcrumbs)
+            txtBreadcrumbsSubtitle = findViewById(R.id.txtBreadcrumbsSubtitle)
+
+            val breadcrumbsEnabled = BreadcrumbsPreferenceManager.isEnabled(this)
+            switchBreadcrumbs?.isChecked = breadcrumbsEnabled
+            updateBreadcrumbsSubtitle(breadcrumbsEnabled)
+
+            cardBreadcrumbs.setOnClickListener { toggleBreadcrumbs() }
+            switchBreadcrumbs?.setOnCheckedChangeListener(null)
+        }
+
+        // Scrolling Text toggle
+        val cardScrollingText = findViewById<MaterialCardView>(R.id.cardScrollingText)
+        switchScrollingText = findViewById(R.id.switchScrollingText)
+        txtScrollingTextSubtitle = findViewById(R.id.txtScrollingTextSubtitle)
+
+        val scrollingTextEnabled = ScrollingTextPreferenceManager.isEnabled(this)
+        switchScrollingText.isChecked = scrollingTextEnabled
+        updateScrollingTextSubtitle(scrollingTextEnabled)
+
+        cardScrollingText.setOnClickListener { toggleScrollingText() }
+        switchScrollingText.setOnCheckedChangeListener(null)
+
+        // File Server System Tiles row (mobile-only)
+        val cardFileServerTiles = findViewById<MaterialCardView?>(R.id.cardFileServerTiles)
+        cardFileServerTiles?.setOnClickListener {
+            startActivity(Intent(this, FileServerTilesActivity::class.java))
+        }
+
+        // Video Thumbnail Time row
+        val cardVideoThumbnailTime = findViewById<MaterialCardView>(R.id.cardVideoThumbnailTime)
+        txtVideoThumbnailTimeSubtitle = findViewById(R.id.txtVideoThumbnailTimeSubtitle)
+        updateVideoThumbnailTimeSubtitle()
+        cardVideoThumbnailTime.setOnClickListener {
+            startActivity(Intent(this, VideoThumbnailTimeActivity::class.java))
+        }
+
+        // Network Thumbnails row
+        cardNetworkThumbnails = findViewById(R.id.cardNetworkThumbnails)
+        cardNetworkThumbnails.setOnClickListener {
+            startActivity(Intent(this, NetworkThumbnailSettingsActivity::class.java))
+        }
+
+        // Storage Indexer row
+        val cardDbViewer = findViewById<MaterialCardView>(R.id.cardDbViewer)
+        cardDbViewer.setOnClickListener {
+            startActivity(Intent(this, StorageIndexerActivity::class.java))
+        }
+
+        // Manage Custom Drive Names row
+        val cardStorageRename = findViewById<MaterialCardView>(R.id.cardStorageRename)
+        cardStorageRename?.setOnClickListener {
+            startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.renamer.StorageRenameActivity::class.java))
+        }
+
+        // Manage Favorites row
+        val cardFavorites = findViewById<MaterialCardView>(R.id.cardFavorites)
+        cardFavorites.setOnClickListener {
+            startActivity(Intent(this, ManageFavoritesActivity::class.java))
+        }
+
+        // Default Applications row
+        val cardDefaultApps = findViewById<MaterialCardView>(R.id.cardDefaultApps)
+        cardDefaultApps.setOnClickListener {
+            startActivity(Intent(this, DefaultAppsActivity::class.java))
+        }
+
+        // Long Press Duration row
+        val cardLongPressDuration = findViewById<MaterialCardView>(R.id.cardLongPressDuration)
+        cardLongPressDuration.setOnClickListener {
+            startActivity(Intent(this, LongPressDurationActivity::class.java))
+        }
+
+        // Long Press Toolbar Icons row
+        val cardToolbarIcons = findViewById<MaterialCardView?>(R.id.cardToolbarIcons)
+        cardToolbarIcons?.setOnClickListener {
+            startActivity(Intent(this, ToolbarIconsActivity::class.java))
+        }
+
+        // APK / XAPK Extract row
+        val cardApkExtract = findViewById<MaterialCardView>(R.id.cardApkExtract)
+        txtApkExtractSubtitle = findViewById(R.id.txtApkExtractSubtitle)
+        cardApkExtract.setOnClickListener {
+            startActivity(Intent(this, ExtractApkSettingsActivity::class.java))
+        }
+
+        // TV focus highlight
+        if (isTv) {
+            setupTvCardFocus(cardFontSize)
+            setupTvCardFocus(cardAnalytics)
+            setupTvCardFocus(cardDbViewer)
+            cardStorageRename?.let { setupTvCardFocus(it) }
+            setupTvCardFocus(cardHiddenFiles)
+            setupTvCardFocus(cardRecycleBin)
+            setupTvCardFocus(cardMediaThumbnails)
+            findViewById<MaterialCardView>(R.id.cardVideoThumbnailTime)?.let { setupTvCardFocus(it) }
+            setupTvCardFocus(cardNetworkThumbnails)
+            setupTvCardFocus(cardCacheCopy)
+            findViewById<MaterialCardView?>(R.id.cardQuickTransfer)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardNetworkOpenCache)?.let { setupTvCardFocus(it) }
+            cardTwinWindowLayout?.let { setupTvCardFocus(it) }
+            cardTwinWindowStartup?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
+            cardBreadcrumbs?.let { setupTvCardFocus(it) }
+            setupTvCardFocus(cardFavorites)
+            setupTvCardFocus(cardDefaultApps)
+            setupTvCardFocus(cardLongPressDuration)
+            cardToolbarIcons?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardDefaultStartScreen)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardLanguage)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardMainMenuViewMode)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardAppearance)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
+        }
+
+        // Icons row
+        val cardIcons = findViewById<MaterialCardView?>(R.id.cardIcons)
+        cardIcons?.setOnClickListener {
+            startActivity(Intent(this, IconCustomizationActivity::class.java))
+        }
+
+        // Main Menu View Mode row
+        val cardMainMenuViewMode = findViewById<MaterialCardView?>(R.id.cardMainMenuViewMode)
+        cardMainMenuViewMode?.setOnClickListener {
+            startActivity(Intent(this, MainMenuViewModeActivity::class.java))
+        }
+
+        // Default Start Screen row
+        val cardDefaultStartScreen = findViewById<MaterialCardView?>(R.id.cardDefaultStartScreen)
+        cardDefaultStartScreen?.setOnClickListener {
+            startActivity(Intent(this, StartScreenPreferenceActivity::class.java))
+        }
+
+        // Language Selection row
+        val cardLanguage = findViewById<MaterialCardView?>(R.id.cardLanguage)
+        cardLanguage?.setOnClickListener {
+            startActivity(Intent(this, LanguageActivity::class.java))
+        }
+
+        // Appearance / Theme row
+        val cardAppearance = findViewById<MaterialCardView?>(R.id.cardAppearance)
+        cardAppearance?.setOnClickListener {
+            startActivity(Intent(this, ThemeActivity::class.java))
+        }
+
+        // Backup & Restore row
+        val cardBackupRestore = findViewById<MaterialCardView?>(R.id.cardBackupRestore)
+        cardBackupRestore?.setOnClickListener {
+            startActivity(Intent(this, BackupRestoreActivity::class.java))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh the font size subtitle
+        val txtFontSizeSubtitle = findViewById<TextView?>(R.id.txtFontSizeSubtitle)
+        txtFontSizeSubtitle?.text = when (FontSizeHelper.getSavedSize(this)) {
+            FontSizeHelper.FONT_SMALL  -> getString(R.string.font_size_small)
+            FontSizeHelper.FONT_LARGE  -> getString(R.string.font_size_large)
+            else                       -> getString(R.string.font_size_normal)
+        }
+
+        // Refresh language subtitle
+        val txtLanguageSubtitle = findViewById<TextView?>(R.id.txtLanguageSubtitle)
+        txtLanguageSubtitle?.text = when (LocaleHelper.getSavedLocale(this)) {
+            LocaleHelper.LOCALE_EN -> getString(R.string.language_english)
+            LocaleHelper.LOCALE_DE -> getString(R.string.language_german)
+            LocaleHelper.LOCALE_JA -> getString(R.string.language_japanese)
+            LocaleHelper.LOCALE_AR -> getString(R.string.language_arabic)
+            LocaleHelper.LOCALE_ES -> getString(R.string.language_spanish)
+            LocaleHelper.LOCALE_FR -> getString(R.string.language_french)
+            LocaleHelper.LOCALE_HI -> getString(R.string.language_hindi)
+            LocaleHelper.LOCALE_ID -> getString(R.string.language_indonesian)
+            LocaleHelper.LOCALE_KO -> getString(R.string.language_korean)
+            LocaleHelper.LOCALE_PT -> getString(R.string.language_portuguese)
+            LocaleHelper.LOCALE_RU -> getString(R.string.language_russian)
+            LocaleHelper.LOCALE_TR -> getString(R.string.language_turkish)
+            else                   -> getString(R.string.language_system_default)
+        }
+
+        // Refresh analytics subtitle (in case something changed externally)
+        if (::switchAnalytics.isInitialized) {
+            val prefs = getSharedPreferences(PREFS_ANALYTICS, Context.MODE_PRIVATE)
+            val enabled = prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
+            switchAnalytics.isChecked = enabled
+            updateAnalyticsSubtitle(enabled)
+        }
+
+        // Refresh hidden files subtitle
+        if (::switchHiddenFiles.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+            switchHiddenFiles.isChecked = enabled
+            updateHiddenFilesSubtitle(enabled)
+        }
+
+        // Refresh media thumbnails subtitle
+        if (::switchMediaThumbnails.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.isEnabled(this)
+            switchMediaThumbnails.isChecked = enabled
+            updateThumbnailsSubtitle(enabled)
+        }
+
+        // Refresh video thumbnail time subtitle
+        if (::txtVideoThumbnailTimeSubtitle.isInitialized) {
+            updateVideoThumbnailTimeSubtitle()
+        }
+
+        // Refresh cache copying subtitle
+        if (::switchCacheCopy.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(this)
+            switchCacheCopy.isChecked = enabled
+            updateCacheCopySubtitle(enabled)
+        }
+
+        // Refresh quick transfer subtitle
+        if (::switchQuickTransfer.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)
+            switchQuickTransfer.isChecked = enabled
+            updateQuickTransferSubtitle(enabled)
+        }
+
+        // Refresh network open cache subtitle
+        if (::switchNetworkOpenCache.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager.isEnabled(this)
+            switchNetworkOpenCache.isChecked = enabled
+            updateNetworkOpenCacheSubtitle(enabled)
+        }
+
+        // Refresh Twin Window layout subtitle (mobile only)
+        switchTwinWindowLayout?.let { sw ->
+            val enabled = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isVerticalSplit(this)
+            sw.isChecked = enabled
+            updateTwinWindowLayoutSubtitle(enabled)
+        }
+
+        // Refresh Twin Window startup subtitle
+        switchTwinWindowStartup?.let { sw ->
+            val enabled = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
+            sw.isChecked = enabled
+            updateTwinWindowStartupSubtitle(enabled)
+        }
+
+        // Refresh Side-by-Side Video subtitle
+        switchSideBySideVideo?.let { sw ->
+            val enabled = SideBySideVideoPreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateSideBySideVideoSubtitle(enabled)
+        }
+
+        // Refresh Breadcrumbs subtitle
+        switchBreadcrumbs?.let { sw ->
+            val enabled = BreadcrumbsPreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateBreadcrumbsSubtitle(enabled)
+        }
+
+        // Refresh Scrolling Text subtitle
+        if (::switchScrollingText.isInitialized) {
+            val enabled = ScrollingTextPreferenceManager.isEnabled(this)
+            switchScrollingText.isChecked = enabled
+            updateScrollingTextSubtitle(enabled)
+        }
+
+
+
+        // Refresh Main Menu View Mode subtitle
+        val txtMainMenuViewModeSubtitle = findViewById<TextView?>(R.id.txtMainMenuViewModeSubtitle)
+        val mode = za.kilowatch.ultimatefilemanager.storage.MainMenuViewModeManager.loadViewMode(this)
+        txtMainMenuViewModeSubtitle?.text = if (mode == za.kilowatch.ultimatefilemanager.storage.MainMenuViewModeManager.ViewMode.LIST) {
+            getString(R.string.layout_list)
+        } else {
+            val cols = za.kilowatch.ultimatefilemanager.storage.MainMenuViewModeManager.loadColumnCount(this)
+            getString(R.string.layout_grid) + " ($cols ${getString(R.string.column_count).lowercase()})"
+        }
+
+        // Refresh Default Start Screen subtitle
+        val txtDefaultStartScreenSubtitle = findViewById<TextView?>(R.id.txtDefaultStartScreenSubtitle)
+        val usesTwinWindowDefault = TwinWindowPreferenceManager.isDefaultStartup(this)
+        val currentStartScreenId = DefaultStartScreenPreferenceManager.getStartScreenId(this)
+        val subtitleText = if (usesTwinWindowDefault) {
+            getString(R.string.start_screen_twin_window)
+        } else {
+            when {
+                currentStartScreenId == DefaultStartScreenPreferenceManager.ID_TWIN_WINDOW -> getString(R.string.start_screen_twin_window)
+                currentStartScreenId == DefaultStartScreenPreferenceManager.ID_FILE_SERVER -> getString(R.string.start_screen_file_server)
+                currentStartScreenId.startsWith(DefaultStartScreenPreferenceManager.PREFIX_STORAGE) -> {
+                    val storageId = currentStartScreenId.removePrefix(DefaultStartScreenPreferenceManager.PREFIX_STORAGE)
+                    val connectedStorages = za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity.getConnectedStorages(this, localOnly = false)
+                    val targetStorage = connectedStorages.find { it.id == storageId }
+                    targetStorage?.label ?: getString(R.string.start_screen_storage_browser)
+                }
+                else -> getString(R.string.start_screen_storage_browser)
+            }
+        }
+        txtDefaultStartScreenSubtitle?.text = subtitleText
+
+        // Refresh Long Press Duration subtitle
+        val txtLongPressDurationSubtitle = findViewById<TextView?>(R.id.txtLongPressDurationSubtitle)
+        txtLongPressDurationSubtitle?.text = LongPressDurationManager.formatSaved(this)
+
+        // Refresh APK Extract subtitle
+        if (::txtApkExtractSubtitle.isInitialized) {
+            updateApkExtractSubtitle()
+        }
+
+        // Apply custom icon overrides to settings cards
+        applySettingsCardIcons()
+    }
+
+    private fun updateApkExtractSubtitle() {
+        val enabled = ApkExtractPreferenceManager.isEnabled(this)
+        txtApkExtractSubtitle.text = if (enabled) {
+            val icon = if (ApkExtractPreferenceManager.isExtractIcon(this)) "icon" else ""
+            val fieldCount = ApkExtractPreferenceManager.getSelectedFields(this).size
+            val parts = mutableListOf<String>()
+            if (icon.isNotEmpty()) parts.add(icon)
+            if (fieldCount > 0) parts.add("$fieldCount fields")
+            val detail = if (parts.isNotEmpty()) " (${parts.joinToString(" + ")})" else ""
+            getString(R.string.settings_apk_extract_subtitle_on) + detail
+        } else {
+            getString(R.string.settings_apk_extract_subtitle_off)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
+    private fun toggleAnalytics(prefs: android.content.SharedPreferences) {
+        val newValue = !switchAnalytics.isChecked
+        switchAnalytics.isChecked = newValue
+        prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, newValue).apply()
+        za.kilowatch.ultimatefilemanager.util.Analytics.setAnalyticsEnabled(this, newValue)
+        updateAnalyticsSubtitle(newValue)
+    }
+
+    private fun toggleHiddenFiles() {
+        val newValue = !switchHiddenFiles.isChecked
+        switchHiddenFiles.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = newValue
+        updateHiddenFilesSubtitle(newValue)
+    }
+
+    private fun updateAnalyticsSubtitle(enabled: Boolean) {
+        txtAnalyticsSubtitle.text = if (enabled) {
+            getString(R.string.settings_analytics_subtitle_on)
+        } else {
+            getString(R.string.settings_analytics_subtitle_off)
+        }
+    }
+
+    private fun updateHiddenFilesSubtitle(enabled: Boolean) {
+        txtHiddenFilesSubtitle.text = if (enabled) {
+            getString(R.string.hidden_files_are_visible)
+        } else {
+            getString(R.string.hidden_files_are_not_visible)
+        }
+    }
+
+    private fun toggleRecycleBin() {
+        val newValue = !switchRecycleBin.isChecked
+        switchRecycleBin.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager.setEnabled(this, newValue)
+        updateRecycleBinSubtitle(newValue)
+    }
+
+    private fun updateRecycleBinSubtitle(enabled: Boolean) {
+        txtRecycleBinSubtitle.text = if (enabled) {
+            getString(R.string.recycle_bin_title)
+        } else {
+            getString(R.string.settings_recycle_bin_summary)
+        }
+    }
+
+    private fun toggleMediaThumbnails() {
+        val newValue = !switchMediaThumbnails.isChecked
+        switchMediaThumbnails.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager.setEnabled(this, newValue)
+        updateThumbnailsSubtitle(newValue)
+    }
+
+    private fun toggleTwinWindowLayout() {
+        val sw = switchTwinWindowLayout ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.setVerticalSplit(this, newValue)
+        updateTwinWindowLayoutSubtitle(newValue)
+    }
+
+    private fun updateThumbnailsSubtitle(enabled: Boolean) {
+        txtMediaThumbnailsSubtitle.text = if (enabled) {
+            getString(R.string.settings_media_thumbnails_subtitle_on)
+        } else {
+            getString(R.string.settings_media_thumbnails_subtitle_off)
+        }
+    }
+
+    private fun updateVideoThumbnailTimeSubtitle() {
+        val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(this)
+        txtVideoThumbnailTimeSubtitle.text = VideoThumbnailTimePreferenceManager.formatPercent(this, pct)
+    }
+
+    private fun toggleCacheCopy() {
+        val newValue = !switchCacheCopy.isChecked
+        switchCacheCopy.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.setEnabled(this, newValue)
+        updateCacheCopySubtitle(newValue)
+    }
+
+    private fun updateCacheCopySubtitle(enabled: Boolean) {
+        txtCacheCopySubtitle.text = if (enabled) {
+            getString(R.string.settings_cache_copy_subtitle_on)
+        } else {
+            getString(R.string.settings_cache_copy_subtitle_off)
+        }
+    }
+
+    private fun toggleQuickTransfer() {
+        val newValue = !switchQuickTransfer.isChecked
+        switchQuickTransfer.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.setEnabled(this, newValue)
+        updateQuickTransferSubtitle(newValue)
+    }
+
+    private fun updateQuickTransferSubtitle(enabled: Boolean) {
+        txtQuickTransferSubtitle.text = if (enabled) {
+            getString(R.string.settings_quick_transfer_subtitle_on)
+        } else {
+            getString(R.string.settings_quick_transfer_subtitle_off)
+        }
+    }
+
+    private fun toggleNetworkOpenCache() {
+        val newValue = !switchNetworkOpenCache.isChecked
+        switchNetworkOpenCache.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager.setEnabled(this, newValue)
+        updateNetworkOpenCacheSubtitle(newValue)
+    }
+
+    private fun updateNetworkOpenCacheSubtitle(enabled: Boolean) {
+        txtNetworkOpenCacheSubtitle.text = if (enabled) {
+            getString(R.string.settings_network_open_cache_subtitle_on)
+        } else {
+            getString(R.string.settings_network_open_cache_subtitle_off)
+        }
+    }
+
+    private fun updateTwinWindowLayoutSubtitle(enabled: Boolean) {
+        txtTwinWindowLayoutSubtitle?.text = if (enabled) {
+            getString(R.string.settings_twin_window_layout_subtitle_vertical)
+        } else {
+            getString(R.string.settings_twin_window_layout_subtitle_horizontal)
+        }
+    }
+
+    private fun toggleTwinWindowStartup() {
+        val sw = switchTwinWindowStartup ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.setDefaultStartup(this, newValue)
+        updateTwinWindowStartupSubtitle(newValue)
+    }
+
+    private fun updateTwinWindowStartupSubtitle(enabled: Boolean) {
+        txtTwinWindowStartupSubtitle?.text = if (enabled) {
+            getString(R.string.settings_twin_window_startup_subtitle_on)
+        } else {
+            getString(R.string.settings_twin_window_startup_subtitle_off)
+        }
+    }
+
+    private fun toggleSideBySideVideo() {
+        val sw = switchSideBySideVideo ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        SideBySideVideoPreferenceManager.setEnabled(this, newValue)
+        updateSideBySideVideoSubtitle(newValue)
+    }
+
+    private fun updateSideBySideVideoSubtitle(enabled: Boolean) {
+        txtSideBySideVideoSubtitle?.text = if (enabled) {
+            getString(R.string.settings_side_by_side_video_subtitle_on)
+        } else {
+            getString(R.string.settings_side_by_side_video_subtitle_off)
+        }
+    }
+
+    private fun toggleBreadcrumbs() {
+        val sw = switchBreadcrumbs ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        BreadcrumbsPreferenceManager.setEnabled(this, newValue)
+        updateBreadcrumbsSubtitle(newValue)
+    }
+
+    private fun updateBreadcrumbsSubtitle(enabled: Boolean) {
+        txtBreadcrumbsSubtitle?.text = if (enabled) {
+            getString(R.string.settings_breadcrumbs_subtitle_on)
+        } else {
+            getString(R.string.settings_breadcrumbs_subtitle_off)
+        }
+    }
+
+    private fun toggleScrollingText() {
+        val newValue = !switchScrollingText.isChecked
+        switchScrollingText.isChecked = newValue
+        ScrollingTextPreferenceManager.setEnabled(this, newValue)
+        updateScrollingTextSubtitle(newValue)
+    }
+
+    private fun updateScrollingTextSubtitle(enabled: Boolean) {
+        txtScrollingTextSubtitle.text = if (enabled) {
+            getString(R.string.settings_scrolling_text_subtitle_on)
+        } else {
+            getString(R.string.settings_scrolling_text_subtitle_off)
+        }
+    }
+
+    private fun setupTvCardFocus(card: MaterialCardView) {
+        val yellowFill  = getColor(R.color.tv_button_focused_yellow)
+        val blackText   = getColor(R.color.tv_button_focused_yellow_text)
+        val glassColor  = getColor(R.color.tv_glass_white_10)
+        val primaryText = getColor(R.color.tv_text_primary)
+        val secondText  = getColor(R.color.tv_text_secondary)
+
+        card.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                card.setCardBackgroundColor(yellowFill)
+                setChildTextColors(card, blackText)
+            } else {
+                card.setCardBackgroundColor(glassColor)
+                setChildTextColorsTwo(card, primaryText, secondText)
+            }
+        }
+    }
+
+    private fun setChildTextColors(view: android.view.View, color: Int) {
+        if (view is android.widget.TextView) { view.setTextColor(color); return }
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) setChildTextColors(view.getChildAt(i), color)
+        }
+    }
+
+    private fun setChildTextColorsTwo(view: android.view.View, primary: Int, secondary: Int) {
+        if (view is android.widget.TextView) {
+            view.setTextColor(if (view.textSize > resources.displayMetrics.density * 14) primary else secondary)
+            return
+        }
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) setChildTextColorsTwo(view.getChildAt(i), primary, secondary)
+        }
+    }
+
+    private fun applySettingsCardIcons() {
+        data class CardIcon(val cardId: Int, val iconId: String, val defaultRes: Int)
+
+        val cards = listOf(
+            CardIcon(R.id.cardDefaultStartScreen, "settings_default_start_screen", R.drawable.ic_storage_internal),
+            CardIcon(R.id.cardLanguage, "settings_language", R.drawable.ic_language),
+            CardIcon(R.id.cardAppearance, "settings_appearance", R.drawable.ic_theme),
+            CardIcon(R.id.cardIcons, "settings_icons", R.drawable.ic_palette),
+            CardIcon(R.id.cardBackupRestore, "settings_backup_restore", R.drawable.ic_export),
+            CardIcon(R.id.cardMainMenuViewMode, "settings_main_menu_layout", R.drawable.ic_view_list),
+            CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),
+            CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),
+            CardIcon(R.id.cardLongPressDuration, "settings_long_press", R.drawable.ic_long_press),
+            CardIcon(R.id.cardToolbarIcons, "settings_toolbar_icons", R.drawable.ic_star),
+            CardIcon(R.id.cardFavorites, "settings_favorites", R.drawable.ic_star),
+            CardIcon(R.id.cardStorageRename, "settings_custom_drive_names", R.drawable.ic_edit),
+            CardIcon(R.id.cardDefaultApps, "settings_default_apps", R.drawable.ic_apps),
+            CardIcon(R.id.cardFileServerTiles, "settings_file_server_tiles", R.drawable.ic_ufm_ftp),
+            CardIcon(R.id.cardHiddenFiles, "settings_hidden_files", R.drawable.ic_eye),
+            CardIcon(R.id.cardRecycleBin, "settings_recycle_bin", R.drawable.ic_delete),
+            CardIcon(R.id.cardMediaThumbnails, "settings_media_thumbnails", R.drawable.ic_photo_video),
+            CardIcon(R.id.cardVideoThumbnailTime, "settings_video_thumbnail_time", R.drawable.ic_photo_video),
+            CardIcon(R.id.cardNetworkThumbnails, "settings_network_thumbnails", R.drawable.ic_cloud),
+            CardIcon(R.id.cardCacheCopy, "settings_cache_copy", R.drawable.ic_copy),
+            CardIcon(R.id.cardQuickTransfer, "settings_quick_transfer", R.drawable.ic_copy),
+            CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
+            CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
+            CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
+            CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size)
+        )
+
+        for (card in cards) {
+            val cardView = findViewById<android.view.ViewGroup?>(card.cardId) ?: continue
+            val iconView = findIconImageView(cardView) ?: continue
+            IconCustomizationManager.applyToView(this, iconView, card.iconId, card.defaultRes)
+        }
+    }
+
+    private fun findIconImageView(view: android.view.View): android.widget.ImageView? {
+        if (view is android.widget.ImageView && view.id != R.id.imgExpandArrow
+            && view.id != R.id.btnBack) return view
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val found = findIconImageView(view.getChildAt(i))
+                if (found != null) return found
+            }
+        }
+        return null
+    }
+}

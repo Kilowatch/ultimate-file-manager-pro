@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Section Header Row — shared between mobile and TV.
+    Used to divide sections inside a single RecyclerView (e.g. junk vs old files).
+-->
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtSectionHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/margin_md"
+    android:paddingTop="@dimen/margin_md"
+    android:paddingBottom="6dp"
+    android:textColor="@color/mobile_text_secondary"
+    android:textSize="11sp"
+    android:fontFamily="sans-serif-medium"
+    android:textAllCaps="true"
+    android:letterSpacing="0.08" />

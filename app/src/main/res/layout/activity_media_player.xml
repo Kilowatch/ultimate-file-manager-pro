@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--  Mobile Media Player — fullscreen overlay layout.
+      Fully theme-aware: light backgrounds + dark text in light mode,
+      near-black backgrounds + white text in dark mode. -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mobile_media_bg"
+    tools:context=".viewer.MediaPlayerActivity">
+
+    <!-- Container for the video surface — centred inside the root FrameLayout.
+         Size is set programmatically to maintain the video's aspect ratio.
+         Always black so letterbox bars are black regardless of theme. -->
+    <FrameLayout
+        android:id="@+id/videoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="#FF000000">
+
+        <!-- Video SurfaceView (hidden for audio) -->
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Audio placeholder icon (visible for audio) -->
+        <LinearLayout
+            android:id="@+id/audioPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/mobile_media_bg"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/icAudioArt"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_audio"
+                android:alpha="0.5"
+                android:contentDescription="@string/audio"
+                app:tint="@color/mobile_text_secondary" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- Loading progress — centred over video -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/ufm_primary"
+        android:visibility="gone" />
+
+    <!-- ── Overlay: Header Bar (top) ── -->
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:background="@color/mobile_media_overlay">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_icon_circle_accent">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:tint="#FFFFFFFF" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                tools:text="audio_track.mp3" />
+
+            <TextView
+                android:id="@+id/txtDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:visibility="gone"
+                tools:text="3:45" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ── Overlay: Controls card (bottom) ── -->
+    <LinearLayout
+        android:id="@+id/controlsCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp"
+        android:background="@color/mobile_media_overlay">
+
+        <!-- Seek bar -->
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/ufm_primary"
+            android:thumbTint="@color/ufm_primary"
+            android:progressBackgroundTint="@color/ufm_progress_bg"
+            android:max="1000"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Time row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/txtElapsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
+                tools:text="0:00" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/txtRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
+                tools:text="-3:45" />
+        </LinearLayout>
+
+        <!-- Playback controls row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Rewind 10s -->
+            <ImageView
+                android:id="@+id/btnRewind"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_replay_10"
+                android:contentDescription="@string/rewind_10_seconds"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_media_btn"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Play / Pause -->
+            <ImageView
+                android:id="@+id/btnPlayPause"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:padding="12dp"
+                android:layout_marginHorizontal="24dp"
+                android:src="@drawable/ic_play"
+                android:contentDescription="@string/play_pause"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="#FFFFFFFF" />
+
+            <!-- Forward 10s -->
+            <ImageView
+                android:id="@+id/btnForward"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_forward_10"
+                android:contentDescription="@string/forward_10_seconds"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_media_btn"
+                app:tint="@color/mobile_icon_tint" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

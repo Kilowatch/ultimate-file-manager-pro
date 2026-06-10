@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Network Security Configuration
+    Replaces android:usesCleartextTraffic="true" (deprecated from SDK 37).
+
+    All outbound traffic is encrypted:
+    - Device pairing now uses HTTPS with a bundle of self-signed certs.
+    - WebDAV, FTP, SFTP are handled by custom client libraries that bypass System Cron/Network Security Config.
+    - Local server HTTP relies on loopback exemptions (127.0.0.1 and localhost).
+-->
+<network-security-config>
+
+    <!-- Localhost -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+    </domain-config>
+
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+</network-security-config>

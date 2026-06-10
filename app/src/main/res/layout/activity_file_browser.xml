@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile File Browser — premium dark glassmorphism design
+    Same dark-navy theme as activity_welcome: bg_mobile_gradient background,
+    glass header bar with back button, title, new folder, and sort.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".storage.FileBrowserActivity">
+
+    <!-- Glass Header Bar -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingVertical="14dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btnTvBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_icon_circle_accent"
+            app:tint="@color/mobile_icon_tint" />
+
+        <!-- Accent divider -->
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#990284C7" />
+
+        <!-- Title + Path -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="17sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.01"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Internal Storage" />
+
+            <TextView
+                android:id="@+id/txtTvSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="/storage/emulated/0" />
+        </LinearLayout>
+
+        <!-- Options Toggle -->
+        <ImageView
+            android:id="@+id/btnOptionsToggle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_settings"
+            android:contentDescription="@string/toggle_options"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+    </LinearLayout>
+
+    <!-- Options Row Below -->
+    <LinearLayout
+        android:id="@+id/layoutOptionsRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingBottom="8dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Spacer to align with back button -->
+        <View
+            android:id="@+id/spacerOptions"
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+        <!-- Aligned divider -->
+        <View
+            android:id="@+id/dividerOptions"
+            android:layout_width="1.5dp"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#990284C7" />
+
+        <!-- View Toggle -->
+        <ImageView
+            android:id="@+id/btnViewToggle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_view_list"
+            android:contentDescription="@string/cd_view_toggle"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+        <!-- Sort -->
+        <ImageView
+            android:id="@+id/btnSort"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_sort"
+            android:contentDescription="@string/sort_and_filter"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnTvNewFolder"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_folder"
+            android:contentDescription="@string/cd_new_folder"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnSearchToggle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="@string/search"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnTwinWindow"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_twin_window"
+            android:contentDescription="@string/twin_window"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnRefreshIndex"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_refresh_custom"
+            android:contentDescription="@string/refresh"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint" />
+
+    </LinearLayout>
+
+    <!-- Search Row (Row 3) -->
+    <LinearLayout
+        android:id="@+id/layoutSearchRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingBottom="8dp"
+        android:background="@color/mobile_glass_header"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutOptionsRow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/mobile_icon_tint" />
+
+        <View
+            android:layout_width="1.5dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="14dp"
+            android:background="#990284C7" />
+
+        <EditText
+            android:id="@+id/edtSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/type_here_to_search"
+            android:textColor="@color/mobile_text_primary"
+            android:textColorHint="@color/mobile_text_secondary"
+            android:textSize="16sp"
+            android:paddingVertical="8dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1" />
+
+        <ImageView
+            android:id="@+id/btnSearchClear"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_close"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/mobile_icon_tint"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="headerLayout,layoutOptionsRow,layoutSearchRow" />
+
+    <!-- Toolbar stub kept for code compatibility -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/menu_file_browser" />
+
+    <!-- Path Breadcrumbs Navigation Bar -->
+    <HorizontalScrollView
+        android:id="@+id/layoutBreadcrumbsScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:background="@color/mobile_glass_header"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/barrier_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layoutBreadcrumbs"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/margin_md" />
+    </HorizontalScrollView>
+
+    <!-- Selection Action Bar (hidden by default) -->
+    <LinearLayout
+        android:id="@+id/layoutSelectionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/mobile_glass_header"
+        android:elevation="6dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutBreadcrumbsScroll"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <!-- Row 1: Close | Count -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/margin_sm">
+
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/mobile_icon_tint" />
+
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_xs"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="3 selected" />
+
+        </LinearLayout>
+
+        <!-- Row 2: Scrolling Actions -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:scrollbars="none"
+            android:fillViewport="true"
+            android:paddingHorizontal="@dimen/margin_sm">
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/btnCopy"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_copy"
+                        android:contentDescription="@string/action_copy"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnMove"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_move"
+                        android:contentDescription="@string/action_move"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnRename"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_rename"
+                        android:contentDescription="@string/action_rename"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnShare"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_share"
+                        android:contentDescription="@string/action_share"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnImageCompress"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_compress_image"
+                        android:contentDescription="@string/action_compress_image"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnCopyEncrypt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_copy_encrypt"
+                        android:contentDescription="@string/action_copy_encrypt"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnMoveEncrypt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_move_encrypt"
+                        android:contentDescription="@string/action_move_encrypt"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+                        
+                    <ImageView
+                        android:id="@+id/btnFavorite"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_star"
+                        android:contentDescription="@string/action_favorite"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnHide"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_eye_off"
+                        android:contentDescription="@string/hide"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+
+                    <ImageView
+                        android:id="@+id/btnUnhide"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="2dp"
+                        android:src="@drawable/ic_eye"
+                        android:contentDescription="@string/unhide"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="@color/mobile_icon_tint" />
+                        
+                </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Row 3: Select All | Compress | Delete -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:fillViewport="false"
+            android:paddingHorizontal="@dimen/margin_sm"
+            android:paddingVertical="4dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectAll"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="@string/action_select_all"
+                    android:textColor="#FF0284C7"
+                    android:textSize="12sp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:paddingVertical="0dp"
+                    android:paddingHorizontal="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    app:backgroundTint="#1A0284C7"
+                    app:icon="@drawable/ic_check"
+                    app:iconTint="#FF0284C7"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:cornerRadius="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCompress"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/action_compress"
+                    android:textColor="@color/ufm_primary"
+                    android:textSize="12sp"
+                    android:paddingVertical="0dp"
+                    android:paddingHorizontal="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    app:backgroundTint="#1A00897B"
+                    app:icon="@drawable/ic_compress"
+                    app:iconTint="@color/ufm_primary"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:cornerRadius="16dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDelete"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="@string/action_delete"
+                    android:textColor="@color/ufm_denied"
+                    android:textSize="12sp"
+                    android:paddingVertical="0dp"
+                    android:paddingHorizontal="12dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    app:backgroundTint="@color/ufm_delete_tint"
+                    app:icon="@drawable/ic_delete"
+                    app:iconTint="@color/ufm_denied"
+                    app:iconSize="16dp"
+                    app:iconPadding="6dp"
+                    app:cornerRadius="16dp" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+
+
+    <!-- File List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFiles"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingVertical="@dimen/margin_xs"
+        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_file" />
+
+    <!-- Paste FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabPaste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_md"
+        android:text="@string/action_paste"
+        android:textColor="?attr/colorOnPrimary"
+        app:icon="@drawable/ic_paste"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty State — Lottie animation + label -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutBreadcrumbsScroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!--
+            LottieAnimationView — plays anim_empty_folder.json on loop.
+            autoPlay + loop keep it subtly alive without being distracting.
+        -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieEmptyFolder"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:contentDescription="@null"
+            app:lottie_rawRes="@raw/anim_empty_folder"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:text="@string/file_empty_folder"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

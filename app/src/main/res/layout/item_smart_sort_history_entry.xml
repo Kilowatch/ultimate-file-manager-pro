@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_sm"
+    app:cardBackgroundColor="@color/ufm_surface_variant"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_md">
+
+        <TextView
+            android:id="@+id/txtHistoryFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="2"
+            android:ellipsize="middle"
+            tools:text="/storage/emulated/0/DCIM" />
+
+        <TextView
+            android:id="@+id/txtHistoryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ufm_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            tools:text="2026-05-14 12:30" />
+
+        <TextView
+            android:id="@+id/txtHistorySummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ufm_text_hint"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            tools:text="Moved: 120, Skipped: 3, Failed: 0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/margin_sm">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistoryUndo"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/margin_sm"
+                android:text="@string/smart_sort_undo"
+                android:textColor="@color/ufm_accent"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_refresh"
+                app:iconSize="16dp"
+                app:iconTint="@color/ufm_accent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHistoryDelete"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_sm"
+                android:text="@string/smart_sort_history_delete"
+                android:textColor="#FFE53935"
+                android:textSize="13sp"
+                app:icon="@drawable/ic_delete"
+                app:iconSize="16dp"
+                app:iconTint="#FFE53935" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Duplicate File Row — Mobile
+    Child row inside a duplicate group — shows filename, path, size, checkbox.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/margin_lg"
+    android:paddingEnd="@dimen/margin_md"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <CheckBox
+        android:id="@+id/checkDupFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_sm"
+        android:buttonTint="@color/tv_accent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtDupFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="IMG_20230101.jpg" />
+
+        <TextView
+            android:id="@+id/txtDupFilePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="start"
+            tools:text="/storage/emulated/0/DCIM" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtDupFileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mobile_card_text_secondary"
+        android:textSize="12sp"
+        tools:text="4.2 MB" />
+
+</LinearLayout>

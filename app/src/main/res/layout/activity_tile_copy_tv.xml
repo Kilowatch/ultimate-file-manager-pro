@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tv_gradient">
+
+    <!-- Selection state -->
+    <LinearLayout
+        android:id="@+id/layoutSelectionState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingTop="@dimen/margin_xxl"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_palette"
+                app:tint="@color/tv_accent"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/tile_copy_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvToggleSelectAll"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/tile_copy_select_all" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/tv_glass_border"
+            android:layout_marginHorizontal="@dimen/tv_safe_horizontal" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerTilesCopy"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingVertical="16dp"
+            android:clipToPadding="false"
+            android:descendantFocusability="afterDescendants" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingVertical="20dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvApplySelected"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/tile_copy_apply_selected" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvApplyAll"
+                style="@style/TvGrantButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/tile_copy_apply_all" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Confirmation state -->
+    <LinearLayout
+        android:id="@+id/layoutConfirmState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingHorizontal="120dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_palette"
+                app:tint="@color/tv_accent"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:id="@+id/txtConfirmCountTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="28sp"
+                android:fontFamily="sans-serif-black" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tile_copy_confirm_subtitle"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="18sp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Grid preview -->
+        <LinearLayout
+            android:id="@+id/confTvGridContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp"
+            android:visibility="visible">
+
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:visibility="invisible" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/confTvPreviewTile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp">
+
+                    <FrameLayout
+                        android:id="@+id/confTvIconContainer"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/bg_icon_circle_accent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+
+                        <ImageView
+                            android:id="@+id/confTvIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_storage_internal"
+                            app:tint="@color/tv_accent" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/confTvLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="18sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintTop_toBottomOf="@id/confTvIconContainer" />
+
+                    <TextView
+                        android:id="@+id/confTvCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        app:layout_constraintTop_toBottomOf="@id/confTvLabel" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:visibility="invisible" />
+        </LinearLayout>
+
+        <!-- List preview -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/confTvListCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="@color/tv_glass_white_10"
+            app:cardCornerRadius="@dimen/card_radius_lg"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="20dp">
+
+                <FrameLayout
+                    android:id="@+id/confTvListIconContainer"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_icon_circle_accent">
+
+                    <ImageView
+                        android:id="@+id/confTvListIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_storage_internal"
+                        app:tint="@color/tv_accent" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/confTvListLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="22sp"
+                        android:fontFamily="sans-serif-black"
+                        android:maxLines="1"
+                        android:ellipsize="end" />
+
+                    <TextView
+                        android:id="@+id/confTvListCapacity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="16sp"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvConfirmCancel"
+                style="@style/TvContinueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/tile_copy_confirm_cancel" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvConfirmApply"
+                style="@style/TvGrantButton"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:text="@string/tile_copy_confirm_apply" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

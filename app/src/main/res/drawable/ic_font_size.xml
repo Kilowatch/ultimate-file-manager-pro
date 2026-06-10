@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Font Size icon: a large "A" with a small "A" to indicate text size control.
+    Matches the style of other UFM vector drawables (24x24 dp, filled path).
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Large "A" on the left -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M9.5,4L4,18H6.25L7.5,14.5H11.5L12.75,18H15L9.5,4ZM9.5,7.5L11.0,12H8.0L9.5,7.5Z" />
+
+    <!-- Small "A" on the right -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M17.5,9L14,18H15.75L16.5,15.8H18.5L19.25,18H21L17.5,9ZM17.5,11.5L18.2,14H16.8L17.5,11.5Z" />
+
+</vector>

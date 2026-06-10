@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Margins & Padding -->
+    <dimen name="margin_xs">4dp</dimen>
+    <dimen name="margin_sm">8dp</dimen>
+    <dimen name="margin_md">16dp</dimen>
+    <dimen name="margin_lg">24dp</dimen>
+    <dimen name="margin_xl">32dp</dimen>
+    <dimen name="margin_xxl">48dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_radius">20dp</dimen>
+    <dimen name="card_radius_lg">24dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_padding">12dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="icon_size_sm">24dp</dimen>
+    <dimen name="icon_size_md">36dp</dimen>
+    <dimen name="icon_size_lg">48dp</dimen>
+    <dimen name="icon_size_xl">64dp</dimen>
+
+    <!-- Text -->
+    <dimen name="text_xs">12sp</dimen>
+    <dimen name="text_sm">14sp</dimen>
+    <dimen name="text_md">16sp</dimen>
+    <dimen name="text_lg">20sp</dimen>
+    <dimen name="text_xl">24sp</dimen>
+    <dimen name="text_xxl">28sp</dimen>
+    <dimen name="text_title">32sp</dimen>
+
+    <!-- TV-specific -->
+    <dimen name="tv_card_width">300dp</dimen>
+    <dimen name="tv_card_height">220dp</dimen>
+    <dimen name="tv_icon_size">56dp</dimen>
+    <dimen name="tv_text_title">44sp</dimen>
+    <dimen name="tv_text_body">22sp</dimen>
+    <dimen name="tv_text_sm">18sp</dimen>
+    <dimen name="tv_focus_border">4dp</dimen>
+    <dimen name="tv_safe_horizontal">54dp</dimen>
+    <dimen name="tv_safe_vertical">27dp</dimen>
+    <dimen name="tv_focus_border_width">3dp</dimen>
+    <dimen name="tv_card_height_lg">160dp</dimen>
+    <dimen name="tv_button_height">56dp</dimen>
+    <dimen name="tv_file_item_height">72dp</dimen>
+
+    <!-- Storage card -->
+    <dimen name="storage_card_width">160dp</dimen>
+    <dimen name="storage_card_height">180dp</dimen>
+    <dimen name="storage_card_tv_width">320dp</dimen>
+    <dimen name="storage_card_tv_height">140dp</dimen>
+    <dimen name="progress_bar_height">6dp</dimen>
+
+    <!-- Welcome header -->
+    <dimen name="welcome_header_height">160dp</dimen>
+    <dimen name="welcome_icon_size">56dp</dimen>
+    <dimen name="continue_button_height">52dp</dimen>
+
+    <!-- Mobile Glass UI -->
+    <dimen name="mob_header_height">72dp</dimen>
+    <dimen name="mob_card_icon_size">56dp</dimen>
+    <dimen name="mob_card_storage_height">100dp</dimen>
+    <dimen name="mob_section_title_size">28sp</dimen>
+    <dimen name="mob_file_item_height">64dp</dimen>
+    <dimen name="notepad_min_editor_width">280dp</dimen>
+</resources>

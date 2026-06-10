@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TV Header Bar -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <View
+            android:id="@+id/divider_back"
+            android:layout_width="1.5dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="@color/tv_divider" />
+
+        <!-- Breadcrumb / Title -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_md">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="My NAS" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="/" />
+        </LinearLayout>
+
+        <!-- Sort -->
+        <ImageView
+            android:id="@+id/btnSort"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_sort"
+            android:contentDescription="@string/sort_and_filter"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <!-- View Toggle Button (TV) -->
+        <ImageView
+            android:id="@+id/btnViewToggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_view_list"
+            android:contentDescription="@string/view_mode"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <!-- New Folder -->
+        <ImageView
+            android:id="@+id/btnNewFolder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_folder"
+            android:contentDescription="@string/cd_new_folder"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <!-- Drive Picker -->
+        <ImageView
+            android:id="@+id/btnDrivePicker"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_storage_internal"
+            android:contentDescription="@string/select_storage"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <!-- Refresh Button -->
+        <ImageView
+            android:id="@+id/btnRefresh"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/refresh"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <ImageView
+            android:id="@+id/btnSearchToggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="@string/search"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
+
+        <!-- Close Twin Window -->
+        <ImageView
+            android:id="@+id/btnCloseTwin"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_twin_window_off"
+            android:contentDescription="@string/close_twin_window"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:visibility="gone"
+            app:tint="@color/tv_text_primary" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="headerLayout,layoutSearchRow" />
+
+    <!-- Search Row (TV) -->
+    <LinearLayout
+        android:id="@+id/layoutSearchRow"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="#1AFFFFFF"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/tv_text_primary" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="32dp"
+            android:layout_marginHorizontal="16dp"
+            android:background="#4DFFFFFF" />
+
+        <EditText
+            android:id="@+id/edtSearch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/type_here_to_search"
+            android:textColor="@color/tv_text_primary"
+            android:textColorHint="@color/tv_text_secondary"
+            android:textSize="20sp"
+            android:paddingVertical="8dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/btnSearchClear"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_close"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- Selection Action Bar (hidden by default) -->
+    <LinearLayout
+        android:id="@+id/layoutSelectionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/tv_glass_white_15"
+        android:elevation="6dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/barrier_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <!-- Row 1: Close | Count -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal">
+
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:background="@drawable/selector_tv_icon_btn"
+                app:tint="@color/tv_text_primary" />
+
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_sm"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="3 selected" />
+
+        </LinearLayout>
+        
+        <!-- Row 2: Scrolling Actions -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:scrollbars="none"
+            android:fillViewport="true"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal">
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                
+                    <ImageView
+                        android:id="@+id/btnCopy"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_copy"
+                        android:contentDescription="@string/action_copy"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+                    <ImageView
+                        android:id="@+id/btnMove"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_move"
+                        android:contentDescription="@string/action_move"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+                    <ImageView
+                        android:id="@+id/btnRename"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_rename"
+                        android:contentDescription="@string/action_rename"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+                        
+                    <ImageView
+                        android:id="@+id/btnFavorite"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_star"
+                        android:contentDescription="@string/action_favorite"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
+                    <ImageView
+                        android:id="@+id/btnShare"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_share"
+                        android:contentDescription="@string/action_share"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
+                    <ImageView
+                        android:id="@+id/btnCopyEncrypt"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_copy_encrypt"
+                        android:contentDescription="@string/action_copy_encrypt"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
+                    <ImageView
+                        android:id="@+id/btnMoveEncrypt"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_move_encrypt"
+                        android:contentDescription="@string/action_move_encrypt"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
+                </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Row 3: Select All | Delete -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectAll"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_select_all"
+                android:textColor="@color/tv_accent"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:backgroundTint="@color/tv_glass_white_10"
+                app:icon="@drawable/ic_check"
+                app:iconTint="@color/tv_accent"
+                app:iconSize="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnImageCompress"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/action_compress_image"
+                android:textColor="@color/tv_accent"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:backgroundTint="@color/tv_glass_white_10"
+                app:icon="@drawable/ic_compress_image"
+                app:iconTint="@color/tv_accent"
+                app:iconSize="20dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCompress"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/action_compress"
+                android:textColor="@color/tv_accent"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:backgroundTint="@color/tv_glass_white_10"
+                app:icon="@drawable/ic_compress"
+                app:iconTint="@color/tv_accent"
+                app:iconSize="20dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDelete"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_delete"
+                android:textColor="@color/ufm_denied"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:backgroundTint="@color/ufm_delete_tint"
+                app:icon="@drawable/ic_delete"
+                app:iconTint="@color/ufm_denied"
+                app:iconSize="20dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/ufm_primary"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- File List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerFiles"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingVertical="@dimen/margin_sm"
+        android:paddingBottom="120dp"
+        android:nextFocusDown="@id/btnPillCopy"
+        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintBottom_toTopOf="@id/layoutTvClipboardPanel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_file_tv" />
+
+    <!-- TV Inline Clipboard Panel -->
+    <LinearLayout
+        android:id="@+id/layoutTvClipboardPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/tv_glass_white_15"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_paste"
+                android:contentDescription="@null"
+                app:tint="@color/tv_accent" />
+
+            <TextView
+                android:id="@+id/txtTvClipboardTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="@string/clipboard"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvClearClipboard"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
+                android:text="@string/clear_all"
+                android:textColor="@color/ufm_denied"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                app:backgroundTint="@color/tv_glass_white_10"
+                app:cornerRadius="12dp"
+                android:focusable="true"
+                android:focusableInTouchMode="false" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTvPasteHere"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="200dp"
+                android:text="@string/paste_here"
+                android:textColor="@color/tv_button_focused_yellow_text"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-black"
+                app:backgroundTint="@color/tv_button_focused_yellow"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_paste"
+                app:iconTint="@color/tv_button_focused_yellow_text"
+                android:focusable="true"
+                android:focusableInTouchMode="false" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Paste FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabPaste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_md"
+        android:text="@string/action_paste"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_paste"
+        app:iconTint="@color/white"
+        app:backgroundTint="@color/tv_accent"
+        android:visibility="gone"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size_xl"
+            android:layout_height="@dimen/icon_size_xl"
+            android:src="@drawable/ic_folder"
+            android:alpha="0.3"
+            app:tint="@color/tv_text_hint"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_md"
+            android:text="@string/file_empty_folder"
+            android:textColor="@color/tv_text_hint"
+            android:textSize="@dimen/tv_text_sm" />
+    </LinearLayout>
+
+    <!-- Twin Window Action Pills (TV Version) -->
+    <LinearLayout
+        android:id="@+id/layoutActionPills"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="@drawable/bg_dialog_glass"
+        android:elevation="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="24dp"
+        tools:visibility="visible">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPillCopy"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/action_copy"
+            android:textSize="18sp"
+            android:focusable="true"
+            android:nextFocusRight="@+id/btnPillMove"
+            app:icon="@drawable/ic_copy"
+            app:iconSize="24dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPillMove"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/action_move"
+            android:textSize="18sp"
+            android:focusable="true"
+            android:clickable="true"
+            android:nextFocusLeft="@+id/btnPillCopy"
+            android:nextFocusRight="@+id/btnPillDelete"
+            app:icon="@drawable/ic_move"
+            app:iconSize="24dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPillDelete"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:paddingHorizontal="24dp"
+            android:text="@string/action_delete"
+            android:textSize="18sp"
+            android:focusable="true"
+            android:nextFocusLeft="@+id/btnPillMove"
+            app:icon="@drawable/ic_delete"
+            app:iconSize="24dp"
+            app:iconTint="@color/ufm_denied"
+            android:textColor="@color/ufm_denied" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="48dp"
+    android:background="@color/tv_dialog_background">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:text="Custom Cache Size"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <Button
+            android:id="@+id/btnMinus"
+            style="?attr/buttonStyle"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:text="-"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="36sp" />
+
+        <TextView
+            android:id="@+id/txtValue"
+            android:layout_width="240dp"
+            android:layout_height="96dp"
+            android:gravity="center"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:text="500 MB"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/btnPlus"
+            style="?attr/buttonStyle"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:text="+"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector"
+            android:textSize="36sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <Button
+            android:id="@+id/btnUnitMb"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:text="MB"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector"
+            android:layout_marginEnd="12dp" />
+
+        <Button
+            android:id="@+id/btnUnitGb"
+            android:layout_width="wrap_content"
+            android:layout_height="56dp"
+            android:text="GB"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="160dp"
+            android:layout_height="64dp"
+            android:text="Cancel"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector"
+            android:layout_marginEnd="24dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="160dp"
+            android:layout_height="64dp"
+            android:text="Save"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:textColor="@color/tv_button_text_selector" />
+
+    </LinearLayout>
+
+</LinearLayout>
