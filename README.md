@@ -23,11 +23,9 @@ If you require Google Drive, OneDrive, or Dropbox integrations, please download 
 
 ---
 
-## 📦 Download Pre-compiled APKs
+## 📦 Pre-compiled APKs
 
-You can download the two pre-compiled production APKs directly from the [Releases](https://github.com/Kilowatch/ultimate-file-manager-pro/releases) page:
-1. **Mobile Build (`app-mobile-foss-release.apk`)**: Optimized for phones and tablets.
-2. **TV Build (`app-tv-foss-release.apk`)**: Optimized for Android TV / Fire TV with full D-pad remote controller support.
+There are no pre-compiled APKs hosted directly in the releases of this repository. Users and developers must generate and sign the APKs themselves using the build instructions below.
 
 ---
 
