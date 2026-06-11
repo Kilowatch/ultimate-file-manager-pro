@@ -109,6 +109,9 @@
     <string name="settings_scrolling_text_title">Scrolling text</string>
     <string name="settings_scrolling_text_subtitle_on">File names scroll when they overflow</string>
     <string name="settings_scrolling_text_subtitle_off">File names are truncated</string>
+    <string name="settings_grid_indicators_title">Hide line numbers and column headers</string>
+    <string name="settings_grid_indicators_subtitle_on">Line numbers and column headers are hidden</string>
+    <string name="settings_grid_indicators_subtitle_off">Line numbers and column headers are visible</string>
     <string name="audio_conflict_title">Audio Warning</string>
     <string name="audio_conflict_message">A video is already playing in the other pane. Both will play audio simultaneously.</string>
     <string name="player_mute">Mute</string>

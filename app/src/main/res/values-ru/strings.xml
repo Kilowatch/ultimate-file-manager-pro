@@ -161,6 +161,15 @@
     <string name="settings_scrolling_text_subtitle_off">
 Имена файлов усекаются
 </string>
+    <string name="settings_grid_indicators_title">
+Скрыть номера строк и заголовки столбцов
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Номера строк и заголовки столбцов скрыты.
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Номера строк и заголовки столбцов видны.
+</string>
     <string name="audio_conflict_title">
 Звуковое предупреждение
 </string>

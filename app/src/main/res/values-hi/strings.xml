@@ -161,6 +161,15 @@
     <string name="settings_scrolling_text_subtitle_off">
 फ़ाइल नाम काट दिए गए हैं
 </string>
+    <string name="settings_grid_indicators_title">
+लाइन नंबर और कॉलम हेडर छुपाएं
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+पंक्ति संख्याएँ और स्तंभ शीर्षलेख छिपे हुए हैं
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+लाइन नंबर और कॉलम हेडर दिखाई दे रहे हैं
+</string>
     <string name="audio_conflict_title">
 ऑडियो चेतावनी
 </string>

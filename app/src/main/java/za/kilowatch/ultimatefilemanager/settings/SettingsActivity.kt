@@ -61,6 +61,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchScrollingText: SwitchMaterial
     private lateinit var txtScrollingTextSubtitle: TextView
 
+    private lateinit var switchGridIndicators: SwitchMaterial
+    private lateinit var txtGridIndicatorsSubtitle: TextView
+
     private lateinit var cardNetworkThumbnails: MaterialCardView
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
@@ -275,6 +278,18 @@ class SettingsActivity : AppCompatActivity() {
         cardScrollingText.setOnClickListener { toggleScrollingText() }
         switchScrollingText.setOnCheckedChangeListener(null)
 
+        // Grid Indicators toggle — ON = hide, OFF = show (default)
+        val cardGridIndicators = findViewById<MaterialCardView>(R.id.cardGridIndicators)
+        switchGridIndicators = findViewById(R.id.switchGridIndicators)
+        txtGridIndicatorsSubtitle = findViewById(R.id.txtGridIndicatorsSubtitle)
+
+        val gridIndicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this)
+        switchGridIndicators.isChecked = gridIndicatorsHidden
+        updateGridIndicatorsSubtitle(gridIndicatorsHidden)
+
+        cardGridIndicators.setOnClickListener { toggleGridIndicators() }
+        switchGridIndicators.setOnCheckedChangeListener(null)
+
         // File Server System Tiles row (mobile-only)
         val cardFileServerTiles = findViewById<MaterialCardView?>(R.id.cardFileServerTiles)
         cardFileServerTiles?.setOnClickListener {
@@ -368,6 +383,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
         }
 
         // Icons row
@@ -518,7 +534,12 @@ class SettingsActivity : AppCompatActivity() {
             updateScrollingTextSubtitle(enabled)
         }
 
-
+        // Refresh Grid Indicators subtitle
+        if (::switchGridIndicators.isInitialized) {
+            val hidden = GridIndicatorsPreferenceManager.isHidden(this)
+            switchGridIndicators.isChecked = hidden
+            updateGridIndicatorsSubtitle(hidden)
+        }
 
         // Refresh Main Menu View Mode subtitle
         val txtMainMenuViewModeSubtitle = findViewById<TextView?>(R.id.txtMainMenuViewModeSubtitle)
@@ -775,6 +796,21 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun toggleGridIndicators() {
+        val newValue = !switchGridIndicators.isChecked
+        switchGridIndicators.isChecked = newValue
+        GridIndicatorsPreferenceManager.setHidden(this, newValue)
+        updateGridIndicatorsSubtitle(newValue)
+    }
+
+    private fun updateGridIndicatorsSubtitle(hidden: Boolean) {
+        txtGridIndicatorsSubtitle.text = if (hidden) {
+            getString(R.string.settings_grid_indicators_subtitle_on)
+        } else {
+            getString(R.string.settings_grid_indicators_subtitle_off)
+        }
+    }
+
     private fun setupTvCardFocus(card: MaterialCardView) {
         val yellowFill  = getColor(R.color.tv_button_focused_yellow)
         val blackText   = getColor(R.color.tv_button_focused_yellow_text)
@@ -838,7 +874,8 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
-            CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size)
+            CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
+            CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list)
         )
 
         for (card in cards) {

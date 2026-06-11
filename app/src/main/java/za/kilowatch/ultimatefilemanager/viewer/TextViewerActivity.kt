@@ -27,6 +27,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
+import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import java.io.File
 import java.io.FileInputStream
@@ -219,7 +220,7 @@ class TextViewerActivity : AppCompatActivity() {
             btnSave.visibility = View.GONE
             txtContent.background = null
             paginationBar.visibility = if (allChunks.size > 1) View.VISIBLE else View.GONE
-            txtLineNumbers.visibility = View.VISIBLE
+            txtLineNumbers.visibility = if (!GridIndicatorsPreferenceManager.isHidden(this)) View.VISIBLE else View.GONE
             updateModifiedState()
             showPage(currentPage)
         }
@@ -574,7 +575,12 @@ class TextViewerActivity : AppCompatActivity() {
 
                 currentText = text
                 val chunks = splitIntoChunks(text, PAGE_BYTE_SIZE)
-                val lineNumChunks = buildLineNumberChunks(text, PAGE_BYTE_SIZE)
+                val indicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this@TextViewerActivity)
+                val lineNumChunks = if (!indicatorsHidden) {
+                    buildLineNumberChunks(text, PAGE_BYTE_SIZE)
+                } else {
+                    emptyList()
+                }
 
                 withContext(Dispatchers.Main) {
                     allChunks = chunks
@@ -582,7 +588,7 @@ class TextViewerActivity : AppCompatActivity() {
                     currentPage = 0
                     progressBar.visibility = View.GONE
                     txtContent.visibility = View.VISIBLE
-                    txtLineNumbers.visibility = View.VISIBLE
+                    txtLineNumbers.visibility = if (!indicatorsHidden) View.VISIBLE else View.GONE
 
                     paginationBar.visibility =
                         if (allChunks.size > 1) View.VISIBLE else View.GONE
@@ -603,7 +609,9 @@ class TextViewerActivity : AppCompatActivity() {
     private fun showPage(page: Int) {
         currentPage = page
         val chunk = allChunks.getOrElse(page) { "" }
-        val lineNums = allLineNumChunks.getOrElse(page) { "" }
+        val lineNums = if (allLineNumChunks.isNotEmpty()) {
+            allLineNumChunks.getOrElse(page) { "" }
+        } else ""
 
         lifecycleScope.launch(Dispatchers.IO) {
             val params = withContext(Dispatchers.Main) {

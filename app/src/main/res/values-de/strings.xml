@@ -161,6 +161,15 @@ Dateinamen scrollen, wenn sie überlaufen
     <string name="settings_scrolling_text_subtitle_off">
 Dateinamen werden gekürzt
 </string>
+    <string name="settings_grid_indicators_title">
+Zeilennummern und Spaltenüberschriften ausblenden
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Zeilennummern und Spaltenüberschriften werden ausgeblendet
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Zeilennummern und Spaltenüberschriften sind sichtbar
+</string>
     <string name="audio_conflict_title">
 Audiowarnung
 </string>

@@ -161,6 +161,15 @@ Les noms de fichiers défilent lorsqu\'ils débordent
     <string name="settings_scrolling_text_subtitle_off">
 Les noms de fichiers sont tronqués
 </string>
+    <string name="settings_grid_indicators_title">
+Masquer les numéros de ligne et les en-têtes de colonnes
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Les numéros de ligne et les en-têtes de colonnes sont masqués
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Les numéros de ligne et les en-têtes de colonnes sont visibles
+</string>
     <string name="audio_conflict_title">
 Avertissement audio
 </string>

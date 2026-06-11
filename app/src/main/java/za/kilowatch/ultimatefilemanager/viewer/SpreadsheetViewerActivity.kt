@@ -32,6 +32,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.DataFormatter
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import java.io.File
 import java.io.FileInputStream
@@ -336,50 +337,55 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
 
         // Determine actual maximum columns populated in this sheet
         val maxCols = rows.maxOfOrNull { it.size } ?: 0
+        val indicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this)
 
-        // Create Excel Style Column Headers (e.g. A, B, C...)
-        val headerRow = TableRow(this)
-        
-        // Empty Top-Left Cell representing the row header origin
-        val topLeftCell = TextView(this).apply {
-            text = " "
-            textSize = currentTextSize
-            setPadding(padH, padV, padH, padV)
-            gravity = Gravity.CENTER
-            setBackgroundColor(Color.parseColor("#30FFFFFF"))
-            typeface = Typeface.DEFAULT_BOLD
-        }
-        headerRow.addView(topLeftCell)
+        // Create Excel Style Column Headers (e.g. A, B, C...) — only when not hidden
+        if (!indicatorsHidden) {
+            val headerRow = TableRow(this)
 
-        for (colIdx in 0 until maxCols) {
-            val headerCell = TextView(this).apply {
-                text = getColumnLabel(colIdx)
+            // Empty Top-Left Cell representing the row header origin
+            val topLeftCell = TextView(this).apply {
+                text = " "
                 textSize = currentTextSize
                 setPadding(padH, padV, padH, padV)
                 gravity = Gravity.CENTER
-                setTextColor(Color.WHITE)
-                setBackgroundColor(Color.parseColor("#20FFFFFF"))
+                setBackgroundColor(Color.parseColor("#30FFFFFF"))
                 typeface = Typeface.DEFAULT_BOLD
             }
-            headerRow.addView(headerCell)
+            headerRow.addView(topLeftCell)
+
+            for (colIdx in 0 until maxCols) {
+                val headerCell = TextView(this).apply {
+                    text = getColumnLabel(colIdx)
+                    textSize = currentTextSize
+                    setPadding(padH, padV, padH, padV)
+                    gravity = Gravity.CENTER
+                    setTextColor(Color.WHITE)
+                    setBackgroundColor(Color.parseColor("#20FFFFFF"))
+                    typeface = Typeface.DEFAULT_BOLD
+                }
+                headerRow.addView(headerCell)
+            }
+            tableLayout.addView(headerRow)
         }
-        tableLayout.addView(headerRow)
 
         // Populate Table Grid Data rows
         rows.forEachIndexed { rowIdx, rowCells ->
             val tableRow = TableRow(this)
 
-            // Add row label (number)
-            val rowLabelCell = TextView(this).apply {
-                text = (rowIdx + 1).toString()
-                textSize = currentTextSize
-                setPadding(padH, padV, padH, padV)
-                gravity = Gravity.CENTER
-                setTextColor(Color.WHITE)
-                setBackgroundColor(Color.parseColor("#20FFFFFF"))
-                typeface = Typeface.DEFAULT_BOLD
+            // Add row label (number) — only when not hidden
+            if (!indicatorsHidden) {
+                val rowLabelCell = TextView(this).apply {
+                    text = (rowIdx + 1).toString()
+                    textSize = currentTextSize
+                    setPadding(padH, padV, padH, padV)
+                    gravity = Gravity.CENTER
+                    setTextColor(Color.WHITE)
+                    setBackgroundColor(Color.parseColor("#20FFFFFF"))
+                    typeface = Typeface.DEFAULT_BOLD
+                }
+                tableRow.addView(rowLabelCell)
             }
-            tableRow.addView(rowLabelCell)
 
             // Add individual cells
             for (colIdx in 0 until maxCols) {
@@ -432,7 +438,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
             }
             // Span across all columns plus row indicator
             val params = TableRow.LayoutParams().apply {
-                span = maxCols + 1
+                span = if (!indicatorsHidden) maxCols + 1 else maxCols
             }
             warningRow.addView(warningCell, params)
             tableLayout.addView(warningRow)

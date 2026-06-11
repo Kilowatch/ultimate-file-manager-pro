@@ -161,6 +161,15 @@ Os nomes dos arquivos rolam quando transbordam
     <string name="settings_scrolling_text_subtitle_off">
 Os nomes dos arquivos estão truncados
 </string>
+    <string name="settings_grid_indicators_title">
+Ocultar números de linha e cabeçalhos de coluna
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Os números das linhas e os cabeçalhos das colunas estão ocultos
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Os números das linhas e os cabeçalhos das colunas ficam visíveis
+</string>
     <string name="audio_conflict_title">
 Aviso de áudio
 </string>

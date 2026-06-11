@@ -161,6 +161,15 @@
     <string name="settings_scrolling_text_subtitle_off">
 파일 이름이 잘립니다.
 </string>
+    <string name="settings_grid_indicators_title">
+줄 번호 및 열 머리글 숨기기
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+줄 번호와 열 머리글이 숨겨져 있습니다.
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+줄 번호와 열 머리글이 표시됩니다.
+</string>
     <string name="audio_conflict_title">
 오디오 경고
 </string>

@@ -161,6 +161,15 @@ Dosya adları taştığında kayar
     <string name="settings_scrolling_text_subtitle_off">
 Dosya adları kısaltıldı
 </string>
+    <string name="settings_grid_indicators_title">
+Satır numaralarını ve sütun başlıklarını gizle
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Satır numaraları ve sütun başlıkları gizlenir
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Satır numaraları ve sütun başlıkları görünür
+</string>
     <string name="audio_conflict_title">
 Sesli Uyarı
 </string>

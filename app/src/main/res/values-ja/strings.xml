@@ -161,6 +161,15 @@
     <string name="settings_scrolling_text_subtitle_off">
 ファイル名が切り詰められます
 </string>
+    <string name="settings_grid_indicators_title">
+行番号と列ヘッダーを非表示にする
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+行番号と列ヘッダーは非表示になります
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+行番号と列ヘッダーが表示されます
+</string>
     <string name="audio_conflict_title">
 音声警告
 </string>

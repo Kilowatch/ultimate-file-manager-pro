@@ -161,6 +161,15 @@
     <string name="settings_scrolling_text_subtitle_off">
 يتم اقتطاع أسماء الملفات
 </string>
+    <string name="settings_grid_indicators_title">
+إخفاء أرقام الأسطر ورؤوس الأعمدة
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+أرقام الأسطر ورؤوس الأعمدة مخفية
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+أرقام الأسطر ورؤوس الأعمدة مرئية
+</string>
     <string name="audio_conflict_title">
 تحذير صوتي
 </string>

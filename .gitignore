@@ -59,6 +59,7 @@ app/store/
 .opencode/
 .vscode/
 .plans/
+CLAUDE.md
 .approval/
 approval-ui/
 __pycache__/

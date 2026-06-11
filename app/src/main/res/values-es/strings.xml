@@ -161,6 +161,15 @@ Los nombres de los archivos se desplazan cuando se desbordan
     <string name="settings_scrolling_text_subtitle_off">
 Los nombres de los archivos están truncados
 </string>
+    <string name="settings_grid_indicators_title">
+Ocultar números de línea y encabezados de columna
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Los números de línea y los encabezados de columna están ocultos
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Los números de línea y los encabezados de columna son visibles
+</string>
     <string name="audio_conflict_title">
 Advertencia sonora
 </string>

@@ -161,6 +161,15 @@ Nama file bergulir ketika meluap
     <string name="settings_scrolling_text_subtitle_off">
 Nama file terpotong
 </string>
+    <string name="settings_grid_indicators_title">
+Sembunyikan nomor baris dan header kolom
+</string>
+    <string name="settings_grid_indicators_subtitle_on">
+Nomor baris dan header kolom disembunyikan
+</string>
+    <string name="settings_grid_indicators_subtitle_off">
+Nomor baris dan header kolom terlihat
+</string>
     <string name="audio_conflict_title">
 Peringatan Audio
 </string>
