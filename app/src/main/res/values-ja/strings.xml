@@ -2984,6 +2984,42 @@ UFMメディアプレーヤーでストリーミング
     <string name="gdrive_premium_message">Googleのセキュリティポリシーにより、UFM Proはこのアプリ内で作成または開かれたファイルにのみアクセスできます。すべてのGoogleドライブファイルを表示するには、公式のGoogleドライブアプリをご利用ください。\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\n続行しますか？</string>
     <string name="gdrive_scope_btn_cancel">キャンセル</string>
     <string name="gdrive_scope_btn_learn_more">詳細を見る</string>
+    <string name="gdrive_scope_error_title">
+Google ドライブ - 権限が不十分です
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM は Google ドライブ アカウントに接続されましたが、ファイルを表示する権限が与えられませんでした。\n
+\n
+これを修正するには:\n
+\n
+1. Google アカウントの権限ページを開きます:\n
+https://myaccount.google.com/permissions\n
+\n
+2. [サードパーティのアプリとサービス] で、[Ultimate File Manager] (または [UFM]) を見つけます\n
+\n
+3.それをタップして、「アクセス権の削除」または「すべての接続の削除」を選択します。\n
+\n
+4. UFM に戻り、Google ドライブ接続を再度タップします\n
+\n
+5. Google サインイン画面が表示されたら、要求された権限をすべて受け入れます\n
+\n
+6.ドライブ ファイルが正しく読み込まれるはずです
+</string>
+    <string name="gdrive_401_error_title">
+Google ドライブ - 無効な認証情報
+</string>
+    <string name="gdrive_401_error_guide">
+UFM は Google ドライブ アカウントで認証できませんでした。接続トークンの有効期限が切れているか、無効である可能性があります。\n
+\n
+これを修正するには:\n
+\n
+1. UFM のオンライン ストレージに移動します\n
+2.リストで Google ドライブ アカウントを見つけます\n
+3.それをタップして、[削除] または [サインアウト] を選択します\n
+4. [ストレージを追加] をタップし、Google ドライブを再度選択します\n
+5.サインイン プロセスを完了し、要求された権限をすべて受け入れます\n
+6.ドライブ ファイルが正しく読み込まれるはずです
+</string>
     <string name="onedrive_device_code_subtitle">別のデバイスを使用してテレビをリンクする</string>
     <string name="onedrive_device_code_step1">1. 携帯電話またはコンピュータで、次の場所に移動します。</string>
     <string name="onedrive_device_code_step2">2. 以下に示すコードを入力します。</string>

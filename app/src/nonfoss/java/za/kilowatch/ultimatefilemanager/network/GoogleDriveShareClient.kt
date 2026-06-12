@@ -45,6 +45,18 @@ object GoogleDriveShareClient {
     private data class TokenCache(val token: String, val expiryMs: Long)
     private val accessTokenCache = java.util.concurrent.ConcurrentHashMap<String, TokenCache>()
 
+    /**
+     * Seed the in-memory access-token cache with a freshly obtained token.
+     *
+     * Called by auth activities (mobile + TV) right after the initial code exchange
+     * so the first API call can use the already-valid token instead of attempting
+     * a refresh-token exchange, which may transiently fail for newly issued tokens.
+     */
+    fun seedAccessToken(email: String, accessToken: String, expiresInSecs: Long = 3600L) {
+        accessTokenCache[email] = TokenCache(accessToken, System.currentTimeMillis() + (expiresInSecs * 1000L))
+        GoRoLog.d("GDriveAuth", "GoogleDriveShareClient: seeded access token for $email (expires in ${expiresInSecs}s)")
+    }
+
     // -------------------------------------------------------------------------
     // Token helpers
     // -------------------------------------------------------------------------

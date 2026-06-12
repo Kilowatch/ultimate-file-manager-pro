@@ -2984,6 +2984,42 @@ PKCS12 पासवर्ड
     <string name="gdrive_premium_message">Google सुरक्षा नीतियों के कारण, UFM Pro केवल इस ऐप के भीतर बनाई या खोली गई फ़ाइलों तक ही पहुंच सकता है। अपनी सभी Google Drive फ़ाइलें देखने के लिए, कृपया आधिकारिक Google Drive ऐप का उपयोग करें।\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nक्या आप जारी रखना चाहते हैं?</string>
     <string name="gdrive_scope_btn_cancel">रद्द करें</string>
     <string name="gdrive_scope_btn_learn_more">और जानें</string>
+    <string name="gdrive_scope_error_title">
+गूगल ड्राइव - अपर्याप्त अनुमतियाँ
+</string>
+    <string name="gdrive_scope_error_guide">
+यूएफएम आपके Google ड्राइव खाते से कनेक्ट था लेकिन उसे आपकी फ़ाइलें देखने की अनुमति नहीं दी गई थी।\n
+\n
+इसे ठीक करने के लिए:\n
+\n
+1. अपना Google खाता अनुमति पृष्ठ खोलें:\n
+https://myaccount.google.com/permissions\n
+\n
+2. \"तृतीय-पक्ष ऐप्स और सेवाओं\" के अंतर्गत, \"अंतिम फ़ाइल प्रबंधक\" (या \"यूएफएम\") ढूंढें\n
+\n
+3. इस पर टैप करें और \"एक्सेस हटाएं\" या \"सभी कनेक्शन हटाएं\" चुनें\n
+\n
+4. UFM पर वापस जाएं और Google Drive कनेक्शन पर दोबारा टैप करें\n
+\n
+5. जब Google साइन-इन स्क्रीन दिखाई दे, तो सभी अनुरोधित अनुमतियाँ स्वीकार करें\n
+\n
+6. आपकी ड्राइव फ़ाइलें अब सही ढंग से लोड होनी चाहिए
+</string>
+    <string name="gdrive_401_error_title">
+गूगल ड्राइव - अमान्य क्रेडेंशियल
+</string>
+    <string name="gdrive_401_error_guide">
+यूएफएम आपके Google ड्राइव खाते से प्रमाणित नहीं कर सका। कनेक्शन टोकन समाप्त या अमान्य हो सकता है।\n
+\n
+इसे ठीक करने के लिए:\n
+\n
+1. UFM के ऑनलाइन स्टोरेज पर जाएँ\n
+2. सूची में अपना Google Drive खाता ढूंढें\n
+3. इस पर टैप करें और \"निकालें\" या \"साइन आउट करें\" चुनें\n
+4. \"स्टोरेज जोड़ें\" पर टैप करें और फिर से Google Drive चुनें\n
+5. साइन-इन प्रक्रिया पूरी करें और सभी अनुरोधित अनुमतियाँ स्वीकार करें\n
+6. आपकी ड्राइव फ़ाइलें अब सही ढंग से लोड होनी चाहिए
+</string>
     <string name="onedrive_device_code_subtitle">किसी अन्य डिवाइस का उपयोग करके अपने टीवी को लिंक करें</string>
     <string name="onedrive_device_code_step1">1. अपने फोन या कंप्यूटर पर, यहां जाएं:</string>
     <string name="onedrive_device_code_step2">2. नीचे दिखाया गया कोड दर्ज करें:</string>

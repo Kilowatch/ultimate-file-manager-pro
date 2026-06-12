@@ -578,10 +578,10 @@
     <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutBreadcrumbsScroll"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -589,6 +589,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/imgEmptyIcon"
             android:layout_width="@dimen/icon_size_xl"
             android:layout_height="@dimen/icon_size_xl"
             android:src="@drawable/ic_folder"
@@ -603,7 +604,31 @@
             android:layout_marginTop="@dimen/margin_md"
             android:text="@string/file_empty_folder"
             android:textColor="@color/mobile_text_secondary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:autoLink="web" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardScopeErrorGuide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_lg"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke">
+
+            <TextView
+                android:id="@+id/txtScopeErrorGuide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_lg"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="14sp"
+                android:autoLink="web"
+                android:linksClickable="true" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

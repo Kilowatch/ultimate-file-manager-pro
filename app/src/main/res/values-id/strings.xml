@@ -2984,6 +2984,42 @@ Streaming dengan Pemutar Media UFM
     <string name="gdrive_premium_message">Karena kebijakan keamanan Google, UFM Pro hanya dapat mengakses file yang dibuat atau dibuka dalam aplikasi ini. Untuk melihat semua file Google Drive Anda, gunakan aplikasi Google Drive resmi.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nApakah Anda ingin melanjutkan?</string>
     <string name="gdrive_scope_btn_cancel">Batal</string>
     <string name="gdrive_scope_btn_learn_more">Pelajari Lebih Lanjut</string>
+    <string name="gdrive_scope_error_title">
+Google Drive — Izin Tidak Memadai
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM terhubung ke akun Google Drive Anda tetapi tidak diberikan izin untuk melihat file Anda.\n
+\n
+Untuk memperbaikinya:\n
+\n
+1. Buka laman izin Akun Google Anda:\n
+https://myaccount.google.com/permissions\n
+\n
+2. Di bagian \"Aplikasi &amp; layanan pihak ketiga\", temukan \"Pengelola File Utama\" (atau \"UFM\")\n
+\n
+3. Ketuk dan pilih \"Hapus Akses\" atau \"Hapus semua koneksi\"\n
+\n
+4. Kembali ke UFM dan ketuk koneksi Google Drive lagi\n
+\n
+5. Saat layar login Google muncul, terima semua izin yang diminta\n
+\n
+6. File Drive Anda sekarang seharusnya dimuat dengan benar
+</string>
+    <string name="gdrive_401_error_title">
+Google Drive — Kredensial Tidak Valid
+</string>
+    <string name="gdrive_401_error_guide">
+UFM tidak dapat mengautentikasi dengan akun Google Drive Anda. Token koneksi mungkin sudah habis masa berlakunya atau tidak valid.\n
+\n
+Untuk memperbaikinya:\n
+\n
+1. Buka Penyimpanan Online UFM\n
+2. Temukan akun Google Drive Anda di daftar\n
+3. Ketuk dan pilih \"Hapus\" atau \"Keluar\"\n
+4. Ketuk \"Tambahkan Penyimpanan\" dan pilih Google Drive lagi\n
+5. Selesaikan proses masuk dan terima semua izin yang diminta\n
+6. File Drive Anda sekarang seharusnya dimuat dengan benar
+</string>
     <string name="onedrive_device_code_subtitle">Tautkan TV Anda menggunakan perangkat lain</string>
     <string name="onedrive_device_code_step1">1. Di ponsel atau komputer Anda, buka:</string>
     <string name="onedrive_device_code_step2">2. Masukkan kode yang ditunjukkan di bawah ini:</string>

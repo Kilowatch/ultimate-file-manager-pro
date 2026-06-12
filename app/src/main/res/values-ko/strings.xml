@@ -2984,6 +2984,42 @@ UFM 미디어 플레이어로 스트리밍
     <string name="gdrive_premium_message">Google 보안 정책으로 인해 UFM Pro는 이 앱 내에서 생성되거나 열린 파일에만 액세스할 수 있습니다. 모든 Google Drive 파일을 보려면 공식 Google Drive 앱을 사용하세요.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\n계속하시겠습니까?</string>
     <string name="gdrive_scope_btn_cancel">취소</string>
     <string name="gdrive_scope_btn_learn_more">자세히 알아보기</string>
+    <string name="gdrive_scope_error_title">
+Google 드라이브 — 권한 부족
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM이 Google 드라이브 계정에 연결되었지만 파일을 볼 수 있는 권한이 부여되지 않았습니다.\n
+\n
+이 문제를 해결하려면:\n
+\n
+1. Google 계정 권한 페이지를 엽니다:\n
+https://myaccount.google.com/permissions\n
+\n
+2. \'타사 앱 및 서비스\'에서 \'Ultimate File Manager\'(또는 \'UFM\')를 찾습니다.\n
+\n
+3. 이를 탭하고 \"액세스 제거\" 또는 \"모든 연결 삭제\"를 선택하십시오.\n
+\n
+4. UFM으로 돌아가 Google Drive 연결을 다시 탭하세요\n
+\n
+5. Google 로그인 화면이 나타나면 요청된 모든 권한을 수락하세요\n
+\n
+6. 이제 드라이브 파일이 올바르게 로드됩니다.
+</string>
+    <string name="gdrive_401_error_title">
+Google 드라이브 — 잘못된 자격 증명
+</string>
+    <string name="gdrive_401_error_guide">
+UFM이 Google 드라이브 계정으로 인증할 수 없습니다. 연결 토큰이 만료되었거나 유효하지 않을 수 있습니다.\n
+\n
+이 문제를 해결하려면:\n
+\n
+1. UFM의 온라인 저장소로 이동합니다\n
+2. 목록에서 Google 드라이브 계정을 찾으세요.\n
+3. 해당 항목을 탭하고 \'제거\' 또는 \'로그아웃\'을 선택하세요.\n
+4. \'저장용량 추가\'를 탭하고 Google 드라이브를 다시 선택하세요.\n
+5. 로그인 프로세스를 완료하고 요청된 모든 권한을 수락합니다.\n
+6. 이제 드라이브 파일이 올바르게 로드됩니다.
+</string>
     <string name="onedrive_device_code_subtitle">다른 장치를 사용하여 TV 연결</string>
     <string name="onedrive_device_code_step1">1. 휴대폰이나 컴퓨터에서 다음으로 이동합니다.</string>
     <string name="onedrive_device_code_step2">2. 아래 표시된 코드를 입력하세요.</string>

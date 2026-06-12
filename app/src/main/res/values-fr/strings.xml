@@ -2984,6 +2984,42 @@ Diffusez avec UFM Media Player
     <string name="gdrive_premium_message">En raison des politiques de sécurité de Google, UFM Pro ne peut accéder qu\'aux fichiers créés ou ouverts dans cette application. Pour voir tous vos fichiers Google Drive, veuillez utiliser l\'application officielle Google Drive.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nSouhaitez-vous continuer ?</string>
     <string name="gdrive_scope_btn_cancel">Annuler</string>
     <string name="gdrive_scope_btn_learn_more">En savoir plus</string>
+    <string name="gdrive_scope_error_title">
+Google Drive – Autorisations insuffisantes
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM était connecté à votre compte Google Drive mais n\'a pas reçu l\'autorisation de voir vos fichiers.\n
+\n
+Pour résoudre ce problème :\n
+\n
+1. Ouvrez la page des autorisations de votre compte Google :\n
+https://myaccount.google.com/permissions\n
+\n
+2. Sous \"Applications et services tiers\", recherchez \"Ultimate File Manager\" (ou \"UFM\")\n
+\n
+3. Appuyez dessus et sélectionnez \"Supprimer l\'accès\" ou \"Supprimer toutes les connexions\"\n
+\n
+4. Revenez à UFM et appuyez à nouveau sur la connexion Google Drive\n
+\n
+5. Lorsque l\'écran de connexion Google apparaît, acceptez toutes les autorisations demandées.\n
+\n
+6. Vos fichiers Drive devraient maintenant se charger correctement
+</string>
+    <string name="gdrive_401_error_title">
+Google Drive – Informations d\'identification invalides
+</string>
+    <string name="gdrive_401_error_guide">
+UFM n\'a pas pu s\'authentifier avec votre compte Google Drive. Le jeton de connexion est peut-être expiré ou invalide.\n
+\n
+Pour résoudre ce problème :\n
+\n
+1. Accédez aux stockages en ligne d\'UFM\n
+2. Recherchez votre compte Google Drive dans la liste\n
+3. Appuyez dessus et sélectionnez \"Supprimer\" ou \"Déconnexion\"\n
+4. Appuyez sur \"Ajouter du stockage\" et sélectionnez à nouveau Google Drive\n
+5. Terminez le processus de connexion et acceptez toutes les autorisations demandées.\n
+6. Vos fichiers Drive devraient maintenant se charger correctement
+</string>
     <string name="onedrive_device_code_subtitle">Associez votre téléviseur à l\'aide d\'un autre appareil</string>
     <string name="onedrive_device_code_step1">1. Sur votre téléphone ou votre ordinateur, accédez à :</string>
     <string name="onedrive_device_code_step2">2. Entrez le code ci-dessous :</string>

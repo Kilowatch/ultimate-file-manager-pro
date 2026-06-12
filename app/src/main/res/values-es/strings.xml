@@ -2984,6 +2984,42 @@ Transmitir con UFM Media Player
     <string name="gdrive_premium_message">Debido a las políticas de seguridad de Google, UFM Pro solo puede acceder a archivos creados o abiertos dentro de esta aplicación. Para ver todos sus archivos de Google Drive, use la aplicación oficial de Google Drive.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\n¿Desea continuar?</string>
     <string name="gdrive_scope_btn_cancel">Cancelar</string>
     <string name="gdrive_scope_btn_learn_more">Más información</string>
+    <string name="gdrive_scope_error_title">
+Google Drive: permisos insuficientes
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM se conectó a su cuenta de Google Drive pero no se le concedió permiso para ver sus archivos.\n
+\n
+Para solucionar este problema:\n
+\n
+1. Abra la página de permisos de su cuenta de Google:\n
+https://myaccount.google.com/permissions\n
+\n
+2. En \"Aplicaciones y servicios de terceros\", busque \"Ultimate File Manager\" (o \"UFM\")\n
+\n
+3. Tócalo y selecciona \"Eliminar acceso\" o \"Eliminar todas las conexiones\"\n
+\n
+4. Vuelve a UFM y toca la conexión de Google Drive nuevamente\n
+\n
+5. Cuando aparezca la pantalla de inicio de sesión de Google, acepte todos los permisos solicitados\n
+\n
+6. Tus archivos de Drive ahora deberían cargarse correctamente
+</string>
+    <string name="gdrive_401_error_title">
+Google Drive: Credenciales no válidas
+</string>
+    <string name="gdrive_401_error_guide">
+UFM no pudo autenticarse con su cuenta de Google Drive. El token de conexión puede estar caducado o no ser válido.\n
+\n
+Para solucionar este problema:\n
+\n
+1. Vaya a los Almacenamientos en línea de UFM\n
+2. Busque su cuenta de Google Drive en la lista\n
+3. Tóquelo y seleccione \"Eliminar\" o \"Cerrar sesión\"\n
+4. Toca \"Agregar almacenamiento\" y selecciona Google Drive nuevamente\n
+5. Complete el proceso de inicio de sesión y acepte todos los permisos solicitados\n
+6. Tus archivos de Drive ahora deberían cargarse correctamente
+</string>
     <string name="onedrive_device_code_subtitle">Vincula tu televisor usando otro dispositivo</string>
     <string name="onedrive_device_code_step1">1. En su teléfono o computadora, vaya a:</string>
     <string name="onedrive_device_code_step2">2. Ingrese el código que se muestra a continuación:</string>

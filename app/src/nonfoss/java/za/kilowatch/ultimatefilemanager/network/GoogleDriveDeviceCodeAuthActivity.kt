@@ -248,6 +248,12 @@ class GoogleDriveDeviceCodeAuthActivity : AppCompatActivity() {
                 )
                 repository.save(newStorage)
 
+                // Seed the access token so the first browse uses it directly
+                // instead of attempting a refresh (which can transiently fail
+                // for newly issued tokens).
+                val expiresIn = tokenResponse.get("expires_in")?.asLong ?: 3600L
+                GoogleDriveShareClient.seedAccessToken(email, accessToken, expiresIn)
+
                 Toast.makeText(
                     this@GoogleDriveDeviceCodeAuthActivity,
                     getString(R.string.onedrive_auth_success, email),

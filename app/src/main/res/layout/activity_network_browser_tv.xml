@@ -581,10 +581,10 @@
     <!-- Empty State -->
     <LinearLayout
         android:id="@+id/layoutEmpty"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -592,6 +592,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
+            android:id="@+id/imgEmptyIcon"
             android:layout_width="@dimen/icon_size_xl"
             android:layout_height="@dimen/icon_size_xl"
             android:src="@drawable/ic_folder"
@@ -606,7 +607,39 @@
             android:layout_marginTop="@dimen/margin_md"
             android:text="@string/file_empty_folder"
             android:textColor="@color/tv_text_hint"
-            android:textSize="@dimen/tv_text_sm" />
+            android:textSize="@dimen/tv_text_sm"
+            android:autoLink="web" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardScopeErrorGuide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_xl"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/card_radius_lg"
+            app:cardElevation="0dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@color/tv_glass_border"
+            app:cardBackgroundColor="@android:color/transparent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/margin_xl"
+                android:paddingVertical="@dimen/margin_lg"
+                android:background="@drawable/bg_glass_card">
+
+                <TextView
+                    android:id="@+id/txtScopeErrorGuide"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/tv_text_sm"
+                    android:textColor="@color/tv_text_primary"
+                    android:lineSpacingExtra="4dp"
+                    android:autoLink="web"
+                    android:linksClickable="true" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

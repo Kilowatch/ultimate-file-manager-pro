@@ -2982,6 +2982,42 @@ SRT
     <string name="gdrive_premium_message">نظرًا لسياسات أمان Google، يمكن لـ UFM Pro الوصول فقط إلى الملفات التي تم إنشاؤها أو فتحها داخل هذا التطبيق. لعرض جميع ملفات Google Drive الخاصة بك، يرجى استخدام تطبيق Google Drive الرسمي.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nهل تريد المتابعة؟</string>
     <string name="gdrive_scope_btn_cancel">إلغاء</string>
     <string name="gdrive_scope_btn_learn_more">اعرف المزيد</string>
+    <string name="gdrive_scope_error_title">
+جوجل درايف — أذونات غير كافية
+</string>
+    <string name="gdrive_scope_error_guide">
+لقد كان UFM متصلاً بحسابك على Google Drive ولكن لم يتم منحه الإذن برؤية ملفاتك.\n
+\n
+لإصلاح هذه المشكلة:\n
+\n
+1. افتح صفحة أذونات حساب Google:\n
+https://myaccount.google.com/permissions\n
+\n
+2. ضمن \"تطبيقات وخدمات الجهات الخارجية\"، ابحث عن \"Ultimate File Manager\" (أو \"UFM\")\n
+\n
+3. اضغط عليها وحدد \"إزالة الوصول\" أو \"حذف كافة الاتصالات\"\n
+\n
+4. ارجع إلى UFM وانقر على اتصال Google Drive مرة أخرى\n
+\n
+5. عندما تظهر شاشة تسجيل الدخول إلى Google، اقبل جميع الأذونات المطلوبة\n
+\n
+6. من المفترض الآن أن يتم تحميل ملفات Drive بشكل صحيح
+</string>
+    <string name="gdrive_401_error_title">
+جوجل درايف — بيانات اعتماد غير صالحة
+</string>
+    <string name="gdrive_401_error_guide">
+تعذر على UFM المصادقة باستخدام حساب Google Drive الخاص بك. قد يكون رمز الاتصال منتهي الصلاحية أو غير صالح.\n
+\n
+لإصلاح هذا:\n
+\n
+1. انتقل إلى مخازن UFM عبر الإنترنت\n
+2. ابحث عن حسابك على Google Drive في القائمة\n
+3. اضغط عليها وحدد \"إزالة\" أو \"تسجيل الخروج\"\n
+4. انقر على \"إضافة مساحة تخزين\" وحدد Google Drive مرة أخرى\n
+5. أكمل عملية تسجيل الدخول واقبل كافة الأذونات المطلوبة\n
+6. من المفترض الآن أن يتم تحميل ملفات Drive بشكل صحيح
+</string>
     <string name="onedrive_device_code_subtitle">قم بربط جهاز التلفزيون الخاص بك باستخدام جهاز آخر</string>
     <string name="onedrive_device_code_step1">1. على هاتفك أو جهاز الكمبيوتر الخاص بك، انتقل إلى:</string>
     <string name="onedrive_device_code_step2">2. أدخل الرمز الموضح أدناه:</string>

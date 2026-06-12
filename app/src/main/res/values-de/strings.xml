@@ -2984,6 +2984,42 @@ Streamen Sie mit dem UFM Media Player
     <string name="gdrive_premium_message">Aufgrund der Google-Sicherheitsrichtlinien kann UFM Pro nur auf Dateien zugreifen, die in dieser App erstellt oder geöffnet wurden. Um alle Ihre Google Drive-Dateien anzuzeigen, verwenden Sie bitte die offizielle Google Drive-App.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nMöchten Sie fortfahren?</string>
     <string name="gdrive_scope_btn_cancel">Abbrechen</string>
     <string name="gdrive_scope_btn_learn_more">Mehr erfahren</string>
+    <string name="gdrive_scope_error_title">
+Google Drive – Unzureichende Berechtigungen
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM war mit Ihrem Google Drive-Konto verbunden, erhielt jedoch keine Berechtigung zum Anzeigen Ihrer Dateien.\n
+\n
+So beheben Sie dieses Problem:\n
+\n
+1. Öffnen Sie die Seite mit den Berechtigungen Ihres Google-Kontos:\n
+https://myaccount.google.com/permissions\n
+\n
+2. Suchen Sie unter „Apps und Dienste von Drittanbietern“ nach „Ultimate File Manager“ (oder „UFM“)\n
+\n
+3. Tippen Sie darauf und wählen Sie „Zugriff entfernen“ oder „Alle Verbindungen löschen“\n
+\n
+4. Gehen Sie zurück zu UFM und tippen Sie erneut auf die Google Drive-Verbindung\n
+\n
+5. Wenn der Google-Anmeldebildschirm angezeigt wird, akzeptieren Sie alle angeforderten Berechtigungen\n
+\n
+6. Ihre Drive-Dateien sollten jetzt korrekt geladen werden
+</string>
+    <string name="gdrive_401_error_title">
+Google Drive – Ungültige Anmeldeinformationen
+</string>
+    <string name="gdrive_401_error_guide">
+UFM konnte sich nicht bei Ihrem Google Drive-Konto authentifizieren. Das Verbindungstoken ist möglicherweise abgelaufen oder ungültig.\n
+\n
+Um dieses Problem zu beheben:\n
+\n
+1. Gehen Sie zu den Online-Speichern von UFM\n
+2. Suchen Sie Ihr Google Drive-Konto in der Liste\n
+3. Tippen Sie darauf und wählen Sie „Entfernen“ oder „Abmelden“\n
+4. Tippen Sie auf „Speicher hinzufügen“ und wählen Sie erneut Google Drive aus\n
+5. Schließen Sie den Anmeldevorgang ab und akzeptieren Sie alle angeforderten Berechtigungen\n
+6. Ihre Drive-Dateien sollten jetzt korrekt geladen werden
+</string>
     <string name="onedrive_device_code_subtitle">Verknüpfen Sie Ihren Fernseher mit einem anderen Gerät</string>
     <string name="onedrive_device_code_step1">1. Gehen Sie auf Ihrem Telefon oder Computer zu:</string>
     <string name="onedrive_device_code_step2">2. Geben Sie den unten angezeigten Code ein:</string>

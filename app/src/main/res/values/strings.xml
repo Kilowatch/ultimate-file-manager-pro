@@ -2152,6 +2152,10 @@
     <string name="gdrive_premium_message">Due to Google security policies, UFM Pro can only access files that have been created or opened within this app. To view all your Google Drive files, please use the official Google Drive app.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nWould you like to continue?</string>
     <string name="gdrive_scope_btn_cancel">Cancel</string>
     <string name="gdrive_scope_btn_learn_more">Learn More</string>
+    <string name="gdrive_scope_error_title">Google Drive — Insufficient Permissions</string>
+    <string name="gdrive_scope_error_guide">UFM was connected to your Google Drive account but was not granted permission to see your files.\n\nTo fix this:\n\n1. Open your Google Account permissions page:\nhttps://myaccount.google.com/permissions\n\n2. Under "Third-party apps &amp; services," find "Ultimate File Manager" (or "UFM")\n\n3. Tap on it and select "Remove Access" or "Delete all connections"\n\n4. Go back to UFM and tap the Google Drive connection again\n\n5. When the Google sign-in screen appears, accept all requested permissions\n\n6. Your Drive files should now load correctly</string>
+    <string name="gdrive_401_error_title">Google Drive — Invalid Credentials</string>
+    <string name="gdrive_401_error_guide">UFM could not authenticate with your Google Drive account. The connection token may be expired or invalid.\n\nTo fix this:\n\n1. Go to UFM\'s Online Storages\n2. Find your Google Drive account in the list\n3. Tap on it and select "Remove" or "Sign Out"\n4. Tap "Add Storage" and select Google Drive again\n5. Complete the sign-in process and accept all requested permissions\n6. Your Drive files should now load correctly</string>
     <string name="onedrive_device_code_subtitle">Link your TV using another device</string>
     <string name="onedrive_device_code_step1">1. On your phone or computer, go to:</string>
     <string name="onedrive_device_code_step2">2. Enter the code shown below:</string>

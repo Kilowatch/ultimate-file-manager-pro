@@ -2984,6 +2984,42 @@ UFM Media Player ile yayın yapın
     <string name="gdrive_premium_message">Google güvenlik politikaları nedeniyle, UFM Pro yalnızca bu uygulama içinde oluşturulmuş veya açılmış dosyalara erişebilir. Tüm Google Drive dosyalarınızı görüntülemek için lütfen resmi Google Drive uygulamasını kullanın.\n\nhttps://developers.google.com/drive/api/guides/api-specific-auth#drive.file\n\nDevam etmek istiyor musunuz?</string>
     <string name="gdrive_scope_btn_cancel">İptal</string>
     <string name="gdrive_scope_btn_learn_more">Daha Fazla Bilgi</string>
+    <string name="gdrive_scope_error_title">
+Google Drive — Yetersiz İzinler
+</string>
+    <string name="gdrive_scope_error_guide">
+UFM, Google Drive hesabınıza bağlandı ancak dosyalarınızı görme izni verilmedi.\n
+\n
+Bunu düzeltmek için:\n
+\n
+1. Google Hesabı izinleri sayfanızı açın:\n
+https://myaccount.google.com/permissions\n
+\n
+2. \"Üçüncü taraf uygulamalar ve hizmetler\" altında \"Ultimate Dosya Yöneticisi\"ni (veya \"UFM\") bulun\n
+\n
+3. Üzerine dokunun ve \"Erişimi Kaldır\" veya \"Tüm bağlantıları sil\"i seçin\n
+\n
+4. UFM\'ye geri dönün ve Google Drive bağlantısına tekrar dokunun\n
+\n
+5. Google oturum açma ekranı göründüğünde istenen tüm izinleri kabul edin\n
+\n
+6. Drive dosyalarınız artık doğru şekilde yüklenmelidir
+</string>
+    <string name="gdrive_401_error_title">
+Google Drive — Geçersiz Kimlik Bilgileri
+</string>
+    <string name="gdrive_401_error_guide">
+UFM, Google Drive hesabınızla kimlik doğrulaması yapamadı. Bağlantı jetonunun süresi dolmuş veya geçersiz olabilir.\n
+\n
+Bunu düzeltmek için:\n
+\n
+1. UFM\'nin Çevrimiçi Depolama Alanlarına gidin\n
+2. Listede Google Drive hesabınızı bulun\n
+3. Üzerine dokunun ve \"Kaldır\" veya \"Oturumu Kapat\"ı seçin\n
+4. \"Depolama Alanı Ekle\"ye dokunun ve tekrar Google Drive\'ı seçin\n
+5. Oturum açma işlemini tamamlayın ve istenen tüm izinleri kabul edin\n
+6. Drive dosyalarınız artık doğru şekilde yüklenmelidir
+</string>
     <string name="onedrive_device_code_subtitle">TV\'nizi başka bir cihaz kullanarak bağlayın</string>
     <string name="onedrive_device_code_step1">1. Telefonunuzda veya bilgisayarınızda şu adrese gidin:</string>
     <string name="onedrive_device_code_step2">2. Aşağıda gösterilen kodu girin:</string>

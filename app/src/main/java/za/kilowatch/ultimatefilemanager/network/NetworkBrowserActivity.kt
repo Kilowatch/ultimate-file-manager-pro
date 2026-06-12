@@ -1535,10 +1535,41 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                             errMessage.contains("reset", ignoreCase = true) ||
                                             errMessage.contains("refused", ignoreCase = true)
 
+                    val isGDriveScopeError = errMessage.startsWith("GDrive") &&
+                            errMessage.contains("403") &&
+                            errMessage.contains("insufficient", ignoreCase = true)
+
+                    val isGDriveAuthError = errMessage.startsWith("GDrive") &&
+                            errMessage.contains("401") &&
+                            (errMessage.contains("invalid authentication", ignoreCase = true) ||
+                             errMessage.contains("Invalid Credentials") ||
+                             errMessage.contains("UNAUTHENTICATED"))
+
+                    val tvEmptyState = findViewById<TextView>(R.id.txtEmptyState)
+                    val cardGuide = findViewById<View>(R.id.cardScopeErrorGuide)
+                    val tvGuide = findViewById<TextView>(R.id.txtScopeErrorGuide)
+                    val imgEmptyIcon = findViewById<View>(R.id.imgEmptyIcon)
+
                     if (isConnectionError) {
-                        findViewById<TextView>(R.id.txtEmptyState).text = getString(R.string.network_connection_restored_first)
+                        tvEmptyState.text = getString(R.string.network_connection_restored_first)
+                        tvEmptyState.visibility = View.VISIBLE
+                        cardGuide.visibility = View.GONE
+                    } else if (isGDriveScopeError) {
+                        imgEmptyIcon.visibility = View.GONE
+                        tvEmptyState.visibility = View.GONE
+                        val guide = "${getString(R.string.gdrive_scope_error_title)}\n\n${getString(R.string.gdrive_scope_error_guide)}"
+                        tvGuide.text = guide
+                        cardGuide.visibility = View.VISIBLE
+                    } else if (isGDriveAuthError) {
+                        imgEmptyIcon.visibility = View.GONE
+                        tvEmptyState.visibility = View.GONE
+                        val guide = "${getString(R.string.gdrive_401_error_title)}\n\n${getString(R.string.gdrive_401_error_guide)}"
+                        tvGuide.text = guide
+                        cardGuide.visibility = View.VISIBLE
                     } else {
-                        findViewById<TextView>(R.id.txtEmptyState).text = "Error loading directory:\n$errMessage"
+                        tvEmptyState.text = "Error loading directory:\n$errMessage"
+                        tvEmptyState.visibility = View.VISIBLE
+                        cardGuide.visibility = View.GONE
                     }
                 }
             }

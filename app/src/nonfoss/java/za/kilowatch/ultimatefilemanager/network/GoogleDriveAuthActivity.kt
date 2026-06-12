@@ -160,6 +160,12 @@ class GoogleDriveAuthActivity : AppCompatActivity() {
                 )
                 OnlineStorageRepository.getInstance(this@GoogleDriveAuthActivity).save(newStorage)
 
+                // Seed the access token so the first browse uses it directly
+                // instead of attempting a refresh (which can transiently fail
+                // for newly issued tokens).
+                val expiresIn = tokenResponse.get("expires_in")?.asLong ?: 3600L
+                GoogleDriveShareClient.seedAccessToken(email, accessToken, expiresIn)
+
                 GoRoLog.d("GDriveAuth", "Auth success for $email")
                 Toast.makeText(this@GoogleDriveAuthActivity, "Connected to $email", Toast.LENGTH_SHORT).show()
 
