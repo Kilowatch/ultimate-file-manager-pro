@@ -4118,6 +4118,45 @@ PDF (متعدد الصفحات فقط)
     <string name="icons_settings_subtitle">
 تخصيص كافة أيقونات التطبيق
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+ألوان الأيقونات الافتراضية
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+قم بتعيين ألوان الأيقونات الافتراضية للموضوعات الفاتحة والداكنة وAMOLED
+</string>
+    <string name="default_icon_color_section_light">
+ضوء
+</string>
+    <string name="default_icon_color_section_dark">
+مظلم
+</string>
+    <string name="default_icon_color_section_amoled">
+أموليد
+</string>
+    <string name="default_icon_color_preview_label">
+معاينة
+</string>
+    <string name="default_icon_color_custom">
+مخصص
+</string>
+    <string name="default_icon_color_reset">
+إعادة التعيين إلى الوضع الافتراضي
+</string>
+    <string name="default_icon_color_reset_all">
+إعادة تعيين الكل إلى الإعدادات الافتراضية
+</string>
+    <string name="default_icon_color_done">
+منتهي
+</string>
+    <string name="default_icon_color_uses_default">
+باستخدام الإعدادات الافتراضية
+</string>
+    <string name="default_icon_color_custom_set">
+مخصص
+</string>
+
     <string name="category_file_types">
 أنواع الملفات
 </string>

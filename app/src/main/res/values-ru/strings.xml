@@ -4120,6 +4120,45 @@ PDF (только многостраничный)
     <string name="icons_settings_subtitle">
 Настройте все значки приложений
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Цвета значков по умолчанию
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Установите цвета значков по умолчанию для светлых, темных тем и тем AMOLED.
+</string>
+    <string name="default_icon_color_section_light">
+Свет
+</string>
+    <string name="default_icon_color_section_dark">
+Темный
+</string>
+    <string name="default_icon_color_section_amoled">
+АМОЛЕД
+</string>
+    <string name="default_icon_color_preview_label">
+Предварительный просмотр
+</string>
+    <string name="default_icon_color_custom">
+Обычай
+</string>
+    <string name="default_icon_color_reset">
+Сбросить настройки по умолчанию
+</string>
+    <string name="default_icon_color_reset_all">
+Сбросить все к настройкам по умолчанию
+</string>
+    <string name="default_icon_color_done">
+Сделанный
+</string>
+    <string name="default_icon_color_uses_default">
+Использование настроек по умолчанию
+</string>
+    <string name="default_icon_color_custom_set">
+Обычай
+</string>
+
     <string name="category_file_types">
 Типы файлов
 </string>

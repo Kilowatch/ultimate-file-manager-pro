@@ -2726,6 +2726,21 @@
     <!-- Icon Customization -->
     <string name="icons_settings_title">Icons</string>
     <string name="icons_settings_subtitle">Customize all app icons</string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">Default Icon Colors</string>
+    <string name="settings_default_icon_colors_subtitle">Set default icon colors for light, dark, and AMOLED themes</string>
+    <string name="default_icon_color_section_light">Light</string>
+    <string name="default_icon_color_section_dark">Dark</string>
+    <string name="default_icon_color_section_amoled">AMOLED</string>
+    <string name="default_icon_color_preview_label">Preview</string>
+    <string name="default_icon_color_custom">Custom</string>
+    <string name="default_icon_color_reset">Reset to default</string>
+    <string name="default_icon_color_reset_all">Reset all to defaults</string>
+    <string name="default_icon_color_done">Done</string>
+    <string name="default_icon_color_uses_default">Using defaults</string>
+    <string name="default_icon_color_custom_set">Custom</string>
+
     <string name="category_file_types">File Types</string>
     <string name="category_folders">Folders</string>
     <string name="category_toolbar">Toolbar Actions</string>

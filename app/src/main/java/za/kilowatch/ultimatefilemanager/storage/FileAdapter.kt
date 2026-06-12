@@ -28,6 +28,7 @@ import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
@@ -513,10 +514,12 @@ class FileAdapter(
 
             if (file.isDirectory) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
-                val tintColor = if (isTv) R.color.tv_accent else R.color.mobile_icon_tint
-                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(context, tintColor)
-                )
+                val tintColor = if (isTv) {
+                    ContextCompat.getColor(context, R.color.tv_accent)
+                } else {
+                    DefaultIconColorManager.getMobileIconTint(context)
+                }
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                 if (!isGrid) {
                     val childCount = childCountCache[file.absolutePath] ?: 0
                     val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
@@ -562,10 +565,12 @@ class FileAdapter(
                     // ── Normal icon mode (list) ───────────────────────────────
                     iconContainer?.setBackgroundResource(0)
                     imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
-                    val tintColor = if (isTv) R.color.tv_accent else R.color.mobile_icon_tint
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                        ContextCompat.getColor(context, tintColor)
-                    )
+                    val tintColor = if (isTv) {
+                        ContextCompat.getColor(context, R.color.tv_accent)
+                    } else {
+                        DefaultIconColorManager.getMobileIconTint(context)
+                    }
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                     val baseDate = formatDate(context, file.lastModified())
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseDate" else baseDate

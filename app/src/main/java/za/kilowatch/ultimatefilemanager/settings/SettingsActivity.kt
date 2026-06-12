@@ -379,6 +379,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardLanguage)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardMainMenuViewMode)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardAppearance)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
@@ -414,6 +415,16 @@ class SettingsActivity : AppCompatActivity() {
         val cardAppearance = findViewById<MaterialCardView?>(R.id.cardAppearance)
         cardAppearance?.setOnClickListener {
             startActivity(Intent(this, ThemeActivity::class.java))
+        }
+
+        // Default Icon Colors row
+        val cardDefaultIconColors = findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)
+        cardDefaultIconColors?.setOnClickListener {
+            if (DeviceUtils.isTvDevice(this)) {
+                startActivity(Intent(this, DefaultIconColorTvActivity::class.java))
+            } else {
+                DefaultIconColorBottomSheet().show(supportFragmentManager, "DefaultIconColorBottomSheet")
+            }
         }
 
         // Backup & Restore row
@@ -579,6 +590,19 @@ class SettingsActivity : AppCompatActivity() {
         // Refresh APK Extract subtitle
         if (::txtApkExtractSubtitle.isInitialized) {
             updateApkExtractSubtitle()
+        }
+
+        // Refresh Default Icon Colors subtitle
+        val txtIconColors = findViewById<TextView?>(R.id.txtDefaultIconColorsSubtitle)
+        txtIconColors?.let {
+            val hasLight  = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_LIGHT) != null
+            val hasDark   = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_DARK) != null
+            val hasAmoled = DefaultIconColorManager.getCustomColor(this, ThemeHelper.THEME_AMOLED) != null
+            it.text = if (hasLight || hasDark || hasAmoled) {
+                getString(R.string.default_icon_color_custom_set)
+            } else {
+                getString(R.string.default_icon_color_uses_default)
+            }
         }
 
         // Apply custom icon overrides to settings cards
@@ -854,6 +878,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardLanguage, "settings_language", R.drawable.ic_language),
             CardIcon(R.id.cardAppearance, "settings_appearance", R.drawable.ic_theme),
             CardIcon(R.id.cardIcons, "settings_icons", R.drawable.ic_palette),
+            CardIcon(R.id.cardDefaultIconColors, "settings_default_icon_colors", R.drawable.ic_tune),
             CardIcon(R.id.cardBackupRestore, "settings_backup_restore", R.drawable.ic_export),
             CardIcon(R.id.cardMainMenuViewMode, "settings_main_menu_layout", R.drawable.ic_view_list),
             CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),

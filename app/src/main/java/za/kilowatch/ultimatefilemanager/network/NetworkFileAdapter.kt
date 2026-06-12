@@ -22,6 +22,7 @@ import kotlinx.coroutines.*
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailPreferenceManager
@@ -457,7 +458,7 @@ class NetworkFileAdapter(
             } else if (file.isDirectory) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                 if (!isGrid) {
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.mobile_icon_tint))
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(DefaultIconColorManager.getMobileIconTint(context))
                     // Show disk usage bar if the directory has storage info (TV drive entries)
                     if (file.freeSpace >= 0 && file.size > 0) {
                         val usedBytes = file.size - file.freeSpace
@@ -503,7 +504,7 @@ class NetworkFileAdapter(
             } else {
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
                 if (!isGrid) {
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.mobile_icon_tint)) // Standard file gray
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(DefaultIconColorManager.getMobileIconTint(context)) // Standard file gray
                     val sizeStr = Formatter.formatFileSize(context, file.size)
                     val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
                     txtDetails.text = if (dateStr.isNotEmpty()) "$sizeStr • $dateStr" else sizeStr
@@ -726,7 +727,7 @@ class NetworkFileAdapter(
                         imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
                         if (!isGridMode) {
                             imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                                ContextCompat.getColor(context, R.color.mobile_icon_tint)
+                                DefaultIconColorManager.getMobileIconTint(context)
                             )
                             imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         } else {
@@ -740,7 +741,7 @@ class NetworkFileAdapter(
                     if (isActive) {
                         imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
                         imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                            ContextCompat.getColor(context, R.color.mobile_icon_tint)
+                            DefaultIconColorManager.getMobileIconTint(context)
                         )
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                     }

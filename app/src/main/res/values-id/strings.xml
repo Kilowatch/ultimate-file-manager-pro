@@ -4120,6 +4120,45 @@ Ikon
     <string name="icons_settings_subtitle">
 Sesuaikan semua ikon aplikasi
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Warna Ikon Default
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Tetapkan warna ikon default untuk tema terang, gelap, dan AMOLED
+</string>
+    <string name="default_icon_color_section_light">
+Lampu
+</string>
+    <string name="default_icon_color_section_dark">
+Gelap
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+Pratinjau
+</string>
+    <string name="default_icon_color_custom">
+Kebiasaan
+</string>
+    <string name="default_icon_color_reset">
+Atur ulang ke default
+</string>
+    <string name="default_icon_color_reset_all">
+Reset semua ke default
+</string>
+    <string name="default_icon_color_done">
+Selesai
+</string>
+    <string name="default_icon_color_uses_default">
+Menggunakan default
+</string>
+    <string name="default_icon_color_custom_set">
+Kebiasaan
+</string>
+
     <string name="category_file_types">
 Jenis File
 </string>

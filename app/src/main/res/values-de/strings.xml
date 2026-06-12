@@ -4120,6 +4120,45 @@ Symbole
     <string name="icons_settings_subtitle">
 Passen Sie alle App-Symbole an
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Standardsymbolfarben
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Legen Sie Standardsymbolfarben für helle, dunkle und AMOLED-Designs fest
+</string>
+    <string name="default_icon_color_section_light">
+Licht
+</string>
+    <string name="default_icon_color_section_dark">
+Dunkel
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+Vorschau
+</string>
+    <string name="default_icon_color_custom">
+Brauch
+</string>
+    <string name="default_icon_color_reset">
+Auf Standard zurücksetzen
+</string>
+    <string name="default_icon_color_reset_all">
+Alles auf die Standardeinstellungen zurücksetzen
+</string>
+    <string name="default_icon_color_done">
+Erledigt
+</string>
+    <string name="default_icon_color_uses_default">
+Standardeinstellungen verwenden
+</string>
+    <string name="default_icon_color_custom_set">
+Brauch
+</string>
+
     <string name="category_file_types">
 Dateitypen
 </string>

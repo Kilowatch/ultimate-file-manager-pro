@@ -4120,6 +4120,45 @@ Iconos
     <string name="icons_settings_subtitle">
 Personaliza todos los íconos de aplicaciones
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Colores de iconos predeterminados
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Establecer colores de íconos predeterminados para temas claros, oscuros y AMOLED
+</string>
+    <string name="default_icon_color_section_light">
+Luz
+</string>
+    <string name="default_icon_color_section_dark">
+Oscuro
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+Avance
+</string>
+    <string name="default_icon_color_custom">
+Costumbre
+</string>
+    <string name="default_icon_color_reset">
+Restablecer los valores predeterminados
+</string>
+    <string name="default_icon_color_reset_all">
+Restablecer todo a los valores predeterminados
+</string>
+    <string name="default_icon_color_done">
+Hecho
+</string>
+    <string name="default_icon_color_uses_default">
+Usando valores predeterminados
+</string>
+    <string name="default_icon_color_custom_set">
+Costumbre
+</string>
+
     <string name="category_file_types">
 Tipos de archivos
 </string>

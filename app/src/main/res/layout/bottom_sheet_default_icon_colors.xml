@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_default_icon_colors_title"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="17sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_default_icon_colors_subtitle"
+        android:textColor="@color/ufm_text_secondary"
+        android:textSize="13sp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Live icon preview -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/ufm_surface_variant"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/imgPreviewIcon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_folder"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/txtPreviewHex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/ufm_text_primary"
+            android:textSize="16sp"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_icon_color_preview_label"
+            android:textColor="@color/ufm_text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Theme sections -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Light Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLightSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <!-- Section header: theme name + current swatch + reset -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_section_light"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <View
+                            android:id="@+id/swatchLightCurrent"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_color_swatch" />
+
+                        <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/btnResetLight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_reset"
+                            android:textColor="@color/ufm_denied"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <!-- Preset swatches row -->
+                    <LinearLayout
+                        android:id="@+id/presetsLight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <View android:id="@+id/swatchLight0"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight1"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight2"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight3"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight4"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight5"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight6"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchLight7"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                    </LinearLayout>
+
+                    <!-- Custom button -->
+                    <TextView
+                        android:id="@+id/btnCustomLight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_icon_color_custom"
+                        android:textColor="@color/ufm_accent"
+                        android:textSize="13sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dark Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDarkSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_section_dark"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <View
+                            android:id="@+id/swatchDarkCurrent"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_color_swatch" />
+
+                        <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/btnResetDark"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_reset"
+                            android:textColor="@color/ufm_denied"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/presetsDark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <View android:id="@+id/swatchDark0"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark1"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark2"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark3"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark4"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark5"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark6"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchDark7"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btnCustomDark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_icon_color_custom"
+                        android:textColor="@color/ufm_accent"
+                        android:textSize="13sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- AMOLED Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAmoledSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_section_amoled"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <View
+                            android:id="@+id/swatchAmoledCurrent"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_color_swatch" />
+
+                        <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/btnResetAmoled"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/default_icon_color_reset"
+                            android:textColor="@color/ufm_denied"
+                            android:textSize="12sp"
+                            android:clickable="true"
+                            android:focusable="true" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/presetsAmoled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <View android:id="@+id/swatchAmoled0"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled1"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled2"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled3"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled4"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled5"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled6"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                        <View android:id="@+id/swatchAmoled7"  android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="3dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btnCustomAmoled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_icon_color_custom"
+                        android:textColor="@color/ufm_accent"
+                        android:textSize="13sp"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="12dp">
+
+        <TextView
+            android:id="@+id/btnResetAll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/default_icon_color_reset_all"
+            android:textColor="@color/ufm_denied"
+            android:textSize="13sp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDone"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_icon_color_done" />
+    </LinearLayout>
+
+</LinearLayout>

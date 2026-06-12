@@ -4120,6 +4120,45 @@ FTP 서버 프로필
     <string name="icons_settings_subtitle">
 모든 앱 아이콘 맞춤설정
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+기본 아이콘 색상
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+밝음, 어두움 및 AMOLED 테마에 대한 기본 아이콘 색상 설정
+</string>
+    <string name="default_icon_color_section_light">
+빛
+</string>
+    <string name="default_icon_color_section_dark">
+어두운
+</string>
+    <string name="default_icon_color_section_amoled">
+아몰레드
+</string>
+    <string name="default_icon_color_preview_label">
+시사
+</string>
+    <string name="default_icon_color_custom">
+관습
+</string>
+    <string name="default_icon_color_reset">
+기본값으로 재설정
+</string>
+    <string name="default_icon_color_reset_all">
+모두 기본값으로 재설정
+</string>
+    <string name="default_icon_color_done">
+완료
+</string>
+    <string name="default_icon_color_uses_default">
+기본값 사용
+</string>
+    <string name="default_icon_color_custom_set">
+관습
+</string>
+
     <string name="category_file_types">
 파일 유형
 </string>

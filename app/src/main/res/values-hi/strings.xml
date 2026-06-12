@@ -4120,6 +4120,45 @@ JSON में शामिल करने के लिए मेटाडे�
     <string name="icons_settings_subtitle">
 सभी ऐप आइकन कस्टमाइज़ करें
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+डिफ़ॉल्ट चिह्न रंग
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+हल्के, गहरे और AMOLED थीम के लिए डिफ़ॉल्ट आइकन रंग सेट करें
+</string>
+    <string name="default_icon_color_section_light">
+रोशनी
+</string>
+    <string name="default_icon_color_section_dark">
+अँधेरा
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+पूर्व दर्शन
+</string>
+    <string name="default_icon_color_custom">
+रिवाज़
+</string>
+    <string name="default_icon_color_reset">
+वितथ पर ले जाएं
+</string>
+    <string name="default_icon_color_reset_all">
+सभी को डिफ़ॉल्ट पर रीसेट करें
+</string>
+    <string name="default_icon_color_done">
+हो गया
+</string>
+    <string name="default_icon_color_uses_default">
+डिफ़ॉल्ट का उपयोग करना
+</string>
+    <string name="default_icon_color_custom_set">
+रिवाज़
+</string>
+
     <string name="category_file_types">
 फ़ाइल प्रकार
 </string>

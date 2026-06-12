@@ -4120,6 +4120,45 @@ FTPサーバープロファイル
     <string name="icons_settings_subtitle">
 すべてのアプリアイコンをカスタマイズする
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+デフォルトのアイコンの色
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+ライト、ダーク、AMOLED テーマのデフォルトのアイコンの色を設定する
+</string>
+    <string name="default_icon_color_section_light">
+ライト
+</string>
+    <string name="default_icon_color_section_dark">
+暗い
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+プレビュー
+</string>
+    <string name="default_icon_color_custom">
+カスタム
+</string>
+    <string name="default_icon_color_reset">
+デフォルトにリセットする
+</string>
+    <string name="default_icon_color_reset_all">
+すべてをデフォルトにリセットする
+</string>
+    <string name="default_icon_color_done">
+終わり
+</string>
+    <string name="default_icon_color_uses_default">
+デフォルトの使用
+</string>
+    <string name="default_icon_color_custom_set">
+カスタム
+</string>
+
     <string name="category_file_types">
 ファイルの種類
 </string>

@@ -4120,6 +4120,45 @@ Pré-visualização de importação
     <string name="icons_settings_subtitle">
 Personalize todos os ícones de aplicativos
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Cores padrão dos ícones
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Defina cores de ícones padrão para temas claros, escuros e AMOLED
+</string>
+    <string name="default_icon_color_section_light">
+Luz
+</string>
+    <string name="default_icon_color_section_dark">
+Escuro
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+Visualização
+</string>
+    <string name="default_icon_color_custom">
+Personalizado
+</string>
+    <string name="default_icon_color_reset">
+Redefinir para o padrão
+</string>
+    <string name="default_icon_color_reset_all">
+Redefinir tudo para os padrões
+</string>
+    <string name="default_icon_color_done">
+Feito
+</string>
+    <string name="default_icon_color_uses_default">
+Usando padrões
+</string>
+    <string name="default_icon_color_custom_set">
+Personalizado
+</string>
+
     <string name="category_file_types">
 Tipos de arquivo
 </string>

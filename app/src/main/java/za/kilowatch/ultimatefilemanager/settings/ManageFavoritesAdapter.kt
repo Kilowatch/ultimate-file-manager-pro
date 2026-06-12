@@ -53,7 +53,7 @@ class ManageFavoritesAdapter(
                 imgIcon.setColorFilter(ctx.getColor(if (isTv) R.color.tv_icon_tint else R.color.mobile_icon_tint))
             } else {
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ctx, item.path.substringAfterLast('.', "")))
-                imgIcon.setColorFilter(itemView.context.getColor(if (isTv) R.color.tv_icon_tint else R.color.mobile_icon_tint))
+                imgIcon.setColorFilter(ctx.getColor(if (isTv) R.color.tv_icon_tint else R.color.mobile_icon_tint))
             }
 
             btnDelete.setOnClickListener {

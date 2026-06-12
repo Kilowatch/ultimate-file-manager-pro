@@ -365,6 +365,11 @@
         <activity
             android:name=".settings.IconPickerTvActivity"
             android:exported="false" />
+
+        <!-- Default Icon Colors (TV) -->
+        <activity
+            android:name=".settings.DefaultIconColorTvActivity"
+            android:exported="false" />
         <activity
             android:name=".settings.IconPackExportActivity"
             android:exported="false" />

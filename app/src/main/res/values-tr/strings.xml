@@ -4120,6 +4120,45 @@ Simgeler
     <string name="icons_settings_subtitle">
 Tüm uygulama simgelerini özelleştirin
 </string>
+
+    <!-- Default Icon Colors -->
+    <string name="settings_default_icon_colors_title">
+Varsayılan Simge Renkleri
+</string>
+    <string name="settings_default_icon_colors_subtitle">
+Açık, koyu ve AMOLED temaları için varsayılan simge renklerini ayarlayın
+</string>
+    <string name="default_icon_color_section_light">
+Işık
+</string>
+    <string name="default_icon_color_section_dark">
+Karanlık
+</string>
+    <string name="default_icon_color_section_amoled">
+AMOLED
+</string>
+    <string name="default_icon_color_preview_label">
+Önizleme
+</string>
+    <string name="default_icon_color_custom">
+Gelenek
+</string>
+    <string name="default_icon_color_reset">
+Varsayılana sıfırla
+</string>
+    <string name="default_icon_color_reset_all">
+Tümünü varsayılanlara sıfırla
+</string>
+    <string name="default_icon_color_done">
+Tamamlamak
+</string>
+    <string name="default_icon_color_uses_default">
+Varsayılanları kullanma
+</string>
+    <string name="default_icon_color_custom_set">
+Gelenek
+</string>
+
     <string name="category_file_types">
 Dosya Türleri
 </string>
