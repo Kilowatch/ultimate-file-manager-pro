@@ -141,11 +141,25 @@
                     <RadioButton android:id="@+id/rbNfs"
                         android:layout_width="0dp" android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
                         android:button="@null"
                         android:background="@drawable/selector_tv_protocol_card"
                         android:text="@string/network_type_nfs"
                         android:textColor="@color/selector_tv_protocol_text"
                         android:drawableTop="@drawable/ic_nfs"
+                        android:drawableTint="@color/selector_tv_protocol_text"
+                        android:drawablePadding="4dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:focusable="true"/>
+                    <RadioButton android:id="@+id/rbDlna"
+                        android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:button="@null"
+                        android:background="@drawable/selector_tv_protocol_card"
+                        android:text="@string/network_type_dlna"
+                        android:textColor="@color/selector_tv_protocol_text"
+                        android:drawableTop="@drawable/ic_dlna"
                         android:drawableTint="@color/selector_tv_protocol_text"
                         android:drawablePadding="4dp"
                         android:gravity="center"
@@ -169,8 +183,33 @@
                         android:focusable="true" android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- DLNA Device Picker (visible only when DLNA type selected) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSelectDlnaDevice"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/dlna_scan_network"
+                    android:textColor="@color/tv_accent"
+                    android:visibility="gone"
+                    android:focusable="true"
+                    app:icon="@drawable/ic_dlna"
+                    app:iconTint="@color/tv_accent"
+                    app:iconGravity="textStart" />
+
+                <TextView
+                    android:id="@+id/txtDlnaSelectedDevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
                 <!-- Host field + Scan button -->
                 <LinearLayout
+                    android:id="@+id/layerHost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -208,6 +247,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layerPort"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -226,6 +266,7 @@
 
                 <!-- Remote path field + Browse button -->
                 <LinearLayout
+                    android:id="@+id/layerPath"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

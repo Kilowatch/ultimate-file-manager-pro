@@ -26,11 +26,26 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
 import android.net.Uri
+import android.net.wifi.WifiManager
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.net.Inet4Address
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.NetworkInterface
+import java.net.Socket
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicInteger
 import android.util.Log
 
 /**
@@ -75,7 +90,16 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private var rbSftp:           RadioButton? = null
     private var rbScp:            RadioButton? = null
     private var rbNfs:            RadioButton? = null
-    
+    private var rbDlna:           RadioButton? = null
+
+    // DLNA-specific views
+    private lateinit var btnSelectDlnaDevice: MaterialButton
+    private lateinit var txtDlnaSelectedDevice: TextView
+    private lateinit var layerHost: View
+    private lateinit var layerPort: View
+    private lateinit var layerPath: View
+    private var selectedDlnaServer: DlnaServerInfo? = null
+
     private lateinit var tilDomain:       TextInputLayout
     private lateinit var etDomain:        TextInputEditText
     private lateinit var etPath:          TextInputEditText
@@ -153,6 +177,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             val isDlna = chipDlna?.isChecked == true
             if (isDlna) showDlnaScanDialog() else showScanDialog()
         }
+        btnSelectDlnaDevice.setOnClickListener { showDlnaScanDialog() }
         btnBrowseShares.setOnClickListener { showShareBrowserDialog() }
     }
 
@@ -194,6 +219,14 @@ class NetworkShareEditActivity : AppCompatActivity() {
         rbSftp           = findViewById(R.id.rbSftp)
         rbScp            = findViewById(R.id.rbScp)
         rbNfs            = findViewById(R.id.rbNfs)
+        rbDlna           = findViewById(R.id.rbDlna)
+
+        // DLNA-specific views
+        btnSelectDlnaDevice = findViewById(R.id.btnSelectDlnaDevice)
+        txtDlnaSelectedDevice = findViewById(R.id.txtDlnaSelectedDevice)
+        layerHost         = findViewById(R.id.layerHost)
+        layerPort         = findViewById(R.id.layerPort)
+        layerPath         = findViewById(R.id.layerPath)
 
         cardSshAuth      = findViewById(R.id.cardSshAuth)
         etPrivateKey     = findViewById(R.id.etPrivateKey)
@@ -232,30 +265,31 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
     private fun setupTypeToggle() {
         val isSmbNow = rbSmb?.isChecked == true || chipSmb?.isChecked == true
-        val isDlnaNow = chipDlna?.isChecked == true
+        val isDlnaNow = chipDlna?.isChecked == true || rbDlna?.isChecked == true
         tilDomain.visibility       = if (isSmbNow) View.VISIBLE else View.GONE
-        btnScanHosts.visibility    = if (isSmbNow || isDlnaNow) View.VISIBLE else View.GONE
         btnBrowseShares.visibility = if (isSmbNow) View.VISIBLE else View.GONE
         layerSmbProtocol?.visibility = if (isSmbNow) View.VISIBLE else View.GONE
+
+        // DLNA initial visibility
+        if (isDlnaNow) {
+            applyDlnaVisibility()
+        } else {
+            btnScanHosts.visibility = if (isSmbNow) View.VISIBLE else View.GONE
+        }
 
         val onTypeChange: (Int) -> Unit = { checkedId ->
             val isSmb = (checkedId == R.id.rbSmb || checkedId == R.id.chipSmb)
             val isSsh = (checkedId == R.id.rbSftp || checkedId == R.id.chipSftp ||
                          checkedId == R.id.rbScp || checkedId == R.id.chipScp)
             val isNfs = (checkedId == R.id.rbNfs || checkedId == R.id.chipNfs)
-            val isDlna = (checkedId == R.id.chipDlna)
+            val isDlna = (checkedId == R.id.rbDlna || checkedId == R.id.chipDlna)
 
-            tilDomain.visibility       = if (isSmb) View.VISIBLE else View.GONE
-            btnScanHosts.visibility    = if (isSmb || isDlna) View.VISIBLE else View.GONE
-            btnBrowseShares.visibility = if (isSmb) View.VISIBLE else View.GONE
-            layerSmbProtocol?.visibility = if (isSmb) View.VISIBLE else View.GONE
-
-            btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
-            cardSshAuth.visibility = View.GONE
-            btnToggleSshAuth.text = getString(R.string.network_btn_show_ssh_auth)
-
-            tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
-            tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
+            if (isDlna) {
+                applyDlnaVisibility()
+            } else {
+                // Restore normal visibility when switching away from DLNA
+                restoreNormalVisibility(isSmb, isSsh, isNfs)
+            }
 
             resetConnectionTested()
         }
@@ -284,6 +318,52 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
         btnPickKey.setOnClickListener { pickKeyLauncher.launch(arrayOf("*/*")) }
         etPrivateKey.setOnClickListener { btnPickKey.performClick() }
+    }
+
+    /** Hide all non-DLNA fields and show DLNA device picker. */
+    private fun applyDlnaVisibility() {
+        layerHost.visibility = View.GONE
+        layerPort.visibility = View.GONE
+        layerPath.visibility = View.GONE
+        tilUsername.visibility = View.GONE
+        tilPassword.visibility = View.GONE
+        tilDomain.visibility = View.GONE
+        btnBrowseShares.visibility = View.GONE
+        btnScanHosts.visibility = View.GONE
+        layerSmbProtocol?.visibility = View.GONE
+        btnToggleSshAuth.visibility = View.GONE
+        cardSshAuth.visibility = View.GONE
+        btnSelectDlnaDevice.visibility = View.VISIBLE
+        // Force read-only for DLNA
+        rgAccess.check(R.id.rbReadOnly)
+        for (i in 0 until rgAccess.childCount) {
+            rgAccess.getChildAt(i).isEnabled = false
+        }
+    }
+
+    /** Restore normal field visibility when switching away from DLNA. */
+    private fun restoreNormalVisibility(isSmb: Boolean, isSsh: Boolean, isNfs: Boolean) {
+        layerHost.visibility = View.VISIBLE
+        layerPort.visibility = View.VISIBLE
+        layerPath.visibility = View.VISIBLE
+        tilDomain.visibility = if (isSmb) View.VISIBLE else View.GONE
+        btnScanHosts.visibility = if (isSmb) View.VISIBLE else View.GONE
+        btnBrowseShares.visibility = if (isSmb) View.VISIBLE else View.GONE
+        layerSmbProtocol?.visibility = if (isSmb) View.VISIBLE else View.GONE
+        btnSelectDlnaDevice.visibility = View.GONE
+        txtDlnaSelectedDevice.visibility = View.GONE
+
+        btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
+        cardSshAuth.visibility = View.GONE
+        btnToggleSshAuth.text = getString(R.string.network_btn_show_ssh_auth)
+
+        tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
+        tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
+
+        // Re-enable access mode
+        for (i in 0 until rgAccess.childCount) {
+            rgAccess.getChildAt(i).isEnabled = true
+        }
     }
 
     /**
@@ -384,6 +464,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipNfs) }
             }
             ShareType.DLNA -> {
+                rgType?.check(R.id.rbDlna)
                 mobileButtons.forEach { it?.isChecked = (it?.id == R.id.chipDlna) }
             }
             else -> {}
@@ -432,6 +513,15 @@ class NetworkShareEditActivity : AppCompatActivity() {
         val isNfs = (share.type == ShareType.NFS)
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
+
+        // DLNA-specific visibility when editing an existing DLNA share
+        if (share.type == ShareType.DLNA) {
+            applyDlnaVisibility()
+            if (share.dlnaUdn.isNotBlank()) {
+                txtDlnaSelectedDevice.text = getString(R.string.dlna_selected_device, share.name, share.host)
+                txtDlnaSelectedDevice.visibility = View.VISIBLE
+            }
+        }
     }
 
     // ── SMB Host Scan ─────────────────────────────────────────────────────────
@@ -653,7 +743,22 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
     // ── DLNA Scan Dialog ──────────────────────────────────────────────────────
 
+    /** Ports we probe during the active subnet sweep. */
+    private val dlnaProbePorts = intArrayOf(8200, 8080)
+
     private fun showDlnaScanDialog() {
+        // Check for any active network (Wi-Fi or Ethernet), not just Wi-Fi.
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+        val isConnected = cm?.activeNetwork != null
+        if (!isConnected) {
+            Toast.makeText(this, R.string.dlna_wifi_required, Toast.LENGTH_LONG).show()
+            return
+        }
+
+        // Resolve the local subnet for the active-IP sweep.
+        val localIp = getLocalIpAddress()
+        val subnetIps = if (localIp != null) buildSubnetIpList(localIp) else emptyList()
+
         val isTv = DeviceUtils.isTvDevice(this)
         val dialogView = LayoutInflater.from(this).inflate(
             if (isTv) R.layout.dialog_smb_scan_tv else R.layout.dialog_smb_scan_mobile,
@@ -664,13 +769,26 @@ class NetworkShareEditActivity : AppCompatActivity() {
         val layerResults  = dialogView.findViewById<View>(R.id.layerResults)
         val txtNoHosts    = dialogView.findViewById<TextView>(R.id.txtNoHosts)
         val rvHosts       = dialogView.findViewById<RecyclerView>(R.id.rvHosts)
+        val progressBar     = dialogView.findViewById<ProgressBar>(R.id.progressBar)
+        val txtScanTitle    = dialogView.findViewById<TextView>(R.id.txtScanTitle)
+        val txtScanningLabel = dialogView.findViewById<TextView>(R.id.txtScanningLabel)
+
+        // Override SMB defaults with DLNA-specific strings
+        txtScanTitle?.text = getString(R.string.dlna_discovering)
+        txtScanningLabel?.text = getString(R.string.dlna_discovering)
+        txtNoHosts.text = getString(R.string.dlna_no_servers_found)
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(true)
             .create()
 
-        dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener { dialog.dismiss() }
+        var cancelled = false
+        dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
+            cancelled = true
+            dialog.dismiss()
+        }
+        dialog.setOnDismissListener { cancelled = true }
         dialog.show()
 
         layerScanning.visibility = View.VISIBLE
@@ -679,50 +797,235 @@ class NetworkShareEditActivity : AppCompatActivity() {
         rvHosts.visibility    = View.VISIBLE
         rvHosts.layoutManager = LinearLayoutManager(this)
 
-        val serverList = mutableListOf<za.kilowatch.ultimatefilemanager.network.DlnaServerInfo>()
-        data class DisplayEntry(val ip: String, val friendlyName: String)
-        val displayList = mutableListOf<DisplayEntry>()
-        val adapter = SimpleStringAdapter(
-            displayList.map { "${it.friendlyName} (${it.ip})" },
-            R.layout.item_smb_host, R.id.txtHostIp
-        ) { selected ->
-            val idx = displayList.indexOfFirst { "${it.friendlyName} (${it.ip})" == selected }
-            if (idx >= 0) {
-                val server = displayList[idx]
-                etHost.setText(server.ip)
-                etPort.setText("")
-                dialog.dismiss()
+        val serverList = mutableListOf<DlnaServerInfo>()
+        val seenUdns = mutableSetOf<String>()
+
+        fun addServer(server: DlnaServerInfo) {
+            if (seenUdns.add(server.udn)) {
+                serverList.add(server)
             }
         }
-        rvHosts.adapter = adapter
 
-        Thread {
-            val servers = DlnaDiscovery.scanLan()
-            runOnUiThread {
-                if (!dialog.isShowing) return@runOnUiThread
-                serverList.addAll(servers)
-                displayList.addAll(servers.map { DisplayEntry(it.ip, it.friendlyName) })
-                val items = displayList.map { "${it.friendlyName} (${it.ip})" }
-                rvHosts.adapter = SimpleStringAdapter(
-                    items, R.layout.item_smb_host, R.id.txtHostIp
-                ) { selected ->
-                    val idx = items.indexOf(selected)
-                    if (idx >= 0) {
-                        etHost.setText(displayList[idx].ip)
-                        etPort.setText("")
-                        dialog.dismiss()
-                    }
+        fun rebuildAdapter() {
+            val items = serverList.map { "${it.friendlyName} (${it.ip})" }
+            rvHosts.adapter = SimpleStringAdapter(
+                items, R.layout.item_smb_host, R.id.txtHostIp
+            ) { selected ->
+                val idx = items.indexOf(selected)
+                if (idx >= 0) {
+                    val server = serverList.getOrNull(idx) ?: return@SimpleStringAdapter
+                    onDlnaServerSelected(server)
+                    dialog.dismiss()
                 }
             }
+        }
+        rebuildAdapter()
+
+        // ── Background scan thread ─────────────────────────────────────────
+        Thread {
+            // ── Phase 1: SSDP M-SEARCH (fast, catches devices on any port) ──
             runOnUiThread {
-                if (!dialog.isShowing) return@runOnUiThread
+                if (cancelled) return@runOnUiThread
+                txtScanTitle?.text = getString(R.string.dlna_discovering)
+            }
+
+            val servers = DlnaDiscovery.scanLan()
+            for (s in servers) {
+                if (seenUdns.add(s.udn)) serverList.add(s)
+            }
+            runOnUiThread {
+                if (cancelled) return@runOnUiThread
+                rebuildAdapter()
+            }
+
+            // ── Phase 2: Active subnet sweep (reliable, shows progress) ──
+            if (!cancelled && subnetIps.isNotEmpty()) {
+                runOnUiThread {
+                    if (cancelled) return@runOnUiThread
+                    progressBar?.isIndeterminate = false
+                    progressBar?.max = subnetIps.size
+                    progressBar?.progress = 0
+                    layerScanning.visibility = View.VISIBLE
+                }
+
+                // Scan in parallel batches to stay fast
+                val batchSize = 20
+                val pool = Executors.newFixedThreadPool(batchSize)
+                val scanned = AtomicInteger(0)
+                val subnetPrefix = localIp!!.substringBeforeLast('.')
+
+                val tasks = subnetIps.map { host ->
+                    Runnable {
+                        if (cancelled) return@Runnable
+                        val count = scanned.incrementAndGet()
+                        // Update UI every 5 IPs
+                        if (count % 5 == 0 || count == subnetIps.size) {
+                            runOnUiThread {
+                                if (cancelled) return@runOnUiThread
+                                val ip = "$subnetPrefix.$host"
+                                txtScanTitle?.text = "Scanning $ip ($count/${subnetIps.size}) — Found: ${serverList.size}"
+                                progressBar?.progress = count
+                            }
+                        }
+
+                        // Try each probe port
+                        for (port in dlnaProbePorts) {
+                            if (cancelled) return@Runnable
+                            val ip = "$subnetPrefix.$host"
+                            if (tryConnect(ip, port, 200)) {
+                                val info = fetchDlnaDescription(ip, port)
+                                if (info != null) {
+                                    synchronized(serverList) {
+                                        addServer(info)
+                                    }
+                                    runOnUiThread {
+                                        if (cancelled) return@runOnUiThread
+                                        rebuildAdapter()
+                                    }
+                                }
+                                break  // got a response, no need to try other ports
+                            }
+                        }
+                    }
+                }
+
+                tasks.forEach { pool.execute(it) }
+                pool.shutdown()
+                try { pool.awaitTermination(30, java.util.concurrent.TimeUnit.SECONDS) } catch (_: InterruptedException) {}
+            }
+
+            // ── Final UI update ────────────────────────────────────────────
+            runOnUiThread {
+                if (cancelled) return@runOnUiThread
                 layerScanning.visibility = View.GONE
                 if (serverList.isEmpty()) {
                     txtNoHosts.visibility = View.VISIBLE
                     rvHosts.visibility    = View.GONE
+                } else {
+                    txtScanTitle?.text = getString(
+                        R.string.dlna_selected_device,
+                        "${serverList.size} device(s)",
+                        ""
+                    ).replace(" ()", "")
                 }
             }
         }.start()
+    }
+
+    /** Quick TCP connect to [host]:[port] with [timeoutMs] timeout. */
+    private fun tryConnect(host: String, port: Int, timeoutMs: Int): Boolean {
+        return try {
+            val sock = Socket()
+            sock.connect(InetSocketAddress(host, port), timeoutMs)
+            sock.close()
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /** Fetch and parse a DLNA device description from http://[ip]:[port]/description.xml. */
+    private fun fetchDlnaDescription(ip: String, port: Int): DlnaServerInfo? {
+        return try {
+            val url = "http://$ip:$port/description.xml"
+            val client = BypassCleartextOkHttpClient.applyBypass(
+                OkHttpClient.Builder()
+                    .connectTimeout(2, java.util.concurrent.TimeUnit.SECONDS)
+                    .readTimeout(3, java.util.concurrent.TimeUnit.SECONDS)
+                    .followRedirects(true)
+            ).build()
+            val request = Request.Builder().url(url).get().build()
+            val response = client.newCall(request).execute()
+            if (!response.isSuccessful) {
+                response.close()
+                return null
+            }
+            val body = response.body?.bytes()
+            response.close()
+            if (body == null || body.isEmpty()) return null
+
+            val builder = za.kilowatch.ultimatefilemanager.server.DlnaXmlParser.newSecureDocumentBuilder()
+            val doc = builder.parse(java.io.ByteArrayInputStream(body))
+            val deviceElement = doc.getElementsByTagName("device")?.item(0) as? org.w3c.dom.Element
+                ?: return null
+
+            val udn = getText(deviceElement, "UDN")?.takeIf { it.isNotBlank() } ?: return null
+            val friendlyName = getText(deviceElement, "friendlyName") ?: "Unknown"
+
+            var cds = ""
+            var cms = ""
+            val sl = doc.getElementsByTagName("serviceList")?.item(0) as? org.w3c.dom.Element
+            if (sl != null) {
+                val services = sl.getElementsByTagName("service")
+                for (i in 0 until services.length) {
+                    val svc = services.item(i) as? org.w3c.dom.Element ?: continue
+                    val st = getText(svc, "serviceType") ?: ""
+                    val cu = getText(svc, "controlURL") ?: ""
+                    if (cu.isBlank()) continue
+                    val resolved = if (cu.startsWith("/")) "http://$ip:$port$cu" else cu
+                    when {
+                        st.contains("ContentDirectory:1") -> cds = resolved
+                        st.contains("ConnectionManager:1") -> cms = resolved
+                    }
+                }
+            }
+
+            DlnaServerInfo(
+                udn = udn,
+                friendlyName = friendlyName,
+                ip = ip,
+                port = port,
+                contentDirectoryUrl = cds.ifBlank { "http://$ip:$port/cds/control" },
+                connectionManagerUrl = cms.ifBlank { "http://$ip:$port/cms/control" }
+            )
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun getText(parent: org.w3c.dom.Element, tag: String): String? {
+        val list = parent.getElementsByTagName(tag)
+        if (list.length == 0) return null
+        return (list.item(0) as? org.w3c.dom.Element)?.textContent?.trim()
+    }
+
+    /** Returns the non-loopback IPv4 address of the active network interface. */
+    private fun getLocalIpAddress(): String? {
+        return try {
+            val interfaces = NetworkInterface.getNetworkInterfaces() ?: return null
+            while (interfaces.hasMoreElements()) {
+                val iface = interfaces.nextElement()
+                if (iface.isLoopback || !iface.isUp) continue
+                val addrs = iface.inetAddresses
+                while (addrs.hasMoreElements()) {
+                    val addr = addrs.nextElement()
+                    if (addr is Inet4Address && !addr.isLoopbackAddress) {
+                        return addr.hostAddress
+                    }
+                }
+            }
+            null
+        } catch (_: Exception) { null }
+    }
+
+    /** Builds a list of host octets (1-254) for a /24 subnet. */
+    private fun buildSubnetIpList(localIp: String): List<Int> {
+        return (1..254).toList()
+    }
+
+    /** Called when the user taps a DLNA server in the scan results list. */
+    private fun onDlnaServerSelected(server: DlnaServerInfo) {
+        selectedDlnaServer = server
+        // Auto-fill name with device's friendly name
+        etName.setText(server.friendlyName)
+        // Silently populate hidden host/port fields for buildShareFromFields()
+        etHost.setText(server.ip)
+        etPort.setText(if (server.port > 0) server.port.toString() else "")
+        // Show confirmation label
+        txtDlnaSelectedDevice.text = getString(R.string.dlna_selected_device, server.friendlyName, server.ip)
+        txtDlnaSelectedDevice.visibility = View.VISIBLE
+        // Invalidate any previous test result since the device changed
+        resetConnectionTested()
     }
 
     // ── Generic string-list RecyclerView adapter ──────────────────────────────
@@ -769,7 +1072,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             R.id.rbScp, R.id.chipScp   -> ShareType.SCP
             R.id.rbNfs, R.id.chipNfs   -> ShareType.NFS
             R.id.rbFtp, R.id.chipFtp   -> ShareType.FTP
-            R.id.chipDlna              -> ShareType.DLNA
+            R.id.rbDlna, R.id.chipDlna  -> ShareType.DLNA
             else                       -> ShareType.SMB
         }
 
@@ -805,6 +1108,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
             privateKeyPath = etPrivateKey.text?.toString()?.ifBlank { null },
             useKeychain = useKeychain,
             smbProtocol = smbProtocol,
+            dlnaUdn = selectedDlnaServer?.udn ?: existingShare?.dlnaUdn ?: "",
+            dlnaContentDirectoryUrl = selectedDlnaServer?.contentDirectoryUrl
+                ?: existingShare?.dlnaContentDirectoryUrl ?: "",
+            dlnaConnectionManagerUrl = selectedDlnaServer?.connectionManagerUrl
+                ?: existingShare?.dlnaConnectionManagerUrl ?: "",
             isCredentialsStripped = false
         )
     }

@@ -107,22 +107,26 @@ object DlnaSoapClient {
         return try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                Log.w(TAG, "browse: HTTP ${response.code} from $serviceUrl")
+                Log.w(TAG, "browse: HTTP ${response.code} from $serviceUrl (objectId=$objectId)")
                 response.close()
                 return emptyList()
             }
 
             val responseBody = response.body?.string() ?: ""
+            val bodyLen = responseBody.length
             response.close()
 
             if (responseBody.isEmpty()) {
-                Log.w(TAG, "browse: empty response body from $serviceUrl")
+                Log.w(TAG, "browse: empty response body from $serviceUrl (objectId=$objectId)")
                 return emptyList()
             }
 
-            parseBrowseResponse(responseBody)
+            Log.d(TAG, "browse: HTTP 200 from $serviceUrl, bodyLen=$bodyLen, objectId=$objectId")
+            val files = parseBrowseResponse(responseBody)
+            Log.d(TAG, "browse: parsed ${files.size} items from DIDL-Lite")
+            files
         } catch (e: IOException) {
-            Log.w(TAG, "browse: network error for $serviceUrl", e)
+            Log.w(TAG, "browse: network error for $serviceUrl (objectId=$objectId)", e)
             emptyList()
         }
     }
@@ -294,6 +298,14 @@ object DlnaSoapClient {
                 }
             }
 
+            // Diagnostic: dump what we found
+            if (files.isEmpty()) {
+                Log.w(TAG, "parseDidlLite: no containers or items found in DIDL-Lite (${didlXml.length} chars)")
+            } else {
+                val sample = files.take(10).joinToString(", ") { "${it.name}[${it.path}]" + if (it.isDirectory) "/" else " (${it.size}b)" }
+                Log.d(TAG, "parseDidlLite: ${files.size} items: $sample${if (files.size > 10) " ..." else ""}")
+            }
+
             files
         } catch (e: Exception) {
             Log.w(TAG, "parseDidlLite: failed to parse DIDL-Lite XML", e)
@@ -338,7 +350,7 @@ object DlnaSoapClient {
             return null
         }
 
-        val title = resolveChildText(element, "title") ?: "Unknown"
+        var title = resolveChildText(element, "title") ?: "Unknown"
 
         // Extract the <res> element for the media URL, size, etc.
         val resElement = findChildByLocalName(element, "res")
@@ -356,6 +368,35 @@ object DlnaSoapClient {
                     Log.w(TAG, "parseItemElement: invalid res@size '$sizeAttr' for item '$id'")
                 }
             }
+
+            // Many DLNA servers omit the file extension from dc:title and
+            // use opaque IDs in media URLs. Try the media URL first, then
+            // fall back to the MIME type from protocolInfo.
+            val titleExt = title.substringAfterLast('.', "")
+            var resolvedExt = ""
+            if (mediaUrl.isNotBlank()) {
+                val urlPath = try {
+                    java.net.URI(mediaUrl).path ?: ""
+                } catch (_: Exception) { "" }
+                val urlFile = urlPath.substringAfterLast('/').substringBefore('?')
+                resolvedExt = urlFile.substringAfterLast('.', "")
+            }
+            if (resolvedExt.isBlank() && resElement != null) {
+                // Extract MIME type from protocolInfo="http-get:*:video/mp4:..."
+                val protoInfo = resElement.getAttribute("protocolInfo")
+                if (protoInfo.isNotBlank()) {
+                    val parts = protoInfo.split(':')
+                    if (parts.size >= 3) {
+                        resolvedExt = mimeToExtension(parts[2])
+                    }
+                }
+            }
+            if (resolvedExt.isNotBlank() && !resolvedExt.equals(titleExt, ignoreCase = true)) {
+                title = "$title.$resolvedExt"
+            }
+            if (resolvedExt.isBlank()) {
+                Log.d(TAG, "parseItemElement: no extension resolved for '$title' (mediaUrl=$mediaUrl)")
+            }
         }
 
         // Cache the media URL for later retrieval
@@ -371,6 +412,43 @@ object DlnaSoapClient {
             lastModified = 0L,
             iconRes = 0
         )
+    }
+
+    // =================================================================
+    // MIME type → file extension
+    // =================================================================
+
+    /** Maps common MIME types to file extensions for DLNA items that omit them. */
+    private fun mimeToExtension(mimeType: String): String {
+        val mime = mimeType.lowercase().trim()
+        return when {
+            mime.startsWith("video/mp4") -> "mp4"
+            mime.startsWith("video/x-matroska") -> "mkv"
+            mime.startsWith("video/x-msvideo") -> "avi"
+            mime.startsWith("video/quicktime") -> "mov"
+            mime.startsWith("video/webm") -> "webm"
+            mime.startsWith("video/mpeg") || mime.startsWith("video/mpg") -> "mpg"
+            mime.startsWith("video/x-ms-wmv") -> "wmv"
+            mime.startsWith("video/x-flv") -> "flv"
+            mime.startsWith("video/3gpp") -> "3gp"
+            mime.startsWith("video/") -> "mp4"  // default video
+            mime.startsWith("audio/mpeg") -> "mp3"
+            mime.startsWith("audio/mp4") || mime.startsWith("audio/x-m4a") -> "m4a"
+            mime.startsWith("audio/flac") -> "flac"
+            mime.startsWith("audio/ogg") -> "ogg"
+            mime.startsWith("audio/wav") || mime.startsWith("audio/x-wav") -> "wav"
+            mime.startsWith("audio/aac") -> "aac"
+            mime.startsWith("audio/wma") -> "wma"
+            mime.startsWith("audio/") -> "mp3"  // default audio
+            mime.startsWith("image/jpeg") -> "jpg"
+            mime.startsWith("image/png") -> "png"
+            mime.startsWith("image/gif") -> "gif"
+            mime.startsWith("image/webp") -> "webp"
+            mime.startsWith("image/bmp") -> "bmp"
+            mime.startsWith("image/svg") -> "svg"
+            mime.startsWith("image/") -> "jpg"  // default image
+            else -> ""
+        }
     }
 
     // =================================================================

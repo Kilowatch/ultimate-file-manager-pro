@@ -270,27 +270,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            // Add discovered DLNA servers
-            val dlnaServers = za.kilowatch.ultimatefilemanager.network.DlnaDiscovery.getDiscoveredServers()
-            for (server in dlnaServers) {
-                storageItems.add(StorageItem(
-                    id = "dlna_${server.ip}:${server.port}",
-                    label = server.friendlyName,
-                    iconRes = R.drawable.ic_dlna,
-                    totalBytes = 0,
-                    usedBytes = 0,
-                    mountPath = "dlna://${server.ip}:${server.port}",
-                    isNetworkRoot = true,
-                    subtitle = server.ip,
-                    networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                        type = za.kilowatch.ultimatefilemanager.network.ShareType.DLNA,
-                        host = server.ip,
-                        port = server.port,
-                        name = server.friendlyName
-                    )
-                ))
-            }
-
             return storageItems
         }
 
@@ -2084,27 +2063,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                         )
                     ))
                 }
-            }
-
-            // Add discovered DLNA servers
-            val dlnaServers = za.kilowatch.ultimatefilemanager.network.DlnaDiscovery.getDiscoveredServers()
-            for (server in dlnaServers) {
-                storageItems.add(StorageItem(
-                    id = "dlna_${server.ip}:${server.port}",
-                    label = server.friendlyName,
-                    iconRes = R.drawable.ic_dlna,
-                    totalBytes = 0,
-                    usedBytes = 0,
-                    mountPath = "dlna://${server.ip}:${server.port}",
-                    isNetworkRoot = true,
-                    subtitle = server.ip,
-                    networkShare = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                        type = za.kilowatch.ultimatefilemanager.network.ShareType.DLNA,
-                        host = server.ip,
-                        port = server.port,
-                        name = server.friendlyName
-                    )
-                ))
             }
 
             // Apply custom drive names from Room DB

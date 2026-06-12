@@ -108,6 +108,9 @@ class NetworkShareRepository private constructor(private val context: Context) {
                         privateKeyPath = decryptOrPlain(o.optString("privateKeyPath", ""), "privateKeyPath").takeIf { it.isNotEmpty() },
                         useKeychain = useKeychain,
                         smbProtocol = normalizeProtocol(o.optString("smbProtocol", "AUTO")),
+                        dlnaUdn = o.optString("dlnaUdn", ""),
+                        dlnaContentDirectoryUrl = o.optString("dlnaContentDirectoryUrl", ""),
+                        dlnaConnectionManagerUrl = o.optString("dlnaConnectionManagerUrl", ""),
                         isCredentialsStripped = o.optBoolean("isCredentialsStripped", false)
                     )
                 )
@@ -146,6 +149,9 @@ class NetworkShareRepository private constructor(private val context: Context) {
                 
                 put("useKeychain", s.useKeychain)
                 put("smbProtocol", s.smbProtocol)
+                put("dlnaUdn", s.dlnaUdn)
+                put("dlnaContentDirectoryUrl", s.dlnaContentDirectoryUrl)
+                put("dlnaConnectionManagerUrl", s.dlnaConnectionManagerUrl)
                 put("isCredentialsStripped", s.isCredentialsStripped)
             })
         }

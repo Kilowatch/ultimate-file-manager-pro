@@ -22,6 +22,9 @@ data class NetworkShare(
     val privateKeyPath: String? = null,    // SFTP/SCP only
     val useKeychain: Boolean = false,      // SFTP/SCP: if true, password field is the encrypted passphrase
     val smbProtocol: String = "AUTO",      // "AUTO", "SMB2", "SMB3"
+    val dlnaUdn: String = "",              // Unique Device Name from UPnP description
+    val dlnaContentDirectoryUrl: String = "",  // Full SOAP URL for ContentDirectory service
+    val dlnaConnectionManagerUrl: String = "", // Full SOAP URL for ConnectionManager service
     val isCredentialsStripped: Boolean = false
 ) {
     val effectivePort: Int get() = when {

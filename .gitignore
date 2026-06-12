@@ -71,6 +71,7 @@ log.txt
 app_log.txt
 error.txt
 build_output.txt
+.kotlin/
 
 # ── Large Binary & Image Files (Not Source Code) ─────────────
 # Uncomment if you want to exclude large images from the repo:

@@ -59,6 +59,9 @@ class DlnaXmlParser {
         /** Maximum allowed entity reference nesting depth (defense-in-depth). */
         private const val MAX_ENTITY_EXPANSION_DEPTH = 5
 
+        /** Log the secure-processing-not-supported message only once per process. */
+        @Volatile private var secureProcessingLogged = false
+
         // -----------------------------------------------------------------
         // Secure parser factories
         // -----------------------------------------------------------------
@@ -76,7 +79,10 @@ class DlnaXmlParser {
             try {
                 dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true)
             } catch (e: ParserConfigurationException) {
-                Log.d(TAG, "FEATURE_SECURE_PROCESSING not supported on this platform")
+                if (!secureProcessingLogged) {
+                    secureProcessingLogged = true
+                    Log.d(TAG, "FEATURE_SECURE_PROCESSING not supported on this platform")
+                }
             }
             // Android's XML parser (Apache Harmony) does not support most
             // javax.xml feature URIs — wrap each call in try-catch.
@@ -99,7 +105,10 @@ class DlnaXmlParser {
             try {
                 spf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true)
             } catch (e: ParserConfigurationException) {
-                Log.d(TAG, "FEATURE_SECURE_PROCESSING not supported on this platform")
+                if (!secureProcessingLogged) {
+                    secureProcessingLogged = true
+                    Log.d(TAG, "FEATURE_SECURE_PROCESSING not supported on this platform")
+                }
             }
             try {
                 spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)

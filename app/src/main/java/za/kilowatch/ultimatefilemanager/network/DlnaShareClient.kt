@@ -54,8 +54,12 @@ object DlnaShareClient {
      *         contains the DLNA object ID of each child.
      */
     fun listFiles(share: NetworkShare, path: String): List<NetworkFile> {
+        val objectId = path.ifBlank { "0" }  // DLNA root container is "0", never blank
         val serviceUrl = buildContentDirectoryUrl(share)
-        return DlnaSoapClient.browse(serviceUrl, path, "BrowseDirectChildren", 0, 200)
+        Log.d(TAG, "listFiles: share=${share.name} host=${share.host}:${share.effectivePort} objectId=$objectId url=$serviceUrl")
+        val result = DlnaSoapClient.browse(serviceUrl, objectId, "BrowseDirectChildren", 0, 200)
+        Log.d(TAG, "listFiles: got ${result.size} items (containers=${result.count { it.isDirectory }}, files=${result.count { !it.isDirectory }})")
+        return result
     }
 
     /**
@@ -240,6 +244,9 @@ object DlnaShareClient {
      * Example: `http://192.168.1.100:8200/cds/control`
      */
     private fun buildContentDirectoryUrl(share: NetworkShare): String {
+        if (share.dlnaContentDirectoryUrl.isNotBlank()) {
+            return share.dlnaContentDirectoryUrl
+        }
         return "http://${share.host}:${share.effectivePort}/cds/control"
     }
 
@@ -249,6 +256,9 @@ object DlnaShareClient {
      * Example: `http://192.168.1.100:8200/cms/control`
      */
     private fun buildConnectionManagerUrl(share: NetworkShare): String {
+        if (share.dlnaConnectionManagerUrl.isNotBlank()) {
+            return share.dlnaConnectionManagerUrl
+        }
         return "http://${share.host}:${share.effectivePort}/cms/control"
     }
 }

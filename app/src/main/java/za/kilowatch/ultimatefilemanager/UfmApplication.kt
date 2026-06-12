@@ -5,6 +5,7 @@ import android.content.ComponentCallbacks2
 import android.util.Log
 import com.google.android.material.color.DynamicColors
 import za.kilowatch.ultimatefilemanager.network.AdbManager
+import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
 import za.kilowatch.ultimatefilemanager.network.PairingServer
 import za.kilowatch.ultimatefilemanager.network.SmbSessionPool
@@ -160,6 +161,16 @@ class UfmApplication : Application() {
                 Log.d(TAG, "File indexing system initialized")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize file indexing system", e)
+            }
+
+            // 1b. Initialize DLNA client discovery (SSDP engine + listener).
+            // Must be called before any DLNA scan; the SSDP multicast socket and
+            // listener thread are idle until a scan is requested, so this is cheap.
+            try {
+                DlnaDiscovery.initialize(this@UfmApplication)
+                Log.d(TAG, "DLNA client discovery initialized")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to initialize DLNA discovery", e)
             }
             
             // 2. Initialize Hidden Files Tracker

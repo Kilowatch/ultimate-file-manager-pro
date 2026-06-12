@@ -2242,6 +2242,7 @@
     <string name="dlna_manual_entry_hint">Server IP or hostname</string>
     <string name="dlna_url_rejected">URL blocked: points outside your local network</string>
     <string name="dlna_scan_network">Scan Network</string>
+    <string name="dlna_selected_device">Selected: %1$s (%2$s)</string>
     <string name="dlna_enter_ip_manually">Enter IP Manually</string>
     <string name="dlna_port_info">Port 8200 · Unencrypted media streaming</string>
 

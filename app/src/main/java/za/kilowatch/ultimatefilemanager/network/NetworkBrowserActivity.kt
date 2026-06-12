@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.os.Bundle
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -745,7 +746,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     if (share.type == ShareType.TV && initialRootPath == null) {
                         initialRootPath = file.path // Cache the first mount point we ever click
                     }
-                    currentPath = if (share.type == ShareType.TV) file.path else if (currentPath.isEmpty()) file.name else "$currentPath/${file.name}"
+                    currentPath = if (share.type == ShareType.TV || share.type == ShareType.DLNA) file.path else if (currentPath.isEmpty()) file.name else "$currentPath/${file.name}"
                     loadDirectory()
                 } else if (isPickerMode) {
                     downloadAndReturnFile(file)
@@ -1484,11 +1485,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun loadDirectory() {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
+        Log.d("NetBrowser", "loadDirectory: share=${share.name} type=${share.type} currentPath='$currentPath'")
         progressBar.visibility = View.VISIBLE
         recyclerFiles.visibility = View.GONE
         layoutEmpty.visibility = View.GONE
         if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
-        
+
         updateSubtitle()
         updateBreadcrumbs()
 

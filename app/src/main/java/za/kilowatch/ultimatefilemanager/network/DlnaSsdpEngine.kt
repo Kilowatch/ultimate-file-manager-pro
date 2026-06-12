@@ -107,13 +107,18 @@ object DlnaSsdpEngine {
                 Log.w(TAG, "Joined multicast group without specific network interface")
             }
 
+            // Use safe-cast: on WiFi-absent TV builds, WifiManager can be null.
             val wm = context.applicationContext.getSystemService(
                 Context.WIFI_SERVICE
-            ) as WifiManager
-            multicastLock = wm.createMulticastLock("UFMDlnaSsdpLock")
-            multicastLock?.setReferenceCounted(true)
-            multicastLock?.acquire()
-            Log.d(TAG, "MulticastLock acquired")
+            ) as? WifiManager
+            if (wm != null) {
+                multicastLock = wm.createMulticastLock("UFMDlnaSsdpLock")
+                multicastLock?.setReferenceCounted(true)
+                multicastLock?.acquire()
+                Log.d(TAG, "MulticastLock acquired")
+            } else {
+                Log.w(TAG, "WifiManager unavailable — MulticastLock not acquired (TV/Ethernet-only device)")
+            }
 
             running = true
             startListenerThread()
@@ -497,22 +502,41 @@ object DlnaSsdpEngine {
         if (bindAddress.isNotBlank()) {
             return InetAddress.getByName(bindAddress)
         }
-        // No specific IP provided — find the active Wi-Fi / LAN address.
+        // No specific IP provided — find the active LAN address.
         // InetAddress.getLocalHost() returns 127.0.0.1 on Android, which would
         // make the SSDP socket unreachable from other devices on the network.
+        // Prioritize Ethernet (eth*) over WiFi (wlan*) since TVs are often wired,
+        // following the same pattern as FileServerService.getDeviceIpAddress().
         try {
             val interfaces = NetworkInterface.getNetworkInterfaces() ?: return InetAddress.getLocalHost()
+            val candidates = mutableListOf<Pair<Int, InetAddress>>()
+
             while (interfaces.hasMoreElements()) {
                 val iface = interfaces.nextElement()
                 if (iface.isLoopback || !iface.isUp) continue
+                val name = iface.name.lowercase()
+
+                // Priority: eth* = 0, wlan* = 1, other = 2
+                val priority = when {
+                    name.startsWith("eth") -> 0
+                    name.startsWith("wlan") -> 1
+                    else -> 2
+                }
+
                 val addresses = iface.inetAddresses
                 while (addresses.hasMoreElements()) {
                     val addr = addresses.nextElement()
                     if (addr is Inet4Address && !addr.isLoopbackAddress) {
-                        Log.i(TAG, "Auto-detected bind address: ${addr.hostAddress} on ${iface.name}")
-                        return addr
+                        candidates.add(priority to addr)
                     }
                 }
+            }
+
+            candidates.sortBy { it.first }
+            val selected = candidates.firstOrNull()?.second
+            if (selected != null) {
+                Log.i(TAG, "Auto-detected bind address: ${selected.hostAddress}")
+                return selected
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to enumerate interfaces, falling back to localhost", e)
