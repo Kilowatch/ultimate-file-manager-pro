@@ -19,7 +19,7 @@ object NetworkThumbnailPreferenceManager {
 
     /** True if the user has enabled remote thumbnails. */
     fun isEnabled(context: Context): Boolean {
-        return prefs(context).getBoolean(KEY_ENABLED, false)
+        return prefs(context).getBoolean(KEY_ENABLED, true)
     }
 
     fun setEnabled(context: Context, enabled: Boolean) {

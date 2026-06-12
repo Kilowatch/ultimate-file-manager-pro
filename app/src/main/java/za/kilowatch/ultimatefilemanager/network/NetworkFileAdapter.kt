@@ -31,6 +31,7 @@ import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import coil3.load
 import coil3.asImage
 import coil3.request.crossfade
+import coil3.request.allowHardware
 import coil3.size.Scale
 
 class NetworkFileAdapter(
@@ -651,6 +652,7 @@ class NetworkFileAdapter(
 
                 coilDisposable = imgIcon.load(File(cachedPath)) {
                     crossfade(200)
+                    allowHardware(false)
                     placeholder(placeholderImage)
                     error(fileTypeImage ?: placeholderImage)
                     if (!isGridMode) {
@@ -702,6 +704,7 @@ class NetworkFileAdapter(
                         if (imgIcon.tag == file.path) {
                             coilDisposable = imgIcon.load(File(thumbnailPath)) {
                                 crossfade(200)
+                                allowHardware(false)
                                 placeholder(placeholderImage)
                                 error(fileTypeImage ?: placeholderImage)
                                 if (!isGridMode) {

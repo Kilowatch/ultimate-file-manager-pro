@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.asImage
 import coil3.load
 import coil3.request.Disposable
+import coil3.request.allowHardware
 import coil3.request.crossfade
 import coil3.size.Scale
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -716,6 +717,7 @@ class FileAdapter(
                 // Coil can decode images natively — fast path.
                 coilDisposable = imgIcon.load(file) {
                     crossfade(200)
+                    allowHardware(false)
                     scale(Scale.FILL)
                     placeholder(placeholderImage)
                     error(placeholderImage)
@@ -736,6 +738,7 @@ class FileAdapter(
                             if (drawable != null) {
                                 coilDisposable = imgIcon.load(drawable) {
                                     crossfade(150)
+                                    allowHardware(false)
                                 }
                             }
                         }
@@ -791,6 +794,7 @@ class FileAdapter(
                                     videoCache.put(file.absolutePath, bitmap)
                                     coilDisposable = imgIcon.load(bitmap) {
                                         crossfade(150)
+                                        allowHardware(false)
                                         scale(Scale.FILL)
                                     }
                                 }
@@ -910,6 +914,7 @@ class FileAdapter(
             if (isImage) {
                 coilDisposable = imgIcon.load(file) {
                     crossfade(150)
+                    allowHardware(false)
                     scale(Scale.FILL)
                     placeholder(placeholderImage)
                     error(placeholderImage)
@@ -936,6 +941,7 @@ class FileAdapter(
                             if (drawable != null) {
                                 coilDisposable = imgIcon.load(drawable) {
                                     crossfade(150)
+                                    allowHardware(false)
                                     listener(
                                         onSuccess = { _, _ ->
                                             updateTextColorForDrawable(imgIcon.drawable, true)
@@ -982,6 +988,7 @@ class FileAdapter(
                                     videoCache.put(file.absolutePath, bitmap)
                                     coilDisposable = imgIcon.load(bitmap) {
                                         crossfade(150)
+                                        allowHardware(false)
                                         scale(Scale.FILL)
                                         listener(
                                             onSuccess = { _, _ ->

@@ -3140,6 +3140,9 @@ URL diblokir: menunjuk ke luar jaringan lokal Anda
     <string name="dlna_scan_network">
 Pindai Jaringan
 </string>
+    <string name="dlna_selected_device">
+Dipilih: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 Masukkan IP Secara Manual
 </string>

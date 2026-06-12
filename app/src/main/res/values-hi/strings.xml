@@ -3140,6 +3140,9 @@ DLNA सर्वर खोज रहे हैं...
     <string name="dlna_scan_network">
 स्कैन नेटवर्क
 </string>
+    <string name="dlna_selected_device">
+चयनित: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 आईपी ​​मैन्युअल रूप से दर्ज करें
 </string>

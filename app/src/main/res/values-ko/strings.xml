@@ -3140,6 +3140,9 @@ DLNA 서버 검색 중…
     <string name="dlna_scan_network">
 네트워크 스캔
 </string>
+    <string name="dlna_selected_device">
+선택됨: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 IP를 수동으로 입력하세요
 </string>

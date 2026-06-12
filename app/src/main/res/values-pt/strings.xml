@@ -3140,6 +3140,9 @@ URL bloqueado: pontos fora da sua rede local
     <string name="dlna_scan_network">
 Digitalizar rede
 </string>
+    <string name="dlna_selected_device">
+Selecionado: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 Insira o IP manualmente
 </string>

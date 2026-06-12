@@ -3140,6 +3140,9 @@ URL engellendi: yerel ağınızın dışına işaret ediyor
     <string name="dlna_scan_network">
 Ağı Tara
 </string>
+    <string name="dlna_selected_device">
+Seçilen: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 IP\'yi Manuel Olarak Girin
 </string>

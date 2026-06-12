@@ -3140,6 +3140,9 @@ URL-адрес заблокирован: точки за пределами ва
     <string name="dlna_scan_network">
 Сканировать сеть
 </string>
+    <string name="dlna_selected_device">
+Выбрано: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 Введите IP вручную
 </string>

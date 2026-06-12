@@ -3140,6 +3140,9 @@ URL がブロックされました: ローカル ネットワーク外のポイ�
     <string name="dlna_scan_network">
 スキャンネットワーク
 </string>
+    <string name="dlna_selected_device">
+選択済み: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 IPを手動で入力する
 </string>

@@ -3138,6 +3138,9 @@ DLNA غير مشفر — يُستخدم فقط على الشبكات الموث�
     <string name="dlna_scan_network">
 شبكة المسح
 </string>
+    <string name="dlna_selected_device">
+تم التحديد: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 أدخل IP يدويا
 </string>

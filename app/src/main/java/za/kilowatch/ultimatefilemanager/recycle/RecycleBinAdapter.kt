@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil3.asImage
 import coil3.load
 import coil3.request.crossfade
+import coil3.request.allowHardware
 import coil3.size.Scale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -202,6 +203,7 @@ class RecycleBinAdapter(
                             imgFileIcon.scaleType = ImageView.ScaleType.CENTER_CROP
                             imgFileIcon.load(file) {
                                 crossfade(200)
+                                allowHardware(false)
                                 scale(Scale.FILL)
                                 placeholder(placeholderImage)
                                 error(placeholderImage)
@@ -220,6 +222,7 @@ class RecycleBinAdapter(
                                         imgFileIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
                                         imgFileIcon.load(drawable) {
                                             crossfade(150)
+                                            allowHardware(false)
                                         }
                                     }
                                 }
@@ -268,6 +271,7 @@ class RecycleBinAdapter(
                                             )?.asImage()
                                             imgFileIcon.load(File(localPath)) {
                                                 crossfade(200)
+                                                allowHardware(false)
                                                 scale(Scale.FILL)
                                                 placeholder(ph)
                                                 error(ph)

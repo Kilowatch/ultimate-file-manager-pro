@@ -3140,6 +3140,9 @@ URL blockiert: Punkte außerhalb Ihres lokalen Netzwerks
     <string name="dlna_scan_network">
 Netzwerk scannen
 </string>
+    <string name="dlna_selected_device">
+Ausgewählt: %1$s (%2$s)
+</string>
     <string name="dlna_enter_ip_manually">
 Geben Sie die IP manuell ein
 </string>
