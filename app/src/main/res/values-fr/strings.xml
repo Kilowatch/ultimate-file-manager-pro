@@ -143,6 +143,15 @@ Activé : lire dans le volet
     <string name="settings_side_by_side_video_subtitle_off">
 Désactivé – plein écran
 </string>
+    <string name="settings_autoplay_next_title">
+Lecture automatique suivante dans UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Activé : lit automatiquement le fichier suivant
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Désactivé : s\'arrête à la fin du fichier
+</string>
     <string name="settings_breadcrumbs_title">
 Fil d\'Ariane du chemin
 </string>

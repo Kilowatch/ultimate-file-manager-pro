@@ -143,6 +143,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 無効 — 全画面表示
 </string>
+    <string name="settings_autoplay_next_title">
+UFM プレーヤーで次の自動再生
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+有効 — 次のファイルを自動的に再生します
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+無効 — ファイルの終わりで停止します
+</string>
     <string name="settings_breadcrumbs_title">
 パスのブレッドクラム
 </string>

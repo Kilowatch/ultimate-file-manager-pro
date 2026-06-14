@@ -143,6 +143,15 @@ Ativado – reproduzir no painel
     <string name="settings_side_by_side_video_subtitle_off">
 Desativado – tela cheia
 </string>
+    <string name="settings_autoplay_next_title">
+Reprodução automática a seguir no UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Ativado – reproduz automaticamente o próximo arquivo
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Desativado – para no final do arquivo
+</string>
     <string name="settings_breadcrumbs_title">
 Pão ralado do caminho
 </string>

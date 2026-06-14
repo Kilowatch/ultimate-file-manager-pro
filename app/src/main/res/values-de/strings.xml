@@ -143,6 +143,15 @@ Aktiviert – Im Bereich abspielen
     <string name="settings_side_by_side_video_subtitle_off">
 Deaktiviert – Vollbild
 </string>
+    <string name="settings_autoplay_next_title">
+Als nächstes automatisch im UFM Player abspielen
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Aktiviert – spielt automatisch die nächste Datei ab
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Deaktiviert – stoppt am Ende der Datei
+</string>
     <string name="settings_breadcrumbs_title">
 Pfad-Brotkrumen
 </string>

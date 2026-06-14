@@ -143,6 +143,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 معطل - ملء الشاشة
 </string>
+    <string name="settings_autoplay_next_title">
+التشغيل التلقائي بعد ذلك في UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+ممكّن — يقوم بتشغيل الملف التالي تلقائيًا
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+معطل — يتوقف عند نهاية الملف
+</string>
     <string name="settings_breadcrumbs_title">
 مسارات التنقل
 </string>

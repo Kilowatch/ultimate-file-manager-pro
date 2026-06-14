@@ -143,6 +143,15 @@ Habilitado: reproducir en el panel
     <string name="settings_side_by_side_video_subtitle_off">
 Desactivado: pantalla completa
 </string>
+    <string name="settings_autoplay_next_title">
+Reproducción automática a continuación en UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Habilitado: reproduce automáticamente el siguiente archivo
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Deshabilitado: se detiene al final del archivo
+</string>
     <string name="settings_breadcrumbs_title">
 Migas de ruta
 </string>

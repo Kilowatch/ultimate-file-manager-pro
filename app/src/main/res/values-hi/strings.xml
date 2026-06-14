@@ -143,6 +143,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 अक्षम - पूर्ण स्क्रीन
 </string>
+    <string name="settings_autoplay_next_title">
+UFM प्लेयर में अगला ऑटो-प्ले
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+सक्षम - स्वचालित रूप से अगली फ़ाइल चलाता है
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+अक्षम - फ़ाइल के अंत में रुक जाता है
+</string>
     <string name="settings_breadcrumbs_title">
 पथ ब्रेडक्रम्ब्स
 </string>

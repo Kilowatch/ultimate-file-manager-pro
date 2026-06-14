@@ -143,6 +143,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 비활성화됨 - 전체 화면
 </string>
+    <string name="settings_autoplay_next_title">
+UFM 플레이어에서 다음 자동 재생
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+활성화됨 — 자동으로 다음 파일을 재생합니다.
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+비활성화됨 - 파일 끝에서 중지됩니다.
+</string>
     <string name="settings_breadcrumbs_title">
 경로 이동 경로
 </string>

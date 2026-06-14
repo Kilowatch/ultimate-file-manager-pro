@@ -143,6 +143,15 @@ Etkin — bölmede oynat
     <string name="settings_side_by_side_video_subtitle_off">
 Devre dışı — tam ekran
 </string>
+    <string name="settings_autoplay_next_title">
+UFM Player\'da sonraki otomatik oynatma
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Etkin — sonraki dosyayı otomatik olarak oynatır
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Devre Dışı — dosyanın sonunda durur
+</string>
     <string name="settings_breadcrumbs_title">
 Yol İçerik Kırıntıları
 </string>

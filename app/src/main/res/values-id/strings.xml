@@ -143,6 +143,15 @@ Diaktifkan — putar di panel
     <string name="settings_side_by_side_video_subtitle_off">
 Dinonaktifkan — layar penuh
 </string>
+    <string name="settings_autoplay_next_title">
+Putar otomatis berikutnya di UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Diaktifkan — secara otomatis memutar file berikutnya
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Disabled (Dinonaktifkan) — berhenti di akhir file
+</string>
     <string name="settings_breadcrumbs_title">
 Remah Roti Jalur
 </string>

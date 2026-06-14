@@ -143,6 +143,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 Отключено — полноэкранный режим
 </string>
+    <string name="settings_autoplay_next_title">
+Следующее автоматическое воспроизведение в UFM Player
+</string>
+    <string name="settings_autoplay_next_subtitle_on">
+Включено — автоматически воспроизводит следующий файл.
+</string>
+    <string name="settings_autoplay_next_subtitle_off">
+Отключено — остановка в конце файла.
+</string>
     <string name="settings_breadcrumbs_title">
 Хлебные крошки пути
 </string>
