@@ -55,6 +55,9 @@ class SettingsActivity : AppCompatActivity() {
     private var switchSideBySideVideo: SwitchMaterial? = null
     private var txtSideBySideVideoSubtitle: TextView? = null
 
+    private var switchAutoplayNext: SwitchMaterial? = null
+    private var txtAutoplayNextSubtitle: TextView? = null
+
     private var switchBreadcrumbs: SwitchMaterial? = null
     private var txtBreadcrumbsSubtitle: TextView? = null
 
@@ -252,6 +255,20 @@ class SettingsActivity : AppCompatActivity() {
             switchSideBySideVideo?.setOnCheckedChangeListener(null)
         }
 
+        // Auto-play Next File toggle
+        val cardAutoplayNext = findViewById<MaterialCardView?>(R.id.cardAutoplayNext)
+        if (cardAutoplayNext != null) {
+            switchAutoplayNext = findViewById(R.id.switchAutoplayNext)
+            txtAutoplayNextSubtitle = findViewById(R.id.txtAutoplayNextSubtitle)
+
+            val autoplayEnabled = AutoplayPreferenceManager.isEnabled(this)
+            switchAutoplayNext?.isChecked = autoplayEnabled
+            updateAutoplayNextSubtitle(autoplayEnabled)
+
+            cardAutoplayNext.setOnClickListener { toggleAutoplayNext() }
+            switchAutoplayNext?.setOnCheckedChangeListener(null)
+        }
+
         // Breadcrumbs toggle (mobile only)
         val cardBreadcrumbs = findViewById<MaterialCardView?>(R.id.cardBreadcrumbs)
         if (cardBreadcrumbs != null) {
@@ -370,6 +387,7 @@ class SettingsActivity : AppCompatActivity() {
             cardTwinWindowLayout?.let { setupTvCardFocus(it) }
             cardTwinWindowStartup?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
             setupTvCardFocus(cardDefaultApps)
@@ -529,6 +547,13 @@ class SettingsActivity : AppCompatActivity() {
             val enabled = SideBySideVideoPreferenceManager.isEnabled(this)
             sw.isChecked = enabled
             updateSideBySideVideoSubtitle(enabled)
+        }
+
+        // Refresh Auto-play Next subtitle
+        switchAutoplayNext?.let { sw ->
+            val enabled = AutoplayPreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateAutoplayNextSubtitle(enabled)
         }
 
         // Refresh Breadcrumbs subtitle
@@ -789,6 +814,22 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun toggleAutoplayNext() {
+        val sw = switchAutoplayNext ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        AutoplayPreferenceManager.setEnabled(this, newValue)
+        updateAutoplayNextSubtitle(newValue)
+    }
+
+    private fun updateAutoplayNextSubtitle(enabled: Boolean) {
+        txtAutoplayNextSubtitle?.text = if (enabled) {
+            getString(R.string.settings_autoplay_next_subtitle_on)
+        } else {
+            getString(R.string.settings_autoplay_next_subtitle_off)
+        }
+    }
+
     private fun toggleBreadcrumbs() {
         val sw = switchBreadcrumbs ?: return
         val newValue = !sw.isChecked
@@ -898,6 +939,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardQuickTransfer, "settings_quick_transfer", R.drawable.ic_copy),
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
+            CardIcon(R.id.cardAutoplayNext, "settings_autoplay_next", R.drawable.ic_play),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list)

@@ -55,6 +55,7 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.Util
 import androidx.media3.ui.SubtitleView
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.AutoplayPreferenceManager
 import java.util.Locale
 
 class UFMPlayerActivity : Activity() {
@@ -114,7 +115,13 @@ class UFMPlayerActivity : Activity() {
 
             if (state == Player.STATE_ENDED) {
                 handler.post {
-                    if (isRepeat) playCurrent() else playNext()
+                    if (isRepeat) {
+                        playCurrent()
+                    } else if (AutoplayPreferenceManager.isEnabled(this@UFMPlayerActivity)) {
+                        playNext()
+                    } else {
+                        finish()
+                    }
                 }
             }
             updatePlayPauseIcon()
