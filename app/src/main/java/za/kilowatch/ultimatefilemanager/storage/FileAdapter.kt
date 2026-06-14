@@ -515,7 +515,7 @@ class FileAdapter(
             if (file.isDirectory) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                 val tintColor = if (isTv) {
-                    ContextCompat.getColor(context, R.color.tv_accent)
+                    DefaultIconColorManager.getTvIconTint(context)
                 } else {
                     DefaultIconColorManager.getMobileIconTint(context)
                 }
@@ -566,7 +566,7 @@ class FileAdapter(
                     iconContainer?.setBackgroundResource(0)
                     imgIcon.setImageResource(FileTypeIconProvider.iconForFile(itemView.context, file))
                     val tintColor = if (isTv) {
-                        ContextCompat.getColor(context, R.color.tv_accent)
+                        DefaultIconColorManager.getTvIconTint(context)
                     } else {
                         DefaultIconColorManager.getMobileIconTint(context)
                     }
@@ -664,7 +664,7 @@ class FileAdapter(
                 val white     = ctx.getColor(R.color.tv_text_primary)
                 val secondary = ctx.getColor(R.color.tv_text_secondary)
                 val hint      = ctx.getColor(R.color.tv_text_hint)
-                val accent    = ctx.getColor(R.color.tv_accent)
+                val accent    = DefaultIconColorManager.getTvIconTint(ctx)
                 val blackCsl  = android.content.res.ColorStateList.valueOf(black)
                 val accentCsl = android.content.res.ColorStateList.valueOf(accent)
 

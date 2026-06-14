@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -103,6 +104,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:focusable="false"
+                android:clickable="false"
+                android:focusableInTouchMode="false"
                 app:cardBackgroundColor="@color/tv_glass_white_10"
                 app:cardCornerRadius="@dimen/card_radius_lg"
                 app:cardElevation="0dp"

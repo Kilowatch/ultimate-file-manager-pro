@@ -458,7 +458,8 @@ class NetworkFileAdapter(
             } else if (file.isDirectory) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                 if (!isGrid) {
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(DefaultIconColorManager.getMobileIconTint(context))
+                    val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                     // Show disk usage bar if the directory has storage info (TV drive entries)
                     if (file.freeSpace >= 0 && file.size > 0) {
                         val usedBytes = file.size - file.freeSpace
@@ -504,7 +505,8 @@ class NetworkFileAdapter(
             } else {
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
                 if (!isGrid) {
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(DefaultIconColorManager.getMobileIconTint(context)) // Standard file gray
+                    val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor) // Standard file gray
                     val sizeStr = Formatter.formatFileSize(context, file.size)
                     val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
                     txtDetails.text = if (dateStr.isNotEmpty()) "$sizeStr • $dateStr" else sizeStr
@@ -542,7 +544,7 @@ class NetworkFileAdapter(
                 val white     = ctx.getColor(R.color.tv_text_primary)
                 val secondary = ctx.getColor(R.color.tv_text_secondary)
                 val hint      = ctx.getColor(R.color.tv_text_hint)
-                val accent    = ctx.getColor(R.color.tv_accent)
+                val accent    = DefaultIconColorManager.getTvIconTint(ctx)
                 val blackCsl  = android.content.res.ColorStateList.valueOf(black)
                 val accentCsl = android.content.res.ColorStateList.valueOf(accent)
 
@@ -727,7 +729,7 @@ class NetworkFileAdapter(
                         imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
                         if (!isGridMode) {
                             imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                                DefaultIconColorManager.getMobileIconTint(context)
+                                if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                             )
                             imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                         } else {
@@ -741,7 +743,7 @@ class NetworkFileAdapter(
                     if (isActive) {
                         imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ext))
                         imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(
-                            DefaultIconColorManager.getMobileIconTint(context)
+                            if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                         )
                         imgIcon.scaleType = ImageView.ScaleType.FIT_CENTER
                     }

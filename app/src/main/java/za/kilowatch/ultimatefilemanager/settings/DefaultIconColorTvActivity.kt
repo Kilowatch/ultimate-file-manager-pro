@@ -2,8 +2,10 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +15,10 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -47,17 +51,43 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: ThemeSectionAdapter
 
+    private var selectedThemeForPreview: Int = ThemeHelper.THEME_DARK
+
+    private val tvPresetColors = intArrayOf(
+        0xFF000000.toInt(), 0xFFFFFFFF.toInt(), 0xFF7DAECC.toInt(), 0xFFE8C98A.toInt(),
+        0xFF1C2B3A.toInt(), 0xFFE53935.toInt(), 0xFF1E88E5.toInt(), 0xFF757575.toInt()
+    )
+
+    // Dialog state variables
+    private var activeDialog: android.app.AlertDialog? = null
+    private var activeDialogData: SectionData? = null
+    private var activeDialogTempColor: Int = 0
+    private var activeDialogPreview: View? = null
+    private var activeDialogHexLabel: TextView? = null
+
     // Launcher for TvColorPickerActivity
     private var pendingSection: Int = ThemeHelper.THEME_DARK
     private val colorPickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
-            val color = result.data?.getIntExtra(TvColorPickerActivity.EXTRA_COLOR, -1) ?: -1
-            if (color != -1) {
-                setSectionColor(pendingSection, color)
-                adapter.notifyDataSetChanged()
-                updatePreview()
+            val data = result.data
+            if (data != null && data.hasExtra(TvColorPickerActivity.EXTRA_COLOR)) {
+                val color = data.getIntExtra(TvColorPickerActivity.EXTRA_COLOR, Color.WHITE)
+                val dialog = activeDialog
+                if (dialog != null && dialog.isShowing) {
+                    activeDialogTempColor = color
+                    val d = GradientDrawable()
+                    d.shape = GradientDrawable.OVAL
+                    d.setColor(color)
+                    activeDialogPreview?.background = d
+                    activeDialogHexLabel?.text = "#%06X".format(0xFFFFFF and color)
+                    (dialog.findViewById<RecyclerView>(R.id.dialogPresetsGrid)?.adapter as? DialogPresetsAdapter)?.updateSelected(color)
+                } else {
+                    setSectionColor(pendingSection, color)
+                    adapter.notifyDataSetChanged()
+                    updatePreview()
+                }
             }
         }
     }
@@ -88,6 +118,9 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
 
         tvPreviewIcon = findViewById(R.id.tvPreviewIcon)
         tvPreviewHex  = findViewById(R.id.tvPreviewHex)
+
+        // Set default preview theme to match current active app theme
+        selectedThemeForPreview = ThemeHelper.getSavedTheme(this)
 
         // RecyclerView with 3 theme sections
         recycler = findViewById(R.id.recyclerThemeSections)
@@ -125,8 +158,7 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
     // ── Preview ─────────────────────────────────────────────────────────────
 
     private fun updatePreview() {
-        val theme = ThemeHelper.getSavedTheme(this)
-        val color = sectionColor(theme)
+        val color = sectionColor(selectedThemeForPreview)
         tvPreviewIcon.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
         tvPreviewHex.text = "#%06X".format(0xFFFFFF and color)
     }
@@ -148,7 +180,95 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
         }
     }
 
-    // ── Adapter ─────────────────────────────────────────────────────────────
+    // ── Dialog Creation ─────────────────────────────────────────────────────
+
+    private fun showColorDialog(data: SectionData) {
+        activeDialogData = data
+        activeDialogTempColor = sectionColor(data.section)
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_default_icon_color_tv, null)
+        val dialogTitle = dialogView.findViewById<TextView>(R.id.dialogTitle)
+        activeDialogPreview = dialogView.findViewById(R.id.dialogSelectedColorPreview)
+        activeDialogHexLabel = dialogView.findViewById(R.id.dialogSelectedColorHex)
+        val recyclerPresets = dialogView.findViewById<RecyclerView>(R.id.dialogPresetsGrid)
+        val btnCustom = dialogView.findViewById<View>(R.id.dialogBtnCustom)
+        val btnReset = dialogView.findViewById<View>(R.id.dialogBtnReset)
+        val btnCancel = dialogView.findViewById<View>(R.id.dialogBtnCancel)
+        val btnApply = dialogView.findViewById<View>(R.id.dialogBtnApply)
+
+        dialogTitle.text = getString(data.titleRes) + " Theme Icon Color"
+
+        fun updateDialogPreview() {
+            val d = GradientDrawable()
+            d.shape = GradientDrawable.OVAL
+            d.setColor(activeDialogTempColor)
+            activeDialogPreview?.background = d
+            activeDialogHexLabel?.text = "#%06X".format(0xFFFFFF and activeDialogTempColor)
+        }
+
+        updateDialogPreview()
+
+        // Setup presets grid
+        recyclerPresets.layoutManager = GridLayoutManager(this, 4)
+        val presetsAdapter = DialogPresetsAdapter(
+            presets = tvPresetColors.toList(),
+            initialSelected = activeDialogTempColor,
+            onSelected = { color ->
+                activeDialogTempColor = color
+                updateDialogPreview()
+            }
+        )
+        recyclerPresets.adapter = presetsAdapter
+
+        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
+            .setView(dialogView)
+            .create()
+
+        dialog.setOnDismissListener {
+            activeDialog = null
+            activeDialogData = null
+        }
+
+        activeDialog = dialog
+
+        // Custom button clicks to open TvColorPickerActivity
+        btnCustom.setOnClickListener {
+            pendingSection = data.section
+            val intent = TvColorPickerActivity.createIntent(this, activeDialogTempColor)
+            colorPickerLauncher.launch(intent)
+        }
+
+        // Reset button
+        btnReset.setOnClickListener {
+            activeDialogTempColor = data.defaultColor
+            updateDialogPreview()
+            presetsAdapter.updateSelected(activeDialogTempColor)
+        }
+
+        // Cancel button
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+            activeDialog = null
+            activeDialogData = null
+        }
+
+        // Apply button
+        btnApply.setOnClickListener {
+            setSectionColor(data.section, activeDialogTempColor)
+            adapter.notifyDataSetChanged()
+            updatePreview()
+            dialog.dismiss()
+            activeDialog = null
+            activeDialogData = null
+        }
+
+        dialog.show()
+        btnCancel.post {
+            btnCancel.requestFocus()
+        }
+    }
+
+    // ── Theme Section Adapter ───────────────────────────────────────────────
 
     private inner class ThemeSectionAdapter : RecyclerView.Adapter<ThemeSectionAdapter.ViewHolder>() {
 
@@ -156,11 +276,6 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
             SectionData(ThemeHelper.THEME_LIGHT,  R.string.default_icon_color_section_light,  DefaultIconColorManager.DEFAULT_LIGHT),
             SectionData(ThemeHelper.THEME_DARK,   R.string.default_icon_color_section_dark,   DefaultIconColorManager.DEFAULT_DARK),
             SectionData(ThemeHelper.THEME_AMOLED, R.string.default_icon_color_section_amoled, DefaultIconColorManager.DEFAULT_AMOLED)
-        )
-
-        private val tvPresetColors = intArrayOf(
-            0xFF000000.toInt(), 0xFFFFFFFF.toInt(), 0xFF7DAECC.toInt(), 0xFFE8C98A.toInt(),
-            0xFF1C2B3A.toInt(), 0xFFE53935.toInt(), 0xFF1E88E5.toInt(), 0xFF757575.toInt()
         )
 
         override fun getItemCount() = sections.size
@@ -180,63 +295,108 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
             private val card: MaterialCardView = itemView as MaterialCardView
             private val txtTitle: TextView = itemView.findViewById(R.id.txtSectionTitle)
             private val swatchCurrent: View = itemView.findViewById(R.id.swatchSectionCurrent)
-            private val presetsContainer: ViewGroup = itemView.findViewById(R.id.presetsSection)
-            private val btnCustom: TextView = itemView.findViewById(R.id.btnSectionCustom)
-            private val btnReset: TextView = itemView.findViewById(R.id.btnSectionReset)
+            private val txtSubtitle: TextView = itemView.findViewById(R.id.txtSectionSubtitle)
 
             fun bind(data: SectionData) {
                 val ctx = itemView.context
                 val currentColor = sectionColor(data.section)
 
                 txtTitle.setText(data.titleRes)
-                swatchCurrent.setBackgroundColor(currentColor)
 
-                // Presets
-                for (i in 0 until presetsContainer.childCount.coerceAtMost(tvPresetColors.size)) {
-                    val presetView = presetsContainer.getChildAt(i)
-                    val color = tvPresetColors[i]
-                    presetView?.setBackgroundColor(color)
-                    presetView?.setOnClickListener {
-                        setSectionColor(data.section, color)
-                        swatchCurrent.setBackgroundColor(color)
+                // Current swatch
+                val d = GradientDrawable()
+                d.shape = GradientDrawable.OVAL
+                d.setColor(currentColor)
+                swatchCurrent.background = d
+
+                // Subtitle showing state
+                val isDefault = currentColor == data.defaultColor
+                txtSubtitle.text = if (isDefault) {
+                    ctx.getString(R.string.default_icon_color_uses_default)
+                } else {
+                    "#%06X".format(0xFFFFFF and currentColor)
+                }
+
+                // Focus updates the preview on the right
+                card.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        selectedThemeForPreview = data.section
                         updatePreview()
                     }
                 }
 
-                // Custom → TvColorPickerActivity
-                btnCustom.setOnClickListener {
-                    pendingSection = data.section
-                    val intent = Intent(ctx, TvColorPickerActivity::class.java)
-                    intent.putExtra(TvColorPickerActivity.EXTRA_COLOR, currentColor)
-                    colorPickerLauncher.launch(intent)
+                // Click opens dialog customization popup
+                card.setOnClickListener {
+                    showColorDialog(data)
                 }
+            }
+        }
+    }
 
-                // Reset
-                btnReset.setOnClickListener {
-                    setSectionColor(data.section, data.defaultColor)
-                    swatchCurrent.setBackgroundColor(data.defaultColor)
-                    updatePreview()
-                }
+    // ── Dialog Presets Adapter ──────────────────────────────────────────────
 
-                // TV D-pad focus
-                val yellowFill  = ctx.getColor(R.color.tv_button_focused_yellow)
-                val blackText   = ctx.getColor(R.color.tv_button_focused_yellow_text)
-                val glassColor  = ctx.getColor(R.color.tv_glass_white_10)
-                val primaryText = ctx.getColor(R.color.tv_text_primary)
-                val secondText  = ctx.getColor(R.color.tv_text_secondary)
+    private class DialogPresetsAdapter(
+        private val presets: List<Int>,
+        initialSelected: Int,
+        private val onSelected: (Int) -> Unit
+    ) : RecyclerView.Adapter<DialogPresetsAdapter.VH>() {
 
-                card.setOnFocusChangeListener { _, hasFocus ->
+        private var selectedColor: Int = initialSelected
+
+        fun updateSelected(newColor: Int) {
+            val oldPos = presets.indexOf(selectedColor)
+            val newPos = presets.indexOf(newColor)
+            selectedColor = newColor
+            if (oldPos >= 0) notifyItemChanged(oldPos)
+            if (newPos >= 0) notifyItemChanged(newPos)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val v = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_color_swatch_tv, parent, false)
+            return VH(v)
+        }
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            holder.bind(presets[position])
+        }
+
+        override fun getItemCount() = presets.size
+
+        inner class VH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            private val swatch: View = itemView.findViewById(R.id.swatchColor)
+            private val check: View = itemView.findViewById(R.id.swatchCheck)
+
+            fun bind(color: Int) {
+                val ctx     = swatch.context
+                val density = ctx.resources.displayMetrics.density
+
+                val fill = GradientDrawable()
+                fill.shape = GradientDrawable.RECTANGLE
+                fill.cornerRadius = 6f
+                fill.setColor(color)
+                swatch.background = fill
+
+                check.visibility = if (color == selectedColor) View.VISIBLE else View.GONE
+
+                fun applyFocusRing(hasFocus: Boolean) {
                     if (hasFocus) {
-                        card.setCardBackgroundColor(yellowFill)
-                        txtTitle.setTextColor(blackText)
-                        btnCustom.setTextColor(blackText)
-                        btnReset.setTextColor(blackText)
+                        val ring = GradientDrawable()
+                        ring.shape = GradientDrawable.RECTANGLE
+                        ring.cornerRadius = 10f
+                        ring.setColor(Color.TRANSPARENT)
+                        ring.setStroke((3 * density).toInt(), ContextCompat.getColor(ctx, R.color.tv_accent))
+                        itemView.foreground = ring
                     } else {
-                        card.setCardBackgroundColor(glassColor)
-                        txtTitle.setTextColor(primaryText)
-                        btnCustom.setTextColor(ctx.getColor(R.color.tv_accent))
-                        btnReset.setTextColor(secondText)
+                        itemView.foreground = null
                     }
+                }
+                itemView.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> applyFocusRing(hasFocus) }
+                applyFocusRing(itemView.hasFocus())
+
+                itemView.setOnClickListener {
+                    updateSelected(color)
+                    onSelected(color)
                 }
             }
         }

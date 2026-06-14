@@ -3,29 +3,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
+    android:layout_height="88dp"
+    android:layout_marginBottom="12dp"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="false"
-    app:cardBackgroundColor="@color/tv_glass_white_10"
+    android:foreground="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="@dimen/card_radius_lg"
     app:cardElevation="0dp"
-    app:strokeWidth="0dp">
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/tv_glass_border">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:background="@drawable/bg_glass_card">
 
-        <!-- Header: Theme name + swatch + Reset -->
+        <!-- Theme Color Swatch Preview (on the left) -->
+        <View
+            android:id="@+id/swatchSectionCurrent"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_color_swatch" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="14dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtSectionTitle"
@@ -35,55 +45,21 @@
                 android:textSize="20sp"
                 android:fontFamily="sans-serif-medium" />
 
-            <View
-                android:id="@+id/swatchSectionCurrent"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/bg_color_swatch" />
-
-            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
-
             <TextView
-                android:id="@+id/btnSectionReset"
+                android:id="@+id/txtSectionSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/default_icon_color_reset"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true" />
+                android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Preset swatches row -->
-        <LinearLayout
-            android:id="@+id/presetsSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="10dp">
-
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-            <View android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_color_swatch" android:layout_marginHorizontal="4dp" />
-        </LinearLayout>
-
-        <!-- Custom button -->
-        <TextView
-            android:id="@+id/btnSectionCustom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/default_icon_color_custom"
-            android:textColor="@color/tv_accent"
-            android:textSize="15sp"
-            android:clickable="true"
-            android:focusable="true" />
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_down"
+            android:rotation="-90"
+            app:tint="@color/tv_text_secondary"
+            android:contentDescription="@null" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
