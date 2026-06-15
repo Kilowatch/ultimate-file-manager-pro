@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Create / Edit Custom Tile dialog — TV layout.
+    Full-screen dialog with D-pad navigable fields.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_tv_gradient">
+
+    <TextView
+        android:id="@+id/txtDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/custom_tile_create_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="28sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Icon picker row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="20dp">
+
+        <ImageView
+            android:id="@+id/imgCustomTileIcon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_folder"
+            android:background="@drawable/selector_tv_button_yellow"
+            app:tint="@color/selector_tv_button_text"
+            android:contentDescription="@string/tile_icon_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/custom_tile_icon_hint"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Title input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/custom_tile_title_hint"
+        app:counterEnabled="true"
+        app:counterMaxLength="50">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtCustomTileTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="50"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textColor="@color/tv_text_primary" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Subtitle input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:hint="@string/custom_tile_subtitle_hint"
+        app:counterEnabled="true"
+        app:counterMaxLength="80">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtCustomTileSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textColor="@color/tv_text_primary" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Buttons row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="56dp"
+            android:text="@string/cancel"
+            android:textColor="@color/selector_tv_button_text"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            app:backgroundTint="@color/tv_text_hint"
+            app:cornerRadius="16dp"
+            android:layout_marginEnd="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="56dp"
+            android:text="@string/save"
+            android:textColor="@color/selector_tv_button_text"
+            android:fontFamily="sans-serif-black"
+            android:textSize="18sp"
+            app:backgroundTint="@color/selector_tv_button_yellow"
+            app:cornerRadius="16dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -36,16 +36,18 @@ class ImportDetailsAdapter(
         allItems.addAll(details.ftpProfiles)
         allItems.addAll(details.renames)
         allItems.addAll(details.smartSortConfigs)
+        allItems.addAll(details.customTiles)
 
         val grouped = allItems.groupBy { it.category }
-        
+
         val categoryOrder = listOf(
             "shared_preferences",
             "network_shares",
             "online_storages",
             "ftp_server_profiles",
             "storage_renames",
-            "smart_sort_configs"
+            "smart_sort_configs",
+            "custom_tiles"
         )
 
         for (cat in categoryOrder) {
@@ -59,6 +61,7 @@ class ImportDetailsAdapter(
                 "ftp_server_profiles" -> R.string.backup_cat_ftp_server_profiles
                 "storage_renames" -> R.string.backup_cat_storage_renames
                 "smart_sort_configs" -> R.string.backup_cat_smart_sort
+                "custom_tiles" -> R.string.backup_cat_custom_tiles
                 else -> R.string.backup_restore_title
             }
             groups.add(CategoryGroup(cat, titleRes, children))

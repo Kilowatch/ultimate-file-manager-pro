@@ -164,9 +164,14 @@ class ManageTilesBottomSheet : BottomSheetDialogFragment() {
             }
         }
 
+        // Load hidden parent map for restore location display
+        val hiddenParents = TileOrderManager.loadHiddenParents(ctx)
+        val customTiles = CustomTileManager.loadCustomTiles(ctx).associateBy { it.id }
+
         // Restore All
         tvBtnRestoreAll!!.setOnClickListener {
-            TileOrderManager.saveHidden(ctx, emptySet())
+            // Clear hidden set and parents, restoring all tiles to their original parents
+            TileOrderManager.saveHidden(ctx, emptySet(), emptyMap())
             onRestored?.invoke()
             refreshList()
         }
@@ -176,7 +181,27 @@ class ManageTilesBottomSheet : BottomSheetDialogFragment() {
             selectedItem?.let { item ->
                 val updated = TileOrderManager.loadHidden(ctx).toMutableSet()
                 updated.remove(item.id)
-                TileOrderManager.saveHidden(ctx, updated)
+                val parentMap = TileOrderManager.loadHiddenParents(ctx).toMutableMap()
+                val originalParentId = parentMap[item.id] ?: ""
+
+                // If tile was from a custom tile, check if it still exists
+                if (originalParentId.isNotEmpty()) {
+                    val ct = customTiles[originalParentId]
+                    if (ct != null) {
+                        // Restore to custom tile
+                        CustomTileManager.setTileParent(ctx, item.id, originalParentId)
+                        val order = CustomTileManager.loadTileOrder(ctx, originalParentId).toMutableList()
+                        if (item.id !in order) {
+                            order.add(item.id)
+                            CustomTileManager.saveTileOrder(ctx, originalParentId, order)
+                        }
+                    } else {
+                        // Custom tile deleted — restore to main screen
+                        CustomTileManager.setTileParent(ctx, item.id, null)
+                    }
+                    parentMap.remove(item.id)
+                }
+                TileOrderManager.saveHidden(ctx, updated, parentMap)
                 onRestored?.invoke()
             }
             clearTvSelection()
@@ -250,6 +275,9 @@ class ManageTilesBottomSheet : BottomSheetDialogFragment() {
 
         recycler.layoutManager = LinearLayoutManager(ctx)
 
+        val hiddenParents = TileOrderManager.loadHiddenParents(ctx)
+        val customTiles = CustomTileManager.loadCustomTiles(ctx).associateBy { it.id }
+
         fun refresh() {
             val hidden      = TileOrderManager.loadHidden(ctx)
             val hiddenItems = allTiles.filter { it.id in hidden }
@@ -262,7 +290,25 @@ class ManageTilesBottomSheet : BottomSheetDialogFragment() {
                 onRestore = { item ->
                     val updated = TileOrderManager.loadHidden(ctx).toMutableSet()
                     updated.remove(item.id)
-                    TileOrderManager.saveHidden(ctx, updated)
+                    val parentMap = TileOrderManager.loadHiddenParents(ctx).toMutableMap()
+                    val originalParentId = parentMap[item.id] ?: ""
+
+                    // Check if parent custom tile still exists
+                    if (originalParentId.isNotEmpty()) {
+                        val ct = customTiles[originalParentId]
+                        if (ct != null) {
+                            CustomTileManager.setTileParent(ctx, item.id, originalParentId)
+                            val order = CustomTileManager.loadTileOrder(ctx, originalParentId).toMutableList()
+                            if (item.id !in order) {
+                                order.add(item.id)
+                                CustomTileManager.saveTileOrder(ctx, originalParentId, order)
+                            }
+                        } else {
+                            CustomTileManager.setTileParent(ctx, item.id, null)
+                        }
+                        parentMap.remove(item.id)
+                    }
+                    TileOrderManager.saveHidden(ctx, updated, parentMap)
                     onRestored?.invoke()
                     refresh()
                 },
@@ -274,7 +320,7 @@ class ManageTilesBottomSheet : BottomSheetDialogFragment() {
         }
 
         btnRestoreAll.setOnClickListener {
-            TileOrderManager.saveHidden(ctx, emptySet())
+            TileOrderManager.saveHidden(ctx, emptySet(), emptyMap())
             onRestored?.invoke()
             refresh()
         }

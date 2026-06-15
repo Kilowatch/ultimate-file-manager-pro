@@ -108,6 +108,11 @@
             android:name=".storage.StorageBrowserActivity"
             android:exported="false" />
 
+        <!-- Custom Tile Sub-Screen -->
+        <activity
+            android:name=".storage.CustomTileActivity"
+            android:exported="false" />
+
         <!-- TV Tile Colour Activities -->
         <activity
             android:name=".storage.TileColorTvActivity"

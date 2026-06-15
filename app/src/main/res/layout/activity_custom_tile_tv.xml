@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="24dp"
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".storage.CustomTileActivity">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:paddingTop="@dimen/margin_xxl"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Back button -->
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_button_yellow"
+                app:tint="@color/selector_tv_button_text"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/back" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtStorageTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="30sp"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="-0.02"
+                    tools:text="My Custom Tile" />
+
+                <TextView
+                    android:id="@+id/txtStorageSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone"
+                    tools:text="Optional subtitle" />
+
+                <!-- Cyan accent underline -->
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/tv_accent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/btnManageTiles"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_tune"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    app:tint="@color/selector_tv_button_text"
+                    android:visibility="gone"
+                    android:layout_marginEnd="12dp" />
+
+                <!-- Palette button -->
+                <ImageView
+                    android:id="@+id/btnColorTile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_palette"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    app:tint="@color/selector_tv_button_text"
+                    android:visibility="gone"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@string/tile_color_title" />
+
+                <!-- Import Code button -->
+                <ImageView
+                    android:id="@+id/btnImportColorCode"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_import_code"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    app:tint="@color/selector_tv_button_text"
+                    android:visibility="gone"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@string/tile_color_import" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDone"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="@string/done"
+                    android:textColor="@color/selector_tv_button_text"
+                    android:fontFamily="sans-serif-black"
+                    android:textSize="16sp"
+                    app:backgroundTint="@color/selector_tv_button_yellow"
+                    app:cornerRadius="16dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipChildren="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:clipChildren="true">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerStorage"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:clipToPadding="true"
+                android:paddingTop="16dp"
+                android:paddingHorizontal="@dimen/tv_safe_horizontal"
+                android:descendantFocusability="afterDescendants"
+                tools:listitem="@layout/item_storage_card_tv" />
+
+        </LinearLayout>
+
+        <!-- Empty State overlay -->
+        <LinearLayout
+            android:id="@+id/layoutEmptyStorage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:visibility="gone">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieEmptyStorage"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:contentDescription="@null"
+                app:lottie_rawRes="@raw/anim_empty_storage"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+            <TextView
+                android:id="@+id/txtEmptyState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/custom_tile_empty"
+                android:textColor="@color/tv_text_hint"
+                android:textSize="@dimen/tv_text_body"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

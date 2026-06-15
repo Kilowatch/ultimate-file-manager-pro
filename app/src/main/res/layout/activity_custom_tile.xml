@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Custom Tile sub-screen — mobile layout.
+    Same structure as activity_storage_browser.xml but with
+    a back-arrow toolbar showing the custom tile title.
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".storage.CustomTileActivity">
+
+    <!-- ══════════════════════════════════════════════════
+         HEADER BAR — MaterialToolbar with back arrow
+         ══════════════════════════════════════════════════ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mobile_glass_header"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/recyclerStorage"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationContentDescription="@string/back">
+
+            <!-- Custom Title inside Toolbar -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="start">
+
+                <TextView
+                    android:id="@+id/txtToolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textColor="@color/mobile_text_primary"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.01"
+                    tools:text="My Custom Tile" />
+
+                <TextView
+                    android:id="@+id/txtToolbarSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:visibility="gone"
+                    tools:text="Optional subtitle" />
+
+            </LinearLayout>
+
+            <!-- Manage Tiles button -->
+            <ImageView
+                android:id="@+id/btnManageTiles"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_tune"
+                android:contentDescription="@string/cd_manage_tiles"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+            <!-- Color button — visible only in Edit Mode -->
+            <ImageView
+                android:id="@+id/btnColorTile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_palette"
+                android:contentDescription="@string/tile_color_title"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+            <!-- Import Code button -->
+            <ImageView
+                android:id="@+id/btnImportColorCode"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_import_code"
+                android:contentDescription="@string/tile_color_import"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_accent"
+                app:tint="@color/mobile_icon_tint"
+                android:visibility="gone" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ══════════════════════════════════════════════════
+         TILE LIST — vertical full-width cards
+         ══════════════════════════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerStorage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/margin_sm"
+        android:paddingBottom="@dimen/margin_xl"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_storage_card" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmptyStorage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieEmptyStorage"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:contentDescription="@null"
+            app:lottie_rawRes="@raw/anim_empty_storage"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <TextView
+            android:id="@+id/txtEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_sm"
+            android:text="@string/custom_tile_empty"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="15sp"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

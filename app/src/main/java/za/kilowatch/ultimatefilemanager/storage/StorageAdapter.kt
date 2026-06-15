@@ -285,12 +285,15 @@ class StorageAdapter(
                                     if (!event.isCanceled && duration < 500) {
                                         when {
                                             isColorPickMode -> {
-                                                // Palette mode: short OK opens colour picker
+                                                onEditModeClick?.invoke(item)
+                                                true
+                                            }
+                                            isEditMode && item.isCustomTile -> {
+                                                // Custom tile: short OK opens Edit/Delete (gear action)
                                                 onEditModeClick?.invoke(item)
                                                 true
                                             }
                                             isEditMode && item.isHideable -> {
-                                                // Normal edit mode: short OK hides tile
                                                 onHideClick?.invoke(item)
                                                 true
                                             }
@@ -306,13 +309,19 @@ class StorageAdapter(
             }
             // Ã¢â€â‚¬Ã¢â€â‚¬ Edit Mode (Pulse/Visibility) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
             if (isEditMode) {
-                // In palette mode, hide the X so D-Pad cannot accidentally trigger hide
-                val showHide = item.isHideable && !isColorPickMode
-                btnHideTile.visibility = if (showHide) View.VISIBLE else View.GONE
-                if (!isTv) {
+                // In palette mode, hide the button so D-Pad cannot accidentally trigger hide
+                val isCustom = item.isCustomTile
+                val showBtn = (item.isHideable || isCustom) && !isColorPickMode
+                btnHideTile.visibility = if (showBtn) View.VISIBLE else View.GONE
+                if (isCustom) {
+                    (btnHideTile as? ImageView)?.setImageResource(R.drawable.ic_settings)
+                    btnHideTile.setOnClickListener { onEditModeClick?.invoke(item) }
+                } else if (!isTv) {
+                    (btnHideTile as? ImageView)?.setImageResource(R.drawable.ic_close)
                     btnHideTile.setOnClickListener { onHideClick?.invoke(item) }
                 } else {
-                    // On TV, the X is display-only; short-press OK triggers the hide
+                    // On TV, the button is display-only; short-press OK triggers the hide
+                    (btnHideTile as? ImageView)?.setImageResource(R.drawable.ic_close)
                     btnHideTile.setOnClickListener(null)
                     btnHideTile.isClickable = false
                     btnHideTile.isFocusable = false
@@ -534,7 +543,7 @@ class StorageAdapter(
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
@@ -569,6 +578,7 @@ class StorageAdapter(
                     item.isExtractsTile  -> item.subtitle ?: context.getString(R.string.browse_extracted_apps)
                     item.isFavoriteTile  -> if (item.favoriteIsFolder) context.getString(R.string.favorite_folder) else context.getString(R.string.favorite_file)
                     item.isRecycleBinTile -> item.subtitle ?: context.getString(R.string.recycle_bin_title)
+                    item.isCustomTile -> item.subtitle ?: ""
                     item.isNetworkRoot   -> {
                         item.subtitle ?: run {
                             val share = item.networkShare

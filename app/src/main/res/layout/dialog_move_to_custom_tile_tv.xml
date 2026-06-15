@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV "Move to Custom Tile" dialog.
+    Lists available custom tiles for the user to select as the destination.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_tv_gradient">
+
+    <TextView
+        android:id="@+id/txtMoveTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/move_to_custom_tile"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="26sp"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/txtMoveSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_hint"
+        android:textSize="@dimen/tv_text_body"
+        android:layout_marginBottom="20dp"
+        tools:text="Select a custom tile to move into:" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCustomTiles"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:descendantFocusability="afterDescendants"
+        tools:listitem="@layout/item_hidden_tile_row_tv" />
+
+    <TextView
+        android:id="@+id/txtNoCustomTiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/move_to_custom_tile_no_tiles"
+        android:textColor="@color/tv_text_hint"
+        android:textSize="@dimen/tv_text_body"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelMove"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/cancel"
+        android:textColor="@color/selector_tv_button_text"
+        android:fontFamily="sans-serif-black"
+        android:textSize="18sp"
+        app:backgroundTint="@color/selector_tv_button_yellow"
+        app:cornerRadius="16dp" />
+
+</LinearLayout>

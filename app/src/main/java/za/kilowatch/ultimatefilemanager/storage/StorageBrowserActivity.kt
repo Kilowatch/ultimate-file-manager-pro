@@ -24,7 +24,10 @@ import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -352,6 +355,101 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
         }
+
+        /**
+         * Static utility that builds a complete snapshot of ALL tile types that
+         * can exist on the main screen — physical storage, network shares, online
+         * storages, paired devices, and all feature shortcut tiles.  Used by
+         * [CustomTileActivity] to resolve child tile IDs to full [StorageItem]s.
+         */
+        // ═══════════════════════════════════════════════════════════════════
+        //  IMPORTANT: Every new tile added to loadStorageVolumes() MUST also
+        //  be added here, otherwise it will NOT render inside custom tiles.
+        //  See CLAUDE.md → "Main Menu Tile Registration Checklist" for details.
+        // ═══════════════════════════════════════════════════════════════════
+        /**
+         * Static utility that builds a complete snapshot of ALL tile types that
+         * can exist on the main screen — physical storage, network shares, online
+         * storages, paired devices, favorites, APK extracts, recycle bin, and all
+         * feature shortcut tiles.  Used by [CustomTileActivity] to resolve child
+         * tile IDs to full [StorageItem]s.
+         */
+        fun buildAllKnownTiles(context: Context): List<StorageItem> {
+            val items = getConnectedStorages(context, localOnly = false).toMutableList()
+            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
+
+            // ── Online Storages (individual accounts) ──────────────────────
+            val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(context)
+            for (storage in onlineRepo.getAll()) {
+                if (storage.isCredentialsStripped) continue
+                items.add(StorageItem(id = storage.id, label = storage.displayName, iconRes = R.drawable.ic_cloud, totalBytes = 0, usedBytes = 0, mountPath = storage.email, isOnlineStorage = true, onlineStorage = storage, subtitle = storage.email))
+            }
+
+            // ── Network Shares (individual SMB/FTP connections) ────────────
+            val shareRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
+            for (share in shareRepo.getAll()) {
+                if (share.isCredentialsStripped) continue
+                items.add(StorageItem(id = share.id, label = share.name, iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = share.docIdPrefix, isNetworkRoot = true, networkShare = share))
+            }
+
+            // ── Paired Devices (individual entries) ────────────────────────
+            val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(context)
+            for (device in pairingManager.getAllPairedDevices()) {
+                if (device.isConnected) {
+                    val iconRes = if (device.isTv) R.drawable.ic_remote_manage else R.drawable.ic_phone
+                    items.add(StorageItem(id = "tv_${device.deviceId}", label = device.name.ifEmpty { if (device.isTv) context.getString(R.string.connected_tv) else context.getString(R.string.connected_phone) }, iconRes = iconRes, totalBytes = 0, usedBytes = 0, mountPath = "tv://${device.deviceId}", isNetworkRoot = true))
+                }
+            }
+
+            // ── Favorites ──────────────────────────────────────────────────
+            val favorites = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context)
+            for (fav in favorites) {
+                items.add(StorageItem(id = fav.id, label = fav.label, iconRes = R.drawable.ic_star, totalBytes = 0, usedBytes = 0, mountPath = "", isFavoriteTile = true, favoritePath = fav.path, favoriteIsFolder = fav.isFolder, favoriteIsNetwork = fav.isNetwork))
+            }
+
+            // ── Feature shortcut tiles ─────────────────────────────────────
+            items.add(StorageItem(id = "twin_window_tile", label = context.getString(R.string.twin_window_title), iconRes = R.drawable.ic_twin_window, totalBytes = 0, usedBytes = 0, mountPath = "", isTwinWindowTile = true))
+            items.add(StorageItem(id = "notepad_tile", label = context.getString(R.string.notepad), iconRes = R.drawable.ic_notepad, totalBytes = 0, usedBytes = 0, mountPath = "", isNotepadTile = true, subtitle = context.getString(R.string.notepad_tile_subtitle)))
+            if (!isTv) {
+                items.add(StorageItem(id = "scanner_tile", label = context.getString(R.string.scanner_title), iconRes = R.drawable.ic_scanner, totalBytes = 0, usedBytes = 0, mountPath = "", isScannerTile = true, subtitle = context.getString(R.string.scanner_tile_subtitle)))
+            }
+            items.add(StorageItem(id = "apps_tile", label = context.getString(R.string.perm_query_apps_title), iconRes = R.drawable.ic_apps, totalBytes = 0, usedBytes = 0, mountPath = "", isAppsTile = true))
+            items.add(StorageItem(id = "remote_tile", label = context.getString(R.string.remote_manage_btn), iconRes = R.drawable.ic_remote_manage, totalBytes = 0, usedBytes = 0, mountPath = "", isRemoteTile = true))
+            items.add(StorageItem(id = "search_tile", label = context.getString(R.string.search_title), iconRes = R.drawable.ic_search, totalBytes = 0, usedBytes = 0, mountPath = "", isSearchTile = true))
+            items.add(StorageItem(id = "analyzer_tile", label = context.getString(R.string.analyzer_title), iconRes = R.drawable.ic_analyzer, totalBytes = 0, usedBytes = 0, mountPath = "", isAnalyzerTile = true))
+            items.add(StorageItem(id = "smart_sort_tile", label = context.getString(R.string.smart_sort_title), iconRes = R.drawable.ic_sort, totalBytes = 0, usedBytes = 0, mountPath = "", isSmartSortTile = true))
+            items.add(StorageItem(id = "vault_tile", label = context.getString(R.string.vault_title), iconRes = R.drawable.ic_lock, totalBytes = 0, usedBytes = 0, mountPath = "", isVaultTile = true))
+
+            // APK Extracts (only if folder exists and non-empty)
+            val extractsDir = java.io.File(context.getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS), "UFM-Extracted")
+            if (extractsDir.exists() && extractsDir.listFiles()?.isNotEmpty() == true) {
+                items.add(StorageItem(id = "extracts_tile", label = context.getString(R.string.apk_xapk_extracts), iconRes = R.drawable.ic_apps, totalBytes = 0, usedBytes = 0, mountPath = extractsDir.absolutePath, isExtractsTile = true))
+            }
+
+            // Recycle Bin (only if enabled)
+            if (za.kilowatch.ultimatefilemanager.recycle.RecycleBinSettingsManager.isEnabled(context)) {
+                items.add(StorageItem(id = "recycle_bin_tile", label = context.getString(R.string.recycle_bin_title), iconRes = R.drawable.ic_delete, totalBytes = 0, usedBytes = 0, mountPath = "", isRecycleBinTile = true))
+            }
+
+            items.add(StorageItem(id = "paired_devices_tile", label = if (isTv) context.getString(R.string.paired_phones_1) else context.getString(R.string.paired_tvs_1), iconRes = R.drawable.ic_tv, totalBytes = 0, usedBytes = 0, mountPath = "", isPairedDevicesTile = true))
+            if (!isTv) {
+                items.add(StorageItem(id = "tv_remote_tile", label = context.getString(R.string.tv_remote), iconRes = R.drawable.ic_tv_remote, totalBytes = 0, usedBytes = 0, mountPath = "", isTvRemoteTile = true, subtitle = context.getString(R.string.tv_remote_subtitle)))
+            }
+            items.add(StorageItem(id = "terminal_tile", label = context.getString(R.string.adb_terminal_title), iconRes = R.drawable.ic_terminal, totalBytes = 0, usedBytes = 0, mountPath = "", isTerminalTile = true))
+            items.add(StorageItem(id = "shizuku_tile", label = context.getString(R.string.shizuku_title), iconRes = R.drawable.ic_shizuku_logo, totalBytes = 0, usedBytes = 0, mountPath = "", isShizukuTile = true, subtitle = context.getString(R.string.shizuku_subtitle)))
+            items.add(StorageItem(id = "network_tile", label = context.getString(R.string.network_tile_title), iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = "", isNetworkTile = true))
+            items.add(StorageItem(id = "online_storages_tile", label = context.getString(R.string.online_storages_title), iconRes = R.drawable.ic_cloud, totalBytes = 0, usedBytes = 0, mountPath = "", isOnlineStoragesTile = true))
+            if (!isTv) {
+                items.add(StorageItem(id = "sync_tile", label = context.getString(R.string.sync_title), iconRes = R.drawable.ic_sync, totalBytes = 0, usedBytes = 0, mountPath = "", isSyncTile = true))
+            }
+            items.add(StorageItem(id = "file_server_tile", label = context.getString(R.string.file_server_title), iconRes = R.drawable.ic_file_server, totalBytes = 0, usedBytes = 0, mountPath = "", isFileServerTile = true))
+            items.add(StorageItem(id = "settings_tile", label = context.getString(R.string.font_size_title), iconRes = R.drawable.ic_font_size, totalBytes = 0, usedBytes = 0, mountPath = "", isSettingsTile = true))
+            items.add(StorageItem(id = "legal_tile", label = context.getString(R.string.policy_selection_title), iconRes = R.drawable.ic_policy, totalBytes = 0, usedBytes = 0, mountPath = "", isLegalTile = true))
+            items.add(StorageItem(id = "rate_us_tile", label = context.getString(R.string.rate_us_title), iconRes = R.drawable.ic_star, totalBytes = 0, usedBytes = 0, mountPath = "", isRateUsTile = true))
+            items.add(StorageItem(id = "tip_jar_tile", label = context.getString(R.string.tip_jar_title), iconRes = R.drawable.ic_coffee, totalBytes = 0, usedBytes = 0, mountPath = "", isTipJarTile = true))
+            items.add(StorageItem(id = "about_tile", label = context.getString(R.string.about_title), iconRes = R.drawable.ic_about, totalBytes = 0, usedBytes = 0, mountPath = "", isAboutTile = true))
+            return items
+        }
     }
 
     // StorageVolume callback for API 30+
@@ -366,6 +464,8 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var toolbar: MaterialToolbar? = null
     private var btnDoneTv: com.google.android.material.button.MaterialButton? = null
     private var draggedItem: StorageItem? = null
+
+    private var btnAddCustomTile: android.widget.ImageView? = null
 
     private var isEditMode = false
 
@@ -588,6 +688,46 @@ class StorageBrowserActivity : AppCompatActivity() {
             btnDoneTv?.setOnClickListener { exitEditMode() }
         }
 
+        // "Add Custom Tile" button
+        val density = resources.displayMetrics.density
+        if (!isTv) {
+            val pad = (8 * density).toInt()
+            val margin = (8 * density).toInt()
+            btnAddCustomTile = ImageView(this).apply {
+                setImageResource(R.drawable.ic_add)
+                contentDescription = getString(R.string.custom_tile_add_button)
+                setPadding(pad, pad, pad, pad)
+                setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                setColorFilter(getColor(R.color.mobile_icon_tint))
+                layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
+                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
+                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
+                    android.view.Gravity.END
+                ).apply { this.marginEnd = margin }
+                setOnClickListener { showCreateCustomTileDialog() }
+            }
+            toolbar?.addView(btnAddCustomTile)
+        } else {
+            val pad = (12 * density).toInt()
+            val size = (48 * density).toInt()
+            val margin = (12 * density).toInt()
+            btnAddCustomTile = ImageView(this).apply {
+                setImageResource(R.drawable.ic_add)
+                contentDescription = getString(R.string.custom_tile_add_button)
+                setPadding(pad, pad, pad, pad)
+                setBackgroundResource(R.drawable.selector_tv_button_yellow)
+                setColorFilter(getColor(R.color.selector_tv_button_text))
+                layoutParams = android.view.ViewGroup.MarginLayoutParams(size, size).apply {
+                    this.marginEnd = margin
+                }
+                setOnClickListener { showCreateCustomTileDialog() }
+            }
+            val headerLayout = findViewById<android.view.ViewGroup>(R.id.headerLayout)
+            val buttonRow = headerLayout?.getChildAt(0) as? android.view.ViewGroup
+            val rightButtons = buttonRow?.getChildAt(1) as? android.view.ViewGroup
+            rightButtons?.addView(btnAddCustomTile, rightButtons.childCount - 1) // before btnDone
+        }
+
         btnManageTiles.setOnClickListener {
             if (isEditMode) {
                 exitEditMode()
@@ -613,31 +753,32 @@ class StorageBrowserActivity : AppCompatActivity() {
             onLongPress = { item, viewHolder ->
                 if (isTv) {
                     // TV: long press enters Edit Mode first.
-                    // If ALREADY in Edit Mode, it starts reorder move (non-locked only).
+                    // If already in Edit Mode, show menu with move/reorder options.
                     if (isEditMode) {
-                        if (!item.isLocked) enterTvReorderMode(item)
+                        showTvEditOptionsMenu(item)
                     } else {
                         enterEditMode()
                     }
                 } else {
-                    // Mobile: enter Edit Mode (pulse/jiggle)
+                    // Mobile: enter Edit Mode (pulse/jiggle) and start drag
                     if (!isEditMode) {
                         enterEditMode()
                     }
-                    // Start live drag only for non-locked tiles (locked tiles are position-pinned)
-                    if (!item.isLocked) {
-                        itemTouchHelper.startDrag(viewHolder)
-                    }
+                    itemTouchHelper.startDrag(viewHolder)
                 }
             }
         ).apply {
             onHideClick = { item -> hideTile(item) }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
+                    // Color-pick mode takes priority — even for custom tiles
                     isSelectingTileForColor = false
                     storageAdapter.isColorPickMode = false
                     selectedTileId = item.id
                     showColorPickerForTile(item)
+                } else if (item.isCustomTile) {
+                    // Gear icon on custom tile → open Edit/Delete dialog
+                    showCustomTileOptionsMenu(item)
                 } else {
                     showPremiumSnackbar(getString(R.string.tile_color_title_select))
                 }
@@ -821,7 +962,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                         TileIconManager.clearTileIcon(this, item.id)
                     }
                     storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
-        storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
                     storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
                 }
                 .setOnBrowseIconClickedListener {
@@ -892,6 +1032,12 @@ class StorageBrowserActivity : AppCompatActivity() {
      */
     fun onStorageTileClicked(item: StorageItem) {
         when {
+            item.isCustomTile -> {
+                val intent = Intent(this, CustomTileActivity::class.java).apply {
+                    putExtra(CustomTileActivity.EXTRA_CUSTOM_TILE_ID, item.id)
+                }
+                startActivity(intent)
+            }
             item.isTwinWindowTile -> {
                 startActivity(Intent(this, TwinWindowActivity::class.java))
                 showPremiumSnackbar(getString(R.string.opening_twin_window))
@@ -1502,6 +1648,8 @@ class StorageBrowserActivity : AppCompatActivity() {
      * - Order is persisted to [TileOrderManager] when the finger lifts.
      * - Dragging over the [fabHideTile] drop-zone hides the tile.
      */
+    private var dragTargetCustomTileId: String? = null
+
     private fun setupItemTouchHelper() {
         val callback = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
@@ -1512,9 +1660,10 @@ class StorageBrowserActivity : AppCompatActivity() {
             ): Int {
                 val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
                     ?: return makeMovementFlags(0, 0)
-                // Only locked tiles cannot be moved at all
-                return if (item.isLocked) makeMovementFlags(0, 0)
-                else makeMovementFlags(ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0)
+                // All tiles can be moved
+                return makeMovementFlags(
+                    ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT, 0
+                )
             }
 
             override fun onMove(
@@ -1524,9 +1673,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             ): Boolean {
                 val from = viewHolder.bindingAdapterPosition
                 val to   = target.bindingAdapterPosition
-                val firstLocked = storageAdapter.getItems().indexOfFirst { it.isLocked }
-                // Do not allow dropping on or after a locked tile
-                if (firstLocked >= 0 && to >= firstLocked) return false
+                // Allow all moves — custom tile drop is handled in clearView
                 storageAdapter.moveItem(from, to)
                 return true
             }
@@ -1536,14 +1683,14 @@ class StorageBrowserActivity : AppCompatActivity() {
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
                 super.onSelectedChanged(viewHolder, actionState)
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
-                    // Scale up the dragged tile
                     viewHolder.itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(150).start()
                     viewHolder.itemView.elevation = 24f
-
                     val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
                     draggedItem = item
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-                    draggedItem = null
+                    // Don't clear draggedItem or dragTargetCustomTileId here —
+                    // onSelectedChanged(IDLE) fires BEFORE clearView(), so we
+                    // must keep them for clearView to do the move logic.
                 }
             }
 
@@ -1555,6 +1702,61 @@ class StorageBrowserActivity : AppCompatActivity() {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && isCurrentlyActive) {
+                    val draggedItemData = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
+                    val density = resources.displayMetrics.density
+
+                    // Compute the dragged view's rect once
+                    val draggedRect = android.graphics.Rect()
+                    viewHolder.itemView.getHitRect(draggedRect)
+                    draggedRect.offset(dX.toInt(), dY.toInt())
+
+                    // First pass: find the custom tile with the largest overlap
+                    var bestId: String? = null
+                    var bestArea: Long = 0
+
+                    for (i in 0 until recyclerView.childCount) {
+                        val child = recyclerView.getChildAt(i) ?: continue
+                        val vh = recyclerView.getChildViewHolder(child)
+                        val pos = vh.bindingAdapterPosition
+                        if (pos == RecyclerView.NO_POSITION) continue
+                        val item = storageAdapter.getItems().getOrNull(pos) ?: continue
+                        if (!item.isCustomTile || draggedItemData?.isCustomTile == true) continue
+
+                        val targetRect = android.graphics.Rect()
+                        child.getHitRect(targetRect)
+
+                        if (android.graphics.Rect.intersects(draggedRect, targetRect)) {
+                            val overlapW = minOf(draggedRect.right, targetRect.right) - maxOf(draggedRect.left, targetRect.left)
+                            val overlapH = minOf(draggedRect.bottom, targetRect.bottom) - maxOf(draggedRect.top, targetRect.top)
+                            val area = (overlapW * overlapH).toLong()
+                            if (area > bestArea) {
+                                bestArea = area
+                                bestId = item.id
+                            }
+                        }
+                    }
+                    dragTargetCustomTileId = bestId
+
+                    // Second pass: highlight only the best match, clear the rest
+                    for (i in 0 until recyclerView.childCount) {
+                        val child = recyclerView.getChildAt(i) ?: continue
+                        val vh = recyclerView.getChildViewHolder(child)
+                        val pos = vh.bindingAdapterPosition
+                        if (pos == RecyclerView.NO_POSITION) continue
+                        val item = storageAdapter.getItems().getOrNull(pos) ?: continue
+                        if (!item.isCustomTile) continue
+
+                        val card = child.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
+                        if (item.id == bestId) {
+                            card?.strokeWidth = (4 * density).toInt()
+                            card?.strokeColor = android.graphics.Color.parseColor("#FF4081")
+                        } else {
+                            card?.strokeWidth = 0
+                            card?.strokeColor = android.graphics.Color.TRANSPARENT
+                        }
+                    }
+                }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
 
@@ -1563,13 +1765,45 @@ class StorageBrowserActivity : AppCompatActivity() {
                 viewHolder.itemView.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
                 viewHolder.itemView.elevation = 0f
 
-                // Normal reorder drop — persist the new order
-                val orderedIds = storageAdapter.getItems().filterNot { it.isLocked }.map { it.id }
-                TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
-                showPremiumSnackbar(getString(R.string.tile_order_saved))
+                val droppedItem = draggedItem
+                val targetId = dragTargetCustomTileId
+                draggedItem = null
+                dragTargetCustomTileId = null
+
+                // Reset all card strokes
+                for (i in 0 until recyclerView.childCount) {
+                    val c = recyclerView.getChildAt(i)
+                        ?.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
+                    if (c != null) {
+                        c.strokeWidth = 0
+                        c.strokeColor = android.graphics.Color.TRANSPARENT
+                    }
+                }
+
+                if (droppedItem != null && targetId != null && !droppedItem.isCustomTile) {
+                    // Dropped onto a custom tile — move it inside
+                    CustomTileManager.setTileParent(this@StorageBrowserActivity, droppedItem.id, targetId)
+                    // Add to custom tile's internal order
+                    val order = CustomTileManager.loadTileOrder(this@StorageBrowserActivity, targetId).toMutableList()
+                    if (droppedItem.id !in order) {
+                        order.add(droppedItem.id)
+                        CustomTileManager.saveTileOrder(this@StorageBrowserActivity, targetId, order)
+                    }
+                    val ctData = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity).find { it.id == targetId }
+                    showPremiumSnackbar(getString(R.string.custom_tile_moved_to, ctData?.title ?: targetId))
+                    loadStorageVolumes()
+                } else if (droppedItem?.isCustomTile == true && targetId != null) {
+                    // Cannot nest custom tiles
+                    showPremiumSnackbar(getString(R.string.custom_tile_cannot_nest))
+                } else {
+                    // Normal reorder drop — persist the new order
+                    val orderedIds = storageAdapter.getItems().map { it.id }
+                    TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
+                    showPremiumSnackbar(getString(R.string.tile_order_saved))
+                }
             }
 
-            /** We manage long-press ourselves (2 s hold) — disable the system default. */
+            /** We manage long-press ourselves — disable the system default. */
             override fun isLongPressDragEnabled() = false
 
             override fun canDropOver(
@@ -1577,8 +1811,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 current: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                val targetItem = storageAdapter.getItems().getOrNull(target.bindingAdapterPosition)
-                return targetItem?.isLocked == false
+                // All tiles allow drops — custom-tile behavior is handled in clearView
+                return true
             }
         }
         itemTouchHelper = ItemTouchHelper(callback)
@@ -1602,7 +1836,9 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         val hidden = TileOrderManager.loadHidden(this).toMutableSet()
         hidden.add(item.id)
-        TileOrderManager.saveHidden(this, hidden)
+        val parentMap = TileOrderManager.loadHiddenParents(this).toMutableMap()
+        parentMap[item.id] = null // null = hidden from main screen
+        TileOrderManager.saveHidden(this, hidden, parentMap)
 
         // Show a toast naming the tile that was hidden
         showPremiumSnackbar("\"${item.label}\" tile hidden")
@@ -1629,7 +1865,10 @@ class StorageBrowserActivity : AppCompatActivity() {
     /** Shows or hides the Manage Tiles button (only visible when there are hidden tiles). */
     private fun updateHiddenBadge() {
         val hiddenCount = TileOrderManager.loadHidden(this).size
-        
+
+        // Hide "Create Custom Tile" button in edit mode
+        btnAddCustomTile?.visibility = if (isEditMode) View.GONE else View.VISIBLE
+
         if (isEditMode) {
             // In Edit Mode
             if (isTv) {
@@ -1758,7 +1997,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             reorderModeOriginalList?.let { storageAdapter.submitList(it) }
             showPremiumSnackbar(getString(R.string.tile_order_cancelled))
         } else {
-            val orderedIds = storageAdapter.getItems().filterNot { it.isLocked }.map { it.id }
+            val orderedIds = storageAdapter.getItems().map { it.id }
             TileOrderManager.save(this, orderedIds)
             showPremiumSnackbar(getString(R.string.tile_order_saved))
         }
@@ -1770,7 +2009,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     /**
      * Moves the tile currently in reorder mode by [direction] (-1 up, +1 down).
-     * Clamps to the boundary above the first locked tile.
+     * All tiles are freely movable — no locked-tile boundary.
      * Refocuses the tile after the layout settles.
      */
     private fun moveTileInReorderMode(direction: Int) {
@@ -1779,9 +2018,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val fromIndex = list.indexOfFirst { it.id == id }
         if (fromIndex < 0) return
 
-        val firstLocked    = list.indexOfFirst { it.isLocked }
-        val maxMovable     = if (firstLocked > 0) firstLocked - 1 else list.lastIndex
-        val toIndex        = (fromIndex + direction).coerceIn(0, maxMovable)
+        val toIndex = (fromIndex + direction).coerceIn(0, list.lastIndex)
         if (toIndex == fromIndex) return
 
         list.add(toIndex, list.removeAt(fromIndex))
@@ -1845,6 +2082,306 @@ class StorageBrowserActivity : AppCompatActivity() {
     /**
      * Shows a modern Material Snackbar with premium styling.
      */
+    // Track the custom tile being edited (null = creating new)
+    private var editingCustomTileId: String? = null
+    private var selectedCustomTileIconRes: Int = R.drawable.ic_folder
+
+    private fun showCreateCustomTileDialog(editTileId: String? = null) {
+        editingCustomTileId = editTileId
+        val isEdit = editTileId != null
+
+        // Load existing data if editing
+        val existingData = if (isEdit) {
+            CustomTileManager.loadCustomTiles(this).find { it.id == editTileId }
+        } else null
+        if (isEdit && existingData != null) {
+            selectedCustomTileIconRes = existingData.iconRes
+        } else {
+            selectedCustomTileIconRes = R.drawable.ic_folder
+        }
+
+        if (isTv) {
+            showCreateCustomTileDialogTv(isEdit, existingData)
+        } else {
+            showCreateCustomTileDialogMobile(isEdit, existingData)
+        }
+    }
+
+    private fun showCreateCustomTileDialogMobile(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_custom_tile, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileIcon)
+        val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileTitle)
+        val edtSubtitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileSubtitle)
+
+        if (isEdit && existingData != null) {
+            edtTitle.setText(existingData.title)
+            edtSubtitle.setText(existingData.subtitle)
+        }
+        imgIcon.setImageResource(selectedCustomTileIconRes)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(if (isEdit) getString(R.string.custom_tile_edit_title) else getString(R.string.custom_tile_create_title))
+            .setView(dialogView)
+            .setPositiveButton(if (isEdit) R.string.save else R.string.custom_tile_add_button) { d, _ ->
+                val title = edtTitle.text?.toString()?.trim() ?: ""
+                if (title.isEmpty()) {
+                    showPremiumSnackbar(getString(R.string.custom_tile_title_required))
+                    return@setPositiveButton
+                }
+                val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
+                saveCustomTile(title, subtitle)
+                d.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
+            .create()
+        dialog.show()
+    }
+
+    /** Shows the full built-in icon picker dialog (same icon set as Tile Color → Icons). */
+    private fun showSimpleIconPickerDialog(targetImageView: ImageView) {
+        val allIcons = za.kilowatch.ultimatefilemanager.settings.ALL_BUILTIN_ICONS
+        val density = resources.displayMetrics.density
+
+        val dialogView = LinearLayout(this)
+        dialogView.orientation = LinearLayout.VERTICAL
+        dialogView.setPadding((16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt())
+
+        val rv = RecyclerView(this)
+        rv.layoutManager = GridLayoutManager(this, 5)
+        rv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (400 * density).toInt())
+
+        val btnBrowse = com.google.android.material.button.MaterialButton(this)
+        btnBrowse.text = getString(R.string.tile_icon_browse)
+        btnBrowse.setIconResource(R.drawable.ic_folder)
+        val btnLp = ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        btnLp.topMargin = (12 * density).toInt()
+        btnBrowse.layoutParams = btnLp
+        btnBrowse.setOnClickListener {
+            activeTileIdForIcon = "custom_tile_icon_picker"
+            launchTileIconPicker("custom_tile_icon_picker")
+        }
+
+        dialogView.addView(rv)
+        dialogView.addView(btnBrowse)
+
+        // Built-in icon adapter (same pattern as TileColorBottomSheet.BuiltinIconAdapter)
+        rv.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            private var selectedIcon = selectedCustomTileIconRes
+
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+                val size = (48 * density).toInt()
+                val pad = (4 * density).toInt()
+                val container = FrameLayout(parent.context)
+                container.layoutParams = ViewGroup.LayoutParams(size, size)
+                container.setPadding(pad, pad, pad, pad)
+                val ivId = View.generateViewId()
+                val iv = ImageView(parent.context)
+                iv.id = ivId
+                iv.layoutParams = ViewGroup.LayoutParams(size - pad * 2, size - pad * 2)
+                iv.scaleType = ImageView.ScaleType.FIT_CENTER
+                container.addView(iv)
+                container.tag = ivId
+                return object : RecyclerView.ViewHolder(container) {
+                    val icon: ImageView = iv
+                }
+            }
+
+            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, pos: Int) {
+                val iconRes = allIcons[pos]
+                val isSelected = iconRes == selectedIcon
+                val iv = holder.itemView.findViewById<ImageView>(holder.itemView.tag as Int)
+                iv.setImageResource(iconRes)
+                iv.setPadding(12, 12, 12, 12)
+                val bg = android.graphics.drawable.GradientDrawable()
+                bg.shape = android.graphics.drawable.GradientDrawable.OVAL
+                if (isSelected) {
+                    bg.setColor(0x33000000.toInt())
+                    bg.setStroke(3, 0xFFFF0000.toInt())
+                } else {
+                    bg.setColor(0x0FFFFFFF.toInt())
+                    bg.setStroke(1, 0x44000000.toInt())
+                }
+                iv.background = bg
+                holder.itemView.setOnClickListener {
+                    selectedIcon = iconRes
+                    selectedCustomTileIconRes = iconRes
+                    targetImageView.setImageResource(iconRes)
+                    notifyDataSetChanged()
+                }
+            }
+
+            override fun getItemCount() = allIcons.size
+        }
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(getString(R.string.custom_tile_select_icon))
+            .setView(dialogView)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showCreateCustomTileDialogTv(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_create_custom_tile_tv, null)
+        val imgIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileIcon)
+        val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileTitle)
+        val edtSubtitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileSubtitle)
+        val txtDialogTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)
+        val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
+
+        txtDialogTitle.text = if (isEdit) getString(R.string.custom_tile_edit_title) else getString(R.string.custom_tile_create_title)
+        if (isEdit && existingData != null) {
+            edtTitle.setText(existingData.title)
+            edtSubtitle.setText(existingData.subtitle)
+        }
+        imgIcon.setImageResource(selectedCustomTileIconRes)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnSave.setOnClickListener {
+            val title = edtTitle.text?.toString()?.trim() ?: ""
+            if (title.isEmpty()) {
+                showPremiumSnackbar(getString(R.string.custom_tile_title_required))
+                return@setOnClickListener
+            }
+            val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
+            saveCustomTile(title, subtitle)
+            dialog.dismiss()
+        }
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun showCustomTileOptionsMenu(item: StorageItem) {
+        if (isTv) {
+            val options = arrayOf(
+                getString(R.string.custom_tile_edit_title),
+                getString(R.string.custom_tile_delete_title)
+            )
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(item.label)
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> showCreateCustomTileDialog(item.id) // Edit
+                        1 -> confirmDeleteCustomTile(item) // Delete
+                    }
+                }
+                .show()
+        } else {
+            val sheet = com.google.android.material.bottomsheet.BottomSheetDialog(this)
+            val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_manage_tiles, null)
+            // Use a simple list for mobile
+            val options = arrayOf(
+                getString(R.string.custom_tile_edit_title),
+                getString(R.string.custom_tile_delete_title)
+            )
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(item.label)
+                .setItems(options) { _, which ->
+                    when (which) {
+                        0 -> showCreateCustomTileDialog(item.id) // Edit
+                        1 -> confirmDeleteCustomTile(item) // Delete
+                    }
+                }
+                .show()
+        }
+    }
+
+    private fun showTvEditOptionsMenu(item: StorageItem) {
+        val customTiles = CustomTileManager.loadCustomTiles(this)
+        val options = mutableListOf<String>()
+        options.add(getString(R.string.dpad_moves_tile_ok_saves_back_cancels)) // Reorder
+        if (customTiles.isNotEmpty() && !item.isCustomTile) {
+            options.add(getString(R.string.move_to_custom_tile))
+        }
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(item.label)
+            .setItems(options.toTypedArray()) { _, which ->
+                when (which) {
+                    0 -> enterTvReorderMode(item)
+                    1 -> showMoveToCustomTileDialogTv(item)
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showMoveToCustomTileDialogTv(item: StorageItem) {
+        val customTiles = CustomTileManager.loadCustomTiles(this)
+        if (customTiles.isEmpty()) {
+            showPremiumSnackbar(getString(R.string.move_to_custom_tile_no_tiles))
+            return
+        }
+        val tileNames = customTiles.map { it.title }.toTypedArray()
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(getString(R.string.move_to_custom_tile))
+            .setItems(tileNames) { _, which ->
+                val target = customTiles[which]
+                CustomTileManager.setTileParent(this, item.id, target.id)
+                val order = CustomTileManager.loadTileOrder(this, target.id).toMutableList()
+                if (item.id !in order) {
+                    order.add(item.id)
+                    CustomTileManager.saveTileOrder(this, target.id, order)
+                }
+                showPremiumSnackbar(getString(R.string.custom_tile_moved_to, target.title))
+                loadStorageVolumes()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun confirmDeleteCustomTile(item: StorageItem) {
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(getString(R.string.custom_tile_delete_confirm))
+            .setMessage(getString(R.string.custom_tile_delete_warning))
+            .setPositiveButton(getString(R.string.custom_tile_delete_title)) { _, _ ->
+                // Move all child tiles back to main screen
+                val childIds = CustomTileManager.getChildTiles(this, item.id)
+                for (childId in childIds) {
+                    CustomTileManager.setTileParent(this, childId, null)
+                }
+                // Update hidden tile parents for tiles hidden from this custom tile
+                val hiddenParents = TileOrderManager.loadHiddenParents(this).toMutableMap()
+                for ((tileId, parentId) in hiddenParents) {
+                    if (parentId == item.id) {
+                        hiddenParents[tileId] = null
+                    }
+                }
+                val hidden = TileOrderManager.loadHidden(this)
+                TileOrderManager.saveHidden(this, hidden, hiddenParents)
+
+                CustomTileManager.deleteCustomTile(this, item.id)
+                showPremiumSnackbar(getString(R.string.custom_tile_deleted))
+                loadStorageVolumes()
+            }
+            .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
+            .show()
+    }
+
+    private fun saveCustomTile(title: String, subtitle: String) {
+        val id = editingCustomTileId ?: CustomTileManager.generateId()
+        val data = CustomTileManager.CustomTileData(
+            id = id,
+            title = title,
+            subtitle = subtitle,
+            iconRes = selectedCustomTileIconRes
+        )
+        CustomTileManager.saveCustomTile(this, data)
+        // Sync icon to TileIconManager so "Tile Color → Icons" and "Edit → Select Icon"
+        // always agree — whichever was set last wins, and both paths read the same value.
+        TileIconManager.saveTileIconRes(this, id, selectedCustomTileIconRes)
+        val wasEdit = editingCustomTileId != null
+        editingCustomTileId = null
+        showPremiumSnackbar(
+            if (wasEdit) getString(R.string.custom_tile_updated)
+            else getString(R.string.custom_tile_created)
+        )
+        loadStorageVolumes()
+    }
+
     private fun showPremiumSnackbar(message: String) {
         val rootView = findViewById<View>(R.id.main)
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
@@ -1866,17 +2403,14 @@ class StorageBrowserActivity : AppCompatActivity() {
      * 4. Returns reordered non-locked tiles followed by locked tiles.
      */
     private fun applyTileOrder(allItems: List<StorageItem>): List<StorageItem> {
-        val locked    = allItems.filter { it.isLocked }
-        val nonLocked = allItems.filter { !it.isLocked }
-
         val saved  = TileOrderManager.load(this)
         if (saved.isEmpty()) return allItems  // No saved order yet — use natural list
 
-        val mergedIds   = TileOrderManager.mergeWithNatural(saved, nonLocked)
-        val byId        = nonLocked.associateBy { it.id }
+        val mergedIds   = TileOrderManager.mergeWithNatural(saved, allItems)
+        val byId        = allItems.associateBy { it.id }
         val reordered   = mergedIds.mapNotNull { byId[it] }
 
-        return reordered + locked
+        return reordered
     }
 
     /**
@@ -2447,6 +2981,36 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
+            // ── Custom Tiles ──────────────────────────────────────────────────
+            // Inject custom tiles into the list and handle parent-child relationships.
+            val customTiles = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity)
+            val parentMap = CustomTileManager.getTileParentMap(this@StorageBrowserActivity)
+
+            // Set parentCustomTileId on tiles that belong to a custom tile
+            for (i in storageItems.indices) {
+                val parentId = parentMap[storageItems[i].id]
+                if (parentId != null) {
+                    storageItems[i] = storageItems[i].copy(parentCustomTileId = parentId)
+                }
+            }
+
+            // Create StorageItems for custom tiles themselves
+            for (ct in customTiles) {
+                storageItems.add(StorageItem(
+                    id = ct.id,
+                    label = ct.title,
+                    iconRes = ct.iconRes,
+                    totalBytes = 0,
+                    usedBytes = 0,
+                    mountPath = "",
+                    isCustomTile = true,
+                    subtitle = ct.subtitle.ifEmpty { null }
+                ))
+            }
+
+            // Remove tiles that belong inside custom tiles from the main list
+            storageItems.removeAll { it.parentCustomTileId != null }
+
             // Filter out any tiles the user has chosen to hide, then publish on main thread.
             val fullList = storageItems.toList()
             val hidden = TileOrderManager.loadHidden(this@StorageBrowserActivity)
@@ -2461,6 +3025,11 @@ class StorageBrowserActivity : AppCompatActivity() {
                 knownMountPaths.addAll(newKnownPaths)
                 lastFullTileList = fullList
                 updateHiddenBadge()
+                // Reload colors and icons every time so changes made inside
+                // custom tiles are picked up when tiles return to main menu.
+                storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
+                storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
+                storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
                 storageAdapter.submitList(displayItems)
                 updateEmptyState(storageItems.isEmpty())
             }

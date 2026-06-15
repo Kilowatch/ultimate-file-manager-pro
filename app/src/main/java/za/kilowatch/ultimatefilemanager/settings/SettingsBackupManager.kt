@@ -40,6 +40,7 @@ data class BackupDetails(
     val ftpProfiles: List<BackupItem>,
     val renames: List<BackupItem>,
     val smartSortConfigs: List<BackupItem>,
+    val customTiles: List<BackupItem>,
     val rawJson: String
 )
 
@@ -173,13 +174,21 @@ object SettingsBackupManager {
             items.add(BackupItem(config.id, "smart_sort_configs", config.folderPath, config.description))
         }
 
+        // Custom tiles
+        val customTiles = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.loadCustomTiles(context)
+        for (ct in customTiles) {
+            val childCount = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getChildTiles(context, ct.id).size
+            val extra = if (ct.subtitle.isNotEmpty()) ct.subtitle else "$childCount tiles"
+            items.add(BackupItem(ct.id, "custom_tiles", ct.title, extra))
+        }
+
         return items
     }
 
     fun performExport(context: Context, selectedItems: List<BackupItem>, targetFile: File): Boolean {
         try {
             val root = JSONObject()
-            root.put("version", 1)
+            root.put("version", 2)
 
             val selectedIds = selectedItems.filter { it.isSelected }.map { it.id }.toSet()
 
@@ -313,6 +322,10 @@ object SettingsBackupManager {
             }
             root.put("smart_sort_configs", smartSortArr)
 
+            // Custom tiles (version 2+)
+            val customTilesArr = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getAllCustomTileDataForExport(context)
+            root.put("custom_tiles", customTilesArr)
+
             val jsonString = root.toString(2)
             val encryptedData = encryptBackup(jsonString)
 
@@ -410,7 +423,22 @@ object SettingsBackupManager {
             }
         }
 
-        return BackupDetails(sharedPrefs, shares, storages, ftpProfiles, renames, smartSortConfigs, jsonString)
+        // Custom tiles (version 2+)
+        val customTiles = mutableListOf<BackupItem>()
+        val customTilesArr = root.optJSONArray("custom_tiles")
+        if (customTilesArr != null) {
+            for (i in 0 until customTilesArr.length()) {
+                val obj = customTilesArr.getJSONObject(i)
+                val id = obj.getString("id")
+                val title = obj.getString("title")
+                val childrenArr = obj.optJSONArray("children")
+                val childCount = childrenArr?.length() ?: 0
+                val extra = obj.optString("subtitle", "").ifEmpty { "$childCount tiles" }
+                customTiles.add(BackupItem(id, "custom_tiles", title, extra))
+            }
+        }
+
+        return BackupDetails(sharedPrefs, shares, storages, ftpProfiles, renames, smartSortConfigs, customTiles, jsonString)
     }
 
     suspend fun performRestore(context: Context, details: BackupDetails): Boolean {
@@ -548,6 +576,12 @@ object SettingsBackupManager {
                         )
                     }
                     SmartSortSavedConfigRepository.saveAll(list, context)
+                }
+
+                // Custom tiles (version 2+) — skip if absent (version 1 import)
+                val customTilesArr = root.optJSONArray("custom_tiles")
+                if (customTilesArr != null) {
+                    za.kilowatch.ultimatefilemanager.storage.CustomTileManager.restoreFromExport(context, customTilesArr)
                 }
 
                 true

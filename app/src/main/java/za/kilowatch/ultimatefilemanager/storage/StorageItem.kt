@@ -61,12 +61,11 @@ data class StorageItem(
     val favoritePath: String? = null,
     val favoriteIsFolder: Boolean = false,
     val favoriteIsNetwork: Boolean = false,
-    val colorConfig: TileColorConfig = TileColorConfig()
+    val colorConfig: TileColorConfig = TileColorConfig(),
+    val isCustomTile: Boolean = false,
+    val parentCustomTileId: String? = null
 ) {
     val freeBytes: Long get() = totalBytes - usedBytes
-
-    /** True for tiles that must always remain at the bottom and cannot be moved or dragged. */
-    val isLocked: Boolean get() = isLegalTile || isRateUsTile || isTipJarTile
 
     /**
      * True for tiles that the user is allowed to hide via the drag-to-FAB gesture or
@@ -74,18 +73,24 @@ data class StorageItem(
      * Raw storage volumes (internal, SD, USB) are excluded because hiding them would
      * be confusing — the user would lose access to their primary storage.
      * Network roots (SMB/FTP/TV) are also excluded (they are managed via their own screens).
-     * NOTE: isLocked tiles (Rate Us, Legal, Tip Jar) ARE hideable — they are only
-     * position-locked (pinned to the bottom), not visibility-locked.
+     * All tiles including Rate Us, Legal, and Tip Jar can be freely reordered and hidden.
+     */
+    /**
+     * True for tiles that show an X button in edit mode.
+     * On the main screen: feature tiles are hideable; physical drives and network
+     * roots are not.  Inside a custom tile (parentCustomTileId != null), ALL tiles
+     * are removable — the X button moves them back to the main menu.
      */
     val isHideable: Boolean get() =
-        !isNetworkRoot &&
+        parentCustomTileId != null ||
+        (!isNetworkRoot &&
         (isAppsTile || isRemoteTile || isSearchTile || isAnalyzerTile ||
          isVaultTile || isTvRemoteTile || isSafTile || isNetworkTile ||
          isPairedDevicesTile || isExtractsTile || isSyncTile || isSettingsTile ||
          isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile ||
           isOnlineStoragesTile || isFileServerTile || isAboutTile ||
             isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
-            isNotepadTile || isScannerTile || isSmartSortTile)
+            isNotepadTile || isScannerTile || isSmartSortTile))
 
 
     val usagePercent: Int get() {
