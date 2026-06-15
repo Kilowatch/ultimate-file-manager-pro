@@ -162,15 +162,15 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/mobile_icon_tint" />
 
-            <!-- New Folder -->
+            <!-- Create New -->
             <ImageView
-                android:id="@+id/btnTvNewFolder"
+                android:id="@+id/btnCreateNew"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:padding="8dp"
                 android:layout_marginEnd="2dp"
-                android:src="@drawable/ic_folder"
-                android:contentDescription="@string/cd_new_folder"
+                android:src="@drawable/ic_create_new"
+                android:contentDescription="@string/cd_create_new"
                 android:clickable="true"
                 android:focusable="true"
                 android:background="?attr/selectableItemBackgroundBorderless"

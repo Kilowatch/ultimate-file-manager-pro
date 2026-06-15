@@ -807,6 +807,50 @@ Depolama sağlayıcısı kullanılamıyor. Bazı öğeler yeniden adlandırılam
     <string name="new_folder_exists">Bu ada sahip bir klasör zaten mevcut</string>
     <string name="new_folder_empty">Klasör adı boş olamaz</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Yeni klasör veya metin dosyası oluştur
+</string>
+    <string name="create_new_title">
+Yeni
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Yeni Metin Dosyası Oluştur
+</string>
+    <string name="new_file_hint">
+Dosya adı
+</string>
+    <string name="new_file_default">
+Yeni Dosya.txt
+</string>
+    <string name="new_file_create">
+Yaratmak
+</string>
+    <string name="new_file_success">
+Metin dosyası oluşturuldu
+</string>
+    <string name="new_file_error">
+Metin dosyası oluşturulamadı
+</string>
+    <string name="new_file_empty">
+Dosya adı boş olamaz
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Yeni Klasör
+</string>
+    <string name="new_menu_new_file">
+Yeni Metin Dosyası
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Yeni Oluştur
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Kasa Klasörünü Seçin</string>
     <string name="encrypt_no_vaults">Kasa klasörü yok</string>

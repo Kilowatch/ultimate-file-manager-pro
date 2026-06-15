@@ -807,6 +807,50 @@ Storage provider unavailable. Tidak dapat mengganti nama beberapa item.
     <string name="new_folder_exists">Folder dengan nama tersebut sudah ada</string>
     <string name="new_folder_empty">Nama folder tidak boleh kosong</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Buat folder atau file teks baru
+</string>
+    <string name="create_new_title">
+Baru
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Buat File Teks Baru
+</string>
+    <string name="new_file_hint">
+Nama file
+</string>
+    <string name="new_file_default">
+File.txt baru
+</string>
+    <string name="new_file_create">
+Membuat
+</string>
+    <string name="new_file_success">
+File teks dibuat
+</string>
+    <string name="new_file_error">
+Gagal membuat file teks
+</string>
+    <string name="new_file_empty">
+Nama file tidak boleh kosong
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Folder Baru
+</string>
+    <string name="new_menu_new_file">
+File Teks Baru
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Buat Baru
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Pilih Folder Gudang</string>
     <string name="encrypt_no_vaults">Tidak ada folder brankas</string>

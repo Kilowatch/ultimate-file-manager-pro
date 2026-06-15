@@ -29,9 +29,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
+import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
@@ -235,7 +237,7 @@ class NetworkBrowserFragment : Fragment() {
 
         view.findViewById<View>(R.id.btnBack)?.setOnClickListener { navigateUp() }
         view.findViewById<View>(R.id.btnRefresh)?.setOnClickListener { loadDirectory() }
-        view.findViewById<View>(R.id.btnNewFolder)?.setOnClickListener { showCreateFolderDialog() }
+        view.findViewById<View>(R.id.btnCreateNew)?.setOnClickListener { showCreateNewMenu() }
         view.findViewById<View>(R.id.btnDrivePicker)?.setOnClickListener { onStoragePickerRequested?.invoke() }
 
         // Close Twin Window button: visible only in twin window mode
@@ -546,6 +548,315 @@ class NetworkBrowserFragment : Fragment() {
 
     // --- Operations (simplified for Fragment, mostly calls Activity or performs IO) ---
 
+    private fun showCreateNewMenu() {
+        val ctx = requireContext()
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
+        val textSecondary = if (isOnTv) ctx.getColor(R.color.tv_text_secondary) else ctx.getColor(R.color.ufm_text_hint)
+
+        val container = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val rowFolder = createMenuRowView(ctx, R.drawable.ic_folder, getString(R.string.new_menu_new_folder), isOnTv, textPrimary, textSecondary)
+        container.addView(rowFolder)
+
+        val divider = View(ctx).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1).apply {
+                topMargin = 8; bottomMargin = 8
+            }
+            setBackgroundColor(0x33FFFFFF.toInt())
+        }
+        container.addView(divider)
+
+        val rowFile = createMenuRowView(ctx, R.drawable.ic_file_text, getString(R.string.new_menu_new_file), isOnTv, textPrimary, textSecondary)
+        container.addView(rowFile)
+
+        val dialog = MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.create_new_title))
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .show()
+
+        // Wire clicks after dialog.show() so we have a reference to dismiss it
+        rowFolder.setOnClickListener {
+            dialog.dismiss()
+            showCreateFolderDialog()
+        }
+        rowFile.setOnClickListener {
+            dialog.dismiss()
+            showCreateTextFileDialog()
+        }
+
+        if (isOnTv) {
+            dialog.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(ctx.getColor(R.color.tv_bg_gradient_end))
+            )
+            dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)?.setTextColor(textPrimary)
+            applyTvButtonStyle(ctx, dialog)
+        }
+    }
+
+    private fun createMenuRowView(ctx: android.content.Context, iconRes: Int, label: String, isOnTv: Boolean, textPrimary: Int, textSecondary: Int): LinearLayout {
+        val row = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            setPadding(16, 12, 16, 12)
+            isClickable = true
+            isFocusable = true
+        }
+        val icon = ImageView(ctx).apply {
+            setImageResource(iconRes)
+            layoutParams = LinearLayout.LayoutParams(40, 40).apply { marginEnd = 16 }
+            if (isOnTv) imageTintList = android.content.res.ColorStateList.valueOf(textPrimary)
+        }
+        row.addView(icon)
+        val text = TextView(ctx).apply {
+            this.text = label
+            textSize = 16f
+            setTextColor(textPrimary)
+        }
+        row.addView(text)
+        if (isOnTv) {
+            val white = ctx.getColor(R.color.tv_text_primary)
+            val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ctx.getColor(R.color.tv_button_focused_yellow)
+            row.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    row.setBackgroundColor(yellow)
+                    text.setTextColor(black)
+                    icon.imageTintList = android.content.res.ColorStateList.valueOf(black)
+                } else {
+                    row.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    text.setTextColor(white)
+                    icon.imageTintList = android.content.res.ColorStateList.valueOf(white)
+                }
+            }
+        }
+        return row
+    }
+
+    private fun applyTvButtonStyle(ctx: android.content.Context, dialog: androidx.appcompat.app.AlertDialog) {
+        val yellowCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
+        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+        val white = ctx.getColor(R.color.tv_text_primary)
+        val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+            backgroundTintList = glassCsl
+            setTextColor(white)
+            setOnFocusChangeListener { _, hasFocus ->
+                backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                setTextColor(if (hasFocus) black else white)
+            }
+        }
+    }
+
+    private fun showCreateTextFileDialog() {
+        val ctx = requireContext()
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) ctx.getColor(R.color.tv_text_hint) else ctx.getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) ctx.getColor(R.color.tv_button_focused_yellow) else ctx.getColor(R.color.ufm_primary)
+
+        val container = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+        val editText = EditText(ctx).apply {
+            hint = getString(R.string.new_file_hint)
+            setText(getString(R.string.new_file_default))
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.new_file_title))
+            .setIcon(R.drawable.ic_create_new)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.new_file_create)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    showFragmentSnackbar(getString(R.string.new_file_empty))
+                } else {
+                    createNetworkTextFile(name)
+                }
+            }
+            .show()
+            .also { dialog ->
+                if (isOnTv) {
+                    dialog.window?.setBackgroundDrawable(
+                        android.graphics.drawable.ColorDrawable(ctx.getColor(R.color.tv_bg_gradient_end))
+                    )
+                    dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)?.setTextColor(textColorPrimary)
+                    val yellowCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
+                    val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+                    val white = ctx.getColor(R.color.tv_text_primary)
+                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+                        backgroundTintList = yellowCsl; setTextColor(black)
+                    }
+                    dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+                        backgroundTintList = glassCsl; setTextColor(white)
+                        setOnFocusChangeListener { _, hasFocus ->
+                            backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                            setTextColor(if (hasFocus) black else white)
+                        }
+                    }
+                }
+                dialog.window?.setSoftInputMode(
+                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                )
+            }
+    }
+
+    private fun createNetworkTextFile(filename: String) {
+        val share = this.share
+        val currentPath = this.currentPath
+        val remotePath = if (currentPath.isEmpty()) filename else "$currentPath/$filename"
+        // Clear any stale network save bridge
+        za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved = null
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val existingNames = try {
+                    val files = when (share.type) {
+                        ShareType.SMB -> SmbShareClient.listFiles(share, currentPath)
+                        ShareType.FTP -> FtpShareClient.listFiles(share, currentPath)
+                        ShareType.TV -> TvShareClient.listFiles(share, currentPath)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
+                        ShareType.NFS -> NfsShareClient.listFiles(share, currentPath)
+                        else -> emptyList()
+                    }
+                    files.map { it.name }.toSet()
+                } catch (_: Exception) { emptySet() }
+
+                val finalName = if (existingNames.contains(filename)) {
+                    val base = filename.substringBeforeLast(".")
+                    val ext = filename.substringAfterLast(".", "txt")
+                    var counter = 2
+                    var candidate = "$base ($counter).$ext"
+                    while (candidate in existingNames) {
+                        counter++
+                        candidate = "$base ($counter).$ext"
+                    }
+                    candidate
+                } else filename
+
+                val finalPath = if (currentPath.isEmpty()) finalName else "$currentPath/$finalName"
+
+                when (share.type) {
+                    ShareType.SMB -> SmbShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.FTP -> FtpShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.SFTP, ShareType.SCP -> withContext(Dispatchers.IO) {
+                        SshShareClient.openOutputStream(share, finalPath).use { }
+                    }
+                    ShareType.TV -> TvShareClient.uploadStream(share, finalPath,
+                        java.io.ByteArrayInputStream(ByteArray(0)), 0L)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, finalPath).use { }
+                    ShareType.NFS -> withContext(Dispatchers.IO) {
+                        NfsShareClient.openOutputStream(share, finalPath).use { }
+                    }
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+
+                withContext(Dispatchers.Main) {
+                    loadDirectory()
+                    showFragmentSnackbar(getString(R.string.new_file_success))
+
+                    // Download to cache and open in text viewer
+                    withContext(Dispatchers.IO) {
+                        val safeName = finalName.replace(Regex("[/\\\\:*?\"<>|]"), "_")
+                        val cacheFile = java.io.File(requireContext().cacheDir, "ufm_open_$safeName")
+                        try {
+                            val input = when (share.type) {
+                                ShareType.SMB -> SmbShareClient.openInputStream(share, finalPath)
+                                ShareType.FTP -> FtpShareClient.openInputStream(share, finalPath)
+                                ShareType.TV -> TvShareClient.openInputStream(share, finalPath)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, finalPath)
+                                ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, finalPath).first
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, finalPath).first
+                                ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, finalPath).first
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, finalPath).first
+                                ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, finalPath).first
+                                ShareType.NFS -> NfsShareClient.openInputStream(share, finalPath)
+                                ShareType.DLNA -> throw UnsupportedOperationException()
+                            }
+                            input.use { inp ->
+                                FileOutputStream(cacheFile).use { out -> inp.copyTo(out) }
+                            }
+                            // Set the network save bridge so content is uploaded back on save
+                            val capturedShare = share
+                            val capturedFinalPath = finalPath
+                            za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved = { savedFile ->
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    try {
+                                        val fis = java.io.FileInputStream(savedFile)
+                                        fis.use { inp ->
+                                            when (capturedShare.type) {
+                                                ShareType.SMB -> SmbShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.FTP -> FtpShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.SFTP, ShareType.SCP -> withContext(Dispatchers.IO) { SshShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) } }
+                                                ShareType.TV -> TvShareClient.uploadStream(capturedShare, capturedFinalPath, inp, savedFile.length())
+                                                ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.DROPBOX -> DropboxShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.WEBDAV -> WebDavShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) }
+                                                ShareType.NFS -> withContext(Dispatchers.IO) { NfsShareClient.openOutputStream(capturedShare, capturedFinalPath).use { out -> inp.copyTo(out) } }
+                                                ShareType.DLNA -> throw UnsupportedOperationException()
+                                            }
+                                        }
+                                    } catch (_: Exception) { }
+                                    // Keep the bridge alive for subsequent saves.
+                                    // The existing stale-cache sweeper (30 min) cleans up cache files.
+                                }
+                            }
+                            withContext(Dispatchers.Main) {
+                                val intent = Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java).apply {
+                                    putExtra(FileViewerRouter.EXTRA_FILE_PATH, cacheFile.absolutePath)
+                                    putExtra(FileViewerRouter.EXTRA_FILE_NAME, finalName)
+                                    putExtra(FileViewerRouter.EXTRA_START_IN_EDIT_MODE, true)
+                                }
+                                startActivity(intent)
+                            }
+                        } catch (_: Exception) {
+                            withContext(Dispatchers.Main) {
+                                showFragmentSnackbar(getString(R.string.new_file_success))
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showFragmentSnackbar(getString(R.string.new_file_error) + ": ${e.message}")
+                }
+            }
+        }
+    }
+
+    private fun showFragmentSnackbar(message: String) {
+        view?.let {
+            Snackbar.make(it, message, Snackbar.LENGTH_SHORT)
+                .setBackgroundTint(requireContext().getColor(R.color.ufm_surface_variant))
+                .setTextColor(requireContext().getColor(R.color.ufm_text_primary))
+                .show()
+        }
+    }
+
     private fun showCreateFolderDialog() {
         val container = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
@@ -697,7 +1008,7 @@ class NetworkBrowserFragment : Fragment() {
         }
 
         wireTvIconBtn(view.findViewById(R.id.btnBack)) { navigateUp() }
-        wireTvIconBtn(view.findViewById(R.id.btnNewFolder)) { showCreateFolderDialog() }
+        wireTvIconBtn(view.findViewById(R.id.btnCreateNew)) { showCreateNewMenu() }
         wireTvIconBtn(view.findViewById(R.id.btnSort)) { showSortFilterSheet() }
         wireTvIconBtn(view.findViewById(R.id.btnRefresh)) { loadDirectory() }
         wireTvIconBtn(view.findViewById(R.id.btnDrivePicker)) { onStoragePickerRequested?.invoke() }

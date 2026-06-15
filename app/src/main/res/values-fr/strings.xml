@@ -807,6 +807,50 @@ Fournisseur de stockage indisponible. Impossible de renommer certains éléments
     <string name="new_folder_exists">Un dossier portant ce nom existe déjà</string>
     <string name="new_folder_empty">Le nom du dossier ne peut pas être vide</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Créer un nouveau dossier ou fichier texte
+</string>
+    <string name="create_new_title">
+Nouveau
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Créer un nouveau fichier texte
+</string>
+    <string name="new_file_hint">
+Nom de fichier
+</string>
+    <string name="new_file_default">
+Nouveau fichier.txt
+</string>
+    <string name="new_file_create">
+Créer
+</string>
+    <string name="new_file_success">
+Fichier texte créé
+</string>
+    <string name="new_file_error">
+Échec de la création du fichier texte
+</string>
+    <string name="new_file_empty">
+Le nom du fichier ne peut pas être vide
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Nouveau dossier
+</string>
+    <string name="new_menu_new_file">
+Nouveau fichier texte
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Créer nouveau
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Sélectionner un dossier de coffre-fort</string>
     <string name="encrypt_no_vaults">Aucun dossier de coffre-fort n\'existe</string>

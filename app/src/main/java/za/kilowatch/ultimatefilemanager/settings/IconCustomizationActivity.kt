@@ -490,6 +490,7 @@ class IconCustomizationActivity : AppCompatActivity() {
 
     private fun buildToolbarIcons(): List<IconItemData> {
         return listOf(
+            IconItemData("toolbar_create_new", getString(R.string.icon_actions_create_new), R.drawable.ic_create_new, emptyList()),
             IconItemData("toolbar_copy", getString(R.string.icon_toolbar_copy), R.drawable.ic_copy, emptyList()),
             IconItemData("toolbar_move", getString(R.string.icon_toolbar_move), R.drawable.ic_move, emptyList()),
             IconItemData("toolbar_rename", getString(R.string.icon_toolbar_rename), R.drawable.ic_edit, emptyList()),

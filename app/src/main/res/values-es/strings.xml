@@ -807,6 +807,50 @@ Proveedor de almacenamiento no disponible. No se pudo cambiar el nombre de algun
     <string name="new_folder_exists">Ya existe una carpeta con ese nombre.</string>
     <string name="new_folder_empty">El nombre de la carpeta no puede estar vacío</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Crear nueva carpeta o archivo de texto
+</string>
+    <string name="create_new_title">
+Nuevo
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Crear nuevo archivo de texto
+</string>
+    <string name="new_file_hint">
+Nombre del archivo
+</string>
+    <string name="new_file_default">
+Nuevo archivo.txt
+</string>
+    <string name="new_file_create">
+Crear
+</string>
+    <string name="new_file_success">
+Archivo de texto creado
+</string>
+    <string name="new_file_error">
+No se pudo crear el archivo de texto
+</string>
+    <string name="new_file_empty">
+El nombre del archivo no puede estar vacío
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Nueva carpeta
+</string>
+    <string name="new_menu_new_file">
+Nuevo archivo de texto
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Crear nuevo
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Seleccionar carpeta de almacén</string>
     <string name="encrypt_no_vaults">No existen carpetas de almacén</string>

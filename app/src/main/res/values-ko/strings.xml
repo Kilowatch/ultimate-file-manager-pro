@@ -807,6 +807,50 @@ UFM 슬라이드 쇼
     <string name="new_folder_exists">해당 이름의 폴더가 이미 존재합니다.</string>
     <string name="new_folder_empty">폴더 이름은 비워둘 수 없습니다.</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+새 폴더 또는 텍스트 파일 만들기
+</string>
+    <string name="create_new_title">
+새로운
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+새 텍스트 파일 만들기
+</string>
+    <string name="new_file_hint">
+파일 이름
+</string>
+    <string name="new_file_default">
+새 파일.txt
+</string>
+    <string name="new_file_create">
+만들다
+</string>
+    <string name="new_file_success">
+텍스트 파일이 생성되었습니다.
+</string>
+    <string name="new_file_error">
+텍스트 파일을 생성하지 못했습니다.
+</string>
+    <string name="new_file_empty">
+파일 이름은 비워둘 수 없습니다.
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+새 폴더
+</string>
+    <string name="new_menu_new_file">
+새 텍스트 파일
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+새로 만들기
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Vault 폴더 선택</string>
     <string name="encrypt_no_vaults">Vault 폴더가 없습니다.</string>

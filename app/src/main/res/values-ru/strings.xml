@@ -807,6 +807,50 @@ sFTP-плитка
     <string name="new_folder_exists">Папка с таким названием уже существует</string>
     <string name="new_folder_empty">Имя папки не может быть пустым</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Создать новую папку или текстовый файл
+</string>
+    <string name="create_new_title">
+Новый
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Создать новый текстовый файл
+</string>
+    <string name="new_file_hint">
+Имя файла
+</string>
+    <string name="new_file_default">
+Новый файл.txt
+</string>
+    <string name="new_file_create">
+Создавать
+</string>
+    <string name="new_file_success">
+Текстовый файл создан
+</string>
+    <string name="new_file_error">
+Не удалось создать текстовый файл
+</string>
+    <string name="new_file_empty">
+Имя файла не может быть пустым
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Новая папка
+</string>
+    <string name="new_menu_new_file">
+Новый текстовый файл
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Создать новый
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Выберите папку хранилища</string>
     <string name="encrypt_no_vaults">Папок хранилища не существует.</string>

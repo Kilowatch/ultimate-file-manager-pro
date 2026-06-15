@@ -70,6 +70,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
         data class IconItem(val iconResId: Int, val nameResId: Int, val prefKey: String)
 
         val items = listOf(
+            IconItem(R.drawable.ic_create_new, R.string.cd_create_new, ToolbarIconsPreferenceManager.KEY_CREATE_NEW),
             IconItem(R.drawable.ic_copy, R.string.action_copy, ToolbarIconsPreferenceManager.KEY_COPY),
             IconItem(R.drawable.ic_move, R.string.action_move, ToolbarIconsPreferenceManager.KEY_MOVE),
             IconItem(R.drawable.ic_rename, R.string.action_rename, ToolbarIconsPreferenceManager.KEY_RENAME),
@@ -99,6 +100,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             imgIcon.setImageResource(item.iconResId)
             // Apply custom icon override from IconCustomizationManager
             val iconId = when (item.prefKey) {
+                ToolbarIconsPreferenceManager.KEY_CREATE_NEW -> "toolbar_create_new"
                 ToolbarIconsPreferenceManager.KEY_COPY -> "toolbar_copy"
                 ToolbarIconsPreferenceManager.KEY_MOVE -> "toolbar_move"
                 ToolbarIconsPreferenceManager.KEY_RENAME -> "toolbar_rename"

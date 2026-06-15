@@ -112,7 +112,7 @@ class IconPackExportActivity : AppCompatActivity() {
         // Toolbar
         categories.add(CategorySelection(
             "toolbar", getString(R.string.category_toolbar),
-            listOf("toolbar_copy", "toolbar_move", "toolbar_rename", "toolbar_share",
+            listOf("toolbar_create_new", "toolbar_copy", "toolbar_move", "toolbar_rename", "toolbar_share",
                 "toolbar_copy_encrypt", "toolbar_move_encrypt", "toolbar_favorite",
                 "toolbar_hide", "toolbar_unhide", "toolbar_select_all", "toolbar_compress",
                 "toolbar_image_compress", "toolbar_delete")

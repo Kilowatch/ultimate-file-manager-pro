@@ -807,6 +807,50 @@ UFM スライド ショー
     <string name="new_folder_exists">その名前のフォルダーはすでに存在します</string>
     <string name="new_folder_empty">フォルダー名を空にすることはできません</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+新しいフォルダーまたはテキスト ファイルを作成する
+</string>
+    <string name="create_new_title">
+新しい
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+新しいテキスト ファイルの作成
+</string>
+    <string name="new_file_hint">
+ファイル名
+</string>
+    <string name="new_file_default">
+新しいファイル.txt
+</string>
+    <string name="new_file_create">
+作成する
+</string>
+    <string name="new_file_success">
+テキストファイルが作成されました
+</string>
+    <string name="new_file_error">
+テキストファイルの作成に失敗しました
+</string>
+    <string name="new_file_empty">
+ファイル名を空にすることはできません
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+新しいフォルダー
+</string>
+    <string name="new_menu_new_file">
+新しいテキスト ファイル
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+新規作成
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">ボルトフォルダの選択</string>
     <string name="encrypt_no_vaults">ボルトフォルダーが存在しません</string>

@@ -807,6 +807,50 @@
     <string name="new_folder_exists">يوجد مجلد بهذا الاسم بالفعل</string>
     <string name="new_folder_empty">لا يمكن أن يكون اسم المجلد فارغًا</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+إنشاء مجلد جديد أو ملف نصي
+</string>
+    <string name="create_new_title">
+جديد
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+إنشاء ملف نصي جديد
+</string>
+    <string name="new_file_hint">
+اسم الملف
+</string>
+    <string name="new_file_default">
+ملف جديد.txt
+</string>
+    <string name="new_file_create">
+يخلق
+</string>
+    <string name="new_file_success">
+تم إنشاء ملف نصي
+</string>
+    <string name="new_file_error">
+فشل في إنشاء ملف نصي
+</string>
+    <string name="new_file_empty">
+لا يمكن أن يكون اسم الملف فارغًا
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+مجلد جديد
+</string>
+    <string name="new_menu_new_file">
+ملف نصي جديد
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+إنشاء جديد
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">حدد مجلد Vault</string>
     <string name="encrypt_no_vaults">لا توجد مجلدات قبو</string>

@@ -151,7 +151,8 @@ class TextViewerActivity : AppCompatActivity() {
         btnEdit.setOnClickListener { toggleEditMode() }
         btnSave.setOnClickListener { showSaveDialog() }
 
-        loadFile(File(originalFilePath))
+        val startEditing = intent.getBooleanExtra(FileViewerRouter.EXTRA_START_IN_EDIT_MODE, false)
+        loadFile(File(originalFilePath), startEditing)
 
         btnPrevPage.setOnClickListener {
             if (currentPage > 0) showPage(currentPage - 1)
@@ -343,7 +344,7 @@ class TextViewerActivity : AppCompatActivity() {
                 val parentDir = File(originalFilePath).parentFile ?: cacheDir
                 val targetFile = File(parentDir, fileName)
 
-                if (targetFile.absolutePath == originalFilePath) {
+                if (targetFile.absolutePath == originalFilePath && targetFile.length() > 0L) {
                     withContext(Dispatchers.Main) {
                         AlertDialog.Builder(this@TextViewerActivity)
                             .setTitle(R.string.overwrite_dialog_title)
@@ -379,6 +380,9 @@ class TextViewerActivity : AppCompatActivity() {
                 "ppt", "pps", "pot" -> targetFile.writeText(content, Charsets.UTF_8)
                 else -> targetFile.writeText(content, Charsets.UTF_8)
             }
+            // If this file was opened from a network share, upload the saved content back
+            // (the bridge callback handles its own threading — runs the upload on IO internally)
+            runCatching { NetworkSaveBridge.onFileSaved?.invoke(targetFile) }
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@TextViewerActivity,
                     getString(R.string.file_saved, targetFile.name), Toast.LENGTH_SHORT).show()
@@ -621,7 +625,7 @@ class TextViewerActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadFile(file: File) {
+    private fun loadFile(file: File, startInEditMode: Boolean = false) {
         progressBar.visibility = View.VISIBLE
         txtContent.visibility = View.GONE
         txtLineNumbers.visibility = View.GONE
@@ -669,6 +673,9 @@ class TextViewerActivity : AppCompatActivity() {
                         if (allChunks.size > 1) View.VISIBLE else View.GONE
 
                     showPage(0)
+                    if (startInEditMode) {
+                        toggleEditMode()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

@@ -40,6 +40,7 @@ import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
+import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import java.io.File
 
 /**
@@ -290,7 +291,7 @@ class FileBrowserFragment : Fragment() {
             btnCloseTwin.setOnClickListener { onCloseTwinWindow?.invoke() }
         }
 
-        view.findViewById<ImageView>(R.id.btnTvNewFolder)?.setOnClickListener { showCreateFolderDialog() }
+        view.findViewById<ImageView>(R.id.btnCreateNew)?.setOnClickListener { showCreateNewMenu() }
         view.findViewById<ImageView>(R.id.btnRefreshIndex)?.setOnClickListener { triggerReindex() }
         view.findViewById<View>(R.id.btnDrivePicker)?.setOnClickListener { 
             if (isTwinWindow) {
@@ -542,7 +543,7 @@ class FileBrowserFragment : Fragment() {
         }
 
         wireTvIconBtn(view.findViewById(R.id.btnTvBack)) { navigateBack() }
-        wireTvIconBtn(view.findViewById(R.id.btnTvNewFolder)) { showCreateFolderDialog() }
+        wireTvIconBtn(view.findViewById(R.id.btnCreateNew)) { showCreateNewMenu() }
         wireTvIconBtn(view.findViewById(R.id.btnSort)) { showSortFilterSheet() }
         wireTvIconBtn(view.findViewById(R.id.btnSearchToggle)) { toggleSearch() }
         wireTvIconBtn(view.findViewById(R.id.btnRefreshIndex)) { triggerReindex() }
@@ -988,6 +989,213 @@ class FileBrowserFragment : Fragment() {
             return true
         }
         return false
+    }
+
+    private fun showCreateNewMenu() {
+        val isOnTv = DeviceUtils.isTvDevice(requireContext())
+        val bgColor = if (isOnTv) requireContext().getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textPrimary = if (isOnTv) requireContext().getColor(R.color.tv_text_primary) else requireContext().getColor(R.color.ufm_text_primary)
+        val textSecondary = if (isOnTv) requireContext().getColor(R.color.tv_text_secondary) else requireContext().getColor(R.color.ufm_text_hint)
+
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val rowFolder = createMenuRowView(R.drawable.ic_folder, getString(R.string.new_menu_new_folder), isOnTv, textPrimary, textSecondary)
+        container.addView(rowFolder)
+
+        val divider = View(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1).apply {
+                topMargin = 8; bottomMargin = 8
+            }
+            setBackgroundColor(0x33FFFFFF.toInt())
+        }
+        container.addView(divider)
+
+        val rowFile = createMenuRowView(R.drawable.ic_file_text, getString(R.string.new_menu_new_file), isOnTv, textPrimary, textSecondary)
+        container.addView(rowFile)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.create_new_title))
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .show()
+
+        // Wire clicks after dialog.show() so we have a reference to dismiss it
+        rowFolder.setOnClickListener {
+            dialog.dismiss()
+            showCreateFolderDialog()
+        }
+        rowFile.setOnClickListener {
+            dialog.dismiss()
+            showCreateTextFileDialog()
+        }
+
+        if (isOnTv) {
+            dialog.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(requireContext().getColor(R.color.tv_bg_gradient_end))
+            )
+            dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)?.setTextColor(textPrimary)
+        }
+    }
+
+    private fun createMenuRowView(iconRes: Int, label: String, isOnTv: Boolean, textPrimary: Int, textSecondary: Int): LinearLayout {
+        val ctx = requireContext()
+        val row = LinearLayout(ctx).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            setPadding(16, 12, 16, 12)
+            isClickable = true
+            isFocusable = true
+        }
+        val icon = ImageView(ctx).apply {
+            setImageResource(iconRes)
+            layoutParams = LinearLayout.LayoutParams(40, 40).apply { marginEnd = 16 }
+            if (isOnTv) imageTintList = android.content.res.ColorStateList.valueOf(textPrimary)
+        }
+        row.addView(icon)
+        val text = TextView(ctx).apply {
+            this.text = label
+            textSize = 16f
+            setTextColor(textPrimary)
+        }
+        row.addView(text)
+        if (isOnTv) {
+            val white = ctx.getColor(R.color.tv_text_primary)
+            val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+            val yellow = ctx.getColor(R.color.tv_button_focused_yellow)
+            row.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    row.setBackgroundColor(yellow)
+                    text.setTextColor(black)
+                    icon.imageTintList = android.content.res.ColorStateList.valueOf(black)
+                } else {
+                    row.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                    text.setTextColor(white)
+                    icon.imageTintList = android.content.res.ColorStateList.valueOf(white)
+                }
+            }
+        }
+        return row
+    }
+
+    private fun showCreateTextFileDialog() {
+        val isOnTv = DeviceUtils.isTvDevice(requireContext())
+        val ctx = requireContext()
+        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) ctx.getColor(R.color.tv_text_hint) else ctx.getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) ctx.getColor(R.color.tv_button_focused_yellow) else ctx.getColor(R.color.ufm_primary)
+
+        val container = LinearLayout(ctx).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+        val editText = EditText(ctx).apply {
+            hint = getString(R.string.new_file_hint)
+            setText(getString(R.string.new_file_default))
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.new_file_title))
+            .setIcon(R.drawable.ic_create_new)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.new_file_create)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_empty))
+                } else {
+                    createTextFileInFragment(name)
+                }
+            }
+            .show()
+            .also { dialog ->
+                if (isOnTv) {
+                    dialog.window?.setBackgroundDrawable(
+                        android.graphics.drawable.ColorDrawable(ctx.getColor(R.color.tv_bg_gradient_end))
+                    )
+                    val titleView = dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)
+                    titleView?.setTextColor(textColorPrimary)
+                    val yellowCsl = android.content.res.ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
+                    val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+                    val white = ctx.getColor(R.color.tv_text_primary)
+                    val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
+                    dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+                        backgroundTintList = yellowCsl; setTextColor(black)
+                    }
+                    dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
+                        backgroundTintList = glassCsl; setTextColor(white)
+                        setOnFocusChangeListener { _, hasFocus ->
+                            backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                            setTextColor(if (hasFocus) black else white)
+                        }
+                    }
+                }
+                dialog.window?.setSoftInputMode(
+                    android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+                )
+            }
+    }
+
+    private fun createTextFileInFragment(baseName: String) {
+        // Only works for local storage in fragment context
+        var targetFile = File(currentDir, baseName)
+        if (targetFile.exists()) {
+            val nameWithoutExt = targetFile.nameWithoutExtension
+            val ext = targetFile.extension
+            var counter = 2
+            while (targetFile.exists()) {
+                targetFile = File(currentDir, "$nameWithoutExt ($counter).$ext")
+                counter++
+            }
+        }
+        val fileToCreate = targetFile
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val created = fileToCreate.createNewFile()
+                if (created) {
+                    try {
+                        val (sid, stype) = IndexingRepository.resolveStorageForPath(fileToCreate.absolutePath)
+                            .let { it.first to it.second }
+                        UfmApplication.indexingRepository.indexFile(fileToCreate, sid, stype)
+                    } catch (_: Exception) { }
+
+                    withContext(Dispatchers.Main) {
+                        loadDirectory(currentDir)
+                        val act = activity
+                        if (act is FileBrowserActivity) {
+                            act.showPremiumSnackbar(getString(R.string.new_file_success))
+                            val intent = Intent(act, za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java).apply {
+                                putExtra(FileViewerRouter.EXTRA_FILE_PATH, fileToCreate.absolutePath)
+                                putExtra(FileViewerRouter.EXTRA_FILE_NAME, fileToCreate.name)
+                                putExtra(FileViewerRouter.EXTRA_START_IN_EDIT_MODE, true)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_error))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_error) + ": ${e.message}")
+                }
+            }
+        }
     }
 
     private fun showCreateFolderDialog() {

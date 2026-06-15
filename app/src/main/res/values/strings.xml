@@ -571,6 +571,26 @@
     <string name="new_folder_exists">A folder with that name already exists</string>
     <string name="new_folder_empty">Folder name cannot be empty</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">Create new folder or text file</string>
+    <string name="create_new_title">New</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">Create New Text File</string>
+    <string name="new_file_hint">Filename</string>
+    <string name="new_file_default">New File.txt</string>
+    <string name="new_file_create">Create</string>
+    <string name="new_file_success">Text file created</string>
+    <string name="new_file_error">Failed to create text file</string>
+    <string name="new_file_empty">Filename cannot be empty</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">New Folder</string>
+    <string name="new_menu_new_file">New Text File</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">Create New</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Select Vault Folder</string>
     <string name="encrypt_no_vaults">No vault folders exist</string>

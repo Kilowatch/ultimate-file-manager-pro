@@ -807,6 +807,50 @@ Speicheranbieter nicht verfügbar. Einige Elemente konnten nicht umbenannt werde
     <string name="new_folder_exists">Ein Ordner mit diesem Namen existiert bereits</string>
     <string name="new_folder_empty">Der Ordnername darf nicht leer sein</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Erstellen Sie einen neuen Ordner oder eine neue Textdatei
+</string>
+    <string name="create_new_title">
+Neu
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Neue Textdatei erstellen
+</string>
+    <string name="new_file_hint">
+Dateiname
+</string>
+    <string name="new_file_default">
+Neue Datei.txt
+</string>
+    <string name="new_file_create">
+Erstellen
+</string>
+    <string name="new_file_success">
+Textdatei erstellt
+</string>
+    <string name="new_file_error">
+Textdatei konnte nicht erstellt werden
+</string>
+    <string name="new_file_empty">
+Der Dateiname darf nicht leer sein
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Neuer Ordner
+</string>
+    <string name="new_menu_new_file">
+Neue Textdatei
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Neu erstellen
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Wählen Sie den Tresorordner aus</string>
     <string name="encrypt_no_vaults">Es sind keine Tresorordner vorhanden</string>

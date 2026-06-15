@@ -807,6 +807,50 @@ Provedor de armazenamento indisponível. Não foi possível renomear alguns iten
     <string name="new_folder_exists">Já existe uma pasta com esse nome</string>
     <string name="new_folder_empty">O nome da pasta não pode ficar vazio</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+Crie uma nova pasta ou arquivo de texto
+</string>
+    <string name="create_new_title">
+Novo
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+Criar novo arquivo de texto
+</string>
+    <string name="new_file_hint">
+Nome do arquivo
+</string>
+    <string name="new_file_default">
+Novo arquivo.txt
+</string>
+    <string name="new_file_create">
+Criar
+</string>
+    <string name="new_file_success">
+Arquivo de texto criado
+</string>
+    <string name="new_file_error">
+Falha ao criar arquivo de texto
+</string>
+    <string name="new_file_empty">
+O nome do arquivo não pode ficar vazio
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+Nova pasta
+</string>
+    <string name="new_menu_new_file">
+Novo arquivo de texto
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+Criar novo
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">Selecione a pasta do Vault</string>
     <string name="encrypt_no_vaults">Não existem pastas do Vault</string>

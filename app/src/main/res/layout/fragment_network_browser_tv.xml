@@ -100,15 +100,15 @@
             android:background="@drawable/selector_tv_icon_btn"
             app:tint="@color/tv_text_primary" />
 
-        <!-- New Folder -->
+        <!-- Create New -->
         <ImageView
-            android:id="@+id/btnNewFolder"
+            android:id="@+id/btnCreateNew"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="10dp"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/ic_folder"
-            android:contentDescription="@string/cd_new_folder"
+            android:src="@drawable/ic_create_new"
+            android:contentDescription="@string/cd_create_new"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="false"

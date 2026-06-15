@@ -36,7 +36,7 @@ object FileViewerRouter {
     // NOTE: keep in sync with LanguageRegistry.kt — every extension that
     // supports syntax highlighting must be listed here so the file is
     // routed to TextViewerActivity.
-    private val TEXT_EXTENSIONS = setOf(
+    val TEXT_EXTENSIONS = setOf(
         // Core text
         "txt", "log", "rtf",
         // Config / data
@@ -66,7 +66,7 @@ object FileViewerRouter {
     )
 
     // ── DAT (auto-detect text vs binary) ─────────────────────────────────────
-    private val DAT_EXTENSIONS = setOf("dat")
+    val DAT_EXTENSIONS = setOf("dat")
 
     // ── Office OOXML (ZIP-based, POI XWPF/XSSF/XSLF) ────────────────────────
     private val OFFICE_OOXML_EXTENSIONS = setOf(
@@ -713,4 +713,6 @@ object FileViewerRouter {
     const val EXTRA_IS_VIDEO  = "extra_is_video"
     /** Used to wire the shared element return transition in [ImageViewerActivity]. */
     const val EXTRA_TRANSITION_NAME = "extra_transition_name"
+    /** When true, [TextViewerActivity] starts in edit mode immediately. */
+    const val EXTRA_START_IN_EDIT_MODE = "extra_start_in_edit_mode"
 }

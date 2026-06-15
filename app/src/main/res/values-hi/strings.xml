@@ -807,6 +807,50 @@ PKCS12 पासवर्ड
     <string name="new_folder_exists">उस नाम का एक फ़ोल्डर पहले से मौजूद है</string>
     <string name="new_folder_empty">फ़ोल्डर का नाम खाली नहीं हो सकता</string>
 
+    <!-- Create New (menu combining New Folder + New Text File) -->
+    <string name="cd_create_new">
+नया फ़ोल्डर या टेक्स्ट फ़ाइल बनाएं
+</string>
+    <string name="create_new_title">
+नया
+</string>
+
+    <!-- New Text File -->
+    <string name="new_file_title">
+नई टेक्स्ट फ़ाइल बनाएँ
+</string>
+    <string name="new_file_hint">
+फ़ाइलनाम
+</string>
+    <string name="new_file_default">
+नई फ़ाइल.txt
+</string>
+    <string name="new_file_create">
+बनाएं
+</string>
+    <string name="new_file_success">
+टेक्स्ट फ़ाइल बनाई गई
+</string>
+    <string name="new_file_error">
+टेक्स्ट फ़ाइल बनाने में विफल
+</string>
+    <string name="new_file_empty">
+फ़ाइल नाम खाली नहीं हो सकता
+</string>
+
+    <!-- New Menu Items -->
+    <string name="new_menu_new_folder">
+नया फ़ोल्डर
+</string>
+    <string name="new_menu_new_file">
+नई पाठ फ़ाइल
+</string>
+
+    <!-- Icon Palette -->
+    <string name="icon_actions_create_new">
+नया निर्माण
+</string>
+
     <!-- Encrypt to Vault -->
     <string name="encrypt_select_vault">वॉल्ट फ़ोल्डर चुनें</string>
     <string name="encrypt_no_vaults">कोई वॉल्ट फ़ोल्डर मौजूद नहीं है</string>
