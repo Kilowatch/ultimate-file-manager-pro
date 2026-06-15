@@ -322,8 +322,8 @@ object SettingsBackupManager {
             }
             root.put("smart_sort_configs", smartSortArr)
 
-            // Custom tiles (version 2+)
-            val customTilesArr = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getAllCustomTileDataForExport(context)
+            // Custom tiles (version 2+) — only export the tiles the user selected
+            val customTilesArr = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getAllCustomTileDataForExport(context, selectedIds)
             root.put("custom_tiles", customTilesArr)
 
             val jsonString = root.toString(2)
@@ -578,10 +578,29 @@ object SettingsBackupManager {
                     SmartSortSavedConfigRepository.saveAll(list, context)
                 }
 
-                // Custom tiles (version 2+) — skip if absent (version 1 import)
+                // Custom tiles (version 2+) — skip if absent (version 1 import).
+                // Only restore the tiles the user selected; build a filtered array from rawJson.
                 val customTilesArr = root.optJSONArray("custom_tiles")
                 if (customTilesArr != null) {
-                    za.kilowatch.ultimatefilemanager.storage.CustomTileManager.restoreFromExport(context, customTilesArr)
+                    val selectedCustomTileIds = details.customTiles
+                        .filter { it.isSelected }
+                        .map { it.id }
+                        .toSet()
+                    // If no custom-tile items exist in the details list (e.g. older backup
+                    // parsed without a UI selection step) fall back to restoring everything.
+                    val filteredArr = if (selectedCustomTileIds.isEmpty()) {
+                        customTilesArr
+                    } else {
+                        val arr = org.json.JSONArray()
+                        for (i in 0 until customTilesArr.length()) {
+                            val obj = customTilesArr.getJSONObject(i)
+                            if (selectedCustomTileIds.contains(obj.getString("id"))) {
+                                arr.put(obj)
+                            }
+                        }
+                        arr
+                    }
+                    za.kilowatch.ultimatefilemanager.storage.CustomTileManager.restoreFromExport(context, filteredArr)
                 }
 
                 true

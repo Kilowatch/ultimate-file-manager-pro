@@ -236,7 +236,7 @@ object TileIconManager {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_ICONS, json.toString())
-            .apply()
+            .commit()
     }
 
     private fun sanitizeId(id: String): String {

@@ -153,7 +153,8 @@ class ImportDetailsActivity : AppCompatActivity() {
                         details.storages.isEmpty() &&
                         details.ftpProfiles.isEmpty() &&
                         details.renames.isEmpty() &&
-                        details.smartSortConfigs.isEmpty()
+                        details.smartSortConfigs.isEmpty() &&
+                        details.customTiles.isEmpty()
 
                 if (isEmpty) {
                     showError(getString(R.string.backup_import_details_empty))
@@ -196,7 +197,7 @@ class ImportDetailsActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 if (success) {
                     Toast.makeText(this@ImportDetailsActivity, R.string.backup_import_success, Toast.LENGTH_SHORT).show()
-                    
+
                     // Self-restart application to reload preferences and db singletons cleanly
                     val pm = packageManager
                     val launchIntent = pm.getLaunchIntentForPackage(packageName)

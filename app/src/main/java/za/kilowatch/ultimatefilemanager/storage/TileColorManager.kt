@@ -17,7 +17,7 @@ object TileColorManager {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
             .putString(KEY_COLORS, json.toString())
-            .apply()
+            .commit()
     }
 
     fun loadTileColors(context: Context): Map<String, TileColorConfig> {

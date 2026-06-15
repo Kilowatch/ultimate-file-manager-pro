@@ -167,12 +167,16 @@ object CustomTileManager {
     //  Export / Import                                                     //
     // ------------------------------------------------------------------ //
 
-    /** Serialize all custom tile data for backup export. */
-    fun getAllCustomTileDataForExport(context: Context): JSONArray {
+    /** Serialize all custom tile data for backup export.
+     *  @param selectedIds if non-empty only the custom tiles whose IDs are in this set are
+     *                     included; an empty set means "export everything". */
+    fun getAllCustomTileDataForExport(context: Context, selectedIds: Set<String> = emptySet()): JSONArray {
         val tiles = loadCustomTiles(context)
-        val parentMap = getTileParentMap(context)
         val arr = JSONArray()
         for (tile in tiles) {
+            // Skip tiles that were not selected by the user (if a selection was made)
+            if (selectedIds.isNotEmpty() && !selectedIds.contains(tile.id)) continue
+
             val obj = JSONObject()
             obj.put("id", tile.id)
             obj.put("title", tile.title)
@@ -220,6 +224,7 @@ object CustomTileManager {
 
         val metaList = mutableListOf<CustomTileData>()
         val parents = mutableMapOf<String, String>()
+        val restoredTileIds = mutableSetOf<String>()
 
         for (i in 0 until jsonArray.length()) {
             val obj = jsonArray.getJSONObject(i)
@@ -229,6 +234,7 @@ object CustomTileManager {
             val iconRes = obj.optInt("iconRes", 0)
 
             metaList.add(CustomTileData(tileId, title, subtitle, iconRes))
+            restoredTileIds.add(tileId)
 
             // Restore children and their order
             val childrenArr = obj.optJSONArray("children")
@@ -267,7 +273,28 @@ object CustomTileManager {
 
         editor.putString(KEY_META, serializeMeta(metaList))
         editor.putString(KEY_PARENTS, serializeParents(parents))
-        editor.apply()
+        editor.commit()
+
+        // Ensure the restored custom-tile container IDs are not in the hidden set
+        // so they appear on-screen immediately after import, even if the target
+        // device previously had them in its hidden list from a prior state.
+        if (restoredTileIds.isNotEmpty()) {
+            val tileOrderPrefs = context.getSharedPreferences("tile_order_prefs", Context.MODE_PRIVATE)
+            val hiddenRaw = tileOrderPrefs.getString("tile_hidden", null)
+            if (!hiddenRaw.isNullOrEmpty()) {
+                val hiddenArr = try { org.json.JSONArray(hiddenRaw) } catch (_: Exception) { null }
+                if (hiddenArr != null) {
+                    val updatedHidden = org.json.JSONArray()
+                    for (k in 0 until hiddenArr.length()) {
+                        val id = hiddenArr.getString(k)
+                        if (!restoredTileIds.contains(id)) updatedHidden.put(id)
+                    }
+                    if (updatedHidden.length() != hiddenArr.length()) {
+                        tileOrderPrefs.edit().putString("tile_hidden", updatedHidden.toString()).commit()
+                    }
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------ //
