@@ -153,4 +153,26 @@
     <color name="date_group_header_count_text">#FFB0B0B0</color>
     <color name="date_group_header_stroke">#3326A69A</color>
 
+    <!-- ════════════════════════════════════════════════════════════════
+         Syntax Highlighting Colors (Dark Theme)
+         Matches token types in SyntaxTokenType.kt
+         ════════════════════════════════════════════════════════════════ -->
+    <color name="syntax_keyword">#FFC084FC</color>         <!-- violet -->
+    <color name="syntax_string">#FF34D399</color>          <!-- emerald -->
+    <color name="syntax_comment">#FF64748B</color>         <!-- slate -->
+    <color name="syntax_number">#FFFBBF24</color>           <!-- amber -->
+    <color name="syntax_type">#FF22D3EE</color>             <!-- cyan -->
+    <color name="syntax_annotation">#FF9CA3AF</color>       <!-- gray -->
+    <color name="syntax_tag_name">#FFF87171</color>         <!-- red -->
+    <color name="syntax_tag_attr">#FFC084FC</color>         <!-- violet -->
+    <color name="syntax_attr_value">#FF34D399</color>       <!-- emerald -->
+    <color name="syntax_property_key">#FF60A5FA</color>     <!-- blue -->
+    <color name="syntax_variable">#FFFBBF24</color>         <!-- amber -->
+    <color name="syntax_preprocessor">#FF9CA3AF</color>     <!-- gray -->
+    <color name="syntax_markdown_header">#FFF87171</color>  <!-- red -->
+    <color name="syntax_markdown_link">#FF60A5FA</color>    <!-- blue -->
+    <color name="syntax_builtin">#FFA78BFA</color>          <!-- purple -->
+    <color name="syntax_boolean_literal">#FFC084FC</color>  <!-- violet -->
+    <color name="syntax_constant">#FFFBBF24</color>         <!-- amber -->
+
 </resources>

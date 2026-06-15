@@ -33,10 +33,36 @@ import za.kilowatch.ultimatefilemanager.R
 object FileViewerRouter {
 
     // ── Plain text / code ────────────────────────────────────────────────────
+    // NOTE: keep in sync with LanguageRegistry.kt — every extension that
+    // supports syntax highlighting must be listed here so the file is
+    // routed to TextViewerActivity.
     private val TEXT_EXTENSIONS = setOf(
-        "txt", "log", "ini", "cfg", "conf", "json", "xml", "yaml", "yml", "md",
-        "sh", "bat", "py", "js", "html", "css", "java", "kt", "c", "cpp", "h",
-        "sql", "gradle", "properties", "rtf"
+        // Core text
+        "txt", "log", "rtf",
+        // Config / data
+        "json", "xml", "yaml", "yml", "toml", "properties", "ini", "cfg", "conf",
+        "xsd", "xsl", "xslt", "plist", "svg",
+        // Web
+        "html", "htm", "xhtml", "css", "scss", "less", "sass",
+        "js", "mjs", "cjs", "jsx", "ts", "tsx",
+        // Scripting
+        "py", "pyw", "pyx", "pxd", "pyi", "rb", "erb", "rhtml", "rxml", "rjs",
+        "rake", "gemspec", "php", "phtml", "php3", "php4", "php5", "php7", "phps", "phpt",
+        "pl", "pm", "t", "pod", "lua", "wlua",
+        // Shell
+        "sh", "bash", "zsh", "ksh", "csh", "tcsh", "bat",
+        // JVM
+        "java", "jav", "jsh", "kt", "kts", "ktm", "gradle",
+        "cs", "csx",
+        // C-family
+        "c", "h", "cpp", "hpp", "cc", "hh", "cxx", "hxx", "cp", "cx",
+        "c++", "h++",
+        // Modern
+        "go", "rs", "rlib", "swift", "swiftmodule", "dart",
+        // Data
+        "sql", "ddl", "dml", "pks", "pkb", "fnc", "prc", "trg", "vw",
+        // Docs
+        "md", "markdown", "mdown", "mdwn"
     )
 
     // ── DAT (auto-detect text vs binary) ─────────────────────────────────────

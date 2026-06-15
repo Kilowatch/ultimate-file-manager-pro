@@ -213,4 +213,26 @@
     <!-- Card stroke -->
     <color name="date_group_header_stroke">#2600897B</color>
 
+    <!-- ════════════════════════════════════════════════════════════════
+         Syntax Highlighting Colors (Light Theme)
+         Matches token types in SyntaxTokenType.kt
+         ════════════════════════════════════════════════════════════════ -->
+    <color name="syntax_keyword">#FF7C3AED</color>         <!-- violet -->
+    <color name="syntax_string">#FF059669</color>          <!-- emerald -->
+    <color name="syntax_comment">#FF94A3B8</color>         <!-- slate -->
+    <color name="syntax_number">#FFD97706</color>           <!-- amber -->
+    <color name="syntax_type">#FF0891B2</color>             <!-- cyan -->
+    <color name="syntax_annotation">#FF6B7280</color>       <!-- gray -->
+    <color name="syntax_tag_name">#FFDC2626</color>         <!-- red -->
+    <color name="syntax_tag_attr">#FF7C3AED</color>         <!-- violet -->
+    <color name="syntax_attr_value">#FF059669</color>       <!-- emerald -->
+    <color name="syntax_property_key">#FF2563EB</color>     <!-- blue -->
+    <color name="syntax_variable">#FFD97706</color>         <!-- amber -->
+    <color name="syntax_preprocessor">#FF6B7280</color>     <!-- gray -->
+    <color name="syntax_markdown_header">#FFDC2626</color>  <!-- red -->
+    <color name="syntax_markdown_link">#FF2563EB</color>    <!-- blue -->
+    <color name="syntax_builtin">#FF6D28D9</color>          <!-- purple -->
+    <color name="syntax_boolean_literal">#FF7C3AED</color>  <!-- violet -->
+    <color name="syntax_constant">#FFD97706</color>         <!-- amber -->
+
 </resources>

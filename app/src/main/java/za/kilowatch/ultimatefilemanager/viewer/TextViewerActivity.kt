@@ -29,6 +29,13 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.viewer.syntax.LanguageDef
+import za.kilowatch.ultimatefilemanager.viewer.syntax.LanguageRegistry
+import za.kilowatch.ultimatefilemanager.viewer.syntax.SyntaxHighlightEngine
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -64,6 +71,13 @@ class TextViewerActivity : AppCompatActivity() {
     private var currentText = ""
     private var isOfficeFile = false
     private var isTv = false
+
+    // ── Syntax highlighting fields ─────────────────────────────────────
+    private var currentLanguage: LanguageDef? = null
+    private var isHighlightedFile = false
+    private var highlightingTextWatcher: TextWatcher? = null
+    private var highlightDebounceHandler: Handler? = null
+    private var highlightDebounceRunnable: Runnable? = null
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -205,7 +219,52 @@ class TextViewerActivity : AppCompatActivity() {
                 setColor(0x15FFFFFF.toInt())
                 cornerRadius = 4f
             }
-            txtContent.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+            // Only force white text for plain text files — syntax highlighting
+            // provides its own per-token colours via ForegroundColorSpan
+            if (!isHighlightedFile) {
+                txtContent.setTextColor(android.graphics.Color.parseColor("#FFFFFF"))
+            }
+
+            // ── Apply syntax highlighting in edit mode ────────────────
+            if (isHighlightedFile && currentLanguage != null) {
+                val lang = currentLanguage!!
+                lifecycleScope.launch(Dispatchers.Default) {
+                    val spannable = SyntaxHighlightEngine.highlight(fullText, lang, this@TextViewerActivity)
+                    withContext(Dispatchers.Main) {
+                        val pos = txtContent.selectionStart.coerceIn(0, spannable.length)
+                        txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)
+                        txtContent.setSelection(pos)
+                    }
+                }
+            }
+
+            // ── Debounced re-highlight TextWatcher ────────────────────
+            highlightDebounceHandler = Handler(Looper.getMainLooper())
+            val debounce = Runnable {
+                if (isEditMode && isHighlightedFile && currentLanguage != null) {
+                    // In-place span update — no setText(), no cursor reset
+                    SyntaxHighlightEngine.applyHighlight(
+                        txtContent.text,
+                        currentLanguage!!,
+                        this@TextViewerActivity
+                    )
+                }
+            }
+            highlightDebounceRunnable = debounce
+
+            val watcher = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    highlightDebounceRunnable?.let { r ->
+                        highlightDebounceHandler?.removeCallbacks(r)
+                        highlightDebounceHandler?.postDelayed(r, 300)
+                    }
+                }
+            }
+            txtContent.addTextChangedListener(watcher)
+            highlightingTextWatcher = watcher
+
             hScrollView.scrollTo(0, 0)
             scrollView.scrollTo(0, 0)
             if (isOfficeFile) {
@@ -214,6 +273,13 @@ class TextViewerActivity : AppCompatActivity() {
                 Toast.makeText(this, R.string.edit_mode_enabled, Toast.LENGTH_SHORT).show()
             }
         } else {
+            // ── Clean up TextWatcher when leaving edit mode ───────────
+            highlightingTextWatcher?.let { txtContent.removeTextChangedListener(it) }
+            highlightingTextWatcher = null
+            highlightDebounceHandler?.removeCallbacksAndMessages(null)
+            highlightDebounceHandler = null
+            highlightDebounceRunnable = null
+
             txtContent.isEnabled = false
             txtContent.isFocusable = false
             txtContent.isFocusableInTouchMode = false
@@ -574,6 +640,15 @@ class TextViewerActivity : AppCompatActivity() {
                 }
 
                 currentText = text
+
+                // ── Syntax highlighting: detect language ──────────────
+                if (!isOfficeFile) {
+                    currentLanguage = LanguageRegistry.detect(originalFileName)
+                    isHighlightedFile = currentLanguage != null
+                } else {
+                    isHighlightedFile = false
+                }
+
                 val chunks = splitIntoChunks(text, PAGE_BYTE_SIZE)
                 val indicatorsHidden = GridIndicatorsPreferenceManager.isHidden(this@TextViewerActivity)
                 val lineNumChunks = if (!indicatorsHidden) {
@@ -613,19 +688,34 @@ class TextViewerActivity : AppCompatActivity() {
             allLineNumChunks.getOrElse(page) { "" }
         } else ""
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            val params = withContext(Dispatchers.Main) {
-                TextViewCompat.getTextMetricsParams(txtContent)
-            }
-            val precomputed = PrecomputedTextCompat.create(chunk, params)
-
-            withContext(Dispatchers.Main) {
-                txtContent.setText(chunk, android.widget.TextView.BufferType.SPANNABLE)
-                txtLineNumbers.text = lineNums
-                txtContent.textSize = textSize
-                txtLineNumbers.textSize = textSize
-                scrollView.scrollTo(0, 0)
-                updatePaginationUi()
+        lifecycleScope.launch(Dispatchers.Default) {
+            // ── Syntax highlighting for code files ────────────────
+            if (isHighlightedFile && currentLanguage != null && chunk.isNotEmpty()) {
+                val lang = currentLanguage!!
+                val context = this@TextViewerActivity
+                val spannable = SyntaxHighlightEngine.highlight(chunk, lang, context)
+                withContext(Dispatchers.Main) {
+                    txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)
+                    txtLineNumbers.text = lineNums
+                    txtContent.textSize = textSize
+                    txtLineNumbers.textSize = textSize
+                    scrollView.scrollTo(0, 0)
+                    updatePaginationUi()
+                }
+            } else {
+                // ── Plain text path (existing behaviour) ──────────
+                val params = withContext(Dispatchers.Main) {
+                    TextViewCompat.getTextMetricsParams(txtContent)
+                }
+                val precomputed = PrecomputedTextCompat.create(chunk, params)
+                withContext(Dispatchers.Main) {
+                    txtContent.setText(chunk, android.widget.TextView.BufferType.SPANNABLE)
+                    txtLineNumbers.text = lineNums
+                    txtContent.textSize = textSize
+                    txtLineNumbers.textSize = textSize
+                    scrollView.scrollTo(0, 0)
+                    updatePaginationUi()
+                }
             }
         }
     }
@@ -944,6 +1034,15 @@ class TextViewerActivity : AppCompatActivity() {
         } catch (e: Exception) {
             "Error extracting Visio content:\n${e.message}"
         }
+    }
+
+    override fun onDestroy() {
+        highlightingTextWatcher?.let { txtContent.removeTextChangedListener(it) }
+        highlightingTextWatcher = null
+        highlightDebounceHandler?.removeCallbacksAndMessages(null)
+        highlightDebounceHandler = null
+        highlightDebounceRunnable = null
+        super.onDestroy()
     }
 
     companion object {
