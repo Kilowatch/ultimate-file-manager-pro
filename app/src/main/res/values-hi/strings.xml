@@ -1085,6 +1085,82 @@ PKCS12 पासवर्ड
     <string name="manage_tiles_no_hidden">वर्तमान में कोई भी टाइल छिपी हुई नहीं है</string>
     <string name="manage_tiles_restored_snackbar">टाइल बहाल की गई</string>
     <string name="manage_tiles_all_restored_snackbar">सभी टाइलें बहाल कर दी गईं</string>
+    <string name="manage_tiles_restores_to_main">
+इसे पुनर्स्थापित करें: मुख्य मेनू
+</string>
+    <string name="manage_tiles_restores_to_custom">
+इसमें पुनर्स्थापित किया गया: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+कस्टम टाइल बनाएं
+</string>
+    <string name="custom_tile_edit_title">
+कस्टम टाइल संपादित करें
+</string>
+    <string name="custom_tile_delete_title">
+कस्टम टाइल हटाएँ
+</string>
+    <string name="custom_tile_title_hint">
+शीर्षक (आवश्यक)
+</string>
+    <string name="custom_tile_subtitle_hint">
+उपशीर्षक (वैकल्पिक)
+</string>
+    <string name="custom_tile_title_required">
+शीर्षक आवश्यक है
+</string>
+    <string name="custom_tile_created">
+कस्टम टाइल बनाई गई
+</string>
+    <string name="custom_tile_updated">
+कस्टम टाइल अपडेट की गई
+</string>
+    <string name="custom_tile_deleted">
+कस्टम टाइल हटा दी गई
+</string>
+    <string name="custom_tile_delete_confirm">
+यह कस्टम टाइल हटाएं?
+</string>
+    <string name="custom_tile_delete_warning">
+अंदर की सभी टाइलें मुख्य मेनू पर वापस ले जायेंगी।
+</string>
+    <string name="custom_tile_moved_to">
+%1$s में ले जाया गया
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" को मुख्य मेनू पर वापस ले जाया गया
+</string>
+    <string name="custom_tile_add_button">
+कस्टम टाइल जोड़ें
+</string>
+    <string name="custom_tile_select_icon">
+आइकन चुनें
+</string>
+    <string name="custom_tile_icon_hint">
+आइकन को पैलेट के माध्यम से बदला जा सकता है (टाइल रंग → आइकन)
+</string>
+    <string name="custom_tile_empty">
+इस समूह में कोई टाइल्स नहीं
+</string>
+    <string name="custom_tile_cannot_nest">
+एक कस्टम टाइल को किसी अन्य कस्टम टाइल में नहीं ले जाया जा सकता
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+कस्टम टाइल पर जाएँ
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+कोई कस्टम टाइल्स उपलब्ध नहीं है. पहले एक बनाएं.
+</string>
+    <string name="move_to_custom_tile_select">
+\"%1$s\" को इसमें ले जाने के लिए एक कस्टम टाइल चुनें:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" को मुख्य मेनू पर वापस ले जाया गया
+</string>
     <string name="tile_color_title">
 टाइल का रंग
 </string>
@@ -4162,6 +4238,9 @@ JSON में शामिल करने के लिए मेटाडे�
     <string name="backup_cat_smart_sort">
 स्मार्ट सॉर्ट फ़ोल्डर कॉन्फ़िगरेशन
 </string>
+    <string name="backup_cat_custom_tiles">
+कस्टम टाइलें एवं amp; समूह
+</string>
     <string name="backup_import_details_title">
 पूर्वावलोकन आयात करें
 </string>
@@ -4742,6 +4821,9 @@ AMOLED
 </string>
     <string name="backup_pref_video_thumb_time">
 वीडियो थंबनेल समय
+</string>
+    <string name="backup_pref_custom_tiles">
+कस्टम टाइलें एवं amp; समूह
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

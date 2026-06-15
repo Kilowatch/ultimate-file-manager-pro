@@ -1085,6 +1085,82 @@ NFS server denied access. Check that the export path is correct and that the ser
     <string name="manage_tiles_no_hidden">Tidak ada ubin yang disembunyikan saat ini</string>
     <string name="manage_tiles_restored_snackbar">Ubin dipulihkan</string>
     <string name="manage_tiles_all_restored_snackbar">Semua ubin dipulihkan</string>
+    <string name="manage_tiles_restores_to_main">
+Restores to: Main Menu
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Restores to: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Create Custom Tile
+</string>
+    <string name="custom_tile_edit_title">
+Edit Custom Tile
+</string>
+    <string name="custom_tile_delete_title">
+Delete Custom Tile
+</string>
+    <string name="custom_tile_title_hint">
+Title (required)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Subtitle (optional)
+</string>
+    <string name="custom_tile_title_required">
+Title is required
+</string>
+    <string name="custom_tile_created">
+Custom tile created
+</string>
+    <string name="custom_tile_updated">
+Custom tile updated
+</string>
+    <string name="custom_tile_deleted">
+Custom tile deleted
+</string>
+    <string name="custom_tile_delete_confirm">
+Delete this custom tile?
+</string>
+    <string name="custom_tile_delete_warning">
+All tiles inside will be moved back to the main menu.
+</string>
+    <string name="custom_tile_moved_to">
+Moved to %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" moved back to main menu
+</string>
+    <string name="custom_tile_add_button">
+Add Custom Tile
+</string>
+    <string name="custom_tile_select_icon">
+Select Icon
+</string>
+    <string name="custom_tile_icon_hint">
+Icon can be changed via palette (Tile Color → Icons)
+</string>
+    <string name="custom_tile_empty">
+No tiles in this group
+</string>
+    <string name="custom_tile_cannot_nest">
+Cannot move a custom tile into another custom tile
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Move to Custom Tile
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+No custom tiles available. Create one first.
+</string>
+    <string name="move_to_custom_tile_select">
+Select a custom tile to move \"%1$s\" into:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" moved back to main menu
+</string>
     <string name="tile_color_title">
 Tile Color
 </string>
@@ -4162,6 +4238,9 @@ Custom Partition/Drive Names
     <string name="backup_cat_smart_sort">
 Smart Sort Folder Configurations
 </string>
+    <string name="backup_cat_custom_tiles">
+Custom Tiles &amp; Groups
+</string>
     <string name="backup_import_details_title">
 Import Preview
 </string>
@@ -4742,6 +4821,9 @@ Secure Cache Copying Settings
 </string>
     <string name="backup_pref_video_thumb_time">
 Video Thumbnail Time
+</string>
+    <string name="backup_pref_custom_tiles">
+Custom Tiles &amp; Groups
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

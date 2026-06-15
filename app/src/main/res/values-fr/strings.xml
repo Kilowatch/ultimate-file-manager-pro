@@ -1085,6 +1085,82 @@ Le serveur NFS a refusé l\'accès. Vérifiez que le chemin d\'exportation est c
     <string name="manage_tiles_no_hidden">Aucune vignette n\'est actuellement masquée</string>
     <string name="manage_tiles_restored_snackbar">Tuile restaurée</string>
     <string name="manage_tiles_all_restored_snackbar">Toutes les tuiles restaurées</string>
+    <string name="manage_tiles_restores_to_main">
+Restaure vers : Menu principal
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Restaure vers : %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Créer une vignette personnalisée
+</string>
+    <string name="custom_tile_edit_title">
+Modifier la vignette personnalisée
+</string>
+    <string name="custom_tile_delete_title">
+Supprimer la vignette personnalisée
+</string>
+    <string name="custom_tile_title_hint">
+Titre (obligatoire)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Sous-titre (facultatif)
+</string>
+    <string name="custom_tile_title_required">
+Le titre est requis
+</string>
+    <string name="custom_tile_created">
+Tuile personnalisée créée
+</string>
+    <string name="custom_tile_updated">
+Tuile personnalisée mise à jour
+</string>
+    <string name="custom_tile_deleted">
+Tuile personnalisée supprimée
+</string>
+    <string name="custom_tile_delete_confirm">
+Supprimer cette vignette personnalisée ?
+</string>
+    <string name="custom_tile_delete_warning">
+Toutes les vignettes à l\'intérieur seront déplacées vers le menu principal.
+</string>
+    <string name="custom_tile_moved_to">
+Déplacé vers %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" est revenu au menu principal
+</string>
+    <string name="custom_tile_add_button">
+Ajouter une vignette personnalisée
+</string>
+    <string name="custom_tile_select_icon">
+Sélectionnez l\'icône
+</string>
+    <string name="custom_tile_icon_hint">
+L\'icône peut être modifiée via la palette (Couleur des tuiles → Icônes)
+</string>
+    <string name="custom_tile_empty">
+Aucune tuile dans ce groupe
+</string>
+    <string name="custom_tile_cannot_nest">
+Impossible de déplacer une vignette personnalisée vers une autre vignette personnalisée
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Passer à la vignette personnalisée
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Aucune vignette personnalisée disponible. Créez-en un d’abord.
+</string>
+    <string name="move_to_custom_tile_select">
+Sélectionnez une vignette personnalisée pour déplacer \"%1$s\" vers :
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" est revenu au menu principal
+</string>
     <string name="tile_color_title">
 Couleur des carreaux
 </string>
@@ -4162,6 +4238,9 @@ Noms de partition/lecteur personnalisés
     <string name="backup_cat_smart_sort">
 Configurations de dossiers de tri intelligent
 </string>
+    <string name="backup_cat_custom_tiles">
+Tuiles et amp; Groupes
+</string>
     <string name="backup_import_details_title">
 Aperçu de l\'importation
 </string>
@@ -4742,6 +4821,9 @@ Paramètres de copie du cache sécurisé
 </string>
     <string name="backup_pref_video_thumb_time">
 Durée de la vignette vidéo
+</string>
+    <string name="backup_pref_custom_tiles">
+Tuiles et amp; Groupes
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

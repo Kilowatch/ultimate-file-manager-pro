@@ -1085,6 +1085,82 @@ NFS sunucusu erişimi reddetti. Dışa aktarma yolunun doğru olduğunu ve sunuc
     <string name="manage_tiles_no_hidden">Şu anda hiçbir kutucuk gizli değil</string>
     <string name="manage_tiles_restored_snackbar">Döşeme geri yüklendi</string>
     <string name="manage_tiles_all_restored_snackbar">Tüm döşemeler restore edildi</string>
+    <string name="manage_tiles_restores_to_main">
+Şuraya geri yüklenir: Ana Menü
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Şuraya geri yüklenir: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Özel Döşeme Oluştur
+</string>
+    <string name="custom_tile_edit_title">
+Özel Döşemeyi Düzenle
+</string>
+    <string name="custom_tile_delete_title">
+Özel Döşemeyi Sil
+</string>
+    <string name="custom_tile_title_hint">
+Başlık (gerekli)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Altyazı (isteğe bağlı)
+</string>
+    <string name="custom_tile_title_required">
+Başlık gerekli
+</string>
+    <string name="custom_tile_created">
+Özel kutucuk oluşturuldu
+</string>
+    <string name="custom_tile_updated">
+Özel kutucuk güncellendi
+</string>
+    <string name="custom_tile_deleted">
+Özel döşeme silindi
+</string>
+    <string name="custom_tile_delete_confirm">
+Bu özel kutucuk silinsin mi?
+</string>
+    <string name="custom_tile_delete_warning">
+İçerideki tüm kutucuklar ana menüye geri taşınacaktır.
+</string>
+    <string name="custom_tile_moved_to">
+%1$s konumuna taşındı
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" ana menüye geri taşındı
+</string>
+    <string name="custom_tile_add_button">
+Özel Döşeme Ekle
+</string>
+    <string name="custom_tile_select_icon">
+Simge Seç
+</string>
+    <string name="custom_tile_icon_hint">
+Simge palet aracılığıyla değiştirilebilir (Döşeme Rengi → Simgeler)
+</string>
+    <string name="custom_tile_empty">
+Bu grupta parça yok
+</string>
+    <string name="custom_tile_cannot_nest">
+Özel bir döşeme başka bir özel döşemeye taşınamıyor
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Özel Döşemeye Taşı
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Özel döşeme mevcut değil. Önce bir tane oluşturun.
+</string>
+    <string name="move_to_custom_tile_select">
+\"%1$s\" öğesini şuraya taşımak için özel bir kutucuk seçin:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" ana menüye geri taşındı
+</string>
     <string name="tile_color_title">
 Döşeme Rengi
 </string>
@@ -4162,6 +4238,9 @@ FTP Sunucusu Profilleri
     <string name="backup_cat_smart_sort">
 Akıllı Sıralama Klasörü Yapılandırmaları
 </string>
+    <string name="backup_cat_custom_tiles">
+Özel Fayanslar ve Gruplar
+</string>
     <string name="backup_import_details_title">
 İçe Aktarma Önizlemesi
 </string>
@@ -4742,6 +4821,9 @@ Güvenli Önbellek Kopyalama Ayarları
 </string>
     <string name="backup_pref_video_thumb_time">
 Video Küçük Resim Süresi
+</string>
+    <string name="backup_pref_custom_tiles">
+Özel Fayanslar ve Gruplar
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

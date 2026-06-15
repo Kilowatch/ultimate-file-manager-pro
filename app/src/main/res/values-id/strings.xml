@@ -1085,6 +1085,82 @@ Server NFS menolak akses. Periksa apakah jalur ekspor sudah benar dan server men
     <string name="manage_tiles_no_hidden">Tidak ada ubin yang disembunyikan saat ini</string>
     <string name="manage_tiles_restored_snackbar">Ubin dipulihkan</string>
     <string name="manage_tiles_all_restored_snackbar">Semua ubin dipulihkan</string>
+    <string name="manage_tiles_restores_to_main">
+Kembalikan ke: Menu Utama
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Pulihkan ke: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Buat Ubin Kustom
+</string>
+    <string name="custom_tile_edit_title">
+Edit Ubin Kustom
+</string>
+    <string name="custom_tile_delete_title">
+Hapus Ubin Kustom
+</string>
+    <string name="custom_tile_title_hint">
+Judul (wajib)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Subjudul (opsional)
+</string>
+    <string name="custom_tile_title_required">
+Judul diperlukan
+</string>
+    <string name="custom_tile_created">
+Ubin khusus dibuat
+</string>
+    <string name="custom_tile_updated">
+Ubin khusus diperbarui
+</string>
+    <string name="custom_tile_deleted">
+Ubin khusus dihapus
+</string>
+    <string name="custom_tile_delete_confirm">
+Hapus ubin khusus ini?
+</string>
+    <string name="custom_tile_delete_warning">
+Semua ubin di dalamnya akan dipindahkan kembali ke menu utama.
+</string>
+    <string name="custom_tile_moved_to">
+Dipindahkan ke %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" dipindahkan kembali ke menu utama
+</string>
+    <string name="custom_tile_add_button">
+Tambahkan Ubin Kustom
+</string>
+    <string name="custom_tile_select_icon">
+Pilih Ikon
+</string>
+    <string name="custom_tile_icon_hint">
+Ikon dapat diubah melalui palet (Warna Ubin → Ikon)
+</string>
+    <string name="custom_tile_empty">
+Tidak ada ubin di grup ini
+</string>
+    <string name="custom_tile_cannot_nest">
+Tidak dapat memindahkan ubin khusus ke ubin khusus lainnya
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Pindah ke Ubin Kustom
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Tidak ada ubin khusus yang tersedia. Buat yang pertama.
+</string>
+    <string name="move_to_custom_tile_select">
+Pilih ubin khusus untuk memindahkan \"%1$s\" ke:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" dipindahkan kembali ke menu utama
+</string>
     <string name="tile_color_title">
 Warna Ubin
 </string>
@@ -4162,6 +4238,9 @@ Nama Partisi/Drive Khusus
     <string name="backup_cat_smart_sort">
 Konfigurasi Folder Sortir Cerdas
 </string>
+    <string name="backup_cat_custom_tiles">
+Ubin Khusus &amp; amp; Grup
+</string>
     <string name="backup_import_details_title">
 Pratinjau Impor
 </string>
@@ -4742,6 +4821,9 @@ Pengaturan Penyalinan Cache Aman
 </string>
     <string name="backup_pref_video_thumb_time">
 Waktu Gambar Kecil Video
+</string>
+    <string name="backup_pref_custom_tiles">
+Ubin Khusus &amp; amp; Grup
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

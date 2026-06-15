@@ -1085,6 +1085,82 @@ NFS-Server verweigert den Zugriff. Überprüfen Sie, ob der Exportpfad korrekt i
     <string name="manage_tiles_no_hidden">Derzeit sind keine Kacheln ausgeblendet</string>
     <string name="manage_tiles_restored_snackbar">Fliese restauriert</string>
     <string name="manage_tiles_all_restored_snackbar">Alle Fliesen restauriert</string>
+    <string name="manage_tiles_restores_to_main">
+Stellt wieder her: Hauptmenü
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Stellt wieder her: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Erstellen Sie eine benutzerdefinierte Kachel
+</string>
+    <string name="custom_tile_edit_title">
+Benutzerdefinierte Kachel bearbeiten
+</string>
+    <string name="custom_tile_delete_title">
+Benutzerdefinierte Kachel löschen
+</string>
+    <string name="custom_tile_title_hint">
+Titel (erforderlich)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Untertitel (optional)
+</string>
+    <string name="custom_tile_title_required">
+Titel ist erforderlich
+</string>
+    <string name="custom_tile_created">
+Benutzerdefinierte Kachel erstellt
+</string>
+    <string name="custom_tile_updated">
+Benutzerdefinierte Kachel aktualisiert
+</string>
+    <string name="custom_tile_deleted">
+Benutzerdefinierte Kachel gelöscht
+</string>
+    <string name="custom_tile_delete_confirm">
+Diese benutzerdefinierte Kachel löschen?
+</string>
+    <string name="custom_tile_delete_warning">
+Alle darin enthaltenen Kacheln werden zurück in das Hauptmenü verschoben.
+</string>
+    <string name="custom_tile_moved_to">
+Verschoben nach %1$s
+</string>
+    <string name="custom_tile_moved_back">
+„%1$s“ wurde zurück ins Hauptmenü verschoben
+</string>
+    <string name="custom_tile_add_button">
+Benutzerdefinierte Kachel hinzufügen
+</string>
+    <string name="custom_tile_select_icon">
+Wählen Sie Symbol
+</string>
+    <string name="custom_tile_icon_hint">
+Das Symbol kann über die Palette geändert werden (Kachelfarbe → Symbole).
+</string>
+    <string name="custom_tile_empty">
+Keine Kacheln in dieser Gruppe
+</string>
+    <string name="custom_tile_cannot_nest">
+Eine benutzerdefinierte Kachel kann nicht in eine andere benutzerdefinierte Kachel verschoben werden
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Gehen Sie zur benutzerdefinierten Kachel
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Keine benutzerdefinierten Kacheln verfügbar. Erstellen Sie zuerst eines.
+</string>
+    <string name="move_to_custom_tile_select">
+Wählen Sie eine benutzerdefinierte Kachel aus, in die „%1$s“ verschoben werden soll:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+„%1$s“ wurde zurück ins Hauptmenü verschoben
+</string>
     <string name="tile_color_title">
 Fliesenfarbe
 </string>
@@ -4162,6 +4238,9 @@ Benutzerdefinierte Partitions-/Laufwerksnamen
     <string name="backup_cat_smart_sort">
 Smart Sort-Ordnerkonfigurationen
 </string>
+    <string name="backup_cat_custom_tiles">
+Benutzerdefinierte Kacheln &amp; Gruppen
+</string>
     <string name="backup_import_details_title">
 Vorschau importieren
 </string>
@@ -4742,6 +4821,9 @@ Einstellungen für sicheres Cache-Kopieren
 </string>
     <string name="backup_pref_video_thumb_time">
 Video-Thumbnail-Zeit
+</string>
+    <string name="backup_pref_custom_tiles">
+Benutzerdefinierte Kacheln &amp; Gruppen
 </string>
     <string name="backup_format_type_host">
 %1$s – %2$s

@@ -1085,6 +1085,82 @@ NFS 서버가 액세스를 거부했습니다. 내보내기 경로가 올바른�
     <string name="manage_tiles_no_hidden">현재 숨겨진 타일이 없습니다.</string>
     <string name="manage_tiles_restored_snackbar">타일 ​​복원됨</string>
     <string name="manage_tiles_all_restored_snackbar">모든 타일이 복원되었습니다.</string>
+    <string name="manage_tiles_restores_to_main">
+복원 대상: 주 메뉴
+</string>
+    <string name="manage_tiles_restores_to_custom">
+복원 대상: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+사용자 정의 타일 만들기
+</string>
+    <string name="custom_tile_edit_title">
+사용자 정의 타일 편집
+</string>
+    <string name="custom_tile_delete_title">
+사용자 정의 타일 삭제
+</string>
+    <string name="custom_tile_title_hint">
+제목 (필수)
+</string>
+    <string name="custom_tile_subtitle_hint">
+자막(선택사항)
+</string>
+    <string name="custom_tile_title_required">
+제목은 필수 항목입니다.
+</string>
+    <string name="custom_tile_created">
+맞춤 타일이 생성되었습니다.
+</string>
+    <string name="custom_tile_updated">
+맞춤 타일이 업데이트되었습니다.
+</string>
+    <string name="custom_tile_deleted">
+맞춤 타일이 삭제되었습니다.
+</string>
+    <string name="custom_tile_delete_confirm">
+이 맞춤 타일을 삭제하시겠습니까?
+</string>
+    <string name="custom_tile_delete_warning">
+내부의 모든 타일은 기본 메뉴로 다시 이동됩니다.
+</string>
+    <string name="custom_tile_moved_to">
+%1$s로 이동됨
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\"이(가) 기본 메뉴로 다시 이동했습니다.
+</string>
+    <string name="custom_tile_add_button">
+사용자 정의 타일 추가
+</string>
+    <string name="custom_tile_select_icon">
+아이콘 선택
+</string>
+    <string name="custom_tile_icon_hint">
+팔레트를 통해 아이콘 변경 가능(타일 색상 → 아이콘)
+</string>
+    <string name="custom_tile_empty">
+이 그룹에는 타일이 없습니다.
+</string>
+    <string name="custom_tile_cannot_nest">
+사용자 지정 타일을 다른 사용자 지정 타일로 이동할 수 없습니다.
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+맞춤 타일로 이동
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+사용자 정의 타일을 사용할 수 없습니다. 먼저 하나를 만드세요.
+</string>
+    <string name="move_to_custom_tile_select">
+\"%1$s\"을(를) 이동할 맞춤 타일을 선택하세요.
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\"이(가) 기본 메뉴로 다시 이동했습니다.
+</string>
     <string name="tile_color_title">
 타일 ​​색상
 </string>
@@ -4162,6 +4238,9 @@ FTP 서버 프로필
     <string name="backup_cat_smart_sort">
 스마트 정렬 폴더 구성
 </string>
+    <string name="backup_cat_custom_tiles">
+맞춤형 타일 &amp; 여러 떼
+</string>
     <string name="backup_import_details_title">
 가져오기 미리보기
 </string>
@@ -4742,6 +4821,9 @@ APK 추출 설정
 </string>
     <string name="backup_pref_video_thumb_time">
 비디오 썸네일 시간
+</string>
+    <string name="backup_pref_custom_tiles">
+맞춤형 타일 &amp; 여러 떼
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

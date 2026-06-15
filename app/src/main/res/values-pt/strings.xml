@@ -1085,6 +1085,82 @@ Servidor NFS com acesso negado. Verifique se o caminho de exportação está cor
     <string name="manage_tiles_no_hidden">Nenhum bloco está oculto no momento</string>
     <string name="manage_tiles_restored_snackbar">Azulejo restaurado</string>
     <string name="manage_tiles_all_restored_snackbar">Todos os azulejos restaurados</string>
+    <string name="manage_tiles_restores_to_main">
+Restaura para: Menu Principal
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Restaura para: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Criar bloco personalizado
+</string>
+    <string name="custom_tile_edit_title">
+Editar bloco personalizado
+</string>
+    <string name="custom_tile_delete_title">
+Excluir bloco personalizado
+</string>
+    <string name="custom_tile_title_hint">
+Título (obrigatório)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Legenda (opcional)
+</string>
+    <string name="custom_tile_title_required">
+O título é obrigatório
+</string>
+    <string name="custom_tile_created">
+Bloco personalizado criado
+</string>
+    <string name="custom_tile_updated">
+Bloco personalizado atualizado
+</string>
+    <string name="custom_tile_deleted">
+Bloco personalizado excluído
+</string>
+    <string name="custom_tile_delete_confirm">
+Excluir este bloco personalizado?
+</string>
+    <string name="custom_tile_delete_warning">
+Todos os blocos dentro serão movidos de volta para o menu principal.
+</string>
+    <string name="custom_tile_moved_to">
+Movido para %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" voltou ao menu principal
+</string>
+    <string name="custom_tile_add_button">
+Adicionar bloco personalizado
+</string>
+    <string name="custom_tile_select_icon">
+Selecione o ícone
+</string>
+    <string name="custom_tile_icon_hint">
+O ícone pode ser alterado através da paleta (Cor do bloco → Ícones)
+</string>
+    <string name="custom_tile_empty">
+Nenhum bloco neste grupo
+</string>
+    <string name="custom_tile_cannot_nest">
+Não é possível mover um bloco personalizado para outro bloco personalizado
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Mover para bloco personalizado
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Nenhum bloco personalizado disponível. Crie um primeiro.
+</string>
+    <string name="move_to_custom_tile_select">
+Selecione um bloco personalizado para mover \"%1$s\" para:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" voltou ao menu principal
+</string>
     <string name="tile_color_title">
 Cor do ladrilho
 </string>
@@ -4162,6 +4238,9 @@ Nomes personalizados de partições/unidades
     <string name="backup_cat_smart_sort">
 Configurações de pasta de classificação inteligente
 </string>
+    <string name="backup_cat_custom_tiles">
+Blocos e blocos personalizados Grupos
+</string>
     <string name="backup_import_details_title">
 Pré-visualização de importação
 </string>
@@ -4742,6 +4821,9 @@ Configurações de cópia segura de cache
 </string>
     <string name="backup_pref_video_thumb_time">
 Hora da miniatura do vídeo
+</string>
+    <string name="backup_pref_custom_tiles">
+Blocos e blocos personalizados Grupos
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

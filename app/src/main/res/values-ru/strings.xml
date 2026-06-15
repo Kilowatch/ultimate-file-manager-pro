@@ -1085,6 +1085,82 @@ NFS-серверу запрещен доступ. Убедитесь, что п�
     <string name="manage_tiles_no_hidden">Ни одна плитка в настоящее время не скрыта</string>
     <string name="manage_tiles_restored_snackbar">Плитка восстановлена</string>
     <string name="manage_tiles_all_restored_snackbar">Вся плитка восстановлена</string>
+    <string name="manage_tiles_restores_to_main">
+Восстанавливается в: Главное меню
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Восстанавливается в: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Создать пользовательскую плитку
+</string>
+    <string name="custom_tile_edit_title">
+Редактировать пользовательскую плитку
+</string>
+    <string name="custom_tile_delete_title">
+Удалить пользовательскую плитку
+</string>
+    <string name="custom_tile_title_hint">
+Название (обязательно)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Подзаголовок (необязательно)
+</string>
+    <string name="custom_tile_title_required">
+Требуется название
+</string>
+    <string name="custom_tile_created">
+Пользовательская плитка создана
+</string>
+    <string name="custom_tile_updated">
+Пользовательская плитка обновлена.
+</string>
+    <string name="custom_tile_deleted">
+Пользовательская плитка удалена.
+</string>
+    <string name="custom_tile_delete_confirm">
+Удалить эту пользовательскую плитку?
+</string>
+    <string name="custom_tile_delete_warning">
+Все плитки внутри будут перемещены обратно в главное меню.
+</string>
+    <string name="custom_tile_moved_to">
+Перемещено в %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" перемещен обратно в главное меню.
+</string>
+    <string name="custom_tile_add_button">
+Добавить пользовательскую плитку
+</string>
+    <string name="custom_tile_select_icon">
+Выберите значок
+</string>
+    <string name="custom_tile_icon_hint">
+Иконку можно изменить с помощью палитры (Цвет плитки → Иконки).
+</string>
+    <string name="custom_tile_empty">
+В этой группе нет плиток
+</string>
+    <string name="custom_tile_cannot_nest">
+Невозможно переместить пользовательскую плитку в другую пользовательскую плитку.
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Перейти к пользовательской плитке
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+Пользовательские плитки отсутствуют. Сначала создайте его.
+</string>
+    <string name="move_to_custom_tile_select">
+Выберите пользовательскую плитку, в которую нужно переместить «%1$s»:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" перемещен обратно в главное меню.
+</string>
     <string name="tile_color_title">
 Цвет плитки
 </string>
@@ -4162,6 +4238,9 @@ PDF (только многостраничный)
     <string name="backup_cat_smart_sort">
 Конфигурации папок интеллектуальной сортировки
 </string>
+    <string name="backup_cat_custom_tiles">
+Пользовательские плитки и усилители; Группы
+</string>
     <string name="backup_import_details_title">
 Импортировать предварительный просмотр
 </string>
@@ -4742,6 +4821,9 @@ XML/Разметка
 </string>
     <string name="backup_pref_video_thumb_time">
 Время миниатюр видео
+</string>
+    <string name="backup_pref_custom_tiles">
+Пользовательские плитки и усилители; Группы
 </string>
     <string name="backup_format_type_host">
 %1$s – %2$s

@@ -1085,6 +1085,82 @@ NFS サーバーがアクセスを拒否しました。エクスポート パス
     <string name="manage_tiles_no_hidden">現在非表示になっているタイルはありません</string>
     <string name="manage_tiles_restored_snackbar">タイルが復元されました</string>
     <string name="manage_tiles_all_restored_snackbar">すべてのタイルが復元されました</string>
+    <string name="manage_tiles_restores_to_main">
+復元先: メインメニュー
+</string>
+    <string name="manage_tiles_restores_to_custom">
+復元先: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+カスタムタイルの作成
+</string>
+    <string name="custom_tile_edit_title">
+カスタムタイルの編集
+</string>
+    <string name="custom_tile_delete_title">
+カスタムタイルの削除
+</string>
+    <string name="custom_tile_title_hint">
+タイトル (必須)
+</string>
+    <string name="custom_tile_subtitle_hint">
+字幕 (オプション)
+</string>
+    <string name="custom_tile_title_required">
+タイトルは必須です
+</string>
+    <string name="custom_tile_created">
+カスタムタイルが作成されました
+</string>
+    <string name="custom_tile_updated">
+カスタムタイルが更新されました
+</string>
+    <string name="custom_tile_deleted">
+カスタムタイルが削除されました
+</string>
+    <string name="custom_tile_delete_confirm">
+このカスタム タイルを削除しますか?
+</string>
+    <string name="custom_tile_delete_warning">
+内部のすべてのタイルがメイン メニューに戻ります。
+</string>
+    <string name="custom_tile_moved_to">
+%1$s に移動しました
+</string>
+    <string name="custom_tile_moved_back">
+「%1$s」をメインメニューに戻しました
+</string>
+    <string name="custom_tile_add_button">
+カスタムタイルの追加
+</string>
+    <string name="custom_tile_select_icon">
+アイコンを選択
+</string>
+    <string name="custom_tile_icon_hint">
+アイコンはパレット（タイルの色→アイコン）から変更できます。
+</string>
+    <string name="custom_tile_empty">
+このグループにはタイルがありません
+</string>
+    <string name="custom_tile_cannot_nest">
+カスタム タイルを別のカスタム タイルに移動できません
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+カスタムタイルに移動
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+利用可能なカスタム タイルはありません。まず 1 つ作成します。
+</string>
+    <string name="move_to_custom_tile_select">
+「%1$s」を移動するカスタム タイルを選択してください:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+「%1$s」をメインメニューに戻しました
+</string>
     <string name="tile_color_title">
 タイルの色
 </string>
@@ -4162,6 +4238,9 @@ FTPサーバープロファイル
     <string name="backup_cat_smart_sort">
 スマートソートフォルダーの構成
 </string>
+    <string name="backup_cat_custom_tiles">
+カスタムタイルとグループ
+</string>
     <string name="backup_import_details_title">
 インポートプレビュー
 </string>
@@ -4742,6 +4821,9 @@ APK抽出設定
 </string>
     <string name="backup_pref_video_thumb_time">
 動画のサムネイル時間
+</string>
+    <string name="backup_pref_custom_tiles">
+カスタムタイルとグループ
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

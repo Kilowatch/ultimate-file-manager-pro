@@ -1085,6 +1085,82 @@ El servidor NFS denegó el acceso. Compruebe que la ruta de exportación sea cor
     <string name="manage_tiles_no_hidden">Actualmente no hay mosaicos ocultos</string>
     <string name="manage_tiles_restored_snackbar">Azulejo restaurado</string>
     <string name="manage_tiles_all_restored_snackbar">Todos los azulejos restaurados</string>
+    <string name="manage_tiles_restores_to_main">
+Restaura a: Menú principal
+</string>
+    <string name="manage_tiles_restores_to_custom">
+Restaura a: %1$s
+</string>
+
+    <!-- Custom Tiles -->
+    <string name="custom_tile_create_title">
+Crear mosaico personalizado
+</string>
+    <string name="custom_tile_edit_title">
+Editar mosaico personalizado
+</string>
+    <string name="custom_tile_delete_title">
+Eliminar mosaico personalizado
+</string>
+    <string name="custom_tile_title_hint">
+Título (requerido)
+</string>
+    <string name="custom_tile_subtitle_hint">
+Subtítulo (opcional)
+</string>
+    <string name="custom_tile_title_required">
+Se requiere título
+</string>
+    <string name="custom_tile_created">
+Mosaico personalizado creado
+</string>
+    <string name="custom_tile_updated">
+Mosaico personalizado actualizado
+</string>
+    <string name="custom_tile_deleted">
+Mosaico personalizado eliminado
+</string>
+    <string name="custom_tile_delete_confirm">
+¿Eliminar este mosaico personalizado?
+</string>
+    <string name="custom_tile_delete_warning">
+Todos los mosaicos del interior volverán al menú principal.
+</string>
+    <string name="custom_tile_moved_to">
+Movido a %1$s
+</string>
+    <string name="custom_tile_moved_back">
+\"%1$s\" volvió al menú principal
+</string>
+    <string name="custom_tile_add_button">
+Agregar mosaico personalizado
+</string>
+    <string name="custom_tile_select_icon">
+Seleccionar icono
+</string>
+    <string name="custom_tile_icon_hint">
+El icono se puede cambiar mediante la paleta (Color del mosaico → Iconos)
+</string>
+    <string name="custom_tile_empty">
+No hay mosaicos en este grupo
+</string>
+    <string name="custom_tile_cannot_nest">
+No se puede mover un mosaico personalizado a otro mosaico personalizado
+</string>
+
+    <!-- TV Move to Custom Tile -->
+    <string name="move_to_custom_tile">
+Mover a mosaico personalizado
+</string>
+    <string name="move_to_custom_tile_no_tiles">
+No hay mosaicos personalizados disponibles. Crea uno primero.
+</string>
+    <string name="move_to_custom_tile_select">
+Seleccione un mosaico personalizado para mover \"%1$s\" a:
+</string>
+    <string name="custom_tile_moved_back_snackbar">
+\"%1$s\" volvió al menú principal
+</string>
     <string name="tile_color_title">
 Color del azulejo
 </string>
@@ -4162,6 +4238,9 @@ Nombres personalizados de particiones/unidades
     <string name="backup_cat_smart_sort">
 Configuraciones de carpetas de clasificación inteligente
 </string>
+    <string name="backup_cat_custom_tiles">
+Azulejos personalizados y Grupos
+</string>
     <string name="backup_import_details_title">
 Vista previa de importación
 </string>
@@ -4742,6 +4821,9 @@ Configuración de copia de caché segura
 </string>
     <string name="backup_pref_video_thumb_time">
 Tiempo de miniatura del vídeo
+</string>
+    <string name="backup_pref_custom_tiles">
+Azulejos personalizados y Grupos
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s
