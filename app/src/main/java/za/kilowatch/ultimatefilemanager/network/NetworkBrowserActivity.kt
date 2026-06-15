@@ -983,6 +983,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                    btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
                    btnCopyEncrypt, btnMoveEncrypt)
             btnSort?.let { tvButtons.add(it) }
+            btnViewToggle?.let { tvButtons.add(it) }
             
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault
@@ -991,6 +992,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
             }
             
+            // View mode toggle for TV
+            btnViewToggle?.setOnClickListener {
+                ViewModeManager.showSelectionDialog(this, fileAdapter.viewMode) { selectedMode ->
+                    ViewModeManager.save(this, selectedMode)
+                    applyViewMode(selectedMode)
+                }
+            }
+
             // Search toggle for TV
             btnSearchToggle.imageTintList = iconTintDefault
             btnSearchToggle.setOnClickListener { toggleSearch() }
