@@ -579,7 +579,65 @@ class UfmDocumentsProvider : DocumentsProvider() {
         documentId: String,
         sizeHint: Point?,
         signal: CancellationSignal?
-    ): AssetFileDescriptor? = null
+    ): AssetFileDescriptor? {
+        if (isNetworkDoc(documentId)) return null
+        val absPath = try { fromSafDocId(documentId) } catch (e: Exception) { return null }
+        val file = File(absPath)
+        if (!file.exists() || !file.isFile) return null
+        val ext = file.extension.lowercase()
+        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+        val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+        if (!isImage && !isVideo) return null
+
+        return try {
+            val hint = sizeHint ?: Point(256, 256)
+            val bitmap: android.graphics.Bitmap? = if (isImage) {
+                val opts = android.graphics.BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                    android.graphics.BitmapFactory.decodeFile(absPath, this)
+                    val maxDim = maxOf(hint.x, hint.y).coerceAtLeast(64)
+                    inSampleSize = maxOf(1, minOf(outWidth, outHeight) / maxDim)
+                    inJustDecodeBounds = false
+                }
+                android.graphics.BitmapFactory.decodeFile(absPath, opts)
+            } else {
+                // Video thumbnail
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    try {
+                        android.media.ThumbnailUtils.createVideoThumbnail(
+                            file, android.util.Size(hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64)), signal
+                        )
+                    } catch (_: Exception) { null }
+                } else {
+                    @Suppress("DEPRECATION")
+                    android.media.ThumbnailUtils.createVideoThumbnail(
+                        absPath, android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                    )
+                }
+            }
+            if (bitmap == null) return null
+
+            // Write bitmap to a pipe so the caller can stream it
+            val pipes = ParcelFileDescriptor.createPipe()
+            val readEnd  = pipes[0]
+            val writeEnd = pipes[1]
+            Thread {
+                try {
+                    ParcelFileDescriptor.AutoCloseOutputStream(writeEnd).use { out ->
+                        bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 90, out)
+                    }
+                } catch (_: Exception) {
+                    runCatching { writeEnd.close() }
+                } finally {
+                    bitmap.recycle()
+                }
+            }.also { it.name = "ufm-thumb"; it.isDaemon = true }.start()
+            AssetFileDescriptor(readEnd, 0, AssetFileDescriptor.UNKNOWN_LENGTH)
+        } catch (e: Exception) {
+            GoRoLog.w("openDocumentThumbnail: failed for $documentId", e)
+            null
+        }
+    }
 
     // ── Write operations (local only — network write is future work) ──────────
 
@@ -919,6 +977,14 @@ class UfmDocumentsProvider : DocumentsProvider() {
         } else {
             if (file.canWrite()) flags = flags or Document.FLAG_SUPPORTS_WRITE or
                     Document.FLAG_SUPPORTS_DELETE or Document.FLAG_SUPPORTS_RENAME
+            // Advertise thumbnail support for images and videos so picker apps
+            // (e.g. Projectivity) know they can call openDocumentThumbnail()
+            val ext = file.extension.lowercase()
+            val hasThumbnail = ext in listOf(
+                "jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif",
+                "mp4", "mkv", "avi", "mov", "3gp", "webm"
+            )
+            if (hasThumbnail) flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
         }
         return flags
     }

@@ -47,6 +47,13 @@ import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import android.webkit.MimeTypeMap
+import coil.dispose
+import coil.load
+import coil.size.Scale
+import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 
 /**
  * A custom document picker for UFM.
@@ -521,19 +528,98 @@ class SafPickerActivity : AppCompatActivity() {
             private val title: TextView = view.findViewById(R.id.txtFileName)
             private val subtitle: TextView = view.findViewById(R.id.txtFileInfo)
 
+            /** Cancels any in-flight Coil request when this ViewHolder is rebound. */
+            private var coilDisposable: coil.request.Disposable? = null
+            /** Cancels any in-flight video-frame extraction coroutine. */
+            private var videoJob: Job? = null
+
             fun bind(item: PickerItem) {
+                // Cancel stale async loads from a previous bind
+                coilDisposable?.dispose()
+                coilDisposable = null
+                videoJob?.cancel()
+                videoJob = null
+
                 title.text = item.label
-                icon.setImageResource(item.iconRes)
                 subtitle.text = if (item.isRoot) getString(R.string.storage_volume) else if (item.isDir) "Folder" else "File"
-                
+
                 itemView.findViewById<View>(R.id.txtFileSize)?.visibility = View.GONE
 
                 // Show selection state in multi-select mode
                 val isSelected = allowMultiple && !item.isRoot && !item.isDir && selectedFiles.contains(item.path)
                 val alpha = if (isSelected) 1.0f else 0.6f
-                icon.alpha = alpha
                 title.alpha = alpha
 
+                // ── Thumbnail vs. icon ────────────────────────────────────────
+                val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
+                val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty()) File(item.path) else null
+                val ext = file?.extension?.lowercase() ?: ""
+                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+                val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+                val canShowThumb = showThumbnails && file != null && (isImage || isVideo)
+
+                icon.imageTintList = null
+                icon.alpha = alpha
+
+                if (canShowThumb) {
+                    icon.scaleType = ImageView.ScaleType.CENTER_CROP
+                    icon.clipToOutline = true
+                    icon.outlineProvider = object : android.view.ViewOutlineProvider() {
+                        override fun getOutline(view: android.view.View, outline: android.graphics.Outline) {
+                            val r = 8f * view.context.resources.displayMetrics.density
+                            outline.setRoundRect(0, 0, view.width, view.height, r)
+                        }
+                    }
+
+                    if (isImage) {
+                        coilDisposable = icon.load(file!!) {
+                            crossfade(200)
+                            allowHardware(false)
+                            scale(Scale.FILL)
+                            placeholder(androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage())
+                            error(androidx.core.content.ContextCompat.getDrawable(itemView.context, item.iconRes)?.asImage())
+                        }
+                    } else {
+                        // Video: extract frame on a background coroutine
+                        icon.setImageResource(item.iconRes)
+                        @OptIn(DelicateCoroutinesApi::class)
+                        videoJob = GlobalScope.launch(Dispatchers.IO) {
+                            val bitmap: android.graphics.Bitmap? = try {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                    android.media.ThumbnailUtils.createVideoThumbnail(
+                                        file!!, android.util.Size(256, 256), null
+                                    )
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    android.media.ThumbnailUtils.createVideoThumbnail(
+                                        file!!.absolutePath,
+                                        android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                    )
+                                }
+                            } catch (_: Throwable) { null }
+
+                            withContext(Dispatchers.Main) {
+                                if (bitmap != null) {
+                                    coilDisposable = icon.load(bitmap) {
+                                        crossfade(150)
+                                        allowHardware(false)
+                                        scale(Scale.FILL)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // Generic icon
+                    icon.scaleType = ImageView.ScaleType.FIT_CENTER
+                    icon.clipToOutline = false
+                    icon.setImageResource(item.iconRes)
+                    // Restore accent tint for TV
+                    if (isTv) {
+                        val accent = itemView.context.getColor(R.color.tv_accent)
+                        icon.imageTintList = android.content.res.ColorStateList.valueOf(accent)
+                    }
+                }
                 itemView.setOnClickListener {
                     if (item.isRoot) {
                         loadDirectory(item.path, item.share)
