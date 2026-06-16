@@ -2,8 +2,13 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -17,12 +22,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
+import javax.crypto.AEADBadTagException
 
 class ImportDetailsActivity : AppCompatActivity() {
 
@@ -33,6 +42,8 @@ class ImportDetailsActivity : AppCompatActivity() {
     private var isTv = false
     private var backupPath: String? = null
     private var parsedDetails: BackupDetails? = null
+    private var importPasswordAttempts = 0
+    private val MAX_IMPORT_ATTEMPTS = 3
 
     private lateinit var progressBar: ProgressBar
     private lateinit var tvError: TextView
@@ -131,51 +142,142 @@ class ImportDetailsActivity : AppCompatActivity() {
                 }
 
                 val bytes = file.readBytes()
-                val plainText = try {
-                    SettingsBackupManager.decryptBackup(bytes)
-                } catch (e: javax.crypto.AEADBadTagException) {
-                    showError(getString(R.string.backup_import_decrypt_error))
-                    return@launch
-                } catch (e: Exception) {
-                    showError(getString(R.string.backup_import_decrypt_error))
-                    return@launch
-                }
-
-                val details = try {
-                    SettingsBackupManager.parseBackupContent(this@ImportDetailsActivity, plainText)
-                } catch (e: Exception) {
-                    showError(getString(R.string.backup_import_invalid_error))
-                    return@launch
-                }
-
-                val isEmpty = details.sharedPrefs.isEmpty() &&
-                        details.shares.isEmpty() &&
-                        details.storages.isEmpty() &&
-                        details.ftpProfiles.isEmpty() &&
-                        details.renames.isEmpty() &&
-                        details.smartSortConfigs.isEmpty() &&
-                        details.customTiles.isEmpty()
-
-                if (isEmpty) {
-                    showError(getString(R.string.backup_import_details_empty))
-                    return@launch
-                }
+                val format = SettingsBackupManager.detectFormat(bytes)
 
                 withContext(Dispatchers.Main) {
-                    parsedDetails = details
-                    if (isTv) {
-                        populateTvPreview(details)
-                    } else {
-                        val adapter = ImportDetailsAdapter(details)
-                        rvImportPreview!!.adapter = adapter
+                    when (format) {
+                        SettingsBackupManager.BackupFormat.V3_ENCRYPTED -> {
+                            importPasswordAttempts = 0
+                            showImportPasswordDialog(bytes) { password ->
+                                decryptWithPassword(bytes, password)
+                            }
+                        }
+                        SettingsBackupManager.BackupFormat.V3_PLAIN,
+                        SettingsBackupManager.BackupFormat.V2_LEGACY,
+                        SettingsBackupManager.BackupFormat.RAW_JSON -> {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                try {
+                                    val plainText = SettingsBackupManager.decryptBackup(bytes, null)
+                                    parseAndPreview(plainText)
+                                } catch (e: Exception) {
+                                    showError(getString(R.string.backup_import_decrypt_error))
+                                }
+                            }
+                        }
+                        SettingsBackupManager.BackupFormat.UNKNOWN -> {
+                            showError(getString(R.string.backup_import_unsupported_format))
+                        }
                     }
-                    progressBar.visibility = View.GONE
-                    layoutContent.visibility = View.VISIBLE
-                    btnImportConfirm.requestFocus()
                 }
             } catch (e: Exception) {
                 showError(getString(R.string.backup_import_error))
             }
+        }
+    }
+
+    private fun showImportPasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_backup_import_password_tv
+            else R.layout.dialog_backup_import_password,
+            null
+        )
+
+        val edtPassword = dialogView.findViewById<TextInputEditText>(R.id.edtPassword)
+        val tilPassword = dialogView.findViewById<TextInputLayout>(R.id.tilPassword)
+        val btnDecrypt = dialogView.findViewById<Button>(R.id.btnDecrypt)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .setOnCancelListener { finish() }
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnDecrypt.setOnClickListener {
+            val pw = edtPassword.text?.toString() ?: ""
+            if (pw.isEmpty()) return@setOnClickListener
+            dialog.dismiss()
+            onPassword(pw)
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = getColor(R.color.tv_button_focused_yellow_text)
+            btnDecrypt.backgroundTintList = ColorStateList.valueOf(yellow)
+            btnDecrypt.setTextColor(black)
+            btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
+                btnDecrypt.backgroundTintList =
+                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    else ColorStateList.valueOf(yellow)
+            }
+            btnDecrypt.requestFocus()
+        }
+    }
+
+    private fun decryptWithPassword(bytes: ByteArray, password: String) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val plainText = SettingsBackupManager.decryptBackup(bytes, password)
+                parseAndPreview(plainText)
+            } catch (e: AEADBadTagException) {
+                importPasswordAttempts++
+                if (importPasswordAttempts >= MAX_IMPORT_ATTEMPTS) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@ImportDetailsActivity,
+                            R.string.backup_import_too_many_attempts, Toast.LENGTH_LONG).show()
+                        finish()
+                    }
+                } else {
+                    val remaining = MAX_IMPORT_ATTEMPTS - importPasswordAttempts
+                    withContext(Dispatchers.Main) {
+                        showError(getString(R.string.backup_import_wrong_password, remaining))
+                        showImportPasswordDialog(bytes) { pw -> decryptWithPassword(bytes, pw) }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showError(getString(R.string.backup_import_decrypt_error))
+                }
+            }
+        }
+    }
+
+    private suspend fun parseAndPreview(plainText: String) {
+        val details = try {
+            SettingsBackupManager.parseBackupContent(this@ImportDetailsActivity, plainText)
+        } catch (e: Exception) {
+            showError(getString(R.string.backup_import_invalid_error))
+            return
+        }
+
+        val isEmpty = details.sharedPrefs.isEmpty() &&
+                details.shares.isEmpty() &&
+                details.storages.isEmpty() &&
+                details.ftpProfiles.isEmpty() &&
+                details.renames.isEmpty() &&
+                details.smartSortConfigs.isEmpty() &&
+                details.customTiles.isEmpty()
+
+        if (isEmpty) {
+            showError(getString(R.string.backup_import_details_empty))
+            return
+        }
+
+        withContext(Dispatchers.Main) {
+            parsedDetails = details
+            if (isTv) {
+                populateTvPreview(details)
+            } else {
+                val adapter = ImportDetailsAdapter(details)
+                rvImportPreview!!.adapter = adapter
+            }
+            progressBar.visibility = View.GONE
+            layoutContent.visibility = View.VISIBLE
+            btnImportConfirm.requestFocus()
         }
     }
 

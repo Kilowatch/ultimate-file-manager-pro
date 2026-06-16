@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `isLanOrLocalhost()` to resolve hostnames to IPs via DNS before applying LAN range checks, preventing bypass via crafted `.local`/`.lan` hostnames.
 - TLS certificate fingerprint log now guarded by `BuildConfig.DEBUG`.
 - Fixed DLNA rate-limit bucket collision — token buckets are now keyed by both IP and endpoint type (SSDP, HTTP_BROWSE, HTTP_STREAM), preventing SSDP rate limits from being bypassed via other endpoint types.
+- Replaced hardcoded backup encryption key with optional user-chosen password protection. Export now offers PBKDF2-HMAC-SHA256 (260k iterations) + AES-256-GCM encryption, or plain JSON for passwordless cross-device transfers. Old `.UFMConfig` files remain importable. Import auto-detects format and prompts for password only when needed, with a 3-attempt retry limit.
 
 ## [1.5.2] — 2026-06-16
 

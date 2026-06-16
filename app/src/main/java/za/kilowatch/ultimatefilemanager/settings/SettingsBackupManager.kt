@@ -22,7 +22,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.security.SecureRandom
 import javax.crypto.Cipher
+import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
 data class BackupItem(
@@ -52,11 +54,29 @@ object SettingsBackupManager {
     private const val IV_SIZE = 12
     private const val TAG_SIZE = 128
 
+    // ── V3 constants ──────────────────────────────────────────────────────
+    private const val MAGIC_V3 = "UFM_PRO_V3"        // 11 bytes
+    private const val AAD_V3 = "UFM_PRO_V3_AAD"
+    private const val FLAG_ENCRYPTED: Byte = 0x01
+    private const val FLAG_PLAINTEXT: Byte = 0x00
+    private const val PBKDF2_ITERATIONS = 260_000
+    private const val PBKDF2_KEY_LENGTH = 256
+    private const val SALT_SIZE = 32
+
+    enum class BackupFormat { V2_LEGACY, V3_ENCRYPTED, V3_PLAIN, RAW_JSON, UNKNOWN }
+
     private fun getSecretKey(): SecretKeySpec {
         val passphrase = "za.kilowatch.ultimatefilemanager.backup.secret.key.v1"
         val digest = java.security.MessageDigest.getInstance("SHA-256")
         val keyBytes = digest.digest(passphrase.toByteArray(Charsets.UTF_8))
         return SecretKeySpec(keyBytes, "AES")
+    }
+
+    private fun deriveKey(password: String, salt: ByteArray): SecretKeySpec {
+        val factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+        val spec = PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH)
+        val rawKey = factory.generateSecret(spec).encoded
+        return SecretKeySpec(rawKey, "AES")
     }
 
     fun encryptBackup(payload: String): ByteArray {
@@ -76,7 +96,98 @@ object SettingsBackupManager {
         return finalBytes
     }
 
-    fun decryptBackup(encryptedBytes: ByteArray): String {
+    fun encryptBackupV3(payload: String, password: String): ByteArray {
+        val salt = ByteArray(SALT_SIZE)
+        SecureRandom().nextBytes(salt)
+        val key = deriveKey(password, salt)
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        val iv = ByteArray(IV_SIZE)
+        SecureRandom().nextBytes(iv)
+        cipher.init(Cipher.ENCRYPT_MODE, key, GCMParameterSpec(TAG_SIZE, iv))
+        cipher.updateAAD(AAD_V3.toByteArray(Charsets.UTF_8))
+        val ciphertext = cipher.doFinal(payload.toByteArray(Charsets.UTF_8))
+
+        val headerBytes = MAGIC_V3.toByteArray(Charsets.US_ASCII)
+        val flagByte = byteArrayOf(FLAG_ENCRYPTED)
+        val finalBytes = ByteArray(headerBytes.size + 1 + salt.size + iv.size + ciphertext.size)
+        var pos = 0
+        System.arraycopy(headerBytes, 0, finalBytes, pos, headerBytes.size); pos += headerBytes.size
+        System.arraycopy(flagByte, 0, finalBytes, pos, 1); pos += 1
+        System.arraycopy(salt, 0, finalBytes, pos, salt.size); pos += salt.size
+        System.arraycopy(iv, 0, finalBytes, pos, iv.size); pos += iv.size
+        System.arraycopy(ciphertext, 0, finalBytes, pos, ciphertext.size)
+        return finalBytes
+    }
+
+    fun encryptBackupPlain(payload: String): ByteArray {
+        val headerBytes = MAGIC_V3.toByteArray(Charsets.US_ASCII)
+        val flagByte = byteArrayOf(FLAG_PLAINTEXT)
+        val payloadBytes = payload.toByteArray(Charsets.UTF_8)
+        val finalBytes = ByteArray(headerBytes.size + 1 + payloadBytes.size)
+        var pos = 0
+        System.arraycopy(headerBytes, 0, finalBytes, pos, headerBytes.size); pos += headerBytes.size
+        System.arraycopy(flagByte, 0, finalBytes, pos, 1); pos += 1
+        System.arraycopy(payloadBytes, 0, finalBytes, pos, payloadBytes.size)
+        return finalBytes
+    }
+
+    fun decryptBackupV3(bytes: ByteArray, password: String): String {
+        val headerBytes = MAGIC_V3.toByteArray(Charsets.US_ASCII)
+        val minSize = headerBytes.size + 1 + SALT_SIZE + IV_SIZE + 1 // +1 for min ciphertext
+        if (bytes.size < minSize) {
+            throw IllegalArgumentException("Invalid backup file: file too small")
+        }
+        for (i in headerBytes.indices) {
+            if (bytes[i] != headerBytes[i]) {
+                throw IllegalArgumentException("Invalid backup file: magic header mismatch")
+            }
+        }
+        if (bytes[headerBytes.size] != FLAG_ENCRYPTED) {
+            throw IllegalArgumentException("Invalid backup file: expected encrypted flag")
+        }
+
+        var pos = headerBytes.size + 1 // skip magic + flag
+        val salt = ByteArray(SALT_SIZE)
+        System.arraycopy(bytes, pos, salt, 0, SALT_SIZE); pos += SALT_SIZE
+
+        val iv = ByteArray(IV_SIZE)
+        System.arraycopy(bytes, pos, iv, 0, IV_SIZE); pos += IV_SIZE
+
+        val ciphertextLen = bytes.size - pos
+        val ciphertext = ByteArray(ciphertextLen)
+        System.arraycopy(bytes, pos, ciphertext, 0, ciphertextLen)
+
+        val key = deriveKey(password, salt)
+        val cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(TAG_SIZE, iv))
+        cipher.updateAAD(AAD_V3.toByteArray(Charsets.UTF_8))
+        val plainBytes = cipher.doFinal(ciphertext)
+        return String(plainBytes, Charsets.UTF_8)
+    }
+
+    fun detectFormat(bytes: ByteArray): BackupFormat {
+        // Check for V2 legacy magic
+        val v2Header = MAGIC_HEADER.toByteArray(Charsets.US_ASCII)
+        if (bytes.size >= v2Header.size && v2Header.indices.all { bytes[it] == v2Header[it] }) {
+            return BackupFormat.V2_LEGACY
+        }
+        // Check for V3 magic
+        val v3Header = MAGIC_V3.toByteArray(Charsets.US_ASCII)
+        if (bytes.size >= v3Header.size + 1 && v3Header.indices.all { bytes[it] == v3Header[it] }) {
+            return when (bytes[v3Header.size]) {
+                FLAG_ENCRYPTED -> BackupFormat.V3_ENCRYPTED
+                FLAG_PLAINTEXT -> BackupFormat.V3_PLAIN
+                else -> BackupFormat.UNKNOWN
+            }
+        }
+        // Loose compat: plain JSON without any header
+        if (bytes.isNotEmpty() && bytes[0] == '{'.code.toByte()) {
+            return BackupFormat.RAW_JSON
+        }
+        return BackupFormat.UNKNOWN
+    }
+
+    private fun decryptBackupV2(encryptedBytes: ByteArray): String {
         val headerBytes = MAGIC_HEADER.toByteArray(Charsets.US_ASCII)
         if (encryptedBytes.size < headerBytes.size + IV_SIZE) {
             throw IllegalArgumentException("Invalid backup file: file too small")
@@ -99,6 +210,32 @@ object SettingsBackupManager {
         cipher.updateAAD(AAD_STRING.toByteArray(Charsets.UTF_8))
         val plainBytes = cipher.doFinal(ciphertext)
         return String(plainBytes, Charsets.UTF_8)
+    }
+
+    fun decryptBackup(bytes: ByteArray, password: String?): String {
+        return when (detectFormat(bytes)) {
+            BackupFormat.V2_LEGACY -> decryptBackupV2(bytes)
+            BackupFormat.V3_ENCRYPTED -> {
+                val pw = password ?: throw IllegalArgumentException("Password required for encrypted backup")
+                decryptBackupV3(bytes, pw)
+            }
+            BackupFormat.V3_PLAIN -> {
+                // Skip magic (11) + flag (1), return JSON
+                val start = MAGIC_V3.toByteArray(Charsets.US_ASCII).size + 1
+                String(bytes, start, bytes.size - start, Charsets.UTF_8)
+            }
+            BackupFormat.RAW_JSON -> {
+                // No header — parse entire bytes as JSON
+                String(bytes, 0, bytes.size, Charsets.UTF_8)
+            }
+            BackupFormat.UNKNOWN -> throw IllegalArgumentException("Unsupported backup file format")
+        }
+    }
+
+    // Keep old signature for backward compat with callers that don't pass password
+    @Deprecated("Use decryptBackup(bytes, password) instead", ReplaceWith("decryptBackup(bytes, null)"))
+    fun decryptBackup(encryptedBytes: ByteArray): String {
+        return decryptBackup(encryptedBytes, null)
     }
 
     fun getBackupDirectory(): File {
@@ -192,10 +329,10 @@ object SettingsBackupManager {
         return items
     }
 
-    fun performExport(context: Context, selectedItems: List<BackupItem>, targetFile: File): Boolean {
+    fun performExport(context: Context, selectedItems: List<BackupItem>, targetFile: File, password: String? = null): Boolean {
         try {
             val root = JSONObject()
-            root.put("version", 2)
+            root.put("version", 3)
 
             val selectedIds = selectedItems.filter { it.isSelected }.map { it.id }.toSet()
 
@@ -361,7 +498,11 @@ object SettingsBackupManager {
             }
 
             val jsonString = root.toString(2)
-            val encryptedData = encryptBackup(jsonString)
+            val encryptedData = if (password != null && password.isNotEmpty()) {
+                encryptBackupV3(jsonString, password)
+            } else {
+                encryptBackupPlain(jsonString)
+            }
 
             targetFile.parentFile?.mkdirs()
             FileOutputStream(targetFile).use { out ->

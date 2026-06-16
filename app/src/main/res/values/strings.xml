@@ -2998,6 +2998,28 @@
     <string name="backup_format_original">Original: %1$s</string>
     <string name="backup_path_internal_storage">Internal Storage/UFM/%1$s</string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">Protect backup with password?</string>
+    <string name="backup_password_hint">Password (min 4 characters)</string>
+    <string name="backup_password_confirm_hint">Confirm password</string>
+    <string name="backup_password_skip_title">Save unencrypted?</string>
+    <string name="backup_password_skip_warning">Save unencrypted? Anyone with access to the file can read your settings.</string>
+    <string name="backup_password_forgot_warning">If you forget this password, the backup cannot be recovered.</string>
+    <string name="backup_password_mismatch">Passwords do not match</string>
+    <string name="backup_password_too_short">Password must be at least 4 characters</string>
+    <string name="backup_password_btn_encrypt">Encrypt</string>
+    <string name="backup_password_btn_skip">Skip (unencrypted)</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">Enter backup password</string>
+    <string name="backup_import_password_hint">Password</string>
+    <string name="backup_import_wrong_password">Wrong password. %d attempts remaining.</string>
+    <string name="backup_import_too_many_attempts">Too many failed attempts.</string>
+    <string name="backup_import_unsupported_format">Unsupported backup file format.</string>
+
+    <string name="decrypt">Decrypt</string>
+    <string name="save_unencrypted">Save unencrypted</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">Select Share Method</string>
     <string name="share_option_standard">Standard Android Share</string>
