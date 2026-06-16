@@ -92,6 +92,7 @@ class UFMPlayerActivity : Activity() {
     private var shareHost: String = ""
     private var shareName: String = ""
     private var provider: String = ""
+    private var remotePathExtra: String = ""
     private var initialFileSize: Long = 0L
 
     private var isShuffle = false
@@ -188,6 +189,7 @@ class UFMPlayerActivity : Activity() {
         initialFileSize = intent.getLongExtra("initialSize", 0L)
         val initialPath = intent.getStringExtra("initialPath") ?:
                          intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: ""
+        remotePathExtra = intent.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH) ?: ""
         playlist = intent.getStringArrayListExtra("playlist") ?: ArrayList()
 
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
@@ -911,7 +913,11 @@ class UFMPlayerActivity : Activity() {
         }
 
         // ── Network file playback ──
-        var share = NetworkShareRepository.getInstance(this).getById(shareId) 
+        var share = NetworkShareRepository.getInstance(this).getById(shareId)
+        // Server-mode shares need remotePath from the intent (browser updates it at navigation time)
+        if (share?.isServerMode == true && remotePathExtra.isNotEmpty()) {
+            share = share.copy(remotePath = remotePathExtra)
+        }
         if (share == null && shareHost.isNotEmpty()) {
             GoRoLog.d("UFMPlayer", "Share not found in repo, creating dummy for $shareHost")
             share = za.kilowatch.ultimatefilemanager.network.NetworkShare(

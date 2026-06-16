@@ -70,6 +70,7 @@ object SmbShareClient {
         return try {
             val session = pooled.session
             val (shareName, innerPath) = splitSharePath(share.remotePath, remotePath)
+            android.util.Log.d("SmbClientTrace", "openInputStream: share.remotePath='${share.remotePath}' remotePath='$remotePath' → shareName='$shareName' innerPath='$innerPath' host=${share.host}")
             val diskShare = session.connectShare(shareName) as DiskShare
             val file = diskShare.openFile(
                 innerPath,
@@ -90,6 +91,7 @@ object SmbShareClient {
                 }
             }
         } catch (e: Exception) {
+            android.util.Log.e("SmbClientTrace", "openInputStream FAILED: share.remotePath='${share.remotePath}' remotePath='$remotePath' host=${share.host} error=${e.message}")
             pooled.invalidate()
             throw e
         }

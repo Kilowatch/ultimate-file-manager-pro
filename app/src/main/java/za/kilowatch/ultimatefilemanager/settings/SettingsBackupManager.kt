@@ -240,6 +240,7 @@ object SettingsBackupManager {
                     obj.put("useKeychain", share.useKeychain)
                     obj.put("smbProtocol", share.smbProtocol)
                     obj.put("isCredentialsStripped", true)
+                    obj.put("isServerMode", share.isServerMode)
                     sharesArr.put(obj)
                 }
             }
@@ -530,7 +531,8 @@ object SettingsBackupManager {
                             privateKeyPath = obj.optString("privateKeyPath", "").takeIf { it.isNotEmpty() },
                             useKeychain = obj.optBoolean("useKeychain", false),
                             smbProtocol = obj.optString("smbProtocol", "AUTO"),
-                            isCredentialsStripped = obj.optBoolean("isCredentialsStripped", true)
+                            isCredentialsStripped = obj.optBoolean("isCredentialsStripped", true),
+                            isServerMode = obj.optBoolean("isServerMode", false)
                         )
                         repo.save(share)
                     }

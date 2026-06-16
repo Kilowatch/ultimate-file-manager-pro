@@ -25,7 +25,8 @@ data class NetworkShare(
     val dlnaUdn: String = "",              // Unique Device Name from UPnP description
     val dlnaContentDirectoryUrl: String = "",  // Full SOAP URL for ContentDirectory service
     val dlnaConnectionManagerUrl: String = "", // Full SOAP URL for ConnectionManager service
-    val isCredentialsStripped: Boolean = false
+    val isCredentialsStripped: Boolean = false,
+    val isServerMode: Boolean = false
 ) {
     val effectivePort: Int get() = when {
         port > 0  -> port

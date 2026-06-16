@@ -111,7 +111,8 @@ class NetworkShareRepository private constructor(private val context: Context) {
                         dlnaUdn = o.optString("dlnaUdn", ""),
                         dlnaContentDirectoryUrl = o.optString("dlnaContentDirectoryUrl", ""),
                         dlnaConnectionManagerUrl = o.optString("dlnaConnectionManagerUrl", ""),
-                        isCredentialsStripped = o.optBoolean("isCredentialsStripped", false)
+                        isCredentialsStripped = o.optBoolean("isCredentialsStripped", false),
+                        isServerMode = o.optBoolean("isServerMode", false)
                     )
                 )
             }
@@ -153,6 +154,7 @@ class NetworkShareRepository private constructor(private val context: Context) {
                 put("dlnaContentDirectoryUrl", s.dlnaContentDirectoryUrl)
                 put("dlnaConnectionManagerUrl", s.dlnaConnectionManagerUrl)
                 put("isCredentialsStripped", s.isCredentialsStripped)
+                put("isServerMode", s.isServerMode)
             })
         }
         file.writeText(arr.toString(2))

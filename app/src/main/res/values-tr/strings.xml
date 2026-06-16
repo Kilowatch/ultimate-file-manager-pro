@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">Yalnızca SMB2 (Eski NAS / Yönlendiriciler)</string>
     <string name="network_smb_protocol_smb3">Yalnızca SMB3 (Modern Güvenli)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+Bağlantı türü
+</string>
+    <string name="network_conn_type_share">
+Paylaşmak
+</string>
+    <string name="network_conn_type_server">
+Sunucu
+</string>
+    <string name="network_folder_shared_folders">
+Paylaşılan Klasörler
+</string>
+    <string name="smb_server_no_shares">
+Bu sunucuda paylaşım yok
+</string>
+    <string name="smb_server_discovery_error">
+Paylaşımlar keşfedilemedi: %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">Bağlantı Başarılı</string>
     <string name="network_dialog_success_body">Paylaşımınıza ulaşılabilir. Şimdi kaydedilsin mi?</string>

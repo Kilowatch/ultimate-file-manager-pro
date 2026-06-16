@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">SMB2 のみ (レガシー NAS/ルーター)</string>
     <string name="network_smb_protocol_smb3">SMB3 のみ (モダン セキュア)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+接続タイプ
+</string>
+    <string name="network_conn_type_share">
+共有
+</string>
+    <string name="network_conn_type_server">
+サーバ
+</string>
+    <string name="network_folder_shared_folders">
+共有フォルダー
+</string>
+    <string name="smb_server_no_shares">
+このサーバーでは利用可能な共有がありません
+</string>
+    <string name="smb_server_discovery_error">
+共有を検出できませんでした: %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">接続成功</string>
     <string name="network_dialog_success_body">あなたのシェアは到達可能です。今すぐ保存しますか?</string>

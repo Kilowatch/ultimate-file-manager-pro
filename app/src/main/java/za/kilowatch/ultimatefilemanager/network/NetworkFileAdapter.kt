@@ -37,13 +37,16 @@ import coil3.size.Scale
 
 class NetworkFileAdapter(
     private val isTv: Boolean,
-    private val share: NetworkShare,
+    initialShare: NetworkShare,
     private val context: Context,
     private val isCompact: Boolean = false,
     private val onItemClick: (NetworkFile) -> Unit,
     private val onSelectionChanged: (Int) -> Unit,
     private val onToggleChanged: ((NetworkFile, Boolean) -> Unit)? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    /** The share used for SMB operations. Updated when navigating into a discovered share. */
+    var share: NetworkShare = initialShare
 
     private val adapterScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val cacheManager = NetworkThumbnailCacheManager(context)

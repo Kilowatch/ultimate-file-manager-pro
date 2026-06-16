@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">SMB2 فقط (أجهزة NAS / أجهزة التوجيه القديمة)</string>
     <string name="network_smb_protocol_smb3">SMB3 فقط (الآمن الحديث)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+نوع الاتصال
+</string>
+    <string name="network_conn_type_share">
+يشارك
+</string>
+    <string name="network_conn_type_server">
+الخادم
+</string>
+    <string name="network_folder_shared_folders">
+المجلدات المشتركة
+</string>
+    <string name="smb_server_no_shares">
+لا توجد مشاركات متاحة على هذا الخادم
+</string>
+    <string name="smb_server_discovery_error">
+فشل اكتشاف المشاركات: %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">تم الاتصال بنجاح</string>
     <string name="network_dialog_success_body">حصتك يمكن الوصول إليها. احفظه الآن؟</string>

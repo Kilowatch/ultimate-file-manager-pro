@@ -207,6 +207,55 @@
                     android:textSize="13sp"
                     android:visibility="gone" />
 
+                <!-- SMB Connection Type (Share / Server) — visible only when SMB is selected -->
+                <LinearLayout
+                    android:id="@+id/layerSmbConnectionType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/network_field_connection_type"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="4dp" />
+                    <RadioGroup
+                        android:id="@+id/rgSmbConnectionType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <RadioButton
+                            android:id="@+id/rbSmbShare"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:button="@null"
+                            android:background="@drawable/selector_tv_protocol_card"
+                            android:text="@string/network_conn_type_share"
+                            android:textColor="@color/selector_tv_protocol_text"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:focusable="true"
+                            android:checked="true" />
+                        <RadioButton
+                            android:id="@+id/rbSmbServer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:button="@null"
+                            android:background="@drawable/selector_tv_protocol_card"
+                            android:text="@string/network_conn_type_server"
+                            android:textColor="@color/selector_tv_protocol_text"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:focusable="true" />
+                    </RadioGroup>
+                </LinearLayout>
+
                 <!-- Host field + Scan button -->
                 <LinearLayout
                     android:id="@+id/layerHost"

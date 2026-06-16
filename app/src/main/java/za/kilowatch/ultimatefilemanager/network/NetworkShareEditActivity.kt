@@ -114,6 +114,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var btnScanHosts:    ImageButton
     private lateinit var btnBrowseShares: ImageButton
 
+    // SMB Connection Type toggle (Share / Server)
+    private var layerSmbConnectionType:    View? = null
+    private var chipSmbShare:             MaterialButton? = null
+    private var chipSmbServer:            MaterialButton? = null
+    private var rgSmbConnectionType:      RadioGroup? = null
+
     // SSH views
     private lateinit var cardSshAuth:     View
     private lateinit var btnToggleSshAuth: MaterialButton
@@ -215,6 +221,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnScanHosts     = findViewById(R.id.btnScanHosts)
         btnBrowseShares  = findViewById(R.id.btnBrowseShares)
 
+        // SMB Connection Type toggle
+        layerSmbConnectionType = findViewById(R.id.layerSmbConnectionType)
+        chipSmbShare          = findViewById(R.id.chipSmbShare)
+        chipSmbServer         = findViewById(R.id.chipSmbServer)
+        rgSmbConnectionType   = findViewById(R.id.rgSmbConnectionType)
+
         // SSH TV RadioButtons
         rbSftp           = findViewById(R.id.rbSftp)
         rbScp            = findViewById(R.id.rbScp)
@@ -269,6 +281,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
         tilDomain.visibility       = if (isSmbNow) View.VISIBLE else View.GONE
         btnBrowseShares.visibility = if (isSmbNow) View.VISIBLE else View.GONE
         layerSmbProtocol?.visibility = if (isSmbNow) View.VISIBLE else View.GONE
+        layerSmbConnectionType?.visibility = if (isSmbNow) View.VISIBLE else View.GONE
+
+        // Apply initial connection type visibility
+        applyConnectionTypeVisibility(isSmbNow)
 
         // DLNA initial visibility
         if (isDlnaNow) {
@@ -318,6 +334,45 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
         btnPickKey.setOnClickListener { pickKeyLauncher.launch(arrayOf("*/*")) }
         etPrivateKey.setOnClickListener { btnPickKey.performClick() }
+
+        // ── SMB Connection Type (Share / Server) ──────────────────────────────
+
+        // Explicitly default to Share (covers any edge case where XML defaults don't propagate)
+        chipSmbShare?.isChecked = true
+        chipSmbServer?.isChecked = false
+        rgSmbConnectionType?.check(R.id.rbSmbShare)
+
+        val onConnTypeChange: () -> Unit = {
+            val isServer = chipSmbServer?.isChecked == true ||
+                    rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+            layerPath.visibility = if (isServer) View.GONE else View.VISIBLE
+            btnBrowseShares.visibility = if (isServer) View.GONE else View.VISIBLE
+        }
+
+        // Mobile buttons
+        val connButtons = listOf(chipSmbShare, chipSmbServer)
+        connButtons.forEach { btn ->
+            btn?.setOnClickListener { clicked ->
+                connButtons.forEach { it?.isChecked = (it == clicked) }
+                onConnTypeChange()
+            }
+        }
+
+        // TV RadioGroup
+        rgSmbConnectionType?.setOnCheckedChangeListener { _, _ -> onConnTypeChange() }
+    }
+
+    /** Apply layerPath visibility based on whether the connection type is Server mode. */
+    private fun applyConnectionTypeVisibility(isSmb: Boolean) {
+        if (!isSmb) {
+            layerPath.visibility = View.VISIBLE
+            btnBrowseShares.visibility = View.VISIBLE
+            return
+        }
+        val isServer = chipSmbServer?.isChecked == true ||
+                rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+        layerPath.visibility = if (isServer) View.GONE else View.VISIBLE
+        btnBrowseShares.visibility = if (isServer) View.GONE else View.VISIBLE
     }
 
     /** Hide all non-DLNA fields and show DLNA device picker. */
@@ -331,6 +386,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnBrowseShares.visibility = View.GONE
         btnScanHosts.visibility = View.GONE
         layerSmbProtocol?.visibility = View.GONE
+        layerSmbConnectionType?.visibility = View.GONE
         btnToggleSshAuth.visibility = View.GONE
         cardSshAuth.visibility = View.GONE
         btnSelectDlnaDevice.visibility = View.VISIBLE
@@ -345,12 +401,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private fun restoreNormalVisibility(isSmb: Boolean, isSsh: Boolean, isNfs: Boolean) {
         layerHost.visibility = View.VISIBLE
         layerPort.visibility = View.VISIBLE
-        layerPath.visibility = View.VISIBLE
         tilDomain.visibility = if (isSmb) View.VISIBLE else View.GONE
         btnScanHosts.visibility = if (isSmb) View.VISIBLE else View.GONE
-        btnBrowseShares.visibility = if (isSmb) View.VISIBLE else View.GONE
         layerSmbProtocol?.visibility = if (isSmb) View.VISIBLE else View.GONE
+        layerSmbConnectionType?.visibility = if (isSmb) View.VISIBLE else View.GONE
         btnSelectDlnaDevice.visibility = View.GONE
+        // Apply connection type visibility (hides/shows layerPath + btnBrowseShares)
+        applyConnectionTypeVisibility(isSmb)
         txtDlnaSelectedDevice.visibility = View.GONE
 
         btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
@@ -488,6 +545,18 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 "SMB3" -> rgSmbProtocol.check(R.id.rbSmb3)
                 else   -> rgSmbProtocol.check(R.id.rbSmbAuto)
             }
+            // Restore connection type toggle
+            if (share.isServerMode) {
+                chipSmbServer?.isChecked = true
+                chipSmbShare?.isChecked = false
+                rgSmbConnectionType?.check(R.id.rbSmbServer)
+            } else {
+                chipSmbShare?.isChecked = true
+                chipSmbServer?.isChecked = false
+                rgSmbConnectionType?.check(R.id.rbSmbShare)
+            }
+            // Apply connection type visibility so layerPath is hidden for server mode
+            applyConnectionTypeVisibility(true)
         }
         
         rgAccess.check(if (share.readOnly) R.id.rbReadOnly else R.id.rbReadWrite)
@@ -507,8 +576,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
         val isSmb = (share.type == ShareType.SMB)
         tilDomain.visibility       = if (isSmb) View.VISIBLE else View.GONE
         btnScanHosts.visibility    = if (isSmb) View.VISIBLE else View.GONE
-        btnBrowseShares.visibility = if (isSmb) View.VISIBLE else View.GONE
         layerSmbProtocol?.visibility = if (isSmb) View.VISIBLE else View.GONE
+        layerSmbConnectionType?.visibility = if (isSmb) View.VISIBLE else View.GONE
+        // Connection-type-dependent visibility (layerPath + btnBrowseShares)
+        applyConnectionTypeVisibility(isSmb)
 
         val isNfs = (share.type == ShareType.NFS)
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
@@ -655,11 +726,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
             // sync it back (the main form watcher will immediately re-lock it if needed)
             etDomain.setText(etCredDomain.text?.toString()?.ifBlank { "WORKGROUP" } ?: "WORKGROUP")
             dialog.dismiss()
-            // Automatically open the share browser so the user can pick a share
-            // without needing to know they must tap the browse button manually.
-            // This is especially important for open/anonymous shares where credentials
-            // are intentionally blank.
-            showShareBrowserDialog()
+            // Automatically open the share browser only in Share mode.
+            // In Server mode the user connects to the whole server, not a specific share.
+            val isServerMode = chipSmbServer?.isChecked == true ||
+                    rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+            if (!isServerMode) {
+                showShareBrowserDialog()
+            }
         }
 
         dialog.show()
@@ -1076,11 +1149,20 @@ class NetworkShareEditActivity : AppCompatActivity() {
             else                       -> ShareType.SMB
         }
 
-        val normalizedPath = normalizeAndValidateRemotePath(rawPath, type == ShareType.SMB)
-            ?: run {
-                showErrorResult(getString(R.string.invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder))
-                return null
-            }
+        val isServerMode = type == ShareType.SMB && (
+            chipSmbServer?.isChecked == true ||
+            rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
+        )
+
+        val normalizedPath = if (isServerMode) {
+            ""  // Server mode: no remote path needed
+        } else {
+            normalizeAndValidateRemotePath(rawPath, type == ShareType.SMB)
+                ?: run {
+                    showErrorResult(getString(R.string.invalid_path_for_smb_enter_a_share_name_eg_sharename_or_hostsharefolder))
+                    return null
+                }
+        }
 
         val password = etPassword.text?.toString() ?: ""
         val useKeychain = cbUseKeychain.isChecked
@@ -1113,7 +1195,8 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 ?: existingShare?.dlnaContentDirectoryUrl ?: "",
             dlnaConnectionManagerUrl = selectedDlnaServer?.connectionManagerUrl
                 ?: existingShare?.dlnaConnectionManagerUrl ?: "",
-            isCredentialsStripped = false
+            isCredentialsStripped = false,
+            isServerMode = isServerMode
         )
     }
 
@@ -1156,7 +1239,19 @@ class NetworkShareEditActivity : AppCompatActivity() {
         Thread {
             // SMB/FTP: null = success, non-null = error message
             val errorMsg: String? = when (share.type) {
-                ShareType.SMB  -> SmbShareClient.testConnection(share)
+                ShareType.SMB  -> {
+                    if (share.isServerMode) {
+                        // Server mode: test by discovering shares
+                        runCatching {
+                            SmbDiscovery.listShares(share.host, share.username, share.password, share.domain)
+                            null // success
+                        }.getOrElse { e ->
+                            e.message ?: getString(R.string.unknown_error)
+                        }
+                    } else {
+                        SmbShareClient.testConnection(share)
+                    }
+                }
                 ShareType.FTP  -> FtpShareClient.testConnection(share)
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(this, share)
                 ShareType.NFS  -> NfsShareClient.testConnection(share)

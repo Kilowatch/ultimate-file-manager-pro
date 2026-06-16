@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">Только SMB2 (устаревшие NAS/маршрутизаторы)</string>
     <string name="network_smb_protocol_smb3">Только SMB3 (современная безопасность)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+Тип подключения
+</string>
+    <string name="network_conn_type_share">
+Делиться
+</string>
+    <string name="network_conn_type_server">
+Сервер
+</string>
+    <string name="network_folder_shared_folders">
+Общие папки
+</string>
+    <string name="smb_server_no_shares">
+На этом сервере нет доступных общих ресурсов
+</string>
+    <string name="smb_server_discovery_error">
+Не удалось обнаружить общие ресурсы: %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">Соединение успешно</string>
     <string name="network_dialog_success_body">Ваша доля достижима. Сохранить сейчас?</string>

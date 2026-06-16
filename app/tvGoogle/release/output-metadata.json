@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 157,
-      "versionName": "1.5.0-GOOGLE",
+      "versionCode": 159,
+      "versionName": "1.5.1-GOOGLE",
       "outputFile": "app-tv-google-release.apk"
     }
   ],

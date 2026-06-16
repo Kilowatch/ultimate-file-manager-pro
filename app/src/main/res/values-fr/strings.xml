@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">SMB2 uniquement (anciens NAS/routeurs)</string>
     <string name="network_smb_protocol_smb3">SMB3 uniquement (moderne sécurisé)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+Type de connexion
+</string>
+    <string name="network_conn_type_share">
+Partager
+</string>
+    <string name="network_conn_type_server">
+Serveur
+</string>
+    <string name="network_folder_shared_folders">
+Dossiers partagés
+</string>
+    <string name="smb_server_no_shares">
+Aucun partage disponible sur ce serveur
+</string>
+    <string name="smb_server_discovery_error">
+Échec de la découverte des partages : %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">Connexion réussie</string>
     <string name="network_dialog_success_body">Votre partage est accessible. L\'enregistrer maintenant ?</string>

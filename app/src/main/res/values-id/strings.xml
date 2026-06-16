@@ -992,6 +992,26 @@ DLNA
     <string name="network_smb_protocol_smb2">Khusus SMB2 (NAS/Router Lama)</string>
     <string name="network_smb_protocol_smb3">Khusus SMB3 (Aman Modern)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">
+Jenis koneksi
+</string>
+    <string name="network_conn_type_share">
+Membagikan
+</string>
+    <string name="network_conn_type_server">
+pelayan
+</string>
+    <string name="network_folder_shared_folders">
+Folder Bersama
+</string>
+    <string name="smb_server_no_shares">
+Tidak ada pembagian yang tersedia di server ini
+</string>
+    <string name="smb_server_discovery_error">
+Gagal menemukan pembagian: %s
+</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">Koneksi Berhasil</string>
     <string name="network_dialog_success_body">Bagian Anda dapat dijangkau. Simpan sekarang?</string>

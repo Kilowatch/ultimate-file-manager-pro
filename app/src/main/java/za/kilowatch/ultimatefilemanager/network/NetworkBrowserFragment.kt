@@ -334,7 +334,7 @@ class NetworkBrowserFragment : Fragment() {
 
         fileAdapter = NetworkFileAdapter(
             isTv = isTv,
-            share = share,
+            initialShare = share,
             context = requireContext(),
             isCompact = isCompactMode,
             onItemClick = { file ->
@@ -432,6 +432,42 @@ class NetworkBrowserFragment : Fragment() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Server-mode SMB: intercept at root to discover shares
+                if (share.type == ShareType.SMB && share.isServerMode) {
+                    if (currentPath.isEmpty()) {
+                        val discovered = discoverServerShares(share)
+                        withContext(Dispatchers.Main) {
+                            progressBar.visibility = View.GONE
+                            if (discovered.isEmpty()) {
+                                currentFiles = emptyList()
+                                fileAdapter.submitList(emptyList())
+                                layoutEmpty.visibility = View.VISIBLE
+                            } else {
+                                currentFiles = discovered
+                                performSearch(edtSearch.text.toString().trim())
+                                updateSubtitle()
+                            }
+                        }
+                    } else {
+                        // Inside a discovered share
+                        val parts = currentPath.trimStart('/').split("/", limit = 2)
+                        val shareName = parts[0]
+                        val innerPath = parts.getOrElse(1) { "" }
+                        // Update share to the effective copy so all file operations
+                        // (copy, delete, rename, etc.) use the correct remotePath
+                        share = share.copy(remotePath = "/$shareName")
+                        fileAdapter.share = share
+                        var files = SmbShareClient.listFiles(share, innerPath)
+                        files = files.filter { it.name != ".." }
+                        withContext(Dispatchers.Main) {
+                            currentFiles = files
+                            performSearch(edtSearch.text.toString().trim())
+                            updateSubtitle()
+                        }
+                    }
+                    return@launch
+                }
+
                 val files = when (share.type) {
                     ShareType.SMB          -> SmbShareClient.listFiles(share, currentPath)
                     ShareType.FTP          -> FtpShareClient.listFiles(share, currentPath)
@@ -462,12 +498,39 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun updateSubtitle() {
+        // Server-mode SMB at root: show "Shared Folders"
+        if (share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty()) {
+            txtSubtitle?.text = getString(R.string.network_folder_shared_folders)
+            return
+        }
         val displayPath = if (isTwinWindow) {
             currentPath.removePrefix(share.docIdPrefix).removePrefix("/")
         } else {
             currentPath
         }
         txtSubtitle?.text = if (displayPath.isEmpty()) "/" else (if (isTwinWindow && !displayPath.startsWith("/")) "/$displayPath" else displayPath)
+    }
+
+    /**
+     * Discovers all accessible shares on an SMB server.
+     * Throws if the server is unreachable or authentication fails.
+     * Returns an empty list if the server is reachable but has no accessible shares.
+     */
+    private fun discoverServerShares(server: NetworkShare): List<NetworkFile> {
+        val allShares = SmbDiscovery.listShares(
+            server.host, server.username, server.password, server.domain
+        )
+        return allShares.filter { shareName ->
+            SmbShareClient.isShareAccessible(
+                server.host, shareName, server.username, server.password, server.domain
+            )
+        }.map { shareName ->
+            NetworkFile(
+                name = shareName,
+                path = "/$shareName",
+                isDirectory = true
+            )
+        }
     }
 
     private fun updateSelectionUI(count: Int) {

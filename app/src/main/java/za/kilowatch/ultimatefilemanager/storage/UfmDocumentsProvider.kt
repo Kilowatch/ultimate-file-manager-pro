@@ -132,6 +132,11 @@ class UfmDocumentsProvider : DocumentsProvider() {
     private fun addNetworkRoots(ctx: Context, result: MatrixCursor) {
         val repo = NetworkShareRepository.getInstance(ctx)
         for (share in repo.getAll()) {
+            // Server-mode SMB shares have no single remotePath, so they cannot
+            // be exposed as a SAF root. Skip them — users browse server-mode
+            // shares through the app's own UI.
+            if (share.isServerMode) continue
+
             val rootDocId = share.docIdPrefix         // e.g. "net:abc-123/"
             val flags = Root.FLAG_SUPPORTS_SEARCH or Root.FLAG_SUPPORTS_IS_CHILD or
                     if (share.readOnly) 0 else Root.FLAG_SUPPORTS_CREATE

@@ -59,7 +59,12 @@ import kotlin.coroutines.cancellation.CancellationException
 object NetworkClipboard {
     enum class Operation { COPY, MOVE }
 
-    data class Entry(val file: NetworkFile, val operation: Operation, val sourceShareId: String)
+    data class Entry(
+        val file: NetworkFile,
+        val operation: Operation,
+        val sourceShareId: String,
+        val sourceRemotePath: String = ""
+    )
 
     var entries: List<Entry> = emptyList()
 
@@ -67,17 +72,18 @@ object NetworkClipboard {
     val files: List<NetworkFile> get() = entries.map { it.file }
     val operation: Operation get() = entries.firstOrNull()?.operation ?: Operation.COPY
     val sourceShareId: String get() = entries.firstOrNull()?.sourceShareId ?: ""
+    val sourceRemotePath: String get() = entries.firstOrNull()?.sourceRemotePath ?: ""
 
     /** Append [items] with [op] from [shareId], deduplicating by path (newest wins). */
-    fun add(items: List<NetworkFile>, op: Operation, shareId: String) {
+    fun add(items: List<NetworkFile>, op: Operation, shareId: String, sourceRemotePath: String = "") {
         val newPaths = items.map { it.path }.toSet()
         entries = entries.filter { it.file.path !in newPaths } +
-                items.map { Entry(it, op, shareId) }
+                items.map { Entry(it, op, shareId, sourceRemotePath) }
     }
 
     /** Legacy alias — replaces entire clipboard. */
-    fun set(items: List<NetworkFile>, op: Operation, shareId: String) {
-        entries = items.map { Entry(it, op, shareId) }
+    fun set(items: List<NetworkFile>, op: Operation, shareId: String, sourceRemotePath: String = "") {
+        entries = items.map { Entry(it, op, shareId, sourceRemotePath) }
     }
 
     fun remove(file: NetworkFile) {
@@ -108,6 +114,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         /** Returned when the user picks a network folder as compress destination */
         const val RESULT_SELECTED_COMPRESS_SHARE_ID = "result_compress_share_id"
         const val RESULT_SELECTED_COMPRESS_NET_PATH  = "result_compress_net_path"
+        const val EXTRA_REMOTE_PATH = "extra_remote_path"
         private const val SIDELOAD_APK_PATH = "__sideload_apk__"
         private const val SIDELOAD_XAPK_PATH = "__sideload_xapk__"
         const val SCREENSHOT_PATH = "__screenshot__"
@@ -306,7 +313,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         pendingQuickTransferIsMove = isMove
         
         // Populate clipboard *now* so that the destination activity can read it directly
-        NetworkClipboard.add(files, if (isMove) NetworkClipboard.Operation.MOVE else NetworkClipboard.Operation.COPY, share.id)
+        NetworkClipboard.add(files, if (isMove) NetworkClipboard.Operation.MOVE else NetworkClipboard.Operation.COPY, share.id, share.remotePath)
         
         val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
             putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
@@ -713,7 +720,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         fileAdapter = NetworkFileAdapter(
             isTv = isTv,
-            share = share,
+            initialShare = share,
             context = this,
             onItemClick = { file ->
                 // Toggle items are handled by their Switch; ignore row taps
@@ -865,7 +872,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
                     launchQuickTransferPicker(selected, isMove = false)
                 } else {
-                    NetworkClipboard.add(selected, NetworkClipboard.Operation.COPY, share.id)
+                    android.util.Log.d("ClipboardTrace", "COPY: share.id=${share.id} share.name=${share.name} share.remotePath='${share.remotePath}' share.isServerMode=${share.isServerMode} firstFile.path='${selected.firstOrNull()?.path}' count=${selected.size}")
+                    NetworkClipboard.add(selected, NetworkClipboard.Operation.COPY, share.id, share.remotePath)
                     fileAdapter.exitSelectionMode()
                     showPremiumSnackbar(getString(R.string.clipboard_copied, selected.size))
                     updatePasteFab()
@@ -878,7 +886,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
                     launchQuickTransferPicker(selected, isMove = true)
                 } else {
-                    NetworkClipboard.add(selected, NetworkClipboard.Operation.MOVE, share.id)
+                    NetworkClipboard.add(selected, NetworkClipboard.Operation.MOVE, share.id, share.remotePath)
                     fileAdapter.exitSelectionMode()
                     showPremiumSnackbar(getString(R.string.clipboard_cut, selected.size))
                     updatePasteFab()
@@ -1403,7 +1411,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
     
     private fun updateSubtitle() {
-        txtSubtitle.text = if (currentPath.isEmpty()) "/" else "/$currentPath"
+        txtSubtitle.text = when {
+            share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty() ->
+                getString(R.string.network_folder_shared_folders)
+            currentPath.isEmpty() -> "/"
+            else -> "/$currentPath"
+        }
     }
 
     private fun updateSelectionBar(count: Int) {
@@ -1507,6 +1520,42 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                // Server-mode SMB: intercept at root to discover shares
+                if (share.type == ShareType.SMB && share.isServerMode) {
+                    if (currentPath.isEmpty()) {
+                        val discovered = discoverServerShares(share)
+                        withContext(Dispatchers.Main) {
+                            if (discovered.isEmpty()) {
+                                progressBar.visibility = View.GONE
+                                layoutEmpty.visibility = View.VISIBLE
+                                val tvEmptyState = findViewById<TextView>(R.id.txtEmptyState)
+                                tvEmptyState.text = getString(R.string.smb_server_no_shares)
+                                tvEmptyState.visibility = View.VISIBLE
+                                recyclerFiles.visibility = View.GONE
+                            } else {
+                                currentFiles = discovered
+                                applyData()
+                            }
+                        }
+                    } else {
+                        // Inside a discovered share
+                        val parts = currentPath.trimStart('/').split("/", limit = 2)
+                        val shareName = parts[0]
+                        val innerPath = parts.getOrElse(1) { "" }
+                        // Update share to the effective copy so all file operations
+                        // (copy, delete, rename, etc.) use the correct remotePath
+                        share = share.copy(remotePath = "/$shareName")
+                        fileAdapter.share = share
+                        var files = SmbShareClient.listFiles(share, innerPath)
+                        files = files.filter { it.name != ".." }
+                        withContext(Dispatchers.Main) {
+                            currentFiles = files
+                            applyData()
+                        }
+                    }
+                    return@launch
+                }
+
                 var files = when (share.type) {
                     ShareType.SMB -> SmbShareClient.listFiles(share, currentPath)
                     ShareType.FTP -> FtpShareClient.listFiles(share, currentPath)
@@ -1584,6 +1633,32 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Discovers all accessible shares on an SMB server.
+     * Returns a list of [NetworkFile] entries (directories) representing each share.
+     */
+    /**
+     * Discovers all accessible shares on an SMB server.
+     * Throws if the server is unreachable or authentication fails.
+     * Returns an empty list if the server is reachable but has no accessible shares.
+     */
+    private fun discoverServerShares(server: NetworkShare): List<NetworkFile> {
+        val allShares = SmbDiscovery.listShares(
+            server.host, server.username, server.password, server.domain
+        )
+        return allShares.filter { shareName ->
+            SmbShareClient.isShareAccessible(
+                server.host, shareName, server.username, server.password, server.domain
+            )
+        }.map { shareName ->
+            NetworkFile(
+                name = shareName,
+                path = "/$shareName",
+                isDirectory = true
+            )
         }
     }
 
@@ -2601,10 +2676,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
             
             // Cache for share resolution
             val shareCache = mutableMapOf<String, NetworkShare?>()
-            fun resolveShare(shareId: String): NetworkShare? = shareCache.getOrPut(shareId) {
-                if (shareId == share.id) share
-                else {
-                    val fromRepo = NetworkShareRepository.getInstance(this@NetworkBrowserActivity).getById(shareId)
+            fun resolveShare(shareId: String, remotePath: String = ""): NetworkShare? = shareCache.getOrPut(shareId) {
+                if (shareId == share.id) {
+                    // Server-mode: override remotePath with clipboard's sourceRemotePath
+                    if (share.isServerMode && remotePath.isNotEmpty()) share.copy(remotePath = remotePath)
+                    else share
+                } else {
+                    var fromRepo = NetworkShareRepository.getInstance(this@NetworkBrowserActivity).getById(shareId)
+                    // Server-mode shares need remotePath from the clipboard entry
+                    if (fromRepo?.isServerMode == true && remotePath.isNotEmpty()) {
+                        fromRepo = fromRepo.copy(remotePath = remotePath)
+                    }
                     if (fromRepo != null) fromRepo
                     else {
                         val dev = PairingManager.getInstance(this@NetworkBrowserActivity).getPairedDevice(shareId)
@@ -2642,7 +2724,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             var totalFiles = 0
             if (hasNet) {
                 for (entry in NetworkClipboard.entries) {
-                    val srcShare = resolveShare(entry.sourceShareId)
+                    val srcShare = resolveShare(entry.sourceShareId, entry.sourceRemotePath)
                     if (srcShare != null) {
                         totalFiles += if (entry.file.isDirectory) za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.countNetworkFiles(srcShare, entry.file.path) else 1
                     }
@@ -2655,12 +2737,24 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
 
             var fileIndex = 0
+            /** Strip the share name prefix from [path] when in server mode, since
+             *  share.remotePath already encodes it. E.g. "Media/Videos" → "Videos". */
+            fun stripSharePrefix(path: String): String {
+                if (!share.isServerMode || share.remotePath.isEmpty()) return path
+                val prefix = share.remotePath.trimStart('/')
+                return if (path.startsWith(prefix + "/")) path.removePrefix(prefix + "/")
+                else if (path == prefix) ""
+                else path
+            }
+
             // Handle Network paste — each entry has its own sourceShareId and operation
             if (hasNet) {
                 suspend fun processNetItem(srcShare: NetworkShare, source: NetworkFile, op: NetworkClipboard.Operation, currentDest: String, destChildren: List<NetworkFile>) {
                     if (isCancelledByUser) throw CancellationException()
                     val itemName = source.name
-                    val targetPath = if (currentDest.isEmpty() || currentDest == "/") itemName else "${currentDest.trimEnd('/')}/$itemName"
+                    val cleanDest = stripSharePrefix(currentDest)
+                    val targetPath = if (cleanDest.isEmpty() || cleanDest == "/") itemName else "${cleanDest.trimEnd('/')}/$itemName"
+                    android.util.Log.d("ServerModePaste", "processNetItem: srcShare.isServerMode=${srcShare.isServerMode} srcShare.remotePath='${srcShare.remotePath}' share.isServerMode=${share.isServerMode} share.remotePath='${share.remotePath}' currentDest='$currentDest' cleanDest='$cleanDest' targetPath='$targetPath' itemName='$itemName' source.path='${source.path}'")
 
                     if (source.isDirectory) {
                         if (srcShare.id == share.id && op == NetworkClipboard.Operation.MOVE) {
@@ -2761,7 +2855,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
 
                         val finalPath = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
-                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(currentDest, itemName, destChildren)
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren)
                         else targetPath
 
                         fileIndex++
@@ -2848,6 +2942,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         } catch (e: Exception) {
                             if (isCancelledByUser) throw CancellationException()
                             android.util.Log.e("PasteFeature", "Error: ${e.message}")
+                            android.util.Log.e("ServerModePaste", "Paste item failed: srcShare.id=${srcShare.id} share.id=${share.id} srcShare.remotePath='${srcShare.remotePath}' share.remotePath='${share.remotePath}' targetPath='${targetPath}' currentDest='$currentDest' op=$op exception=${e.message}")
                             lastErrorMessage = e.message
                             failCount++
                         }
@@ -2856,7 +2951,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
                 // 2. Process items
                 for (entry in NetworkClipboard.entries) {
-                    val srcShare = resolveShare(entry.sourceShareId)
+                    val srcShare = resolveShare(entry.sourceShareId, entry.sourceRemotePath)
                     if (srcShare != null) {
                         try {
                             processNetItem(srcShare, entry.file, entry.operation, currentPath, currentFiles)
@@ -2883,7 +2978,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
             if (hasLocal) {
                 suspend fun processLocalItem(source: File, op: za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation, currentDest: String, destChildren: List<NetworkFile>) {
                     val itemName = source.name
-                    val targetPath = if (currentDest.isEmpty() || currentDest == "/") itemName else "${currentDest.trimEnd('/')}/$itemName"
+                    val cleanDest = stripSharePrefix(currentDest)
+                    val targetPath = if (cleanDest.isEmpty() || cleanDest == "/") itemName else "${cleanDest.trimEnd('/')}/$itemName"
 
                     if (source.isDirectory) {
                         try {
@@ -2953,7 +3049,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) { successCount++; return }
 
                         val finalPath = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
-                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(currentDest, itemName, destChildren)
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren)
                         else targetPath
 
                         fileIndex++
@@ -3871,7 +3967,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         
         val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java).apply {
             putExtra("shareId", share.id)
-            putExtra("shareHost", share.host) 
+            putExtra(EXTRA_REMOTE_PATH, share.remotePath)
+            putExtra("shareHost", share.host)
             putExtra("shareName", share.name)
             putExtra("provider", share.type.name)
             putExtra("initialPath", file.path)
@@ -3887,7 +3984,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val sizesMap = filesToConsider.associate { it.path to it.size }
         val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity::class.java).apply {
             putExtra("shareId", share.id)
-            putExtra("shareHost", share.host) 
+            putExtra(EXTRA_REMOTE_PATH, share.remotePath)
+            putExtra("shareHost", share.host)
             putExtra("shareName", share.name)
             putExtra("provider", share.type.name)
             putExtra("initialPath", file.path)

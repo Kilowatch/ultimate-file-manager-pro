@@ -710,6 +710,14 @@
     <string name="network_smb_protocol_smb2">SMB2 Only (Legacy NAS / Routers)</string>
     <string name="network_smb_protocol_smb3">SMB3 Only (Modern Secure)</string>
 
+    <!-- SMB Connection Type -->
+    <string name="network_field_connection_type">Connection type</string>
+    <string name="network_conn_type_share">Share</string>
+    <string name="network_conn_type_server">Server</string>
+    <string name="network_folder_shared_folders">Shared Folders</string>
+    <string name="smb_server_no_shares">No shares available on this server</string>
+    <string name="smb_server_discovery_error">Failed to discover shares: %s</string>
+
     <!-- Connection Success Dialog -->
     <string name="network_dialog_success_title">Connection Successful</string>
     <string name="network_dialog_success_body">Your share is reachable. Save it now?</string>

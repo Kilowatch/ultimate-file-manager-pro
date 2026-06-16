@@ -327,6 +327,73 @@
                         android:textSize="12sp"
                         android:visibility="gone" />
 
+                    <!-- SMB Connection Type (Share / Server) — visible only when SMB is selected -->
+                    <LinearLayout
+                        android:id="@+id/layerSmbConnectionType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/network_field_connection_type"
+                            android:textColor="@color/mobile_card_text_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="8dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipSmbShare"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:layout_margin="4dp"
+                                android:text="@string/network_conn_type_share"
+                                android:textSize="12sp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                android:checkable="true"
+                                android:checked="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/chipSmbServer"
+                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="64dp"
+                                android:layout_weight="1"
+                                android:layout_margin="4dp"
+                                android:text="@string/network_conn_type_server"
+                                android:textSize="12sp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                android:checkable="true"
+                                app:backgroundTint="@color/selector_protocol_bg"
+                                app:iconTint="@color/selector_protocol_text"
+                                android:textColor="@color/selector_protocol_text"
+                                android:gravity="center"
+                                app:cornerRadius="12dp"
+                                app:strokeColor="@color/mobile_glass_stroke"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <!-- Host field + Scan button -->
                     <LinearLayout
                         android:id="@+id/layerHost"

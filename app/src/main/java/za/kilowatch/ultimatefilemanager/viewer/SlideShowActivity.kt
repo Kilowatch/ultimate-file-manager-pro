@@ -93,6 +93,7 @@ class SlideShowActivity : AppCompatActivity() {
     private var shareHost: String = ""
     private var shareName: String = ""
     private var provider: String = ""
+    private var remotePathExtra: String = ""
     private var initialFileSize: Long = 0L
     private var sizesMap: HashMap<String, Long> = HashMap()
 
@@ -245,6 +246,7 @@ class SlideShowActivity : AppCompatActivity() {
         shareName = intent.getStringExtra("shareName") ?: ""
         provider = intent.getStringExtra("provider") ?: ""
         initialFileSize = intent.getLongExtra("initialSize", 0L)
+        remotePathExtra = intent.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH) ?: ""
         initialPath = intent.getStringExtra("initialPath") ?: ""
         playlist = intent.getStringArrayListExtra("playlist") ?: ArrayList()
         @Suppress("UNCHECKED_CAST")
@@ -298,7 +300,7 @@ class SlideShowActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager() {
-        val adapter = SlideShowAdapter(this, playlist, shareId, shareHost, shareName, provider, coilLoader, viewPager) {
+        val adapter = SlideShowAdapter(this, playlist, shareId, shareHost, shareName, provider, remotePathExtra, coilLoader, viewPager) {
             toggleControls()
         }
         viewPager.adapter = adapter
@@ -1084,6 +1086,7 @@ class SlideShowAdapter(
     private val shareHost: String,
     private val shareName: String,
     private val provider: String,
+    private val remotePath: String,
     private val coilLoader: ImageLoader,
     private val viewPager: ViewPager2,
     private val onItemClick: () -> Unit
@@ -1107,7 +1110,7 @@ class SlideShowAdapter(
             VideoViewHolder(view, onItemClick)
         } else {
             val view = inflater.inflate(R.layout.item_slideshow_image, parent, false)
-            ImageViewHolder(view, viewPager, coilLoader, shareId, shareHost, shareName, provider, onItemClick)
+            ImageViewHolder(view, viewPager, coilLoader, shareId, shareHost, shareName, provider, remotePath, onItemClick)
         }
     }
 
@@ -1131,6 +1134,7 @@ class SlideShowAdapter(
         private val shareHost: String,
         private val shareName: String,
         private val provider: String,
+        private val remotePath: String,
         private val onItemClick: () -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
@@ -1157,7 +1161,7 @@ class SlideShowAdapter(
                     loadImage(cacheFile)
                 } else {
                     progressBar.visibility = View.VISIBLE
-                    downloadNetworkFile(itemView.context, shareId, shareHost, shareName, provider, path, cacheFile) { success ->
+                    downloadNetworkFile(itemView.context, shareId, shareHost, shareName, provider, remotePath, path, cacheFile) { success ->
                         progressBar.visibility = View.GONE
                         if (success) {
                             loadImage(cacheFile)
@@ -1202,33 +1206,38 @@ class SlideShowAdapter(
             shareHost: String,
             shareName: String,
             provider: String,
-            remotePath: String,
+            shareRemotePath: String,
+            fileRemotePath: String,
             destFile: File,
             onComplete: (Boolean) -> Unit
         ) {
-            val share = NetworkShareRepository.getInstance(context).getById(shareId)
+            var share = NetworkShareRepository.getInstance(context).getById(shareId)
                 ?: NetworkShare(
                     id = shareId,
                     host = shareHost,
                     name = shareName,
                     type = ShareType.valueOf(provider)
                 )
+            // Server-mode shares need remotePath from the intent (browser updates it at navigation time)
+            if (share.isServerMode && shareRemotePath.isNotEmpty()) {
+                share = share.copy(remotePath = shareRemotePath)
+            }
 
             CoroutineScope(Dispatchers.IO).launch {
                 var success = false
                 try {
                     val inStream = when (share.type) {
-                        ShareType.SMB -> SmbShareClient.openInputStream(share, remotePath)
-                        ShareType.FTP -> FtpShareClient.openInputStream(share, remotePath)
-                        ShareType.TV  -> TvShareClient.openInputStream(share, remotePath)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, remotePath)
-                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, remotePath).first
-                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, remotePath).first
-                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, remotePath).first
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, remotePath).first
-                        ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, remotePath).first
-                        ShareType.NFS                         -> NfsShareClient.openInputStream(share, remotePath)
-                        ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, remotePath)
+                        ShareType.SMB -> SmbShareClient.openInputStream(share, fileRemotePath)
+                        ShareType.FTP -> FtpShareClient.openInputStream(share, fileRemotePath)
+                        ShareType.TV  -> TvShareClient.openInputStream(share, fileRemotePath)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, fileRemotePath)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.NFS                         -> NfsShareClient.openInputStream(share, fileRemotePath)
+                        ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, fileRemotePath)
                     }
                     destFile.parentFile?.mkdirs()
                     inStream.use { inp ->
@@ -1238,7 +1247,7 @@ class SlideShowAdapter(
                     }
                     success = true
                 } catch (e: Exception) {
-                    GoRoLog.e("SlideShowAdapter", "Failed to download $remotePath", e)
+                    GoRoLog.e("SlideShowAdapter", "Failed to download $fileRemotePath", e)
                 }
                 withContext(Dispatchers.Main) {
                     onComplete(success)

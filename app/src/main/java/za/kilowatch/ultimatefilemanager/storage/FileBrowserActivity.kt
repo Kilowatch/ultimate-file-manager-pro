@@ -2687,6 +2687,11 @@ class FileBrowserActivity : AppCompatActivity() {
                 val operation = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.operation
                 val sourceShareId = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.sourceShareId
                 var share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@FileBrowserActivity).getById(sourceShareId)
+                // Server-mode shares need remotePath from the clipboard entry
+                val sourceRemotePath = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.sourceRemotePath
+                if (share?.isServerMode == true && sourceRemotePath.isNotEmpty()) {
+                    share = share.copy(remotePath = sourceRemotePath)
+                }
 
                 if (share == null) {
                     val pairedDevice = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@FileBrowserActivity).getPairedDevice(sourceShareId)
