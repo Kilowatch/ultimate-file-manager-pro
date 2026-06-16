@@ -47,9 +47,12 @@ import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import android.webkit.MimeTypeMap
-import coil.dispose
-import coil.load
-import coil.size.Scale
+import coil3.asImage
+import coil3.load
+import coil3.request.Disposable
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.size.Scale
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -529,7 +532,7 @@ class SafPickerActivity : AppCompatActivity() {
             private val subtitle: TextView = view.findViewById(R.id.txtFileInfo)
 
             /** Cancels any in-flight Coil request when this ViewHolder is rebound. */
-            private var coilDisposable: coil.request.Disposable? = null
+            private var coilDisposable: Disposable? = null
             /** Cancels any in-flight video-frame extraction coroutine. */
             private var videoJob: Job? = null
 
