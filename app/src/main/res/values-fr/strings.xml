@@ -4882,6 +4882,111 @@ Original : %1$s
 Stockage interne/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+Protéger la sauvegarde avec un mot de passe ?
+</string>
+    <string name="backup_password_hint">
+Mot de passe (min 4 caractères)
+</string>
+    <string name="backup_password_confirm_hint">
+Confirmez le mot de passe
+</string>
+    <string name="backup_password_skip_title">
+Enregistrer en clair ?
+</string>
+    <string name="backup_password_skip_warning">
+Enregistrer en clair ? Toute personne ayant accès au fichier peut lire vos paramètres.
+</string>
+    <string name="backup_password_forgot_warning">
+Si vous oubliez ce mot de passe, la sauvegarde ne pourra pas être récupérée.
+</string>
+    <string name="backup_password_mismatch">
+Les mots de passe ne correspondent pas
+</string>
+    <string name="backup_password_too_short">
+Le mot de passe doit contenir au moins 4 caractères
+</string>
+    <string name="backup_password_btn_encrypt">
+Chiffrer
+</string>
+    <string name="backup_password_btn_skip">
+Passer (non chiffré)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Entrez le mot de passe de sauvegarde
+</string>
+    <string name="backup_import_password_hint">
+Mot de passe
+</string>
+    <string name="backup_import_wrong_password">
+Mauvais mot de passe. %d tentatives restantes.
+</string>
+    <string name="backup_import_too_many_attempts">
+Trop de tentatives infructueuses.
+</string>
+    <string name="backup_import_unsupported_format">
+Format de fichier de sauvegarde non pris en charge.
+</string>
+
+    <string name="decrypt">
+Décrypter
+</string>
+    <string name="save_unencrypted">
+Enregistrer en clair
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+Protéger le pack de thèmes avec un mot de passe ?
+</string>
+    <string name="theme_password_hint">
+Mot de passe (min 4 caractères)
+</string>
+    <string name="theme_password_confirm_hint">
+Confirmez le mot de passe
+</string>
+    <string name="theme_password_skip_title">
+Enregistrer en clair ?
+</string>
+    <string name="theme_password_skip_warning">
+Enregistrer en clair ? Toute personne ayant accès au fichier peut lire les remplacements de vos icônes.
+</string>
+    <string name="theme_password_forgot_warning">
+Si vous oubliez ce mot de passe, le pack thématique ne pourra pas être récupéré.
+</string>
+    <string name="theme_password_mismatch">
+Les mots de passe ne correspondent pas
+</string>
+    <string name="theme_password_too_short">
+Le mot de passe doit contenir au moins 4 caractères
+</string>
+    <string name="theme_password_btn_encrypt">
+Chiffrer et amp; Exporter
+</string>
+    <string name="theme_password_btn_skip">
+Passer (non chiffré)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Entrez le mot de passe du pack de thèmes
+</string>
+    <string name="theme_import_password_hint">
+Mot de passe
+</string>
+    <string name="theme_import_wrong_password">
+Mauvais mot de passe. %d tentatives restantes.
+</string>
+    <string name="theme_import_too_many_attempts">
+Trop de tentatives infructueuses.
+</string>
+    <string name="theme_import_unsupported_format">
+Fichier de pack de thèmes non pris en charge ou corrompu.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Sélectionnez la méthode de partage

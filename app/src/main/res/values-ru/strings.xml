@@ -4882,6 +4882,111 @@ XML/Разметка
 Внутренняя память/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+Защитить резервную копию паролем?
+</string>
+    <string name="backup_password_hint">
+Пароль (минимум 4 символа)
+</string>
+    <string name="backup_password_confirm_hint">
+Подтвердите пароль
+</string>
+    <string name="backup_password_skip_title">
+Сохранить в незашифрованном виде?
+</string>
+    <string name="backup_password_skip_warning">
+Сохранить в незашифрованном виде? Любой, у кого есть доступ к файлу, может прочитать ваши настройки.
+</string>
+    <string name="backup_password_forgot_warning">
+Если вы забудете этот пароль, резервную копию невозможно будет восстановить.
+</string>
+    <string name="backup_password_mismatch">
+Пароли не совпадают
+</string>
+    <string name="backup_password_too_short">
+Пароль должен быть не менее 4 символов
+</string>
+    <string name="backup_password_btn_encrypt">
+Шифровать
+</string>
+    <string name="backup_password_btn_skip">
+Пропустить (в незашифрованном виде)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Введите резервный пароль
+</string>
+    <string name="backup_import_password_hint">
+Пароль
+</string>
+    <string name="backup_import_wrong_password">
+Неправильный пароль. Осталось %d попыток.
+</string>
+    <string name="backup_import_too_many_attempts">
+Слишком много неудачных попыток.
+</string>
+    <string name="backup_import_unsupported_format">
+Неподдерживаемый формат файла резервной копии.
+</string>
+
+    <string name="decrypt">
+Расшифровать
+</string>
+    <string name="save_unencrypted">
+Сохранить в незашифрованном виде
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+Защитить пакет тем паролем?
+</string>
+    <string name="theme_password_hint">
+Пароль (минимум 4 символа)
+</string>
+    <string name="theme_password_confirm_hint">
+Подтвердите пароль
+</string>
+    <string name="theme_password_skip_title">
+Сохранить в незашифрованном виде?
+</string>
+    <string name="theme_password_skip_warning">
+Сохранить в незашифрованном виде? Любой, у кого есть доступ к файлу, может прочитать ваши переопределения значков.
+</string>
+    <string name="theme_password_forgot_warning">
+Если вы забудете этот пароль, пакет тем не удастся восстановить.
+</string>
+    <string name="theme_password_mismatch">
+Пароли не совпадают
+</string>
+    <string name="theme_password_too_short">
+Пароль должен быть не менее 4 символов
+</string>
+    <string name="theme_password_btn_encrypt">
+Зашифровать и усилить; Экспорт
+</string>
+    <string name="theme_password_btn_skip">
+Пропустить (в незашифрованном виде)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Введите пароль пакета тем
+</string>
+    <string name="theme_import_password_hint">
+Пароль
+</string>
+    <string name="theme_import_wrong_password">
+Неправильный пароль. Осталось %d попыток.
+</string>
+    <string name="theme_import_too_many_attempts">
+Слишком много неудачных попыток.
+</string>
+    <string name="theme_import_unsupported_format">
+Неподдерживаемый или поврежденный файл пакета тем.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Выберите метод обмена

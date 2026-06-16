@@ -4882,6 +4882,111 @@ APK 추출 설정
 내부 저장소/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+비밀번호로 백업을 보호하시겠습니까?
+</string>
+    <string name="backup_password_hint">
+비밀번호(최소 4자)
+</string>
+    <string name="backup_password_confirm_hint">
+비밀번호 확인
+</string>
+    <string name="backup_password_skip_title">
+암호화되지 않은 상태로 저장하시겠습니까?
+</string>
+    <string name="backup_password_skip_warning">
+암호화되지 않은 상태로 저장하시겠습니까? 파일에 액세스할 수 있는 사람은 누구나 설정을 읽을 수 있습니다.
+</string>
+    <string name="backup_password_forgot_warning">
+이 비밀번호를 잊어버리면 백업을 복구할 수 없습니다.
+</string>
+    <string name="backup_password_mismatch">
+비밀번호가 일치하지 않습니다.
+</string>
+    <string name="backup_password_too_short">
+비밀번호는 4자 이상이어야 합니다.
+</string>
+    <string name="backup_password_btn_encrypt">
+암호화
+</string>
+    <string name="backup_password_btn_skip">
+건너뛰기(암호화되지 않음)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+백업 비밀번호를 입력하세요
+</string>
+    <string name="backup_import_password_hint">
+비밀번호
+</string>
+    <string name="backup_import_wrong_password">
+비밀번호가 잘못되었습니다. %d 시도가 남았습니다.
+</string>
+    <string name="backup_import_too_many_attempts">
+실패한 시도가 너무 많습니다.
+</string>
+    <string name="backup_import_unsupported_format">
+지원되지 않는 백업 파일 형식입니다.
+</string>
+
+    <string name="decrypt">
+암호 해독
+</string>
+    <string name="save_unencrypted">
+암호화되지 않은 상태로 저장
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+테마팩을 비밀번호로 보호하시겠습니까?
+</string>
+    <string name="theme_password_hint">
+비밀번호(최소 4자)
+</string>
+    <string name="theme_password_confirm_hint">
+비밀번호 확인
+</string>
+    <string name="theme_password_skip_title">
+암호화되지 않은 상태로 저장하시겠습니까?
+</string>
+    <string name="theme_password_skip_warning">
+암호화되지 않은 상태로 저장하시겠습니까? 파일에 액세스할 수 있는 사람은 누구나 아이콘 재정의를 읽을 수 있습니다.
+</string>
+    <string name="theme_password_forgot_warning">
+비밀번호를 잊어버리시면 해당 테마팩을 복구하실 수 없습니다.
+</string>
+    <string name="theme_password_mismatch">
+비밀번호가 일치하지 않습니다.
+</string>
+    <string name="theme_password_too_short">
+비밀번호는 4자 이상이어야 합니다.
+</string>
+    <string name="theme_password_btn_encrypt">
+암호화 &amp; 내보내다
+</string>
+    <string name="theme_password_btn_skip">
+건너뛰기(암호화되지 않음)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+테마팩 비밀번호를 입력하세요
+</string>
+    <string name="theme_import_password_hint">
+비밀번호
+</string>
+    <string name="theme_import_wrong_password">
+비밀번호가 잘못되었습니다. %d 시도가 남았습니다.
+</string>
+    <string name="theme_import_too_many_attempts">
+실패한 시도가 너무 많습니다.
+</string>
+    <string name="theme_import_unsupported_format">
+지원되지 않거나 손상된 테마 팩 파일입니다.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 공유 방법 선택

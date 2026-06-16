@@ -3020,6 +3020,25 @@
     <string name="decrypt">Decrypt</string>
     <string name="save_unencrypted">Save unencrypted</string>
 
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">Protect theme pack with password?</string>
+    <string name="theme_password_hint">Password (min 4 characters)</string>
+    <string name="theme_password_confirm_hint">Confirm password</string>
+    <string name="theme_password_skip_title">Save unencrypted?</string>
+    <string name="theme_password_skip_warning">Save unencrypted? Anyone with access to the file can read your icon overrides.</string>
+    <string name="theme_password_forgot_warning">If you forget this password, the theme pack cannot be recovered.</string>
+    <string name="theme_password_mismatch">Passwords do not match</string>
+    <string name="theme_password_too_short">Password must be at least 4 characters</string>
+    <string name="theme_password_btn_encrypt">Encrypt &amp; Export</string>
+    <string name="theme_password_btn_skip">Skip (unencrypted)</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">Enter theme pack password</string>
+    <string name="theme_import_password_hint">Password</string>
+    <string name="theme_import_wrong_password">Wrong password. %d attempts remaining.</string>
+    <string name="theme_import_too_many_attempts">Too many failed attempts.</string>
+    <string name="theme_import_unsupported_format">Unsupported or corrupted theme pack file.</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">Select Share Method</string>
     <string name="share_option_standard">Standard Android Share</string>

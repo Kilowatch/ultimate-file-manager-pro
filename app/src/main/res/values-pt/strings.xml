@@ -4882,6 +4882,111 @@ Original: %1$s
 Armazenamento Interno/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+Proteger backup com senha?
+</string>
+    <string name="backup_password_hint">
+Senha (mínimo 4 caracteres)
+</string>
+    <string name="backup_password_confirm_hint">
+Confirme sua senha
+</string>
+    <string name="backup_password_skip_title">
+Salvar sem criptografia?
+</string>
+    <string name="backup_password_skip_warning">
+Salvar sem criptografia? Qualquer pessoa com acesso ao arquivo pode ler suas configurações.
+</string>
+    <string name="backup_password_forgot_warning">
+Se você esquecer esta senha, o backup não poderá ser recuperado.
+</string>
+    <string name="backup_password_mismatch">
+As senhas não coincidem
+</string>
+    <string name="backup_password_too_short">
+A senha deve ter pelo menos 4 caracteres
+</string>
+    <string name="backup_password_btn_encrypt">
+Criptografar
+</string>
+    <string name="backup_password_btn_skip">
+Pular (não criptografado)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Digite a senha de backup
+</string>
+    <string name="backup_import_password_hint">
+Senha
+</string>
+    <string name="backup_import_wrong_password">
+Senha errada. %d tentativas restantes.
+</string>
+    <string name="backup_import_too_many_attempts">
+Muitas tentativas fracassadas.
+</string>
+    <string name="backup_import_unsupported_format">
+Formato de arquivo de backup não suportado.
+</string>
+
+    <string name="decrypt">
+Descriptografar
+</string>
+    <string name="save_unencrypted">
+Salvar sem criptografia
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+Proteger pacote temático com senha?
+</string>
+    <string name="theme_password_hint">
+Senha (mínimo 4 caracteres)
+</string>
+    <string name="theme_password_confirm_hint">
+Confirme sua senha
+</string>
+    <string name="theme_password_skip_title">
+Salvar sem criptografia?
+</string>
+    <string name="theme_password_skip_warning">
+Salvar sem criptografia? Qualquer pessoa com acesso ao arquivo pode ler as substituições de ícones.
+</string>
+    <string name="theme_password_forgot_warning">
+Se você esquecer esta senha, o pacote temático não poderá ser recuperado.
+</string>
+    <string name="theme_password_mismatch">
+As senhas não coincidem
+</string>
+    <string name="theme_password_too_short">
+A senha deve ter pelo menos 4 caracteres
+</string>
+    <string name="theme_password_btn_encrypt">
+Criptografar e Exportar
+</string>
+    <string name="theme_password_btn_skip">
+Pular (não criptografado)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Digite a senha do pacote temático
+</string>
+    <string name="theme_import_password_hint">
+Senha
+</string>
+    <string name="theme_import_wrong_password">
+Senha errada. %d tentativas restantes.
+</string>
+    <string name="theme_import_too_many_attempts">
+Muitas tentativas fracassadas.
+</string>
+    <string name="theme_import_unsupported_format">
+Arquivo de pacote de tema incompatível ou corrompido.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Selecione o método de compartilhamento

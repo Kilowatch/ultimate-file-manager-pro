@@ -1,8 +1,13 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -14,6 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -199,19 +207,99 @@ class IconPackExportActivity : AppCompatActivity() {
     }
 
     private fun performExport() {
+        val selectedIconIds = categories
+            .filter { it.isSelected }
+            .flatMap { it.iconIds }
+            .toSet()
+
+        if (selectedIconIds.isEmpty()) {
+            Toast.makeText(this, R.string.icon_pack_export_error, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_theme_password_tv else R.layout.dialog_theme_password,
+            null
+        )
+
+        val tilPassword = dialogView.findViewById<TextInputLayout>(R.id.tilPassword)
+        val edtPassword = dialogView.findViewById<TextInputEditText>(R.id.edtPassword)
+        val tilConfirm = dialogView.findViewById<TextInputLayout>(R.id.tilConfirmPassword)
+        val edtConfirm = dialogView.findViewById<TextInputEditText>(R.id.edtConfirmPassword)
+        val btnEncrypt = dialogView.findViewById<Button>(R.id.btnEncrypt)
+        val btnSkip = dialogView.findViewById<Button>(R.id.btnSkip)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnEncrypt.setOnClickListener {
+            val pw = edtPassword.text?.toString() ?: ""
+            val confirm = edtConfirm.text?.toString() ?: ""
+            if (pw.length < 4) {
+                tilPassword.error = getString(R.string.theme_password_too_short)
+                return@setOnClickListener
+            }
+            if (pw != confirm) {
+                tilConfirm.error = getString(R.string.theme_password_mismatch)
+                return@setOnClickListener
+            }
+            tilPassword.error = null
+            tilConfirm.error = null
+            dialog.dismiss()
+            doExport(selectedIconIds, pw)
+        }
+
+        btnSkip.setOnClickListener {
+            dialog.dismiss()
+            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setTitle(R.string.theme_password_skip_title)
+                .setMessage(R.string.theme_password_skip_warning)
+                .setPositiveButton(R.string.save_unencrypted) { _, _ -> doExport(selectedIconIds, null) }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val white = getColor(R.color.tv_text_primary)
+            val glass = 0x26FFFFFF.toInt()
+
+            btnEncrypt.backgroundTintList = ColorStateList.valueOf(yellow)
+            btnEncrypt.setTextColor(black)
+            btnEncrypt.setOnFocusChangeListener { _, hasFocus ->
+                btnEncrypt.backgroundTintList =
+                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    else ColorStateList.valueOf(yellow)
+            }
+
+            btnSkip.backgroundTintList = ColorStateList.valueOf(glass)
+            btnSkip.setTextColor(white)
+            btnSkip.setOnFocusChangeListener { _, hasFocus ->
+                btnSkip.backgroundTintList =
+                    if (hasFocus) ColorStateList.valueOf(yellow)
+                    else ColorStateList.valueOf(glass)
+                btnSkip.setTextColor(if (hasFocus) black else white)
+            }
+            btnEncrypt.requestFocus()
+        }
+    }
+
+    private fun doExport(selectedIconIds: Set<String>, password: String?) {
         progressBar.visibility = View.VISIBLE
         layoutContent.visibility = View.GONE
 
         lifecycleScope.launch(Dispatchers.Main) {
-            val selectedIconIds = categories
-                .filter { it.isSelected }
-                .flatMap { it.iconIds }
-                .toSet()
-
             val success = withContext(Dispatchers.IO) {
-                if (selectedIconIds.isEmpty()) return@withContext false
                 val targetFile = ThemePackManager.getDefaultExportFile()
-                ThemePackManager.performExport(this@IconPackExportActivity, selectedIconIds, targetFile)
+                ThemePackManager.performExport(this@IconPackExportActivity, selectedIconIds, targetFile, password)
             }
 
             progressBar.visibility = View.GONE

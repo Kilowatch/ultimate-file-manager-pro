@@ -4882,6 +4882,111 @@ Original: %1$s
 Almacenamiento interno/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+¿Proteger la copia de seguridad con contraseña?
+</string>
+    <string name="backup_password_hint">
+Contraseña (mínimo 4 caracteres)
+</string>
+    <string name="backup_password_confirm_hint">
+Confirmar Contraseña
+</string>
+    <string name="backup_password_skip_title">
+¿Guardar sin cifrar?
+</string>
+    <string name="backup_password_skip_warning">
+¿Guardar sin cifrar? Cualquiera que tenga acceso al archivo puede leer su configuración.
+</string>
+    <string name="backup_password_forgot_warning">
+Si olvida esta contraseña, la copia de seguridad no se podrá recuperar.
+</string>
+    <string name="backup_password_mismatch">
+Las contraseñas no coinciden
+</string>
+    <string name="backup_password_too_short">
+La contraseña debe tener al menos 4 caracteres.
+</string>
+    <string name="backup_password_btn_encrypt">
+cifrar
+</string>
+    <string name="backup_password_btn_skip">
+Saltar (sin cifrar)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Ingrese la contraseña de respaldo
+</string>
+    <string name="backup_import_password_hint">
+Contraseña
+</string>
+    <string name="backup_import_wrong_password">
+Contraseña incorrecta. Quedan %d intentos.
+</string>
+    <string name="backup_import_too_many_attempts">
+Demasiados intentos fallidos.
+</string>
+    <string name="backup_import_unsupported_format">
+Formato de archivo de copia de seguridad no compatible.
+</string>
+
+    <string name="decrypt">
+Descifrar
+</string>
+    <string name="save_unencrypted">
+Guardar sin cifrar
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+¿Proteger el paquete de temas con contraseña?
+</string>
+    <string name="theme_password_hint">
+Contraseña (mínimo 4 caracteres)
+</string>
+    <string name="theme_password_confirm_hint">
+Confirmar Contraseña
+</string>
+    <string name="theme_password_skip_title">
+¿Guardar sin cifrar?
+</string>
+    <string name="theme_password_skip_warning">
+¿Guardar sin cifrar? Cualquiera que tenga acceso al archivo puede leer las anulaciones de iconos.
+</string>
+    <string name="theme_password_forgot_warning">
+Si olvida esta contraseña, el paquete de temas no se podrá recuperar.
+</string>
+    <string name="theme_password_mismatch">
+Las contraseñas no coinciden
+</string>
+    <string name="theme_password_too_short">
+La contraseña debe tener al menos 4 caracteres.
+</string>
+    <string name="theme_password_btn_encrypt">
+Cifrar &amp; Exportar
+</string>
+    <string name="theme_password_btn_skip">
+Saltar (sin cifrar)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Ingrese la contraseña del paquete de temas
+</string>
+    <string name="theme_import_password_hint">
+Contraseña
+</string>
+    <string name="theme_import_wrong_password">
+Contraseña incorrecta. Quedan %d intentos.
+</string>
+    <string name="theme_import_too_many_attempts">
+Demasiados intentos fallidos.
+</string>
+    <string name="theme_import_unsupported_format">
+Archivo de paquete de temas no compatible o dañado.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Seleccione el método de compartir

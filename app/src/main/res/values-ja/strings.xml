@@ -4882,6 +4882,111 @@ APK抽出設定
 内部ストレージ/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+バックアップをパスワードで保護しますか?
+</string>
+    <string name="backup_password_hint">
+パスワード (4文字以上)
+</string>
+    <string name="backup_password_confirm_hint">
+パスワードを認証する
+</string>
+    <string name="backup_password_skip_title">
+暗号化せずに保存しますか?
+</string>
+    <string name="backup_password_skip_warning">
+暗号化せずに保存しますか?ファイルにアクセスできる人は誰でも設定を読み取ることができます。
+</string>
+    <string name="backup_password_forgot_warning">
+このパスワードを忘れた場合、バックアップを復元することはできません。
+</string>
+    <string name="backup_password_mismatch">
+パスワードが一致しません
+</string>
+    <string name="backup_password_too_short">
+パスワードは4文字以上である必要があります
+</string>
+    <string name="backup_password_btn_encrypt">
+暗号化する
+</string>
+    <string name="backup_password_btn_skip">
+スキップ（非暗号化）
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+バックアップパスワードを入力してください
+</string>
+    <string name="backup_import_password_hint">
+パスワード
+</string>
+    <string name="backup_import_wrong_password">
+パスワードが間違っています。残りの試行回数は %d です。
+</string>
+    <string name="backup_import_too_many_attempts">
+失敗した試行が多すぎます。
+</string>
+    <string name="backup_import_unsupported_format">
+サポートされていないバックアップ ファイル形式です。
+</string>
+
+    <string name="decrypt">
+復号化
+</string>
+    <string name="save_unencrypted">
+暗号化せずに保存する
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+テーマパックをパスワードで保護しますか?
+</string>
+    <string name="theme_password_hint">
+パスワード (4文字以上)
+</string>
+    <string name="theme_password_confirm_hint">
+パスワードを認証する
+</string>
+    <string name="theme_password_skip_title">
+暗号化せずに保存しますか?
+</string>
+    <string name="theme_password_skip_warning">
+暗号化せずに保存しますか?ファイルにアクセスできる人は誰でも、アイコンのオーバーライドを読み取ることができます。
+</string>
+    <string name="theme_password_forgot_warning">
+このパスワードを忘れた場合、テーマ パックを回復することはできません。
+</string>
+    <string name="theme_password_mismatch">
+パスワードが一致しません
+</string>
+    <string name="theme_password_too_short">
+パスワードは4文字以上である必要があります
+</string>
+    <string name="theme_password_btn_encrypt">
+暗号化と暗号化輸出
+</string>
+    <string name="theme_password_btn_skip">
+スキップ（非暗号化）
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+テーマパックのパスワードを入力してください
+</string>
+    <string name="theme_import_password_hint">
+パスワード
+</string>
+    <string name="theme_import_wrong_password">
+パスワードが間違っています。残りの試行回数は %d です。
+</string>
+    <string name="theme_import_too_many_attempts">
+失敗した試行が多すぎます。
+</string>
+    <string name="theme_import_unsupported_format">
+テーマ パック ファイルがサポートされていないか破損しています。
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 共有方法の選択

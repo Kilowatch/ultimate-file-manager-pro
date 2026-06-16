@@ -4880,6 +4880,111 @@ XML / العلامات
 وحدة التخزين الداخلية/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+حماية النسخة الاحتياطية بكلمة مرور؟
+</string>
+    <string name="backup_password_hint">
+كلمة المرور (4 أحرف على الأقل)
+</string>
+    <string name="backup_password_confirm_hint">
+تأكيد كلمة المرور
+</string>
+    <string name="backup_password_skip_title">
+هل تريد الحفظ غير مشفرة؟
+</string>
+    <string name="backup_password_skip_warning">
+هل تريد الحفظ غير مشفرة؟ يمكن لأي شخص لديه حق الوصول إلى الملف قراءة إعداداتك.
+</string>
+    <string name="backup_password_forgot_warning">
+إذا نسيت كلمة المرور هذه، فلا يمكن استرداد النسخة الاحتياطية.
+</string>
+    <string name="backup_password_mismatch">
+كلمات المرور غير متطابقة
+</string>
+    <string name="backup_password_too_short">
+يجب أن تتكون كلمة المرور من 4 أحرف على الأقل
+</string>
+    <string name="backup_password_btn_encrypt">
+تشفير
+</string>
+    <string name="backup_password_btn_skip">
+تخطي (غير مشفر)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+أدخل كلمة المرور الاحتياطية
+</string>
+    <string name="backup_import_password_hint">
+كلمة المرور
+</string>
+    <string name="backup_import_wrong_password">
+كلمة مرور خاطئة. %d من المحاولات المتبقية.
+</string>
+    <string name="backup_import_too_many_attempts">
+عدد كبير جدًا من المحاولات الفاشلة.
+</string>
+    <string name="backup_import_unsupported_format">
+تنسيق ملف النسخ الاحتياطي غير معتمد.
+</string>
+
+    <string name="decrypt">
+فك التشفير
+</string>
+    <string name="save_unencrypted">
+حفظ غير مشفرة
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+حماية حزمة الموضوع بكلمة مرور؟
+</string>
+    <string name="theme_password_hint">
+كلمة المرور (4 أحرف على الأقل)
+</string>
+    <string name="theme_password_confirm_hint">
+تأكيد كلمة المرور
+</string>
+    <string name="theme_password_skip_title">
+هل تريد الحفظ غير مشفرة؟
+</string>
+    <string name="theme_password_skip_warning">
+هل تريد الحفظ غير مشفرة؟ يمكن لأي شخص لديه حق الوصول إلى الملف قراءة تجاوزات الرمز الخاص بك.
+</string>
+    <string name="theme_password_forgot_warning">
+إذا نسيت كلمة المرور هذه، فلا يمكن استرداد حزمة السمات.
+</string>
+    <string name="theme_password_mismatch">
+كلمات المرور غير متطابقة
+</string>
+    <string name="theme_password_too_short">
+يجب أن تتكون كلمة المرور من 4 أحرف على الأقل
+</string>
+    <string name="theme_password_btn_encrypt">
+تشفير &amp; يصدّر
+</string>
+    <string name="theme_password_btn_skip">
+تخطي (غير مشفر)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+أدخل كلمة مرور حزمة السمات
+</string>
+    <string name="theme_import_password_hint">
+كلمة المرور
+</string>
+    <string name="theme_import_wrong_password">
+كلمة مرور خاطئة. %d من المحاولات المتبقية.
+</string>
+    <string name="theme_import_too_many_attempts">
+عدد كبير جدًا من المحاولات الفاشلة.
+</string>
+    <string name="theme_import_unsupported_format">
+ملف حزمة السمات غير مدعوم أو تالف.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 حدد طريقة المشاركة

@@ -4882,6 +4882,111 @@ Asli: %1$s
 Penyimpanan Internal/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+Lindungi cadangan dengan kata sandi?
+</string>
+    <string name="backup_password_hint">
+Kata sandi (minimal 4 karakter)
+</string>
+    <string name="backup_password_confirm_hint">
+Konfirmasikan kata sandi
+</string>
+    <string name="backup_password_skip_title">
+Simpan tidak terenkripsi?
+</string>
+    <string name="backup_password_skip_warning">
+Simpan tidak terenkripsi? Siapa pun yang memiliki akses ke file tersebut dapat membaca pengaturan Anda.
+</string>
+    <string name="backup_password_forgot_warning">
+Jika Anda lupa kata sandi ini, cadangan tidak dapat dipulihkan.
+</string>
+    <string name="backup_password_mismatch">
+Kata sandi tidak cocok
+</string>
+    <string name="backup_password_too_short">
+Kata sandi minimal harus 4 karakter
+</string>
+    <string name="backup_password_btn_encrypt">
+Enkripsi
+</string>
+    <string name="backup_password_btn_skip">
+Lewati (tidak terenkripsi)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Masukkan kata sandi cadangan
+</string>
+    <string name="backup_import_password_hint">
+Kata sandi
+</string>
+    <string name="backup_import_wrong_password">
+Kata sandi salah. %d upaya tersisa.
+</string>
+    <string name="backup_import_too_many_attempts">
+Terlalu banyak upaya yang gagal.
+</string>
+    <string name="backup_import_unsupported_format">
+Format file cadangan tidak didukung.
+</string>
+
+    <string name="decrypt">
+Dekripsi
+</string>
+    <string name="save_unencrypted">
+Simpan tidak terenkripsi
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+Lindungi paket tema dengan kata sandi?
+</string>
+    <string name="theme_password_hint">
+Kata sandi (minimal 4 karakter)
+</string>
+    <string name="theme_password_confirm_hint">
+Konfirmasikan kata sandi
+</string>
+    <string name="theme_password_skip_title">
+Simpan tidak terenkripsi?
+</string>
+    <string name="theme_password_skip_warning">
+Simpan tidak terenkripsi? Siapa pun yang memiliki akses ke file dapat membaca penggantian ikon Anda.
+</string>
+    <string name="theme_password_forgot_warning">
+Jika Anda lupa kata sandi ini, paket tema tidak dapat dipulihkan.
+</string>
+    <string name="theme_password_mismatch">
+Kata sandi tidak cocok
+</string>
+    <string name="theme_password_too_short">
+Kata sandi minimal harus 4 karakter
+</string>
+    <string name="theme_password_btn_encrypt">
+Enkripsi &amp; Ekspor
+</string>
+    <string name="theme_password_btn_skip">
+Lewati (tidak terenkripsi)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Masukkan kata sandi paket tema
+</string>
+    <string name="theme_import_password_hint">
+Kata sandi
+</string>
+    <string name="theme_import_wrong_password">
+Kata sandi salah. %d upaya tersisa.
+</string>
+    <string name="theme_import_too_many_attempts">
+Terlalu banyak upaya yang gagal.
+</string>
+    <string name="theme_import_unsupported_format">
+File paket tema tidak didukung atau rusak.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Pilih Metode Bagikan

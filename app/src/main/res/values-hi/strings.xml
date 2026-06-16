@@ -4882,6 +4882,111 @@ AMOLED
 आंतरिक भंडारण/यूएफएम/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+बैकअप को पासवर्ड से सुरक्षित रखें?
+</string>
+    <string name="backup_password_hint">
+पासवर्ड (न्यूनतम 4 अक्षर)
+</string>
+    <string name="backup_password_confirm_hint">
+पासवर्ड की पुष्टि कीजिये
+</string>
+    <string name="backup_password_skip_title">
+अनएन्क्रिप्टेड सहेजें?
+</string>
+    <string name="backup_password_skip_warning">
+अनएन्क्रिप्टेड सहेजें? फ़ाइल तक पहुंच रखने वाला कोई भी व्यक्ति आपकी सेटिंग्स पढ़ सकता है।
+</string>
+    <string name="backup_password_forgot_warning">
+यदि आप यह पासवर्ड भूल जाते हैं, तो बैकअप पुनर्प्राप्त नहीं किया जा सकता है।
+</string>
+    <string name="backup_password_mismatch">
+सांकेतिक शब्द मेल नहीं खाते
+</string>
+    <string name="backup_password_too_short">
+पासवर्ड कम से कम 4 अक्षर का होना चाहिए
+</string>
+    <string name="backup_password_btn_encrypt">
+एन्क्रिप्ट
+</string>
+    <string name="backup_password_btn_skip">
+छोड़ें (अनएन्क्रिप्टेड)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+बैकअप पासवर्ड दर्ज करें
+</string>
+    <string name="backup_import_password_hint">
+पासवर्ड
+</string>
+    <string name="backup_import_wrong_password">
+ग़लत पासवर्ड. %d प्रयास शेष हैं।
+</string>
+    <string name="backup_import_too_many_attempts">
+कई विफल प्रयास।
+</string>
+    <string name="backup_import_unsupported_format">
+असमर्थित बैकअप फ़ाइल स्वरूप.
+</string>
+
+    <string name="decrypt">
+डिक्रिप्ट
+</string>
+    <string name="save_unencrypted">
+अनएन्क्रिप्टेड सहेजें
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+थीम पैक को पासवर्ड से सुरक्षित रखें?
+</string>
+    <string name="theme_password_hint">
+पासवर्ड (न्यूनतम 4 अक्षर)
+</string>
+    <string name="theme_password_confirm_hint">
+पासवर्ड की पुष्टि कीजिये
+</string>
+    <string name="theme_password_skip_title">
+अनएन्क्रिप्टेड सहेजें?
+</string>
+    <string name="theme_password_skip_warning">
+अनएन्क्रिप्टेड सहेजें? फ़ाइल तक पहुंच रखने वाला कोई भी व्यक्ति आपके आइकन ओवरराइड्स को पढ़ सकता है।
+</string>
+    <string name="theme_password_forgot_warning">
+यदि आप यह पासवर्ड भूल जाते हैं, तो थीम पैक पुनर्प्राप्त नहीं किया जा सकता है।
+</string>
+    <string name="theme_password_mismatch">
+सांकेतिक शब्द मेल नहीं खाते
+</string>
+    <string name="theme_password_too_short">
+पासवर्ड कम से कम 4 अक्षर का होना चाहिए
+</string>
+    <string name="theme_password_btn_encrypt">
+एन्क्रिप्ट करें &amp; निर्यात
+</string>
+    <string name="theme_password_btn_skip">
+छोड़ें (अनएन्क्रिप्टेड)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+थीम पैक पासवर्ड दर्ज करें
+</string>
+    <string name="theme_import_password_hint">
+पासवर्ड
+</string>
+    <string name="theme_import_wrong_password">
+ग़लत पासवर्ड. %d प्रयास शेष हैं।
+</string>
+    <string name="theme_import_too_many_attempts">
+कई विफल प्रयास।
+</string>
+    <string name="theme_import_unsupported_format">
+असमर्थित या दूषित थीम पैक फ़ाइल.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 शेयर विधि का चयन करें

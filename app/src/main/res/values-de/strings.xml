@@ -4882,6 +4882,111 @@ Original: %1$s
 Interner Speicher/UFM/%1$s
 </string>
 
+    <!-- Backup password dialog (export) -->
+    <string name="backup_password_title">
+Backup mit Passwort schützen?
+</string>
+    <string name="backup_password_hint">
+Passwort (mindestens 4 Zeichen)
+</string>
+    <string name="backup_password_confirm_hint">
+Passwort bestätigen
+</string>
+    <string name="backup_password_skip_title">
+Unverschlüsselt speichern?
+</string>
+    <string name="backup_password_skip_warning">
+Unverschlüsselt speichern? Jeder, der Zugriff auf die Datei hat, kann Ihre Einstellungen lesen.
+</string>
+    <string name="backup_password_forgot_warning">
+Wenn Sie dieses Passwort vergessen, kann das Backup nicht wiederhergestellt werden.
+</string>
+    <string name="backup_password_mismatch">
+Passwörter stimmen nicht überein
+</string>
+    <string name="backup_password_too_short">
+Das Passwort muss mindestens 4 Zeichen lang sein
+</string>
+    <string name="backup_password_btn_encrypt">
+Verschlüsseln
+</string>
+    <string name="backup_password_btn_skip">
+Überspringen (unverschlüsselt)
+</string>
+
+    <!-- Import password -->
+    <string name="backup_import_password_title">
+Geben Sie das Backup-Passwort ein
+</string>
+    <string name="backup_import_password_hint">
+Passwort
+</string>
+    <string name="backup_import_wrong_password">
+Falsches Passwort. %d Versuche verbleiben.
+</string>
+    <string name="backup_import_too_many_attempts">
+Zu viele gescheiterte Versuche.
+</string>
+    <string name="backup_import_unsupported_format">
+Nicht unterstütztes Backup-Dateiformat.
+</string>
+
+    <string name="decrypt">
+Entschlüsseln
+</string>
+    <string name="save_unencrypted">
+Unverschlüsselt speichern
+</string>
+
+    <!-- Theme pack password dialog (export) -->
+    <string name="theme_password_title">
+Themenpaket mit Passwort schützen?
+</string>
+    <string name="theme_password_hint">
+Passwort (mindestens 4 Zeichen)
+</string>
+    <string name="theme_password_confirm_hint">
+Passwort bestätigen
+</string>
+    <string name="theme_password_skip_title">
+Unverschlüsselt speichern?
+</string>
+    <string name="theme_password_skip_warning">
+Unverschlüsselt speichern? Jeder, der Zugriff auf die Datei hat, kann Ihre Symbolüberschreibungen lesen.
+</string>
+    <string name="theme_password_forgot_warning">
+Wenn Sie dieses Passwort vergessen, kann das Theme-Paket nicht wiederhergestellt werden.
+</string>
+    <string name="theme_password_mismatch">
+Passwörter stimmen nicht überein
+</string>
+    <string name="theme_password_too_short">
+Das Passwort muss mindestens 4 Zeichen lang sein
+</string>
+    <string name="theme_password_btn_encrypt">
+Verschlüsseln &amp; Export
+</string>
+    <string name="theme_password_btn_skip">
+Überspringen (unverschlüsselt)
+</string>
+
+    <!-- Theme pack import password -->
+    <string name="theme_import_password_title">
+Geben Sie das Passwort für das Themenpaket ein
+</string>
+    <string name="theme_import_password_hint">
+Passwort
+</string>
+    <string name="theme_import_wrong_password">
+Falsches Passwort. %d Versuche verbleiben.
+</string>
+    <string name="theme_import_too_many_attempts">
+Zu viele gescheiterte Versuche.
+</string>
+    <string name="theme_import_unsupported_format">
+Nicht unterstützte oder beschädigte Theme-Pack-Datei.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Wählen Sie die Freigabemethode aus

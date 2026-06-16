@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.network
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -325,7 +326,9 @@ class AdbManager private constructor() {
     suspend fun pair(host: String, port: Int, pairingCode: String): Boolean = withContext(Dispatchers.IO) {
         mutex.withLock {
             try {
-                Log.i(TAG, "Pairing with code: $pairingCode")
+                if (BuildConfig.DEBUG) {
+                    Log.i(TAG, "Pairing with code: $pairingCode")
+                }
                 true
             } catch (e: Exception) {
                 false
