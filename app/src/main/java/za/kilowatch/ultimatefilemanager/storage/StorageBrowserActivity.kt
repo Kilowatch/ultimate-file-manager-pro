@@ -2450,8 +2450,16 @@ class StorageBrowserActivity : AppCompatActivity() {
             usbSelinuxBlocked = false
 
             Log.d(TAG, "StorageManager reports ${volumes.size} volume(s)")
+            val seenVolumeIds   = mutableSetOf<String>()
+            val seenMountPaths  = mutableSetOf<String>()
             for (volume in volumes) {
                 val item = volumeToStorageItem(volume) ?: continue
+                // Guard against firmware bugs that return the same volume twice —
+                // deduplicate by both id (UUID/"internal") and mountPath.
+                if (!seenVolumeIds.add(item.id) || !seenMountPaths.add(item.mountPath)) {
+                    Log.w(TAG, "Skipping duplicate storage volume: id=${item.id} path=${item.mountPath}")
+                    continue
+                }
                 storageItems.add(item)
                 newKnownPaths.add(item.mountPath)
                 discoveredPaths.add(item.mountPath)

@@ -117,8 +117,15 @@ class NetworkFileAdapter(
         files.clear()
         files.addAll(filesCopy)
         this.searchBasePath = searchBasePath
-        // Clean up selection if files were removed
+        // Clean up selection if files were removed by a directory reload.
+        // If retainAll drops any items (e.g. the server returned different metadata
+        // for the same file), fire onSelectionChanged so the toolbar reflects the
+        // real selection count rather than going stale.
+        val prevSelectionSize = selectedFiles.size
         selectedFiles.retainAll(files.toSet())
+        if (selectedFiles.size != prevSelectionSize) {
+            onSelectionChanged(selectedFiles.size)
+        }
         
         items.clear()
         if (isGroupedByDate) {

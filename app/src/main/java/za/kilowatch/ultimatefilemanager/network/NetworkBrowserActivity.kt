@@ -1513,7 +1513,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         recyclerFiles.visibility = View.GONE
         layoutEmpty.visibility = View.GONE
-        if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
+        // NOTE: Do NOT call fileAdapter.exitSelectionMode() here. loadDirectory() runs
+        // an async network call (1-3s on SMB), so the user may enter selection mode
+        // while the listing is in-flight. Clearing selection synchronously here races
+        // against that user action and destroys their selection state.
 
         updateSubtitle()
         updateBreadcrumbs()
