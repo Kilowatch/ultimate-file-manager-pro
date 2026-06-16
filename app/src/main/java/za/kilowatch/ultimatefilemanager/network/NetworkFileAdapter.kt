@@ -460,9 +460,9 @@ class NetworkFileAdapter(
                 }
             } else if (file.isDirectory) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
+                val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
                 if (!isGrid) {
-                    val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
                     // Show disk usage bar if the directory has storage info (TV drive entries)
                     if (file.freeSpace >= 0 && file.size > 0) {
                         val usedBytes = file.size - file.freeSpace
@@ -507,9 +507,9 @@ class NetworkFileAdapter(
                 }
             } else {
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
+                val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
                 if (!isGrid) {
-                    val tintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor) // Standard file gray
                     val sizeStr = Formatter.formatFileSize(context, file.size)
                     val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
                     txtDetails.text = if (dateStr.isNotEmpty()) "$sizeStr • $dateStr" else sizeStr
