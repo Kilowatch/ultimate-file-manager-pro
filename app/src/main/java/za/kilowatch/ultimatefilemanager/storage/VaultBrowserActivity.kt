@@ -17,6 +17,9 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.R
+import android.util.Log
+import za.kilowatch.ultimatefilemanager.BuildConfig
+import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -166,9 +169,9 @@ class VaultBrowserActivity : AppCompatActivity() {
 
                     val metadata = JSONObject().apply {
                         put("id", entry.id)
-                        put("displayName", entry.displayName)
-                        put("originalRoot", entry.originalRoot)
-                        put("files", JSONArray(relativeList))
+                        put("displayName", encryptField(entry.displayName))
+                        put("originalRoot", encryptField(entry.originalRoot))
+                        put("files", JSONArray(relativeList.map { encryptField(it) }))
                     }
                     File(entryDir, META_FILE).writeText(metadata.toString())
 
@@ -232,6 +235,27 @@ class VaultBrowserActivity : AppCompatActivity() {
         return false
     }
 
+    /** Encrypt a field for storage in metadata.json. */
+    private fun encryptField(plain: String): String {
+        return try {
+            "enc:" + VaultCrypto.encryptString(plain)
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w("VaultBrowser", "encryptField failed", e)
+            plain
+        }
+    }
+
+    /** Decrypt a field from metadata.json (enc: prefix → decrypt, otherwise pass through). */
+    private fun decryptField(encrypted: String): String {
+        if (!encrypted.startsWith("enc:")) return encrypted
+        return try {
+            VaultCrypto.decryptString(encrypted.removePrefix("enc:"))
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w("VaultBrowser", "decryptField failed — using fallback", e)
+            encrypted
+        }
+    }
+
     private fun readEntry(dir: File): VaultEntry? {
         return try {
             val metadataFile = File(dir, META_FILE)
@@ -240,12 +264,12 @@ class VaultBrowserActivity : AppCompatActivity() {
             val filesJson = json.getJSONArray("files")
             val files = mutableListOf<String>()
             for (i in 0 until filesJson.length()) {
-                files.add(filesJson.getString(i))
+                files.add(decryptField(filesJson.getString(i)))
             }
             VaultEntry(
                 id = json.getString("id"),
-                displayName = json.getString("displayName"),
-                originalRoot = json.getString("originalRoot"),
+                displayName = decryptField(json.getString("displayName")),
+                originalRoot = decryptField(json.getString("originalRoot")),
                 files = files
             )
         } catch (_: Exception) {

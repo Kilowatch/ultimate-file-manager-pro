@@ -116,11 +116,9 @@ class VaultActivity : AppCompatActivity() {
         }
 
         legacyPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        scope.launch {
-            withContext(Dispatchers.IO) {
-                initSecurePrefs()
-            }
-        }
+        // Initialize EncryptedSharedPreferences synchronously — this does Keystore
+        // IPC but is acceptable for a user-initiated vault open action.
+        initSecurePrefs()
         toolbar = findViewById(R.id.toolbar)
         recyclerVault = findViewById(R.id.recyclerVault)
         layoutEmpty = findViewById(R.id.layoutEmpty)
@@ -380,8 +378,8 @@ class VaultActivity : AppCompatActivity() {
                     backgroundTintList = yellowCsl; setTextColor(black)
                     setOnClickListener {
                         warningDialog.dismiss()
-                        // Save PIN with PBKDF2 to encrypted prefs
-                        encryptedPrefs?.edit()?.putString(KEY_PIN, pbkdf2(pin))?.commit()
+                        // Save PIN with PBKDF2
+                        savePinHash(pbkdf2(pin))
                         onConfirmed?.invoke()
 
                         if (generateRecoveryCode) {
@@ -404,9 +402,8 @@ class VaultActivity : AppCompatActivity() {
     ) {
         // Generate 16-char alphanumeric code
         val code = (1..16).map { RECOVERY_CHARS.random() }.joinToString("")
-        // Store PBKDF2 hash in encrypted prefs
-        val hash = pbkdf2(code)
-        encryptedPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.commit()
+        // Store PBKDF2 hash
+        saveRecoveryHash(pbkdf2(code))
 
         // Build a premium one-time display dialog
         val ctx = this
@@ -592,6 +589,24 @@ class VaultActivity : AppCompatActivity() {
         )
     }
 
+    /** Save a PIN hash to preferences — tries encrypted prefs first, falls back to legacy. */
+    private fun savePinHash(hash: String) {
+        if (encryptedPrefs != null) {
+            encryptedPrefs?.edit()?.putString(KEY_PIN, hash)?.commit()
+        } else {
+            legacyPrefs?.edit()?.putString(KEY_PIN, hash)?.apply()
+        }
+    }
+
+    /** Save a recovery code hash to preferences — tries encrypted prefs first, falls back to legacy. */
+    private fun saveRecoveryHash(hash: String) {
+        if (encryptedPrefs != null) {
+            encryptedPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.commit()
+        } else {
+            legacyPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.apply()
+        }
+    }
+
     /** Encrypt a plaintext string for storage in metadata.json.
      *  Returns "enc:<base64>" on success, or the original plaintext on failure. */
     private fun encryptField(plain: String): String {
@@ -623,13 +638,23 @@ class VaultActivity : AppCompatActivity() {
     /** Read the PIN hash — try encrypted prefs first, fall back to legacy plain prefs. */
     private fun readPinHash(): String? {
         encryptedPrefs?.getString(KEY_PIN, null)?.let { return it }
-        return legacyPrefs?.getString(KEY_PIN, null)
+        val legacy = legacyPrefs?.getString(KEY_PIN, null)
+        if (legacy != null && encryptedPrefs != null) {
+            savePinHash(legacy)
+            legacyPrefs?.edit()?.remove(KEY_PIN)?.apply()
+        }
+        return legacy
     }
 
     /** Read the recovery code hash — try encrypted prefs first, fall back to legacy plain prefs. */
     private fun readRecoveryHash(): String? {
         encryptedPrefs?.getString(KEY_RECOVERY, null)?.let { return it }
-        return legacyPrefs?.getString(KEY_RECOVERY, null)
+        val legacy = legacyPrefs?.getString(KEY_RECOVERY, null)
+        if (legacy != null && encryptedPrefs != null) {
+            saveRecoveryHash(legacy)
+            legacyPrefs?.edit()?.remove(KEY_RECOVERY)?.apply()
+        }
+        return legacy
     }
 
     /** Initialise EncryptedSharedPreferences on a background thread.
@@ -720,7 +745,7 @@ class VaultActivity : AppCompatActivity() {
     private fun migratePin(pin: String) {
         if (encryptedPrefs == null) return
         val hash = pbkdf2(pin)
-        encryptedPrefs?.edit()?.putString(KEY_PIN, hash)?.commit()
+        savePinHash(hash)
         // Delete old plain prefs file
         File(applicationContext.filesDir, "shared_prefs/${PREFS_NAME}.xml").delete()
         File(applicationContext.filesDir, "shared_prefs/${PREFS_NAME}.xml.bak")?.delete()
@@ -731,8 +756,7 @@ class VaultActivity : AppCompatActivity() {
      *  Called from showRecoveryFlow() when the plaintext code is available. */
     private fun migrateRecoveryCode(code: String) {
         if (encryptedPrefs == null) return
-        val hash = pbkdf2(code)
-        encryptedPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.commit()
+        saveRecoveryHash(pbkdf2(code))
         if (BuildConfig.DEBUG) Log.i(TAG, "Recovery code migration complete")
     }
 
@@ -839,7 +863,19 @@ class VaultActivity : AppCompatActivity() {
             if (!success) {
                 showSnackbar(getString(R.string.vault_encryption_failed))
             }
-            loadVault()
+            // Refresh the adapter directly — don't use loadVault() because its
+            // isUnlocked guard may fail if the folder picker recreated the activity.
+            // Reading entries from disk is safe (only shows what's on disk).
+            val currentEntries = readEntries()
+            if (currentEntries.isNotEmpty()) {
+                val sorted = currentEntries.sortedBy { it.displayName.lowercase() }
+                adapter.submitList(sorted)
+                updateEmptyState(false)
+                layoutEmpty.visibility = View.GONE
+                recyclerVault.visibility = View.VISIBLE
+            } else {
+                loadVault()
+            }
         }
     }
 
