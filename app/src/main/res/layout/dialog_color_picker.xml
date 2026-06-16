@@ -41,6 +41,49 @@
 
     </LinearLayout>
 
+    <!-- Hex input row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#"
+            android:textColor="@color/ufm_text_secondary"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:layout_marginEnd="4dp" />
+
+        <EditText
+            android:id="@+id/hexInput"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:maxLength="8"
+            android:inputType="textFilter"
+            android:digits="0123456789abcdefABCDEF"
+            android:fontFamily="monospace"
+            android:textSize="15sp"
+            android:textColor="@color/ufm_text_primary"
+            android:hint="FF6B35"
+            android:textColorHint="@color/ufm_text_secondary"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="10dp"
+            android:gravity="center_vertical" />
+
+        <View
+            android:id="@+id/colorPreview"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_color_swatch" />
+
+    </LinearLayout>
+
     <!-- Preset swatches row -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -91,12 +134,6 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_marginTop="16dp">
-
-        <View
-            android:id="@+id/colorPreview"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_color_swatch" />
 
         <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 

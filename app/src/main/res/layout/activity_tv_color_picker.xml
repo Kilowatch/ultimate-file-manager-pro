@@ -34,7 +34,7 @@
             android:textSize="28sp"
             android:fontFamily="sans-serif-black" />
 
-        <!-- Preview swatch + hex label -->
+        <!-- Preview swatch + hex input -->
         <View
             android:id="@+id/tvPickerPreviewSwatch"
             android:layout_width="56dp"
@@ -42,14 +42,42 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_color_swatch" />
 
-        <TextView
-            android:id="@+id/tvPickerHexLabel"
-            android:layout_width="120dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="18sp"
+                android:fontFamily="monospace"
+                android:layout_marginEnd="4dp" />
+
+            <EditText
+                android:id="@+id/hexInput"
+                android:layout_width="160dp"
+                android:layout_height="44dp"
+                android:maxLength="8"
+                android:inputType="textFilter"
+                android:digits="0123456789abcdefABCDEF"
+                android:fontFamily="monospace"
+                android:textSize="18sp"
+                android:textColor="@color/tv_text_primary"
+                android:hint="FF6B35"
+                android:textColorHint="@color/tv_text_secondary"
+                android:background="@drawable/bg_input_field"
+                android:paddingHorizontal="12dp"
+                android:gravity="center_vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:nextFocusDown="@+id/sliderHue"
+                android:nextFocusUp="@+id/btnPickerCancel" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <View

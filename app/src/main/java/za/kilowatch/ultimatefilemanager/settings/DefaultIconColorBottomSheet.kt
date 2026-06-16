@@ -4,12 +4,17 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
 import za.kilowatch.ultimatefilemanager.ui.HsvPaletteView
 import za.kilowatch.ultimatefilemanager.ui.HueSliderView
 
@@ -205,19 +210,60 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
         val palette      = dialogView.findViewById<HsvPaletteView>(R.id.hsvPalette)
         val hueSlider    = dialogView.findViewById<HueSliderView>(R.id.hueSlider)
         val colorPreview = dialogView.findViewById<View>(R.id.colorPreview)
+        val hexInput     = dialogView.findViewById<EditText>(R.id.hexInput)
+
+        // ── Hex-only InputFilter ────────────────────────────────────────────
+        hexInput.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            source.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }
+        })
+
+        // ── Re-entrancy guard ───────────────────────────────────────────────
+        var isUpdatingHex = false
+
+        // ── Helper: push colour from visual controls into hex field ─────────
+        fun syncHexFromColor(color: Int) {
+            if (isUpdatingHex) return
+            isUpdatingHex = true
+            hexInput.setText(HexColorHelper.formatHex(color).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+            isUpdatingHex = false
+        }
+
+        // ── Hex TextWatcher (hex → visual controls) ─────────────────────────
+        hexInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdatingHex) return
+                val hex = s?.toString() ?: ""
+                HexColorHelper.parseHex(hex)?.let { color ->
+                    palette.setColor(color)
+                    hueSlider.currentHue = palette.currentHue
+                    colorPreview.setBackgroundColor(color)
+                }
+            }
+        })
 
         palette.setColor(initialColor)
         hueSlider.currentHue = palette.currentHue
         colorPreview.setBackgroundColor(initialColor)
 
+        // Prefill hex field from saved colour
+        if (initialColor != Color.TRANSPARENT) {
+            hexInput.setText(HexColorHelper.formatHex(initialColor).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+        }
+
         palette.onColorChanged = { color ->
             hueSlider.currentHue = palette.currentHue
             colorPreview.setBackgroundColor(color)
+            syncHexFromColor(color)
         }
 
         hueSlider.onHueChanged = { hue ->
             palette.setHue(hue)
             colorPreview.setBackgroundColor(palette.selectedColor)
+            syncHexFromColor(palette.selectedColor)
         }
 
         val builder = android.app.AlertDialog.Builder(context)
@@ -256,7 +302,10 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
         }
         dialogView.findViewById<TextView>(R.id.btnSelect)?.setOnClickListener {
             dialog.dismiss()
-            onColorSelected(palette.selectedColor)
+            // Priority: valid hex → use hex; otherwise → use visual selection
+            val hexText = hexInput.text?.toString() ?: ""
+            val color = HexColorHelper.parseHex(hexText) ?: palette.selectedColor
+            onColorSelected(color)
         }
 
         dialog.show()

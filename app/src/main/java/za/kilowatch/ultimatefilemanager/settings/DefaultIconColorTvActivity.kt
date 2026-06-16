@@ -7,9 +7,13 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +29,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.TvColorPickerActivity
+import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
 
 /**
  * Full-screen TV activity for customising the default icon tint colour per theme.
@@ -63,7 +68,7 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
     private var activeDialogData: SectionData? = null
     private var activeDialogTempColor: Int = 0
     private var activeDialogPreview: View? = null
-    private var activeDialogHexLabel: TextView? = null
+    private var activeDialogHexInput: EditText? = null
 
     // Launcher for TvColorPickerActivity
     private var pendingSection: Int = ThemeHelper.THEME_DARK
@@ -81,7 +86,7 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
                     d.shape = GradientDrawable.OVAL
                     d.setColor(color)
                     activeDialogPreview?.background = d
-                    activeDialogHexLabel?.text = "#%06X".format(0xFFFFFF and color)
+                    activeDialogHexInput?.setText(HexColorHelper.formatHex(color).removePrefix("#"))
                     (dialog.findViewById<RecyclerView>(R.id.dialogPresetsGrid)?.adapter as? DialogPresetsAdapter)?.updateSelected(color)
                 } else {
                     setSectionColor(pendingSection, color)
@@ -189,7 +194,7 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_default_icon_color_tv, null)
         val dialogTitle = dialogView.findViewById<TextView>(R.id.dialogTitle)
         activeDialogPreview = dialogView.findViewById(R.id.dialogSelectedColorPreview)
-        activeDialogHexLabel = dialogView.findViewById(R.id.dialogSelectedColorHex)
+        activeDialogHexInput = dialogView.findViewById(R.id.dialogSelectedColorHex)
         val recyclerPresets = dialogView.findViewById<RecyclerView>(R.id.dialogPresetsGrid)
         val btnCustom = dialogView.findViewById<View>(R.id.dialogBtnCustom)
         val btnReset = dialogView.findViewById<View>(R.id.dialogBtnReset)
@@ -198,17 +203,29 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
 
         dialogTitle.text = getString(data.titleRes) + " Theme Icon Color"
 
+        // ── Hex-only InputFilter ────────────────────────────────────────────
+        activeDialogHexInput?.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            source.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }
+        })
+
+        // ── Re-entrancy guard ───────────────────────────────────────────────
+        var isUpdatingHex = false
+
+        // ── Shared preview updater ──────────────────────────────────────────
         fun updateDialogPreview() {
             val d = GradientDrawable()
             d.shape = GradientDrawable.OVAL
             d.setColor(activeDialogTempColor)
             activeDialogPreview?.background = d
-            activeDialogHexLabel?.text = "#%06X".format(0xFFFFFF and activeDialogTempColor)
+            if (!isUpdatingHex) {
+                isUpdatingHex = true
+                activeDialogHexInput?.setText(HexColorHelper.formatHex(activeDialogTempColor).removePrefix("#"))
+                activeDialogHexInput?.setSelection(activeDialogHexInput?.text?.length ?: 0)
+                isUpdatingHex = false
+            }
         }
 
-        updateDialogPreview()
-
-        // Setup presets grid
+        // ── Presets grid ──────────────────────────────────────────────────
         recyclerPresets.layoutManager = GridLayoutManager(this, 4)
         val presetsAdapter = DialogPresetsAdapter(
             presets = tvPresetColors.toList(),
@@ -219,6 +236,35 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
             }
         )
         recyclerPresets.adapter = presetsAdapter
+
+        // ── Hex TextWatcher (hex → preview) ─────────────────────────────────
+        activeDialogHexInput?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdatingHex) return
+                val hex = s?.toString() ?: ""
+                val parsed = HexColorHelper.parseHex(hex)
+                if (parsed != null) {
+                    activeDialogTempColor = parsed
+                    val d = GradientDrawable()
+                    d.shape = GradientDrawable.OVAL
+                    d.setColor(parsed)
+                    activeDialogPreview?.background = d
+                    presetsAdapter.updateSelected(parsed)
+                }
+            }
+        })
+
+        // Prefill hex field from current colour
+        if (activeDialogTempColor != Color.TRANSPARENT) {
+            isUpdatingHex = true
+            activeDialogHexInput?.setText(HexColorHelper.formatHex(activeDialogTempColor).removePrefix("#"))
+            activeDialogHexInput?.setSelection(activeDialogHexInput?.text?.length ?: 0)
+            isUpdatingHex = false
+        }
+
+        updateDialogPreview()
 
         val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
             .setView(dialogView)
@@ -254,7 +300,10 @@ class DefaultIconColorTvActivity : AppCompatActivity() {
 
         // Apply button
         btnApply.setOnClickListener {
-            setSectionColor(data.section, activeDialogTempColor)
+            // Priority: valid hex → use hex; otherwise → use visual selection
+            val hexText = activeDialogHexInput?.text?.toString() ?: ""
+            val color = HexColorHelper.parseHex(hexText) ?: activeDialogTempColor
+            setSectionColor(data.section, color)
             adapter.notifyDataSetChanged()
             updatePreview()
             dialog.dismiss()

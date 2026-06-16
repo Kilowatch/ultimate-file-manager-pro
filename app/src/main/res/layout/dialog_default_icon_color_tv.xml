@@ -69,14 +69,43 @@
                     android:layout_height="64dp"
                     android:background="@drawable/bg_color_swatch" />
 
-                <TextView
-                    android:id="@+id/dialogSelectedColorHex"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="16sp"
-                    android:fontFamily="monospace" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="#"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="16sp"
+                        android:fontFamily="monospace"
+                        android:layout_marginEnd="4dp" />
+
+                    <EditText
+                        android:id="@+id/dialogSelectedColorHex"
+                        android:layout_width="140dp"
+                        android:layout_height="40dp"
+                        android:maxLength="8"
+                        android:inputType="textFilter"
+                        android:digits="0123456789abcdefABCDEF"
+                        android:fontFamily="monospace"
+                        android:textSize="16sp"
+                        android:textColor="@color/tv_text_primary"
+                        android:hint="FF6B35"
+                        android:textColorHint="@color/tv_text_secondary"
+                        android:background="@drawable/bg_input_field"
+                        android:paddingHorizontal="10dp"
+                        android:gravity="center_vertical"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusDown="@+id/dialogBtnApply"
+                        android:nextFocusUp="@+id/dialogBtnCustom" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Right: Preset swatches recycler and action buttons -->

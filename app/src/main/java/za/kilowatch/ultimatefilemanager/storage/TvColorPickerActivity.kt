@@ -6,10 +6,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
 
 /**
  * D-Pad friendly full-screen colour picker for TV.
@@ -30,9 +35,10 @@ class TvColorPickerActivity : AppCompatActivity() {
 
     private var currentColor = Color.WHITE
     private val hsv = floatArrayOf(0f, 1f, 1f)
+    private var isUpdatingHex = false
 
     private lateinit var previewSwatch: View
-    private lateinit var hexLabel: TextView
+    private lateinit var hexInput: EditText
     private lateinit var sliderHue: SeekBar
     private lateinit var sliderSat: SeekBar
     private lateinit var sliderVal: SeekBar
@@ -51,7 +57,7 @@ class TvColorPickerActivity : AppCompatActivity() {
         currentColor = initial
 
         previewSwatch = findViewById(R.id.tvPickerPreviewSwatch)
-        hexLabel      = findViewById(R.id.tvPickerHexLabel)
+        hexInput      = findViewById(R.id.hexInput)
         sliderHue     = findViewById(R.id.sliderHue)
         sliderSat     = findViewById(R.id.sliderSat)
         sliderVal     = findViewById(R.id.sliderVal)
@@ -106,6 +112,36 @@ class TvColorPickerActivity : AppCompatActivity() {
         sliderSat.setOnKeyListener(sliderKeyListener)
         sliderVal.setOnKeyListener(sliderKeyListener)
 
+        // ── Hex-only InputFilter ────────────────────────────────────────────
+        hexInput.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            source.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }
+        })
+
+        // ── Hex TextWatcher (hex → sliders) ─────────────────────────────────
+        hexInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdatingHex) return
+                val hex = s?.toString() ?: ""
+                HexColorHelper.parseHex(hex)?.let { color ->
+                    currentColor = color
+                    Color.colorToHSV(color, hsv)
+                    syncSlidersFromHsv()
+                    swatchAdapter.clearSelection()
+                    updatePreview()
+                }
+            }
+        })
+
+        // Prefill hex field from initial colour
+        if (initial != Color.TRANSPARENT) {
+            isUpdatingHex = true
+            hexInput.setText(HexColorHelper.formatHex(initial).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+            isUpdatingHex = false
+        }
+
         updatePreview()
 
         // ── Buttons ───────────────────────────────────────────────────────
@@ -114,7 +150,10 @@ class TvColorPickerActivity : AppCompatActivity() {
             finish()
         }
         findViewById<View>(R.id.btnPickerOk).setOnClickListener {
-            setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_COLOR, currentColor))
+            // Priority: valid hex → use hex; otherwise → use visual selection
+            val hexText = hexInput.text?.toString() ?: ""
+            val color = HexColorHelper.parseHex(hexText) ?: currentColor
+            setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_COLOR, color))
             finish()
         }
     }
@@ -130,7 +169,12 @@ class TvColorPickerActivity : AppCompatActivity() {
         d.shape = GradientDrawable.OVAL
         d.setColor(currentColor)
         previewSwatch.background = d
-        hexLabel.text = String.format("#%06X", 0xFFFFFF and currentColor)
+        if (!isUpdatingHex) {
+            isUpdatingHex = true
+            hexInput.setText(HexColorHelper.formatHex(currentColor).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+            isUpdatingHex = false
+        }
     }
 
     companion object {

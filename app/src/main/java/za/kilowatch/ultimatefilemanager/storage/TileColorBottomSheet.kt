@@ -5,9 +5,13 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
 
 class TileColorBottomSheet : BottomSheetDialogFragment() {
 
@@ -573,22 +578,63 @@ private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> U
         val palette      = dialogView.findViewById<za.kilowatch.ultimatefilemanager.ui.HsvPaletteView>(R.id.hsvPalette)
         val hueSlider    = dialogView.findViewById<za.kilowatch.ultimatefilemanager.ui.HueSliderView>(R.id.hueSlider)
         val colorPreview = dialogView.findViewById<View>(R.id.colorPreview)
+        val hexInput     = dialogView.findViewById<EditText>(R.id.hexInput)
+
+        // ── Hex-only InputFilter ────────────────────────────────────────────
+        hexInput.filters = arrayOf(InputFilter { source, _, _, _, _, _ ->
+            source.filter { it in '0'..'9' || it in 'A'..'F' || it in 'a'..'f' }
+        })
+
+        // ── Re-entrancy guard ───────────────────────────────────────────────
+        var isUpdatingHex = false
+
+        // ── Helper: push colour from visual controls into hex field ─────────
+        fun syncHexFromColor(color: Int) {
+            if (isUpdatingHex) return
+            isUpdatingHex = true
+            hexInput.setText(HexColorHelper.formatHex(color).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+            isUpdatingHex = false
+        }
+
+        // ── Hex TextWatcher (hex → visual controls) ─────────────────────────
+        hexInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdatingHex) return
+                val hex = s?.toString() ?: ""
+                HexColorHelper.parseHex(hex)?.let { color ->
+                    palette.setColor(color)
+                    hueSlider.currentHue = palette.currentHue
+                    colorPreview.setBackgroundColor(color)
+                }
+            }
+        })
 
         // Set initial colour
         palette.setColor(initialColor)
         hueSlider.currentHue = palette.currentHue
         colorPreview.setBackgroundColor(initialColor)
 
-        // Sync: palette → preview
+        // Prefill hex field from saved colour
+        if (initialColor != android.graphics.Color.TRANSPARENT) {
+            hexInput.setText(HexColorHelper.formatHex(initialColor).removePrefix("#"))
+            hexInput.setSelection(hexInput.text.length)
+        }
+
+        // Sync: palette → preview + hex
         palette.onColorChanged = { color ->
             hueSlider.currentHue = palette.currentHue
             colorPreview.setBackgroundColor(color)
+            syncHexFromColor(color)
         }
 
-        // Sync: hue slider → palette → preview
+        // Sync: hue slider → palette → preview + hex
         hueSlider.onHueChanged = { hue ->
             palette.setHue(hue)
             colorPreview.setBackgroundColor(palette.selectedColor)
+            syncHexFromColor(palette.selectedColor)
         }
 
         // Preset swatches
@@ -609,6 +655,7 @@ private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> U
                     palette.setColor(color)
                     hueSlider.currentHue = palette.currentHue
                     colorPreview.setBackgroundColor(color)
+                    syncHexFromColor(color)
                 }
             }
         }
@@ -618,7 +665,10 @@ private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> U
             .create()
 
         dialogView.findViewById<View>(R.id.btnSelect).setOnClickListener {
-            onColorSelected(palette.selectedColor)
+            // Priority: valid hex → use hex; otherwise → use visual selection
+            val hexText = hexInput.text?.toString() ?: ""
+            val color = HexColorHelper.parseHex(hexText) ?: palette.selectedColor
+            onColorSelected(color)
             dialog.dismiss()
         }
         dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
