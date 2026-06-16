@@ -538,6 +538,9 @@ PKCS12 パスワード
     <string name="vault_recovery_code_copy">コードをコピーする</string>
     <string name="vault_recovery_code_done">完了 — 保存しました</string>
     <string name="vault_recovery_code_copied">リカバリコードがクリップボードにコピーされました</string>
+    <string name="vault_recovery_code_copied_autoclear">
+リカバリ コードがコピーされました — クリップボードは 60 秒後に自動的に消去されます
+</string>
     <string name="vault_recovery_entry_title">リカバリーコードを入力してください</string>
     <string name="vault_recovery_entry_subtitle">16 文字のリカバリ コードを入力して PIN をリセットしてください</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ UFM ウェブ共有
 </string>
     <string name="web_portal_html_invalid_pin">
 PIN が無効です。もう一度試してください。
+</string>
+    <string name="web_portal_html_rate_limited">
+間違った試行が多すぎます。 15 分後にもう一度試してください。
 </string>
     <string name="web_portal_html_download_list">
 ダウンロード可能なファイル

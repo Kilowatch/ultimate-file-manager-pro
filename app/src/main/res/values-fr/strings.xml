@@ -538,6 +538,9 @@ Mot de passe du certificat
     <string name="vault_recovery_code_copy">Copier le code</string>
     <string name="vault_recovery_code_done">Terminé - je l\'ai enregistré</string>
     <string name="vault_recovery_code_copied">Code de récupération copié dans le presse-papiers</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Code de récupération copié – le presse-papiers s\'effacera automatiquement dans 60 s
+</string>
     <string name="vault_recovery_entry_title">Entrez le code de récupération</string>
     <string name="vault_recovery_entry_subtitle">Entrez votre code de récupération à 16 caractères pour réinitialiser votre code PIN</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Vérifier
 </string>
     <string name="web_portal_html_invalid_pin">
 Code PIN invalide. Veuillez réessayer.
+</string>
+    <string name="web_portal_html_rate_limited">
+Trop de tentatives incorrectes. Veuillez réessayer dans 15 minutes.
 </string>
     <string name="web_portal_html_download_list">
 Fichiers disponibles au téléchargement

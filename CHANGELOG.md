@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.3] — 2026-06-16
+
+### Security
+- Vault PIN and recovery code now use PBKDF2-HMAC-SHA256 (260k iterations, random 16-byte salt) instead of bare SHA-256, and are stored in hardware-backed EncryptedSharedPreferences. Existing hashes are silently migrated on first successful PIN entry after upgrade.
+- Vault metadata.json fields (display name, original root path, file paths) are now encrypted using AES-GCM via VaultCrypto. Existing vault entries are silently re-encrypted on first vault unlock after upgrade, with backup safety verification.
+- Recovery code clipboard now auto-clears after 60 seconds. Timer resets on re-copy and is cancelled when the dialog is dismissed.
+- Added per-IP brute-force protection to WebShare `/verify` endpoint — 5-second delay after 5 failures, HTTP 429 after 10 failures, with a 15-minute lockout window. Counter resets on successful PIN entry.
+- WebShare server now binds to the active LAN IP instead of `0.0.0.0`, reducing exposure on untrusted networks.
+- Session PIN cookie now has the `HttpOnly` flag, preventing JavaScript access.
+- Removed session token from download URL query parameters. Added a short-lived (60s) single-use `/api/download-ticket` endpoint for browser-initiated downloads, preventing token leakage via browser history, logs, and referer headers.
+- Replaced `mutableMapOf` with `ConcurrentHashMap` for `zipJobs` and `xapkJobs` to prevent `ConcurrentModificationException` from concurrent access.
+- Fixed `isLanOrLocalhost()` to resolve hostnames to IPs via DNS before applying LAN range checks, preventing bypass via crafted `.local`/`.lan` hostnames.
+- TLS certificate fingerprint log now guarded by `BuildConfig.DEBUG`.
+- Fixed DLNA rate-limit bucket collision — token buckets are now keyed by both IP and endpoint type (SSDP, HTTP_BROWSE, HTTP_STREAM), preventing SSDP rate limits from being bypassed via other endpoint types.
+
 ## [1.5.2] — 2026-06-16
 
 ### Added

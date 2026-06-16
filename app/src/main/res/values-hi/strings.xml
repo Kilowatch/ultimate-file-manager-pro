@@ -538,6 +538,9 @@ PKCS12 पासवर्ड
     <string name="vault_recovery_code_copy">कोड कॉपी करें</string>
     <string name="vault_recovery_code_done">हो गया - मैंने इसे सहेज लिया है</string>
     <string name="vault_recovery_code_copied">पुनर्प्राप्ति कोड क्लिपबोर्ड पर कॉपी किया गया</string>
+    <string name="vault_recovery_code_copied_autoclear">
+पुनर्प्राप्ति कोड कॉपी किया गया - क्लिपबोर्ड 60 के दशक में स्वतः साफ़ हो जाएगा
+</string>
     <string name="vault_recovery_entry_title">पुनर्प्राप्ति कोड दर्ज करें</string>
     <string name="vault_recovery_entry_subtitle">अपना पिन रीसेट करने के लिए अपना 16-वर्ण का पुनर्प्राप्ति कोड दर्ज करें</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ AMOLED
 </string>
     <string name="web_portal_html_invalid_pin">
 अमान्य पिन. कृपया पुन: प्रयास करें।
+</string>
+    <string name="web_portal_html_rate_limited">
+बहुत सारे ग़लत प्रयास. कृपया 15 मिनट में पुनः प्रयास करें।
 </string>
     <string name="web_portal_html_download_list">
 डाउनलोड के लिए उपलब्ध फ़ाइलें

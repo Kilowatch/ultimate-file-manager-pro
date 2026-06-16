@@ -538,6 +538,9 @@ Zertifikatspasswort
     <string name="vault_recovery_code_copy">Code kopieren</string>
     <string name="vault_recovery_code_done">Fertig – ich habe es gespeichert</string>
     <string name="vault_recovery_code_copied">Wiederherstellungscode in die Zwischenablage kopiert</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Wiederherstellungscode kopiert – Zwischenablage wird in 60 Sekunden automatisch gelöscht
+</string>
     <string name="vault_recovery_entry_title">Geben Sie den Wiederherstellungscode ein</string>
     <string name="vault_recovery_entry_subtitle">Geben Sie Ihren 16-stelligen Wiederherstellungscode ein, um Ihre PIN zurückzusetzen</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Verifizieren
 </string>
     <string name="web_portal_html_invalid_pin">
 Ungültige PIN. Bitte versuchen Sie es erneut.
+</string>
+    <string name="web_portal_html_rate_limited">
+Zu viele Fehlversuche. Bitte versuchen Sie es in 15 Minuten erneut.
 </string>
     <string name="web_portal_html_download_list">
 Verfügbare Dateien zum Download

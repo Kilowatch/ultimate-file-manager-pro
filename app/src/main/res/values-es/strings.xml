@@ -538,6 +538,9 @@ Contraseña del certificado
     <string name="vault_recovery_code_copy">Copiar código</string>
     <string name="vault_recovery_code_done">Listo: lo he guardado</string>
     <string name="vault_recovery_code_copied">Código de recuperación copiado al portapapeles</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Código de recuperación copiado: el portapapeles se borrará automáticamente en 60 segundos
+</string>
     <string name="vault_recovery_entry_title">Ingrese el código de recuperación</string>
     <string name="vault_recovery_entry_subtitle">Ingrese su código de recuperación de 16 caracteres para restablecer su PIN</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Verificar
 </string>
     <string name="web_portal_html_invalid_pin">
 PIN no válido. Por favor inténtalo de nuevo.
+</string>
+    <string name="web_portal_html_rate_limited">
+Demasiados intentos incorrectos. Inténtelo de nuevo en 15 minutos.
 </string>
     <string name="web_portal_html_download_list">
 Archivos disponibles para descargar

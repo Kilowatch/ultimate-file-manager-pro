@@ -538,6 +538,9 @@ sFTP-плитка
     <string name="vault_recovery_code_copy">Копировать код</string>
     <string name="vault_recovery_code_done">Готово — я сохранил это</string>
     <string name="vault_recovery_code_copied">Код восстановления скопирован в буфер обмена.</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Код восстановления скопирован — буфер обмена автоматически очистится через 60 секунд.
+</string>
     <string name="vault_recovery_entry_title">Введите код восстановления</string>
     <string name="vault_recovery_entry_subtitle">Введите 16-значный код восстановления, чтобы сбросить PIN-код.</string>
     <string name="vault_recovery_entry_hint">ХХХХХХХХХХХХХ</string>
@@ -5003,6 +5006,9 @@ PIN-код сеанса
 </string>
     <string name="web_portal_html_invalid_pin">
 Неверный ПИН-код. Пожалуйста, попробуйте еще раз.
+</string>
+    <string name="web_portal_html_rate_limited">
+Слишком много неверных попыток. Пожалуйста, повторите попытку через 15 минут.
 </string>
     <string name="web_portal_html_download_list">
 Доступные файлы для скачивания

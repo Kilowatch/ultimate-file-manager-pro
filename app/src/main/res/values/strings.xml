@@ -364,6 +364,7 @@
     <string name="vault_recovery_code_copy">Copy Code</string>
     <string name="vault_recovery_code_done">Done — I\'ve Saved It</string>
     <string name="vault_recovery_code_copied">Recovery code copied to clipboard</string>
+    <string name="vault_recovery_code_copied_autoclear">Recovery code copied — clipboard will auto-clear in 60s</string>
     <string name="vault_recovery_entry_title">Enter Recovery Code</string>
     <string name="vault_recovery_entry_subtitle">Enter your 16-character recovery code to reset your PIN</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -3042,6 +3043,7 @@
     <string name="web_portal_html_enter_pin">Enter Session PIN</string>
     <string name="web_portal_html_verify">Verify</string>
     <string name="web_portal_html_invalid_pin">Invalid PIN. Please try again.</string>
+    <string name="web_portal_html_rate_limited">Too many incorrect attempts. Please try again in 15 minutes.</string>
     <string name="web_portal_html_download_list">Available Files for Download</string>
     <string name="web_portal_html_download_button">Download</string>
     <string name="web_portal_html_download_all">Download All (ZIP)</string>

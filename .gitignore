@@ -60,6 +60,7 @@ app/store/
 .vscode/
 .plans/
 CLAUDE.md
+GEMINI.md
 .approval/
 approval-ui/
 __pycache__/

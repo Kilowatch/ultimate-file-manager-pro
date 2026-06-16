@@ -2697,7 +2697,15 @@
     }
 
     function download(p) {
-      window.location.href = '/api/download?path=' + encodeURIComponent(p) + '&token=' + token;
+      api('/api/download-ticket', {
+        method: 'POST',
+        body: JSON.stringify({ path: p, isFolder: false }),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(function (result) {
+        if (result && result.ticket) {
+          window.location.href = '/api/download?path=' + encodeURIComponent(p) + '&ticket=' + encodeURIComponent(result.ticket);
+        }
+      });
     }
 
     function downloadFolder(p) {
@@ -2763,7 +2771,8 @@
               // Use XHR to download with progress tracking
               var xhr = new XMLHttpRequest();
               window._folderDlXhr = xhr;
-              xhr.open('GET', '/api/download-folder-file?jobId=' + jobId + '&token=' + token, true);
+              xhr.open('GET', '/api/download-folder-file?jobId=' + jobId, true);
+              xhr.setRequestHeader('Authorization', 'Bearer ' + token);
               xhr.responseType = 'blob';
 
               xhr.onprogress = function (e) {
@@ -2948,7 +2957,8 @@
       fd.append('file', file);
 
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/install-remote?file=' + encodeURIComponent(file.name) + '&token=' + token, true);
+      xhr.open('POST', '/api/install-remote?file=' + encodeURIComponent(file.name), true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
       xhr.upload.onprogress = function (e) {
         if (e.lengthComputable) {
@@ -3128,7 +3138,8 @@
       fd.append('file', file);
 
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', '/api/install-xapk-remote?file=' + encodeURIComponent(file.name) + '&token=' + token, true);
+      xhr.open('POST', '/api/install-xapk-remote?file=' + encodeURIComponent(file.name), true);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + token);
 
       xhr.upload.onprogress = function (e) {
         if (e.lengthComputable) {
@@ -3357,12 +3368,20 @@
 
     /** Trigger browser download of APK or XAPK for the given package. */
     function extractAppByPkg(pkg) {
-      var a = document.createElement('a');
-      a.href = '/api/apps/extract?packageName=' + encodeURIComponent(pkg) + '&token=' + token;
-      a.download = '';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      api('/api/download-ticket', {
+        method: 'POST',
+        body: JSON.stringify({ path: pkg, isFolder: false }),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(function (result) {
+        if (result && result.ticket) {
+          var a = document.createElement('a');
+          a.href = '/api/apps/extract?packageName=' + encodeURIComponent(pkg) + '&ticket=' + encodeURIComponent(result.ticket);
+          a.download = '';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      });
     }
 
     function openAppInfo() {

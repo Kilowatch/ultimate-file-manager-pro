@@ -538,6 +538,9 @@ PKCS12 비밀번호
     <string name="vault_recovery_code_copy">코드 복사</string>
     <string name="vault_recovery_code_done">완료 — 저장했습니다</string>
     <string name="vault_recovery_code_copied">복구 코드가 클립보드에 복사되었습니다.</string>
+    <string name="vault_recovery_code_copied_autoclear">
+복구 코드가 복사되었습니다. 클립보드는 60초 후에 자동으로 지워집니다.
+</string>
     <string name="vault_recovery_entry_title">복구 코드 입력</string>
     <string name="vault_recovery_entry_subtitle">PIN을 재설정하려면 16자리 복구 코드를 입력하세요.</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ UFM 웹 공유
 </string>
     <string name="web_portal_html_invalid_pin">
 PIN이 잘못되었습니다. 다시 시도해 주세요.
+</string>
+    <string name="web_portal_html_rate_limited">
+잘못된 시도가 너무 많습니다. 15분 후에 다시 시도해 주세요.
 </string>
     <string name="web_portal_html_download_list">
 다운로드 가능한 파일

@@ -538,6 +538,9 @@ Senha do certificado
     <string name="vault_recovery_code_copy">Copiar código</string>
     <string name="vault_recovery_code_done">Feito - eu salvei</string>
     <string name="vault_recovery_code_copied">Código de recuperação copiado para a área de transferência</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Código de recuperação copiado – a área de transferência será limpa automaticamente em 60s
+</string>
     <string name="vault_recovery_entry_title">Digite o código de recuperação</string>
     <string name="vault_recovery_entry_subtitle">Digite seu código de recuperação de 16 caracteres para redefinir seu PIN</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Verificar
 </string>
     <string name="web_portal_html_invalid_pin">
 PIN inválido. Por favor, tente novamente.
+</string>
+    <string name="web_portal_html_rate_limited">
+Muitas tentativas incorretas. Tente novamente em 15 minutos.
 </string>
     <string name="web_portal_html_download_list">
 Arquivos disponíveis para download

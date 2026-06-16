@@ -538,6 +538,9 @@ Certificate Password
     <string name="vault_recovery_code_copy">Salin Kode</string>
     <string name="vault_recovery_code_done">Selesai — Saya Sudah Menyimpannya</string>
     <string name="vault_recovery_code_copied">Kode pemulihan disalin ke papan klip</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Recovery code copied — clipboard will auto-clear in 60s
+</string>
     <string name="vault_recovery_entry_title">Masukkan Kode Pemulihan</string>
     <string name="vault_recovery_entry_subtitle">Masukkan kode pemulihan 16 karakter Anda untuk mengatur ulang PIN Anda</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Verify
 </string>
     <string name="web_portal_html_invalid_pin">
 Invalid PIN. Please try again.
+</string>
+    <string name="web_portal_html_rate_limited">
+Too many incorrect attempts. Please try again in 15 minutes.
 </string>
     <string name="web_portal_html_download_list">
 Available Files for Download

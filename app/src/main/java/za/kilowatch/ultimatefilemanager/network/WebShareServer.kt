@@ -23,7 +23,9 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -36,6 +38,27 @@ import java.util.zip.ZipOutputStream
 
 object WebShareServer {
     private const val TAG = "WebShareServer"
+
+    // ── Rate limiting constants ──
+    private const val RATE_LIMIT_DELAY_THRESHOLD = 5
+    private const val RATE_LIMIT_BLOCK_THRESHOLD = 10
+    private const val RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000L  // 15 minutes
+    private const val RATE_LIMIT_DELAY_MS = 5_000L
+
+    // ── Rate limit state ──
+    private data class RateLimitEntry(
+        val failures: Int,
+        val firstFailureTime: Long
+    )
+
+    private sealed class RateLimitResult {
+        object Allowed : RateLimitResult()
+        object Delayed : RateLimitResult()
+        object Blocked : RateLimitResult()
+    }
+
+    private val rateLimitMap = java.util.concurrent.ConcurrentHashMap<String, RateLimitEntry>()
+
     private var server: io.ktor.server.engine.EmbeddedServer<*, *>? = null
     
     var pin: String = ""
@@ -116,6 +139,52 @@ object WebShareServer {
         return bitmap
     }
 
+    /** Record a failed PIN attempt for a client IP.
+     *  Atomically increments the failure counter or starts a new window if the previous one expired. */
+    private fun recordFailure(clientIp: String) {
+        val now = System.currentTimeMillis()
+        rateLimitMap.compute(clientIp) { _, existing ->
+            if (existing == null) {
+                RateLimitEntry(1, now)
+            } else if (now - existing.firstFailureTime > RATE_LIMIT_WINDOW_MS) {
+                RateLimitEntry(1, now)
+            } else {
+                existing.copy(failures = existing.failures + 1)
+            }
+        }
+    }
+
+    /** Reset the rate-limit counter for a client IP (called on successful PIN entry). */
+    private fun resetRateLimit(clientIp: String) {
+        rateLimitMap.remove(clientIp)
+    }
+
+    /** Returns true if the client IP has exceeded the block threshold within the current window. */
+    private fun isIpBlocked(clientIp: String): Boolean {
+        val entry = rateLimitMap[clientIp] ?: return false
+        val now = System.currentTimeMillis()
+        if (now - entry.firstFailureTime > RATE_LIMIT_WINDOW_MS) {
+            rateLimitMap.remove(clientIp)
+            return false
+        }
+        return entry.failures >= RATE_LIMIT_BLOCK_THRESHOLD
+    }
+
+    /** Check the rate-limit status for a client IP. Returns Allowed, Delayed, or Blocked. */
+    private fun checkRateLimit(clientIp: String): RateLimitResult {
+        val entry = rateLimitMap[clientIp] ?: return RateLimitResult.Allowed
+        val now = System.currentTimeMillis()
+        if (now - entry.firstFailureTime > RATE_LIMIT_WINDOW_MS) {
+            rateLimitMap.remove(clientIp)
+            return RateLimitResult.Allowed
+        }
+        return when {
+            entry.failures >= RATE_LIMIT_BLOCK_THRESHOLD -> RateLimitResult.Blocked
+            entry.failures >= RATE_LIMIT_DELAY_THRESHOLD -> RateLimitResult.Delayed
+            else -> RateLimitResult.Allowed
+        }
+    }
+
     /**
      * Starts the Ktor web server.
      * Returns the access URL (e.g. http://192.168.1.100:8080)
@@ -127,7 +196,7 @@ object WebShareServer {
         pin = String.format("%04d", (1000..9999).random())
         port = findFreePort()
 
-        val serverInstance = embeddedServer(Netty, port = port, host = "0.0.0.0") {
+        val serverInstance = embeddedServer(Netty, port = port, host = getLocalIpAddress()) {
             routing {
                 // Serve localized flag SVGs
                 get("/api/flags/{code}") {
@@ -238,17 +307,47 @@ object WebShareServer {
 
                 // PIN verification POST action
                 post("/verify") {
+                    val clientIp = call.request.local.remoteHost
                     val params = call.receiveParameters()
                     val enteredPin = params["pin"]
+
+                    // Rate-limit check
+                    when (checkRateLimit(clientIp)) {
+                        RateLimitResult.Blocked -> {
+                            if (BuildConfig.DEBUG) {
+                                val entry = rateLimitMap[clientIp]
+                                Log.i(TAG, "CRIT-2: Rate limit block applied to $clientIp (failure #${entry?.failures ?: "?"})")
+                            }
+                            call.respondText(
+                                renderPinHtml(getLocalizedContext(context, "en"), false, true, "en"),
+                                ContentType.Text.Html,
+                                HttpStatusCode.TooManyRequests
+                            )
+                            return@post
+                        }
+                        RateLimitResult.Delayed -> {
+                            if (BuildConfig.DEBUG) {
+                                val entry = rateLimitMap[clientIp]
+                                Log.i(TAG, "CRIT-2: Rate limit delay applied to $clientIp (failure #${entry?.failures ?: "?"})")
+                            }
+                            delay(RATE_LIMIT_DELAY_MS)
+                        }
+                        RateLimitResult.Allowed -> { /* proceed */ }
+                    }
+
                     if (enteredPin == pin) {
+                        resetRateLimit(clientIp)
+                        if (BuildConfig.DEBUG) Log.i(TAG, "CRIT-2: Rate limit reset for $clientIp (successful PIN)")
                         call.response.cookies.append(
                             name = "session_pin",
                             value = pin,
                             path = "/",
-                            maxAge = 7200L // 2 hours validity
+                            maxAge = 7200L, // 2 hours validity
+                            httpOnly = true
                         )
                         call.respondRedirect("/")
                     } else {
+                        recordFailure(clientIp)
                         call.respondRedirect("/?error=1")
                     }
                 }
@@ -261,8 +360,17 @@ object WebShareServer {
                     if (sessionPin == pin) {
                         call.respondText(renderFilesHtml(localizedCtx, lang), ContentType.Text.Html)
                     } else {
-                        val isError = call.request.queryParameters["error"] == "1"
-                        call.respondText(renderPinHtml(localizedCtx, isError, lang), ContentType.Text.Html)
+                        val clientIp = call.request.local.remoteHost
+                        if (isIpBlocked(clientIp)) {
+                            call.respondText(
+                                renderPinHtml(localizedCtx, false, true, lang),
+                                ContentType.Text.Html,
+                                HttpStatusCode.TooManyRequests
+                            )
+                        } else {
+                            val isError = call.request.queryParameters["error"] == "1"
+                            call.respondText(renderPinHtml(localizedCtx, isError, false, lang), ContentType.Text.Html)
+                        }
                     }
                 }
             }
@@ -304,7 +412,7 @@ object WebShareServer {
     /**
      * Renders the PIN prompt screen.
      */
-    private fun renderPinHtml(ctx: Context, showError: Boolean, lang: String): String {
+    private fun renderPinHtml(ctx: Context, showError: Boolean, showRateLimit: Boolean, lang: String): String {
         val title = ctx.getString(R.string.web_portal_html_title)
         val header = ctx.getString(R.string.web_portal_html_header)
         val deviceName = Build.MODEL
@@ -312,6 +420,7 @@ object WebShareServer {
         val pinPrompt = ctx.getString(R.string.web_portal_html_enter_pin)
         val btnText = ctx.getString(R.string.web_portal_html_verify)
         val errorMsg = if (showError) ctx.getString(R.string.web_portal_html_invalid_pin) else ""
+        val rateLimitMsg = if (showRateLimit) ctx.getString(R.string.web_portal_html_rate_limited) else ""
 
         return """
             <!DOCTYPE html>
@@ -517,14 +626,17 @@ object WebShareServer {
                     <h1>${escape(header)}</h1>
                     <div class="subtitle">${escape(subtitle)}</div>
                     
+                    ${if (showRateLimit) """
+                    <div class="error-msg" style="text-align:center; padding: 20px; font-size: 16px;">${escape(rateLimitMsg)}</div>
+                    """ else """
                     <form action="/verify" method="post">
                         <div class="input-group">
                             <input class="pin-input" type="password" name="pin" maxlength="4" placeholder="••••" required autocomplete="off" autofocus>
                         </div>
                         <button type="submit" class="btn">${escape(btnText)}</button>
                     </form>
-                    
                     ${if (showError) "<div class=\"error-msg\">" + escape(errorMsg) + "</div>" else ""}
+                    """}
                 </div>
             </body>
             </html>

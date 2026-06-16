@@ -25,6 +25,9 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
+import za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity
+import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
@@ -368,7 +371,23 @@ class CustomTileActivity : AppCompatActivity() {
                 startActivity(Intent(this, AppManagerActivity::class.java))
             }
             item.isRemoteTile -> {
-                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.remote.RemoteManageActivity::class.java))
+                if (VpnWarningHelper.isVpnActive(this)) {
+                    VpnWarningHelper.showVpnWarningDialog(this) {
+                        PinDialogHelper.showPinDialog(this, onCancel = {}) { pin ->
+                            val intent = Intent(this, RemoteManageActivity::class.java).apply {
+                                putExtra(RemoteManageActivity.EXTRA_PIN, pin)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                } else {
+                    PinDialogHelper.showPinDialog(this, onCancel = {}) { pin ->
+                        val intent = Intent(this, RemoteManageActivity::class.java).apply {
+                            putExtra(RemoteManageActivity.EXTRA_PIN, pin)
+                        }
+                        startActivity(intent)
+                    }
+                }
             }
             item.isSearchTile -> {
                 startActivity(Intent(this, SearchActivity::class.java))

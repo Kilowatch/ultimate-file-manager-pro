@@ -538,6 +538,9 @@
     <string name="vault_recovery_code_copy">نسخ الرمز</string>
     <string name="vault_recovery_code_done">تم - لقد حفظته</string>
     <string name="vault_recovery_code_copied">تم نسخ رمز الاسترداد إلى الحافظة</string>
+    <string name="vault_recovery_code_copied_autoclear">
+تم نسخ رمز الاسترداد - سيتم مسح الحافظة تلقائيًا خلال 60 ثانية
+</string>
     <string name="vault_recovery_entry_title">أدخل رمز الاسترداد</string>
     <string name="vault_recovery_entry_subtitle">أدخل رمز الاسترداد المكون من 16 حرفًا لإعادة ضبط رقم التعريف الشخصي (PIN) الخاص بك</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5001,6 +5004,9 @@ XML / العلامات
 </string>
     <string name="web_portal_html_invalid_pin">
 رقم التعريف الشخصي غير صالح. يرجى المحاولة مرة أخرى.
+</string>
+    <string name="web_portal_html_rate_limited">
+عدد كبير جدًا من المحاولات غير الصحيحة. يرجى المحاولة مرة أخرى خلال 15 دقيقة.
 </string>
     <string name="web_portal_html_download_list">
 الملفات المتاحة للتحميل

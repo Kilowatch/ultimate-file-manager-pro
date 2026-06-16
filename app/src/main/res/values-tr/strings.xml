@@ -538,6 +538,9 @@ Sertifika Şifresi
     <string name="vault_recovery_code_copy">Kodu Kopyala</string>
     <string name="vault_recovery_code_done">Bitti — Kaydettim</string>
     <string name="vault_recovery_code_copied">Kurtarma kodu panoya kopyalandı</string>
+    <string name="vault_recovery_code_copied_autoclear">
+Kurtarma kodu kopyalandı — pano 60\'lı yıllarda otomatik olarak temizlenecek
+</string>
     <string name="vault_recovery_entry_title">Kurtarma Kodunu Girin</string>
     <string name="vault_recovery_entry_subtitle">PIN\'inizi sıfırlamak için 16 karakterlik kurtarma kodunuzu girin</string>
     <string name="vault_recovery_entry_hint">XXXXXXXXXXXXXXXX</string>
@@ -5003,6 +5006,9 @@ Doğrulamak
 </string>
     <string name="web_portal_html_invalid_pin">
 Geçersiz PIN. Lütfen tekrar deneyin.
+</string>
+    <string name="web_portal_html_rate_limited">
+Çok fazla hatalı deneme. Lütfen 15 dakika sonra tekrar deneyin.
 </string>
     <string name="web_portal_html_download_list">
 İndirilebilecek Mevcut Dosyalar

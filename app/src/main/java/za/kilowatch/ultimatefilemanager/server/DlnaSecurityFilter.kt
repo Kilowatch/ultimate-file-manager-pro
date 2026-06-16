@@ -225,7 +225,8 @@ object DlnaSecurityFilter {
         if (sourceIp.isBlank()) return false
 
         val now = System.currentTimeMillis()
-        val entry = tokenBuckets.computeIfAbsent(sourceIp) {
+        val key = "$sourceIp:${endpoint.name}"
+        val entry = tokenBuckets.computeIfAbsent(key) {
             TokenBucketEntry(TokenBucket(endpoint.maxTokens, endpoint.refillRate), now)
         }
 

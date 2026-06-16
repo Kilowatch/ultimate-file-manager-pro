@@ -25,10 +25,12 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.ProgressBar
 import android.widget.Toast
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.remote.PinDialogHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -38,6 +40,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import android.util.Log
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import java.security.SecureRandom
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 /**
  * Premium Encrypted Vault (PIN-gated).
@@ -51,7 +59,10 @@ class VaultActivity : AppCompatActivity() {
     private lateinit var layoutEmpty: LinearLayout
     private lateinit var btnAddFolder: com.google.android.material.button.MaterialButton
     private lateinit var adapter: VaultAdapter
-    private lateinit var prefs: SharedPreferences
+    private var encryptedPrefs: SharedPreferences? = null
+    private var legacyPrefs: SharedPreferences? = null
+    private var clipboardClearHandler: android.os.Handler? = null
+    private var clipboardClearRunnable: Runnable? = null
 
     private val entries = mutableListOf<VaultEntry>()
     private var isUnlocked = false
@@ -74,6 +85,14 @@ class VaultActivity : AppCompatActivity() {
         private const val KEY_RECOVERY   = "vault_recovery_hash"
         private const val META_FILE      = "metadata.json"
         private const val RECOVERY_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+        // ── PBKDF2 constants ──
+        private const val PBKDF2_ALGORITHM  = "PBKDF2WithHmacSHA256"
+        private const val PBKDF2_ITERATIONS = 260_000
+        private const val PBKDF2_KEY_LENGTH = 256
+        private const val SALT_SIZE = 16
+        private const val PREFS_SECURE = "vault_prefs_secure"
+        private const val TAG = "VaultActivity"
     }
 
     override fun attachBaseContext(newBase: android.content.Context) {
@@ -96,7 +115,12 @@ class VaultActivity : AppCompatActivity() {
             insets
         }
 
-        prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        legacyPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                initSecurePrefs()
+            }
+        }
         toolbar = findViewById(R.id.toolbar)
         recyclerVault = findViewById(R.id.recyclerVault)
         layoutEmpty = findViewById(R.id.layoutEmpty)
@@ -159,6 +183,15 @@ class VaultActivity : AppCompatActivity() {
         unlockVault()
     }
 
+    override fun onDestroy() {
+        clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
+        clipboardClearRunnable = null
+        clipboardClearHandler = null
+        if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear cancelled (activity destroyed)")
+        scope.cancel()
+        super.onDestroy()
+    }
+
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onBackPressed() {
         // If a vault card is expanded, collapse it instead of exiting
@@ -193,8 +226,8 @@ class VaultActivity : AppCompatActivity() {
     }
 
     private fun unlockVault() {
-        val hasPin = prefs.getString(KEY_PIN, null) != null
-        if (!hasPin) {
+        val stored = readPinHash()
+        if (stored == null) {
             showSetPinFlow(generateRecoveryCode = true) {
                 showSnackbar(getString(R.string.vault_pin_saved))
                 isUnlocked = true
@@ -203,6 +236,14 @@ class VaultActivity : AppCompatActivity() {
             return
         }
 
+        // ── Legacy SHA-256 detected → migration path ──
+        if (isLegacyHash(stored)) {
+            if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 PIN hash detected — migrating to PBKDF2")
+            showMigrationPinDialog(stored)
+            return
+        }
+
+        // ── PBKDF2 hash → normal verify ──
         PinDialogHelper.showPinDialog(
             context = this,
             title = getString(R.string.vault_unlock_title),
@@ -214,8 +255,35 @@ class VaultActivity : AppCompatActivity() {
             showRecoveryCode = true,
             onRecoveryCode = { showRecoveryFlow() }
         ) { pin ->
-            val stored = prefs.getString(KEY_PIN, null)
-            if (sha256(pin) == stored) {
+            if (verifyPbkdf2(pin, stored)) {
+                isUnlocked = true
+                showUnlockedUi()
+            } else {
+                showSnackbar(getString(R.string.vault_pin_invalid))
+                unlockVault()
+            }
+        }
+    }
+
+    /** PIN dialog that verifies against the legacy SHA-256 hash,
+     *  then silently migrates to PBKDF2 on success. */
+    private fun showMigrationPinDialog(legacyHash: String) {
+        PinDialogHelper.showPinDialog(
+            context = this,
+            title = getString(R.string.vault_unlock_title),
+            subtitle = getString(R.string.vault_unlock_subtitle),
+            confirmText = getString(R.string.vault_unlock_title),
+            showChangePin = false,
+            showRecoveryCode = true,
+            onCancel = { finish() },
+            onRecoveryCode = { showRecoveryFlow() }
+        ) { pin ->
+            // Inline SHA-256 verification for migration only
+            val md = java.security.MessageDigest.getInstance("SHA-256")
+            val enteredHash = md.digest(pin.toByteArray(Charsets.UTF_8))
+                .joinToString("") { "%02x".format(it) }
+            if (enteredHash == legacyHash) {
+                migratePin(pin)
                 isUnlocked = true
                 showUnlockedUi()
             } else {
@@ -226,7 +294,7 @@ class VaultActivity : AppCompatActivity() {
     }
 
     private fun changePinFlow() {
-        val stored = prefs.getString(KEY_PIN, null) ?: return
+        val stored = readPinHash() ?: return
 
         PinDialogHelper.showPinDialog(
             context = this,
@@ -235,7 +303,7 @@ class VaultActivity : AppCompatActivity() {
             confirmText = getString(R.string.vault_verify_pin_title),
             onCancel = {}
         ) { pin ->
-            if (sha256(pin) != stored) {
+            if (!verifyPbkdf2(pin, stored)) {
                 showSnackbar(getString(R.string.vault_pin_invalid))
                 changePinFlow()
                 return@showPinDialog
@@ -312,8 +380,8 @@ class VaultActivity : AppCompatActivity() {
                     backgroundTintList = yellowCsl; setTextColor(black)
                     setOnClickListener {
                         warningDialog.dismiss()
-                        // Save PIN
-                        prefs.edit().putString(KEY_PIN, sha256(pin)).apply()
+                        // Save PIN with PBKDF2 to encrypted prefs
+                        encryptedPrefs?.edit()?.putString(KEY_PIN, pbkdf2(pin))?.commit()
                         onConfirmed?.invoke()
 
                         if (generateRecoveryCode) {
@@ -336,9 +404,9 @@ class VaultActivity : AppCompatActivity() {
     ) {
         // Generate 16-char alphanumeric code
         val code = (1..16).map { RECOVERY_CHARS.random() }.joinToString("")
-        // Store SHA-256 hash
-        val hash = sha256(code)
-        prefs.edit().putString(KEY_RECOVERY, hash).apply()
+        // Store PBKDF2 hash in encrypted prefs
+        val hash = pbkdf2(code)
+        encryptedPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.commit()
 
         // Build a premium one-time display dialog
         val ctx = this
@@ -358,8 +426,28 @@ class VaultActivity : AppCompatActivity() {
         }
         btnCopy.setOnClickListener {
             val cm = getSystemService(android.content.ClipboardManager::class.java)
-            cm.setPrimaryClip(android.content.ClipData.newPlainText(getString(R.string.recovery_code), code))
-            showSnackbar(getString(R.string.vault_recovery_code_copied))
+            cm.setPrimaryClip(android.content.ClipData.newPlainText(
+                getString(R.string.recovery_code), code
+            ))
+
+            // Cancel previous timer if re-copying
+            clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
+
+            // Ensure handler is initialised
+            if (clipboardClearHandler == null) {
+                clipboardClearHandler = android.os.Handler(mainLooper)
+            }
+
+            // Schedule auto-clear in 60s
+            val runnable = Runnable {
+                cm.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
+                if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear fired")
+            }
+            clipboardClearRunnable = runnable
+            clipboardClearHandler?.postDelayed(runnable, 60_000L)
+
+            if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear scheduled in 60s")
+            showSnackbar(getString(R.string.vault_recovery_code_copied_autoclear))
         }
 
         val codeDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
@@ -371,6 +459,10 @@ class VaultActivity : AppCompatActivity() {
             .setCancelable(false)
             .create()
 
+        codeDialog.setOnDismissListener {
+            clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
+            clipboardClearRunnable = null
+        }
         codeDialog.show()
         codeDialog.window?.setBackgroundDrawable(
             android.graphics.drawable.ColorDrawable(bgColor)
@@ -382,7 +474,7 @@ class VaultActivity : AppCompatActivity() {
 
     /** Shows the recovery code entry dialog; on success calls showSetPinFlow(generateRecoveryCode=true). */
     private fun showRecoveryFlow() {
-        val storedHash = prefs.getString(KEY_RECOVERY, null) ?: run {
+        val storedHash = readRecoveryHash() ?: run {
             showSnackbar(getString(R.string.no_recovery_code_is_set))
             return
         }
@@ -438,7 +530,23 @@ class VaultActivity : AppCompatActivity() {
                     txtErr.visibility = android.view.View.VISIBLE
                     return@setOnClickListener
                 }
-                if (sha256(entered) != storedHash) {
+
+                val isValid = if (isLegacyHash(storedHash)) {
+                    // Legacy SHA-256 recovery code — verify then migrate
+                    val md = java.security.MessageDigest.getInstance("SHA-256")
+                    val enteredHash = md.digest(entered.toByteArray(Charsets.UTF_8))
+                        .joinToString("") { "%02x".format(it) }
+                    if (enteredHash == storedHash) {
+                        if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 recovery code hash detected — migrating to PBKDF2")
+                        migrateRecoveryCode(entered)
+                        true
+                    } else false
+                } else {
+                    // PBKDF2 recovery code — verify directly
+                    verifyPbkdf2(entered, storedHash)
+                }
+
+                if (!isValid) {
                     txtErr.text = getString(R.string.vault_recovery_invalid)
                     txtErr.visibility = android.view.View.VISIBLE
                     return@setOnClickListener
@@ -456,11 +564,176 @@ class VaultActivity : AppCompatActivity() {
         }
     }
 
-    /** SHA-256 hash of a string, returned as a hex string. */
-    private fun sha256(input: String): String {
-        val md = java.security.MessageDigest.getInstance("SHA-256")
-        val bytes = md.digest(input.toByteArray(Charsets.UTF_8))
-        return bytes.joinToString("") { "%02x".format(it) }
+    /** PBKDF2-HMAC-SHA256 hash with a random 16-byte salt.
+     *  Returns the hash string in format: iterations:salt_hex:hash_hex */
+    private fun pbkdf2(password: String): String {
+        val salt = ByteArray(SALT_SIZE).apply { SecureRandom().nextBytes(this) }
+        val spec = PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH)
+        val key = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM).generateSecret(spec).encoded
+        val saltHex = salt.joinToString("") { "%02x".format(it) }
+        val hashHex = key.joinToString("") { "%02x".format(it) }
+        return "$PBKDF2_ITERATIONS:$saltHex:$hashHex"
+    }
+
+    /** Verify a password against a PBKDF2 hash stored in iterations:salt_hex:hash_hex format. */
+    private fun verifyPbkdf2(password: String, stored: String): Boolean {
+        if (isLegacyHash(stored)) return false
+        val parts = stored.split(":")
+        if (parts.size != 3) return false
+        val iterations = parts[0].toIntOrNull() ?: return false
+        val salt = parts[1].hexToByteArray() ?: return false
+        val expectedHash = parts[2]
+        val spec = PBEKeySpec(password.toCharArray(), salt, iterations, PBKDF2_KEY_LENGTH)
+        val key = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM).generateSecret(spec).encoded
+        val computedHash = key.joinToString("") { "%02x".format(it) }
+        return java.security.MessageDigest.isEqual(
+            computedHash.toByteArray(Charsets.UTF_8),
+            expectedHash.toByteArray(Charsets.UTF_8)
+        )
+    }
+
+    /** Encrypt a plaintext string for storage in metadata.json.
+     *  Returns "enc:<base64>" on success, or the original plaintext on failure. */
+    private fun encryptField(plain: String): String {
+        return try {
+            "enc:" + VaultCrypto.encryptString(plain)
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w(TAG, "MED-4: encryptField failed", e)
+            plain
+        }
+    }
+
+    /** Decrypt a field from metadata.json.
+     *  Fields prefixed with "enc:" are decrypted; plaintext fields are returned as-is. */
+    private fun decryptField(encrypted: String): String {
+        if (!encrypted.startsWith("enc:")) return encrypted
+        return try {
+            VaultCrypto.decryptString(encrypted.removePrefix("enc:"))
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.w(TAG, "MED-4: decryptField failed — using fallback", e)
+            encrypted
+        }
+    }
+
+    /** Returns true if the stored hash is the old unsalted SHA-256 format (64 hex chars, no colon). */
+    private fun isLegacyHash(stored: String?): Boolean {
+        return stored != null && stored.length == 64 && ":" !in stored
+    }
+
+    /** Read the PIN hash — try encrypted prefs first, fall back to legacy plain prefs. */
+    private fun readPinHash(): String? {
+        encryptedPrefs?.getString(KEY_PIN, null)?.let { return it }
+        return legacyPrefs?.getString(KEY_PIN, null)
+    }
+
+    /** Read the recovery code hash — try encrypted prefs first, fall back to legacy plain prefs. */
+    private fun readRecoveryHash(): String? {
+        encryptedPrefs?.getString(KEY_RECOVERY, null)?.let { return it }
+        return legacyPrefs?.getString(KEY_RECOVERY, null)
+    }
+
+    /** Initialise EncryptedSharedPreferences on a background thread.
+     *  On failure, encryptedPrefs stays null and PIN ops fall back gracefully. */
+    private fun initSecurePrefs() {
+        try {
+            val masterKey = MasterKey.Builder(applicationContext)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            encryptedPrefs = EncryptedSharedPreferences.create(
+                applicationContext,
+                PREFS_SECURE,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to init EncryptedSharedPreferences — PIN ops will fail", e)
+        }
+    }
+
+    /** Scan all existing vault entries and re-encrypt any that still have
+     *  plaintext metadata fields. Creates a .bak backup before overwriting,
+     *  verifies the encrypted file reads back correctly, then removes the backup. */
+    private fun migrateMetadataEncryption() {
+        val base = vaultBaseDir()
+        if (!base.exists()) return
+        var migratedCount = 0
+
+        base.listFiles()?.forEach { entryDir ->
+            if (!entryDir.isDirectory) return@forEach
+            val metaFile = File(entryDir, META_FILE)
+            if (!metaFile.exists()) return@forEach
+
+            try {
+                val json = JSONObject(metaFile.readText())
+
+                // Skip if already encrypted
+                val displayName = json.optString("displayName", "")
+                val originalRoot = json.optString("originalRoot", "")
+                if (displayName.startsWith("enc:") || originalRoot.startsWith("enc:")) return@forEach
+
+                // Plaintext detected — back up
+                val entryId = json.optString("id", "unknown")
+                if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Re-encrypting metadata for entry $entryId…")
+
+                val bakFile = File(entryDir, "$META_FILE.bak")
+                metaFile.copyTo(bakFile, overwrite = true)
+
+                // Encrypt fields
+                json.put("displayName", encryptField(displayName))
+                json.put("originalRoot", encryptField(originalRoot))
+                val filesArr = json.getJSONArray("files")
+                val encryptedFiles = JSONArray()
+                for (i in 0 until filesArr.length()) {
+                    encryptedFiles.put(encryptField(filesArr.getString(i)))
+                }
+                json.put("files", encryptedFiles)
+                metaFile.writeText(json.toString())
+
+                // Verify the encrypted version can be read back
+                val verifyJson = JSONObject(metaFile.readText())
+                val verifyName = verifyJson.optString("displayName", "")
+                if (!verifyName.startsWith("enc:") || verifyName.length <= 4) {
+                    if (BuildConfig.DEBUG) Log.w(TAG, "MED-4: Verification failed — restoring from backup")
+                    bakFile.copyTo(metaFile, overwrite = true)
+                    return@forEach
+                }
+
+                bakFile.delete()
+                if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Backup verified — deleted metadata.json.bak")
+                migratedCount++
+
+                // Re-load vault adapter to show decrypted names
+                loadVault()
+            } catch (_: Exception) {
+                // Failed to process this entry — skip it
+            }
+        }
+
+        if (migratedCount > 0 && BuildConfig.DEBUG) {
+            Log.i(TAG, "MED-4: Migration complete — $migratedCount entries re-encrypted")
+        }
+    }
+
+    /** Migrate the user's PIN from legacy SHA-256 to PBKDF2.
+     *  Saves to encrypted prefs, then deletes the old plain-text vault_prefs file. */
+    private fun migratePin(pin: String) {
+        if (encryptedPrefs == null) return
+        val hash = pbkdf2(pin)
+        encryptedPrefs?.edit()?.putString(KEY_PIN, hash)?.commit()
+        // Delete old plain prefs file
+        File(applicationContext.filesDir, "shared_prefs/${PREFS_NAME}.xml").delete()
+        File(applicationContext.filesDir, "shared_prefs/${PREFS_NAME}.xml.bak")?.delete()
+        if (BuildConfig.DEBUG) Log.i(TAG, "PIN migration complete — old vault_prefs deleted")
+    }
+
+    /** Migrate the recovery code hash from legacy SHA-256 to PBKDF2.
+     *  Called from showRecoveryFlow() when the plaintext code is available. */
+    private fun migrateRecoveryCode(code: String) {
+        if (encryptedPrefs == null) return
+        val hash = pbkdf2(code)
+        encryptedPrefs?.edit()?.putString(KEY_RECOVERY, hash)?.commit()
+        if (BuildConfig.DEBUG) Log.i(TAG, "Recovery code migration complete")
     }
 
     private fun lockUi() {
@@ -473,6 +746,10 @@ class VaultActivity : AppCompatActivity() {
     private fun showUnlockedUi() {
         btnAddFolder.isEnabled = true
         loadVault()
+        // One-time migration: re-encrypt any legacy plaintext metadata
+        scope.launch {
+            withContext(Dispatchers.IO) { migrateMetadataEncryption() }
+        }
     }
 
     private fun loadVault() {
@@ -548,9 +825,9 @@ class VaultActivity : AppCompatActivity() {
 
                     val metadata = JSONObject().apply {
                         put("id", entryId)
-                        put("displayName", root.name)
-                        put("originalRoot", root.absolutePath)
-                        put("files", JSONArray(relativeList))
+                        put("displayName", encryptField(root.name))
+                        put("originalRoot", encryptField(root.absolutePath))
+                        put("files", JSONArray(relativeList.map { encryptField(it) }))
                     }
                     File(entryDir, META_FILE).writeText(metadata.toString())
                     true
@@ -687,16 +964,34 @@ class VaultActivity : AppCompatActivity() {
                 val filesJson = json.getJSONArray("files")
                 val files = mutableListOf<String>()
                 for (i in 0 until filesJson.length()) {
-                    files.add(filesJson.getString(i))
+                    files.add(decryptField(filesJson.getString(i)))
                 }
                 VaultEntry(
                     id = json.getString("id"),
-                    displayName = json.getString("displayName"),
-                    originalRoot = json.getString("originalRoot"),
+                    displayName = decryptField(json.getString("displayName")),
+                    originalRoot = decryptField(json.getString("originalRoot")),
                     files = files
                 )
             } catch (_: Exception) {
-                null
+                // Try backup file if main metadata.json failed
+                try {
+                    val bakFile = File(dir, "$META_FILE.bak")
+                    if (!bakFile.exists()) return@mapNotNull null
+                    val json = JSONObject(bakFile.readText())
+                    val filesJson = json.getJSONArray("files")
+                    val files = mutableListOf<String>()
+                    for (i in 0 until filesJson.length()) {
+                        files.add(decryptField(filesJson.getString(i)))
+                    }
+                    VaultEntry(
+                        id = json.getString("id"),
+                        displayName = decryptField(json.getString("displayName")),
+                        originalRoot = decryptField(json.getString("originalRoot")),
+                        files = files
+                    )
+                } catch (_: Exception) {
+                    null
+                }
             }
         } ?: emptyList()
     }

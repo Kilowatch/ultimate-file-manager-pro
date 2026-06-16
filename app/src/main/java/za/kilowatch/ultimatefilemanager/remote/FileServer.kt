@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.remote
 
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
 import android.app.PendingIntent
@@ -327,7 +328,7 @@ class FileServer(
         @Volatile var error: String? = null,
         @Volatile var cancelled: Boolean = false
     )
-    private val zipJobs = mutableMapOf<String, ZipJob>()
+    private val zipJobs = ConcurrentHashMap<String, ZipJob>()
 
     // Background XAPK install job tracking
     private data class XapkJob(
@@ -338,7 +339,16 @@ class FileServer(
         @Volatile var packageLabel: String = "",
         @Volatile var error: String? = null
     )
-    private val xapkJobs = mutableMapOf<String, XapkJob>()
+    private val xapkJobs = ConcurrentHashMap<String, XapkJob>()
+
+    // ── Download ticket storage (HIGH-1) ──
+    private data class DownloadTicket(
+        val path: String,
+        val isFolder: Boolean,
+        val expiresAt: Long,
+        val used: Boolean
+    )
+    private val downloadTickets = ConcurrentHashMap<String, DownloadTicket>()
 
     private val serverScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
@@ -522,8 +532,8 @@ class FileServer(
                                 val session = KtorSession(call)
                                 Log.d(TAG, "[API] ${session.method} ${session.uri}")
                                 if (!isLanOrLocalhost(session.remoteIpAddress)) { KtorResult.Json(HttpStatusCode.Forbidden, JSONObject().put("error", "Access restricted to local network").toString()).send(call); return@withContext }
-                                if (!isAuthorized(session)) { KtorResult.Json(HttpStatusCode.Unauthorized, JSONObject().put("error", "Unauthorized").toString()).send(call); return@withContext }
                                 val uri = session.uri; val isPost = session.method == "POST"
+                                if (!isAuthorized(session) && !consumeDownloadTicket(session, uri)) { KtorResult.Json(HttpStatusCode.Unauthorized, JSONObject().put("error", "Unauthorized").toString()).send(call); return@withContext }
                                 val result: KtorResult = when {
                                     uri == "/api/volumes" -> handleVolumes(session)
                                     uri == "/api/install-status" -> handleInstallStatus()
@@ -545,6 +555,7 @@ class FileServer(
                                     uri == "/api/move" && isPost -> handleMove(session)
                                     uri == "/api/upload" && isPost -> handleUpload(session)
                                     uri == "/api/upload-stream" && isPost -> handleStreamUpload(session)
+                                    uri == "/api/download-ticket" && isPost -> handleDownloadTicket(session)
                                     uri == "/api/download" -> handleDownload(session)
                                     uri == "/api/download-folder-start" -> handleDownloadFolderStart(session)
                                     uri == "/api/download-folder-status" -> handleDownloadFolderStatus(session)
@@ -629,7 +640,7 @@ class FileServer(
             }
 
             Log.i(TAG, "FileServer started on https://0.0.0.0:$port")
-            serverCertFingerprint?.let { Log.i(TAG, "TLS fingerprint: $it") }
+            serverCertFingerprint?.let { if (BuildConfig.DEBUG) Log.i(TAG, "TLS fingerprint: $it") }
             globalInstance = this
         } catch (e: Exception) { Log.e(TAG, "Failed to start FileServer", e) }
     }
@@ -793,13 +804,10 @@ class FileServer(
         Log.d(TAG, "Checking if IP is LAN/Localhost: '$ip'")
         if (ip.isBlank()) return false
         if (ip == "127.0.0.1" || ip == "::1" || ip.equals("localhost", ignoreCase = true)) return true
-        
-        // Accept mDNS or local networking hostnames directly
-        if (ip.endsWith(".local", ignoreCase = true) || ip.endsWith(".lan", ignoreCase = true)) {
-            Log.d(TAG, "Allowed local hostname: $ip")
-            return true
-        }
 
+        // Resolve hostname to IP address before any LAN checks.
+        // This handles mDNS (.local), .lan, and any other hostnames by resolving
+        // them to actual IPs and then applying the standard private-range checks.
         val remoteAddr = try { InetAddress.getByName(ip) } catch (e: Exception) { return false }
         if (remoteAddr.isLoopbackAddress) return true
 
@@ -920,6 +928,21 @@ class FileServer(
         return jsonResponse(Status.FORBIDDEN, "error" to "Invalid PIN")
     }
 
+    /** Consume a single-use download ticket from the ?ticket= query parameter.
+     *  Only valid for download endpoints. Returns true if a valid ticket was consumed. */
+    private fun consumeDownloadTicket(session: KtorSession, uri: String): Boolean {
+        val downloadEndpoints = setOf("/api/download", "/api/download-folder-start",
+            "/api/download-folder-status", "/api/download-folder-file",
+            "/api/download-folder-cancel", "/api/apps/extract")
+        if (uri !in downloadEndpoints) return false
+        val ticketParam = session.parms["ticket"]
+        if (ticketParam.isNullOrBlank()) return false
+        val ticket = downloadTickets[ticketParam] ?: return false
+        downloadTickets.remove(ticketParam)
+        val now = System.currentTimeMillis()
+        return !ticket.used && now <= ticket.expiresAt
+    }
+
     private fun isAuthorized(session: KtorSession): Boolean {
         val now = System.currentTimeMillis()
         fun checkToken(token: String?): Boolean {
@@ -936,12 +959,6 @@ class FileServer(
         val authHeader = session.headers["authorization"]
         if (!authHeader.isNullOrBlank()) {
             return checkToken(authHeader.removePrefix("Bearer ").trim())
-        }
-        // Fallback: ?token= query param (used by browser-initiated downloads
-        // where custom headers cannot be set, e.g. <a href> or window.location.href)
-        val queryToken = session.parms["token"]
-        if (!queryToken.isNullOrBlank()) {
-            return checkToken(queryToken.trim())
         }
         return false
     }
@@ -2648,6 +2665,27 @@ class FileServer(
     }
 
     // ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ Download ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
+
+    /** Generate a single-use 60-second download ticket for browser-initiated downloads.
+     *  Requires valid Authorization header (no ticket auth for ticket generation). */
+    private fun handleDownloadTicket(session: KtorSession): KtorResult {
+        if (!isAuthorized(session)) {
+            return KtorResult.Json(HttpStatusCode.Unauthorized,
+                JSONObject().put("error", "Unauthorized").toString())
+        }
+        val body = mutableMapOf<String, String>()
+        session.parseBody(body)
+        val json = JSONObject(body["postData"] ?: "{}")
+        val path = json.optString("path", "")
+        val isFolder = json.optBoolean("isFolder", false)
+        if (path.isBlank()) {
+            return jsonResponse(Status.BAD_REQUEST, "error" to "Missing path")
+        }
+        val ticket = UUID.randomUUID().toString()
+        val expiresAt = System.currentTimeMillis() + 60_000L
+        downloadTickets[ticket] = DownloadTicket(path, isFolder, expiresAt, used = false)
+        return jsonResponse(Status.OK, "ticket" to ticket, "expiresIn" to 60)
+    }
 
     private fun handleDownload(session: KtorSession): KtorResult {
         val path = session.parms["path"] ?: return jsonResponse(
