@@ -138,6 +138,13 @@ object SettingsBackupManager {
         add("apk_extract_prefs",         context.getString(R.string.backup_pref_apk_extract))
         add("cache_copy_prefs",          context.getString(R.string.backup_pref_cache_copy))
         add("video_thumbnail_time_prefs",context.getString(R.string.backup_pref_video_thumb_time))
+        add("autoplay_prefs",            context.getString(R.string.backup_pref_autoplay))
+        add("breadcrumbs_prefs",         context.getString(R.string.backup_pref_breadcrumbs))
+        add("grid_indicators_prefs",     context.getString(R.string.backup_pref_grid_indicators))
+        add("scrolling_text_prefs",      context.getString(R.string.backup_pref_scrolling_text))
+        add("file_server_prefs",         context.getString(R.string.backup_pref_file_server))
+        add("tile_icons_prefs",          context.getString(R.string.backup_pref_tile_icons))
+        add("icon_customization_prefs",  context.getString(R.string.backup_pref_icon_customization))
 
         val shares = NetworkShareRepository.getInstance(context).getAll()
         for (share in shares) {
@@ -326,6 +333,32 @@ object SettingsBackupManager {
             val customTilesArr = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getAllCustomTileDataForExport(context, selectedIds)
             root.put("custom_tiles", customTilesArr)
 
+            // Embed icon image files as base64 for cross-device portability
+            val iconFilesObj = JSONObject()
+            val iconDirs = mutableListOf<Pair<String, String>>() // (prefsName, dirName)
+            if (selectedIds.contains("tile_icons_prefs")) {
+                iconDirs.add("tile_icons_prefs" to "tile_icons")
+            }
+            if (selectedIds.contains("icon_customization_prefs")) {
+                iconDirs.add("icon_customization_prefs" to "custom_icons")
+            }
+            for ((_, dirName) in iconDirs) {
+                val dir = java.io.File(context.filesDir, dirName)
+                if (dir.exists() && dir.isDirectory) {
+                    val pngFiles = dir.listFiles { f -> f.extension.equals("png", ignoreCase = true) }
+                    pngFiles?.forEach { file ->
+                        if (file.length() < 1_048_576) { // 1 MB limit per icon
+                            val bytes = file.readBytes()
+                            val b64 = android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP)
+                            iconFilesObj.put("$dirName/${file.name}", b64)
+                        }
+                    }
+                }
+            }
+            if (iconFilesObj.length() > 0) {
+                root.put("icon_files", iconFilesObj)
+            }
+
             val jsonString = root.toString(2)
             val encryptedData = encryptBackup(jsonString)
 
@@ -368,7 +401,14 @@ object SettingsBackupManager {
                 "toolbar_icons_prefs"       to R.string.backup_pref_toolbar_icons,
                 "recycle_bin_prefs"         to R.string.backup_pref_recycle_bin,
                 "tile_order_prefs"          to R.string.backup_pref_tile_order,
-                "cache_copy_prefs"          to R.string.backup_pref_cache_copy
+                "cache_copy_prefs"          to R.string.backup_pref_cache_copy,
+                "autoplay_prefs"            to R.string.backup_pref_autoplay,
+                "breadcrumbs_prefs"         to R.string.backup_pref_breadcrumbs,
+                "grid_indicators_prefs"     to R.string.backup_pref_grid_indicators,
+                "scrolling_text_prefs"      to R.string.backup_pref_scrolling_text,
+                "file_server_prefs"         to R.string.backup_pref_file_server,
+                "tile_icons_prefs"          to R.string.backup_pref_tile_icons,
+                "icon_customization_prefs"  to R.string.backup_pref_icon_customization
             )
             while (keys.hasNext()) {
                 val key = keys.next()
@@ -603,11 +643,87 @@ object SettingsBackupManager {
                     za.kilowatch.ultimatefilemanager.storage.CustomTileManager.restoreFromExport(context, filteredArr)
                 }
 
+                // Restore embedded icon image files (base64) — version 2+
+                val iconFilesObj = root.optJSONObject("icon_files")
+                if (iconFilesObj != null) {
+                    val keys = iconFilesObj.keys()
+                    while (keys.hasNext()) {
+                        val relPath = keys.next() // e.g. "tile_icons/custom_f07ef337.png"
+                        val b64 = iconFilesObj.getString(relPath)
+                        try {
+                            val bytes = android.util.Base64.decode(b64, android.util.Base64.NO_WRAP)
+                            val outFile = java.io.File(context.filesDir, relPath)
+                            outFile.parentFile?.mkdirs()
+                            outFile.writeBytes(bytes)
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Failed to restore icon file: $relPath", e)
+                        }
+                    }
+                    // Fix device-specific paths in tile_icons_prefs and icon_customization_prefs.
+                    // The source device's filesDir differs from this device's filesDir, so any
+                    // absolute paths stored in the prefs JSON need to be rewritten.
+                    fixIconPathsInPrefs(context, "tile_icons_prefs", "tile_icons", "tile_icons")
+                    fixIconPathsInPrefs(context, "icon_customization_prefs", "icon_overrides", "custom_icons")
+                }
+
                 true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to restore backup", e)
                 false
             }
+        }
+    }
+
+    /**
+     * Rewrites absolute icon paths in a SharedPreferences JSON entry so they
+     * point to the current device's `filesDir` instead of the source device's.
+     *
+     * Both `tile_icons_prefs` and `icon_customization_prefs` store a JSON object
+     * where each entry can have a `"path"` field containing an absolute path like
+     * `/data/user/0/za.kilowatch.ultimatefilemanager/files/tile_icons/foo.png`.
+     * After restoring on a different device the prefix will be different, but the
+     * `tile_icons/foo.png` or `custom_icons/foo.png` suffix is the same.
+     *
+     * @param prefsName  the SharedPreferences file name (e.g. `"tile_icons_prefs"`)
+     * @param jsonKey    the key inside SharedPreferences that holds the JSON string
+     * @param dirName    the sub-directory inside filesDir used in the file paths
+     */
+    private fun fixIconPathsInPrefs(context: Context, prefsName: String, jsonKey: String, dirName: String) {
+        try {
+            val prefs = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
+            val raw = prefs.getString(jsonKey, null) ?: return
+            val json = JSONObject(raw)
+            val localFilesDir = context.filesDir.absolutePath
+            var changed = false
+
+            val keys = json.keys()
+            while (keys.hasNext()) {
+                val id = keys.next()
+                val value = json.get(id)
+                if (value is JSONObject) {
+                    val path = value.optString("path", null)
+                    if (!path.isNullOrEmpty()) {
+                        // Extract the relative suffix after the dir name
+                        // e.g. "/data/user/0/.../files/tile_icons/foo.png" → "tile_icons/foo.png"
+                        val marker = "/$dirName/"
+                        val idx = path.indexOf(marker)
+                        if (idx >= 0) {
+                            val filename = path.substring(idx + marker.length)
+                            val newPath = "$localFilesDir/$dirName/$filename"
+                            if (newPath != path) {
+                                value.put("path", newPath)
+                                changed = true
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (changed) {
+                prefs.edit().putString(jsonKey, json.toString()).commit()
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to fix icon paths in $prefsName", e)
         }
     }
 }

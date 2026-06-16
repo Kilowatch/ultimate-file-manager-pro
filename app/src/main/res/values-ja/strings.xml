@@ -4825,6 +4825,27 @@ APK抽出設定
     <string name="backup_pref_custom_tiles">
 カスタムタイルとグループ
 </string>
+    <string name="backup_pref_autoplay">
+次のビデオ自動再生
+</string>
+    <string name="backup_pref_breadcrumbs">
+ブレッドクラムナビゲーション
+</string>
+    <string name="backup_pref_grid_indicators">
+グリッドビューインジケーター
+</string>
+    <string name="backup_pref_scrolling_text">
+スクロールテキストアニメーション
+</string>
+    <string name="backup_pref_file_server">
+ファイルサーバーの構成
+</string>
+    <string name="backup_pref_tile_icons">
+カスタムアイコンを並べて表示
+</string>
+    <string name="backup_pref_icon_customization">
+ファイルタイプアイコンの上書き
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

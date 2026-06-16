@@ -4825,6 +4825,27 @@ XML/Разметка
     <string name="backup_pref_custom_tiles">
 Пользовательские плитки и усилители; Группы
 </string>
+    <string name="backup_pref_autoplay">
+Автовоспроизведение видео Далее
+</string>
+    <string name="backup_pref_breadcrumbs">
+Хлебная навигация
+</string>
+    <string name="backup_pref_grid_indicators">
+Индикаторы представления сетки
+</string>
+    <string name="backup_pref_scrolling_text">
+Анимация прокрутки текста
+</string>
+    <string name="backup_pref_file_server">
+Конфигурация файлового сервера
+</string>
+    <string name="backup_pref_tile_icons">
+Пользовательские значки плитки
+</string>
+    <string name="backup_pref_icon_customization">
+Переопределения значков типов файлов
+</string>
     <string name="backup_format_type_host">
 %1$s – %2$s
 </string>

@@ -4825,6 +4825,27 @@ Video-Thumbnail-Zeit
     <string name="backup_pref_custom_tiles">
 Benutzerdefinierte Kacheln &amp; Gruppen
 </string>
+    <string name="backup_pref_autoplay">
+Video als Nächstes automatisch abspielen
+</string>
+    <string name="backup_pref_breadcrumbs">
+Breadcrumb-Navigation
+</string>
+    <string name="backup_pref_grid_indicators">
+Indikatoren für die Rasteransicht
+</string>
+    <string name="backup_pref_scrolling_text">
+Lauftextanimation
+</string>
+    <string name="backup_pref_file_server">
+Dateiserverkonfiguration
+</string>
+    <string name="backup_pref_tile_icons">
+Benutzerdefinierte Kachelsymbole
+</string>
+    <string name="backup_pref_icon_customization">
+Dateityp-Symbolüberschreibungen
+</string>
     <string name="backup_format_type_host">
 %1$s – %2$s
 </string>

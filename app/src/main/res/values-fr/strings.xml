@@ -4825,6 +4825,27 @@ Durée de la vignette vidéo
     <string name="backup_pref_custom_tiles">
 Tuiles et amp; Groupes
 </string>
+    <string name="backup_pref_autoplay">
+Lecture automatique de la vidéo Suivant
+</string>
+    <string name="backup_pref_breadcrumbs">
+Navigation dans le fil d\'Ariane
+</string>
+    <string name="backup_pref_grid_indicators">
+Indicateurs de vue en grille
+</string>
+    <string name="backup_pref_scrolling_text">
+Animation de texte défilant
+</string>
+    <string name="backup_pref_file_server">
+Configuration du serveur de fichiers
+</string>
+    <string name="backup_pref_tile_icons">
+Icônes personnalisées en mosaïque
+</string>
+    <string name="backup_pref_icon_customization">
+Remplacements des icônes de type de fichier
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

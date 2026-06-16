@@ -72,7 +72,7 @@ object TileIconManager {
 
     // ── Private storage management ──────────────────────────────────────
 
-    private fun iconsDir(context: Context): File {
+    internal fun iconsDir(context: Context): File {
         return File(context.filesDir, ICON_DIR).also { it.mkdirs() }
     }
 

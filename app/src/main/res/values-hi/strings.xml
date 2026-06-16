@@ -4825,6 +4825,27 @@ AMOLED
     <string name="backup_pref_custom_tiles">
 कस्टम टाइलें एवं amp; समूह
 </string>
+    <string name="backup_pref_autoplay">
+वीडियो ऑटोप्ले अगला
+</string>
+    <string name="backup_pref_breadcrumbs">
+ब्रेडक्रंब नेविगेशन
+</string>
+    <string name="backup_pref_grid_indicators">
+ग्रिड व्यू संकेतक
+</string>
+    <string name="backup_pref_scrolling_text">
+स्क्रॉलिंग टेक्स्ट एनीमेशन
+</string>
+    <string name="backup_pref_file_server">
+फ़ाइल सर्वर कॉन्फ़िगरेशन
+</string>
+    <string name="backup_pref_tile_icons">
+टाइल कस्टम चिह्न
+</string>
+    <string name="backup_pref_icon_customization">
+फ़ाइल प्रकार चिह्न ओवरराइड करता है
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

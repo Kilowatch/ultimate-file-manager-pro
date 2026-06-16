@@ -201,7 +201,17 @@ object CustomTileManager {
                 val iconRes = iconResMap[childId]
                 if (iconPath != null || (iconRes != null && iconRes != 0)) {
                     val iconObj = JSONObject()
-                    if (iconPath != null) iconObj.put("customIconPath", iconPath)
+                    if (iconPath != null) {
+                        iconObj.put("customIconPath", iconPath)
+                        // Embed actual PNG data as base64 for cross-device portability
+                        val iconFile = java.io.File(iconPath)
+                        if (iconFile.exists() && iconFile.length() < 1_048_576) {
+                            try {
+                                val bytes = iconFile.readBytes()
+                                iconObj.put("customIconData", android.util.Base64.encodeToString(bytes, android.util.Base64.NO_WRAP))
+                            } catch (_: Exception) { /* skip embedding if read fails */ }
+                        }
+                    }
                     if (iconRes != null && iconRes != 0) iconObj.put("selectedIconRes", iconRes)
                     childObj.put("iconConfig", iconObj)
                 }
@@ -257,9 +267,25 @@ object CustomTileManager {
                     // Restore icon config
                     val iconObj = childObj.optJSONObject("iconConfig")
                     if (iconObj != null) {
+                        val iconData = iconObj.optString("customIconData", null)
                         val iconPath = iconObj.optString("customIconPath", null)
                         val iconResVal = iconObj.optInt("selectedIconRes", 0)
-                        if (iconPath != null) {
+
+                        if (!iconData.isNullOrEmpty()) {
+                            // Decode base64 and write to tile_icons directory
+                            try {
+                                val bytes = android.util.Base64.decode(iconData, android.util.Base64.NO_WRAP)
+                                val outFile = java.io.File(TileIconManager.iconsDir(context), "${childId}.png")
+                                outFile.writeBytes(bytes)
+                                TileIconManager.saveTileIcon(context, childId, outFile.absolutePath)
+                            } catch (_: Exception) {
+                                // Fallback to raw path if base64 decode fails
+                                if (!iconPath.isNullOrEmpty()) {
+                                    TileIconManager.saveTileIcon(context, childId, iconPath)
+                                }
+                            }
+                        } else if (!iconPath.isNullOrEmpty()) {
+                            // Legacy: raw path (won't work cross-device, but don't break old imports)
                             TileIconManager.saveTileIcon(context, childId, iconPath)
                         }
                         if (iconResVal != 0) {

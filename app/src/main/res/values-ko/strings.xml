@@ -4825,6 +4825,27 @@ APK 추출 설정
     <string name="backup_pref_custom_tiles">
 맞춤형 타일 &amp; 여러 떼
 </string>
+    <string name="backup_pref_autoplay">
+다음 비디오 자동 재생
+</string>
+    <string name="backup_pref_breadcrumbs">
+탐색경로 탐색
+</string>
+    <string name="backup_pref_grid_indicators">
+그리드 보기 표시기
+</string>
+    <string name="backup_pref_scrolling_text">
+스크롤링 텍스트 애니메이션
+</string>
+    <string name="backup_pref_file_server">
+파일 서버 구성
+</string>
+    <string name="backup_pref_tile_icons">
+타일 ​​사용자 정의 아이콘
+</string>
+    <string name="backup_pref_icon_customization">
+파일 유형 아이콘 재정의
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

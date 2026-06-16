@@ -2977,6 +2977,13 @@
     <string name="backup_pref_cache_copy">Secure Cache Copying Settings</string>
     <string name="backup_pref_video_thumb_time">Video Thumbnail Time</string>
     <string name="backup_pref_custom_tiles">Custom Tiles &amp; Groups</string>
+    <string name="backup_pref_autoplay">Video Autoplay Next</string>
+    <string name="backup_pref_breadcrumbs">Breadcrumb Navigation</string>
+    <string name="backup_pref_grid_indicators">Grid View Indicators</string>
+    <string name="backup_pref_scrolling_text">Scrolling Text Animation</string>
+    <string name="backup_pref_file_server">File Server Configuration</string>
+    <string name="backup_pref_tile_icons">Tile Custom Icons</string>
+    <string name="backup_pref_icon_customization">File Type Icon Overrides</string>
     <string name="backup_format_type_host">%1$s - %2$s</string>
     <string name="backup_format_location">Location: %1$s</string>
     <string name="backup_format_original">Original: %1$s</string>

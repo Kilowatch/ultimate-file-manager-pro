@@ -4825,6 +4825,27 @@ Waktu Gambar Kecil Video
     <string name="backup_pref_custom_tiles">
 Ubin Khusus &amp; amp; Grup
 </string>
+    <string name="backup_pref_autoplay">
+Putar Otomatis Video Berikutnya
+</string>
+    <string name="backup_pref_breadcrumbs">
+Navigasi remah roti
+</string>
+    <string name="backup_pref_grid_indicators">
+Indikator Tampilan Grid
+</string>
+    <string name="backup_pref_scrolling_text">
+Animasi Teks Bergulir
+</string>
+    <string name="backup_pref_file_server">
+Konfigurasi Server File
+</string>
+    <string name="backup_pref_tile_icons">
+Ikon Kustom Ubin
+</string>
+    <string name="backup_pref_icon_customization">
+Penggantian Ikon Jenis File
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

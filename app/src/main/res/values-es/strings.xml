@@ -4825,6 +4825,27 @@ Tiempo de miniatura del vídeo
     <string name="backup_pref_custom_tiles">
 Azulejos personalizados y Grupos
 </string>
+    <string name="backup_pref_autoplay">
+Reproducción automática de vídeo Siguiente
+</string>
+    <string name="backup_pref_breadcrumbs">
+Navegación de ruta de navegación
+</string>
+    <string name="backup_pref_grid_indicators">
+Indicadores de vista de cuadrícula
+</string>
+    <string name="backup_pref_scrolling_text">
+Animación de texto desplazable
+</string>
+    <string name="backup_pref_file_server">
+Configuración del servidor de archivos
+</string>
+    <string name="backup_pref_tile_icons">
+Iconos personalizados de mosaico
+</string>
+    <string name="backup_pref_icon_customization">
+Anulaciones de iconos de tipo de archivo
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

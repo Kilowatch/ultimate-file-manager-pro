@@ -4825,6 +4825,27 @@ Video Küçük Resim Süresi
     <string name="backup_pref_custom_tiles">
 Özel Fayanslar ve Gruplar
 </string>
+    <string name="backup_pref_autoplay">
+Otomatik Video Oynatma Sonraki
+</string>
+    <string name="backup_pref_breadcrumbs">
+İçerik Haritası Gezintisi
+</string>
+    <string name="backup_pref_grid_indicators">
+Izgara Görünümü Göstergeleri
+</string>
+    <string name="backup_pref_scrolling_text">
+Kayan Metin Animasyonu
+</string>
+    <string name="backup_pref_file_server">
+Dosya Sunucusu Yapılandırması
+</string>
+    <string name="backup_pref_tile_icons">
+Döşeme Özel Simgeler
+</string>
+    <string name="backup_pref_icon_customization">
+Dosya Türü Simgesini Geçersiz Kılmalar
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

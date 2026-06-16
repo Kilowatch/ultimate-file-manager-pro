@@ -4825,6 +4825,27 @@ Hora da miniatura do vídeo
     <string name="backup_pref_custom_tiles">
 Blocos e blocos personalizados Grupos
 </string>
+    <string name="backup_pref_autoplay">
+Próximo Reprodução automática de vídeo
+</string>
+    <string name="backup_pref_breadcrumbs">
+Navegação estrutural
+</string>
+    <string name="backup_pref_grid_indicators">
+Indicadores de visualização em grade
+</string>
+    <string name="backup_pref_scrolling_text">
+Animação de texto de rolagem
+</string>
+    <string name="backup_pref_file_server">
+Configuração do servidor de arquivos
+</string>
+    <string name="backup_pref_tile_icons">
+Ícones personalizados de bloco
+</string>
+    <string name="backup_pref_icon_customization">
+Substituições de ícone de tipo de arquivo
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>

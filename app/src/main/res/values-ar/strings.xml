@@ -4823,6 +4823,27 @@ XML / العلامات
     <string name="backup_pref_custom_tiles">
 بلاط مخصص &amp; المجموعات
 </string>
+    <string name="backup_pref_autoplay">
+التشغيل التلقائي للفيديو التالي
+</string>
+    <string name="backup_pref_breadcrumbs">
+التنقل التفصيلي
+</string>
+    <string name="backup_pref_grid_indicators">
+مؤشرات عرض الشبكة
+</string>
+    <string name="backup_pref_scrolling_text">
+التمرير الرسوم المتحركة النص
+</string>
+    <string name="backup_pref_file_server">
+تكوين خادم الملفات
+</string>
+    <string name="backup_pref_tile_icons">
+أيقونات البلاط المخصصة
+</string>
+    <string name="backup_pref_icon_customization">
+تجاوزات رمز نوع الملف
+</string>
     <string name="backup_format_type_host">
 %1$s - %2$s
 </string>
