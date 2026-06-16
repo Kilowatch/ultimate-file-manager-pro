@@ -728,8 +728,8 @@ class VaultActivity : AppCompatActivity() {
                 if (BuildConfig.DEBUG) Log.i(TAG, "MED-4: Backup verified — deleted metadata.json.bak")
                 migratedCount++
 
-                // Re-load vault adapter to show decrypted names
-                loadVault()
+                // Re-load vault adapter to show decrypted names on main thread
+                runOnUiThread { loadVault() }
             } catch (_: Exception) {
                 // Failed to process this entry — skip it
             }
