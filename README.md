@@ -1,12 +1,19 @@
 # Ultimate File Manager Pro (FOSS Edition)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![F-Droid](https://img.shields.io/f-droid/v/za.kilowatch.ultimatefilemanager.foss)](https://f-droid.org/packages/za.kilowatch.ultimatefilemanager.foss)
 [![Get it on Google Play](https://img.shields.io/badge/Google%20Play-Ultimate%20File%20Manager%20Pro-green.svg?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager)
+[![XDA Forum](https://img.shields.io/badge/XDA-Forum-orange.svg)](https://xdaforums.com/t/app-free-ultimate-file-manager-pro-dual-pane-android-mobile-android-tv-foss-edition-available.4791958/)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500.svg?logo=reddit&logoColor=white)](https://www.reddit.com/r/UFManagerPro/)
 
 Ultimate File Manager Pro (UFM) is a powerful, dual-pane file manager for Android and Android TV, built for power users.
 
-This repository contains the **Free and Open Source Software (FOSS) edition** of UFM. 
+This repository contains the **Free and Open Source Software (FOSS) edition** of UFM.
+
+---
+
+## 💬 Community & Discussion
+
+Join the discussion on the [XDA Developers Forum](https://xdaforums.com/t/app-free-ultimate-file-manager-pro-dual-pane-android-mobile-android-tv-foss-edition-available.4791958/) or the [r/UFManagerPro subreddit](https://www.reddit.com/r/UFManagerPro/) — share feedback, report issues, and connect with other users.
 
 ---
 
