@@ -599,6 +599,12 @@ Kode pemulihan disalin — papan klip akan dihapus secara otomatis dalam 60 deti
     <!-- Settings Hub -->
     <string name="settings_title">Pengaturan</string>
     <string name="settings_subtitle">Preferensi aplikasi</string>
+    <string name="settings_auto_backup_title">
+Pencadangan Otomatis
+</string>
+    <string name="settings_auto_backup_subtitle">
+Secara otomatis mencadangkan pengaturan dan tema
+</string>
     <string name="font_size_title_row">Ukuran Huruf</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Ubin Khusus &amp; amp; Grup
 Pratinjau Impor
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Pencadangan Otomatis
+</string>
+    <string name="auto_backup_subtitle">
+Pengaturan pencadangan otomatis
+</string>
+    <string name="auto_backup_enable">
+Aktifkan Pencadangan Otomatis
+</string>
+    <string name="auto_backup_enable_desc">
+Secara otomatis menyimpan cadangan ketika ada perubahan
+</string>
+    <string name="auto_backup_settings_label">
+Pengaturan Cadangan
+</string>
+    <string name="auto_backup_settings_desc">
+Preferensi aplikasi, tata letak ubin, data tip jar
+</string>
+    <string name="auto_backup_theme_label">
+Tema Cadangan
+</string>
+    <string name="auto_backup_theme_desc">
+Tema ikon khusus dan ikon ubin
+</string>
+    <string name="auto_backup_schedule_label">
+Jadwal
+</string>
+    <string name="auto_backup_schedule_daily">
+Sehari-hari
+</string>
+    <string name="auto_backup_schedule_weekly">
+Mingguan
+</string>
+    <string name="auto_backup_schedule_monthly">
+Bulanan
+</string>
+    <string name="auto_backup_password_set">
+Tetapkan Kata Sandi Cadangan
+</string>
+    <string name="auto_backup_password_change">
+Ubah Kata Sandi Cadangan
+</string>
+    <string name="auto_backup_password_status_set">
+Dilindungi kata sandi
+</string>
+    <string name="auto_backup_password_status_none">
+Tanpa kata sandi (teks biasa)
+</string>
+    <string name="auto_backup_now">
+Cadangkan Sekarang
+</string>
+    <string name="auto_backup_now_progress">
+Mencadangkan…
+</string>
+    <string name="auto_backup_success">
+Pencadangan berhasil diselesaikan
+</string>
+    <string name="auto_backup_error">
+Pencadangan gagal
+</string>
+    <string name="auto_backup_summary_on">
+Pencadangan otomatis AKTIF — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Pengaturan
+</string>
+    <string name="auto_backup_summary_items_theme">
+Tema
+</string>
+    <string name="auto_backup_summary_items_both">
+Pengaturan dan Tema
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Cadangan Ditemukan
+</string>
+    <string name="auto_restore_message">
+Cadangan sebelumnya ditemukan. Apakah Anda ingin memulihkannya?
+</string>
+    <string name="auto_restore_detected_config">
+Konfigurasi pengaturan terdeteksi
+</string>
+    <string name="auto_restore_detected_theme">
+Tema ikon terdeteksi
+</string>
+    <string name="auto_restore_btn_restore">
+Pulihkan Sekarang
+</string>
+    <string name="auto_restore_btn_skip">
+Melewati
+</string>
+    <string name="auto_restore_success_config">
+Pengaturan berhasil dipulihkan. Aplikasi sekarang akan dimulai ulang.
+</string>
+    <string name="auto_restore_success_theme">
+Tema ikon berhasil dipulihkan.
+</string>
+    <string name="auto_restore_error_config">
+Gagal memulihkan pengaturan.
+</string>
+    <string name="auto_restore_error_theme">
+Gagal memulihkan tema ikon.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Ikon
@@ -4641,6 +4753,9 @@ Ikon
     <string name="icon_settings_backup_restore">
 Cadangan &amp; Memulihkan
 </string>
+    <string name="icon_settings_auto_backup">
+Pencadangan Otomatis
+</string>
     <string name="icon_settings_main_menu_layout">
 Tata Letak Menu Utama
 </string>
@@ -4868,6 +4983,9 @@ Ikon Kustom Ubin
 </string>
     <string name="backup_pref_icon_customization">
 Penggantian Ikon Jenis File
+</string>
+    <string name="backup_pref_loyalty">
+Data Loyalitas Tip Jar
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

@@ -599,6 +599,12 @@ PKCS12 パスワード
     <!-- Settings Hub -->
     <string name="settings_title">設定</string>
     <string name="settings_subtitle">アプリの設定</string>
+    <string name="settings_auto_backup_title">
+自動バックアップ
+</string>
+    <string name="settings_auto_backup_subtitle">
+設定とテーマを自動的にバックアップする
+</string>
     <string name="font_size_title_row">フォントサイズ</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ FTPサーバープロファイル
 インポートプレビュー
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+自動バックアップ
+</string>
+    <string name="auto_backup_subtitle">
+自動バックアップ設定
+</string>
+    <string name="auto_backup_enable">
+自動バックアップを有効にする
+</string>
+    <string name="auto_backup_enable_desc">
+変更が加えられたときに自動的にバックアップを保存する
+</string>
+    <string name="auto_backup_settings_label">
+バックアップ設定
+</string>
+    <string name="auto_backup_settings_desc">
+アプリの設定、タイルのレイアウト、チップジャーのデータ
+</string>
+    <string name="auto_backup_theme_label">
+バックアップテーマ
+</string>
+    <string name="auto_backup_theme_desc">
+カスタムアイコンテーマとタイルアイコン
+</string>
+    <string name="auto_backup_schedule_label">
+スケジュール
+</string>
+    <string name="auto_backup_schedule_daily">
+毎日
+</string>
+    <string name="auto_backup_schedule_weekly">
+毎週
+</string>
+    <string name="auto_backup_schedule_monthly">
+毎月
+</string>
+    <string name="auto_backup_password_set">
+バックアップパスワードの設定
+</string>
+    <string name="auto_backup_password_change">
+バックアップパスワードの変更
+</string>
+    <string name="auto_backup_password_status_set">
+パスワードで保護されています
+</string>
+    <string name="auto_backup_password_status_none">
+パスワードなし (プレーンテキスト)
+</string>
+    <string name="auto_backup_now">
+今すぐバックアップ
+</string>
+    <string name="auto_backup_now_progress">
+バックアップ中…
+</string>
+    <string name="auto_backup_success">
+バックアップが正常に完了しました
+</string>
+    <string name="auto_backup_error">
+バックアップに失敗しました
+</string>
+    <string name="auto_backup_summary_on">
+自動バックアップがオンになっています — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+設定
+</string>
+    <string name="auto_backup_summary_items_theme">
+テーマ
+</string>
+    <string name="auto_backup_summary_items_both">
+設定とテーマ
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+バックアップが見つかりました
+</string>
+    <string name="auto_restore_message">
+以前のバックアップが見つかりました。復元しますか?
+</string>
+    <string name="auto_restore_detected_config">
+設定構成が検出されました
+</string>
+    <string name="auto_restore_detected_theme">
+アイコンのテーマが検出されました
+</string>
+    <string name="auto_restore_btn_restore">
+今すぐ復元
+</string>
+    <string name="auto_restore_btn_skip">
+スキップ
+</string>
+    <string name="auto_restore_success_config">
+設定が正常に復元されました。アプリが再起動されます。
+</string>
+    <string name="auto_restore_success_theme">
+アイコンテーマが正常に復元されました。
+</string>
+    <string name="auto_restore_error_config">
+設定の復元に失敗しました。
+</string>
+    <string name="auto_restore_error_theme">
+アイコンテーマの復元に失敗しました。
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 アイコン
@@ -4641,6 +4753,9 @@ XML / マークアップ
     <string name="icon_settings_backup_restore">
 バックアップとバックアップ復元する
 </string>
+    <string name="icon_settings_auto_backup">
+自動バックアップ
+</string>
     <string name="icon_settings_main_menu_layout">
 メインメニューのレイアウト
 </string>
@@ -4868,6 +4983,9 @@ APK抽出設定
 </string>
     <string name="backup_pref_icon_customization">
 ファイルタイプアイコンの上書き
+</string>
+    <string name="backup_pref_loyalty">
+チップジャーのロイヤルティデータ
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

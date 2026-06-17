@@ -599,6 +599,12 @@ Kurtarma kodu kopyalandı — pano 60\'lı yıllarda otomatik olarak temizlenece
     <!-- Settings Hub -->
     <string name="settings_title">Ayarlar</string>
     <string name="settings_subtitle">Uygulama tercihleri</string>
+    <string name="settings_auto_backup_title">
+Otomatik Yedekleme
+</string>
+    <string name="settings_auto_backup_subtitle">
+Ayarları ve temayı otomatik olarak yedekle
+</string>
     <string name="font_size_title_row">Yazı Tipi Boyutu</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Akıllı Sıralama Klasörü Yapılandırmaları
 İçe Aktarma Önizlemesi
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Otomatik Yedekleme
+</string>
+    <string name="auto_backup_subtitle">
+Otomatik yedekleme ayarları
+</string>
+    <string name="auto_backup_enable">
+Otomatik Yedeklemeyi Etkinleştir
+</string>
+    <string name="auto_backup_enable_desc">
+Değişiklikler yapıldığında yedekleri otomatik olarak kaydet
+</string>
+    <string name="auto_backup_settings_label">
+Yedekleme Ayarları
+</string>
+    <string name="auto_backup_settings_desc">
+Uygulama tercihleri, kutucuk düzeni, uç kavanozu verileri
+</string>
+    <string name="auto_backup_theme_label">
+Yedekleme Teması
+</string>
+    <string name="auto_backup_theme_desc">
+Özel simge teması ve döşeme simgeleri
+</string>
+    <string name="auto_backup_schedule_label">
+Takvim
+</string>
+    <string name="auto_backup_schedule_daily">
+Günlük
+</string>
+    <string name="auto_backup_schedule_weekly">
+Haftalık
+</string>
+    <string name="auto_backup_schedule_monthly">
+Aylık
+</string>
+    <string name="auto_backup_password_set">
+Yedekleme Parolasını Ayarla
+</string>
+    <string name="auto_backup_password_change">
+Yedekleme Şifresini Değiştir
+</string>
+    <string name="auto_backup_password_status_set">
+Şifre korumalı
+</string>
+    <string name="auto_backup_password_status_none">
+Şifre yok (düz metin)
+</string>
+    <string name="auto_backup_now">
+Şimdi Yedekle
+</string>
+    <string name="auto_backup_now_progress">
+Yedekleniyor…
+</string>
+    <string name="auto_backup_success">
+Yedekleme başarıyla tamamlandı
+</string>
+    <string name="auto_backup_error">
+Yedekleme başarısız oldu
+</string>
+    <string name="auto_backup_summary_on">
+Otomatik yedekleme AÇIK — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Ayarlar
+</string>
+    <string name="auto_backup_summary_items_theme">
+Tema
+</string>
+    <string name="auto_backup_summary_items_both">
+Ayarlar ve Tema
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Yedekleme Bulundu
+</string>
+    <string name="auto_restore_message">
+Önceki bir yedekleme bulundu. Onu geri yüklemek ister misiniz?
+</string>
+    <string name="auto_restore_detected_config">
+Ayarlar yapılandırması algılandı
+</string>
+    <string name="auto_restore_detected_theme">
+Simge teması algılandı
+</string>
+    <string name="auto_restore_btn_restore">
+Şimdi Geri Yükle
+</string>
+    <string name="auto_restore_btn_skip">
+Atlamak
+</string>
+    <string name="auto_restore_success_config">
+Ayarlar başarıyla geri yüklendi. Uygulama şimdi yeniden başlatılacak.
+</string>
+    <string name="auto_restore_success_theme">
+Simge teması başarıyla geri yüklendi.
+</string>
+    <string name="auto_restore_error_config">
+Ayarlar geri yüklenemedi.
+</string>
+    <string name="auto_restore_error_theme">
+Simge teması geri yüklenemedi.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Simgeler
@@ -4641,6 +4753,9 @@ Simgeler
     <string name="icon_settings_backup_restore">
 Yedekleme ve yedekleme Eski haline getirmek
 </string>
+    <string name="icon_settings_auto_backup">
+Otomatik Yedekleme
+</string>
     <string name="icon_settings_main_menu_layout">
 Ana Menü Düzeni
 </string>
@@ -4868,6 +4983,9 @@ Döşeme Özel Simgeler
 </string>
     <string name="backup_pref_icon_customization">
 Dosya Türü Simgesini Geçersiz Kılmalar
+</string>
+    <string name="backup_pref_loyalty">
+Tip Kavanozu Sadakat Verileri
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

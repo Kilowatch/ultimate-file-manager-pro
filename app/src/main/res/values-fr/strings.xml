@@ -599,6 +599,12 @@ Code de récupération copié – le presse-papiers s\'effacera automatiquemen
     <!-- Settings Hub -->
     <string name="settings_title">Paramètres</string>
     <string name="settings_subtitle">Préférences de l\'application</string>
+    <string name="settings_auto_backup_title">
+Sauvegarde automatique
+</string>
+    <string name="settings_auto_backup_subtitle">
+Sauvegarder automatiquement les paramètres et le thème
+</string>
     <string name="font_size_title_row">Taille de la police</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Tuiles et amp; Groupes
 Aperçu de l\'importation
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Sauvegarde automatique
+</string>
+    <string name="auto_backup_subtitle">
+Paramètres de sauvegarde automatique
+</string>
+    <string name="auto_backup_enable">
+Activer la sauvegarde automatique
+</string>
+    <string name="auto_backup_enable_desc">
+Enregistrez automatiquement les sauvegardes lorsque des modifications sont apportées
+</string>
+    <string name="auto_backup_settings_label">
+Paramètres de sauvegarde
+</string>
+    <string name="auto_backup_settings_desc">
+Préférences de l\'application, disposition des vignettes, données du pot de pourboires
+</string>
+    <string name="auto_backup_theme_label">
+Thème de sauvegarde
+</string>
+    <string name="auto_backup_theme_desc">
+Thème d\'icônes personnalisé et icônes de tuiles
+</string>
+    <string name="auto_backup_schedule_label">
+Calendrier
+</string>
+    <string name="auto_backup_schedule_daily">
+Tous les jours
+</string>
+    <string name="auto_backup_schedule_weekly">
+Hebdomadaire
+</string>
+    <string name="auto_backup_schedule_monthly">
+Mensuel
+</string>
+    <string name="auto_backup_password_set">
+Définir le mot de passe de sauvegarde
+</string>
+    <string name="auto_backup_password_change">
+Changer le mot de passe de sauvegarde
+</string>
+    <string name="auto_backup_password_status_set">
+Protégé par mot de passe
+</string>
+    <string name="auto_backup_password_status_none">
+Pas de mot de passe (texte brut)
+</string>
+    <string name="auto_backup_now">
+Sauvegarder maintenant
+</string>
+    <string name="auto_backup_now_progress">
+Sauvegarde…
+</string>
+    <string name="auto_backup_success">
+Sauvegarde terminée avec succès
+</string>
+    <string name="auto_backup_error">
+La sauvegarde a échoué
+</string>
+    <string name="auto_backup_summary_on">
+La sauvegarde automatique est activée — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Paramètres
+</string>
+    <string name="auto_backup_summary_items_theme">
+Thème
+</string>
+    <string name="auto_backup_summary_items_both">
+Paramètres et thème
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Sauvegarde trouvée
+</string>
+    <string name="auto_restore_message">
+Une sauvegarde précédente a été trouvée. Souhaitez-vous le restaurer ?
+</string>
+    <string name="auto_restore_detected_config">
+Configuration des paramètres détectée
+</string>
+    <string name="auto_restore_detected_theme">
+Thème d\'icône détecté
+</string>
+    <string name="auto_restore_btn_restore">
+Restaurer maintenant
+</string>
+    <string name="auto_restore_btn_skip">
+Sauter
+</string>
+    <string name="auto_restore_success_config">
+Paramètres restaurés avec succès. L\'application va maintenant redémarrer.
+</string>
+    <string name="auto_restore_success_theme">
+Thème d\'icônes restauré avec succès.
+</string>
+    <string name="auto_restore_error_config">
+Échec de la restauration des paramètres.
+</string>
+    <string name="auto_restore_error_theme">
+Échec de la restauration du thème d\'icônes.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Icônes
@@ -4641,6 +4753,9 @@ Icônes
     <string name="icon_settings_backup_restore">
 Sauvegarde et amp; Restaurer
 </string>
+    <string name="icon_settings_auto_backup">
+Sauvegarde automatique
+</string>
     <string name="icon_settings_main_menu_layout">
 Disposition du menu principal
 </string>
@@ -4868,6 +4983,9 @@ Icônes personnalisées en mosaïque
 </string>
     <string name="backup_pref_icon_customization">
 Remplacements des icônes de type de fichier
+</string>
+    <string name="backup_pref_loyalty">
+Données de fidélité Tip Jar
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

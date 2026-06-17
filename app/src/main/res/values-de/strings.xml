@@ -599,6 +599,12 @@ Wiederherstellungscode kopiert – Zwischenablage wird in 60 Sekunden automatisc
     <!-- Settings Hub -->
     <string name="settings_title">Einstellungen</string>
     <string name="settings_subtitle">App-Einstellungen</string>
+    <string name="settings_auto_backup_title">
+Automatische Sicherung
+</string>
+    <string name="settings_auto_backup_subtitle">
+Einstellungen und Theme automatisch sichern
+</string>
     <string name="font_size_title_row">Schriftgröße</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Benutzerdefinierte Kacheln &amp; Gruppen
 Vorschau importieren
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Automatische Sicherung
+</string>
+    <string name="auto_backup_subtitle">
+Automatische Backup-Einstellungen
+</string>
+    <string name="auto_backup_enable">
+Aktivieren Sie die automatische Sicherung
+</string>
+    <string name="auto_backup_enable_desc">
+Speichern Sie automatisch Backups, wenn Änderungen vorgenommen werden
+</string>
+    <string name="auto_backup_settings_label">
+Sicherungseinstellungen
+</string>
+    <string name="auto_backup_settings_desc">
+App-Einstellungen, Kachellayout, Trinkgeldglas-Daten
+</string>
+    <string name="auto_backup_theme_label">
+Backup-Thema
+</string>
+    <string name="auto_backup_theme_desc">
+Benutzerdefiniertes Symboldesign und Kachelsymbole
+</string>
+    <string name="auto_backup_schedule_label">
+Zeitplan
+</string>
+    <string name="auto_backup_schedule_daily">
+Täglich
+</string>
+    <string name="auto_backup_schedule_weekly">
+Wöchentlich
+</string>
+    <string name="auto_backup_schedule_monthly">
+Monatlich
+</string>
+    <string name="auto_backup_password_set">
+Legen Sie das Backup-Passwort fest
+</string>
+    <string name="auto_backup_password_change">
+Backup-Passwort ändern
+</string>
+    <string name="auto_backup_password_status_set">
+Passwortgeschützt
+</string>
+    <string name="auto_backup_password_status_none">
+Kein Passwort (Klartext)
+</string>
+    <string name="auto_backup_now">
+Jetzt sichern
+</string>
+    <string name="auto_backup_now_progress">
+Sichern…
+</string>
+    <string name="auto_backup_success">
+Sicherung erfolgreich abgeschlossen
+</string>
+    <string name="auto_backup_error">
+Die Sicherung ist fehlgeschlagen
+</string>
+    <string name="auto_backup_summary_on">
+Automatische Sicherung ist EIN – %1$s – %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Einstellungen
+</string>
+    <string name="auto_backup_summary_items_theme">
+Thema
+</string>
+    <string name="auto_backup_summary_items_both">
+Einstellungen und Thema
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Backup gefunden
+</string>
+    <string name="auto_restore_message">
+Es wurde ein vorheriges Backup gefunden. Möchten Sie es wiederherstellen?
+</string>
+    <string name="auto_restore_detected_config">
+Einstellungskonfiguration erkannt
+</string>
+    <string name="auto_restore_detected_theme">
+Symbolthema erkannt
+</string>
+    <string name="auto_restore_btn_restore">
+Jetzt wiederherstellen
+</string>
+    <string name="auto_restore_btn_skip">
+Überspringen
+</string>
+    <string name="auto_restore_success_config">
+Einstellungen erfolgreich wiederhergestellt. Die App wird nun neu gestartet.
+</string>
+    <string name="auto_restore_success_theme">
+Symboldesign erfolgreich wiederhergestellt.
+</string>
+    <string name="auto_restore_error_config">
+Die Einstellungen konnten nicht wiederhergestellt werden.
+</string>
+    <string name="auto_restore_error_theme">
+Symboldesign konnte nicht wiederhergestellt werden.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Symbole
@@ -4641,6 +4753,9 @@ Symbole
     <string name="icon_settings_backup_restore">
 Backup &amp; Wiederherstellen
 </string>
+    <string name="icon_settings_auto_backup">
+Automatische Sicherung
+</string>
     <string name="icon_settings_main_menu_layout">
 Hauptmenü-Layout
 </string>
@@ -4868,6 +4983,9 @@ Benutzerdefinierte Kachelsymbole
 </string>
     <string name="backup_pref_icon_customization">
 Dateityp-Symbolüberschreibungen
+</string>
+    <string name="backup_pref_loyalty">
+Treuedaten für Trinkgeldgläser
 </string>
     <string name="backup_format_type_host">
 %1$s – %2$s

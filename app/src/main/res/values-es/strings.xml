@@ -599,6 +599,12 @@ Código de recuperación copiado: el portapapeles se borrará automáticamente e
     <!-- Settings Hub -->
     <string name="settings_title">Ajustes</string>
     <string name="settings_subtitle">Preferencias de la aplicación</string>
+    <string name="settings_auto_backup_title">
+Copia de seguridad automática
+</string>
+    <string name="settings_auto_backup_subtitle">
+Copia de seguridad automática de la configuración y el tema
+</string>
     <string name="font_size_title_row">Tamaño de fuente</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Azulejos personalizados y Grupos
 Vista previa de importación
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Copia de seguridad automática
+</string>
+    <string name="auto_backup_subtitle">
+Configuración de copia de seguridad automática
+</string>
+    <string name="auto_backup_enable">
+Habilitar copia de seguridad automática
+</string>
+    <string name="auto_backup_enable_desc">
+Guarde copias de seguridad automáticamente cuando se realicen cambios
+</string>
+    <string name="auto_backup_settings_label">
+Configuración de copia de seguridad
+</string>
+    <string name="auto_backup_settings_desc">
+Preferencias de aplicaciones, diseño de mosaicos, datos del tarro de propinas
+</string>
+    <string name="auto_backup_theme_label">
+Tema de copia de seguridad
+</string>
+    <string name="auto_backup_theme_desc">
+Tema de íconos personalizados e íconos de mosaicos
+</string>
+    <string name="auto_backup_schedule_label">
+Cronograma
+</string>
+    <string name="auto_backup_schedule_daily">
+A diario
+</string>
+    <string name="auto_backup_schedule_weekly">
+Semanalmente
+</string>
+    <string name="auto_backup_schedule_monthly">
+Mensual
+</string>
+    <string name="auto_backup_password_set">
+Establecer contraseña de respaldo
+</string>
+    <string name="auto_backup_password_change">
+Cambiar contraseña de respaldo
+</string>
+    <string name="auto_backup_password_status_set">
+Protegido con contraseña
+</string>
+    <string name="auto_backup_password_status_none">
+Sin contraseña (texto sin formato)
+</string>
+    <string name="auto_backup_now">
+Hacer copia de seguridad ahora
+</string>
+    <string name="auto_backup_now_progress">
+Copia de seguridad…
+</string>
+    <string name="auto_backup_success">
+Copia de seguridad completada exitosamente
+</string>
+    <string name="auto_backup_error">
+Error en la copia de seguridad
+</string>
+    <string name="auto_backup_summary_on">
+La copia de seguridad automática está activada — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Ajustes
+</string>
+    <string name="auto_backup_summary_items_theme">
+Tema
+</string>
+    <string name="auto_backup_summary_items_both">
+Configuración y tema
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Copia de seguridad encontrada
+</string>
+    <string name="auto_restore_message">
+Se encontró una copia de seguridad anterior. ¿Quieres restaurarlo?
+</string>
+    <string name="auto_restore_detected_config">
+Configuración de ajustes detectada
+</string>
+    <string name="auto_restore_detected_theme">
+Tema de icono detectado
+</string>
+    <string name="auto_restore_btn_restore">
+Restaurar ahora
+</string>
+    <string name="auto_restore_btn_skip">
+Saltar
+</string>
+    <string name="auto_restore_success_config">
+La configuración se restauró correctamente. La aplicación ahora se reiniciará.
+</string>
+    <string name="auto_restore_success_theme">
+El tema del icono se restauró correctamente.
+</string>
+    <string name="auto_restore_error_config">
+No se pudo restaurar la configuración.
+</string>
+    <string name="auto_restore_error_theme">
+No se pudo restaurar el tema del icono.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Iconos
@@ -4641,6 +4753,9 @@ Iconos
     <string name="icon_settings_backup_restore">
 Copia de seguridad y Restaurar
 </string>
+    <string name="icon_settings_auto_backup">
+Copia de seguridad automática
+</string>
     <string name="icon_settings_main_menu_layout">
 Diseño del menú principal
 </string>
@@ -4868,6 +4983,9 @@ Iconos personalizados de mosaico
 </string>
     <string name="backup_pref_icon_customization">
 Anulaciones de iconos de tipo de archivo
+</string>
+    <string name="backup_pref_loyalty">
+Datos de fidelización del tarro de propinas
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

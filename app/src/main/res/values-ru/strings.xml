@@ -599,6 +599,12 @@ sFTP-плитка
     <!-- Settings Hub -->
     <string name="settings_title">Настройки</string>
     <string name="settings_subtitle">Настройки приложения</string>
+    <string name="settings_auto_backup_title">
+Автоматическое резервное копирование
+</string>
+    <string name="settings_auto_backup_subtitle">
+Автоматическое резервное копирование настроек и темы
+</string>
     <string name="font_size_title_row">Размер шрифта</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ PDF (только многостраничный)
 Импортировать предварительный просмотр
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Автоматическое резервное копирование
+</string>
+    <string name="auto_backup_subtitle">
+Настройки автоматического резервного копирования
+</string>
+    <string name="auto_backup_enable">
+Включить автоматическое резервное копирование
+</string>
+    <string name="auto_backup_enable_desc">
+Автоматически сохранять резервные копии при внесении изменений
+</string>
+    <string name="auto_backup_settings_label">
+Настройки резервного копирования
+</string>
+    <string name="auto_backup_settings_desc">
+Настройки приложения, макет плитки, данные банки подсказок
+</string>
+    <string name="auto_backup_theme_label">
+Резервная тема
+</string>
+    <string name="auto_backup_theme_desc">
+Пользовательская тема значков и значки плиток
+</string>
+    <string name="auto_backup_schedule_label">
+Расписание
+</string>
+    <string name="auto_backup_schedule_daily">
+Ежедневно
+</string>
+    <string name="auto_backup_schedule_weekly">
+Еженедельно
+</string>
+    <string name="auto_backup_schedule_monthly">
+Ежемесячно
+</string>
+    <string name="auto_backup_password_set">
+Установить резервный пароль
+</string>
+    <string name="auto_backup_password_change">
+Изменить пароль резервной копии
+</string>
+    <string name="auto_backup_password_status_set">
+Защищено паролем
+</string>
+    <string name="auto_backup_password_status_none">
+Без пароля (обычный текст)
+</string>
+    <string name="auto_backup_now">
+Резервное копирование сейчас
+</string>
+    <string name="auto_backup_now_progress">
+Резервное копирование…
+</string>
+    <string name="auto_backup_success">
+Резервное копирование успешно завершено
+</string>
+    <string name="auto_backup_error">
+Резервное копирование не выполнено
+</string>
+    <string name="auto_backup_summary_on">
+Автоматическое резервное копирование включено — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Настройки
+</string>
+    <string name="auto_backup_summary_items_theme">
+Тема
+</string>
+    <string name="auto_backup_summary_items_both">
+Настройки и тема
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Резервная копия найдена
+</string>
+    <string name="auto_restore_message">
+Предыдущая резервная копия была найдена. Хотели бы вы восстановить его?
+</string>
+    <string name="auto_restore_detected_config">
+Обнаружена конфигурация настроек
+</string>
+    <string name="auto_restore_detected_theme">
+Обнаружена тема значка
+</string>
+    <string name="auto_restore_btn_restore">
+Восстановить сейчас
+</string>
+    <string name="auto_restore_btn_skip">
+Пропускать
+</string>
+    <string name="auto_restore_success_config">
+Настройки успешно восстановлены. Приложение будет перезапущено.
+</string>
+    <string name="auto_restore_success_theme">
+Тема значков успешно восстановлена.
+</string>
+    <string name="auto_restore_error_config">
+Не удалось восстановить настройки.
+</string>
+    <string name="auto_restore_error_theme">
+Не удалось восстановить тему значков.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Иконки
@@ -4641,6 +4753,9 @@ XML/Разметка
     <string name="icon_settings_backup_restore">
 Резервное копирование и усиление; Восстановить
 </string>
+    <string name="icon_settings_auto_backup">
+Автоматическое резервное копирование
+</string>
     <string name="icon_settings_main_menu_layout">
 Макет главного меню
 </string>
@@ -4868,6 +4983,9 @@ XML/Разметка
 </string>
     <string name="backup_pref_icon_customization">
 Переопределения значков типов файлов
+</string>
+    <string name="backup_pref_loyalty">
+Данные о лояльности в банке чаевых
 </string>
     <string name="backup_format_type_host">
 %1$s – %2$s

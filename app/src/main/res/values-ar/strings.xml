@@ -599,6 +599,12 @@
     <!-- Settings Hub -->
     <string name="settings_title">إعدادات</string>
     <string name="settings_subtitle">تفضيلات التطبيق</string>
+    <string name="settings_auto_backup_title">
+النسخ الاحتياطي التلقائي
+</string>
+    <string name="settings_auto_backup_subtitle">
+النسخ الاحتياطي للإعدادات والموضوع تلقائيًا
+</string>
     <string name="font_size_title_row">حجم الخط</string>
 
     <!-- Default Start Screen -->
@@ -4266,6 +4272,112 @@ PDF (متعدد الصفحات فقط)
 معاينة الاستيراد
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+النسخ الاحتياطي التلقائي
+</string>
+    <string name="auto_backup_subtitle">
+إعدادات النسخ الاحتياطي التلقائي
+</string>
+    <string name="auto_backup_enable">
+تمكين النسخ الاحتياطي التلقائي
+</string>
+    <string name="auto_backup_enable_desc">
+حفظ النسخ الاحتياطية تلقائيًا عند إجراء التغييرات
+</string>
+    <string name="auto_backup_settings_label">
+إعدادات النسخ الاحتياطي
+</string>
+    <string name="auto_backup_settings_desc">
+تفضيلات التطبيق، وتخطيط البلاط، وبيانات جرة الطرف
+</string>
+    <string name="auto_backup_theme_label">
+موضوع النسخ الاحتياطي
+</string>
+    <string name="auto_backup_theme_desc">
+موضوع رمز مخصص وأيقونات البلاط
+</string>
+    <string name="auto_backup_schedule_label">
+جدول
+</string>
+    <string name="auto_backup_schedule_daily">
+يوميًا
+</string>
+    <string name="auto_backup_schedule_weekly">
+أسبوعي
+</string>
+    <string name="auto_backup_schedule_monthly">
+شهريا
+</string>
+    <string name="auto_backup_password_set">
+تعيين كلمة المرور الاحتياطية
+</string>
+    <string name="auto_backup_password_change">
+تغيير كلمة المرور الاحتياطية
+</string>
+    <string name="auto_backup_password_status_set">
+محمية بكلمة مرور
+</string>
+    <string name="auto_backup_password_status_none">
+لا توجد كلمة مرور (نص عادي)
+</string>
+    <string name="auto_backup_now">
+النسخ الاحتياطي الآن
+</string>
+    <string name="auto_backup_now_progress">
+جارٍ الاحتفاظ بنسخة احتياطية…
+</string>
+    <string name="auto_backup_success">
+اكتمل النسخ الاحتياطي بنجاح
+</string>
+    <string name="auto_backup_error">
+فشل النسخ الاحتياطي
+</string>
+    <string name="auto_backup_summary_on">
+النسخ الاحتياطي التلقائي قيد التشغيل — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+إعدادات
+</string>
+    <string name="auto_backup_summary_items_theme">
+سمة
+</string>
+    <string name="auto_backup_summary_items_both">
+الإعدادات والموضوع
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+تم العثور على نسخة احتياطية
+</string>
+    <string name="auto_restore_message">
+تم العثور على نسخة احتياطية سابقة. هل ترغب في استعادته؟
+</string>
+    <string name="auto_restore_detected_config">
+تم اكتشاف تكوين الإعدادات
+</string>
+    <string name="auto_restore_detected_theme">
+تم اكتشاف سمة الرمز
+</string>
+    <string name="auto_restore_btn_restore">
+استعادة الآن
+</string>
+    <string name="auto_restore_btn_skip">
+يتخطى
+</string>
+    <string name="auto_restore_success_config">
+تمت استعادة الإعدادات بنجاح. سيتم الآن إعادة تشغيل التطبيق.
+</string>
+    <string name="auto_restore_success_theme">
+تمت استعادة سمة الرمز بنجاح.
+</string>
+    <string name="auto_restore_error_config">
+فشل في استعادة الإعدادات.
+</string>
+    <string name="auto_restore_error_theme">
+فشل في استعادة سمة الرمز.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 أيقونات
@@ -4639,6 +4751,9 @@ XML / العلامات
     <string name="icon_settings_backup_restore">
 النسخ الاحتياطي &amp; يعيد
 </string>
+    <string name="icon_settings_auto_backup">
+النسخ الاحتياطي التلقائي
+</string>
     <string name="icon_settings_main_menu_layout">
 تخطيط القائمة الرئيسية
 </string>
@@ -4866,6 +4981,9 @@ XML / العلامات
 </string>
     <string name="backup_pref_icon_customization">
 تجاوزات رمز نوع الملف
+</string>
+    <string name="backup_pref_loyalty">
+بيانات ولاء جرة نصيحة
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

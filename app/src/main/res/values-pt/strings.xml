@@ -599,6 +599,12 @@ Código de recuperação copiado – a área de transferência será limpa autom
     <!-- Settings Hub -->
     <string name="settings_title">Configurações</string>
     <string name="settings_subtitle">Preferências de aplicativos</string>
+    <string name="settings_auto_backup_title">
+Backup automático
+</string>
+    <string name="settings_auto_backup_subtitle">
+Faça backup automático de configurações e tema
+</string>
     <string name="font_size_title_row">Tamanho da fonte</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ Blocos e blocos personalizados Grupos
 Pré-visualização de importação
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+Backup automático
+</string>
+    <string name="auto_backup_subtitle">
+Configurações de backup automático
+</string>
+    <string name="auto_backup_enable">
+Ativar backup automático
+</string>
+    <string name="auto_backup_enable_desc">
+Salve backups automaticamente quando alterações forem feitas
+</string>
+    <string name="auto_backup_settings_label">
+Configurações de backup
+</string>
+    <string name="auto_backup_settings_desc">
+Preferências de aplicativos, layout de blocos, dados de jar de dicas
+</string>
+    <string name="auto_backup_theme_label">
+Tema de backup
+</string>
+    <string name="auto_backup_theme_desc">
+Tema de ícone personalizado e ícones de bloco
+</string>
+    <string name="auto_backup_schedule_label">
+Agendar
+</string>
+    <string name="auto_backup_schedule_daily">
+Diário
+</string>
+    <string name="auto_backup_schedule_weekly">
+Semanalmente
+</string>
+    <string name="auto_backup_schedule_monthly">
+Mensal
+</string>
+    <string name="auto_backup_password_set">
+Definir senha de backup
+</string>
+    <string name="auto_backup_password_change">
+Alterar senha de backup
+</string>
+    <string name="auto_backup_password_status_set">
+Protegido por senha
+</string>
+    <string name="auto_backup_password_status_none">
+Sem senha (texto simples)
+</string>
+    <string name="auto_backup_now">
+Faça backup agora
+</string>
+    <string name="auto_backup_now_progress">
+Fazendo backup…
+</string>
+    <string name="auto_backup_success">
+Backup concluído com sucesso
+</string>
+    <string name="auto_backup_error">
+Falha no backup
+</string>
+    <string name="auto_backup_summary_on">
+O backup automático está ATIVADO — %1$s — %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+Configurações
+</string>
+    <string name="auto_backup_summary_items_theme">
+Tema
+</string>
+    <string name="auto_backup_summary_items_both">
+Configurações e tema
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+Backup encontrado
+</string>
+    <string name="auto_restore_message">
+Um backup anterior foi encontrado. Você gostaria de restaurá-lo?
+</string>
+    <string name="auto_restore_detected_config">
+Configuração de configurações detectada
+</string>
+    <string name="auto_restore_detected_theme">
+Tema do ícone detectado
+</string>
+    <string name="auto_restore_btn_restore">
+Restaurar agora
+</string>
+    <string name="auto_restore_btn_skip">
+Pular
+</string>
+    <string name="auto_restore_success_config">
+Configurações restauradas com sucesso. O aplicativo será reiniciado agora.
+</string>
+    <string name="auto_restore_success_theme">
+Tema do ícone restaurado com sucesso.
+</string>
+    <string name="auto_restore_error_config">
+Falha ao restaurar as configurações.
+</string>
+    <string name="auto_restore_error_theme">
+Falha ao restaurar o tema do ícone.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 Ícones
@@ -4641,6 +4753,9 @@ Aparência
     <string name="icon_settings_backup_restore">
 Cópia de segurança e Restaurar
 </string>
+    <string name="icon_settings_auto_backup">
+Backup automático
+</string>
     <string name="icon_settings_main_menu_layout">
 Layout do menu principal
 </string>
@@ -4868,6 +4983,9 @@ Configuração do servidor de arquivos
 </string>
     <string name="backup_pref_icon_customization">
 Substituições de ícone de tipo de arquivo
+</string>
+    <string name="backup_pref_loyalty">
+Dados de fidelidade do Tip Jar
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s

@@ -599,6 +599,12 @@ PKCS12 पासवर्ड
     <!-- Settings Hub -->
     <string name="settings_title">सेटिंग्स</string>
     <string name="settings_subtitle">ऐप प्राथमिकताएँ</string>
+    <string name="settings_auto_backup_title">
+ऑटो बैकअप
+</string>
+    <string name="settings_auto_backup_subtitle">
+सेटिंग्स और थीम का स्वचालित रूप से बैकअप लें
+</string>
     <string name="font_size_title_row">फ़ॉन्ट आकार</string>
 
     <!-- Default Start Screen -->
@@ -4268,6 +4274,112 @@ JSON में शामिल करने के लिए मेटाडे�
 पूर्वावलोकन आयात करें
 </string>
 
+    <!-- Auto Backup -->
+    <string name="auto_backup_title">
+ऑटो बैकअप
+</string>
+    <string name="auto_backup_subtitle">
+स्वचालित बैकअप सेटिंग्स
+</string>
+    <string name="auto_backup_enable">
+ऑटो बैकअप सक्षम करें
+</string>
+    <string name="auto_backup_enable_desc">
+परिवर्तन किए जाने पर स्वचालित रूप से बैकअप सहेजें
+</string>
+    <string name="auto_backup_settings_label">
+बैकअप सेटिंग्स
+</string>
+    <string name="auto_backup_settings_desc">
+ऐप प्राथमिकताएं, टाइल लेआउट, टिप जार डेटा
+</string>
+    <string name="auto_backup_theme_label">
+बैकअप थीम
+</string>
+    <string name="auto_backup_theme_desc">
+कस्टम आइकन थीम और टाइल आइकन
+</string>
+    <string name="auto_backup_schedule_label">
+अनुसूची
+</string>
+    <string name="auto_backup_schedule_daily">
+दैनिक
+</string>
+    <string name="auto_backup_schedule_weekly">
+साप्ताहिक
+</string>
+    <string name="auto_backup_schedule_monthly">
+महीने के
+</string>
+    <string name="auto_backup_password_set">
+बैकअप पासवर्ड सेट करें
+</string>
+    <string name="auto_backup_password_change">
+बैकअप पासवर्ड बदलें
+</string>
+    <string name="auto_backup_password_status_set">
+पासवर्ड सुरक्षित
+</string>
+    <string name="auto_backup_password_status_none">
+कोई पासवर्ड नहीं (सादा पाठ)
+</string>
+    <string name="auto_backup_now">
+अब समर्थन देना
+</string>
+    <string name="auto_backup_now_progress">
+समर्थन करना…
+</string>
+    <string name="auto_backup_success">
+बैकअप सफलतापूर्वक पूरा हुआ
+</string>
+    <string name="auto_backup_error">
+बैकअप विफल रहा
+</string>
+    <string name="auto_backup_summary_on">
+ऑटो बैकअप चालू है - %1$s - %2$s
+</string>
+    <string name="auto_backup_summary_items_settings">
+सेटिंग्स
+</string>
+    <string name="auto_backup_summary_items_theme">
+विषय
+</string>
+    <string name="auto_backup_summary_items_both">
+सेटिंग्स और थीम
+</string>
+
+    <!-- Auto Restore Dialog -->
+    <string name="auto_restore_title">
+बैकअप मिला
+</string>
+    <string name="auto_restore_message">
+पिछला बैकअप मिला था. क्या आप इसे पुनर्स्थापित करना चाहेंगे?
+</string>
+    <string name="auto_restore_detected_config">
+सेटिंग्स कॉन्फ़िगरेशन का पता चला
+</string>
+    <string name="auto_restore_detected_theme">
+चिह्न थीम का पता चला
+</string>
+    <string name="auto_restore_btn_restore">
+अभी पुनर्स्थापित करें
+</string>
+    <string name="auto_restore_btn_skip">
+छोडना
+</string>
+    <string name="auto_restore_success_config">
+सेटिंग्स सफलतापूर्वक बहाल हो गईं. ऐप अब पुनः आरंभ होगा.
+</string>
+    <string name="auto_restore_success_theme">
+आइकन थीम सफलतापूर्वक बहाल हो गई.
+</string>
+    <string name="auto_restore_error_config">
+सेटिंग्स पुनर्स्थापित करने में विफल.
+</string>
+    <string name="auto_restore_error_theme">
+आइकन थीम पुनर्स्थापित करने में विफल.
+</string>
+
     <!-- Icon Customization -->
     <string name="icons_settings_title">
 माउस
@@ -4641,6 +4753,9 @@ AMOLED
     <string name="icon_settings_backup_restore">
 बैकअप और amp; पुनर्स्थापित करना
 </string>
+    <string name="icon_settings_auto_backup">
+ऑटो बैकअप
+</string>
     <string name="icon_settings_main_menu_layout">
 मुख्य मेनू लेआउट
 </string>
@@ -4868,6 +4983,9 @@ AMOLED
 </string>
     <string name="backup_pref_icon_customization">
 फ़ाइल प्रकार चिह्न ओवरराइड करता है
+</string>
+    <string name="backup_pref_loyalty">
+टिप जार लॉयल्टी डेटा
 </string>
     <string name="backup_format_type_host">
 %1$s - %2$s
