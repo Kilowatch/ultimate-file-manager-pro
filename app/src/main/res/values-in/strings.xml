@@ -4987,6 +4987,20 @@ Too many failed attempts.
 Unsupported or corrupted theme pack file.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Host key verified: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Host key: Not yet verified (verified on first connection)
+</string>
+    <string name="ssh_host_key_clear">
+Clear
+</string>
+    <string name="ssh_host_key_mismatch_error">
+Host key verification failed! The server\'s key has changed since your last connection. This could indicate a security attack, or the server may have been reinstalled. Clear the stored key in Edit Share to accept the new key.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Select Share Method

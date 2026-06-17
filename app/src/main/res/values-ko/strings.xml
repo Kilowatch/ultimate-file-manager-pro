@@ -4987,6 +4987,20 @@ APK 추출 설정
 지원되지 않거나 손상된 테마 팩 파일입니다.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+확인된 호스트 키: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+호스트 키: 아직 확인되지 않음(첫 번째 연결에서 확인됨)
+</string>
+    <string name="ssh_host_key_clear">
+분명한
+</string>
+    <string name="ssh_host_key_mismatch_error">
+호스트 키 확인에 실패했습니다! 마지막 연결 이후 서버 키가 변경되었습니다. 이는 보안 공격을 의미하거나 서버가 다시 설치되었을 수 있습니다. 새 키를 수락하려면 공유 편집에서 저장된 키를 지우세요.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 공유 방법 선택

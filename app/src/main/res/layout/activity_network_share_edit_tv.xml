@@ -313,6 +313,19 @@
                         android:focusable="true" android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <TextView
+                    android:id="@+id/txtHostKeyFingerprint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="14sp"
+                    android:padding="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    android:focusable="true"
+                    android:background="@drawable/selector_tv_button"
+                    android:text="@string/ssh_host_key_not_verified" />
+
                 <!-- Remote path field + Browse button -->
                 <LinearLayout
                     android:id="@+id/layerPath"

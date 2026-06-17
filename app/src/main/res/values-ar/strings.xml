@@ -4985,6 +4985,20 @@ XML / العلامات
 ملف حزمة السمات غير مدعوم أو تالف.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+تم التحقق من مفتاح المضيف: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+مفتاح المضيف: لم يتم التحقق منه بعد (تم التحقق منه عند أول اتصال)
+</string>
+    <string name="ssh_host_key_clear">
+واضح
+</string>
+    <string name="ssh_host_key_mismatch_error">
+فشل التحقق من مفتاح المضيف! لقد تغير مفتاح الخادم منذ آخر اتصال لك. قد يشير هذا إلى هجوم أمني، أو ربما تمت إعادة تثبيت الخادم. امسح المفتاح المخزن في تحرير المشاركة لقبول المفتاح الجديد.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 حدد طريقة المشاركة

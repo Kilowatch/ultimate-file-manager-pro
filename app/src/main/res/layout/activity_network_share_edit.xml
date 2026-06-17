@@ -450,6 +450,20 @@
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <TextView
+                        android:id="@+id/txtHostKeyFingerprint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/ufm_text_secondary"
+                        android:textSize="13sp"
+                        android:padding="8dp"
+                        android:layout_marginBottom="12dp"
+                        android:visibility="gone"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground"
+                        android:text="@string/ssh_host_key_not_verified" />
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilUsername"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"

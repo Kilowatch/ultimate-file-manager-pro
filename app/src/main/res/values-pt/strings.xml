@@ -4987,6 +4987,20 @@ Muitas tentativas fracassadas.
 Arquivo de pacote de tema incompatível ou corrompido.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Chave de host verificada: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Chave do host: ainda não verificada (verificada na primeira conexão)
+</string>
+    <string name="ssh_host_key_clear">
+Claro
+</string>
+    <string name="ssh_host_key_mismatch_error">
+A verificação da chave do host falhou! A chave do servidor mudou desde a sua última conexão. Isso pode indicar um ataque à segurança ou o servidor pode ter sido reinstalado. Limpe a chave armazenada em Editar compartilhamento para aceitar a nova chave.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Selecione o método de compartilhamento

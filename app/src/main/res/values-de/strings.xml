@@ -4987,6 +4987,20 @@ Zu viele gescheiterte Versuche.
 Nicht unterstützte oder beschädigte Theme-Pack-Datei.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Hostschlüssel überprüft: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Hostschlüssel: Noch nicht überprüft (bei der ersten Verbindung überprüft)
+</string>
+    <string name="ssh_host_key_clear">
+Klar
+</string>
+    <string name="ssh_host_key_mismatch_error">
+Die Überprüfung des Hostschlüssels ist fehlgeschlagen! Der Schlüssel des Servers hat sich seit Ihrer letzten Verbindung geändert. Dies könnte auf einen Sicherheitsangriff hinweisen oder der Server wurde möglicherweise neu installiert. Löschen Sie den gespeicherten Schlüssel in „Freigabe bearbeiten“, um den neuen Schlüssel zu akzeptieren.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Wählen Sie die Freigabemethode aus

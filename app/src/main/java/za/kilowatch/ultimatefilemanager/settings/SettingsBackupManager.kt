@@ -378,6 +378,7 @@ object SettingsBackupManager {
                     obj.put("smbProtocol", share.smbProtocol)
                     obj.put("isCredentialsStripped", true)
                     obj.put("isServerMode", share.isServerMode)
+                    obj.put("hostKeyFingerprint", "") // stripped — device-specific
                     sharesArr.put(obj)
                 }
             }
@@ -673,7 +674,8 @@ object SettingsBackupManager {
                             useKeychain = obj.optBoolean("useKeychain", false),
                             smbProtocol = obj.optString("smbProtocol", "AUTO"),
                             isCredentialsStripped = obj.optBoolean("isCredentialsStripped", true),
-                            isServerMode = obj.optBoolean("isServerMode", false)
+                            isServerMode = obj.optBoolean("isServerMode", false),
+                            hostKeyFingerprint = null // force re-TOFU on restored device
                         )
                         repo.save(share)
                     }

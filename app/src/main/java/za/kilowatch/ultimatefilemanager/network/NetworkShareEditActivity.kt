@@ -108,6 +108,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var rgAccess:        RadioGroup
     private lateinit var rbReadOnly:      RadioButton
     private lateinit var txtResult:       TextView
+    private lateinit var txtHostKeyFingerprint: TextView
     private lateinit var btnTest:         View
     private lateinit var btnSave:         View
     private lateinit var txtTitle:        TextView
@@ -215,6 +216,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         rgAccess         = findViewById(R.id.rgAccess)
         rbReadOnly       = findViewById(R.id.rbReadOnly)
         txtResult        = findViewById(R.id.txtTestResult)
+        txtHostKeyFingerprint = findViewById(R.id.txtHostKeyFingerprint)
         btnTest          = findViewById(R.id.btnTest)
         btnSave          = findViewById(R.id.btnSave)
         txtTitle         = findViewById(R.id.txtToolbarTitle)
@@ -389,6 +391,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         layerSmbConnectionType?.visibility = View.GONE
         btnToggleSshAuth.visibility = View.GONE
         cardSshAuth.visibility = View.GONE
+        txtHostKeyFingerprint.visibility = View.GONE
         btnSelectDlnaDevice.visibility = View.VISIBLE
         // Force read-only for DLNA
         rgAccess.check(R.id.rbReadOnly)
@@ -413,6 +416,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
         cardSshAuth.visibility = View.GONE
         btnToggleSshAuth.text = getString(R.string.network_btn_show_ssh_auth)
+
+        txtHostKeyFingerprint.visibility = if (isSsh) View.VISIBLE else View.GONE
+        if (isSsh) {
+            txtHostKeyFingerprint.text = getString(R.string.ssh_host_key_not_verified)
+            txtHostKeyFingerprint.setOnClickListener(null)
+        }
 
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
@@ -592,6 +601,29 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 txtDlnaSelectedDevice.text = getString(R.string.dlna_selected_device, share.name, share.host)
                 txtDlnaSelectedDevice.visibility = View.VISIBLE
             }
+        }
+
+        // Host key fingerprint display (SSH only)
+        if (isSsh) {
+            updateFingerprintDisplay(share)
+        } else {
+            txtHostKeyFingerprint.visibility = View.GONE
+        }
+    }
+
+    private fun updateFingerprintDisplay(share: NetworkShare) {
+        val fp = share.hostKeyFingerprint
+        txtHostKeyFingerprint.visibility = View.VISIBLE
+        if (fp != null && fp.isNotEmpty()) {
+            txtHostKeyFingerprint.text = getString(R.string.ssh_host_key_verified, "SHA256:$fp")
+            txtHostKeyFingerprint.setOnClickListener {
+                // Clear fingerprint
+                existingShare = existingShare?.copy(hostKeyFingerprint = null)
+                txtHostKeyFingerprint.text = getString(R.string.ssh_host_key_not_verified)
+            }
+        } else {
+            txtHostKeyFingerprint.text = getString(R.string.ssh_host_key_not_verified)
+            txtHostKeyFingerprint.setOnClickListener(null)
         }
     }
 
@@ -1196,7 +1228,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
             dlnaConnectionManagerUrl = selectedDlnaServer?.connectionManagerUrl
                 ?: existingShare?.dlnaConnectionManagerUrl ?: "",
             isCredentialsStripped = false,
-            isServerMode = isServerMode
+            isServerMode = isServerMode,
+            hostKeyFingerprint = if (existingShare != null &&
+                (host != existingShare!!.host || (etPort.text?.toString()?.trim()?.toIntOrNull() ?: 0) != existingShare!!.port)
+            ) null else existingShare?.hostKeyFingerprint
         )
     }
 
@@ -1267,7 +1302,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     connectionTested = true
                     btnSave.isEnabled = true
                     txtResult.visibility = View.GONE
-                    showSuccessDialog(share)
+                    // Reload share from repo to pick up fingerprint persisted by testConnection
+                    val updatedShare = if (share.type == ShareType.SFTP || share.type == ShareType.SCP) {
+                        repo.getById(share.id) ?: share
+                    } else share
+                    showSuccessDialog(updatedShare)
                 } else {
                     connectionTested = false
                     btnSave.isEnabled = false

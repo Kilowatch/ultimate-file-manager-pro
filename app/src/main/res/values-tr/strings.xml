@@ -4987,6 +4987,20 @@ Yanlış şifre. %d deneme kaldı.
 Desteklenmeyen veya bozuk tema paketi dosyası.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Ana makine anahtarı doğrulandı: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Ana bilgisayar anahtarı: Henüz doğrulanmadı (ilk bağlantıda doğrulandı)
+</string>
+    <string name="ssh_host_key_clear">
+Temizlemek
+</string>
+    <string name="ssh_host_key_mismatch_error">
+Ana bilgisayar anahtarı doğrulaması başarısız oldu! Sunucunun anahtarı son bağlantınızdan bu yana değişti. Bu bir güvenlik saldırısına işaret ediyor olabilir veya sunucu yeniden yüklenmiş olabilir. Yeni anahtarı kabul etmek için Paylaşımı Düzenle\'de kayıtlı anahtarı temizleyin.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Paylaşma Yöntemini Seçin

@@ -4987,6 +4987,20 @@ AMOLED
 असमर्थित या दूषित थीम पैक फ़ाइल.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+होस्ट कुंजी सत्यापित: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+होस्ट कुंजी: अभी तक सत्यापित नहीं (पहले कनेक्शन पर सत्यापित)
+</string>
+    <string name="ssh_host_key_clear">
+स्पष्ट
+</string>
+    <string name="ssh_host_key_mismatch_error">
+होस्ट कुंजी सत्यापन विफल! आपके अंतिम कनेक्शन के बाद से सर्वर की कुंजी बदल गई है। यह सुरक्षा हमले का संकेत हो सकता है, या सर्वर को पुनः स्थापित किया गया हो सकता है। नई कुंजी स्वीकार करने के लिए एडिट शेयर में संग्रहीत कुंजी साफ़ करें।
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 शेयर विधि का चयन करें

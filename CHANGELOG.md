@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed DLNA rate-limit bucket collision — token buckets are now keyed by both IP and endpoint type (SSDP, HTTP_BROWSE, HTTP_STREAM), preventing SSDP rate limits from being bypassed via other endpoint types.
 - Replaced hardcoded backup encryption key with optional user-chosen password protection. Export now offers PBKDF2-HMAC-SHA256 (260k iterations) + AES-256-GCM encryption, or plain JSON for passwordless cross-device transfers. Old `.UFMConfig` files remain importable. Import auto-detects format and prompts for password only when needed, with a 3-attempt retry limit.
 - Replaced hardcoded theme pack encryption key with the same PBKDF2 + AES-256-GCM password protection pattern. Export prompts for a password or allows unencrypted export. Old `.UFMTheme` files remain importable. Import auto-detects format (V1/V2) and prompts for password only when needed, with a 3-attempt retry limit. Both mobile and TV dialogs follow the premium dialog conventions.
+- ADB pairing code log statement now guarded by `BuildConfig.DEBUG`.
+- Replaced `AcceptAllServerKeyVerifier` with Trust-On-First-Use (TOFU) host key verification for all SSH/SFTP/SCP connections. On first connect, the server's public key SHA-256 fingerprint is captured and stored in the share. Subsequent connections verify the key matches — a mismatch rejects the connection with a clear error. Fingerprints can be cleared per share if the server legitimately changes keys. Auto-clears on host/port edit. Stripped on backup/restore to force re-TOFU on new devices.
 
 ## [1.5.2] — 2026-06-16
 

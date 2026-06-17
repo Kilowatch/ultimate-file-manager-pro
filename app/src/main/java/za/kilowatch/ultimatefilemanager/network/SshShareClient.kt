@@ -2,9 +2,13 @@ package za.kilowatch.ultimatefilemanager.network
 
 import android.content.Context
 import android.util.Log
+import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.UfmApplication
 import org.apache.sshd.client.SshClient
-import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier
+import org.apache.sshd.client.keyverifier.ServerKeyVerifier
 import org.apache.sshd.client.session.ClientSession
+import java.security.MessageDigest
+import java.security.PublicKey
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider
 import org.apache.sshd.sftp.client.SftpClientFactory
 import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
@@ -22,13 +26,20 @@ object SshShareClient {
      * Returns null on success, error message on failure.
      */
     fun testConnection(context: Context, share: NetworkShare): String? {
+        var newFingerprint: String? = null
         val client = SshClient.setUpDefaultClient()
-        setupClientAuth(client, share)
+        setupClientAuth(client, share) { fp -> newFingerprint = fp }
         client.start()
 
         return try {
             val session = client.connect(share.username, share.host, share.effectivePort)
                 .verify(TIMEOUT_SECONDS, TimeUnit.SECONDS).session
+
+            // Persist fingerprint on TOFU (also persisted directly in verifier, this is a fallback)
+            if (newFingerprint != null) {
+                val updatedShare = share.copy(hostKeyFingerprint = newFingerprint)
+                NetworkShareRepository.getInstance(context).save(updatedShare)
+            }
 
             if (!authenticate(session, share)) return "Authentication failed"
 
@@ -61,7 +72,12 @@ object SshShareClient {
             null
         } catch (e: Exception) {
             Log.e(TAG, "Connection test failed: ${e.message}", e)
-            e.message ?: "Unknown SSH error"
+            val msg = e.message ?: ""
+            if (msg.contains("server key", ignoreCase = true)) {
+                context.getString(R.string.ssh_host_key_mismatch_error)
+            } else {
+                e.message ?: "Unknown SSH error"
+            }
         } finally {
             client.stop()
         }
@@ -228,8 +244,47 @@ object SshShareClient {
 
     // ── Auth setup (internal + called by SshSessionPool) ─────────────────────
 
-    fun setupClientAuth(client: SshClient, share: NetworkShare) {
-        client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE)
+    fun setupClientAuth(client: SshClient, share: NetworkShare, onNewFingerprint: ((String) -> Unit)? = null) {
+        client.setServerKeyVerifier(TofuServerKeyVerifier(share, onNewFingerprint ?: {}))
+    }
+
+    // ── TOFU Host Key Verifier ────────────────────────────────────────────
+
+    private class TofuServerKeyVerifier(
+        private val share: NetworkShare,
+        private val onNewFingerprint: (String) -> Unit
+    ) : ServerKeyVerifier {
+
+        override fun verifyServerKey(
+            session: ClientSession?,
+            remoteAddress: java.net.SocketAddress?,
+            serverKey: PublicKey
+        ): Boolean {
+            val fingerprint = computeFingerprint(serverKey)
+            return when {
+                share.hostKeyFingerprint == null -> {
+                    onNewFingerprint(fingerprint)
+                    try {
+                        val updated = share.copy(hostKeyFingerprint = fingerprint)
+                        NetworkShareRepository.getInstance(UfmApplication.instance).save(updated)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to persist host key fingerprint", e)
+                    }
+                    true
+                }
+                MessageDigest.isEqual(
+                    share.hostKeyFingerprint.toByteArray(Charsets.UTF_8),
+                    fingerprint.toByteArray(Charsets.UTF_8)
+                ) -> true
+                else -> false
+            }
+        }
+
+        private fun computeFingerprint(key: PublicKey): String {
+            val digest = MessageDigest.getInstance("SHA-256")
+            val hash = digest.digest(key.encoded)
+            return hash.joinToString("") { "%02x".format(it) }
+        }
     }
 
     fun authenticate(session: ClientSession, share: NetworkShare): Boolean {

@@ -26,7 +26,8 @@ data class NetworkShare(
     val dlnaContentDirectoryUrl: String = "",  // Full SOAP URL for ContentDirectory service
     val dlnaConnectionManagerUrl: String = "", // Full SOAP URL for ConnectionManager service
     val isCredentialsStripped: Boolean = false,
-    val isServerMode: Boolean = false
+    val isServerMode: Boolean = false,
+    val hostKeyFingerprint: String? = null   // SHA-256 hex; null = TOFU on next connect
 ) {
     val effectivePort: Int get() = when {
         port > 0  -> port

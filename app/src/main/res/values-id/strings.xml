@@ -4987,6 +4987,20 @@ Terlalu banyak upaya yang gagal.
 File paket tema tidak didukung atau rusak.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Kunci host terverifikasi: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Kunci host: Belum diverifikasi (diverifikasi pada koneksi pertama)
+</string>
+    <string name="ssh_host_key_clear">
+Jernih
+</string>
+    <string name="ssh_host_key_mismatch_error">
+Verifikasi kunci host gagal! Kunci server telah berubah sejak koneksi terakhir Anda. Ini mungkin mengindikasikan serangan keamanan, atau server mungkin telah diinstal ulang. Hapus kunci yang disimpan di Edit Bagikan untuk menerima kunci baru.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Pilih Metode Bagikan

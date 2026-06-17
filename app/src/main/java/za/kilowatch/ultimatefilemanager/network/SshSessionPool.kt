@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.network
 import android.util.Log
 import org.apache.sshd.client.SshClient
 import org.apache.sshd.client.session.ClientSession
+import za.kilowatch.ultimatefilemanager.UfmApplication
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -143,12 +144,18 @@ object SshSessionPool {
      * Auth is delegated to [SshShareClient.authenticate].
      */
     private fun freshSession(share: NetworkShare): Pair<SshClient, ClientSession> {
+        var newFingerprint: String? = null
         val client = SshClient.setUpDefaultClient()
-        SshShareClient.setupClientAuth(client, share)
+        SshShareClient.setupClientAuth(client, share) { fp -> newFingerprint = fp }
         client.start()
         return try {
             val session = client.connect(share.username, share.host, share.effectivePort)
                 .verify(SshShareClient.TIMEOUT_SECONDS, TimeUnit.SECONDS).session
+            // Persist fingerprint on TOFU
+            if (newFingerprint != null) {
+                val updatedShare = share.copy(hostKeyFingerprint = newFingerprint)
+                NetworkShareRepository.getInstance(UfmApplication.instance).save(updatedShare)
+            }
             if (!SshShareClient.authenticate(session, share)) {
                 client.stop()
                 throw java.io.IOException("SSH authentication failed for ${share.host}")

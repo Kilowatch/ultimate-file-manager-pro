@@ -4987,6 +4987,20 @@ APK抽出設定
 テーマ パック ファイルがサポートされていないか破損しています。
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+ホストキーが確認されました: %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+ホストキー: まだ検証されていません (最初の接続で検証されています)
+</string>
+    <string name="ssh_host_key_clear">
+クリア
+</string>
+    <string name="ssh_host_key_mismatch_error">
+ホストキーの検証に失敗しました!サーバーのキーは最後の接続以降に変更されました。これは、セキュリティ攻撃が行われたか、サーバーが再インストールされたことを示している可能性があります。新しいキーを受け入れるには、編集共有で保存されているキーをクリアします。
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 共有方法の選択

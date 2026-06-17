@@ -4987,6 +4987,20 @@ Trop de tentatives infructueuses.
 Fichier de pack de thèmes non pris en charge ou corrompu.
 </string>
 
+    <!-- SSH host key verification -->
+    <string name="ssh_host_key_verified">
+Clé d\'hôte vérifiée : %1$s
+</string>
+    <string name="ssh_host_key_not_verified">
+Clé d\'hôte : Pas encore vérifiée (vérifiée à la première connexion)
+</string>
+    <string name="ssh_host_key_clear">
+Clair
+</string>
+    <string name="ssh_host_key_mismatch_error">
+La vérification de la clé de l\'hôte a échoué ! La clé du serveur a changé depuis votre dernière connexion. Cela pourrait indiquer une attaque de sécurité ou le serveur pourrait avoir été réinstallé. Effacez la clé stockée dans Modifier le partage pour accepter la nouvelle clé.
+</string>
+
     <!-- Premium Share General -->
     <string name="share_dialog_title">
 Sélectionnez la méthode de partage
