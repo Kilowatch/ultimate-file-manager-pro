@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.util
 
 import android.util.Log
+import za.kilowatch.ultimatefilemanager.BuildConfig
 
 /**
  * Custom logging utility to track execution flow and debug crashes.
@@ -11,7 +12,7 @@ object GoRoLog {
     private const val PREFIX = "🚀 [GoRo] "
 
     fun d(tag: String, message: String, throwable: Throwable? = null) {
-        Log.d(tag, "$PREFIX$message", throwable)
+        if (BuildConfig.DEBUG) Log.d(tag, "$PREFIX$message", throwable)
     }
     fun d(message: String, throwable: Throwable? = null) = d(DEFAULT_TAG, message, throwable)
 
@@ -21,7 +22,7 @@ object GoRoLog {
     fun e(message: String, throwable: Throwable? = null) = e(DEFAULT_TAG, message, throwable)
 
     fun i(tag: String, message: String, throwable: Throwable? = null) {
-        Log.i(tag, "$PREFIX$message", throwable)
+        if (BuildConfig.DEBUG) Log.i(tag, "$PREFIX$message", throwable)
     }
     fun i(message: String, throwable: Throwable? = null) = i(DEFAULT_TAG, message, throwable)
 

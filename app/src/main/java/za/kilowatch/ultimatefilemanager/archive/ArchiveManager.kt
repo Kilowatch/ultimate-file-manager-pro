@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.archive
 
 import android.content.Context
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.lingala.zip4j.ZipFile
@@ -19,6 +20,7 @@ import java.io.FileInputStream
  * Handles compression and extraction for ZIP and 7Z formats.
  */
 object ArchiveManager {
+    private const val TAG = "ArchiveManager"
 
     enum class Format { ZIP, SEVEN_Z }
 
@@ -132,9 +134,23 @@ object ArchiveManager {
         }
         
         sevenZFile.use { archive ->
+            val canonicalDest = destDir.canonicalPath
             var entry = archive.nextEntry
             while (entry != null) {
                 val outFile = File(destDir, entry.name)
+                // Zip Slip protection — canonical path must stay inside destDir
+                val canonicalOut = try {
+                    outFile.canonicalPath
+                } catch (e: java.io.IOException) {
+                    Log.w(TAG, "Skipping entry with unresolvable path: ${entry.name}")
+                    entry = archive.nextEntry
+                    continue
+                }
+                if (!canonicalOut.startsWith(canonicalDest + File.separator) && canonicalOut != canonicalDest) {
+                    Log.w(TAG, "Zip Slip attempt detected! Skipping entry: ${entry.name}")
+                    entry = archive.nextEntry
+                    continue
+                }
                 if (entry.isDirectory) {
                     outFile.mkdirs()
                 } else {

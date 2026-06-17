@@ -409,7 +409,8 @@ class PremiumShareActivity : AppCompatActivity() {
             val ip = WebShareServer.getLocalIpAddress()
             val port = WebShareServer.port
             if (port > 0 && ip != "127.0.0.1") {
-                val url = "http://$ip:$port"
+                val proto = if (WebShareServer.sslPort > 0) "https" else "http"
+                val url = "$proto://$ip:$port"
                 txtWebUrl.text = url
                 val qr = QrCodeUtils.generateQrCode(url, 512)
                 if (qr != null) {

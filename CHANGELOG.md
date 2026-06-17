@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced hardcoded theme pack encryption key with the same PBKDF2 + AES-256-GCM password protection pattern. Export prompts for a password or allows unencrypted export. Old `.UFMTheme` files remain importable. Import auto-detects format (V1/V2) and prompts for password only when needed, with a 3-attempt retry limit. Both mobile and TV dialogs follow the premium dialog conventions.
 - ADB pairing code log statement now guarded by `BuildConfig.DEBUG`.
 - Replaced `AcceptAllServerKeyVerifier` with Trust-On-First-Use (TOFU) host key verification for all SSH/SFTP/SCP connections. On first connect, the server's public key SHA-256 fingerprint is captured and stored in the share. Subsequent connections verify the key matches — a mismatch rejects the connection with a clear error. Fingerprints can be cleared per share if the server legitimately changes keys. Auto-clears on host/port edit. Stripped on backup/restore to force re-TOFU on new devices.
+- Added canonical path validation to 7z archive extraction. Entries that resolve outside the destination directory (Zip Slip attacks) are now detected and skipped with a warning log, matching the existing protection already present in ZIP and other archive viewers.
+- Added canonical path validation to XAPK extraction in the pairing server (same Zip Slip protection as 7z).
+- WebShare file-sharing server now uses TLS encryption with a self-signed ECDSA certificate. File transfers and the access PIN are encrypted on the LAN. The certificate fingerprint is displayed on the PIN page for manual verification. Falls back to HTTP if TLS setup fails.
+- UDP pairing discovery metadata (device name, UUID) documented as non-sensitive accepted risk — all secrets travel exclusively over the pinned TLS handshake.
+- `GoRoLog.d()` and `GoRoLog.i()` now guarded by `BuildConfig.DEBUG`. All debug and info log output across the app is suppressed in release builds. Error and warning logs remain active for crash diagnostics.
 
 ## [1.5.2] — 2026-06-16
 

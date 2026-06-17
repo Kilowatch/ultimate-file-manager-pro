@@ -12,8 +12,21 @@ import android.webkit.MimeTypeMap
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.call
-import io.ktor.server.engine.embeddedServer
+import io.ktor.server.engine.*
 import io.ktor.server.netty.Netty
+import org.bouncycastle.asn1.x500.X500Name
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
+import java.math.BigInteger
+import java.security.KeyPairGenerator
+import java.security.KeyStore
+import java.security.MessageDigest
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import java.util.Date
+import javax.net.ssl.KeyManagerFactory
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLServerSocket
 import io.ktor.server.request.receiveParameters
 import io.ktor.server.response.header
 import io.ktor.server.response.respondOutputStream
@@ -65,10 +78,16 @@ object WebShareServer {
         private set
     var port: Int = 0
         private set
-    
+    var sslPort: Int = 0
+        private set
+    var certFingerprint: String = ""
+        private set
+
     private var filesToShare: List<File> = emptyList()
     private var cleanUpOnStop = false
     private var appContext: Context? = null
+    private var sslServerSocket: SSLServerSocket? = null
+    private var ktorPort: Int = 0
 
     private val localizedContextCache = mutableMapOf<String, Context>()
 
@@ -189,14 +208,53 @@ object WebShareServer {
      * Starts the Ktor web server.
      * Returns the access URL (e.g. http://192.168.1.100:8080)
      */
+    private fun generateSelfSignedCert(context: Context): SSLContext? {
+        return try {
+            val dir = File(context.filesDir, "webshare")
+            dir.mkdirs()
+            val keystoreFile = File(dir, "server.p12")
+
+            val keyPair = KeyPairGenerator.getInstance("EC").apply { initialize(256) }.generateKeyPair()
+            val now = Date()
+            val notAfter = Date(now.time + 365L * 24 * 3600 * 1000)
+            val issuer = X500Name("CN=UFM WebShare")
+            val serial = BigInteger.valueOf(now.time)
+
+            val certBuilder = JcaX509v3CertificateBuilder(issuer, serial, now, notAfter, issuer, keyPair.public)
+            val signer = JcaContentSignerBuilder("SHA256withECDSA").build(keyPair.private)
+            val certHolder = certBuilder.build(signer)
+            val certFactory = java.security.cert.CertificateFactory.getInstance("X.509")
+            val cert = certFactory.generateCertificate(certHolder.encoded.inputStream()) as X509Certificate
+
+            val digest = MessageDigest.getInstance("SHA-256")
+            certFingerprint = digest.digest(cert.encoded).joinToString("") { "%02x".format(it) }
+
+            val ks = KeyStore.getInstance("PKCS12")
+            ks.load(null, null)
+            ks.setKeyEntry("webshare", keyPair.private, "webshare".toCharArray(), arrayOf<X509Certificate>(cert))
+            keystoreFile.outputStream().use { ks.store(it, "webshare".toCharArray()) }
+
+            val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+            kmf.init(ks, "webshare".toCharArray())
+            SSLContext.getInstance("TLS").apply { init(kmf.keyManagers, null, SecureRandom()) }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to generate TLS certificate, HTTP only", e)
+            null
+        }
+    }
+
     fun start(context: Context, files: List<File>, cleanUp: Boolean = false): String {
         appContext = context.applicationContext
         filesToShare = files
         cleanUpOnStop = cleanUp
         pin = String.format("%04d", (1000..9999).random())
-        port = findFreePort()
 
-        val serverInstance = embeddedServer(Netty, port = port, host = getLocalIpAddress()) {
+        val localIp = getLocalIpAddress()
+        ktorPort = findFreePort()
+        val sslContext = generateSelfSignedCert(context)
+        if (sslContext != null) sslPort = findFreePort()
+
+        val serverInstance = embeddedServer(Netty, port = ktorPort, host = "127.0.0.1") {
             routing {
                 // Serve localized flag SVGs
                 get("/api/flags/{code}") {
@@ -378,9 +436,39 @@ object WebShareServer {
         
         server = serverInstance
         serverInstance.start(wait = false)
-        
-        val localIp = getLocalIpAddress()
-        return "http://$localIp:$port"
+
+        // Start SSL proxy if certificate was generated
+        if (sslContext != null) {
+            val factory = sslContext.serverSocketFactory
+            sslServerSocket = factory.createServerSocket() as SSLServerSocket
+            sslServerSocket!!.reuseAddress = true
+            sslServerSocket!!.bind(java.net.InetSocketAddress(localIp, sslPort))
+            Thread {
+                try {
+                    while (true) {
+                        val sock = sslServerSocket?.accept() ?: break
+                        Thread {
+                            try {
+                                val ktorSocket = java.net.Socket("127.0.0.1", ktorPort)
+                                val fromClient = sock.getInputStream()
+                                val toKtor = ktorSocket.getOutputStream()
+                                val fromKtor = ktorSocket.getInputStream()
+                                val toClient = sock.getOutputStream()
+                                val t1 = Thread { try { fromClient.copyTo(toKtor) } catch (_: Exception) {} }
+                                val t2 = Thread { try { fromKtor.copyTo(toClient) } catch (_: Exception) {} }
+                                t1.start(); t2.start()
+                                t1.join(); t2.join()
+                                ktorSocket.close()
+                            } catch (_: Exception) {}
+                            try { sock.close() } catch (_: Exception) {}
+                        }.start()
+                    }
+                } catch (_: Exception) {}
+            }.apply { isDaemon = true; name = "WebShare-SSL-Proxy" }.start()
+        }
+
+        port = if (sslPort > 0) sslPort else ktorPort
+        return if (sslPort > 0) "https://$localIp:$sslPort" else "http://$localIp:$ktorPort"
     }
 
     /**
@@ -388,6 +476,8 @@ object WebShareServer {
      */
     fun stop() {
         try {
+            sslServerSocket?.close()
+            sslServerSocket = null
             server?.stop(1000, 2000)
             server = null
         } catch (e: Exception) {
@@ -636,6 +726,11 @@ object WebShareServer {
                         <button type="submit" class="btn">${escape(btnText)}</button>
                     </form>
                     ${if (showError) "<div class=\"error-msg\">" + escape(errorMsg) + "</div>" else ""}
+                    ${if (certFingerprint.isNotEmpty()) """
+                    <div style="text-align:center; padding-top: 12px; opacity: 0.4; font-size: 11px;">
+                        TLS SHA256: ${certFingerprint}
+                    </div>
+                    """.trimIndent() else ""}
                     """}
                 </div>
             </body>

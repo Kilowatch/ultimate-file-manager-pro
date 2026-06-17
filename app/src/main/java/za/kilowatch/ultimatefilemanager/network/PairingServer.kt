@@ -987,12 +987,23 @@ class PairingServer(
                 }
 
                 // Extract APK splits
+                val canonicalExtractDir = extractDir.canonicalPath
                 apkEntries.forEachIndexed { i, entry ->
                     val name = entry.name.substringAfterLast('/')
                     job.current = i + 1
                     job.currentFile = name
 
                     val outFile = File(extractDir, name)
+                    val canonicalOut = try {
+                        outFile.canonicalPath
+                    } catch (e: java.io.IOException) {
+                        Log.w("PairingServer", "XAPK: skipping entry with unresolvable path: $name")
+                        return@forEachIndexed
+                    }
+                    if (!canonicalOut.startsWith(canonicalExtractDir + File.separator) && canonicalOut != canonicalExtractDir) {
+                        Log.w("PairingServer", "XAPK: Zip Slip attempt detected! Skipping entry: $name")
+                        return@forEachIndexed
+                    }
                     zip.getInputStream(entry).use { input ->
                         outFile.outputStream().use { input.copyTo(it) }
                     }
