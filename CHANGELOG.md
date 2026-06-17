@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.5.4] — 2026-06-17
+
+### Added
+- Auto Backup system — new settings screen with enable/disable toggle, selection of what to back up (Settings config and/or Icon Theme), schedule picker (daily/weekly/monthly), and optional password protection. Backups are saved to `Documents/UFM/` and survive uninstall. On fresh install, the app detects existing backup files and offers to restore them (theme first, then settings). Tip jar loyalty data is now included in both manual and auto backups.
+
 ## [1.5.3] — 2026-06-16
 
 ### Security

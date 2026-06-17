@@ -254,6 +254,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         if (tipAmount > 0) {
             LoyaltyPrefs.addTip(this, tipAmount)
             refreshLoyaltyUI()
+            // Trigger auto-backup if enabled
+            AutoBackupScheduler.runOnceNow(this)
         }
     }
 

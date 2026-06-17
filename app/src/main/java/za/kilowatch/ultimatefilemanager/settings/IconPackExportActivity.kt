@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.storage.TileIconManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
@@ -304,6 +305,9 @@ class IconPackExportActivity : AppCompatActivity() {
 
             progressBar.visibility = View.GONE
             if (success) {
+                // Mirror to Documents/UFM/ if auto-backup is enabled
+                AutoBackupScheduler.runOnceNow(this@IconPackExportActivity)
+
                 Toast.makeText(
                     this@IconPackExportActivity,
                     R.string.icon_pack_export_success,

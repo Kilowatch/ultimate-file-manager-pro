@@ -23,8 +23,10 @@ import kotlinx.coroutines.withContext
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -52,6 +54,10 @@ import za.kilowatch.ultimatefilemanager.remote.VpnWarningHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeActivity
 import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
+import za.kilowatch.ultimatefilemanager.settings.SettingsBackupManager
+import za.kilowatch.ultimatefilemanager.settings.ThemePackManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -60,6 +66,7 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper
 import za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity
+import androidx.lifecycle.lifecycleScope
 
 /**
  * Displays all available storage volumes (internal, SD card, USB) as cards.
@@ -575,6 +582,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private var hasShownReviewPopupThisSession = false
+    private var hasCheckedAutoBackupRestoreThisSession = false
     /** Timestamp of the last background device-ping pass. Prevents hammering the OEM
      *  Kumiho telemetry hook (and the network) every time onResume fires. */
     private var lastDevicePingMs = 0L
@@ -636,6 +644,298 @@ class StorageBrowserActivity : AppCompatActivity() {
                 hasShownReviewPopupThisSession = true
                 za.kilowatch.ultimatefilemanager.util.ReviewUiHelper.showReviewPopup(this)
             }
+        }
+
+        // Check for auto-backup restore (first boot detection)
+        if (!hasCheckedAutoBackupRestoreThisSession) {
+            hasCheckedAutoBackupRestoreThisSession = true
+            checkAutoBackupRestore()
+        }
+    }
+
+    // ── Auto-Backup Restore Detection ─────────────────────────────────────
+
+    private fun checkAutoBackupRestore() {
+        val ctx = this
+
+        // If the flag doesn't exist yet, this is the first boot after install/upgrade
+        val prefs = ctx.getSharedPreferences("auto_backup_prefs", Context.MODE_PRIVATE)
+        if (!prefs.contains("backup_files_present_on_first_boot")) {
+            val configExists = AutoBackupPrefs.getConfigFile().exists()
+            val themeExists = AutoBackupPrefs.getThemeFile().exists()
+            AutoBackupPrefs.setBackupFilesPresentOnFirstBoot(ctx, configExists || themeExists)
+            return
+        }
+
+        // If files were not present on first boot, nothing to restore
+        if (!AutoBackupPrefs.isBackupFilesPresentOnFirstBoot(ctx)) return
+
+        // If prompt was already shown, don't show again
+        if (AutoBackupPrefs.isRestorePromptShown(ctx)) return
+
+        // Show the restore dialog
+        showBackupRestoreDialog()
+    }
+
+    private fun showBackupRestoreDialog() {
+        val ctx = this
+        val configExists = AutoBackupPrefs.getConfigFile().exists()
+        val themeExists = AutoBackupPrefs.getThemeFile().exists()
+
+        val detectedItems = mutableListOf<String>()
+        if (configExists) detectedItems.add(getString(R.string.auto_restore_detected_config))
+        if (themeExists) detectedItems.add(getString(R.string.auto_restore_detected_theme))
+
+        val message = getString(R.string.auto_restore_message) + "\n\n" + detectedItems.joinToString("\n")
+
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setTitle(R.string.auto_restore_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.auto_restore_btn_restore) { _, _ ->
+                performAutoBackupRestore(configExists, themeExists)
+            }
+            .setNegativeButton(R.string.auto_restore_btn_skip) { _, _ ->
+                AutoBackupPrefs.setRestorePromptShown(ctx)
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+    }
+
+    private fun performAutoBackupRestore(configExists: Boolean, themeExists: Boolean) {
+        val ctx = this@StorageBrowserActivity
+
+        // Theme must be restored first (no restart needed), then settings (triggers restart)
+        if (themeExists) {
+            restoreTheme { success ->
+                if (!success) {
+                    runOnUiThread {
+                        android.widget.Toast.makeText(ctx, R.string.auto_restore_error_theme, android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+                // Continue to config restore regardless
+                if (configExists) {
+                    restoreConfig()
+                } else {
+                    AutoBackupPrefs.setRestorePromptShown(ctx)
+                }
+            }
+        } else if (configExists) {
+            restoreConfig()
+        } else {
+            AutoBackupPrefs.setRestorePromptShown(ctx)
+        }
+    }
+
+    private fun restoreTheme(onComplete: (Boolean) -> Unit) {
+        val ctx = this@StorageBrowserActivity
+        val themeFile = AutoBackupPrefs.getThemeFile()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val bytes = themeFile.readBytes()
+                val format = ThemePackManager.detectFormat(bytes)
+
+                when (format) {
+                    ThemePackManager.ThemePackFormat.V2_ENCRYPTED -> {
+                        // Need password — show dialog
+                        withContext(Dispatchers.Main) {
+                            showThemePasswordDialog(bytes) { password ->
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    try {
+                                        val (success, overrides) = ThemePackManager.performImport(ctx, themeFile, password)
+                                        if (success && overrides.isNotEmpty()) {
+                                            ThemePackManager.applyOverrides(ctx, overrides)
+                                            withContext(Dispatchers.Main) {
+                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_theme, android.widget.Toast.LENGTH_SHORT).show()
+                                            }
+                                            onComplete(true)
+                                        } else {
+                                            onComplete(false)
+                                        }
+                                    } catch (e: javax.crypto.AEADBadTagException) {
+                                        withContext(Dispatchers.Main) {
+                                            android.widget.Toast.makeText(ctx, R.string.backup_import_wrong_password, android.widget.Toast.LENGTH_SHORT).show()
+                                        }
+                                        onComplete(false)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ThemePackManager.ThemePackFormat.V1_LEGACY,
+                    ThemePackManager.ThemePackFormat.V2_PLAIN -> {
+                        val (success, overrides) = ThemePackManager.performImport(ctx, themeFile, null)
+                        if (success && overrides.isNotEmpty()) {
+                            ThemePackManager.applyOverrides(ctx, overrides)
+                            withContext(Dispatchers.Main) {
+                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_theme, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        onComplete(success && overrides.isNotEmpty())
+                    }
+                    ThemePackManager.ThemePackFormat.UNKNOWN -> {
+                        onComplete(false)
+                    }
+                }
+            } catch (e: Exception) {
+                onComplete(false)
+            }
+        }
+    }
+
+    private fun showThemePasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_theme_import_password_tv
+            else R.layout.dialog_theme_import_password,
+            null
+        )
+
+        val edtPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtPassword)
+        val btnDecrypt = dialogView.findViewById<Button>(R.id.btnDecrypt)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnDecrypt.setOnClickListener {
+            val pw = edtPassword.text?.toString() ?: ""
+            if (pw.isEmpty()) return@setOnClickListener
+            dialog.dismiss()
+            onPassword(pw)
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = getColor(R.color.tv_button_focused_yellow_text)
+            btnDecrypt.backgroundTintList = android.content.res.ColorStateList.valueOf(yellow)
+            btnDecrypt.setTextColor(black)
+            btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
+                btnDecrypt.backgroundTintList =
+                    if (hasFocus) android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    else android.content.res.ColorStateList.valueOf(yellow)
+            }
+            btnDecrypt.requestFocus()
+        }
+    }
+
+    private fun restoreConfig() {
+        val ctx = this@StorageBrowserActivity
+        val configFile = AutoBackupPrefs.getConfigFile()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val bytes = configFile.readBytes()
+                val format = SettingsBackupManager.detectFormat(bytes)
+
+                when (format) {
+                    SettingsBackupManager.BackupFormat.V3_ENCRYPTED -> {
+                        withContext(Dispatchers.Main) {
+                            showConfigPasswordDialog(bytes) { password ->
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    try {
+                                        val plainText = SettingsBackupManager.decryptBackup(bytes, password)
+                                        val details = SettingsBackupManager.parseBackupContent(ctx, plainText)
+                                        val success = SettingsBackupManager.performRestore(ctx, details)
+                                        withContext(Dispatchers.Main) {
+                                            if (success) {
+                                                AutoBackupPrefs.setRestorePromptShown(ctx)
+                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_config, android.widget.Toast.LENGTH_SHORT).show()
+                                                // App will restart via performRestore -> Runtime.exit(0)
+                                            } else {
+                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    } catch (e: javax.crypto.AEADBadTagException) {
+                                        withContext(Dispatchers.Main) {
+                                            android.widget.Toast.makeText(ctx, R.string.backup_import_wrong_password, android.widget.Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    SettingsBackupManager.BackupFormat.V3_PLAIN,
+                    SettingsBackupManager.BackupFormat.V2_LEGACY,
+                    SettingsBackupManager.BackupFormat.RAW_JSON -> {
+                        try {
+                            val plainText = SettingsBackupManager.decryptBackup(bytes, null)
+                            val details = SettingsBackupManager.parseBackupContent(ctx, plainText)
+                            val success = SettingsBackupManager.performRestore(ctx, details)
+                            withContext(Dispatchers.Main) {
+                                if (success) {
+                                    AutoBackupPrefs.setRestorePromptShown(ctx)
+                                    android.widget.Toast.makeText(ctx, R.string.auto_restore_success_config, android.widget.Toast.LENGTH_SHORT).show()
+                                } else {
+                                    android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    SettingsBackupManager.BackupFormat.UNKNOWN -> {
+                        withContext(Dispatchers.Main) {
+                            android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showConfigPasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_backup_import_password_tv
+            else R.layout.dialog_backup_import_password,
+            null
+        )
+
+        val edtPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtPassword)
+        val tilPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilPassword)
+        val btnDecrypt = dialogView.findViewById<Button>(R.id.btnDecrypt)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnDecrypt.setOnClickListener {
+            val pw = edtPassword.text?.toString() ?: ""
+            if (pw.isEmpty()) return@setOnClickListener
+            dialog.dismiss()
+            onPassword(pw)
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = getColor(R.color.tv_button_focused_yellow_text)
+            btnDecrypt.backgroundTintList = android.content.res.ColorStateList.valueOf(yellow)
+            btnDecrypt.setTextColor(black)
+            btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
+                btnDecrypt.backgroundTintList =
+                    if (hasFocus) android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    else android.content.res.ColorStateList.valueOf(yellow)
+            }
+            btnDecrypt.requestFocus()
         }
     }
 

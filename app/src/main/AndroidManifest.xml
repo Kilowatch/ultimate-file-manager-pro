@@ -355,6 +355,11 @@
             android:name=".settings.BackupRestoreActivity"
             android:exported="false" />
 
+        <!-- Auto Backup -->
+        <activity
+            android:name=".settings.AutoBackupActivity"
+            android:exported="false" />
+
         <activity
             android:name=".settings.ImportDetailsActivity"
             android:exported="false" />

@@ -400,6 +400,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardAutoBackup)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
@@ -449,6 +450,12 @@ class SettingsActivity : AppCompatActivity() {
         val cardBackupRestore = findViewById<MaterialCardView?>(R.id.cardBackupRestore)
         cardBackupRestore?.setOnClickListener {
             startActivity(Intent(this, BackupRestoreActivity::class.java))
+        }
+
+        // Auto Backup row
+        val cardAutoBackup = findViewById<MaterialCardView?>(R.id.cardAutoBackup)
+        cardAutoBackup?.setOnClickListener {
+            startActivity(Intent(this, AutoBackupActivity::class.java))
         }
     }
 
@@ -921,6 +928,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardIcons, "settings_icons", R.drawable.ic_palette),
             CardIcon(R.id.cardDefaultIconColors, "settings_default_icon_colors", R.drawable.ic_tune),
             CardIcon(R.id.cardBackupRestore, "settings_backup_restore", R.drawable.ic_export),
+            CardIcon(R.id.cardAutoBackup, "settings_auto_backup", R.drawable.ic_cloud),
             CardIcon(R.id.cardMainMenuViewMode, "settings_main_menu_layout", R.drawable.ic_view_list),
             CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),
             CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),

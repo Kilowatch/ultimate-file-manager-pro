@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 155,
-      "versionName": "1.4.9-AMAZON",
+      "versionCode": 163,
+      "versionName": "1.5.3-AMAZON",
       "outputFile": "app-tv-amazon-release.apk"
     }
   ],

@@ -483,6 +483,71 @@
             </com.google.android.material.card.MaterialCardView>
 
 
+            <!-- Auto Backup Row -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAutoBackup"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_cloud"
+                        android:layout_marginEnd="@dimen/margin_lg"
+                        app:tint="@color/tv_icon_tint"
+                        android:contentDescription="@string/settings_auto_backup_title" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_auto_backup_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_auto_backup_subtitle"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_arrow_down"
+                        android:rotation="-90"
+                        app:tint="@color/tv_text_secondary"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
             <!-- Main Menu Layout Row -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardMainMenuViewMode"

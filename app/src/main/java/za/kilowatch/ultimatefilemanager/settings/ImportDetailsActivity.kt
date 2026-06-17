@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import javax.crypto.AEADBadTagException
@@ -298,6 +299,9 @@ class ImportDetailsActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 progressBar.visibility = View.GONE
                 if (success) {
+                    // Trigger auto-backup of the newly restored state
+                    AutoBackupScheduler.runOnceNow(this@ImportDetailsActivity)
+
                     Toast.makeText(this@ImportDetailsActivity, R.string.backup_import_success, Toast.LENGTH_SHORT).show()
 
                     // Self-restart application to reload preferences and db singletons cleanly

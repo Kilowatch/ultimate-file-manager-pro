@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 class ExportDetailsActivity : AppCompatActivity() {
@@ -220,6 +221,9 @@ class ExportDetailsActivity : AppCompatActivity() {
             }
             progressBar.visibility = View.GONE
             if (success) {
+                // Mirror to Documents/UFM/ if auto-backup is enabled
+                AutoBackupScheduler.runOnceNow(this@ExportDetailsActivity)
+
                 val userPath = getString(R.string.backup_path_internal_storage, targetFile.name)
                 val message = getString(R.string.backup_notification_file_saved, userPath)
                 Toast.makeText(this@ExportDetailsActivity, message, Toast.LENGTH_LONG).show()

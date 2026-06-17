@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import javax.crypto.AEADBadTagException
@@ -316,6 +317,8 @@ class IconPackImportActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO) {
                 ThemePackManager.applyOverrides(this@IconPackImportActivity, importedOverrides)
+                // Trigger auto-backup after theme import
+                AutoBackupScheduler.runOnceNow(this@IconPackImportActivity)
             }
 
             progressBar.visibility = View.GONE
