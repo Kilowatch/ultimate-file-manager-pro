@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.4] — 2026-06-17
 
+### Changed
+- Custom tile contents on TV now enter edit mode on long-press (matching main menu behavior), with hide/gear buttons, color picker, and a second long-press showing a reorder option.
+
 ### Added
 - In-document search for Text Viewer and Spreadsheet Viewer: search bar with case-insensitive substring matching, match highlighting (yellow/light blue), up/down navigation with wrapping, match count display, and search icon indicator. Supports both mobile and TV with full D-pad focus on TV.
 - Auto Backup system — new settings screen with enable/disable toggle, selection of what to back up (Settings config and/or Icon Theme), schedule picker (daily/weekly/monthly), and optional password protection. Backups are saved to `Documents/UFM/` and survive uninstall. On fresh install, the app detects existing backup files and offers to restore them (theme first, then settings). Tip jar loyalty data is now included in both manual and auto backups.

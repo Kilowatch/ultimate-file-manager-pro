@@ -139,16 +139,18 @@ class CustomTileActivity : AppCompatActivity() {
             onStorageClick = { item -> onTileClicked(item) },
             onLongPress = { item, viewHolder ->
                 if (isTv) {
-                    // On TV, long-press enters reorder mode directly
-                    if (reorderModeItemId != null) {
-                        exitTvReorderMode(save = true)
+                    // TV: long press enters Edit Mode first.
+                    // If already in Edit Mode, show menu with move/reorder options.
+                    if (isEditMode) {
+                        showTvEditOptionsMenu(item)
                     } else {
-                        enterTvReorderMode(item)
+                        enterEditMode()
                     }
                 } else {
-                    // On mobile, long-press enters edit mode
-                    enterEditMode()
-                    // Start drag via ItemTouchHelper
+                    // Mobile: enter Edit Mode (pulse/jiggle) and start drag
+                    if (!isEditMode) {
+                        enterEditMode()
+                    }
                     itemTouchHelper.startDrag(viewHolder)
                 }
             },
@@ -325,6 +327,25 @@ class CustomTileActivity : AppCompatActivity() {
 
         dialog.setOnShowListener { btnGotIt.requestFocus() }
         dialog.show()
+    }
+
+    /**
+     * Shows an options dialog for a tile when already in Edit Mode on TV.
+     * Provides "Reorder" (D-pad move mode) matching [StorageBrowserActivity.showTvEditOptionsMenu].
+     */
+    private fun showTvEditOptionsMenu(item: StorageItem) {
+        val options = mutableListOf<String>()
+        options.add(getString(R.string.dpad_moves_tile_ok_saves_back_cancels)) // Reorder
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(item.label)
+            .setItems(options.toTypedArray()) { _, which ->
+                when (which) {
+                    0 -> enterTvReorderMode(item)
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     // ── Tile Actions ────────────────────────────────────────────────────────
@@ -785,6 +806,7 @@ class CustomTileActivity : AppCompatActivity() {
             if (isTv) {
                 btnDoneTv?.visibility = View.VISIBLE
                 btnColorTile?.visibility = View.VISIBLE
+                btnImportColorCode?.visibility = View.VISIBLE
             } else {
                 // Mobile: show checkmark button to exit edit mode
                 btnManageTiles.setImageResource(R.drawable.ic_check)
@@ -797,6 +819,7 @@ class CustomTileActivity : AppCompatActivity() {
             if (isTv) {
                 btnDoneTv?.visibility = View.GONE
                 btnColorTile?.visibility = View.GONE
+                btnImportColorCode?.visibility = View.GONE
             } else {
                 btnManageTiles.visibility = View.GONE
                 btnColorTile?.visibility = View.GONE
