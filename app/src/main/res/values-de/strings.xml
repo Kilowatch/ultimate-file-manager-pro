@@ -4348,6 +4348,41 @@ Thema
 Einstellungen und Thema
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Standort speichern
+</string>
+    <string name="auto_backup_location_default">
+Standard (Dokumente/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Benutzerdefinierter Standort
+</string>
+    <string name="auto_backup_select_folder">
+Wählen Sie als Backup-Speicherort aus
+</string>
+    <string name="auto_backup_select_folder_btn">
+Wählen Sie Ordner aus
+</string>
+    <string name="auto_backup_reset_default">
+Auf Standard zurücksetzen
+</string>
+    <string name="auto_backup_location_unavailable">
+Der ausgewählte Ordner existiert nicht mehr – es wird auf die Standardeinstellung zurückgesetzt
+</string>
+    <string name="auto_backup_location_confirm_title">
+Wählen Sie als Backup-Speicherort aus
+</string>
+    <string name="auto_backup_location_confirm_message">
+Diesen Ordner für automatische Backups verwenden?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Netzwerkfreigabe nicht erreichbar – Standardspeicherort wird verwendet
+</string>
+    <string name="auto_backup_location_success">
+Sicherungsspeicherort auf %1$s festgelegt
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Backup gefunden

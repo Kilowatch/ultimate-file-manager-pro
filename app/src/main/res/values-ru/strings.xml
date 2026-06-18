@@ -4348,6 +4348,41 @@ PDF (только многостраничный)
 Настройки и тема
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Сохранить местоположение
+</string>
+    <string name="auto_backup_location_default">
+По умолчанию (Документы/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Пользовательское местоположение
+</string>
+    <string name="auto_backup_select_folder">
+Выбрать в качестве места резервного копирования
+</string>
+    <string name="auto_backup_select_folder_btn">
+Выберите папку
+</string>
+    <string name="auto_backup_reset_default">
+Сбросить настройки по умолчанию
+</string>
+    <string name="auto_backup_location_unavailable">
+Выбранная папка больше не существует — возврат к настройкам по умолчанию
+</string>
+    <string name="auto_backup_location_confirm_title">
+Выбрать в качестве места резервного копирования
+</string>
+    <string name="auto_backup_location_confirm_message">
+Использовать эту папку для автоматического резервного копирования?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Сетевой ресурс недоступен — используется местоположение по умолчанию
+</string>
+    <string name="auto_backup_location_success">
+Местоположение резервной копии установлено на %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Резервная копия найдена

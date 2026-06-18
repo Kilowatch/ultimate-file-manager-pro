@@ -213,6 +213,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var quickTransferIsMove = false
     private var isShareDestPickerMode = false
     private var isScannerFolderPicker = false
+    private var isAutoBackupFolderPicker = false
     private var isImageCompressDestPickerMode = false
     private var isSmartSortPickerMode = false
     private var isSmartSortCategoryPickerMode = false
@@ -377,6 +378,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         quickTransferIsMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP) == "MOVE"
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
+        isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
         isSmartSortCategoryPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_CATEGORY_PICKER, false)
@@ -823,6 +825,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
             return
         }
 
+        // Auto Backup folder picker mode: show "Select as Backup Location" FAB
+        if (isAutoBackupFolderPicker) {
+            layoutSelectionBar.visibility = View.GONE
+            showUseFolderFab()
+            return
+        }
+
         // Image Compress folder picker mode: show "Use This Folder" FAB
         if (isImageCompressDestPickerMode) {
             layoutSelectionBar.visibility = View.GONE
@@ -1102,6 +1111,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_scanner)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmScannerNetworkFolderDialog() }
+        } else if (isAutoBackupFolderPicker) {
+            fabPaste.setText(R.string.auto_backup_select_folder)
+            fabPaste.setIconResource(R.drawable.ic_cloud)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmAutoBackupNetworkFolderDialog() }
         } else if (isImageCompressDestPickerMode) {
             fabPaste.setText(R.string.use_this_folder_image)
             fabPaste.setIconResource(R.drawable.ic_compress_image)
@@ -1239,6 +1253,22 @@ class NetworkBrowserActivity : AppCompatActivity() {
             .setMessage(getString(R.string.scanner_folder_picker_title) + "\n\n${share.name}$displayPath")
             .setIcon(R.drawable.ic_scanner)
             .setPositiveButton(R.string.scanner_use_this_folder) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showConfirmAutoBackupNetworkFolderDialog() {
+        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.auto_backup_location_confirm_title)
+            .setMessage(R.string.auto_backup_location_confirm_message)
+            .setPositiveButton(R.string.auto_backup_select_folder) { _, _ ->
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_SHARE_ID, share.id)
                     putExtra(RESULT_SELECTED_NET_PATH, currentPath)
@@ -1460,7 +1490,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun updatePasteFab() {
         // In sync/compress folder picker mode + location picker mode the FAB is "Use This Folder" — never hide it here
-        if (isSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
+        if (isSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
             showUseFolderFab()
             return
         }

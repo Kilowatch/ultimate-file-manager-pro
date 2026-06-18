@@ -4348,6 +4348,41 @@ Thème
 Paramètres et thème
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Enregistrer l\'emplacement
+</string>
+    <string name="auto_backup_location_default">
+Par défaut (Documents/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Emplacement personnalisé
+</string>
+    <string name="auto_backup_select_folder">
+Sélectionner comme emplacement de sauvegarde
+</string>
+    <string name="auto_backup_select_folder_btn">
+Sélectionner un dossier
+</string>
+    <string name="auto_backup_reset_default">
+Réinitialiser aux valeurs par défaut
+</string>
+    <string name="auto_backup_location_unavailable">
+Le dossier sélectionné n\'existe plus - retour aux valeurs par défaut
+</string>
+    <string name="auto_backup_location_confirm_title">
+Sélectionner comme emplacement de sauvegarde
+</string>
+    <string name="auto_backup_location_confirm_message">
+Utiliser ce dossier pour les sauvegardes automatiques ?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Partage réseau inaccessible – en utilisant l\'emplacement par défaut
+</string>
+    <string name="auto_backup_location_success">
+Emplacement de sauvegarde défini sur %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Sauvegarde trouvée

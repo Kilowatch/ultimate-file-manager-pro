@@ -4348,6 +4348,41 @@ Tema
 Configuración y tema
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Guardar ubicación
+</string>
+    <string name="auto_backup_location_default">
+Predeterminado (Documentos/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Ubicación personalizada
+</string>
+    <string name="auto_backup_select_folder">
+Seleccionar como ubicación de copia de seguridad
+</string>
+    <string name="auto_backup_select_folder_btn">
+Seleccionar carpeta
+</string>
+    <string name="auto_backup_reset_default">
+Restablecer los valores predeterminados
+</string>
+    <string name="auto_backup_location_unavailable">
+La carpeta seleccionada ya no existe: vuelve al valor predeterminado
+</string>
+    <string name="auto_backup_location_confirm_title">
+Seleccionar como ubicación de copia de seguridad
+</string>
+    <string name="auto_backup_location_confirm_message">
+¿Utilizar esta carpeta para copias de seguridad automáticas?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Compartir red inalcanzable: usando la ubicación predeterminada
+</string>
+    <string name="auto_backup_location_success">
+Ubicación de la copia de seguridad configurada en %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Copia de seguridad encontrada

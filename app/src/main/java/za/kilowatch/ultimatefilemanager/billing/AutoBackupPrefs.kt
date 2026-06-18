@@ -39,6 +39,13 @@ object AutoBackupPrefs {
     private const val KEY_FILES_ON_FIRST_BOOT = "backup_files_present_on_first_boot"
     private const val KEY_RESTORE_PROMPT_SHOWN = "auto_restore_prompt_shown"
 
+    // ── Custom location keys ─────────────────────────────────────────────────
+
+    private const val KEY_CUSTOM_LOCATION_TYPE = "custom_location_type"
+    private const val KEY_CUSTOM_LOCAL_PATH = "custom_local_path"
+    private const val KEY_CUSTOM_SHARE_ID = "custom_share_id"
+    private const val KEY_CUSTOM_NET_PATH = "custom_net_path"
+
     // ── Prefs instances (lazily initialised) ──────────────────────────────────
 
     @Volatile
@@ -168,21 +175,119 @@ object AutoBackupPrefs {
         getPrefs(context).edit().putBoolean(KEY_RESTORE_PROMPT_SHOWN, true).commit()
     }
 
+    // ── Custom location getters/setters ───────────────────────────────────────
+
+    fun getCustomLocationType(context: Context): String =
+        getPrefs(context).getString(KEY_CUSTOM_LOCATION_TYPE, "") ?: ""
+
+    fun setCustomLocationType(context: Context, type: String) {
+        getPrefs(context).edit().putString(KEY_CUSTOM_LOCATION_TYPE, type).apply()
+    }
+
+    fun getCustomLocalPath(context: Context): String =
+        getPrefs(context).getString(KEY_CUSTOM_LOCAL_PATH, "") ?: ""
+
+    fun setCustomLocalPath(context: Context, path: String) {
+        getPrefs(context).edit().putString(KEY_CUSTOM_LOCAL_PATH, path).apply()
+    }
+
+    fun getCustomShareId(context: Context): String =
+        getPrefs(context).getString(KEY_CUSTOM_SHARE_ID, "") ?: ""
+
+    fun setCustomShareId(context: Context, shareId: String) {
+        getPrefs(context).edit().putString(KEY_CUSTOM_SHARE_ID, shareId).apply()
+    }
+
+    fun getCustomNetPath(context: Context): String =
+        getPrefs(context).getString(KEY_CUSTOM_NET_PATH, "") ?: ""
+
+    fun setCustomNetPath(context: Context, netPath: String) {
+        getPrefs(context).edit().putString(KEY_CUSTOM_NET_PATH, netPath).apply()
+    }
+
+    fun isCustomLocationSet(context: Context): Boolean =
+        getCustomLocationType(context).isNotEmpty()
+
+    fun clearCustomLocation(context: Context) {
+        getPrefs(context).edit()
+            .putString(KEY_CUSTOM_LOCATION_TYPE, "")
+            .putString(KEY_CUSTOM_LOCAL_PATH, "")
+            .putString(KEY_CUSTOM_SHARE_ID, "")
+            .putString(KEY_CUSTOM_NET_PATH, "")
+            .apply()
+    }
+
+    /**
+     * Returns the human-readable path for display in the settings UI.
+     * For local: the absolute path. For network: "share_name: remote_path".
+     */
+    fun getBackupDirectoryDisplayPath(context: Context): String {
+        return when (getCustomLocationType(context)) {
+            "local" -> getCustomLocalPath(context)
+            "network" -> {
+                val shareId = getCustomShareId(context)
+                val netPath = getCustomNetPath(context)
+                val shareName = try {
+                    val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
+                    val share = repo.getById(shareId)
+                    share?.name ?: shareId
+                } catch (e: Exception) {
+                    shareId
+                }
+                "$shareName: $netPath"
+            }
+            else -> "Documents/UFM/"
+        }
+    }
+
+    /**
+     * Checks whether the custom location is currently available.
+     * For local: checks directory existence. For network: always returns true
+     * (actual reachability is checked at backup time by the worker).
+     */
+    fun isCustomLocationAvailable(context: Context): Boolean {
+        return when (getCustomLocationType(context)) {
+            "local" -> {
+                val f = File(getCustomLocalPath(context))
+                f.exists() || f.mkdirs()
+            }
+            "network" -> true // checked at write time
+            else -> true
+        }
+    }
+
     // ── Path helpers ──────────────────────────────────────────────────────────
 
-    fun getBackupDirectory(): File {
+    /**
+     * Returns the effective backup directory.
+     * - If a local custom path is set and exists, returns that.
+     * - For network custom paths, or if the local path doesn't exist,
+     *   returns the default Documents/UFM/ as a fallback.
+     */
+    fun getBackupDirectory(context: Context): File {
+        val type = getCustomLocationType(context)
+        if (type == "local") {
+            val customPath = getCustomLocalPath(context)
+            if (customPath.isNotEmpty()) {
+                val dir = File(customPath)
+                if (dir.exists() || dir.mkdirs()) {
+                    return dir
+                }
+                android.util.Log.w(TAG, "Custom local path $customPath does not exist — falling back to default")
+            }
+        }
         return File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
             "UFM"
         )
     }
 
-    fun getConfigFile(): File {
-        return File(getBackupDirectory(), "ufm_backup.UFMConfig")
+    fun getConfigFile(context: Context): File {
+        return File(getBackupDirectory(context), "ufm_backup.UFMConfig")
     }
 
-    fun getThemeFile(): File {
-        return File(getBackupDirectory(), "ufm_icons_theme.UFMTheme")
+    fun getThemeFile(context: Context): File {
+        return File(getBackupDirectory(context), "ufm_icons_theme.UFMTheme")
     }
 
     /**

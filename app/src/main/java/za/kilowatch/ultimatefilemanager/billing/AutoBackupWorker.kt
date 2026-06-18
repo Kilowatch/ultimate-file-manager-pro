@@ -40,7 +40,7 @@ class AutoBackupWorker(
             null
         }
 
-        val backupDir = AutoBackupPrefs.getBackupDirectory()
+        val backupDir = AutoBackupPrefs.getBackupDirectory(ctx)
         backupDir.mkdirs()
 
         var anyFailure = false
@@ -55,6 +55,11 @@ class AutoBackupWorker(
         if (AutoBackupPrefs.isBackupTheme(ctx)) {
             anyFailure = !exportTheme(ctx, backupDir, password) || anyFailure
             AutoBackupPrefs.clearThemeDirty(ctx)
+        }
+
+        // ── 3. Network custom location upload ───────────────────────────
+        if (!anyFailure && AutoBackupPrefs.getCustomLocationType(ctx) == "network") {
+            anyFailure = !uploadToNetworkShare(ctx, backupDir, password) || anyFailure
         }
 
         if (anyFailure) Result.retry() else Result.success()
@@ -114,6 +119,72 @@ class AutoBackupWorker(
         } catch (e: Exception) {
             Log.e(TAG, "Theme backup error", e)
             false
+        }
+    }
+
+    /**
+     * Uploads the local backup files to the configured network share.
+     * Falls back gracefully if the share is unreachable.
+     */
+    private suspend fun uploadToNetworkShare(
+        context: Context,
+        localDir: File,
+        password: String?
+    ): Boolean {
+        val shareId = AutoBackupPrefs.getCustomShareId(context)
+        val netPath = AutoBackupPrefs.getCustomNetPath(context)
+        if (shareId.isEmpty()) return false
+
+        return try {
+            val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
+            val share = repo.getById(shareId) ?: return false
+
+            val configFile = File(localDir, "ufm_backup.UFMConfig")
+            val themeFile = File(localDir, "ufm_icons_theme.UFMTheme")
+
+            val filesToUpload = mutableListOf<File>()
+            if (configFile.exists()) filesToUpload.add(configFile)
+            if (themeFile.exists()) filesToUpload.add(themeFile)
+
+            for (file in filesToUpload) {
+                val remoteName = file.name
+                val remotePath = if (netPath.isEmpty()) remoteName else "$netPath/$remoteName"
+                val inp = file.inputStream()
+                try {
+                    when (share.type) {
+                        za.kilowatch.ultimatefilemanager.network.ShareType.TV ->
+                            za.kilowatch.ultimatefilemanager.network.TvShareClient.uploadStream(share, remotePath, inp, file.length())
+                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB ->
+                            za.kilowatch.ultimatefilemanager.network.SmbShareClient.openOutputStream(share, remotePath)
+                                .use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) }
+                        za.kilowatch.ultimatefilemanager.network.ShareType.FTP ->
+                            za.kilowatch.ultimatefilemanager.network.FtpShareClient.openOutputStream(share, remotePath)
+                                .use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) }
+                        za.kilowatch.ultimatefilemanager.network.ShareType.SFTP,
+                        za.kilowatch.ultimatefilemanager.network.ShareType.SCP ->
+                            za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(share, remotePath)
+                                .use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) }
+                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->
+                            za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, remotePath)
+                                .use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) }
+                        za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
+                            za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, remotePath)
+                                .use { out -> za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(inp, out) }
+                        else -> {
+                            // Non-local share types (OneDrive, Google Drive, Dropbox, S3)
+                            // are handled by separate cloud sync flows — skip for auto-backup
+                            Log.d(TAG, "Skipping upload for ${share.type} — not supported for auto-backup")
+                        }
+                    }
+                    Log.d(TAG, "Uploaded ${file.name} to network share: $remotePath")
+                } finally {
+                    inp.close()
+                }
+            }
+            true
+        } catch (e: Exception) {
+            Log.w(TAG, "Network share upload failed — falling back to local backup", e)
+            false // non-fatal — local files remain in Documents/UFM/
         }
     }
 }

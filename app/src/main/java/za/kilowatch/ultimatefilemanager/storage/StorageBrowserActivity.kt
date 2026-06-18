@@ -1,4 +1,4 @@
-package za.kilowatch.ultimatefilemanager.storage
+﻿package za.kilowatch.ultimatefilemanager.storage
 
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
@@ -73,9 +73,9 @@ import androidx.lifecycle.lifecycleScope
  * Dynamically updates when new storage is mounted or removed.
  *
  * Uses three detection mechanisms:
- * 1. StorageVolume callback (API 30+) — immediate, most reliable
- * 2. BroadcastReceiver for media/USB events — classic approach
- * 3. onResume auto-refresh — catches anything missed
+ * 1. StorageVolume callback (API 30+) â€” immediate, most reliable
+ * 2. BroadcastReceiver for media/USB events â€” classic approach
+ * 3. onResume auto-refresh â€” catches anything missed
  */
 class StorageBrowserActivity : AppCompatActivity() {
 
@@ -97,6 +97,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var isShareDestPickerMode = false
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
+    private var isAutoBackupFolderPicker = false
     private var isTileIconPickerMode = false
     private var activeTileIdForIcon: String? = null
     
@@ -177,7 +178,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         const val EXTRA_DRIVE_PICKER = "extra_drive_picker"
         /** Returned by child activity when the user confirms a sync folder */
         const val RESULT_SELECTED_SYNC_PATH = "result_selected_sync_path"
-        /** Returned by child activity — the absolute path of the selected local folder */
+        /** Returned by child activity â€” the absolute path of the selected local folder */
         const val RESULT_SELECTED_LOCAL_PATH = "result_selected_local_path"
         
         /** When true, the user is picking a tile icon file from any storage */
@@ -296,7 +297,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 used = total - stats.availableBytes
             } catch (e: SecurityException) {
                 if (path.contains("media_rw") || path.contains("/mnt/media_rw")) {
-                    Log.w(TAG, "SELinux blocked StatFs for $path — USB drive inaccessible on this platform.")
+                    Log.w(TAG, "SELinux blocked StatFs for $path â€” USB drive inaccessible on this platform.")
                     // On Amazon FireOS, flag for Shizuku guidance card
                     if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(context)) {
                         usbSelinuxBlocked = true
@@ -365,18 +366,18 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         /**
          * Static utility that builds a complete snapshot of ALL tile types that
-         * can exist on the main screen — physical storage, network shares, online
+         * can exist on the main screen â€” physical storage, network shares, online
          * storages, paired devices, and all feature shortcut tiles.  Used by
          * [CustomTileActivity] to resolve child tile IDs to full [StorageItem]s.
          */
-        // ═══════════════════════════════════════════════════════════════════
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         //  IMPORTANT: Every new tile added to loadStorageVolumes() MUST also
         //  be added here, otherwise it will NOT render inside custom tiles.
-        //  See CLAUDE.md → "Main Menu Tile Registration Checklist" for details.
-        // ═══════════════════════════════════════════════════════════════════
+        //  See CLAUDE.md â†’ "Main Menu Tile Registration Checklist" for details.
+        // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
         /**
          * Static utility that builds a complete snapshot of ALL tile types that
-         * can exist on the main screen — physical storage, network shares, online
+         * can exist on the main screen â€” physical storage, network shares, online
          * storages, paired devices, favorites, APK extracts, recycle bin, and all
          * feature shortcut tiles.  Used by [CustomTileActivity] to resolve child
          * tile IDs to full [StorageItem]s.
@@ -385,21 +386,21 @@ class StorageBrowserActivity : AppCompatActivity() {
             val items = getConnectedStorages(context, localOnly = false).toMutableList()
             val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)
 
-            // ── Online Storages (individual accounts) ──────────────────────
+            // â”€â”€ Online Storages (individual accounts) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(context)
             for (storage in onlineRepo.getAll()) {
                 if (storage.isCredentialsStripped) continue
                 items.add(StorageItem(id = storage.id, label = storage.displayName, iconRes = R.drawable.ic_cloud, totalBytes = 0, usedBytes = 0, mountPath = storage.email, isOnlineStorage = true, onlineStorage = storage, subtitle = storage.email))
             }
 
-            // ── Network Shares (individual SMB/FTP connections) ────────────
+            // â”€â”€ Network Shares (individual SMB/FTP connections) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             val shareRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
             for (share in shareRepo.getAll()) {
                 if (share.isCredentialsStripped) continue
                 items.add(StorageItem(id = share.id, label = share.name, iconRes = R.drawable.ic_network, totalBytes = 0, usedBytes = 0, mountPath = share.docIdPrefix, isNetworkRoot = true, networkShare = share))
             }
 
-            // ── Paired Devices (individual entries) ────────────────────────
+            // â”€â”€ Paired Devices (individual entries) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             val pairingManager = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(context)
             for (device in pairingManager.getAllPairedDevices()) {
                 if (device.isConnected) {
@@ -408,13 +409,13 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            // ── Favorites ──────────────────────────────────────────────────
+            // â”€â”€ Favorites â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             val favorites = za.kilowatch.ultimatefilemanager.settings.FavoritesManager.getFavorites(context)
             for (fav in favorites) {
                 items.add(StorageItem(id = fav.id, label = fav.label, iconRes = R.drawable.ic_star, totalBytes = 0, usedBytes = 0, mountPath = "", isFavoriteTile = true, favoritePath = fav.path, favoriteIsFolder = fav.isFolder, favoriteIsNetwork = fav.isNetwork))
             }
 
-            // ── Feature shortcut tiles ─────────────────────────────────────
+            // â”€â”€ Feature shortcut tiles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             items.add(StorageItem(id = "twin_window_tile", label = context.getString(R.string.twin_window_title), iconRes = R.drawable.ic_twin_window, totalBytes = 0, usedBytes = 0, mountPath = "", isTwinWindowTile = true))
             items.add(StorageItem(id = "notepad_tile", label = context.getString(R.string.notepad), iconRes = R.drawable.ic_notepad, totalBytes = 0, usedBytes = 0, mountPath = "", isNotepadTile = true, subtitle = context.getString(R.string.notepad_tile_subtitle)))
             if (!isTv) {
@@ -552,6 +553,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isNotepadFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
+        isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isTileIconPickerMode = intent.getBooleanExtra(EXTRA_TILE_ICON_PICKER, false)
 
         if (isTileIconPickerMode) {
@@ -653,18 +655,18 @@ class StorageBrowserActivity : AppCompatActivity() {
         }
     }
 
-    // ── Auto-Backup Restore Detection ─────────────────────────────────────
+    // â”€â”€ Auto-Backup Restore Detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private fun checkAutoBackupRestore() {
         val ctx = this
 
-        // If the flag doesn't exist yet, this is the first boot after install/upgrade
+        // If the flag doesn't exist yet, this is the first boot after install/upgrade.
+        // Set the flag now, then fall through to check if we need to show the dialog.
         val prefs = ctx.getSharedPreferences("auto_backup_prefs", Context.MODE_PRIVATE)
         if (!prefs.contains("backup_files_present_on_first_boot")) {
-            val configExists = AutoBackupPrefs.getConfigFile().exists()
-            val themeExists = AutoBackupPrefs.getThemeFile().exists()
+            val configExists = AutoBackupPrefs.getConfigFile(ctx).exists()
+            val themeExists = AutoBackupPrefs.getThemeFile(ctx).exists()
             AutoBackupPrefs.setBackupFilesPresentOnFirstBoot(ctx, configExists || themeExists)
-            return
         }
 
         // If files were not present on first boot, nothing to restore
@@ -679,8 +681,8 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private fun showBackupRestoreDialog() {
         val ctx = this
-        val configExists = AutoBackupPrefs.getConfigFile().exists()
-        val themeExists = AutoBackupPrefs.getThemeFile().exists()
+        val configExists = AutoBackupPrefs.getConfigFile(this).exists()
+        val themeExists = AutoBackupPrefs.getThemeFile(this).exists()
 
         val detectedItems = mutableListOf<String>()
         if (configExists) detectedItems.add(getString(R.string.auto_restore_detected_config))
@@ -706,198 +708,35 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun performAutoBackupRestore(configExists: Boolean, themeExists: Boolean) {
         val ctx = this@StorageBrowserActivity
 
-        // Theme must be restored first (no restart needed), then settings (triggers restart)
-        if (themeExists) {
-            restoreTheme { success ->
-                if (!success) {
-                    runOnUiThread {
-                        android.widget.Toast.makeText(ctx, R.string.auto_restore_error_theme, android.widget.Toast.LENGTH_SHORT).show()
-                    }
-                }
-                // Continue to config restore regardless
-                if (configExists) {
-                    restoreConfig()
-                } else {
-                    AutoBackupPrefs.setRestorePromptShown(ctx)
-                }
-            }
-        } else if (configExists) {
-            restoreConfig()
-        } else {
-            AutoBackupPrefs.setRestorePromptShown(ctx)
-        }
-    }
-
-    private fun restoreTheme(onComplete: (Boolean) -> Unit) {
-        val ctx = this@StorageBrowserActivity
-        val themeFile = AutoBackupPrefs.getThemeFile()
-
+        // Check if any file needs a password â€” read formats on IO thread
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val bytes = themeFile.readBytes()
-                val format = ThemePackManager.detectFormat(bytes)
-
-                when (format) {
-                    ThemePackManager.ThemePackFormat.V2_ENCRYPTED -> {
-                        // Need password — show dialog
-                        withContext(Dispatchers.Main) {
-                            showThemePasswordDialog(bytes) { password ->
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    try {
-                                        val (success, overrides) = ThemePackManager.performImport(ctx, themeFile, password)
-                                        if (success && overrides.isNotEmpty()) {
-                                            ThemePackManager.applyOverrides(ctx, overrides)
-                                            withContext(Dispatchers.Main) {
-                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_theme, android.widget.Toast.LENGTH_SHORT).show()
-                                            }
-                                            onComplete(true)
-                                        } else {
-                                            onComplete(false)
-                                        }
-                                    } catch (e: javax.crypto.AEADBadTagException) {
-                                        withContext(Dispatchers.Main) {
-                                            android.widget.Toast.makeText(ctx, R.string.backup_import_wrong_password, android.widget.Toast.LENGTH_SHORT).show()
-                                        }
-                                        onComplete(false)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    ThemePackManager.ThemePackFormat.V1_LEGACY,
-                    ThemePackManager.ThemePackFormat.V2_PLAIN -> {
-                        val (success, overrides) = ThemePackManager.performImport(ctx, themeFile, null)
-                        if (success && overrides.isNotEmpty()) {
-                            ThemePackManager.applyOverrides(ctx, overrides)
-                            withContext(Dispatchers.Main) {
-                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_theme, android.widget.Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        onComplete(success && overrides.isNotEmpty())
-                    }
-                    ThemePackManager.ThemePackFormat.UNKNOWN -> {
-                        onComplete(false)
-                    }
-                }
-            } catch (e: Exception) {
-                onComplete(false)
+            var needsPassword = false
+            if (configExists) {
+                val configFile = AutoBackupPrefs.getConfigFile(this@StorageBrowserActivity)
+                val cb = configFile.readBytes()
+                val fmt = SettingsBackupManager.detectFormat(cb)
+                if (fmt == SettingsBackupManager.BackupFormat.V3_ENCRYPTED) needsPassword = true
             }
-        }
-    }
-
-    private fun showThemePasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
-        val isTv = DeviceUtils.isTvDevice(this)
-        val dialogView = LayoutInflater.from(this).inflate(
-            if (isTv) R.layout.dialog_theme_import_password_tv
-            else R.layout.dialog_theme_import_password,
-            null
-        )
-
-        val edtPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtPassword)
-        val btnDecrypt = dialogView.findViewById<Button>(R.id.btnDecrypt)
-
-        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-
-        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-
-        btnDecrypt.setOnClickListener {
-            val pw = edtPassword.text?.toString() ?: ""
-            if (pw.isEmpty()) return@setOnClickListener
-            dialog.dismiss()
-            onPassword(pw)
-        }
-
-        dialog.show()
-
-        if (isTv) {
-            val yellow = getColor(R.color.tv_button_focused_yellow)
-            val black = getColor(R.color.tv_button_focused_yellow_text)
-            btnDecrypt.backgroundTintList = android.content.res.ColorStateList.valueOf(yellow)
-            btnDecrypt.setTextColor(black)
-            btnDecrypt.setOnFocusChangeListener { _, hasFocus ->
-                btnDecrypt.backgroundTintList =
-                    if (hasFocus) android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-                    else android.content.res.ColorStateList.valueOf(yellow)
+            if (!needsPassword && themeExists) {
+                val themeFile = AutoBackupPrefs.getThemeFile(this@StorageBrowserActivity)
+                val tb = themeFile.readBytes()
+                val fmt = ThemePackManager.detectFormat(tb)
+                if (fmt == ThemePackManager.ThemePackFormat.V2_ENCRYPTED) needsPassword = true
             }
-            btnDecrypt.requestFocus()
-        }
-    }
 
-    private fun restoreConfig() {
-        val ctx = this@StorageBrowserActivity
-        val configFile = AutoBackupPrefs.getConfigFile()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val bytes = configFile.readBytes()
-                val format = SettingsBackupManager.detectFormat(bytes)
-
-                when (format) {
-                    SettingsBackupManager.BackupFormat.V3_ENCRYPTED -> {
-                        withContext(Dispatchers.Main) {
-                            showConfigPasswordDialog(bytes) { password ->
-                                lifecycleScope.launch(Dispatchers.IO) {
-                                    try {
-                                        val plainText = SettingsBackupManager.decryptBackup(bytes, password)
-                                        val details = SettingsBackupManager.parseBackupContent(ctx, plainText)
-                                        val success = SettingsBackupManager.performRestore(ctx, details)
-                                        withContext(Dispatchers.Main) {
-                                            if (success) {
-                                                AutoBackupPrefs.setRestorePromptShown(ctx)
-                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_success_config, android.widget.Toast.LENGTH_SHORT).show()
-                                                // App will restart via performRestore -> Runtime.exit(0)
-                                            } else {
-                                                android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                    } catch (e: javax.crypto.AEADBadTagException) {
-                                        withContext(Dispatchers.Main) {
-                                            android.widget.Toast.makeText(ctx, R.string.backup_import_wrong_password, android.widget.Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    SettingsBackupManager.BackupFormat.V3_PLAIN,
-                    SettingsBackupManager.BackupFormat.V2_LEGACY,
-                    SettingsBackupManager.BackupFormat.RAW_JSON -> {
-                        try {
-                            val plainText = SettingsBackupManager.decryptBackup(bytes, null)
-                            val details = SettingsBackupManager.parseBackupContent(ctx, plainText)
-                            val success = SettingsBackupManager.performRestore(ctx, details)
-                            withContext(Dispatchers.Main) {
-                                if (success) {
-                                    AutoBackupPrefs.setRestorePromptShown(ctx)
-                                    android.widget.Toast.makeText(ctx, R.string.auto_restore_success_config, android.widget.Toast.LENGTH_SHORT).show()
-                                } else {
-                                    android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                    SettingsBackupManager.BackupFormat.UNKNOWN -> {
-                        withContext(Dispatchers.Main) {
-                            android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            } catch (e: Exception) {
+            if (needsPassword) {
                 withContext(Dispatchers.Main) {
-                    android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                    showSingleRestorePasswordDialog { password ->
+                        doAutoBackupRestore(password, configExists, themeExists)
+                    }
                 }
+            } else {
+                doAutoBackupRestore(null, configExists, themeExists)
             }
         }
     }
 
-    private fun showConfigPasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
+    private fun showSingleRestorePasswordDialog(onPassword: (String) -> Unit) {
         val isTv = DeviceUtils.isTvDevice(this)
         val dialogView = LayoutInflater.from(this).inflate(
             if (isTv) R.layout.dialog_backup_import_password_tv
@@ -906,7 +745,6 @@ class StorageBrowserActivity : AppCompatActivity() {
         )
 
         val edtPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtPassword)
-        val tilPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilPassword)
         val btnDecrypt = dialogView.findViewById<Button>(R.id.btnDecrypt)
 
         val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
@@ -938,6 +776,78 @@ class StorageBrowserActivity : AppCompatActivity() {
             btnDecrypt.requestFocus()
         }
     }
+
+    private fun doAutoBackupRestore(password: String?, configExists: Boolean, themeExists: Boolean) {
+        val ctx = this@StorageBrowserActivity
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Theme first (no restart needed)
+            if (themeExists) {
+                try {
+                    val themeFile = AutoBackupPrefs.getThemeFile(this@StorageBrowserActivity)
+                    val (success, overrides) = ThemePackManager.performImport(ctx, themeFile, password)
+                    if (success && overrides.isNotEmpty()) {
+                        ThemePackManager.applyOverrides(ctx, overrides)
+                        withContext(Dispatchers.Main) {
+                            android.widget.Toast.makeText(ctx, R.string.auto_restore_success_theme, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            android.widget.Toast.makeText(ctx, R.string.auto_restore_error_theme, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: javax.crypto.AEADBadTagException) {
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(ctx, ctx.getString(R.string.backup_import_wrong_password, 0), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(ctx, R.string.auto_restore_error_theme, android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            // Then config (triggers restart)
+            if (configExists) {
+                try {
+                    val configFile = AutoBackupPrefs.getConfigFile(this@StorageBrowserActivity)
+                    val bytes = configFile.readBytes()
+                    val plainText = SettingsBackupManager.decryptBackup(bytes, password)
+                    val details = SettingsBackupManager.parseBackupContent(ctx, plainText)
+                    val success = SettingsBackupManager.performRestore(ctx, details)
+                    withContext(Dispatchers.Main) {
+                        if (success) {
+                            AutoBackupPrefs.setRestorePromptShown(ctx)
+                            android.widget.Toast.makeText(ctx, R.string.auto_restore_success_config, android.widget.Toast.LENGTH_SHORT).show()
+                            val pm = packageManager
+                            val launchIntent = pm.getLaunchIntentForPackage(packageName)
+                            val mainIntent = android.content.Intent.makeRestartActivityTask(launchIntent?.component)
+                            startActivity(mainIntent)
+                            java.lang.Runtime.getRuntime().exit(0)
+                        } else {
+                            android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                            AutoBackupPrefs.setRestorePromptShown(ctx)
+                        }
+                    }
+                } catch (e: javax.crypto.AEADBadTagException) {
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(ctx, ctx.getString(R.string.backup_import_wrong_password, 0), android.widget.Toast.LENGTH_SHORT).show()
+                        AutoBackupPrefs.setRestorePromptShown(ctx)
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        android.widget.Toast.makeText(ctx, R.string.auto_restore_error_config, android.widget.Toast.LENGTH_SHORT).show()
+                        AutoBackupPrefs.setRestorePromptShown(ctx)
+                    }
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    AutoBackupPrefs.setRestorePromptShown(ctx)
+                }
+            }
+        }
+    }
+
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -949,7 +859,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 if (firstChild != null) {
                     firstChild.requestFocus()
                 } else {
-                    // Fallback: focus the RecyclerView itself — descendantFocusability
+                    // Fallback: focus the RecyclerView itself â€” descendantFocusability
                     // will pass it down to the first focusable child
                     recyclerStorage.requestFocus()
                 }
@@ -1071,13 +981,13 @@ class StorageBrowserActivity : AppCompatActivity() {
             onHideClick = { item -> hideTile(item) }
             onEditModeClick = { item ->
                 if (isSelectingTileForColor) {
-                    // Color-pick mode takes priority — even for custom tiles
+                    // Color-pick mode takes priority â€” even for custom tiles
                     isSelectingTileForColor = false
                     storageAdapter.isColorPickMode = false
                     selectedTileId = item.id
                     showColorPickerForTile(item)
                 } else if (item.isCustomTile) {
-                    // Gear icon on custom tile → open Edit/Delete dialog
+                    // Gear icon on custom tile â†’ open Edit/Delete dialog
                     showCustomTileOptionsMenu(item)
                 } else {
                     showPremiumSnackbar(getString(R.string.tile_color_title_select))
@@ -1094,7 +1004,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this))
         storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this))
 
-        // Palette button — TV sets colour-selection mode directly (no dialog); mobile uses popup
+        // Palette button â€” TV sets colour-selection mode directly (no dialog); mobile uses popup
         btnColorTile?.setOnClickListener {
             if (isEditMode) {
                 if (isTv) {
@@ -1463,7 +1373,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             item.isTipJarTile -> {
                 if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
-                    // Tip Jar not yet available on Amazon — show notice and don't open the activity
+                    // Tip Jar not yet available on Amazon â€” show notice and don't open the activity
                     android.widget.Toast.makeText(
                         this,
                         getString(R.string.billing_unavailable_amazon_coming_soon),
@@ -1556,6 +1466,17 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                         putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                         putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isAutoBackupFolderPicker) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
+                            putExtra(NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
+                        } else {
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
+                        }
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
                     }
                     pickerLauncher.launch(intent)
                 } else if (isImageCompressDestPickerMode) {
@@ -1660,6 +1581,14 @@ class StorageBrowserActivity : AppCompatActivity() {
                         putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
                         putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
                         putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    }
+                    pickerLauncher.launch(intent)
+                } else if (isAutoBackupFolderPicker) {
+                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
+                        putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
                     }
                     pickerLauncher.launch(intent)
                 } else if (isImageCompressDestPickerMode) {
@@ -1831,9 +1760,9 @@ class StorageBrowserActivity : AppCompatActivity() {
     /**
      * Checks if the storage needs to be indexed before navigating.
      *
-     *  - Already indexed       → navigate directly (fast path, no dialog)
-     *  - User declined before  → navigate directly (respect the choice)
-     *  - Never indexed         → show the indexing offer dialog first
+     *  - Already indexed       â†’ navigate directly (fast path, no dialog)
+     *  - User declined before  â†’ navigate directly (respect the choice)
+     *  - Never indexed         â†’ show the indexing offer dialog first
      */
     private fun checkAndNavigateToFileBrowser(item: StorageItem) {
         val storageId = IndexingRepository.resolveStorageForPath(item.mountPath).first
@@ -1849,8 +1778,8 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     /**
      * Asks the user whether they want to index this storage before browsing.
-     * "Index Now" → starts the full index via the progress dialog.
-     * "Not Now"   → saves a declined preference so we don't ask again, then navigates.
+     * "Index Now" â†’ starts the full index via the progress dialog.
+     * "Not Now"   â†’ saves a declined preference so we don't ask again, then navigates.
      */
     private fun showIndexingOfferDialog(item: StorageItem, storageId: String, storageType: String) {
         IndexingUiHelper.showIndexingOfferDialog(
@@ -1880,7 +1809,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private fun navigateToFileBrowser(item: StorageItem, storageId: String, storageType: String) {
         val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
         
-        if (isDefaultTwinWindow && !isPickerMode && !isSyncFolderPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker) {
+        if (isDefaultTwinWindow && !isPickerMode && !isSyncFolderPickerMode && !isCompressDestPickerMode && !isImageCompressDestPickerMode && !isExtractDestPickerMode && !isLocationPickerMode && !isNetworkCachePickerMode && !isQuickTransferPickerMode && !isShareDestPickerMode && !isScannerFolderPicker && !isAutoBackupFolderPicker) {
             val intent = Intent(this, TwinWindowActivity::class.java).apply {
                 putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_PATH, item.mountPath)
                 putExtra(TwinWindowActivity.EXTRA_TOP_LOCAL_LABEL, item.label)
@@ -1930,8 +1859,11 @@ class StorageBrowserActivity : AppCompatActivity() {
             if (isScannerFolderPicker) {
                 putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
             }
+            if (isAutoBackupFolderPicker) {
+                putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+            }
         }
-        if (isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker) {
+        if (isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker) {
             pickerLauncher.launch(intent)
         } else {
             startActivity(intent)
@@ -1943,7 +1875,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     /**
      * Sets up the [ItemTouchHelper] for mobile drag-and-drop tile reordering.
      * - Long-press (2 s) on any tile calls [ItemTouchHelper.startDrag].
-     * - The dragged tile scales to 1.1× with elevated shadow.
+     * - The dragged tile scales to 1.1Ã— with elevated shadow.
      * - Dropping is blocked on/after locked tiles.
      * - Order is persisted to [TileOrderManager] when the finger lifts.
      * - Dragging over the [fabHideTile] drop-zone hides the tile.
@@ -1973,7 +1905,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             ): Boolean {
                 val from = viewHolder.bindingAdapterPosition
                 val to   = target.bindingAdapterPosition
-                // Allow all moves — custom tile drop is handled in clearView
+                // Allow all moves â€” custom tile drop is handled in clearView
                 storageAdapter.moveItem(from, to)
                 return true
             }
@@ -1988,7 +1920,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     val item = storageAdapter.getItems().getOrNull(viewHolder.bindingAdapterPosition)
                     draggedItem = item
                 } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-                    // Don't clear draggedItem or dragTargetCustomTileId here —
+                    // Don't clear draggedItem or dragTargetCustomTileId here â€”
                     // onSelectedChanged(IDLE) fires BEFORE clearView(), so we
                     // must keep them for clearView to do the move logic.
                 }
@@ -2081,7 +2013,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
 
                 if (droppedItem != null && targetId != null && !droppedItem.isCustomTile) {
-                    // Dropped onto a custom tile — move it inside
+                    // Dropped onto a custom tile â€” move it inside
                     CustomTileManager.setTileParent(this@StorageBrowserActivity, droppedItem.id, targetId)
                     // Add to custom tile's internal order
                     val order = CustomTileManager.loadTileOrder(this@StorageBrowserActivity, targetId).toMutableList()
@@ -2096,14 +2028,14 @@ class StorageBrowserActivity : AppCompatActivity() {
                     // Cannot nest custom tiles
                     showPremiumSnackbar(getString(R.string.custom_tile_cannot_nest))
                 } else {
-                    // Normal reorder drop — persist the new order
+                    // Normal reorder drop â€” persist the new order
                     val orderedIds = storageAdapter.getItems().map { it.id }
                     TileOrderManager.save(this@StorageBrowserActivity, orderedIds)
                     showPremiumSnackbar(getString(R.string.tile_order_saved))
                 }
             }
 
-            /** We manage long-press ourselves — disable the system default. */
+            /** We manage long-press ourselves â€” disable the system default. */
             override fun isLongPressDragEnabled() = false
 
             override fun canDropOver(
@@ -2111,7 +2043,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 current: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // All tiles allow drops — custom-tile behavior is handled in clearView
+                // All tiles allow drops â€” custom-tile behavior is handled in clearView
                 return true
             }
         }
@@ -2119,7 +2051,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(recyclerStorage)
     }
 
-    // ── Tile hide / unhide helpers ─────────────────────────────────────────
+    // â”€â”€ Tile hide / unhide helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     /**
      * Marks [item] as hidden: persists its ID to [TileOrderManager], removes it
@@ -2265,7 +2197,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     /**
      * Builds the complete natural tile list (ignoring hidden filter) so
      * [ManageTilesBottomSheet] can show both hidden and visible tiles.
-     * This is a lightweight snapshot — no storage I/O, just the current adapter list
+     * This is a lightweight snapshot â€” no storage I/O, just the current adapter list
      * combined with hidden tiles reconstructed from saved IDs.
      */
     private fun buildAllTilesForSheet(): List<StorageItem> {
@@ -2274,7 +2206,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
 
 
-    // ── TV D-Pad reorder mode ──────────────────────────────────────────────
+    // â”€â”€ TV D-Pad reorder mode â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     /**
      * Enters TV reorder mode for [item]: snapshot the list, mark the tile visually,
@@ -2309,7 +2241,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     /**
      * Moves the tile currently in reorder mode by [direction] (-1 up, +1 down).
-     * All tiles are freely movable — no locked-tile boundary.
+     * All tiles are freely movable â€” no locked-tile boundary.
      * Refocuses the tile after the layout settles.
      */
     private fun moveTileInReorderMode(direction: Int) {
@@ -2437,7 +2369,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    /** Shows the full built-in icon picker dialog (same icon set as Tile Color → Icons). */
+    /** Shows the full built-in icon picker dialog (same icon set as Tile Color â†’ Icons). */
     private fun showSimpleIconPickerDialog(targetImageView: ImageView) {
         val allIcons = za.kilowatch.ultimatefilemanager.settings.ALL_BUILTIN_ICONS
         val density = resources.displayMetrics.density
@@ -2670,8 +2602,8 @@ class StorageBrowserActivity : AppCompatActivity() {
             iconRes = selectedCustomTileIconRes
         )
         CustomTileManager.saveCustomTile(this, data)
-        // Sync icon to TileIconManager so "Tile Color → Icons" and "Edit → Select Icon"
-        // always agree — whichever was set last wins, and both paths read the same value.
+        // Sync icon to TileIconManager so "Tile Color â†’ Icons" and "Edit â†’ Select Icon"
+        // always agree â€” whichever was set last wins, and both paths read the same value.
         TileIconManager.saveTileIconRes(this, id, selectedCustomTileIconRes)
         val wasEdit = editingCustomTileId != null
         editingCustomTileId = null
@@ -2704,7 +2636,7 @@ class StorageBrowserActivity : AppCompatActivity() {
      */
     private fun applyTileOrder(allItems: List<StorageItem>): List<StorageItem> {
         val saved  = TileOrderManager.load(this)
-        if (saved.isEmpty()) return allItems  // No saved order yet — use natural list
+        if (saved.isEmpty()) return allItems  // No saved order yet â€” use natural list
 
         val mergedIds   = TileOrderManager.mergeWithNatural(saved, allItems)
         val byId        = allItems.associateBy { it.id }
@@ -2737,6 +2669,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsKeyfilePickerMode = isKeyfilePickerMode
         val capturedIsCertPickerMode = isCertPickerMode
         val capturedIsScannerFolderPicker = isScannerFolderPicker
+        val capturedIsAutoBackupFolderPicker = isAutoBackupFolderPicker
         val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -2754,7 +2687,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             val seenMountPaths  = mutableSetOf<String>()
             for (volume in volumes) {
                 val item = volumeToStorageItem(volume) ?: continue
-                // Guard against firmware bugs that return the same volume twice —
+                // Guard against firmware bugs that return the same volume twice â€”
                 // deduplicate by both id (UUID/"internal") and mountPath.
                 if (!seenVolumeIds.add(item.id) || !seenMountPaths.add(item.mountPath)) {
                     Log.w(TAG, "Skipping duplicate storage volume: id=${item.id} path=${item.mountPath}")
@@ -2766,7 +2699,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Twin Window tile at the very top (first in list)
-            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
                 storageItems.add(0, StorageItem(
                     id = "twin_window_tile",
                     label = getString(R.string.twin_window_title),
@@ -2779,7 +2712,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Notepad tile (after twin window)
-            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
                 storageItems.add(StorageItem(
                     id = "notepad_tile",
                     label = getString(R.string.notepad),
@@ -2793,7 +2726,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Document Scanner tile (mobile only, after notepad)
-            if (!capturedIsTv && !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (!capturedIsTv && !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
                 storageItems.add(StorageItem(
                     id = "scanner_tile",
                     label = getString(R.string.scanner_title),
@@ -2828,7 +2761,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
-            // In sync/notepad/network-cache folder picker mode only show local device storage — no network shares or tiles
+            // In sync/notepad/network-cache folder picker mode only show local device storage â€” no network shares or tiles
             if (capturedIsSyncFolderPickerMode || capturedIsNotepadFolderPicker || capturedIsNetworkCachePickerMode) {
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
@@ -2928,8 +2861,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            // Scanner folder picker: show local + network + online storages — no feature/favorites tiles
-            if (capturedIsScannerFolderPicker) {
+            // Scanner folder picker: show local + network + online storages â€” no feature/favorites tiles
+            if (capturedIsScannerFolderPicker || capturedIsAutoBackupFolderPicker) {
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
                     knownMountPaths.addAll(newKnownPaths)
@@ -2949,7 +2882,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 return@launch
             }
 
-            // Cert picker: show all real storage + network shares — no feature tiles
+            // Cert picker: show all real storage + network shares â€” no feature tiles
             if (capturedIsCertPickerMode) {
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
@@ -3033,7 +2966,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             if (!capturedIsImageCompressDestPickerMode) {
-                // Add APK / XAPK Extracts tile — only if the folder is non-empty
+                // Add APK / XAPK Extracts tile â€” only if the folder is non-empty
                 val extractsDir = File(
                     getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),
                     "UFM-Extracted"
@@ -3192,7 +3125,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             if (!capturedIsImageCompressDestPickerMode) {
-                // Add the Network Shares tile — above SAF tile
+                // Add the Network Shares tile â€” above SAF tile
                 storageItems.add(StorageItem(
                     id = "network_tile",
                     label = getString(R.string.network_tile_title),
@@ -3218,7 +3151,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             if (!capturedIsImageCompressDestPickerMode) {
-                // Add the Folder Sync tile — mobile only, directly below the Network Shares manager tile
+                // Add the Folder Sync tile â€” mobile only, directly below the Network Shares manager tile
                 if (!capturedIsTv) {
                     storageItems.add(StorageItem(
                         id = "sync_tile",
@@ -3231,7 +3164,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     ))
                 }
 
-                // Add the Settings tile (Font Size etc.) — just above Legal
+                // Add the Settings tile (Font Size etc.) â€” just above Legal
                 storageItems.add(StorageItem(
                     id = "settings_tile",
                     label = getString(R.string.font_size_title),
@@ -3253,7 +3186,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     isLegalTile = true
                 ))
 
-                // Add the Rate Us tile — shown on all devices
+                // Add the Rate Us tile â€” shown on all devices
                 storageItems.add(StorageItem(
                     id = "rate_us_tile",
                     label = getString(R.string.rate_us_title),
@@ -3264,7 +3197,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     isRateUsTile = true
                 ))
 
-                // Add the Tip Jar tile — shown on ALL devices including Amazon.
+                // Add the Tip Jar tile â€” shown on ALL devices including Amazon.
                 if (isInternetAvailable()) {
                     storageItems.add(StorageItem(
                         id = "tip_jar_tile",
@@ -3289,7 +3222,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
-            // ── Custom Tiles ──────────────────────────────────────────────────
+            // â”€â”€ Custom Tiles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
             // Inject custom tiles into the list and handle parent-child relationships.
             val customTiles = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity)
             val parentMap = CustomTileManager.getTileParentMap(this@StorageBrowserActivity)
@@ -3379,7 +3312,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 // Detect this case so we can offer Shizuku guidance later.
                 if (!child.canRead()) {
                     if (path.contains("media_rw") && za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
-                        Log.w(TAG, "SELinux blocked read access to $path on FireOS — USB not accessible without Shizuku.")
+                        Log.w(TAG, "SELinux blocked read access to $path on FireOS â€” USB not accessible without Shizuku.")
                         usbSelinuxBlocked = true
                     }
                     continue
@@ -3398,7 +3331,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     future.get(STAT_TIMEOUT_MS, java.util.concurrent.TimeUnit.MILLISECONDS)
                 } catch (_: Exception) {
                     future.cancel(true)
-                    Log.w(TAG, "  StatFs timed out or failed for $path — skipping")
+                    Log.w(TAG, "  StatFs timed out or failed for $path â€” skipping")
                     null
                 } ?: continue
 
@@ -3452,7 +3385,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             StatFs(path)
         } catch (e: SecurityException) {
             if (path.contains("media_rw")) {
-                Log.w(TAG, "SELinux blocked StatFs for $path — USB inaccessible on this platform.")
+                Log.w(TAG, "SELinux blocked StatFs for $path â€” USB inaccessible on this platform.")
                 if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
                     usbSelinuxBlocked = true
                 }
@@ -3470,8 +3403,8 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         // On some TV/set-top firmware (e.g. NVIDIA Shield), a large USB dongle can be
         // reported as isPrimary=true and isRemovable=false. Detect this via a path heuristic:
-        //   • Mount path contains a known USB directory segment, AND
-        //   • A UUID is present — real internal eMMC is always UUID-less on Android.
+        //   â€¢ Mount path contains a known USB directory segment, AND
+        //   â€¢ A UUID is present â€” real internal eMMC is always UUID-less on Android.
         // This keeps normal phones/tablets unaffected (their eMMC is at /storage/emulated/0
         // and has no UUID).
         val looksLikeUsb = path.contains("/mnt/media_rw/", ignoreCase = true)
@@ -3608,7 +3541,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             if (isTv) {
                 // After the RecyclerView has a real measured height, calculate the exact inner-tile
-                // height that makes exactly 2 complete rows visible — no partial rows on 4K TV.
+                // height that makes exactly 2 complete rows visible â€” no partial rows on 4K TV.
                 recyclerStorage.doOnLayout {
                     val density = resources.displayMetrics.density
                     val rvH = recyclerStorage.height

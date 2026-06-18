@@ -4348,6 +4348,41 @@ Tema
 Pengaturan dan Tema
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Simpan Lokasi
+</string>
+    <string name="auto_backup_location_default">
+Default (Dokumen/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Lokasi khusus
+</string>
+    <string name="auto_backup_select_folder">
+Pilih sebagai Lokasi Cadangan
+</string>
+    <string name="auto_backup_select_folder_btn">
+Pilih Folder
+</string>
+    <string name="auto_backup_reset_default">
+Atur Ulang ke Default
+</string>
+    <string name="auto_backup_location_unavailable">
+Folder yang dipilih sudah tidak ada lagi — kembali ke default
+</string>
+    <string name="auto_backup_location_confirm_title">
+Pilih sebagai Lokasi Cadangan
+</string>
+    <string name="auto_backup_location_confirm_message">
+Gunakan folder ini untuk pencadangan otomatis?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Berbagi jaringan tidak dapat dijangkau — menggunakan lokasi default
+</string>
+    <string name="auto_backup_location_success">
+Lokasi pencadangan disetel ke %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Cadangan Ditemukan

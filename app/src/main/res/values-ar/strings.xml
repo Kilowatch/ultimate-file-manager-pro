@@ -4346,6 +4346,41 @@ PDF (متعدد الصفحات فقط)
 الإعدادات والموضوع
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+حفظ الموقع
+</string>
+    <string name="auto_backup_location_default">
+الافتراضي (المستندات/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+موقع مخصص
+</string>
+    <string name="auto_backup_select_folder">
+حدد كموقع النسخ الاحتياطي
+</string>
+    <string name="auto_backup_select_folder_btn">
+حدد المجلد
+</string>
+    <string name="auto_backup_reset_default">
+إعادة التعيين إلى الافتراضي
+</string>
+    <string name="auto_backup_location_unavailable">
+المجلد المحدد لم يعد موجودًا — يعود إلى الوضع الافتراضي
+</string>
+    <string name="auto_backup_location_confirm_title">
+حدد كموقع النسخ الاحتياطي
+</string>
+    <string name="auto_backup_location_confirm_message">
+هل تريد استخدام هذا المجلد لإجراء عمليات النسخ الاحتياطي التلقائي؟
+</string>
+    <string name="auto_backup_location_network_unavailable">
+مشاركة الشبكة غير قابلة للوصول — باستخدام الموقع الافتراضي
+</string>
+    <string name="auto_backup_location_success">
+تم ضبط موقع النسخ الاحتياطي على %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 تم العثور على نسخة احتياطية

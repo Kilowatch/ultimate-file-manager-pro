@@ -4348,6 +4348,41 @@ FTPサーバープロファイル
 設定とテーマ
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+場所を保存
+</string>
+    <string name="auto_backup_location_default">
+デフォルト (ドキュメント/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+カスタムの場所
+</string>
+    <string name="auto_backup_select_folder">
+バックアップ場所として選択
+</string>
+    <string name="auto_backup_select_folder_btn">
+フォルダーの選択
+</string>
+    <string name="auto_backup_reset_default">
+デフォルトにリセット
+</string>
+    <string name="auto_backup_location_unavailable">
+選択したフォルダーは存在しません - デフォルトに戻ります
+</string>
+    <string name="auto_backup_location_confirm_title">
+バックアップ場所として選択
+</string>
+    <string name="auto_backup_location_confirm_message">
+このフォルダーを自動バックアップに使用しますか?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+ネットワーク共有に到達できません - デフォルトの場所を使用しています
+</string>
+    <string name="auto_backup_location_success">
+バックアップの場所が %1$s に設定されました
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 バックアップが見つかりました

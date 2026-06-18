@@ -4348,6 +4348,41 @@ Tema
 Configurações e tema
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Salvar localização
+</string>
+    <string name="auto_backup_location_default">
+Padrão (Documentos/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Localização personalizada
+</string>
+    <string name="auto_backup_select_folder">
+Selecione como local de backup
+</string>
+    <string name="auto_backup_select_folder_btn">
+Selecione a pasta
+</string>
+    <string name="auto_backup_reset_default">
+Redefinir para o padrão
+</string>
+    <string name="auto_backup_location_unavailable">
+A pasta selecionada não existe mais – voltando ao padrão
+</string>
+    <string name="auto_backup_location_confirm_title">
+Selecione como local de backup
+</string>
+    <string name="auto_backup_location_confirm_message">
+Usar esta pasta para backups automáticos?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Compartilhamento de rede inacessível — usando local padrão
+</string>
+    <string name="auto_backup_location_success">
+Local de backup definido como %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Backup encontrado

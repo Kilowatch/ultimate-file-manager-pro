@@ -4348,6 +4348,41 @@ Tema
 Ayarlar ve Tema
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Konumu Kaydet
+</string>
+    <string name="auto_backup_location_default">
+Varsayılan (Belgeler/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Özel konum
+</string>
+    <string name="auto_backup_select_folder">
+Yedekleme Konumu olarak seçin
+</string>
+    <string name="auto_backup_select_folder_btn">
+Klasör Seçin
+</string>
+    <string name="auto_backup_reset_default">
+Varsayılana Sıfırla
+</string>
+    <string name="auto_backup_location_unavailable">
+Seçilen klasör artık mevcut değil; varsayılana geri dönülüyor
+</string>
+    <string name="auto_backup_location_confirm_title">
+Yedekleme Konumu olarak seçin
+</string>
+    <string name="auto_backup_location_confirm_message">
+Otomatik yedeklemeler için bu klasör kullanılsın mı?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Ağ paylaşımına erişilemiyor — varsayılan konum kullanılıyor
+</string>
+    <string name="auto_backup_location_success">
+Yedekleme konumu %1$s olarak ayarlandı
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Yedekleme Bulundu

@@ -237,6 +237,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         /** When true, the user is picking a folder for Smart Sort */
         const val EXTRA_SMART_SORT_PICKER = "extra_smart_sort_picker"
+
+        /** When true, the user is picking a destination folder for Auto Backup */
+        const val EXTRA_AUTO_BACKUP_FOLDER_PICKER = "extra_auto_backup_folder_picker"
     }
     
     private var isLocationPickerMode = false
@@ -251,6 +254,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isShareDestPickerMode = false
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
+    private var isAutoBackupFolderPicker = false
     private var isSmartSortPickerMode = false
 
     // (Removed Saf directory permission launchers)
@@ -327,6 +331,7 @@ class FileBrowserActivity : AppCompatActivity() {
         isShareDestPickerMode = intent.getBooleanExtra(EXTRA_SHARE_DEST_PICKER, false)
         isNotepadFolderPicker = intent.getBooleanExtra(EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(EXTRA_SCANNER_FOLDER_PICKER, false)
+        isAutoBackupFolderPicker = intent.getBooleanExtra(EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
 
         // Category mode — read extras that drive the filtered file list
@@ -419,6 +424,12 @@ class FileBrowserActivity : AppCompatActivity() {
                 fabPaste.setIconResource(R.drawable.ic_scanner)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmScannerFolderDialog() }
+            }
+            isAutoBackupFolderPicker -> {
+                fabPaste.setText(R.string.auto_backup_select_folder)
+                fabPaste.setIconResource(R.drawable.ic_cloud)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmAutoBackupFolderDialog() }
             }
             isKeyfilePickerMode -> {
                 fabPaste.setText(R.string.use_this_key_file)
@@ -681,6 +692,22 @@ class FileBrowserActivity : AppCompatActivity() {
             .setTitle(R.string.scanner_use_this_folder)
             .setMessage(getString(R.string.scanner_folder_picker_title))
             .setPositiveButton(R.string.scanner_use_this_folder) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showConfirmAutoBackupFolderDialog() {
+        val path = currentDir.absolutePath
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.auto_backup_location_confirm_title)
+            .setMessage(R.string.auto_backup_location_confirm_message)
+            .setPositiveButton(R.string.auto_backup_select_folder) { _, _ ->
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_LOCAL_PATH, path)
                 }

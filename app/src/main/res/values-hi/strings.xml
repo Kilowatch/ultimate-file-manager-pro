@@ -4348,6 +4348,41 @@ JSON में शामिल करने के लिए मेटाडे�
 सेटिंग्स और थीम
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+स्थान सहेजें
+</string>
+    <string name="auto_backup_location_default">
+डिफ़ॉल्ट (दस्तावेज़/यूएफएम)
+</string>
+    <string name="auto_backup_location_custom">
+कस्टम स्थान
+</string>
+    <string name="auto_backup_select_folder">
+बैकअप स्थान के रूप में चयन करें
+</string>
+    <string name="auto_backup_select_folder_btn">
+फ़ोल्डर चुनें
+</string>
+    <string name="auto_backup_reset_default">
+वितथ पर ले जाएं
+</string>
+    <string name="auto_backup_location_unavailable">
+चयनित फ़ोल्डर अब मौजूद नहीं है - डिफ़ॉल्ट पर वापस आ रहा है
+</string>
+    <string name="auto_backup_location_confirm_title">
+बैकअप स्थान के रूप में चयन करें
+</string>
+    <string name="auto_backup_location_confirm_message">
+ऑटो-बैकअप के लिए इस फ़ोल्डर का उपयोग करें?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+नेटवर्क शेयर पहुंच योग्य नहीं - डिफ़ॉल्ट स्थान का उपयोग कर
+</string>
+    <string name="auto_backup_location_success">
+बैकअप स्थान को %1$s पर सेट किया गया
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 बैकअप मिला

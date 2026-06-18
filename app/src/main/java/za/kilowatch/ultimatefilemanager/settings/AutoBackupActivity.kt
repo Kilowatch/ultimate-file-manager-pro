@@ -47,6 +47,38 @@ class AutoBackupActivity : AppCompatActivity() {
     private lateinit var txtSummary: TextView
     private lateinit var btnBackupNow: View
     private lateinit var progressBar: ProgressBar
+    private lateinit var radioLocation: RadioGroup
+    private lateinit var rbLocationDefault: RadioButton
+    private lateinit var rbLocationCustom: RadioButton
+    private lateinit var txtLocationPath: TextView
+    private lateinit var txtLocationWarning: TextView
+    private lateinit var btnSelectFolder: View
+    private lateinit var btnResetLocation: View
+
+    private val backupFolderPickerLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val data = result.data
+            val localPath = data?.getStringExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+            val netShareId = data?.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID)
+            val netPath = data?.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.RESULT_SELECTED_NET_PATH)
+            if (localPath != null) {
+                AutoBackupPrefs.setCustomLocationType(this, "local")
+                AutoBackupPrefs.setCustomLocalPath(this, localPath)
+                AutoBackupPrefs.setCustomShareId(this, "")
+                AutoBackupPrefs.setCustomNetPath(this, "")
+                Toast.makeText(this, getString(R.string.auto_backup_location_success, localPath), Toast.LENGTH_SHORT).show()
+            } else if (netShareId != null) {
+                AutoBackupPrefs.setCustomLocationType(this, "network")
+                AutoBackupPrefs.setCustomShareId(this, netShareId)
+                AutoBackupPrefs.setCustomNetPath(this, netPath ?: "")
+                AutoBackupPrefs.setCustomLocalPath(this, "")
+                Toast.makeText(this, R.string.auto_backup_select_folder, Toast.LENGTH_SHORT).show()
+            }
+            updateLocationUI()
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -92,6 +124,13 @@ class AutoBackupActivity : AppCompatActivity() {
         txtSummary = findViewById(R.id.txtAutoBackupSummary)
         btnBackupNow = findViewById(R.id.btnBackupNow)
         progressBar = findViewById(R.id.progressBar)
+        radioLocation = findViewById(R.id.radioLocation)
+        rbLocationDefault = findViewById(R.id.rbLocationDefault)
+        rbLocationCustom = findViewById(R.id.rbLocationCustom)
+        txtLocationPath = findViewById(R.id.txtLocationPath)
+        txtLocationWarning = findViewById(R.id.txtLocationWarning)
+        btnSelectFolder = findViewById(R.id.btnSelectFolder)
+        btnResetLocation = findViewById(R.id.btnResetLocation)
     }
 
     private fun setupViews() {
@@ -150,12 +189,37 @@ class AutoBackupActivity : AppCompatActivity() {
         // ── Backup Now button ────────────────────────────────────────────
         btnBackupNow.setOnClickListener { performBackupNow() }
 
+        // ── Save Location ────────────────────────────────────────────────
+        radioLocation.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.rbLocationCustom) {
+                AutoBackupPrefs.setCustomLocationType(this, "local")
+                AutoBackupPrefs.setCustomLocalPath(this, "") // will be set after picker
+                updateLocationUI()
+            } else {
+                AutoBackupPrefs.clearCustomLocation(this)
+                updateLocationUI()
+            }
+        }
+        btnSelectFolder.setOnClickListener {
+            val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+            }
+            backupFolderPickerLauncher.launch(intent)
+        }
+        btnResetLocation.setOnClickListener {
+            AutoBackupPrefs.clearCustomLocation(this)
+            rbLocationDefault.isChecked = true
+            updateLocationUI()
+        }
+
         // ── TV focus handling ────────────────────────────────────────────
         if (isTv) {
             setupTvCardFocus(cardEnable)
             setupTvCardFocus(cardSettings)
             setupTvCardFocus(cardTheme)
             setupTvCardFocus(cardPassword)
+            val cardLocation = findViewById<MaterialCardView>(R.id.cardAutoBackupLocation)
+            setupTvCardFocus(cardLocation)
             setupTvButtonFocus(btnBackupNow)
         }
     }
@@ -172,6 +236,7 @@ class AutoBackupActivity : AppCompatActivity() {
         }
 
         updatePasswordStatus()
+        updateLocationUI()
         updateSummary()
 
         // Enable/disable controls based on master toggle
@@ -217,6 +282,7 @@ class AutoBackupActivity : AppCompatActivity() {
         findViewById<MaterialCardView>(R.id.cardAutoBackupTheme).isEnabled = enabled
         findViewById<MaterialCardView>(R.id.cardSchedule).isEnabled = enabled
         findViewById<MaterialCardView>(R.id.cardAutoBackupPassword).isEnabled = enabled
+        findViewById<MaterialCardView>(R.id.cardAutoBackupLocation).isEnabled = enabled
         btnBackupNow.isEnabled = enabled
     }
 
@@ -337,6 +403,36 @@ class AutoBackupActivity : AppCompatActivity() {
             getString(R.string.auto_backup_password_status_none)
 
         txtSummary.text = getString(R.string.auto_backup_summary_on, "$itemsStr — $scheduleStr", passwordStr)
+    }
+
+    // ── Save Location UI ─────────────────────────────────────────────────────
+
+    private fun updateLocationUI() {
+        val isCustom = AutoBackupPrefs.isCustomLocationSet(this)
+        if (isCustom) {
+            rbLocationCustom.isChecked = true
+        } else {
+            rbLocationDefault.isChecked = true
+        }
+
+        val path = AutoBackupPrefs.getBackupDirectoryDisplayPath(this)
+        if (isCustom) {
+            txtLocationPath.text = path
+            txtLocationPath.visibility = View.VISIBLE
+            btnSelectFolder.visibility = View.VISIBLE
+            btnResetLocation.visibility = View.VISIBLE
+
+            if (!AutoBackupPrefs.isCustomLocationAvailable(this)) {
+                txtLocationWarning.visibility = View.VISIBLE
+            } else {
+                txtLocationWarning.visibility = View.GONE
+            }
+        } else {
+            txtLocationPath.visibility = View.GONE
+            txtLocationWarning.visibility = View.GONE
+            btnSelectFolder.visibility = View.GONE
+            btnResetLocation.visibility = View.GONE
+        }
     }
 
     // ── Backup Now ─────────────────────────────────────────────────────────

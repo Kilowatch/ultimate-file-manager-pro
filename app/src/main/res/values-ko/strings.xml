@@ -4348,6 +4348,41 @@ FTP 서버 프로필
 설정 및 테마
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+위치 저장
+</string>
+    <string name="auto_backup_location_default">
+기본값(문서/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+맞춤 위치
+</string>
+    <string name="auto_backup_select_folder">
+백업 위치로 선택
+</string>
+    <string name="auto_backup_select_folder_btn">
+폴더 선택
+</string>
+    <string name="auto_backup_reset_default">
+기본값으로 재설정
+</string>
+    <string name="auto_backup_location_unavailable">
+선택한 폴더가 더 이상 존재하지 않습니다. 기본값으로 돌아갑니다.
+</string>
+    <string name="auto_backup_location_confirm_title">
+백업 위치로 선택
+</string>
+    <string name="auto_backup_location_confirm_message">
+자동 백업에 이 폴더를 사용하시겠습니까?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+네트워크 공유에 연결할 수 없음 - 기본 위치 사용
+</string>
+    <string name="auto_backup_location_success">
+백업 위치가 %1$s로 설정됨
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 백업 발견됨

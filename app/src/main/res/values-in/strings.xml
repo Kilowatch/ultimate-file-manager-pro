@@ -4348,6 +4348,41 @@ Theme
 Settings and Theme
 </string>
 
+    <!-- Custom Backup Location -->
+    <string name="auto_backup_save_location">
+Save Location
+</string>
+    <string name="auto_backup_location_default">
+Default (Documents/UFM)
+</string>
+    <string name="auto_backup_location_custom">
+Custom location
+</string>
+    <string name="auto_backup_select_folder">
+Select as Backup Location
+</string>
+    <string name="auto_backup_select_folder_btn">
+Select Folder
+</string>
+    <string name="auto_backup_reset_default">
+Reset to Default
+</string>
+    <string name="auto_backup_location_unavailable">
+Selected folder no longer exists — falling back to default
+</string>
+    <string name="auto_backup_location_confirm_title">
+Select as Backup Location
+</string>
+    <string name="auto_backup_location_confirm_message">
+Use this folder for auto-backups?
+</string>
+    <string name="auto_backup_location_network_unavailable">
+Network share unreachable — using default location
+</string>
+    <string name="auto_backup_location_success">
+Backup location set to %1$s
+</string>
+
     <!-- Auto Restore Dialog -->
     <string name="auto_restore_title">
 Backup Found
