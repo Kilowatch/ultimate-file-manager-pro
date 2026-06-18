@@ -471,6 +471,20 @@
     <string name="search_filter_date_hint">على سبيل المثال 7</string>
     <string name="search_clear">واضح</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+البحث في الوثيقة...
+</string>
+    <string name="search_match_count">
+%1$d من %2$d
+</string>
+    <string name="search_match_zero">
+0 من 0
+</string>
+    <string name="search_in_document">
+البحث في الوثيقة
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">محلل التخزين</string>
     <string name="analyzer_subtitle">تصور استخدام القرص الخاص بك</string>

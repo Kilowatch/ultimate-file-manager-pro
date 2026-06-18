@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -59,6 +60,12 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     private lateinit var tableScrollView: ScrollView
     private lateinit var tableHScrollView: HorizontalScrollView
 
+    // ── In-document search fields ──────────────────────────────────────
+    private var searchHelper: DocumentSearchHelper<Pair<Int, Int>>? = null
+    private val allCellViews = mutableListOf<Pair<Pair<Int, Int>, TextView>>()
+    private var searchQuery: String = ""
+    private var searchIsActive: Boolean = false
+
     // Performant ceiling to keep grid rendering exceptionally fast and memory-safe
     private val MAX_ROWS_PER_SHEET = 1000
 
@@ -82,6 +89,12 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
             insets
+        }
+
+        // Restore search state after configuration change
+        if (savedInstanceState != null) {
+            searchIsActive = savedInstanceState.getBoolean("search_active", false)
+            searchQuery = savedInstanceState.getString("search_query", "") ?: ""
         }
 
         tableLayout = findViewById(R.id.tableLayout)
@@ -170,6 +183,33 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                 }
             }
             dialog.show(supportFragmentManager, "ConvertToPdfDialog")
+        }
+
+        // ── In-document search setup ──────────────────────────────────
+        val btnSearch = findViewById<ImageView>(R.id.btnSearch)
+        val searchBar = findViewById<View>(R.id.layoutSearchBar)
+        val edtSearch = findViewById<EditText>(R.id.edtSearchInput)
+        val txtCount = findViewById<TextView>(R.id.txtSearchCount)
+        val btnSearchUp = findViewById<View>(R.id.btnSearchUp)
+        val btnSearchDown = findViewById<View>(R.id.btnSearchDown)
+        val btnSearchClose = findViewById<View>(R.id.btnSearchClose)
+
+        searchHelper = DocumentSearchHelper(
+            host = createSearchHost(),
+            searchInput = edtSearch,
+            searchBarLayout = searchBar,
+            matchCountLabel = txtCount,
+            btnUp = btnSearchUp,
+            btnDown = btnSearchDown,
+            btnClose = btnSearchClose,
+            searchIconView = btnSearch,
+            isTv = isTv
+        )
+        btnSearch.setOnClickListener { searchHelper?.toggle() }
+
+        // Restore search query after config change
+        if (searchIsActive && searchQuery.isNotEmpty()) {
+            btnSearch.post { searchHelper?.restoreState(searchQuery, 0) }
         }
 
         val filePath = intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: run {
@@ -325,6 +365,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
     private fun displaySheet(index: Int) {
         currentSheetIndex = index
         tableLayout.removeAllViews()
+        allCellViews.clear()
         if (index !in sheets.indices) return
         val sheet = sheets[index]
         val rows = sheet.rows
@@ -398,13 +439,16 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     setBackgroundColor(Color.parseColor("#0AFFFFFF"))
                     isClickable = true
                     isFocusable = true
-                    
+
                     // Glass grid divider borders
                     val borderDrawable = GradientDrawable().apply {
                         setColor(Color.parseColor("#0AFFFFFF"))
                         setStroke(1, Color.parseColor("#15FFFFFF"))
                     }
                     background = borderDrawable
+
+                    // Store original drawable for search highlight restoration
+                    setTag(R.id.tag_original_drawable, borderDrawable)
 
                     setOnFocusChangeListener { view, hasFocus ->
                         if (hasFocus) {
@@ -421,8 +465,15 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                     }
                 }
                 tableRow.addView(dataCell)
+                // Store cell reference for search
+                allCellViews.add(Pair(rowIdx, colIdx) to dataCell)
             }
             tableLayout.addView(tableRow)
+        }
+
+        // Re-run search on the new sheet if search is active
+        if (searchHelper?.isActive == true) {
+            searchHelper?.reRunSearch()
         }
 
         // Show a helpful warning footer if the sheet content was truncated due to performance limits
@@ -628,5 +679,81 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
             index = index * 26 + (c - 'A' + 1)
         }
         return index - 1
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (searchHelper?.isActive == true) {
+            outState.putString("search_query", searchHelper?.currentQuery)
+            outState.putBoolean("search_active", true)
+        }
+    }
+
+    override fun onDestroy() {
+        searchHelper?.close()
+        searchHelper = null
+        super.onDestroy()
+    }
+
+    // ── In-document search host implementation ────────────────────────────
+
+    private fun createSearchHost(): SearchHost<Pair<Int, Int>> {
+        return object : SearchHost<Pair<Int, Int>> {
+            override fun findMatches(query: String): List<Pair<Int, Int>> {
+                if (query.isBlank()) return emptyList()
+                val lowerQuery = query.lowercase()
+                val matches = mutableListOf<Pair<Int, Int>>()
+                for ((pair, cell) in allCellViews) {
+                    val cellText = cell.text?.toString()?.lowercase() ?: continue
+                    if (cellText.contains(lowerQuery)) {
+                        matches.add(pair)
+                    }
+                }
+                return matches
+            }
+
+            override fun highlightMatches(matches: List<Pair<Int, Int>>, currentIndex: Int) {
+                // First pass: reset all cells to their original border background
+                for ((_, cell) in allCellViews) {
+                    val original = cell.getTag(R.id.tag_original_drawable) as? GradientDrawable
+                    if (original != null) {
+                        cell.background = original
+                    }
+                    cell.setTextColor(Color.WHITE)
+                }
+
+                // Second pass: apply highlight colors
+                for ((i, pair) in matches.withIndex()) {
+                    val cell = allCellViews.find { it.first == pair }?.second ?: continue
+                    val color = if (i == currentIndex) {
+                        Color.parseColor("#8044B5F6") // Light blue for current match
+                    } else {
+                        Color.parseColor("#80FFEB3B") // Yellow for other matches
+                    }
+                    cell.setBackgroundColor(color)
+                    cell.setTextColor(Color.BLACK)
+                }
+            }
+
+            override fun clearHighlights() {
+                for ((_, cell) in allCellViews) {
+                    val original = cell.getTag(R.id.tag_original_drawable) as? GradientDrawable
+                    if (original != null) {
+                        cell.background = original
+                    }
+                    cell.setTextColor(Color.WHITE)
+                }
+            }
+
+            override fun scrollToMatch(matches: List<Pair<Int, Int>>, index: Int) {
+                if (index !in matches.indices) return
+                val (row, _) = matches[index]
+                val estimatedCellHeight = 48 * scaleFactor
+                val targetY = (row * estimatedCellHeight).toInt()
+                tableScrollView.smoothScrollTo(0, (targetY - tableScrollView.height / 3).coerceAtLeast(0))
+            }
+
+            override fun getContext() = this@SpreadsheetViewerActivity
+        }
     }
 }

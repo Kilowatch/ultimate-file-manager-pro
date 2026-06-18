@@ -471,6 +471,20 @@ Zertifikatspasswort
     <string name="search_filter_date_hint">z.B. 7</string>
     <string name="search_clear">Klar</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+Im Dokument suchen…
+</string>
+    <string name="search_match_count">
+%1$d von %2$d
+</string>
+    <string name="search_match_zero">
+0 von 0
+</string>
+    <string name="search_in_document">
+Im Dokument suchen
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Speicheranalysator</string>
     <string name="analyzer_subtitle">Visualisieren Sie Ihre Festplattennutzung</string>

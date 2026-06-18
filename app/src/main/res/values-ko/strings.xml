@@ -471,6 +471,20 @@ PKCS12 비밀번호
     <string name="search_filter_date_hint">예를 들어 7</string>
     <string name="search_clear">분명한</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+문서에서 검색…
+</string>
+    <string name="search_match_count">
+%2$d 중 %1$d
+</string>
+    <string name="search_match_zero">
+0 중 0
+</string>
+    <string name="search_in_document">
+문서에서 검색
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">스토리지 분석기</string>
     <string name="analyzer_subtitle">디스크 사용량 시각화</string>

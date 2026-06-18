@@ -471,6 +471,20 @@ Mot de passe du certificat
     <string name="search_filter_date_hint">par ex. 7</string>
     <string name="search_clear">Clair</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+Rechercher dans le document…
+</string>
+    <string name="search_match_count">
+%1$d sur %2$d
+</string>
+    <string name="search_match_zero">
+0 sur 0
+</string>
+    <string name="search_in_document">
+Rechercher dans le document
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Analyseur de stockage</string>
     <string name="analyzer_subtitle">Visualisez votre utilisation du disque</string>

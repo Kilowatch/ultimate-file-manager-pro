@@ -1,7 +1,10 @@
 package za.kilowatch.ultimatefilemanager.viewer
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
+import android.text.style.BackgroundColorSpan
+import android.text.Spannable
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
@@ -15,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.text.PrecomputedTextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -79,6 +83,11 @@ class TextViewerActivity : AppCompatActivity() {
     private var highlightDebounceHandler: Handler? = null
     private var highlightDebounceRunnable: Runnable? = null
 
+    // ── In-document search fields ──────────────────────────────────────
+    private var searchHelper: DocumentSearchHelper<IntRange>? = null
+    private var searchQuery: String = ""
+    private var searchIsActive: Boolean = false
+
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
@@ -91,6 +100,12 @@ class TextViewerActivity : AppCompatActivity() {
             if (isTv) R.layout.activity_text_viewer_tv
             else R.layout.activity_text_viewer
         )
+
+        // Restore search state after configuration change
+        if (savedInstanceState != null) {
+            searchIsActive = savedInstanceState.getBoolean("search_active", false)
+            searchQuery = savedInstanceState.getString("search_query", "") ?: ""
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -150,6 +165,36 @@ class TextViewerActivity : AppCompatActivity() {
 
         btnEdit.setOnClickListener { toggleEditMode() }
         btnSave.setOnClickListener { showSaveDialog() }
+
+        // ── In-document search setup ──────────────────────────────────
+        val btnSearch = findViewById<ImageView>(R.id.btnSearch)
+        val searchBar = findViewById<View>(R.id.layoutSearchBar)
+        val edtSearch = findViewById<EditText>(R.id.edtSearchInput)
+        val txtCount = findViewById<TextView>(R.id.txtSearchCount)
+        val btnSearchUp = findViewById<View>(R.id.btnSearchUp)
+        val btnSearchDown = findViewById<View>(R.id.btnSearchDown)
+        val btnSearchClose = findViewById<View>(R.id.btnSearchClose)
+
+        searchHelper = DocumentSearchHelper(
+            host = createSearchHost(),
+            searchInput = edtSearch,
+            searchBarLayout = searchBar,
+            matchCountLabel = txtCount,
+            btnUp = btnSearchUp,
+            btnDown = btnSearchDown,
+            btnClose = btnSearchClose,
+            searchIconView = btnSearch,
+            isTv = isTv
+        )
+        btnSearch.setOnClickListener { searchHelper?.toggle() }
+
+        // Restore search state after configuration change
+        if (searchIsActive && searchQuery.isNotEmpty()) {
+            searchHelper?.let { helper ->
+                // Post to allow content to load first
+                btnSearch.post { helper.restoreState(searchQuery, 0) }
+            }
+        }
 
         val startEditing = intent.getBooleanExtra(FileViewerRouter.EXTRA_START_IN_EDIT_MODE, false)
         loadFile(File(originalFilePath), startEditing)
@@ -708,6 +753,7 @@ class TextViewerActivity : AppCompatActivity() {
                     txtLineNumbers.textSize = textSize
                     scrollView.scrollTo(0, 0)
                     updatePaginationUi()
+                    searchHelper?.reRunSearch()
                 }
             } else {
                 // ── Plain text path (existing behaviour) ──────────
@@ -722,6 +768,7 @@ class TextViewerActivity : AppCompatActivity() {
                     txtLineNumbers.textSize = textSize
                     scrollView.scrollTo(0, 0)
                     updatePaginationUi()
+                    searchHelper?.reRunSearch()
                 }
             }
         }
@@ -1049,7 +1096,105 @@ class TextViewerActivity : AppCompatActivity() {
         highlightDebounceHandler?.removeCallbacksAndMessages(null)
         highlightDebounceHandler = null
         highlightDebounceRunnable = null
+        searchHelper?.close()
+        searchHelper = null
         super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (searchHelper?.isActive == true) {
+            outState.putString("search_query", searchHelper?.currentQuery)
+            // currentIndex can't be saved easily without the matches list;
+            // we restore to 0 and let the user re-navigate.
+            outState.putBoolean("search_active", true)
+        }
+    }
+
+    // ── In-document search host implementation ────────────────────────────
+
+    private fun createSearchHost(): SearchHost<IntRange> {
+        return object : SearchHost<IntRange> {
+            override fun findMatches(query: String): List<IntRange> {
+                val text = txtContent.text?.toString() ?: return emptyList()
+                if (query.isBlank()) return emptyList()
+                val lowerQuery = query.lowercase()
+                val lowerText = text.lowercase()
+                val matches = mutableListOf<IntRange>()
+                var start = 0
+                while (true) {
+                    val idx = lowerText.indexOf(lowerQuery, start)
+                    if (idx < 0) break
+                    matches.add(idx until (idx + query.length))
+                    start = idx + 1
+                }
+                return matches
+            }
+
+            override fun highlightMatches(matches: List<IntRange>, currentIndex: Int) {
+                val text = txtContent.text
+                if (text !is Spannable) return
+
+                // Remove any existing search highlight spans first
+                val existing = text.getSpans(0, text.length, BackgroundColorSpan::class.java)
+                for (span in existing) {
+                    text.removeSpan(span)
+                }
+
+                // Apply yellow background to all matches
+                for ((i, range) in matches.withIndex()) {
+                    val color = if (i == currentIndex) {
+                        Color.parseColor("#8044B5F6") // Light blue for current match
+                    } else {
+                        Color.parseColor("#80FFEB3B") // Yellow for other matches
+                    }
+                    text.setSpan(
+                        BackgroundColorSpan(color),
+                        range.first,
+                        range.last + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+
+            override fun clearHighlights() {
+                val text = txtContent.text
+                if (text !is Spannable) return
+                val spans = text.getSpans(0, text.length, BackgroundColorSpan::class.java)
+                for (span in spans) {
+                    text.removeSpan(span)
+                }
+            }
+
+            override fun scrollToMatch(matches: List<IntRange>, index: Int) {
+                if (index !in matches.indices) return
+                val range = matches[index]
+                val text = txtContent.text?.toString() ?: return
+
+                // ── Vertical scroll (line-based) ───────────────────────
+                val textBefore = text.substring(0, range.first)
+                val lineCount = textBefore.count { it == '\n' }
+                val lineHeight = txtContent.lineHeight
+                val targetY = lineCount * lineHeight
+                scrollView.smoothScrollTo(
+                    0,
+                    (targetY - scrollView.height / 3).coerceAtLeast(0)
+                )
+
+                // ── Horizontal scroll (character column-based) ─────────
+                // Text uses monospace font, so we measure from line start to match
+                val lastNewline = textBefore.lastIndexOf('\n')
+                val colInLine = range.first - lastNewline - 1
+                val charWidth = txtContent.paint.measureText("A")
+                val targetX = (colInLine * charWidth).toInt()
+                hScrollView.smoothScrollTo(
+                    (targetX - hScrollView.width / 3).coerceAtLeast(0),
+                    0
+                )
+            }
+
+            override fun getContext() = this@TextViewerActivity
+        }
     }
 
     companion object {

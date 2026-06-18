@@ -5,11 +5,10 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
----
-
 ## [1.5.4] — 2026-06-17
 
 ### Added
+- In-document search for Text Viewer and Spreadsheet Viewer: search bar with case-insensitive substring matching, match highlighting (yellow/light blue), up/down navigation with wrapping, match count display, and search icon indicator. Supports both mobile and TV with full D-pad focus on TV.
 - Auto Backup system — new settings screen with enable/disable toggle, selection of what to back up (Settings config and/or Icon Theme), schedule picker (daily/weekly/monthly), and optional password protection. Backups are saved to `Documents/UFM/` and survive uninstall. On fresh install, the app detects existing backup files and offers to restore them (theme first, then settings). Tip jar loyalty data is now included in both manual and auto backups.
 - Custom Backup Location — users can now choose a custom save destination for auto-backups (local folder, SD card, USB drive, or network share via SMB/FTP/SFTP/NFS/WebDAV). The folder picker reuses the existing StorageBrowserActivity → FileBrowserActivity flow with a dedicated FAB and confirmation dialog. Falls back gracefully to `Documents/UFM/` when the custom location is unavailable (network down, storage removed).
 

@@ -471,6 +471,20 @@ sFTP-плитка
     <string name="search_filter_date_hint">например 7</string>
     <string name="search_clear">Прозрачный</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+Искать в документе…
+</string>
+    <string name="search_match_count">
+%1$d из %2$d
+</string>
+    <string name="search_match_zero">
+0 из 0
+</string>
+    <string name="search_in_document">
+Поиск в документе
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Анализатор хранилища</string>
     <string name="analyzer_subtitle">Визуализируйте использование вашего диска</string>

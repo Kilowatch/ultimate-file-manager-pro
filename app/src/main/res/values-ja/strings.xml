@@ -471,6 +471,20 @@ PKCS12 パスワード
     <string name="search_filter_date_hint">例えば7</string>
     <string name="search_clear">クリア</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+ドキュメント内を検索…
+</string>
+    <string name="search_match_count">
+%1$d/%2$d
+</string>
+    <string name="search_match_zero">
+0/0
+</string>
+    <string name="search_in_document">
+文書内を検索する
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">ストレージアナライザー</string>
     <string name="analyzer_subtitle">ディスク使用量を視覚化する</string>

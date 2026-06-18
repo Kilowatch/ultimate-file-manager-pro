@@ -471,6 +471,20 @@ Senha do certificado
     <string name="search_filter_date_hint">por exemplo 7</string>
     <string name="search_clear">Claro</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+Pesquisar no documento…
+</string>
+    <string name="search_match_count">
+%1$d de %2$d
+</string>
+    <string name="search_match_zero">
+0 de 0
+</string>
+    <string name="search_in_document">
+Pesquisar no documento
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Analisador de armazenamento</string>
     <string name="analyzer_subtitle">Visualize o uso do disco</string>

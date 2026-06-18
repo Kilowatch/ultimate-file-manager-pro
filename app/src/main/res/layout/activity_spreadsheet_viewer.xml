@@ -81,6 +81,20 @@
                 app:tint="@android:color/white" />
         </FrameLayout>
 
+        <!-- Search in document button -->
+        <ImageView
+            android:id="@+id/btnSearch"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="12dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="@string/search_in_document"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_icon_circle_accent"
+            app:tint="@color/mobile_icon_tint" />
+
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
@@ -95,6 +109,83 @@
             tools:text="spreadsheet.xlsx" />
     </LinearLayout>
 
+    <!-- Search Bar — hidden by default, toggled by btnSearch -->
+    <LinearLayout
+        android:id="@+id/layoutSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:background="@color/mobile_glass_header"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgSearchIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_search"
+            app:tint="@color/mobile_text_secondary" />
+
+        <EditText
+            android:id="@+id/edtSearchInput"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="8dp"
+            android:background="@null"
+            android:singleLine="true"
+            android:gravity="center_vertical"
+            android:imeOptions="actionSearch"
+            android:inputType="textNoSuggestions"
+            android:textColor="@color/mobile_text_primary"
+            android:textColorHint="@color/ufm_text_hint"
+            android:hint="@string/search_in_document_hint" />
+
+        <TextView
+            android:id="@+id/txtSearchCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="60dp"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="@color/mobile_text_secondary"
+            tools:text="0 of 0" />
+
+        <ImageView
+            android:id="@+id/btnSearchUp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_up"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/mobile_text_secondary" />
+
+        <ImageView
+            android:id="@+id/btnSearchDown"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_down"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/mobile_text_secondary" />
+
+        <ImageView
+            android:id="@+id/btnSearchClose"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_close"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/mobile_text_secondary" />
+    </LinearLayout>
+
     <!-- Loading progress -->
     <ProgressBar
         android:id="@+id/progressBar"
@@ -104,7 +195,7 @@
         android:indeterminate="true"
         android:indeterminateTint="#FF0284C7"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/layoutSearchBar" />
 
     <!-- Sheet Tabs Bar -->
     <HorizontalScrollView

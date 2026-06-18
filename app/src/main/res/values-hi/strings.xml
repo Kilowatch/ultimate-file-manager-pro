@@ -471,6 +471,20 @@ PKCS12 पासवर्ड
     <string name="search_filter_date_hint">जैसे 7</string>
     <string name="search_clear">स्पष्ट</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+दस्तावेज़ में खोजें...
+</string>
+    <string name="search_match_count">
+%1$d में से %2$d
+</string>
+    <string name="search_match_zero">
+0 में से 0
+</string>
+    <string name="search_in_document">
+दस्तावेज़ में खोजें
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">भंडारण विश्लेषक</string>
     <string name="analyzer_subtitle">अपने डिस्क उपयोग की कल्पना करें</string>

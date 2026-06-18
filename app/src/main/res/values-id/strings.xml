@@ -471,6 +471,20 @@ Kata Sandi Sertifikat
     <string name="search_filter_date_hint">misalnya 7</string>
     <string name="search_clear">Jernih</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">
+Telusuri di dokumen…
+</string>
+    <string name="search_match_count">
+%1$d dari %2$d
+</string>
+    <string name="search_match_zero">
+0 dari 0
+</string>
+    <string name="search_in_document">
+Cari di dokumen
+</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Penganalisis Penyimpanan</string>
     <string name="analyzer_subtitle">Visualisasikan penggunaan disk Anda</string>

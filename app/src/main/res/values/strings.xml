@@ -297,6 +297,12 @@
     <string name="search_filter_date_hint">e.g. 7</string>
     <string name="search_clear">Clear</string>
 
+    <!-- In-document search -->
+    <string name="search_in_document_hint">Search in document…</string>
+    <string name="search_match_count">%1$d of %2$d</string>
+    <string name="search_match_zero">0 of 0</string>
+    <string name="search_in_document">Search in document</string>
+
     <!-- Storage Analyzer -->
     <string name="analyzer_title">Storage Analyzer</string>
     <string name="analyzer_subtitle">Visualize your disk usage</string>
