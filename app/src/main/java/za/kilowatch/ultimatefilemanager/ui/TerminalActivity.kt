@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -168,6 +169,7 @@ class TerminalActivity : AppCompatActivity() {
         btnDisconnect.setOnClickListener {
             adbManager.disconnectExplicit()
             shellJob?.cancel()
+            adbWarningShown = false  // SEC-§8.9: reset so warning fires on next connection
             updateStatus(getString(R.string.adb_terminal_status_disconnected))
             adapter.addLine(getString(R.string.disconnected_from_adb))
             updateButtonState()
@@ -178,6 +180,23 @@ class TerminalActivity : AppCompatActivity() {
             adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
             updateButtonState()
         }
+    }
+
+    /**
+     * SEC-§8.9: Show a security warning once per ADB session.
+     * Uses an in-memory flag so the warning fires once for each new session but is
+     * not permanently suppressed — the user sees it every time they open a connection.
+     */
+    private var adbWarningShown = false
+    private fun showAdbSecurityWarningIfNeeded() {
+        if (adbWarningShown) return
+        adbWarningShown = true
+        val rootView = findViewById<View>(android.R.id.content) ?: return
+        Snackbar.make(
+            rootView,
+            "⚠️ ADB shell grants full device access. Disconnect when not in use.",
+            Snackbar.LENGTH_LONG
+        ).setAction("OK") { /* dismiss */ }.show()
     }
 
     private fun updateStatus(status: String) {
@@ -589,6 +608,7 @@ class TerminalActivity : AppCompatActivity() {
                     updateStatus(getString(R.string.adb_terminal_status_connected))
                     adapter.addLine(getString(R.string.connected_to_adb_successfully))
                     startShellReader()
+                    showAdbSecurityWarningIfNeeded()
                     delay(800) // Brief delay to show getString(R.string.approved)
                     lifecycleScope.launch(Dispatchers.Main) { onComplete?.invoke(true) }
                 } else {

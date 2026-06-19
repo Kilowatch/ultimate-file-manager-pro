@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 164          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.5.4"      // Shown in Play Store listing
+val appVersionCode = 166          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.5.5"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 android {
@@ -335,10 +335,11 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.viewpager2)
     // Ktor embedded HTTP server for FileServer (replaces NanoHTTPD in FileServer.kt)
-    implementation("io.ktor:ktor-server-core:3.4.2")
-    implementation("io.ktor:ktor-server-netty:3.4.2")
-    implementation("io.ktor:ktor-server-content-negotiation:3.4.2")
-    implementation("io.ktor:ktor-server-status-pages:3.4.2")
+    // SEC: upgraded 3.4.2 → 3.5.0 to pick up patched Netty ≥ 4.1.135.Final (CVE-2026-50010)
+    implementation("io.ktor:ktor-server-core:3.5.0")
+    implementation("io.ktor:ktor-server-netty:3.5.0")
+    implementation("io.ktor:ktor-server-content-negotiation:3.5.0")
+    implementation("io.ktor:ktor-server-status-pages:3.5.0")
     // NanoHTTPD retained for PairingServer (HTTPS/TLS TV pairing — uses makeSecure())
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     // Google Play Billing (Tip Jar — Google variants)
@@ -384,9 +385,10 @@ dependencies {
     implementation(libs.coil.svg)
     implementation(libs.apng.core)
     // BouncyCastle for certificate generation and SSHD cryptography
-    implementation("org.bouncycastle:bcpkix-jdk18on:1.83")
-    implementation("org.bouncycastle:bcprov-jdk18on:1.83")
-    implementation("org.bouncycastle:bcutil-jdk18on:1.83")
+    // SEC: upgraded 1.83 → 1.84 to fix CVE-2026-5588 (HIGH — CompositeVerifier signature bypass in bcpkix)
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.84")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
+    implementation("org.bouncycastle:bcutil-jdk18on:1.84")
     
     // EdDSA for Ed25519 SSH keys
     implementation("net.i2p.crypto:eddsa:0.3.0")

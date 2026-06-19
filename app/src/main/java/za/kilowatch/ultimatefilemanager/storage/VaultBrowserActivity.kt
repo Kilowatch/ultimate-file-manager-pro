@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -49,6 +50,9 @@ class VaultBrowserActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // SEC-§8.12: Vault browser exposes decrypted files — prevent screenshots
+        // and recent-apps thumbnails from leaking vault contents.
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         if (DeviceUtils.isTvDevice(this)) {

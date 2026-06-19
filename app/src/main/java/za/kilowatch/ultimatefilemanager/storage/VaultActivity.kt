@@ -8,6 +8,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -100,6 +101,9 @@ class VaultActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // SEC-§8.12: Prevent vault PIN and contents from appearing in recent-apps
+        // thumbnails or being captured by screen recording / screenshot tools.
+        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val isTv = DeviceUtils.isTvDevice(this)
