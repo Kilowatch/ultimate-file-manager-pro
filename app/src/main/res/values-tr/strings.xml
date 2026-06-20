@@ -1518,6 +1518,30 @@ Seçim eylem çubuğunu özelleştirin
     <string name="long_press_hint">Döşemeleri yeniden düzenleyebileceğiniz veya gizleyebileceğiniz döşeme düzenleme moduna girmek için bu süre boyunca ana ekrandaki herhangi bir döşemeyi basılı tutun.</string>
     <string name="long_press_decrease">Bekletme süresini azaltın</string>
     <string name="long_press_increase">Bekletme süresini artırın</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Otomatik Gizleme Süresini Kontrol Eder
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Medya oynatıcı kontrolleri ne kadar süreyle görünür kalır?
+</string>
+    <string name="controls_timeout_faster">
+Daha hızlı (1 sn)
+</string>
+    <string name="controls_timeout_slower">
+Daha yavaş (10 sn)
+</string>
+    <string name="controls_timeout_hint">
+Daha kısa süreler, oynatma sırasında kontrollerin yoldan çekilmesini sağlar. Daha uzun süreler, kaybolmadan önce etkileşimde bulunmanız için size daha fazla zaman tanır.
+</string>
+    <string name="controls_timeout_decrease">
+Zaman aşımını azalt
+</string>
+    <string name="controls_timeout_increase">
+Zaman aşımını artır
+</string>
+
     <string name="save">Kaydetmek</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Klasör Seçin
     <string name="auto_backup_reset_default">
 Varsayılana Sıfırla
 </string>
+    <string name="auto_backup_location_not_set">
+Hiçbir klasör seçilmedi — bir yedekleme konumu seçmek için Klasör Seç\'e dokunun
+</string>
     <string name="auto_backup_location_unavailable">
 Seçilen klasör artık mevcut değil; varsayılana geri dönülüyor
 </string>
@@ -4832,6 +4859,9 @@ APK/XAPK Çıkartımı
     <string name="icon_settings_long_press">
 Uzun Basma Süresi
 </string>
+    <string name="icon_settings_controls_timeout">
+Otomatik Gizleme Süresini Kontrol Eder
+</string>
     <string name="icon_settings_toolbar_icons">
 Araç Çubuğu Simgeleri
 </string>
@@ -4960,6 +4990,9 @@ Ana Menü Düzeni
 </string>
     <string name="backup_pref_long_press">
 Düzenleme Modu Uzun Basma Süresi
+</string>
+    <string name="backup_pref_controls_timeout">
+Otomatik Gizleme Süresini Kontrol Eder
 </string>
     <string name="backup_pref_date_group">
 Tarih Gruplandırma Kuralları

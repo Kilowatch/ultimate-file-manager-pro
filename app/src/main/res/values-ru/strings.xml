@@ -1518,6 +1518,30 @@ NFS-серверу запрещен доступ. Убедитесь, что п�
     <string name="long_press_hint">Удерживайте любую плитку на главном экране в течение этого времени, чтобы войти в режим редактирования плитки, где вы можете переставлять или скрывать плитки.</string>
     <string name="long_press_decrease">Уменьшить продолжительность удержания</string>
     <string name="long_press_increase">Увеличить продолжительность удержания</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Управление длительностью автоматического скрытия
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Как долго элементы управления медиаплеером остаются видимыми
+</string>
+    <string name="controls_timeout_faster">
+Быстрее (1 с)
+</string>
+    <string name="controls_timeout_slower">
+Медленнее (10 с)
+</string>
+    <string name="controls_timeout_hint">
+Более короткое время позволяет не мешать управлению во время воспроизведения. Более длительное время дает вам больше времени для взаимодействия, прежде чем они исчезнут.
+</string>
+    <string name="controls_timeout_decrease">
+Уменьшить таймаут
+</string>
+    <string name="controls_timeout_increase">
+Увеличить таймаут
+</string>
+
     <string name="save">Сохранять</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ PDF (только многостраничный)
     <string name="auto_backup_reset_default">
 Сбросить настройки по умолчанию
 </string>
+    <string name="auto_backup_location_not_set">
+Папка не выбрана — коснитесь «Выбрать папку», чтобы выбрать место для резервного копирования.
+</string>
     <string name="auto_backup_location_unavailable">
 Выбранная папка больше не существует — возврат к настройкам по умолчанию
 </string>
@@ -4832,6 +4859,9 @@ XML/Разметка
     <string name="icon_settings_long_press">
 Длительность длительного нажатия
 </string>
+    <string name="icon_settings_controls_timeout">
+Управление длительностью автоматического скрытия
+</string>
     <string name="icon_settings_toolbar_icons">
 Значки панели инструментов
 </string>
@@ -4960,6 +4990,9 @@ XML/Разметка
 </string>
     <string name="backup_pref_long_press">
 Режим редактирования, длительность длительного нажатия
+</string>
+    <string name="backup_pref_controls_timeout">
+Управление длительностью автоматического скрытия
 </string>
     <string name="backup_pref_date_group">
 Правила группировки дат

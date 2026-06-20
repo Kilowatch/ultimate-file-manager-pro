@@ -1518,6 +1518,30 @@ PKCS12 पासवर्ड
     <string name="long_press_hint">टाइल संपादन मोड में प्रवेश करने के लिए इस अवधि के लिए किसी भी टाइल को मुख्य स्क्रीन पर दबाए रखें, जहां आप टाइल्स को पुनर्व्यवस्थित या छिपा सकते हैं।</string>
     <string name="long_press_decrease">होल्ड अवधि कम करें</string>
     <string name="long_press_increase">होल्ड अवधि बढ़ाएँ</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+स्वतः-छिपाने की अवधि को नियंत्रित करता है
+</string>
+    <string name="settings_controls_timeout_subtitle">
+मीडिया प्लेयर नियंत्रण कितने समय तक दृश्यमान रहते हैं
+</string>
+    <string name="controls_timeout_faster">
+तेज़ (1 सेकंड)
+</string>
+    <string name="controls_timeout_slower">
+धीमा (10 सेकंड)
+</string>
+    <string name="controls_timeout_hint">
+प्लेबैक के दौरान कम समय नियंत्रण को रास्ते से हटा देता है। लंबे समय तक आपको उनके ख़त्म होने से पहले बातचीत करने के लिए अधिक समय मिलता है।
+</string>
+    <string name="controls_timeout_decrease">
+टाइमआउट कम करें
+</string>
+    <string name="controls_timeout_increase">
+टाइमआउट बढ़ाएँ
+</string>
+
     <string name="save">बचाना</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ JSON में शामिल करने के लिए मेटाडे�
     <string name="auto_backup_reset_default">
 वितथ पर ले जाएं
 </string>
+    <string name="auto_backup_location_not_set">
+कोई फ़ोल्डर चयनित नहीं - बैकअप स्थान चुनने के लिए फ़ोल्डर चुनें पर टैप करें
+</string>
     <string name="auto_backup_location_unavailable">
 चयनित फ़ोल्डर अब मौजूद नहीं है - डिफ़ॉल्ट पर वापस आ रहा है
 </string>
@@ -4832,6 +4859,9 @@ AMOLED
     <string name="icon_settings_long_press">
 लंबी प्रेस अवधि
 </string>
+    <string name="icon_settings_controls_timeout">
+स्वतः-छिपाने की अवधि को नियंत्रित करता है
+</string>
     <string name="icon_settings_toolbar_icons">
 टूलबार चिह्न
 </string>
@@ -4960,6 +4990,9 @@ AMOLED
 </string>
     <string name="backup_pref_long_press">
 संपादन मोड लंबे समय तक दबाए रखने की अवधि
+</string>
+    <string name="backup_pref_controls_timeout">
+स्वतः-छिपाने की अवधि को नियंत्रित करता है
 </string>
     <string name="backup_pref_date_group">
 दिनांक समूहन नियम

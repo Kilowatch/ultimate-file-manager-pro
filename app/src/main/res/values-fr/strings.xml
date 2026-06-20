@@ -1518,6 +1518,30 @@ Personnaliser la barre d\'action de sélection
     <string name="long_press_hint">Maintenez n\'importe quelle vignette sur l\'écran principal pendant cette durée pour accéder au mode d\'édition de vignettes, où vous pouvez réorganiser ou masquer les vignettes.</string>
     <string name="long_press_decrease">Diminuer la durée de maintien</string>
     <string name="long_press_increase">Augmenter la durée de conservation</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Contrôle la durée du masquage automatique
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Combien de temps les commandes du lecteur multimédia restent visibles
+</string>
+    <string name="controls_timeout_faster">
+Plus rapide (1 s)
+</string>
+    <string name="controls_timeout_slower">
+Plus lent (10 s)
+</string>
+    <string name="controls_timeout_hint">
+Des durées plus courtes maintiennent les commandes à l\'écart pendant la lecture. Des durées plus longues vous donnent plus de temps pour interagir avant qu’elles ne disparaissent.
+</string>
+    <string name="controls_timeout_decrease">
+Diminuer le délai d\'attente
+</string>
+    <string name="controls_timeout_increase">
+Augmenter le délai d\'attente
+</string>
+
     <string name="save">Sauvegarder</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Sélectionner un dossier
     <string name="auto_backup_reset_default">
 Réinitialiser aux valeurs par défaut
 </string>
+    <string name="auto_backup_location_not_set">
+Aucun dossier sélectionné : appuyez sur Sélectionner un dossier pour choisir un emplacement de sauvegarde.
+</string>
     <string name="auto_backup_location_unavailable">
 Le dossier sélectionné n\'existe plus - retour aux valeurs par défaut
 </string>
@@ -4832,6 +4859,9 @@ Extrait APK/XAPK
     <string name="icon_settings_long_press">
 Durée d\'appui longue
 </string>
+    <string name="icon_settings_controls_timeout">
+Contrôle la durée du masquage automatique
+</string>
     <string name="icon_settings_toolbar_icons">
 Icônes de la barre d\'outils
 </string>
@@ -4960,6 +4990,9 @@ Disposition du menu principal
 </string>
     <string name="backup_pref_long_press">
 Mode d\'édition Durée d\'appui long
+</string>
+    <string name="backup_pref_controls_timeout">
+Contrôle la durée du masquage automatique
 </string>
     <string name="backup_pref_date_group">
 Règles de regroupement de dates

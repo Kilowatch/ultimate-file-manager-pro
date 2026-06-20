@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.5] — 2026-06-19
 
+### Added
+- Media Player Controls Auto-Hide Duration — new Settings screen (mobile: SeekBar, TV: step cards + Save button) letting users choose how long media player controls stay visible before fading (1–10 seconds, default 3 s). Applies to UFMPlayer, MediaPlayer, TwinWindow player, and Slideshow video playback. New `ic_controls_timeout` vector icon registered in icon customization, backup/restore, and transfer systems.
+
 ### Fixed
 - "Show hidden files" setting now filters out dot-prefixed files/folders (e.g. `.UFM_Recyclebin`, `.test.txt`) in both local and network/online storage browsers, consistent with standard file manager behavior.
+- Auto Backup: Fixed misleading "Selected folder no longer exists" message when no custom folder had been selected yet — now shows a prompt to select a folder instead.
+- Auto Backup: Fixed custom backup location being silently cleared when leaving and re-entering the settings page.
 
 ### Security
 - Upgraded BouncyCastle from 1.83 to 1.84 to fix CVE-2026-5588 (HIGH — `CompositeVerifier` in `bcpkix` accepted an empty signature sequence as valid, which could allow a crafted certificate to bypass signature chain validation in the custom TLS cert import flow).

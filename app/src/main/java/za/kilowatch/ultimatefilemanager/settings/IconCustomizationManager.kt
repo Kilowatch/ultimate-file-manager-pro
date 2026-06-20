@@ -62,7 +62,7 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     // Settings
     R.drawable.ic_font_size, R.drawable.ic_language, R.drawable.ic_theme,
     R.drawable.ic_palette, R.drawable.ic_export, R.drawable.ic_import,
-    R.drawable.ic_long_press, R.drawable.ic_photo_video, R.drawable.ic_tune,
+    R.drawable.ic_long_press, R.drawable.ic_controls_timeout, R.drawable.ic_photo_video, R.drawable.ic_tune,
     R.drawable.ic_policy, R.drawable.ic_coffee, R.drawable.ic_home,
     // Utility
     R.drawable.ic_more_vert, R.drawable.ic_remove_circle, R.drawable.ic_history,

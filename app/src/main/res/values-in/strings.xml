@@ -1518,6 +1518,30 @@ Customize selection action bar
     <string name="long_press_hint">Hold any tile on the main screen for this duration to enter tile edit mode, where you can rearrange or hide tiles.</string>
     <string name="long_press_decrease">Decrease hold duration</string>
     <string name="long_press_increase">Increase hold duration</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Controls Auto-Hide Duration
+</string>
+    <string name="settings_controls_timeout_subtitle">
+How long media player controls stay visible
+</string>
+    <string name="controls_timeout_faster">
+Faster (1 s)
+</string>
+    <string name="controls_timeout_slower">
+Slower (10 s)
+</string>
+    <string name="controls_timeout_hint">
+Shorter times keep controls out of the way during playback. Longer times give you more time to interact before they fade.
+</string>
+    <string name="controls_timeout_decrease">
+Decrease timeout
+</string>
+    <string name="controls_timeout_increase">
+Increase timeout
+</string>
+
     <string name="save">Save</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Select Folder
     <string name="auto_backup_reset_default">
 Reset to Default
 </string>
+    <string name="auto_backup_location_not_set">
+No folder selected — tap Select Folder to choose a backup location
+</string>
     <string name="auto_backup_location_unavailable">
 Selected folder no longer exists — falling back to default
 </string>
@@ -4832,6 +4859,9 @@ APK/XAPK Extract
     <string name="icon_settings_long_press">
 Long Press Duration
 </string>
+    <string name="icon_settings_controls_timeout">
+Controls Auto-Hide Duration
+</string>
     <string name="icon_settings_toolbar_icons">
 Toolbar Icons
 </string>
@@ -4960,6 +4990,9 @@ Main Menu Layout
 </string>
     <string name="backup_pref_long_press">
 Edit Mode Long-Press Duration
+</string>
+    <string name="backup_pref_controls_timeout">
+Controls Auto-Hide Duration
 </string>
     <string name="backup_pref_date_group">
 Date Grouping Rules

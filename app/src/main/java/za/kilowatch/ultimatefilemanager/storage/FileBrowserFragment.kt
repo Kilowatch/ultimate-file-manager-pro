@@ -203,6 +203,10 @@ class FileBrowserFragment : Fragment() {
         super.onResume()
         applyToolbarIconVisibility()
         updatePasteFab()
+        // Refresh file list on return from child activities (e.g. Settings toggle)
+        if (::currentDir.isInitialized) {
+            loadDirectory(currentDir)
+        }
     }
 
     private fun applyToolbarIconVisibility() {

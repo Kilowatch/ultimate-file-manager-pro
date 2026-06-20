@@ -357,6 +357,12 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, LongPressDurationActivity::class.java))
         }
 
+        // Controls Auto-Hide Duration row
+        val cardControlsTimeout = findViewById<MaterialCardView>(R.id.cardControlsTimeout)
+        cardControlsTimeout.setOnClickListener {
+            startActivity(Intent(this, ControlsTimeoutActivity::class.java))
+        }
+
         // Long Press Toolbar Icons row
         val cardToolbarIcons = findViewById<MaterialCardView?>(R.id.cardToolbarIcons)
         cardToolbarIcons?.setOnClickListener {
@@ -392,6 +398,7 @@ class SettingsActivity : AppCompatActivity() {
             setupTvCardFocus(cardFavorites)
             setupTvCardFocus(cardDefaultApps)
             setupTvCardFocus(cardLongPressDuration)
+            findViewById<MaterialCardView?>(R.id.cardControlsTimeout)?.let { setupTvCardFocus(it) }
             cardToolbarIcons?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardDefaultStartScreen)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardLanguage)?.let { setupTvCardFocus(it) }
@@ -618,6 +625,10 @@ class SettingsActivity : AppCompatActivity() {
         // Refresh Long Press Duration subtitle
         val txtLongPressDurationSubtitle = findViewById<TextView?>(R.id.txtLongPressDurationSubtitle)
         txtLongPressDurationSubtitle?.text = LongPressDurationManager.formatSaved(this)
+
+        // Refresh Controls Auto-Hide Duration subtitle
+        val txtControlsTimeoutSubtitle = findViewById<TextView?>(R.id.txtControlsTimeoutSubtitle)
+        txtControlsTimeoutSubtitle?.text = ControlsTimeoutManager.formatSaved(this)
 
         // Refresh APK Extract subtitle
         if (::txtApkExtractSubtitle.isInitialized) {
@@ -933,6 +944,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardFontSize, "settings_font_size", R.drawable.ic_font_size),
             CardIcon(R.id.cardApkExtract, "settings_apk_extract", R.drawable.ic_file_apk),
             CardIcon(R.id.cardLongPressDuration, "settings_long_press", R.drawable.ic_long_press),
+            CardIcon(R.id.cardControlsTimeout, "settings_controls_timeout", R.drawable.ic_controls_timeout),
             CardIcon(R.id.cardToolbarIcons, "settings_toolbar_icons", R.drawable.ic_star),
             CardIcon(R.id.cardFavorites, "settings_favorites", R.drawable.ic_star),
             CardIcon(R.id.cardStorageRename, "settings_custom_drive_names", R.drawable.ic_edit),

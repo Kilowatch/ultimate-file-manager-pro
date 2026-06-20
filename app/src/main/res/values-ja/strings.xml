@@ -1518,6 +1518,30 @@ UFM カラーコード
     <string name="long_press_hint">この期間メイン画面上のいずれかのタイルを押し続けると、タイル編集モードに入り、タイルを並べ替えたり非表示にしたりできます。</string>
     <string name="long_press_decrease">ホールド時間を短縮する</string>
     <string name="long_press_increase">ホールド時間を長くする</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+自動非表示期間の制御
+</string>
+    <string name="settings_controls_timeout_subtitle">
+メディア プレーヤー コントロールが表示される期間
+</string>
+    <string name="controls_timeout_faster">
+より速く（1秒）
+</string>
+    <string name="controls_timeout_slower">
+遅い (10 秒)
+</string>
+    <string name="controls_timeout_hint">
+時間を短くすると、再生中にコントロールが邪魔になりません。時間を長くすると、消えてしまう前に対話する時間が長くなります。
+</string>
+    <string name="controls_timeout_decrease">
+タイムアウトを減らす
+</string>
+    <string name="controls_timeout_increase">
+タイムアウトを増やす
+</string>
+
     <string name="save">保存</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ FTPサーバープロファイル
     <string name="auto_backup_reset_default">
 デフォルトにリセット
 </string>
+    <string name="auto_backup_location_not_set">
+フォルダーが選択されていません — [フォルダーの選択] をタップしてバックアップの場所を選択します
+</string>
     <string name="auto_backup_location_unavailable">
 選択したフォルダーは存在しません - デフォルトに戻ります
 </string>
@@ -4832,6 +4859,9 @@ APK/XAPK 抽出
     <string name="icon_settings_long_press">
 長押し時間
 </string>
+    <string name="icon_settings_controls_timeout">
+自動非表示期間の制御
+</string>
     <string name="icon_settings_toolbar_icons">
 ツールバーのアイコン
 </string>
@@ -4960,6 +4990,9 @@ UFM ブラウザを使用して .UFMConfig バックアップ ファイルを選
 </string>
     <string name="backup_pref_long_press">
 編集モードの長押し時間
+</string>
+    <string name="backup_pref_controls_timeout">
+自動非表示期間の制御
 </string>
     <string name="backup_pref_date_group">
 日付グループ化ルール

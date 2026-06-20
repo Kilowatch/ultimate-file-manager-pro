@@ -33,6 +33,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 class AutoBackupActivity : AppCompatActivity() {
 
     private var isTv = false
+    private var isUpdatingLocationUI = false
 
     // Views
     private lateinit var switchAutoBackup: SwitchMaterial
@@ -191,6 +192,7 @@ class AutoBackupActivity : AppCompatActivity() {
 
         // ── Save Location ────────────────────────────────────────────────
         radioLocation.setOnCheckedChangeListener { _, checkedId ->
+            if (isUpdatingLocationUI) return@setOnCheckedChangeListener
             if (checkedId == R.id.rbLocationCustom) {
                 AutoBackupPrefs.setCustomLocationType(this, "local")
                 AutoBackupPrefs.setCustomLocalPath(this, "") // will be set after picker
@@ -408,12 +410,14 @@ class AutoBackupActivity : AppCompatActivity() {
     // ── Save Location UI ─────────────────────────────────────────────────────
 
     private fun updateLocationUI() {
+        isUpdatingLocationUI = true
         val isCustom = AutoBackupPrefs.isCustomLocationSet(this)
         if (isCustom) {
             rbLocationCustom.isChecked = true
         } else {
             rbLocationDefault.isChecked = true
         }
+        isUpdatingLocationUI = false
 
         val path = AutoBackupPrefs.getBackupDirectoryDisplayPath(this)
         if (isCustom) {
@@ -422,7 +426,12 @@ class AutoBackupActivity : AppCompatActivity() {
             btnSelectFolder.visibility = View.VISIBLE
             btnResetLocation.visibility = View.VISIBLE
 
-            if (!AutoBackupPrefs.isCustomLocationAvailable(this)) {
+            val localPath = AutoBackupPrefs.getCustomLocalPath(this)
+            if (localPath.isEmpty()) {
+                txtLocationWarning.setText(R.string.auto_backup_location_not_set)
+                txtLocationWarning.visibility = View.VISIBLE
+            } else if (!AutoBackupPrefs.isCustomLocationAvailable(this)) {
+                txtLocationWarning.setText(R.string.auto_backup_location_unavailable)
                 txtLocationWarning.visibility = View.VISIBLE
             } else {
                 txtLocationWarning.visibility = View.GONE

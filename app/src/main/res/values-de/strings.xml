@@ -1518,6 +1518,30 @@ Passen Sie die Auswahl-Aktionsleiste an
     <string name="long_press_hint">Halten Sie eine beliebige Kachel auf dem Hauptbildschirm für diesen Zeitraum gedrückt, um in den Kachelbearbeitungsmodus zu gelangen, in dem Sie Kacheln neu anordnen oder ausblenden können.</string>
     <string name="long_press_decrease">Haltedauer verringern</string>
     <string name="long_press_increase">Haltedauer erhöhen</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Steuert die Dauer des automatischen Ausblendens
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Wie lange die Steuerelemente des Media Players sichtbar bleiben
+</string>
+    <string name="controls_timeout_faster">
+Schneller (1 s)
+</string>
+    <string name="controls_timeout_slower">
+Langsamer (10 s)
+</string>
+    <string name="controls_timeout_hint">
+Bei kürzeren Zeiten sind die Bedienelemente während der Wiedergabe nicht im Weg. Längere Zeiten geben Ihnen mehr Zeit zur Interaktion, bevor sie verblassen.
+</string>
+    <string name="controls_timeout_decrease">
+Timeout verringern
+</string>
+    <string name="controls_timeout_increase">
+Timeout erhöhen
+</string>
+
     <string name="save">Speichern</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Wählen Sie Ordner aus
     <string name="auto_backup_reset_default">
 Auf Standard zurücksetzen
 </string>
+    <string name="auto_backup_location_not_set">
+Kein Ordner ausgewählt – tippen Sie auf „Ordner auswählen“, um einen Sicherungsspeicherort auszuwählen
+</string>
     <string name="auto_backup_location_unavailable">
 Der ausgewählte Ordner existiert nicht mehr – es wird auf die Standardeinstellung zurückgesetzt
 </string>
@@ -4832,6 +4859,9 @@ APK/XAPK-Extrakt
     <string name="icon_settings_long_press">
 Lange Druckdauer
 </string>
+    <string name="icon_settings_controls_timeout">
+Steuert die Dauer des automatischen Ausblendens
+</string>
     <string name="icon_settings_toolbar_icons">
 Symbolleistensymbole
 </string>
@@ -4960,6 +4990,9 @@ Hauptmenü-Layout
 </string>
     <string name="backup_pref_long_press">
 Dauer des langen Drückens im Bearbeitungsmodus
+</string>
+    <string name="backup_pref_controls_timeout">
+Steuert die Dauer des automatischen Ausblendens
 </string>
     <string name="backup_pref_date_group">
 Regeln zur Datumsgruppierung

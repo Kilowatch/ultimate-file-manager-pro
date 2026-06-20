@@ -1518,6 +1518,30 @@ Personalizar barra de ação de seleção
     <string name="long_press_hint">Segure qualquer bloco na tela principal durante esse período para entrar no modo de edição de blocos, onde você pode reorganizar ou ocultar os blocos.</string>
     <string name="long_press_decrease">Diminuir a duração da retenção</string>
     <string name="long_press_increase">Aumentar a duração da espera</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Controla a duração do ocultamento automático
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Por quanto tempo os controles do media player permanecem visíveis
+</string>
+    <string name="controls_timeout_faster">
+Mais rápido (1s)
+</string>
+    <string name="controls_timeout_slower">
+Mais lento (10 s)
+</string>
+    <string name="controls_timeout_hint">
+Tempos mais curtos mantêm os controles fora do caminho durante a reprodução. Tempos mais longos proporcionam mais tempo para interagir antes que desapareçam.
+</string>
+    <string name="controls_timeout_decrease">
+Diminuir tempo limite
+</string>
+    <string name="controls_timeout_increase">
+Aumentar o tempo limite
+</string>
+
     <string name="save">Salvar</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Selecione a pasta
     <string name="auto_backup_reset_default">
 Redefinir para o padrão
 </string>
+    <string name="auto_backup_location_not_set">
+Nenhuma pasta selecionada – toque em Selecionar pasta para escolher um local de backup
+</string>
     <string name="auto_backup_location_unavailable">
 A pasta selecionada não existe mais – voltando ao padrão
 </string>
@@ -4832,6 +4859,9 @@ Extração de APK/XAPK
     <string name="icon_settings_long_press">
 Longa duração do toque
 </string>
+    <string name="icon_settings_controls_timeout">
+Controla a duração do ocultamento automático
+</string>
     <string name="icon_settings_toolbar_icons">
 Ícones da barra de ferramentas
 </string>
@@ -4960,6 +4990,9 @@ Layout do menu principal
 </string>
     <string name="backup_pref_long_press">
 Duração do toque longo no modo de edição
+</string>
+    <string name="backup_pref_controls_timeout">
+Controla a duração do ocultamento automático
 </string>
     <string name="backup_pref_date_group">
 Regras de agrupamento de datas

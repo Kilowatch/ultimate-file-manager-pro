@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Controls auto-hide timeout icon.
+    A clock face with a sweep hand, indicating the countdown before
+    media player controls disappear. Matches the app's 24×24 dp icon style.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="?attr/colorControlNormal">
+
+    <!-- Clock face ring (donut: outer circle CCW, inner hole CW) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:fillAlpha="0.35"
+        android:pathData="M12,2 A10,10 0 1,0 12,22 A10,10 0 1,0 12,2 Z
+                          M12,4.5 A7.5,7.5 0 1,1 12,19.5 A7.5,7.5 0 1,1 12,4.5 Z"/>
+
+    <!-- Sweep hand — triangle pointing to upper-right (~2 o'clock) -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M10.5,12.5 L15.5,6 L13,13 Z"/>
+
+    <!-- Centre dot -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M10.8,12 A1.2,1.2 0 1,0 13.2,12 A1.2,1.2 0 1,0 10.8,12 Z"/>
+</vector>

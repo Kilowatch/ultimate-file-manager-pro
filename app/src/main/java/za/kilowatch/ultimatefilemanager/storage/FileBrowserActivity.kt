@@ -824,7 +824,7 @@ class FileBrowserActivity : AppCompatActivity() {
             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
                 .getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
             val files = fileIndices.map { File(it.path) }
-                .filter { showHidden || it.absolutePath !in hiddenPaths }
+                .filter { isFileVisible(it, showHidden, hiddenPaths) }
 
             withContext(Dispatchers.Main) {
                 if (append) {
@@ -3051,7 +3051,7 @@ class FileBrowserActivity : AppCompatActivity() {
                         val files = currentDir.walkTopDown()
                             .filter { coroutineContext.ensureActive(); true }
                             .filter { it.isFile && SortFilterSheet.matchesFilter(it, filterType) }
-                            .filter { showHidden || it.absolutePath !in hiddenPaths }
+                            .filter { isFileVisible(it, showHidden, hiddenPaths) }
                             .sortedByDescending { it.lastModified() }
                             .toList()
                         withContext(Dispatchers.Main) {
@@ -3084,7 +3084,7 @@ class FileBrowserActivity : AppCompatActivity() {
                     directory.listFiles()?.toList() ?: emptyList()
                 }
                 
-                val visibleFiles = if (showHidden) rawFiles else rawFiles.filter { it.absolutePath !in hiddenPaths }
+                val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
 
                 val indexedPaths = try { dao.getIndexedPathsInFolder(directory.absolutePath).toSet() } catch (e: Exception) { emptySet<String>() }
                 val sorted = sortAndFilterFiles(visibleFiles)
@@ -3113,7 +3113,7 @@ class FileBrowserActivity : AppCompatActivity() {
                                     coroutineContext.ensureActive()
                                     directory.listFiles()?.toList() ?: emptyList()
                                 }
-                                val visibleFiles = if (showHidden) rawFiles else rawFiles.filter { it.absolutePath !in hiddenPaths }
+                                val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
                                 withContext(Dispatchers.Main) {
                                     fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
@@ -3121,7 +3121,7 @@ class FileBrowserActivity : AppCompatActivity() {
                                     applyFileFocus()
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { showHidden || it.absolutePath !in hiddenPaths }
+                                val files = fileIndices.map { File(it.path) }.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     fileAdapter.submitList(sorted, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
@@ -3160,6 +3160,16 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         // Only focus once per intent
         focusPath = null
+    }
+
+    /**
+     * Determines whether a file should be visible in the file list.
+     * When [showHidden] is false, filters out both:
+     * - Files/folders whose name starts with "." (Unix dotfile convention)
+     * - Files whose absolute path is in the explicit hidden-paths database
+     */
+    private fun isFileVisible(file: File, showHidden: Boolean, hiddenPaths: Set<String>): Boolean {
+        return showHidden || (!file.name.startsWith(".") && file.absolutePath !in hiddenPaths)
     }
 
     /**

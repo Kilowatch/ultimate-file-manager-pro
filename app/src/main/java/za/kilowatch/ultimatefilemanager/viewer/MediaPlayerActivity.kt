@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -86,7 +87,6 @@ class MediaPlayerActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     // ── Controls auto-hide (video mode) ──────────────────────────────────────
     private val hideControlsRunnable = Runnable { hideControls() }
-    private val CONTROLS_TIMEOUT_MS = 3000L
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -451,7 +451,7 @@ class MediaPlayerActivity : AppCompatActivity(), SurfaceHolder.Callback {
         handler.removeCallbacks(hideControlsRunnable)
         showControls()
         if (mediaPlayer?.isPlaying == true) {
-            handler.postDelayed(hideControlsRunnable, CONTROLS_TIMEOUT_MS)
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
 

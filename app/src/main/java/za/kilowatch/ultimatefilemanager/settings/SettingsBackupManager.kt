@@ -259,6 +259,7 @@ object SettingsBackupManager {
         add("ufm_hidden_files_prefs",    context.getString(R.string.backup_pref_hidden_files))
         add("ufm_main_menu_prefs",       context.getString(R.string.backup_pref_main_menu))
         add("ufm_long_press_prefs",      context.getString(R.string.backup_pref_long_press))
+        add("ufm_controls_timeout_prefs",context.getString(R.string.backup_pref_controls_timeout))
         add("ufm_date_group_prefs",      context.getString(R.string.backup_pref_date_group))
         add("default_start_screen_prefs",context.getString(R.string.backup_pref_default_start))
         add("toolbar_icons_prefs",       context.getString(R.string.backup_pref_toolbar_icons))
@@ -530,6 +531,7 @@ object SettingsBackupManager {
                 "ufm_hidden_files_prefs"    to R.string.backup_pref_hidden_files,
                 "ufm_main_menu_prefs"       to R.string.backup_pref_main_menu,
                 "ufm_long_press_prefs"      to R.string.backup_pref_long_press,
+                "ufm_controls_timeout_prefs" to R.string.backup_pref_controls_timeout,
                 "ufm_favorites_prefs"       to R.string.backup_pref_favorites,
                 "ufm_default_apps"          to R.string.backup_pref_default_apps,
                 "apk_extract_prefs"         to R.string.backup_pref_apk_extract,

@@ -56,6 +56,7 @@ import androidx.media3.common.util.Util
 import androidx.media3.ui.SubtitleView
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.AutoplayPreferenceManager
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import java.util.Locale
 
 class UFMPlayerActivity : Activity() {
@@ -217,7 +218,7 @@ class UFMPlayerActivity : Activity() {
 
         // Only auto-hide if playing and sheet is not showing
         if (player?.isPlaying == true && !isShowingSheet) {
-            handler.postDelayed(hideControlsRunnable, 3000)
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
 

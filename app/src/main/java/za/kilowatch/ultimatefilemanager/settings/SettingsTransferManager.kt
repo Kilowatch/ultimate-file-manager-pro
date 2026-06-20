@@ -47,6 +47,7 @@ object SettingsTransferManager {
         SettingItem(prefsName = "ufm_sort_prefs",     key = "sort_mode",                     canonicalName = "sort_mode",           displayLabel = "Sort Mode"),
         SettingItem(prefsName = "ufm_sort_prefs",     key = "sort_order",                    canonicalName = "sort_order",          displayLabel = "Sort Order"),
         SettingItem(prefsName = "ufm_long_press_prefs", key = "long_press_step",             canonicalName = "long_press_step",     displayLabel = "Edit Mode Hold Duration"),
+        SettingItem(prefsName = "ufm_controls_timeout_prefs", key = "controls_timeout_step", canonicalName = "controls_timeout_step", displayLabel = "Controls Auto-Hide Duration"),
         SettingItem(prefsName = "ufm_prefs",          key = "media_thumbnails_enabled",      canonicalName = "media_thumbnails_enabled", displayLabel = "Media Thumbnails"),
         SettingItem(prefsName = "ufm_favorites_prefs", key = "favorites_array",               canonicalName = "favorites_array",     displayLabel = "Manage Favorites"),
         SettingItem(prefsName = "ufm_default_apps",   key = "*",                             canonicalName = "default_apps",        displayLabel = "Default Applications")

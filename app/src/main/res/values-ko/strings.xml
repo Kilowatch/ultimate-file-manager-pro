@@ -1518,6 +1518,30 @@ UFM 색상 코드
     <string name="long_press_hint">이 시간 동안 메인 화면의 타일을 누르고 있으면 타일 편집 모드로 들어가 타일을 재배열하거나 숨길 수 있습니다.</string>
     <string name="long_press_decrease">보유 기간 감소</string>
     <string name="long_press_increase">보유 기간 증가</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+자동 숨기기 기간을 제어합니다.
+</string>
+    <string name="settings_controls_timeout_subtitle">
+미디어 플레이어 컨트롤이 표시되는 기간
+</string>
+    <string name="controls_timeout_faster">
+더 빠르게(1초)
+</string>
+    <string name="controls_timeout_slower">
+더 느리게(10초)
+</string>
+    <string name="controls_timeout_hint">
+시간이 짧을수록 재생 중에 컨트롤이 방해가 되지 않습니다. 시간이 길어질수록 사라지기 전에 상호 작용할 수 있는 시간이 더 많아집니다.
+</string>
+    <string name="controls_timeout_decrease">
+시간 초과 감소
+</string>
+    <string name="controls_timeout_increase">
+시간 초과 증가
+</string>
+
     <string name="save">구하다</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ FTP 서버 프로필
     <string name="auto_backup_reset_default">
 기본값으로 재설정
 </string>
+    <string name="auto_backup_location_not_set">
+선택한 폴더가 없습니다. 폴더 선택을 탭하여 백업 위치를 선택하세요.
+</string>
     <string name="auto_backup_location_unavailable">
 선택한 폴더가 더 이상 존재하지 않습니다. 기본값으로 돌아갑니다.
 </string>
@@ -4832,6 +4859,9 @@ APK/XAPK 추출
     <string name="icon_settings_long_press">
 길게 누르는 시간
 </string>
+    <string name="icon_settings_controls_timeout">
+자동 숨기기 기간을 제어합니다.
+</string>
     <string name="icon_settings_toolbar_icons">
 도구 모음 아이콘
 </string>
@@ -4960,6 +4990,9 @@ SAF
 </string>
     <string name="backup_pref_long_press">
 편집 모드 길게 누르는 시간
+</string>
+    <string name="backup_pref_controls_timeout">
+자동 숨기기 기간을 제어합니다.
 </string>
     <string name="backup_pref_date_group">
 날짜 그룹화 규칙

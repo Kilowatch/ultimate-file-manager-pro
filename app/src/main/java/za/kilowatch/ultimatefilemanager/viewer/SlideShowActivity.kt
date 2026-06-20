@@ -71,6 +71,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -814,7 +815,7 @@ class SlideShowActivity : AppCompatActivity() {
     private fun resetHideTimer() {
         handler.removeCallbacks(hideControlsRunnable)
         if (controlsVisible && isCurrentItemVideo() && isVideoPlaying()) {
-            handler.postDelayed(hideControlsRunnable, 3000)
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
 

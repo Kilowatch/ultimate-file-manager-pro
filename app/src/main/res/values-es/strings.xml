@@ -1518,6 +1518,30 @@ Personalizar la barra de acciones de selección
     <string name="long_press_hint">Mantenga presionado cualquier mosaico en la pantalla principal durante este tiempo para ingresar al modo de edición de mosaicos, donde puede reorganizar u ocultar mosaicos.</string>
     <string name="long_press_decrease">Disminuir la duración de la espera</string>
     <string name="long_press_increase">Aumentar la duración de la espera</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Controla la duración de la ocultación automática
+</string>
+    <string name="settings_controls_timeout_subtitle">
+¿Cuánto tiempo permanecen visibles los controles del reproductor multimedia?
+</string>
+    <string name="controls_timeout_faster">
+Más rápido (1 s)
+</string>
+    <string name="controls_timeout_slower">
+Más lento (10 s)
+</string>
+    <string name="controls_timeout_hint">
+Los tiempos más cortos mantienen los controles fuera del camino durante la reproducción. Los tiempos más largos te dan más tiempo para interactuar antes de que se desvanezcan.
+</string>
+    <string name="controls_timeout_decrease">
+Disminuir el tiempo de espera
+</string>
+    <string name="controls_timeout_increase">
+aumentar el tiempo de espera
+</string>
+
     <string name="save">Ahorrar</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Seleccionar carpeta
     <string name="auto_backup_reset_default">
 Restablecer los valores predeterminados
 </string>
+    <string name="auto_backup_location_not_set">
+No se ha seleccionado ninguna carpeta: toque Seleccionar carpeta para elegir una ubicación de copia de seguridad
+</string>
     <string name="auto_backup_location_unavailable">
 La carpeta seleccionada ya no existe: vuelve al valor predeterminado
 </string>
@@ -4832,6 +4859,9 @@ Extracto de APK/XAPK
     <string name="icon_settings_long_press">
 Duración de pulsación larga
 </string>
+    <string name="icon_settings_controls_timeout">
+Controla la duración de la ocultación automática
+</string>
     <string name="icon_settings_toolbar_icons">
 Iconos de la barra de herramientas
 </string>
@@ -4960,6 +4990,9 @@ Diseño del menú principal
 </string>
     <string name="backup_pref_long_press">
 Modo de edición Duración de la pulsación larga
+</string>
+    <string name="backup_pref_controls_timeout">
+Controla la duración de la ocultación automática
 </string>
     <string name="backup_pref_date_group">
 Reglas de agrupación de fechas

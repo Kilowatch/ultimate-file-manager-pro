@@ -1518,6 +1518,30 @@ DLNA
     <string name="long_press_hint">اضغط باستمرار على أي بلاطة على الشاشة الرئيسية لهذه المدة للدخول في وضع تحرير المربعات، حيث يمكنك إعادة ترتيب المربعات أو إخفائها.</string>
     <string name="long_press_decrease">تقليل مدة الانتظار</string>
     <string name="long_press_increase">زيادة مدة الانتظار</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+يتحكم في مدة الإخفاء التلقائي
+</string>
+    <string name="settings_controls_timeout_subtitle">
+المدة التي تظل فيها عناصر التحكم في مشغل الوسائط مرئية
+</string>
+    <string name="controls_timeout_faster">
+أسرع (1 ثانية)
+</string>
+    <string name="controls_timeout_slower">
+أبطأ (10 ثواني)
+</string>
+    <string name="controls_timeout_hint">
+تعمل الأوقات الأقصر على إبقاء عناصر التحكم بعيدة عن الطريق أثناء التشغيل. تمنحك الأوقات الأطول مزيدًا من الوقت للتفاعل قبل أن تتلاشى.
+</string>
+    <string name="controls_timeout_decrease">
+تقليل المهلة
+</string>
+    <string name="controls_timeout_increase">
+زيادة المهلة
+</string>
+
     <string name="save">يحفظ</string>
 
     <!-- ADB Terminal -->
@@ -4379,6 +4403,9 @@ PDF (متعدد الصفحات فقط)
     <string name="auto_backup_reset_default">
 إعادة التعيين إلى الافتراضي
 </string>
+    <string name="auto_backup_location_not_set">
+لم يتم تحديد أي مجلد — انقر فوق تحديد مجلد لاختيار موقع النسخ الاحتياطي
+</string>
     <string name="auto_backup_location_unavailable">
 المجلد المحدد لم يعد موجودًا — يعود إلى الوضع الافتراضي
 </string>
@@ -4830,6 +4857,9 @@ XML / العلامات
     <string name="icon_settings_long_press">
 مدة الضغط الطويلة
 </string>
+    <string name="icon_settings_controls_timeout">
+يتحكم في مدة الإخفاء التلقائي
+</string>
     <string name="icon_settings_toolbar_icons">
 أيقونات شريط الأدوات
 </string>
@@ -4958,6 +4988,9 @@ XML / العلامات
 </string>
     <string name="backup_pref_long_press">
 تحرير الوضع لمدة الضغط لفترة طويلة
+</string>
+    <string name="backup_pref_controls_timeout">
+يتحكم في مدة الإخفاء التلقائي
 </string>
     <string name="backup_pref_date_group">
 قواعد تجميع التاريخ

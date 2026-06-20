@@ -1518,6 +1518,30 @@ Sesuaikan bilah tindakan pemilihan
     <string name="long_press_hint">Tahan ubin apa pun di layar utama selama durasi ini untuk masuk ke mode edit ubin, tempat Anda dapat mengatur ulang atau menyembunyikan ubin.</string>
     <string name="long_press_decrease">Kurangi durasi penahanan</string>
     <string name="long_press_increase">Tingkatkan durasi penahanan</string>
+
+    <!-- Controls Auto-Hide Duration -->
+    <string name="settings_controls_timeout_title">
+Mengontrol Durasi Sembunyikan Otomatis
+</string>
+    <string name="settings_controls_timeout_subtitle">
+Berapa lama kontrol pemutar media tetap terlihat
+</string>
+    <string name="controls_timeout_faster">
+Lebih cepat (1 detik)
+</string>
+    <string name="controls_timeout_slower">
+Lebih lambat (10 detik)
+</string>
+    <string name="controls_timeout_hint">
+Waktu yang lebih singkat membuat kontrol tidak mengganggu selama pemutaran. Waktu yang lebih lama memberi Anda lebih banyak waktu untuk berinteraksi sebelum memudar.
+</string>
+    <string name="controls_timeout_decrease">
+Kurangi batas waktu
+</string>
+    <string name="controls_timeout_increase">
+Tingkatkan batas waktu
+</string>
+
     <string name="save">Menyimpan</string>
 
     <!-- ADB Terminal -->
@@ -4381,6 +4405,9 @@ Pilih Folder
     <string name="auto_backup_reset_default">
 Atur Ulang ke Default
 </string>
+    <string name="auto_backup_location_not_set">
+Tidak ada folder yang dipilih — ketuk Pilih Folder untuk memilih lokasi pencadangan
+</string>
     <string name="auto_backup_location_unavailable">
 Folder yang dipilih sudah tidak ada lagi — kembali ke default
 </string>
@@ -4832,6 +4859,9 @@ Ekstrak APK/XAPK
     <string name="icon_settings_long_press">
 Durasi Tekan Lama
 </string>
+    <string name="icon_settings_controls_timeout">
+Mengontrol Durasi Sembunyikan Otomatis
+</string>
     <string name="icon_settings_toolbar_icons">
 Ikon Bilah Alat
 </string>
@@ -4960,6 +4990,9 @@ Tata Letak Menu Utama
 </string>
     <string name="backup_pref_long_press">
 Mode Edit Durasi Tekan Lama
+</string>
+    <string name="backup_pref_controls_timeout">
+Mengontrol Durasi Sembunyikan Otomatis
 </string>
     <string name="backup_pref_date_group">
 Aturan Pengelompokan Tanggal

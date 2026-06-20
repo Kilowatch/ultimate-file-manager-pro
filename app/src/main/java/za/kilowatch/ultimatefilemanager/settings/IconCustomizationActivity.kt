@@ -365,6 +365,7 @@ class IconCustomizationActivity : AppCompatActivity() {
                 IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),
                 IconItemData("settings_apk_extract", getString(R.string.icon_settings_apk_extract), R.drawable.ic_file_apk, emptyList()),
                 IconItemData("settings_long_press", getString(R.string.icon_settings_long_press), R.drawable.ic_long_press, emptyList()),
+                IconItemData("settings_controls_timeout", getString(R.string.icon_settings_controls_timeout), R.drawable.ic_controls_timeout, emptyList()),
                 IconItemData("settings_toolbar_icons", getString(R.string.icon_settings_toolbar_icons), R.drawable.ic_star, emptyList()),
                 IconItemData("settings_favorites", getString(R.string.icon_settings_favorites), R.drawable.ic_star, emptyList()),
                 IconItemData("settings_custom_drive_names", getString(R.string.icon_settings_custom_drive_names), R.drawable.ic_edit, emptyList()),

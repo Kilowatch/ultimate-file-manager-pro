@@ -26,6 +26,7 @@ import androidx.media3.ui.PlayerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 
 class TwinWindowPlayerFragment : Fragment() {
 
@@ -87,7 +88,7 @@ class TwinWindowPlayerFragment : Fragment() {
             topBar.alpha = 1f
             handler.removeCallbacks(hideControlsRunnable)
             if (player?.isPlaying == true) {
-                handler.postDelayed(hideControlsRunnable, 3000)
+                handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(requireContext()))
             }
             return true
         }
@@ -501,7 +502,7 @@ class TwinWindowPlayerFragment : Fragment() {
         topBar.visibility = View.VISIBLE
         topBar.alpha = 1f
         if (player?.isPlaying == true) {
-            handler.postDelayed(hideControlsRunnable, 6000)
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(requireContext()))
         }
     }
 

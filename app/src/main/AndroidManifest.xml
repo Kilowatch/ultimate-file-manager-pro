@@ -296,6 +296,11 @@
             android:name=".settings.LongPressDurationActivity"
             android:exported="false" />
 
+        <!-- Controls Auto-Hide Duration -->
+        <activity
+            android:name=".settings.ControlsTimeoutActivity"
+            android:exported="false" />
+
         <!-- Toolbar Icons -->
         <activity
             android:name=".settings.ToolbarIconsActivity"
