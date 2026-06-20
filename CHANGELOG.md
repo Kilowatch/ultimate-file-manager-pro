@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.5] — 2026-06-19
 
+### Fixed
+- "Show hidden files" setting now filters out dot-prefixed files/folders (e.g. `.UFM_Recyclebin`, `.test.txt`) in both local and network/online storage browsers, consistent with standard file manager behavior.
+
 ### Security
 - Upgraded BouncyCastle from 1.83 to 1.84 to fix CVE-2026-5588 (HIGH — `CompositeVerifier` in `bcpkix` accepted an empty signature sequence as valid, which could allow a crafted certificate to bypass signature chain validation in the custom TLS cert import flow).
 - Upgraded Ktor server from 3.4.2 to 3.5.0 to pick up Netty ≥ 4.1.135.Final, which addresses CVE-2026-50010 (TLS/SSL verification issue in the embedded Netty engine).

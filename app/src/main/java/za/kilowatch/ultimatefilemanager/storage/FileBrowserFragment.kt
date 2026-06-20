@@ -714,7 +714,7 @@ class FileBrowserFragment : Fragment() {
                 } else {
                     directory.listFiles()?.toList() ?: emptyList()
                 }
-                val visibleFiles = if (showHidden) rawFiles else rawFiles.filter { it.absolutePath !in hiddenPaths }
+                val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
                     submitAdapterList(sorted, null, hiddenPaths)
@@ -735,13 +735,13 @@ class FileBrowserFragment : Fragment() {
                                 } else {
                                     directory.listFiles()?.toList() ?: emptyList()
                                 }
-                                val visibleFiles = if (showHidden) rawFiles else rawFiles.filter { it.absolutePath !in hiddenPaths }
+                                val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList(sorted, false, hiddenPaths)
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { showHidden || it.absolutePath !in hiddenPaths }
+                                val files = fileIndices.map { File(it.path) }.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList(sorted, true, hiddenPaths)
@@ -1438,6 +1438,16 @@ class FileBrowserFragment : Fragment() {
     fun refresh() = loadDirectory(currentDir)
     fun getStorageId() = storageId
     fun getStorageType() = storageType
+
+    /**
+     * Determines whether a file should be visible in the file list.
+     * When [showHidden] is false, filters out both:
+     * - Files/folders whose name starts with "." (Unix dotfile convention)
+     * - Files whose absolute path is in the explicit hidden-paths database
+     */
+    private fun isFileVisible(file: File, showHidden: Boolean, hiddenPaths: Set<String>): Boolean {
+        return showHidden || (!file.name.startsWith(".") && file.absolutePath !in hiddenPaths)
+    }
 
     private fun showDrivePicker() {
         val drives = StorageBrowserActivity.getConnectedStorages(requireContext())

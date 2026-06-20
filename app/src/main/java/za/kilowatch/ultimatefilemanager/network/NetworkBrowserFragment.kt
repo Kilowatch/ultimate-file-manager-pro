@@ -1133,8 +1133,10 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun performSearch(query: String) {
+        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         val baseList = if (query.isEmpty()) currentFiles else currentFiles.filter { it.name.contains(query, ignoreCase = true) }
-        val sortedAndFiltered = sortAndFilterFiles(baseList)
+        val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
+        val sortedAndFiltered = sortAndFilterFiles(filtered)
         fileAdapter.submitList(sortedAndFiltered)
         layoutEmpty.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
 
@@ -1246,6 +1248,14 @@ class NetworkBrowserFragment : Fragment() {
 
         view?.findViewById<ImageView>(R.id.btnViewToggle)?.setImageResource(ViewModeManager.iconRes(mode))
         recyclerFiles.adapter = fileAdapter
+    }
+
+    /**
+     * Determines whether a network file should be visible in the file list.
+     * When [showHidden] is false, filters out files/folders whose name starts with "." (Unix dotfile convention).
+     */
+    private fun isNetworkFileVisible(nf: za.kilowatch.ultimatefilemanager.network.NetworkFile, showHidden: Boolean): Boolean {
+        return showHidden || !nf.name.startsWith(".")
     }
 
     private fun showSortFilterSheet() {

@@ -1696,8 +1696,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun applyData() {
+        // Apply hidden files filter
+        val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        val withoutHidden = currentFiles.filter { isNetworkFileVisible(it, showHidden) }
+
         // Apply filter
-        val filtered = currentFiles.filter {
+        val filtered = withoutHidden.filter {
             if (filterType == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
             else if (it.isDirectory) true
             else {
@@ -1839,6 +1843,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
             applyData()
         }
         sheet.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.TAG)
+    }
+
+    /**
+     * Determines whether a network file should be visible in the file list.
+     * When [showHidden] is false, filters out files/folders whose name starts with "." (Unix dotfile convention).
+     */
+    private fun isNetworkFileVisible(nf: NetworkFile, showHidden: Boolean): Boolean {
+        return showHidden || !nf.name.startsWith(".")
     }
 
 
