@@ -2443,6 +2443,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 iv.scaleType = ImageView.ScaleType.FIT_CENTER
                 container.addView(iv)
                 container.tag = ivId
+                container.isFocusable = true
                 return object : RecyclerView.ViewHolder(container) {
                     val icon: ImageView = iv
                 }
@@ -2475,11 +2476,16 @@ class StorageBrowserActivity : AppCompatActivity() {
             override fun getItemCount() = allIcons.size
         }
 
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+        val iconPickerDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setTitle(getString(R.string.custom_tile_select_icon))
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok, null)
             .show()
+
+        // Restore D-pad focus to the icon preview when the picker dialog is dismissed
+        iconPickerDialog.setOnDismissListener {
+            targetImageView.requestFocus()
+        }
     }
 
     private fun showCreateCustomTileDialogTv(isEdit: Boolean, existingData: CustomTileManager.CustomTileData?) {
@@ -2499,6 +2505,16 @@ class StorageBrowserActivity : AppCompatActivity() {
             switchShowInPicker.isChecked = existingData.showInFolderPicker
         }
         imgIcon.setImageResource(selectedCustomTileIconRes)
+
+        // TV D-pad: clicking the toggle row toggles the show-in-picker switch
+        dialogView.findViewById<android.widget.LinearLayout>(R.id.layoutToggleShowInPicker).setOnClickListener {
+            switchShowInPicker.isChecked = !switchShowInPicker.isChecked
+        }
+
+        // TV D-pad: clicking the icon preview opens the built-in icon picker
+        imgIcon.setOnClickListener {
+            showSimpleIconPickerDialog(imgIcon)
+        }
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)

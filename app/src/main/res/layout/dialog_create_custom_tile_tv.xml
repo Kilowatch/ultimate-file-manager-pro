@@ -30,7 +30,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:focusable="false"
+        android:clickable="false">
 
         <ImageView
             android:id="@+id/imgCustomTileIcon"
@@ -40,7 +42,9 @@
             android:src="@drawable/ic_folder"
             android:background="@drawable/selector_tv_button_yellow"
             app:tint="@color/selector_tv_button_text"
-            android:contentDescription="@string/tile_icon_title" />
+            android:contentDescription="@string/tile_icon_title"
+            android:clickable="true"
+            android:focusable="true" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,12 +101,14 @@
 
     <!-- Show in folder/file pickers toggle -->
     <LinearLayout
+        android:id="@+id/layoutToggleShowInPicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_marginBottom="16dp"
         android:focusable="true"
+        android:clickable="true"
         android:nextFocusDown="@+id/btnSave"
         android:background="@drawable/selector_tv_button">
 
@@ -120,7 +126,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:focusable="false" />
+            android:focusable="false"
+            android:clickable="false"
+            android:duplicateParentState="true" />
 
     </LinearLayout>
 
