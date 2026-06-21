@@ -467,10 +467,22 @@ class TextViewerActivity : AppCompatActivity() {
                 if (targetFile.absolutePath == originalFilePath) {
                     isEditMode = false
                     btnSave.visibility = View.GONE
-                    txtContent.isEnabled = false
-                    txtContent.isFocusable = false
-                    txtContent.isFocusableInTouchMode = false
                     txtContent.background = null
+                    if (!isTv) {
+                        txtContent.isEnabled = true
+                        txtContent.setTextIsSelectable(true)
+                        txtContent.setKeyListener(null)
+                        txtContent.setCursorVisible(false)
+                        txtContent.setHighlightColor(
+                            ContextCompat.getColor(this, R.color.text_selection_highlight)
+                        )
+                        txtContent.setCustomSelectionActionModeCallback(viewModeActionModeCallback)
+                    } else {
+                        txtContent.isEnabled = false
+                        txtContent.isFocusable = false
+                        txtContent.isFocusableInTouchMode = false
+                    }
+                    showPage(currentPage)
                 }
             }
         } catch (e: Exception) {
@@ -774,7 +786,6 @@ class TextViewerActivity : AppCompatActivity() {
         if (!isTv) {
             txtContent.isEnabled = true
             txtContent.setTextIsSelectable(true)
-            txtContent.isFocusableInTouchMode = false
             txtContent.setKeyListener(null)
             txtContent.setCursorVisible(false)
             txtContent.setHighlightColor(
