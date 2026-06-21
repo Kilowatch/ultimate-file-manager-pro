@@ -294,3 +294,22 @@
 -keep class za.kilowatch.ultimatefilemanager.network.LibNfsBridge {
     *;
 }
+
+# ── R8 DontWarn Rules (third-party optional dependencies) ─────────────────
+-dontwarn com.google.protobuf.ExtensionRegistry
+-dontwarn com.google.protobuf.ExtensionRegistryLite
+-dontwarn com.google.protobuf.MessageLite$Builder
+-dontwarn com.google.protobuf.MessageLite
+-dontwarn com.google.protobuf.MessageLiteOrBuilder
+-dontwarn com.google.protobuf.Parser
+-dontwarn com.google.protobuf.nano.CodedOutputByteBufferNano
+-dontwarn com.google.protobuf.nano.MessageNano
+-dontwarn io.netty.internal.tcnative.SSLCredential
+-dontwarn javax.naming.ldap.LdapName
+-dontwarn javax.naming.ldap.Rdn
+-dontwarn org.jboss.marshalling.ByteInput
+-dontwarn org.jboss.marshalling.ByteOutput
+-dontwarn org.jboss.marshalling.Marshaller
+-dontwarn org.jboss.marshalling.MarshallerFactory
+-dontwarn org.jboss.marshalling.MarshallingConfiguration
+-dontwarn org.jboss.marshalling.Unmarshaller
