@@ -40,6 +40,9 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -87,6 +90,24 @@ class TextViewerActivity : AppCompatActivity() {
     private var searchHelper: DocumentSearchHelper<IntRange>? = null
     private var searchQuery: String = ""
     private var searchIsActive: Boolean = false
+
+    // ── View-mode selection action mode (hides Cut/Paste) ────────────────
+    private val viewModeActionModeCallback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            menu.findItem(android.R.id.cut)?.isVisible = false
+            menu.findItem(android.R.id.paste)?.isVisible = false
+            menu.findItem(android.R.id.pasteAsPlainText)?.isVisible = false
+            return true
+        }
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            menu.findItem(android.R.id.cut)?.isVisible = false
+            menu.findItem(android.R.id.paste)?.isVisible = false
+            menu.findItem(android.R.id.pasteAsPlainText)?.isVisible = false
+            return false
+        }
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = false
+        override fun onDestroyActionMode(mode: ActionMode) {}
+    }
 
     override fun attachBaseContext(newBase: android.content.Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -252,6 +273,12 @@ class TextViewerActivity : AppCompatActivity() {
             val fullText = allChunks.joinToString("\n")
             txtContent.setText(fullText)
             txtContent.textSize = textSize
+            // ── Restore EditText editing capabilities (mobile only) ─────
+            if (!isTv) {
+                txtContent.setKeyListener(android.text.method.TextKeyListener.getInstance())
+                txtContent.setCursorVisible(true)
+                txtContent.setCustomSelectionActionModeCallback(null)
+            }
             txtContent.isEnabled = true
             txtContent.isFocusable = true
             txtContent.isFocusableInTouchMode = true
@@ -326,9 +353,14 @@ class TextViewerActivity : AppCompatActivity() {
             highlightDebounceHandler = null
             highlightDebounceRunnable = null
 
-            txtContent.isEnabled = false
-            txtContent.isFocusable = false
-            txtContent.isFocusableInTouchMode = false
+            // ── Restore view-mode text selection (mobile) or disable (TV) ──
+            if (!isTv) {
+                applyViewModeTextSelection()
+            } else {
+                txtContent.isEnabled = false
+                txtContent.isFocusable = false
+                txtContent.isFocusableInTouchMode = false
+            }
             btnSave.visibility = View.GONE
             txtContent.background = null
             paginationBar.visibility = if (allChunks.size > 1) View.VISIBLE else View.GONE
@@ -733,6 +765,25 @@ class TextViewerActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Applies view-mode text selection properties on mobile (enabled, textIsSelectable,
+     * null KeyListener, cursor hidden) while keeping the EditText non-editable.
+     * On TV this is a no-op — the TV path disables the view outright in toggleEditMode().
+     */
+    private fun applyViewModeTextSelection() {
+        if (!isTv) {
+            txtContent.isEnabled = true
+            txtContent.setTextIsSelectable(true)
+            txtContent.isFocusableInTouchMode = false
+            txtContent.setKeyListener(null)
+            txtContent.setCursorVisible(false)
+            txtContent.setHighlightColor(
+                ContextCompat.getColor(this, R.color.text_selection_highlight)
+            )
+            txtContent.setCustomSelectionActionModeCallback(viewModeActionModeCallback)
+        }
+    }
+
     private fun showPage(page: Int) {
         currentPage = page
         val chunk = allChunks.getOrElse(page) { "" }
@@ -754,6 +805,7 @@ class TextViewerActivity : AppCompatActivity() {
                     scrollView.scrollTo(0, 0)
                     updatePaginationUi()
                     searchHelper?.reRunSearch()
+                    applyViewModeTextSelection()
                 }
             } else {
                 // ── Plain text path (existing behaviour) ──────────
@@ -762,13 +814,14 @@ class TextViewerActivity : AppCompatActivity() {
                 }
                 val precomputed = PrecomputedTextCompat.create(chunk, params)
                 withContext(Dispatchers.Main) {
-                    txtContent.setText(chunk, android.widget.TextView.BufferType.SPANNABLE)
+                    txtContent.setText(precomputed, android.widget.TextView.BufferType.SPANNABLE)
                     txtLineNumbers.text = lineNums
                     txtContent.textSize = textSize
                     txtLineNumbers.textSize = textSize
                     scrollView.scrollTo(0, 0)
                     updatePaginationUi()
                     searchHelper?.reRunSearch()
+                    applyViewModeTextSelection()
                 }
             }
         }

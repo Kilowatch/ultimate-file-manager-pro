@@ -250,8 +250,7 @@
                     android:textColor="@color/mobile_text_primary"
                     android:background="@null"
                     android:inputType="textMultiLine|textNoSuggestions"
-                    android:enabled="false"
-                    android:focusable="false"
+                    android:textIsSelectable="true"
                     android:visibility="gone" />
 
             </LinearLayout>

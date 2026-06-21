@@ -40,6 +40,7 @@
 
     <!-- Selection -->
     <color name="ufm_selection_highlight">#3326A69A</color>
+    <color name="text_selection_highlight">#4038BDF8</color>
     <color name="ufm_delete_tint">#33EF5350</color>
 
     <!-- Analyzer Category Colors -->

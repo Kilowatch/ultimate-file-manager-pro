@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Media Player Controls Auto-Hide Duration — new Settings screen (mobile: SeekBar, TV: step cards + Save button) letting users choose how long media player controls stay visible before fading (1–10 seconds, default 3 s). Applies to UFMPlayer, MediaPlayer, TwinWindow player, and Slideshow video playback. New `ic_controls_timeout` vector icon registered in icon customization, backup/restore, and transfer systems.
+- Text Viewer: Added text selection and copy-to-clipboard in view mode on mobile, without needing to enter edit mode. Cut/Paste are hidden from the view-mode context menu since the text is read-only.
 
 ### Fixed
 - "Show hidden files" setting now filters out dot-prefixed files/folders (e.g. `.UFM_Recyclebin`, `.test.txt`) in both local and network/online storage browsers, consistent with standard file manager behavior.
