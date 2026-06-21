@@ -474,7 +474,7 @@ class TextViewerActivity : AppCompatActivity() {
                         txtContent.setKeyListener(null)
                         txtContent.setCursorVisible(false)
                         txtContent.setHighlightColor(
-                            ContextCompat.getColor(this, R.color.text_selection_highlight)
+                            ContextCompat.getColor(this@TextViewerActivity, R.color.text_selection_highlight)
                         )
                         txtContent.setCustomSelectionActionModeCallback(viewModeActionModeCallback)
                     } else {
