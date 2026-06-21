@@ -5,6 +5,17 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.6] — 2026-06-21
+
+### Added
+- Custom tiles: new "Show in folder/file pickers" toggle in the tile edit screen (mobile + TV) that lets users choose which custom tiles appear alongside storage drives when selecting a folder/file destination. Existing custom tiles default to hidden in pickers, preserving the clean all-drives view.
+
+### Fixed
+- Feature tiles (Twin Window, Notepad, Document Scanner, Remote, Settings, Apps, etc.) no longer leak into folder/file picker views — all picker modes now show only storage drives, consistent with Auto Backup's Select Folder behavior.
+- Custom tile icons now display correctly in folder/file picker mode — TileIconManager overrides are loaded before early-return picker paths submit the tile list.
+- Custom tiles in picker mode now propagate picker extras (EXTRA_* flags) through CustomTileActivity to FileBrowserActivity/NetworkBrowserActivity, so the picker FAB appears when navigating into a folder from a custom tile.
+- Custom tile child tiles no longer leak into the main picker grid — children are removed from the main list before early-return picker paths submit the tile list.
+
 ## [1.5.5] — 2026-06-19
 
 ### Added

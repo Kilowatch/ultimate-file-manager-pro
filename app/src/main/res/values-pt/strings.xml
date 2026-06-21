@@ -1184,6 +1184,9 @@ Selecione o ícone
     <string name="custom_tile_icon_hint">
 O ícone pode ser alterado através da paleta (Cor do bloco → Ícones)
 </string>
+    <string name="custom_tile_show_in_picker">
+Mostrar em seletores de pastas/arquivos
+</string>
     <string name="custom_tile_empty">
 Nenhum bloco neste grupo
 </string>

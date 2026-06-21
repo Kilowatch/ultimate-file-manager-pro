@@ -30,7 +30,8 @@ object CustomTileManager {
         val id: String,
         val title: String,
         val subtitle: String,
-        val iconRes: Int
+        val iconRes: Int,
+        val showInFolderPicker: Boolean = false
     )
 
     // ------------------------------------------------------------------ //
@@ -65,7 +66,8 @@ object CustomTileManager {
                     id = obj.getString("id"),
                     title = obj.getString("title"),
                     subtitle = obj.optString("subtitle", ""),
-                    iconRes = obj.optInt("iconRes", 0)
+                    iconRes = obj.optInt("iconRes", 0),
+                    showInFolderPicker = obj.optBoolean("showInFolderPicker", false)
                 )
             }
         } catch (_: Exception) {
@@ -182,6 +184,7 @@ object CustomTileManager {
             obj.put("title", tile.title)
             obj.put("subtitle", tile.subtitle)
             obj.put("iconRes", tile.iconRes)
+            obj.put("showInFolderPicker", tile.showInFolderPicker)
 
             // Child tiles in order
             val childIds = loadTileOrder(context, tile.id)
@@ -243,7 +246,7 @@ object CustomTileManager {
             val subtitle = obj.optString("subtitle", "")
             val iconRes = obj.optInt("iconRes", 0)
 
-            metaList.add(CustomTileData(tileId, title, subtitle, iconRes))
+            metaList.add(CustomTileData(tileId, title, subtitle, iconRes, obj.optBoolean("showInFolderPicker", false)))
             restoredTileIds.add(tileId)
 
             // Restore children and their order
@@ -335,6 +338,7 @@ object CustomTileManager {
             obj.put("title", tile.title)
             obj.put("subtitle", tile.subtitle)
             obj.put("iconRes", tile.iconRes)
+            obj.put("showInFolderPicker", tile.showInFolderPicker)
             arr.put(obj)
         }
         return arr.toString()

@@ -95,6 +95,35 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Show in folder/file pickers toggle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp"
+        android:focusable="true"
+        android:nextFocusDown="@+id/btnSave"
+        android:background="@drawable/selector_tv_button">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/custom_tile_show_in_picker"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:padding="16dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchShowInPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:focusable="false" />
+
+    </LinearLayout>
+
     <!-- Buttons row -->
     <LinearLayout
         android:layout_width="match_parent"

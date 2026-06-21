@@ -1184,6 +1184,9 @@ Pilih Ikon
     <string name="custom_tile_icon_hint">
 Ikon dapat diubah melalui palet (Warna Ubin → Ikon)
 </string>
+    <string name="custom_tile_show_in_picker">
+Tampilkan di pemilih folder/file
+</string>
     <string name="custom_tile_empty">
 Tidak ada ubin di grup ini
 </string>

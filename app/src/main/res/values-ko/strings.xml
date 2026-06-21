@@ -1184,6 +1184,9 @@ NFS 서버가 액세스를 거부했습니다. 내보내기 경로가 올바른�
     <string name="custom_tile_icon_hint">
 팔레트를 통해 아이콘 변경 가능(타일 색상 → 아이콘)
 </string>
+    <string name="custom_tile_show_in_picker">
+폴더/파일 선택기에 표시
+</string>
     <string name="custom_tile_empty">
 이 그룹에는 타일이 없습니다.
 </string>

@@ -1184,6 +1184,9 @@ NFS サーバーがアクセスを拒否しました。エクスポート パス
     <string name="custom_tile_icon_hint">
 アイコンはパレット（タイルの色→アイコン）から変更できます。
 </string>
+    <string name="custom_tile_show_in_picker">
+フォルダー/ファイルピッカーに表示
+</string>
     <string name="custom_tile_empty">
 このグループにはタイルがありません
 </string>

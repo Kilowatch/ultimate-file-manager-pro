@@ -57,6 +57,25 @@ class CustomTileActivity : AppCompatActivity() {
     private var customTileTitle: String = ""
     private var customTileSubtitle: String = ""
 
+    // Picker extras propagated from StorageBrowserActivity
+    private var isPickerMode = false
+    private var pickerExtensions: String? = null
+    private var isSyncFolderPickerMode = false
+    private var isCompressDestPickerMode = false
+    private var isImageCompressDestPickerMode = false
+    private var isExtractDestPickerMode = false
+    private var isNetworkCachePickerMode = false
+    private var isQuickTransferPickerMode = false
+    private var quickTransferOp: String? = null
+    private var isShareDestPickerMode = false
+    private var isNotepadFolderPicker = false
+    private var isScannerFolderPicker = false
+    private var isAutoBackupFolderPicker = false
+    private var isKeyfilePickerMode = false
+    private var isCertPickerMode = false
+    private var isLocationPickerMode = false
+    private var isDrivePicker = false
+
     // TV D-Pad reorder state
     private var reorderModeItemId: String? = null
     private var reorderModeOriginalList: List<StorageItem>? = null
@@ -88,6 +107,18 @@ class CustomTileActivity : AppCompatActivity() {
             }
         }
 
+    /** True when any folder/file picker mode is active on this activity. */
+    private val isAnyPickerActive: Boolean get() = isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
+
+    // Forwards file-browser picker results back through the activity chain
+    private val pickerResultLauncher =
+        registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                setResult(Activity.RESULT_OK, result.data)
+                finish()
+            }
+        }
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
@@ -100,6 +131,25 @@ class CustomTileActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        // Read picker extras propagated from StorageBrowserActivity
+        isPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_PICKER_MODE, false)
+        pickerExtensions = intent.getStringExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS)
+        isSyncFolderPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, false)
+        isCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, false)
+        isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
+        isExtractDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, false)
+        isNetworkCachePickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, false)
+        isQuickTransferPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, false)
+        quickTransferOp = intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP)
+        isShareDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SHARE_DEST_PICKER, false)
+        isNotepadFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, false)
+        isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
+        isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
+        isKeyfilePickerMode = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_KEYFILE_PICKER, false)
+        isCertPickerMode = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_CERT_PICKER, false)
+        isLocationPickerMode = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, false)
+        isDrivePicker = intent.getBooleanExtra(StorageBrowserActivity.EXTRA_DRIVE_PICKER, false)
 
         isTv = DeviceUtils.isTvDevice(this)
         if (isTv) {
@@ -371,8 +421,9 @@ class CustomTileActivity : AppCompatActivity() {
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    applyPickerExtras()
                 }
-                startActivity(intent)
+                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
             item.isPairedDevicesTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.ui.DevicePairingActivity::class.java))
@@ -457,6 +508,8 @@ class CustomTileActivity : AppCompatActivity() {
                 // but handle gracefully by opening as sub-screen
                 val intent = Intent(this, CustomTileActivity::class.java).apply {
                     putExtra(EXTRA_CUSTOM_TILE_ID, item.id)
+                    // Propagate picker extras to nested CustomTileActivity too
+                    applyPickerExtras()
                 }
                 startActivity(intent)
             }
@@ -468,25 +521,58 @@ class CustomTileActivity : AppCompatActivity() {
                         putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_SHARE_ID, item.networkShare?.id)
                     }
                     putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    applyPickerExtras()
                 }
-                startActivity(intent)
+                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
             item.isFavoriteTile -> {
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    applyPickerExtras()
                 }
-                startActivity(intent)
+                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
             else -> {
                 // Physical storage or unknown — open file browser
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    applyPickerExtras()
                 }
-                startActivity(intent)
+                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
         }
+    }
+
+    /**
+     * Applies any active picker extras to an intent destined for
+     * FileBrowserActivity or NetworkBrowserActivity, so the picker FAB
+     * is shown when navigating from a custom tile.
+     */
+    private fun Intent.applyPickerExtras(): Intent {
+        if (isPickerMode) {
+            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+            pickerExtensions?.let { putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, it) }
+        }
+        if (isSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
+        if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+        if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+        if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
+        if (isNetworkCachePickerMode) putExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
+        if (isQuickTransferPickerMode) {
+            putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+            quickTransferOp?.let { putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP, it) }
+        }
+        if (isShareDestPickerMode) putExtra(FileBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+        if (isNotepadFolderPicker) putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
+        if (isScannerFolderPicker) putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+        if (isAutoBackupFolderPicker) putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+        if (isKeyfilePickerMode) putExtra(StorageBrowserActivity.EXTRA_KEYFILE_PICKER, true)
+        if (isCertPickerMode) putExtra(StorageBrowserActivity.EXTRA_CERT_PICKER, true)
+        if (isLocationPickerMode) putExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, true)
+        if (isDrivePicker) putExtra(StorageBrowserActivity.EXTRA_DRIVE_PICKER, true)
+        return this
     }
 
     /**

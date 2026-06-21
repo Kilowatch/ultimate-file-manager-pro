@@ -1184,6 +1184,9 @@ Wählen Sie Symbol
     <string name="custom_tile_icon_hint">
 Das Symbol kann über die Palette geändert werden (Kachelfarbe → Symbole).
 </string>
+    <string name="custom_tile_show_in_picker">
+In der Ordner-/Dateiauswahl anzeigen
+</string>
     <string name="custom_tile_empty">
 Keine Kacheln in dieser Gruppe
 </string>

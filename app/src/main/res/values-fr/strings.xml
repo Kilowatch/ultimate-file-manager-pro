@@ -1184,6 +1184,9 @@ Sélectionnez l\'icône
     <string name="custom_tile_icon_hint">
 L\'icône peut être modifiée via la palette (Couleur des tuiles → Icônes)
 </string>
+    <string name="custom_tile_show_in_picker">
+Afficher dans les sélecteurs de dossiers/fichiers
+</string>
     <string name="custom_tile_empty">
 Aucune tuile dans ce groupe
 </string>

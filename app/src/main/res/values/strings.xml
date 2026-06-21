@@ -834,6 +834,7 @@
     <string name="custom_tile_add_button">Add Custom Tile</string>
     <string name="custom_tile_select_icon">Select Icon</string>
     <string name="custom_tile_icon_hint">Icon can be changed via palette (Tile Color → Icons)</string>
+    <string name="custom_tile_show_in_picker">Show in folder/file pickers</string>
     <string name="custom_tile_empty">No tiles in this group</string>
     <string name="custom_tile_cannot_nest">Cannot move a custom tile into another custom tile</string>
 

@@ -1245,8 +1245,36 @@ class StorageBrowserActivity : AppCompatActivity() {
             item.isCustomTile -> {
                 val intent = Intent(this, CustomTileActivity::class.java).apply {
                     putExtra(CustomTileActivity.EXTRA_CUSTOM_TILE_ID, item.id)
+                    // Propagate active picker extras so CustomTileActivity can pass them through
+                    if (isPickerMode) {
+                        putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                        putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                    }
+                    if (isSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
+                    if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                    if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                    if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
+                    if (isNetworkCachePickerMode) putExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
+                    if (isQuickTransferPickerMode) {
+                        putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                        putExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                            intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
+                    }
+                    if (isShareDestPickerMode) putExtra(FileBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                    if (isNotepadFolderPicker) putExtra(FileBrowserActivity.EXTRA_NOTEPAD_FOLDER_PICKER, true)
+                    if (isScannerFolderPicker) putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    if (isAutoBackupFolderPicker) putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+                    if (isKeyfilePickerMode) putExtra(StorageBrowserActivity.EXTRA_KEYFILE_PICKER, true)
+                    if (isCertPickerMode) putExtra(StorageBrowserActivity.EXTRA_CERT_PICKER, true)
+                    if (isLocationPickerMode) putExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                    if (isDrivePicker) putExtra(StorageBrowserActivity.EXTRA_DRIVE_PICKER, true)
                 }
-                startActivity(intent)
+                val isAnyPickerActive = isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
+                if (isAnyPickerActive) {
+                    pickerLauncher.launch(intent)
+                } else {
+                    startActivity(intent)
+                }
             }
             item.isTwinWindowTile -> {
                 startActivity(Intent(this, TwinWindowActivity::class.java))
@@ -2344,10 +2372,12 @@ class StorageBrowserActivity : AppCompatActivity() {
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileIcon)
         val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileTitle)
         val edtSubtitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileSubtitle)
+        val switchShowInPicker = dialogView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.switchShowInPicker)
 
         if (isEdit && existingData != null) {
             edtTitle.setText(existingData.title)
             edtSubtitle.setText(existingData.subtitle)
+            switchShowInPicker.isChecked = existingData.showInFolderPicker
         }
         imgIcon.setImageResource(selectedCustomTileIconRes)
 
@@ -2361,7 +2391,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     return@setPositiveButton
                 }
                 val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
-                saveCustomTile(title, subtitle)
+                saveCustomTile(title, subtitle, switchShowInPicker.isChecked)
                 d.dismiss()
             }
             .setNegativeButton(R.string.cancel) { d, _ -> d.dismiss() }
@@ -2457,6 +2487,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val imgIcon = dialogView.findViewById<ImageView>(R.id.imgCustomTileIcon)
         val edtTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileTitle)
         val edtSubtitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCustomTileSubtitle)
+        val switchShowInPicker = dialogView.findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.switchShowInPicker)
         val txtDialogTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
         val btnSave = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)
         val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
@@ -2465,6 +2496,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (isEdit && existingData != null) {
             edtTitle.setText(existingData.title)
             edtSubtitle.setText(existingData.subtitle)
+            switchShowInPicker.isChecked = existingData.showInFolderPicker
         }
         imgIcon.setImageResource(selectedCustomTileIconRes)
 
@@ -2480,7 +2512,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val subtitle = edtSubtitle.text?.toString()?.trim() ?: ""
-            saveCustomTile(title, subtitle)
+            saveCustomTile(title, subtitle, switchShowInPicker.isChecked)
             dialog.dismiss()
         }
         btnCancel.setOnClickListener { dialog.dismiss() }
@@ -2593,13 +2625,14 @@ class StorageBrowserActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun saveCustomTile(title: String, subtitle: String) {
+    private fun saveCustomTile(title: String, subtitle: String, showInFolderPicker: Boolean = false) {
         val id = editingCustomTileId ?: CustomTileManager.generateId()
         val data = CustomTileManager.CustomTileData(
             id = id,
             title = title,
             subtitle = subtitle,
-            iconRes = selectedCustomTileIconRes
+            iconRes = selectedCustomTileIconRes,
+            showInFolderPicker = showInFolderPicker
         )
         CustomTileManager.saveCustomTile(this, data)
         // Sync icon to TileIconManager so "Tile Color â†’ Icons" and "Edit â†’ Select Icon"
@@ -2652,6 +2685,45 @@ class StorageBrowserActivity : AppCompatActivity() {
      * so the main thread is never stalled. Results are applied on the main thread
      * once the background work completes.
      */
+    /**
+     * Tags items that belong inside custom tile groups with [StorageItem.parentCustomTileId],
+     * removes them from the main list, and adds [StorageItem] entries for the custom tile
+     * containers themselves (filtered by [showFeatureTiles] and [CustomTileData.showInFolderPicker]).
+     *
+     * Must be called AFTER all storage volumes, network shares, online storages, and feature
+     * tiles have been added to [storageItems], so the parent map correctly identifies children.
+     */
+    private fun removeCustomTileChildrenAndAddContainers(storageItems: MutableList<StorageItem>, showFeatureTiles: Boolean) {
+        val customTiles = CustomTileManager.loadCustomTiles(this)
+        val parentMap = CustomTileManager.getTileParentMap(this)
+
+        // Tag items with their parent custom tile ID
+        for (i in storageItems.indices) {
+            val parentId = parentMap[storageItems[i].id]
+            if (parentId != null) {
+                storageItems[i] = storageItems[i].copy(parentCustomTileId = parentId)
+            }
+        }
+
+        // Add custom tile container entries (only those opted in for picker mode)
+        for (ct in customTiles) {
+            if (!showFeatureTiles && !ct.showInFolderPicker) continue
+            storageItems.add(StorageItem(
+                id = ct.id,
+                label = ct.title,
+                iconRes = ct.iconRes,
+                totalBytes = 0,
+                usedBytes = 0,
+                mountPath = "",
+                isCustomTile = true,
+                subtitle = ct.subtitle.ifEmpty { null }
+            ))
+        }
+
+        // Remove child tiles from the main list (they belong inside custom tile containers)
+        storageItems.removeAll { it.parentCustomTileId != null }
+    }
+
     private fun loadStorageVolumes() {
         // Capture values needed on the background thread before leaving the main thread.
         val previousPaths = knownMountPaths.toSet()
@@ -2670,6 +2742,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         val capturedIsCertPickerMode = isCertPickerMode
         val capturedIsScannerFolderPicker = isScannerFolderPicker
         val capturedIsAutoBackupFolderPicker = isAutoBackupFolderPicker
+        val capturedIsExtractDestPickerMode = isExtractDestPickerMode
         val capturedIsImageCompressDestPickerMode = isImageCompressDestPickerMode
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -2698,8 +2771,11 @@ class StorageBrowserActivity : AppCompatActivity() {
                 discoveredPaths.add(item.mountPath)
             }
 
+            // Composite flag: feature tiles are suppressed in any picker mode
+            val showFeatureTiles = !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode && !capturedIsPickerMode && !capturedIsCompressDestPickerMode && !capturedIsExtractDestPickerMode && !capturedIsLocationPickerMode && !capturedIsSyncFolderPickerMode && !capturedIsNetworkCachePickerMode
+
             // Add Twin Window tile at the very top (first in list)
-            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (showFeatureTiles) {
                 storageItems.add(0, StorageItem(
                     id = "twin_window_tile",
                     label = getString(R.string.twin_window_title),
@@ -2712,7 +2788,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Notepad tile (after twin window)
-            if (!capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (showFeatureTiles) {
                 storageItems.add(StorageItem(
                     id = "notepad_tile",
                     label = getString(R.string.notepad),
@@ -2726,7 +2802,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             // Add Document Scanner tile (mobile only, after notepad)
-            if (!capturedIsTv && !capturedIsDrivePicker && !capturedIsQuickTransferPickerMode && !capturedIsShareDestPickerMode && !capturedIsNotepadFolderPicker && !capturedIsKeyfilePickerMode && !capturedIsCertPickerMode && !capturedIsScannerFolderPicker && !capturedIsAutoBackupFolderPicker && !capturedIsImageCompressDestPickerMode) {
+            if (!capturedIsTv && showFeatureTiles) {
                 storageItems.add(StorageItem(
                     id = "scanner_tile",
                     label = getString(R.string.scanner_title),
@@ -2763,6 +2839,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
             // In sync/notepad/network-cache folder picker mode only show local device storage â€” no network shares or tiles
             if (capturedIsSyncFolderPickerMode || capturedIsNotepadFolderPicker || capturedIsNetworkCachePickerMode) {
+                removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
                     knownMountPaths.addAll(newKnownPaths)
@@ -2861,11 +2938,15 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
 
-            // Scanner folder picker: show local + network + online storages â€” no feature/favorites tiles
+            // Scanner folder picker: show local + network + online storages — no feature/favorites tiles
             if (capturedIsScannerFolderPicker || capturedIsAutoBackupFolderPicker) {
+                removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
                     knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
+                    storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
+                    storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                 }
@@ -2873,20 +2954,28 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
 
             if (capturedIsPickerMode || capturedIsKeyfilePickerMode) {
+                removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
                     knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
+                    storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
+                    storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                 }
                 return@launch
             }
 
-            // Cert picker: show all real storage + network shares â€” no feature tiles
+            // Cert picker: show all real storage + network shares — no feature tiles
             if (capturedIsCertPickerMode) {
+                removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
                 withContext(Dispatchers.Main) {
                     knownMountPaths.clear()
                     knownMountPaths.addAll(newKnownPaths)
+                    storageAdapter.setTileColors(TileColorManager.loadTileColors(this@StorageBrowserActivity))
+                    storageAdapter.setTileIcons(TileIconManager.getAllTileIcons(this@StorageBrowserActivity))
+                    storageAdapter.setTileIconRes(TileIconManager.getAllTileIconRes(this@StorageBrowserActivity))
                     storageAdapter.submitList(storageItems.filterForTileIconPicker())
                     updateEmptyState(storageItems.isEmpty())
                 }
@@ -2965,7 +3054,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
-            if (!capturedIsImageCompressDestPickerMode) {
+            if (showFeatureTiles) {
                 // Add APK / XAPK Extracts tile â€” only if the folder is non-empty
                 val extractsDir = File(
                     getExternalFilesDir(android.os.Environment.DIRECTORY_DOWNLOADS),
@@ -3122,9 +3211,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isSmartSortTile = true
                 ))
-            }
 
-            if (!capturedIsImageCompressDestPickerMode) {
                 // Add the Network Shares tile â€” above SAF tile
                 storageItems.add(StorageItem(
                     id = "network_tile",
@@ -3135,9 +3222,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isNetworkTile = true
                 ))
-            }
 
-            if (!capturedIsImageCompressDestPickerMode) {
                 // Add the Online Storages tile
                 storageItems.add(StorageItem(
                     id = "online_storages_tile",
@@ -3148,9 +3233,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     mountPath = "",
                     isOnlineStoragesTile = true
                 ))
-            }
 
-            if (!capturedIsImageCompressDestPickerMode) {
                 // Add the Folder Sync tile â€” mobile only, directly below the Network Shares manager tile
                 if (!capturedIsTv) {
                     storageItems.add(StorageItem(
@@ -3222,35 +3305,9 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ))
             }
 
-            // â”€â”€ Custom Tiles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-            // Inject custom tiles into the list and handle parent-child relationships.
-            val customTiles = CustomTileManager.loadCustomTiles(this@StorageBrowserActivity)
-            val parentMap = CustomTileManager.getTileParentMap(this@StorageBrowserActivity)
-
-            // Set parentCustomTileId on tiles that belong to a custom tile
-            for (i in storageItems.indices) {
-                val parentId = parentMap[storageItems[i].id]
-                if (parentId != null) {
-                    storageItems[i] = storageItems[i].copy(parentCustomTileId = parentId)
-                }
-            }
-
-            // Create StorageItems for custom tiles themselves
-            for (ct in customTiles) {
-                storageItems.add(StorageItem(
-                    id = ct.id,
-                    label = ct.title,
-                    iconRes = ct.iconRes,
-                    totalBytes = 0,
-                    usedBytes = 0,
-                    mountPath = "",
-                    isCustomTile = true,
-                    subtitle = ct.subtitle.ifEmpty { null }
-                ))
-            }
-
-            // Remove tiles that belong inside custom tiles from the main list
-            storageItems.removeAll { it.parentCustomTileId != null }
+            // Handle custom tile parent-child relationships and container entries.
+            // Runs here for normal (non-picker) mode where all items are in storageItems.
+            removeCustomTileChildrenAndAddContainers(storageItems, showFeatureTiles)
 
             // Filter out any tiles the user has chosen to hide, then publish on main thread.
             val fullList = storageItems.toList()

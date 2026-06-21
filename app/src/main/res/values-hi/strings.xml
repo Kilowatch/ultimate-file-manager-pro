@@ -1184,6 +1184,9 @@ PKCS12 पासवर्ड
     <string name="custom_tile_icon_hint">
 आइकन को पैलेट के माध्यम से बदला जा सकता है (टाइल रंग → आइकन)
 </string>
+    <string name="custom_tile_show_in_picker">
+फ़ोल्डर/फ़ाइल पिकर में दिखाएँ
+</string>
     <string name="custom_tile_empty">
 इस समूह में कोई टाइल्स नहीं
 </string>

@@ -1184,6 +1184,9 @@ Seleccionar icono
     <string name="custom_tile_icon_hint">
 El icono se puede cambiar mediante la paleta (Color del mosaico → Iconos)
 </string>
+    <string name="custom_tile_show_in_picker">
+Mostrar en selectores de carpetas/archivos
+</string>
     <string name="custom_tile_empty">
 No hay mosaicos en este grupo
 </string>

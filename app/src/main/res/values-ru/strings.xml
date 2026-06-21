@@ -1184,6 +1184,9 @@ NFS-серверу запрещен доступ. Убедитесь, что п�
     <string name="custom_tile_icon_hint">
 Иконку можно изменить с помощью палитры (Цвет плитки → Иконки).
 </string>
+    <string name="custom_tile_show_in_picker">
+Показать в средствах выбора папок/файлов
+</string>
     <string name="custom_tile_empty">
 В этой группе нет плиток
 </string>
