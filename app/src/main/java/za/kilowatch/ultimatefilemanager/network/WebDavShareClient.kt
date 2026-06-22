@@ -204,6 +204,58 @@ object WebDavShareClient {
         }
     }
 
+    /**
+     * Opens a seekable, random-access handle to a remote WebDAV file.
+     *
+     * Uses HTTP Range headers to read arbitrary byte ranges — identical pattern
+     * to [S3ShareClient.openRandomAccessFile]. Each read() call performs a fresh
+     * HTTP GET with a Range header; no persistent connection is held open.
+     *
+     * @param share      The WebDAV share configuration.
+     * @param remotePath The remote file path.
+     * @return An [IRandomAccessFile] backed by stateless HTTP Range requests.
+     */
+    fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile {
+        val fileSize = getFileSizeSync(share, remotePath)
+        return object : IRandomAccessFile {
+            override val size: Long = fileSize
+
+            override fun read(offset: Long, buffer: ByteArray, length: Int): Int {
+                if (offset >= size) return -1
+                val rangeHeader = "bytes=$offset-${offset + length - 1}"
+                val response = openInputStreamForStreamingSync(share, remotePath, rangeHeader)
+                if (!response.isSuccessful) {
+                    response.close()
+                    throw IOException("WebDAV RAF read failed: ${response.code}")
+                }
+                val body = response.body ?: throw IOException("WebDAV RAF read failed: empty body (${response.code})")
+                return body.byteStream().use { input ->
+                    // If server ignored Range (200 instead of 206), skip to the requested offset
+                    if (response.code == 200 && offset > 0) {
+                        var remaining = offset
+                        while (remaining > 0) {
+                            val skipped = input.skip(remaining)
+                            if (skipped <= 0) break
+                            remaining -= skipped
+                        }
+                    }
+                    var totalRead = 0
+                    while (totalRead < length) {
+                        val read = input.read(buffer, totalRead, length - totalRead)
+                        if (read == -1) break
+                        totalRead += read
+                    }
+                    if (totalRead == 0) -1 else totalRead
+                }
+            }
+
+            override fun write(offset: Long, buffer: ByteArray, length: Int): Int =
+                throw IOException("Random writes not supported on WebDAV")
+
+            override fun close() { /* stateless HTTP — nothing to close */ }
+        }
+    }
+
     suspend fun uploadStream(
         share: NetworkShare,
         remotePath: String,

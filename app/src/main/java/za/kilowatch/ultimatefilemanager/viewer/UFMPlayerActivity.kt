@@ -31,6 +31,7 @@ import za.kilowatch.ultimatefilemanager.network.FtpShareClient
 import za.kilowatch.ultimatefilemanager.network.NfsShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
+import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import android.media.MediaDataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
@@ -1163,6 +1164,7 @@ class UfmMedia3DataSource(
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
                 ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
                 ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
+                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
                 else -> throw IllegalStateException("Unsupported share type for random access")
             }
         } catch (e: Exception) {

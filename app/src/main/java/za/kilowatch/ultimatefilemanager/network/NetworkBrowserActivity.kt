@@ -3768,7 +3768,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                    share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SFTP ||
                                    share.type == za.kilowatch.ultimatefilemanager.network.ShareType.SCP ||
                                    share.type == za.kilowatch.ultimatefilemanager.network.ShareType.NFS ||
-                                   share.type == za.kilowatch.ultimatefilemanager.network.ShareType.DLNA
+                                   share.type == za.kilowatch.ultimatefilemanager.network.ShareType.DLNA ||
+                                   share.type == za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
         val ext = file.name.substringAfterLast('.', "").lowercase()
         val isMedia = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext) || za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)
         

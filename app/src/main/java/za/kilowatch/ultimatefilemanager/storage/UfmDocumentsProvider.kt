@@ -313,10 +313,11 @@ class UfmDocumentsProvider : DocumentsProvider() {
             share.type == ShareType.ONEDRIVE ||
             share.type == ShareType.DROPBOX ||
             share.type == ShareType.AWS_S3 ||
-            share.type == ShareType.IDRIVE_E2
+            share.type == ShareType.IDRIVE_E2 ||
+            share.type == ShareType.WEBDAV
             // NFS: uses ProxyFileDescriptor which opens a new NFS connection per call,
             // exhausting the server's connection limit. Use sequential pipe instead.
-            // WEBDAV: supports Range via OkHttp but skip seeking to keep things simple
+            // WEBDAV: HTTP Range requests via OkHttp provide stateless random access
 
         val canUseProxy = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
             supportsRandomAccess && (!isStrictlyWrite || isSmb)

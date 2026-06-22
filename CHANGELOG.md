@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.7] — 2026-06-21
 
+### Added
+- WebDAV random-access file support (`IRandomAccessFile`) — video seeking is now on par with SMB/FTP/cloud shares
+
 ### Fixed
+- WebDAV video playback via external players (VLC, MX Player) no longer returns HTTP 500 errors
+- WebDAV videos can now be played through the built-in UFMPlayer (ExoPlayer) with seeking support
 - Custom tile create/edit dialog on TV: the "Show in folder/file pickers" toggle switch now responds to OK/Enter on the remote — D-pad focus reaches the row and pressing toggles the switch.
 - Custom tile create/edit dialog on TV: the icon preview now responds to OK/Enter on the remote — pressing opens the built-in icon picker with D-pad navigable grid items.
 

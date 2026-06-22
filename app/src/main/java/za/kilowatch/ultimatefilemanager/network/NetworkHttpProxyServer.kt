@@ -392,6 +392,7 @@ object NetworkHttpProxyServer {
                 session.share, session.path
             )
             ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(session.share, session.path)
+            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(session.share, session.path)
             else -> null // FTP/TV: not supported via proxy
         }
     }
