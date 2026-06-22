@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/iconDirection"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_direction_twoway"
+            app:tint="@color/tv_text_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iconDirection"
+            app:layout_constraintTop_toTopOf="@+id/iconDirection"
+            tools:text="DCIM Advanced Sync" />
+
+        <TextView
+            android:id="@+id/txtScheduleType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/txtName"
+            app:layout_constraintStart_toStartOf="@+id/txtName"
+            tools:text="Every 1h" />
+
+        <TextView
+            android:id="@+id/txtSource"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawablePadding="8dp"
+            android:ellipsize="middle"
+            android:maxLines="1"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="15sp"
+            app:drawableStartCompat="@drawable/ic_phone"
+            app:drawableTint="@color/tv_text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtScheduleType"
+            tools:text="Internal Storage/DCIM" />
+
+        <TextView
+            android:id="@+id/txtDest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:drawablePadding="8dp"
+            android:ellipsize="middle"
+            android:maxLines="1"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="15sp"
+            app:drawableStartCompat="@drawable/ic_network"
+            app:drawableTint="@color/tv_text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtSource"
+            tools:text="NAS Media / Backups" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -772,6 +772,76 @@
     <string name="sync_title">Folder Sync</string>
     <string name="sync_subtitle">Backup to network shares</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">Advanced Sync</string>
+    <string name="advanced_sync_subtitle">Instant sync, WiFi-only &amp; more</string>
+    <string name="opening_advanced_sync">⚡ Opening Advanced Sync</string>
+    <string name="advanced_sync_empty_title">No Advanced Sync Profiles</string>
+    <string name="advanced_sync_empty_desc">Create profiles that sync instantly when files change, with two-way sync, conflict resolution, and more.</string>
+    <string name="sync_direction">Sync direction</string>
+    <string name="sync_filtering">Sync filtering</string>
+    <string name="destination">Destination</string>
+    <string name="conflict_handling">Conflict handling</string>
+    <string name="manual">Manual</string>
+    <string name="select_destination">Select destination</string>
+    <string name="switch_to_twoway">Switch to Two-way</string>
+    <string name="move_files_upload">Move files after upload</string>
+    <string name="move_files_upload_summary">Delete source files after they are uploaded to the destination (cut instead of copy)</string>
+    <string name="move_files_download">Move files after download</string>
+    <string name="move_files_download_summary">Delete destination files after they are downloaded to your phone (cut instead of copy)</string>
+    <string name="move_files_conflict">Move files cannot be used with Sync deletions. Sync deletions has been disabled.</string>
+    <string name="backup_pref_advanced_sync">Advanced Sync profiles</string>
+    <string name="filter_all_types">All types</string>
+    <string name="filter_only">Only these</string>
+    <string name="filter_skip">Skip these</string>
+    <string name="filter_extensions_hint">jpg, png, mp4</string>
+    <string name="filter_extensions_label">File extensions</string>
+    <string name="filter_exclude_summary">File names containing these words are skipped</string>
+    <string name="filter_min_size">Min file size</string>
+    <string name="filter_max_size">Max file size</string>
+    <string name="filter_min_age">Min file age (days)</string>
+    <string name="filter_max_age">Max file age (days)</string>
+    <string name="filter_size_hint">e.g. 10</string>
+    <string name="filter_age_hint">e.g. 7</string>
+    <string name="size_unit_mb">MB</string>
+    <string name="size_unit_gb">GB</string>
+    <string name="filter_exclude_label">Skip file names containing</string>
+    <string name="filter_exclude_hint">comma separated words</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">Upload</string>
+    <string name="sync_direction_upload_desc">Send files from phone to remote destination</string>
+    <string name="sync_direction_download">Download</string>
+    <string name="sync_direction_download_desc">Pull files from remote destination to phone</string>
+    <string name="sync_direction_twoway">Two-way</string>
+    <string name="sync_direction_twoway_desc">Keep both sides in sync</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">Skip (safest)</string>
+    <string name="conflict_strategy_newest">Use newest</string>
+    <string name="conflict_strategy_keep_local">Keep local</string>
+    <string name="conflict_strategy_keep_remote">Keep remote</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">Instant sync</string>
+    <string name="trigger_instant_summary">Sync when files change in the source folder</string>
+    <string name="network_wifi_only">Only on WiFi</string>
+    <string name="network_wifi_only_summary">Wait for WiFi connection before syncing</string>
+    <string name="sync_deletions">Sync deletions</string>
+    <string name="sync_deletions_summary_upload">Files deleted from source are removed from destination on next sync. Files added manually to destination are safe.</string>
+    <string name="sync_deletions_summary_download">Files deleted from destination are removed from your phone on next sync. Other files on your phone are safe.</string>
+    <string name="sync_deletions_warning_title">⚠️ Destructive Operation</string>
+    <string name="sync_deletions_warning_upload">⚠️ DESTRUCTIVE OPERATION\n\nWith "Sync deletions" enabled:\n• Files you delete from source are PERMANENTLY DELETED from destination on next sync\n• Only files previously uploaded by this profile are affected\n• Files placed manually in the destination are SAFE (not tracked)\n\nSwitch to Two-way sync if you do not want deletions.\n\nDo you want to continue?</string>
+    <string name="sync_deletions_warning_download">⚠️ DESTRUCTIVE OPERATION\n\nWith "Sync deletions" enabled:\n• Files deleted from destination are PERMANENTLY DELETED from your phone on next sync\n• Only files previously downloaded by this profile are affected\n• Other files on your phone are SAFE (not tracked)\n\nSwitch to Two-way sync if you do not want deletions.\n\nDo you want to continue?</string>
+    <string name="download_subfolders">Download subfolders</string>
+    <string name="download_subfolders_summary">Recursively download files from all subfolders in the destination</string>
+    <string name="trigger_scheduled">Scheduled</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">Conflict Log</string>
+    <string name="conflict_log_empty">No conflicts recorded</string>
+    <string name="conflict_log_entry">%1$s — used %2$s version</string>
+
     <!-- Generic -->
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
@@ -2010,6 +2080,8 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="select_sync_folder">Select Sync Folder</string>
+    <string name="q5_minutes">5 minutes</string>
+    <string name="q10_minutes">10 minutes</string>
     <string name="q15_minutes">15 minutes</string>
     <string name="q30_minutes">30 minutes</string>
     <string name="q1_hour">1 hour</string>

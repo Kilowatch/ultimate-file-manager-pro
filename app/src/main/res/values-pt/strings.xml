@@ -1080,6 +1080,214 @@ Falha ao descobrir compartilhamentos: %s
     <string name="sync_title">Sincronização de pastas</string>
     <string name="sync_subtitle">Backup para compartilhamentos de rede</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Sincronização Avançada
+</string>
+    <string name="advanced_sync_subtitle">
+Sincronização instantânea, somente WiFi e sem fio. mais
+</string>
+    <string name="opening_advanced_sync">
+⚡ Abrindo sincronização avançada
+</string>
+    <string name="advanced_sync_empty_title">
+Sem perfis de sincronização avançada
+</string>
+    <string name="advanced_sync_empty_desc">
+Crie perfis que sincronizam instantaneamente quando os arquivos são alterados, com sincronização bidirecional, resolução de conflitos e muito mais.
+</string>
+    <string name="sync_direction">
+Direção de sincronização
+</string>
+    <string name="sync_filtering">
+Filtragem de sincronização
+</string>
+    <string name="destination">
+Destino
+</string>
+    <string name="conflict_handling">
+Tratamento de conflitos
+</string>
+    <string name="manual">
+Manual
+</string>
+    <string name="select_destination">
+Selecione o destino
+</string>
+    <string name="switch_to_twoway">
+Mudar para bidirecional
+</string>
+    <string name="move_files_upload">
+Mover arquivos após upload
+</string>
+    <string name="move_files_upload_summary">
+Exclua os arquivos de origem depois que eles forem carregados no destino (cortar em vez de copiar)
+</string>
+    <string name="move_files_download">
+Mover arquivos após download
+</string>
+    <string name="move_files_download_summary">
+Exclua os arquivos de destino após serem baixados para o seu telefone (cortar em vez de copiar)
+</string>
+    <string name="move_files_conflict">
+Mover arquivos não pode ser usado com exclusões de sincronização. As exclusões de sincronização foram desativadas.
+</string>
+    <string name="backup_pref_advanced_sync">
+Perfis de sincronização avançada
+</string>
+    <string name="filter_all_types">
+Todos os tipos
+</string>
+    <string name="filter_only">
+Somente estes
+</string>
+    <string name="filter_skip">
+Ignore estes
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Extensões de arquivo
+</string>
+    <string name="filter_exclude_summary">
+Os nomes dos arquivos que contêm essas palavras são ignorados
+</string>
+    <string name="filter_min_size">
+Tamanho mínimo do arquivo
+</string>
+    <string name="filter_max_size">
+Tamanho máximo do arquivo
+</string>
+    <string name="filter_min_age">
+Idade mínima do arquivo (dias)
+</string>
+    <string name="filter_max_age">
+Duração máxima do arquivo (dias)
+</string>
+    <string name="filter_size_hint">
+por exemplo 10
+</string>
+    <string name="filter_age_hint">
+por exemplo 7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+GB
+</string>
+    <string name="filter_exclude_label">
+Ignorar nomes de arquivos contendo
+</string>
+    <string name="filter_exclude_hint">
+palavras separadas por vírgula
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Carregar
+</string>
+    <string name="sync_direction_upload_desc">
+Envie arquivos do telefone para um destino remoto
+</string>
+    <string name="sync_direction_download">
+Download
+</string>
+    <string name="sync_direction_download_desc">
+Extraia arquivos do destino remoto para o telefone
+</string>
+    <string name="sync_direction_twoway">
+Bidirecional
+</string>
+    <string name="sync_direction_twoway_desc">
+Mantenha os dois lados sincronizados
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Pular (mais seguro)
+</string>
+    <string name="conflict_strategy_newest">
+Usar o mais novo
+</string>
+    <string name="conflict_strategy_keep_local">
+Mantenha-se local
+</string>
+    <string name="conflict_strategy_keep_remote">
+Mantenha-se remoto
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Sincronização instantânea
+</string>
+    <string name="trigger_instant_summary">
+Sincronize quando os arquivos forem alterados na pasta de origem
+</string>
+    <string name="network_wifi_only">
+Somente em Wi-Fi
+</string>
+    <string name="network_wifi_only_summary">
+Aguarde a conexão WiFi antes de sincronizar
+</string>
+    <string name="sync_deletions">
+Sincronizar exclusões
+</string>
+    <string name="sync_deletions_summary_upload">
+Os arquivos excluídos da origem serão removidos do destino na próxima sincronização. Os arquivos adicionados manualmente ao destino são seguros.
+</string>
+    <string name="sync_deletions_summary_download">
+Os arquivos excluídos do destino serão removidos do seu telefone na próxima sincronização. Outros arquivos do seu telefone estão seguros.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Operação Destrutiva
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ OPERAÇÃO DESTRUTIVA\n
+\n
+Com a opção \"Sincronizar exclusões\" ativada:\n
+• Os arquivos excluídos da origem são EXCLUÍDOS PERMANENTEMENTE do destino na próxima sincronização\n
+• Apenas os arquivos enviados anteriormente por este perfil são afetados\n
+• Os arquivos colocados manualmente no destino são SEGUROS (não rastreados).\n
+\n
+Mude para a sincronização bidirecional se não quiser exclusões.\n
+\n
+Deseja continuar?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ OPERAÇÃO DESTRUTIVA\n
+\n
+Com a opção \"Sincronizar exclusões\" ativada:\n
+• Os arquivos excluídos do destino são EXCLUÍDOS PERMANENTEMENTE do seu telefone na próxima sincronização\n
+• Apenas os arquivos baixados anteriormente por este perfil são afetados\n
+• Outros arquivos no seu telefone são SEGUROS (não rastreados).\n
+\n
+Mude para a sincronização bidirecional se não quiser exclusões.\n
+\n
+Deseja continuar?
+</string>
+    <string name="download_subfolders">
+Baixar subpastas
+</string>
+    <string name="download_subfolders_summary">
+Baixe recursivamente arquivos de todas as subpastas no destino
+</string>
+    <string name="trigger_scheduled">
+Agendado
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Registro de conflitos
+</string>
+    <string name="conflict_log_empty">
+Nenhum conflito registrado
+</string>
+    <string name="conflict_log_entry">
+%1$s — versão %2$s usada
+</string>
+
     <!-- Generic -->
     <string name="cancel">Cancelar</string>
     <string name="close">Fechar</string>
@@ -2952,6 +3160,12 @@ Uma nova pasta com um sufixo numérico é criada (por exemplo, \"Fotos UFM (1)\"
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
     <string name="select_sync_folder">Selecione a pasta de sincronização</string>
+    <string name="q5_minutes">
+5 minutos
+</string>
+    <string name="q10_minutes">
+10 minutos
+</string>
     <string name="q15_minutes">15 minutos</string>
     <string name="q30_minutes">30 minutos</string>
     <string name="q1_hour">1 hora</string>

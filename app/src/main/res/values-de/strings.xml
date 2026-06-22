@@ -1080,6 +1080,214 @@ Freigaben konnten nicht ermittelt werden: %s
     <string name="sync_title">Ordnersynchronisierung</string>
     <string name="sync_subtitle">Backup auf Netzwerkfreigaben</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Erweiterte Synchronisierung
+</string>
+    <string name="advanced_sync_subtitle">
+Sofortige Synchronisierung, nur WLAN &amp; mehr
+</string>
+    <string name="opening_advanced_sync">
+⚡ Öffnen Sie die erweiterte Synchronisierung
+</string>
+    <string name="advanced_sync_empty_title">
+Keine erweiterten Synchronisierungsprofile
+</string>
+    <string name="advanced_sync_empty_desc">
+Erstellen Sie Profile, die bei Dateiänderungen sofort synchronisiert werden, mit bidirektionaler Synchronisierung, Konfliktlösung und mehr.
+</string>
+    <string name="sync_direction">
+Synchronisierungsrichtung
+</string>
+    <string name="sync_filtering">
+Synchronisierungsfilterung
+</string>
+    <string name="destination">
+Ziel
+</string>
+    <string name="conflict_handling">
+Konfliktbearbeitung
+</string>
+    <string name="manual">
+Handbuch
+</string>
+    <string name="select_destination">
+Ziel auswählen
+</string>
+    <string name="switch_to_twoway">
+Wechseln Sie zu Zwei-Wege
+</string>
+    <string name="move_files_upload">
+Verschieben Sie Dateien nach dem Hochladen
+</string>
+    <string name="move_files_upload_summary">
+Quelldateien löschen, nachdem sie zum Ziel hochgeladen wurden (Ausschneiden statt Kopieren)
+</string>
+    <string name="move_files_download">
+Verschieben Sie Dateien nach dem Download
+</string>
+    <string name="move_files_download_summary">
+Löschen Sie Zieldateien, nachdem sie auf Ihr Telefon heruntergeladen wurden (ausschneiden statt kopieren).
+</string>
+    <string name="move_files_conflict">
+Verschiebedateien können nicht mit Sync-Löschungen verwendet werden. Synchronisierungslöschungen wurden deaktiviert.
+</string>
+    <string name="backup_pref_advanced_sync">
+Erweiterte Synchronisierungsprofile
+</string>
+    <string name="filter_all_types">
+Alle Arten
+</string>
+    <string name="filter_only">
+Nur diese
+</string>
+    <string name="filter_skip">
+Überspringen Sie diese
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Dateierweiterungen
+</string>
+    <string name="filter_exclude_summary">
+Dateinamen, die diese Wörter enthalten, werden übersprungen
+</string>
+    <string name="filter_min_size">
+Mindestdateigröße
+</string>
+    <string name="filter_max_size">
+Maximale Dateigröße
+</string>
+    <string name="filter_min_age">
+Mindestalter der Datei (Tage)
+</string>
+    <string name="filter_max_age">
+Maximales Dateialter (Tage)
+</string>
+    <string name="filter_size_hint">
+z.B. 10
+</string>
+    <string name="filter_age_hint">
+z.B. 7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+GB
+</string>
+    <string name="filter_exclude_label">
+Überspringen Sie Dateinamen, die enthalten
+</string>
+    <string name="filter_exclude_hint">
+durch Kommas getrennte Wörter
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Hochladen
+</string>
+    <string name="sync_direction_upload_desc">
+Senden Sie Dateien vom Telefon an ein entferntes Ziel
+</string>
+    <string name="sync_direction_download">
+Herunterladen
+</string>
+    <string name="sync_direction_download_desc">
+Ziehen Sie Dateien vom Remote-Ziel auf das Telefon
+</string>
+    <string name="sync_direction_twoway">
+Zweiseitig
+</string>
+    <string name="sync_direction_twoway_desc">
+Halten Sie beide Seiten synchron
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Überspringen (am sichersten)
+</string>
+    <string name="conflict_strategy_newest">
+Neueste verwenden
+</string>
+    <string name="conflict_strategy_keep_local">
+Bleiben Sie lokal
+</string>
+    <string name="conflict_strategy_keep_remote">
+Bleiben Sie fern
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Sofortige Synchronisierung
+</string>
+    <string name="trigger_instant_summary">
+Synchronisieren Sie, wenn sich Dateien im Quellordner ändern
+</string>
+    <string name="network_wifi_only">
+Nur über WLAN
+</string>
+    <string name="network_wifi_only_summary">
+Warten Sie vor der Synchronisierung auf die WLAN-Verbindung
+</string>
+    <string name="sync_deletions">
+Löschungen synchronisieren
+</string>
+    <string name="sync_deletions_summary_upload">
+Von der Quelle gelöschte Dateien werden bei der nächsten Synchronisierung vom Ziel entfernt. Manuell zum Ziel hinzugefügte Dateien sind sicher.
+</string>
+    <string name="sync_deletions_summary_download">
+Vom Ziel gelöschte Dateien werden bei der nächsten Synchronisierung von Ihrem Telefon entfernt. Andere Dateien auf Ihrem Telefon sind sicher.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Zerstörerischer Betrieb
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ ZERSTÖRENDER BETRIEB\n
+\n
+Wenn „Löschungen synchronisieren“ aktiviert ist:\n
+• Dateien, die Sie aus der Quelle löschen, werden bei der nächsten Synchronisierung DAUERHAFT vom Ziel GELÖSCHT\n
+• Nur Dateien, die zuvor von diesem Profil hochgeladen wurden, sind betroffen\n
+• Dateien, die manuell am Zielort abgelegt wurden, sind SICHER (nicht nachverfolgt)\n
+\n
+Wechseln Sie zur bidirektionalen Synchronisierung, wenn Sie keine Löschungen wünschen.\n
+\n
+Möchten Sie fortfahren?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ ZERSTÖRENDER BETRIEB\n
+\n
+Wenn „Löschungen synchronisieren“ aktiviert ist:\n
+• Vom Ziel gelöschte Dateien werden bei der nächsten Synchronisierung DAUERHAFT von Ihrem Telefon GELÖSCHT\n
+• Es sind nur Dateien betroffen, die zuvor von diesem Profil heruntergeladen wurden\n
+• Andere Dateien auf Ihrem Telefon sind SICHER (nicht nachverfolgt)\n
+\n
+Wechseln Sie zur bidirektionalen Synchronisierung, wenn Sie keine Löschungen wünschen.\n
+\n
+Möchten Sie fortfahren?
+</string>
+    <string name="download_subfolders">
+Unterordner herunterladen
+</string>
+    <string name="download_subfolders_summary">
+Laden Sie Dateien rekursiv aus allen Unterordnern im Ziel herunter
+</string>
+    <string name="trigger_scheduled">
+Geplant
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Konfliktprotokoll
+</string>
+    <string name="conflict_log_empty">
+Keine Konflikte erfasst
+</string>
+    <string name="conflict_log_entry">
+%1$s – verwendete %2$s-Version
+</string>
+
     <!-- Generic -->
     <string name="cancel">Stornieren</string>
     <string name="close">Schließen</string>
@@ -2952,6 +3160,12 @@ Ein neuer Ordner mit einem Nummernsuffix wird erstellt (z. B. „UFM Photos (1)�
     <string name="saturday">Samstag</string>
     <string name="sunday">Sonntag</string>
     <string name="select_sync_folder">Wählen Sie „Ordner synchronisieren“.</string>
+    <string name="q5_minutes">
+5 Minuten
+</string>
+    <string name="q10_minutes">
+10 Minuten
+</string>
     <string name="q15_minutes">15 Minuten</string>
     <string name="q30_minutes">30 Minuten</string>
     <string name="q1_hour">1 Stunde</string>

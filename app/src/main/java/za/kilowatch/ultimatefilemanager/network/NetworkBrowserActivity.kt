@@ -107,6 +107,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         const val EXTRA_OPEN_FILE_NAME = "extra_open_file_name"
         /** When true: hides clipboard/selection UI and shows 'Use This Folder' FAB for Folder Sync setup */
         const val EXTRA_SYNC_FOLDER_PICKER = "extra_sync_folder_picker"
+        /** When true: shows 'Use This Folder' FAB for Advanced Sync destination selection */
+        const val EXTRA_ADVANCED_SYNC_FOLDER_PICKER = "extra_advanced_sync_folder_picker"
         /** When true: shows 'Use This Folder' FAB for Compress destination selection */
         const val EXTRA_COMPRESS_DEST_PICKER = "extra_compress_dest_picker"
         /** Returned in the result intent when the user confirms a sync folder path */
@@ -207,6 +209,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var isPickerMode = false
     private var pickerExtensions: Set<String> = emptySet()
     private var isSyncFolderPickerMode = false
+    private var isAdvancedSyncFolderPickerMode = false
     private var isCompressDestPickerMode = false
     private var isLocationPickerMode = false
     private var isQuickTransferPickerMode = false
@@ -372,6 +375,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val extString = intent.getStringExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS) ?: ""
         pickerExtensions = extString.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }.toSet()
         isSyncFolderPickerMode = intent.getBooleanExtra(EXTRA_SYNC_FOLDER_PICKER, false)
+        isAdvancedSyncFolderPickerMode = intent.getBooleanExtra(EXTRA_ADVANCED_SYNC_FOLDER_PICKER, false)
+        android.util.Log.d("AdvSyncDest", "Flags: isAdvSyncPicker=$isAdvancedSyncFolderPickerMode, isSyncPicker=$isSyncFolderPickerMode, isPicker=$isPickerMode, isQuickTransfer=$isQuickTransferPickerMode, isCompress=$isCompressDestPickerMode, isShareDest=$isShareDestPickerMode, isLoc=$isLocationPickerMode")
         isCompressDestPickerMode = intent.getBooleanExtra(EXTRA_COMPRESS_DEST_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(EXTRA_QUICK_TRANSFER_PICKER, false)
@@ -804,6 +809,18 @@ class NetworkBrowserActivity : AppCompatActivity() {
             return
         }
 
+        // Advanced Sync folder picker mode: show New Folder + Use This Folder FAB
+        if (isAdvancedSyncFolderPickerMode) {
+            android.util.Log.d("AdvSyncDest", "Advanced sync picker mode MATCHED at setupViews")
+            layoutSelectionBar.visibility = View.GONE
+            fabPaste.visibility = View.GONE
+            if (!share.readOnly) {
+                btnCreateNew.visibility = View.VISIBLE
+            }
+            showUseFolderFab()
+            return
+        }
+
         // Quick Transfer picker mode: show "Copy Here" / "Move Here" FAB
         if (isQuickTransferPickerMode) {
             layoutSelectionBar.visibility = View.GONE
@@ -1091,6 +1108,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_sync)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmSyncPathDialog() }
+        } else if (isAdvancedSyncFolderPickerMode) {
+            android.util.Log.d("AdvSyncDest", "showUseFolderFab: Setting FAB for advanced sync")
+            fabPaste.setText(R.string.use_this_folder)
+            fabPaste.setIconResource(R.drawable.ic_sync_advanced)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmAdvancedSyncPathDialog() }
         } else if (isLocationPickerMode) {
             fabPaste.setText(R.string.use_this_folder)
             fabPaste.setIconResource(R.drawable.ic_folder)
@@ -1310,6 +1333,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             .setPositiveButton(R.string.btn_continue) { _, _ ->
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
+                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
                 }
                 setResult(RESULT_OK, result)
                 finish()
@@ -1317,7 +1341,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .show()
     }
-    
+
+    private fun showConfirmAdvancedSyncPathDialog() {
+        val displayPath = if (currentPath.isEmpty()) "/" else "/$currentPath"
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.confirm_sync_folder)
+            .setMessage(
+                getString(R.string.use_following_path_as_sync_destination, displayPath) +
+                getString(R.string.folder_sync_will_back_up_to_this_location_on_the_network_share)
+            )
+            .setIcon(R.drawable.ic_sync_advanced)
+            .setPositiveButton(R.string.btn_continue) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
+                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
     private fun showFavoriteDialog(file: NetworkFile) {
         val isOnTv = DeviceUtils.isTvDevice(this)
         
@@ -1490,7 +1535,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun updatePasteFab() {
         // In sync/compress folder picker mode + location picker mode the FAB is "Use This Folder" — never hide it here
-        if (isSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
+        if (isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isLocationPickerMode || isShareDestPickerMode || isScannerFolderPicker || isAutoBackupFolderPicker || isImageCompressDestPickerMode || isSmartSortPickerMode || isSmartSortCategoryPickerMode) {
             showUseFolderFab()
             return
         }

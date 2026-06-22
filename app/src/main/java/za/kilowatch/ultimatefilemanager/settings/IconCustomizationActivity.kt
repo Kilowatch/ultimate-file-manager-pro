@@ -539,6 +539,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             FeatureTile("recycle_bin_tile", R.string.recycle_bin_title, R.drawable.ic_delete),
             FeatureTile("file_server_tile", R.string.file_server_title, R.drawable.ic_ufm_ftp),
             FeatureTile("sync_tile", R.string.sync_title, R.drawable.ic_sync),
+            FeatureTile("advanced_sync_tile", R.string.advanced_sync_title, R.drawable.ic_sync_advanced),
             FeatureTile("smart_sort_tile", R.string.smart_sort_title, R.drawable.ic_sort),
             FeatureTile("terminal_tile", R.string.adb_terminal_title, R.drawable.ic_terminal),
             FeatureTile("network_tile", R.string.network_tile_title, R.drawable.ic_network),

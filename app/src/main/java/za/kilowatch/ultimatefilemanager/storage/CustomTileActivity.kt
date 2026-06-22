@@ -61,6 +61,7 @@ class CustomTileActivity : AppCompatActivity() {
     private var isPickerMode = false
     private var pickerExtensions: String? = null
     private var isSyncFolderPickerMode = false
+    private var isAdvancedSyncFolderPickerMode = false
     private var isCompressDestPickerMode = false
     private var isImageCompressDestPickerMode = false
     private var isExtractDestPickerMode = false
@@ -108,7 +109,7 @@ class CustomTileActivity : AppCompatActivity() {
         }
 
     /** True when any folder/file picker mode is active on this activity. */
-    private val isAnyPickerActive: Boolean get() = isPickerMode || isSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
+    private val isAnyPickerActive: Boolean get() = isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode || isLocationPickerMode || isDrivePicker
 
     // Forwards file-browser picker results back through the activity chain
     private val pickerResultLauncher =
@@ -136,6 +137,7 @@ class CustomTileActivity : AppCompatActivity() {
         isPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_PICKER_MODE, false)
         pickerExtensions = intent.getStringExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS)
         isSyncFolderPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, false)
+        isAdvancedSyncFolderPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, false)
         isCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
         isExtractDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, false)
@@ -556,6 +558,7 @@ class CustomTileActivity : AppCompatActivity() {
             pickerExtensions?.let { putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, it) }
         }
         if (isSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
+        if (isAdvancedSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
         if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
         if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
         if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)

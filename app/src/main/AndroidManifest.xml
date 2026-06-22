@@ -754,6 +754,16 @@
             android:exported="false"
             android:label="Edit Sync" />
 
+        <!-- Advanced Sync Feature -->
+        <activity
+            android:name=".sync.advanced.AdvancedSyncActivity"
+            android:exported="false"
+            android:label="Advanced Sync" />
+        <activity
+            android:name=".sync.advanced.AdvancedSyncEditActivity"
+            android:exported="false"
+            android:label="Edit Advanced Sync" />
+
         <!-- File Server (FTP/SFTP hosting) -->
         <activity
             android:name=".server.ServerHostActivity"

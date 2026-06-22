@@ -1080,6 +1080,214 @@ Aucun partage disponible sur ce serveur
     <string name="sync_title">Synchronisation des dossiers</string>
     <string name="sync_subtitle">Sauvegarde sur les partages réseau</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Synchronisation avancée
+</string>
+    <string name="advanced_sync_subtitle">
+Synchronisation instantanée, WiFi uniquement et amp; plus
+</string>
+    <string name="opening_advanced_sync">
+⚡ Ouverture de la synchronisation avancée
+</string>
+    <string name="advanced_sync_empty_title">
+Aucun profil de synchronisation avancé
+</string>
+    <string name="advanced_sync_empty_desc">
+Créez des profils qui se synchronisent instantanément lorsque les fichiers changent, avec une synchronisation bidirectionnelle, une résolution des conflits et bien plus encore.
+</string>
+    <string name="sync_direction">
+Sens de synchronisation
+</string>
+    <string name="sync_filtering">
+Filtrage de synchronisation
+</string>
+    <string name="destination">
+Destination
+</string>
+    <string name="conflict_handling">
+Gestion des conflits
+</string>
+    <string name="manual">
+Manuel
+</string>
+    <string name="select_destination">
+Sélectionnez une destination
+</string>
+    <string name="switch_to_twoway">
+Passer au mode bidirectionnel
+</string>
+    <string name="move_files_upload">
+Déplacer les fichiers après le téléchargement
+</string>
+    <string name="move_files_upload_summary">
+Supprimez les fichiers source après leur téléchargement vers la destination (coupez au lieu de copier)
+</string>
+    <string name="move_files_download">
+Déplacer les fichiers après le téléchargement
+</string>
+    <string name="move_files_download_summary">
+Supprimez les fichiers de destination une fois qu\'ils ont été téléchargés sur votre téléphone (coupez au lieu de copier)
+</string>
+    <string name="move_files_conflict">
+Les fichiers de déplacement ne peuvent pas être utilisés avec les suppressions synchronisées. Les suppressions synchronisées ont été désactivées.
+</string>
+    <string name="backup_pref_advanced_sync">
+Profils de synchronisation avancés
+</string>
+    <string name="filter_all_types">
+Tous types
+</string>
+    <string name="filter_only">
+Seulement ceux-là
+</string>
+    <string name="filter_skip">
+Ignorez-les
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Extensions de fichiers
+</string>
+    <string name="filter_exclude_summary">
+Les noms de fichiers contenant ces mots sont ignorés
+</string>
+    <string name="filter_min_size">
+Taille minimale du fichier
+</string>
+    <string name="filter_max_size">
+Taille maximale du fichier
+</string>
+    <string name="filter_min_age">
+Âge minimum du fichier (jours)
+</string>
+    <string name="filter_max_age">
+Âge maximum du fichier (jours)
+</string>
+    <string name="filter_size_hint">
+par ex. 10
+</string>
+    <string name="filter_age_hint">
+par ex. 7
+</string>
+    <string name="size_unit_mb">
+Mo
+</string>
+    <string name="size_unit_gb">
+FR
+</string>
+    <string name="filter_exclude_label">
+Ignorer les noms de fichiers contenant
+</string>
+    <string name="filter_exclude_hint">
+mots séparés par des virgules
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Télécharger
+</string>
+    <string name="sync_direction_upload_desc">
+Envoyer des fichiers du téléphone vers une destination distante
+</string>
+    <string name="sync_direction_download">
+Télécharger
+</string>
+    <string name="sync_direction_download_desc">
+Extraire des fichiers d\'une destination distante vers le téléphone
+</string>
+    <string name="sync_direction_twoway">
+Bidirectionnel
+</string>
+    <string name="sync_direction_twoway_desc">
+Gardez les deux côtés synchronisés
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Passer (le plus sûr)
+</string>
+    <string name="conflict_strategy_newest">
+Utiliser le plus récent
+</string>
+    <string name="conflict_strategy_keep_local">
+Restez local
+</string>
+    <string name="conflict_strategy_keep_remote">
+Rester à distance
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Synchronisation instantanée
+</string>
+    <string name="trigger_instant_summary">
+Synchroniser lorsque les fichiers changent dans le dossier source
+</string>
+    <string name="network_wifi_only">
+Uniquement en Wi-Fi
+</string>
+    <string name="network_wifi_only_summary">
+Attendez la connexion WiFi avant de synchroniser
+</string>
+    <string name="sync_deletions">
+Synchroniser les suppressions
+</string>
+    <string name="sync_deletions_summary_upload">
+Les fichiers supprimés de la source sont supprimés de la destination lors de la prochaine synchronisation. Les fichiers ajoutés manuellement à la destination sont en sécurité.
+</string>
+    <string name="sync_deletions_summary_download">
+Les fichiers supprimés de la destination sont supprimés de votre téléphone lors de la prochaine synchronisation. Les autres fichiers de votre téléphone sont en sécurité.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Opération destructrice
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ OPÉRATION DESTRUCTIVE\n
+\n
+Avec \"Synchroniser les suppressions\" activé :\n
+• Les fichiers que vous supprimez de la source sont SUPPRIMÉS DE MANIÈRE PERMANENTE de la destination lors de la prochaine synchronisation\n
+• Seuls les fichiers précédemment téléchargés par ce profil sont affectés\n
+• Les fichiers placés manuellement dans la destination sont SÉCURISÉS (non suivis)\n
+\n
+Passez en synchronisation bidirectionnelle si vous ne souhaitez pas de suppressions.\n
+\n
+Voulez-vous continuer ?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ OPÉRATION DESTRUCTIVE\n
+\n
+Avec \"Synchroniser les suppressions\" activé :\n
+• Les fichiers supprimés de la destination sont SUPPRIMÉS DE MANIÈRE PERMANENTE de votre téléphone lors de la prochaine synchronisation\n
+• Seuls les fichiers précédemment téléchargés par ce profil sont affectés\n
+• Les autres fichiers de votre téléphone sont SÉCURISÉS (non suivis)\n
+\n
+Passez en synchronisation bidirectionnelle si vous ne souhaitez pas de suppression.\n
+\n
+Voulez-vous continuer ?
+</string>
+    <string name="download_subfolders">
+Télécharger les sous-dossiers
+</string>
+    <string name="download_subfolders_summary">
+Téléchargez de manière récursive des fichiers à partir de tous les sous-dossiers de la destination
+</string>
+    <string name="trigger_scheduled">
+Programmé
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Journal des conflits
+</string>
+    <string name="conflict_log_empty">
+Aucun conflit enregistré
+</string>
+    <string name="conflict_log_entry">
+%1$s – version utilisée de %2$s
+</string>
+
     <!-- Generic -->
     <string name="cancel">Annuler</string>
     <string name="close">Fermer</string>
@@ -2952,6 +3160,12 @@ Un nouveau dossier avec un suffixe numérique est créé (par exemple \"UFM Phot
     <string name="saturday">Samedi</string>
     <string name="sunday">Dimanche</string>
     <string name="select_sync_folder">Sélectionnez le dossier de synchronisation</string>
+    <string name="q5_minutes">
+5 minutes
+</string>
+    <string name="q10_minutes">
+10 minutes
+</string>
     <string name="q15_minutes">15 minutes</string>
     <string name="q30_minutes">30 minutes</string>
     <string name="q1_hour">1 heure</string>

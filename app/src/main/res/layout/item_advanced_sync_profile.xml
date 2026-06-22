@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardBackgroundColor="@color/mobile_glass_card"
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Direction icon -->
+        <ImageView
+            android:id="@+id/iconDirection"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_circle_translucent"
+            android:padding="8dp"
+            android:src="@drawable/ic_direction_twoway"
+            app:tint="@color/ufm_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Green dot (active indicator) -->
+        <ImageView
+            android:id="@+id/iconActiveDot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_active_dot"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/iconDirection"
+            app:layout_constraintTop_toTopOf="@+id/iconDirection" />
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnMenu"
+            app:layout_constraintStart_toEndOf="@+id/iconDirection"
+            app:layout_constraintTop_toTopOf="@+id/iconDirection"
+            tools:text="DCIM Advanced Sync" />
+
+        <!-- Trigger indicator icons -->
+        <LinearLayout
+            android:id="@+id/layoutTriggers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/txtName"
+            app:layout_constraintStart_toStartOf="@+id/txtName">
+
+            <TextView
+                android:id="@+id/txtScheduleType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_primary"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:textColor="@color/ufm_primary"
+                android:textSize="12sp"
+                tools:text="Every 1h" />
+
+            <ImageView
+                android:id="@+id/iconInstantSync"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/ic_instant_sync"
+                android:visibility="gone"
+                app:tint="@color/ufm_primary"
+                android:contentDescription="@string/trigger_instant" />
+
+            <ImageView
+                android:id="@+id/iconWifiOnly"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_network_wifi"
+                android:visibility="gone"
+                app:tint="@color/ufm_primary"
+                android:contentDescription="@string/network_wifi_only" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_more_vert"
+            app:tint="@color/mobile_card_text_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Source / Dest -->
+        <LinearLayout
+            android:id="@+id/layoutPaths"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toStartOf="@+id/switchEnabled"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutTriggers">
+
+            <TextView
+                android:id="@+id/txtSource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:ellipsize="middle"
+                android:maxLines="1"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="14sp"
+                app:drawableStartCompat="@drawable/ic_phone"
+                app:drawableTint="@color/ufm_text_hint"
+                tools:text="Internal Storage/DCIM" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginVertical="2dp"
+                android:src="@drawable/ic_arrow_down"
+                app:tint="@color/ufm_text_hint" />
+
+            <TextView
+                android:id="@+id/txtDest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:ellipsize="middle"
+                android:maxLines="1"
+                android:textColor="@color/mobile_card_text_secondary"
+                android:textSize="14sp"
+                app:drawableStartCompat="@drawable/ic_network"
+                app:drawableTint="@color/ufm_text_hint"
+                tools:text="NAS Media / Backups" />
+
+        </LinearLayout>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchEnabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutPaths"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/layoutPaths" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/mobile_glass_stroke"
+            app:layout_constraintTop_toBottomOf="@+id/layoutPaths" />
+
+        <TextView
+            android:id="@+id/txtLastSync"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="8dp"
+            android:textColor="@color/ufm_text_hint"
+            android:textSize="12sp"
+            app:drawableStartCompat="@drawable/ic_time"
+            app:drawableTint="@color/ufm_text_hint"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider"
+            tools:text="Last sync: 2 mins ago (15 files)" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

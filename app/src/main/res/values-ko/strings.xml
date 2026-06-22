@@ -1080,6 +1080,214 @@ DLNA
     <string name="sync_title">폴더 동기화</string>
     <string name="sync_subtitle">네트워크 공유에 백업</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+고급 동기화
+</string>
+    <string name="advanced_sync_subtitle">
+즉시 동기화, Wi-Fi 전용 &amp; 더
+</string>
+    <string name="opening_advanced_sync">
+⚡ 고급 동기화 열기
+</string>
+    <string name="advanced_sync_empty_title">
+고급 동기화 프로필 없음
+</string>
+    <string name="advanced_sync_empty_desc">
+양방향 동기화, 충돌 해결 등을 통해 파일이 변경되면 즉시 동기화되는 프로필을 만듭니다.
+</string>
+    <string name="sync_direction">
+동기화 방향
+</string>
+    <string name="sync_filtering">
+동기화 필터링
+</string>
+    <string name="destination">
+목적지
+</string>
+    <string name="conflict_handling">
+갈등 처리
+</string>
+    <string name="manual">
+수동
+</string>
+    <string name="select_destination">
+목적지 선택
+</string>
+    <string name="switch_to_twoway">
+양방향으로 전환
+</string>
+    <string name="move_files_upload">
+업로드 후 파일 이동
+</string>
+    <string name="move_files_upload_summary">
+원본 파일을 대상에 업로드한 후 삭제(복사 대신 잘라내기)
+</string>
+    <string name="move_files_download">
+다운로드 후 파일 이동
+</string>
+    <string name="move_files_download_summary">
+휴대폰에 다운로드한 후 대상 파일 삭제(복사 대신 잘라내기)
+</string>
+    <string name="move_files_conflict">
+파일 이동은 동기화 삭제와 함께 사용할 수 없습니다. 동기화 삭제가 비활성화되었습니다.
+</string>
+    <string name="backup_pref_advanced_sync">
+고급 동기화 프로필
+</string>
+    <string name="filter_all_types">
+모든 유형
+</string>
+    <string name="filter_only">
+이것들만
+</string>
+    <string name="filter_skip">
+건너뛰기
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+파일 확장자
+</string>
+    <string name="filter_exclude_summary">
+이 단어가 포함된 파일 이름은 건너뜁니다.
+</string>
+    <string name="filter_min_size">
+최소 파일 크기
+</string>
+    <string name="filter_max_size">
+최대 파일 크기
+</string>
+    <string name="filter_min_age">
+최소 파일 수명(일)
+</string>
+    <string name="filter_max_age">
+최대 파일 기간(일)
+</string>
+    <string name="filter_size_hint">
+예를 들어 10
+</string>
+    <string name="filter_age_hint">
+예를 들어 7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+GB
+</string>
+    <string name="filter_exclude_label">
+다음을 포함하는 파일 이름 건너뛰기
+</string>
+    <string name="filter_exclude_hint">
+쉼표로 구분된 단어
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+업로드
+</string>
+    <string name="sync_direction_upload_desc">
+휴대폰에서 원격 대상으로 파일 보내기
+</string>
+    <string name="sync_direction_download">
+다운로드
+</string>
+    <string name="sync_direction_download_desc">
+원격 대상에서 전화로 파일 가져오기
+</string>
+    <string name="sync_direction_twoway">
+양방향
+</string>
+    <string name="sync_direction_twoway_desc">
+양쪽의 동기화를 유지하세요
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+건너뛰기(가장 안전함)
+</string>
+    <string name="conflict_strategy_newest">
+최신 사용
+</string>
+    <string name="conflict_strategy_keep_local">
+로컬 유지
+</string>
+    <string name="conflict_strategy_keep_remote">
+원격 유지
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+즉시 동기화
+</string>
+    <string name="trigger_instant_summary">
+원본 폴더에서 파일이 변경되면 동기화
+</string>
+    <string name="network_wifi_only">
+WiFi에서만
+</string>
+    <string name="network_wifi_only_summary">
+동기화하기 전에 Wi-Fi 연결을 기다립니다.
+</string>
+    <string name="sync_deletions">
+동기화 삭제
+</string>
+    <string name="sync_deletions_summary_upload">
+소스에서 삭제된 파일은 다음 동기화 시 대상에서 제거됩니다. 대상에 수동으로 추가한 파일은 안전합니다.
+</string>
+    <string name="sync_deletions_summary_download">
+대상에서 삭제된 파일은 다음 동기화 시 휴대폰에서 제거됩니다. 휴대폰에 있는 다른 파일은 안전합니다.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ 파괴적인 작전
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ 파괴적인 작업\n
+\n
+\'동기화 삭제\' 활성화:\n
+• 소스에서 삭제한 파일은 다음 동기화 시 대상에서 영구적으로 삭제됩니다.\n
+• 이전에 이 프로필에 의해 업로드된 파일만 영향을 받습니다.\n
+• 대상에 수동으로 배치된 파일은 안전합니다(추적되지 않음).\n
+\n
+삭제를 원하지 않으면 양방향 동기화로 전환하십시오.\n
+\n
+계속하시겠습니까?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ 파괴적인 작업\n
+\n
+\"동기화 삭제\" 활성화:\n
+• 다음 동기화 시 대상에서 삭제된 파일은 휴대전화에서 영구적으로 삭제됩니다.\n
+• 이전에 이 프로필로 다운로드한 파일만 영향을 받습니다.\n
+• 휴대전화에 있는 다른 파일은 안전합니다(추적되지 않음).\n
+\n
+삭제를 원하지 않으면 양방향 동기화로 전환하세요.\n
+\n
+계속하시겠습니까?
+</string>
+    <string name="download_subfolders">
+하위 폴더 다운로드
+</string>
+    <string name="download_subfolders_summary">
+대상의 모든 하위 폴더에서 파일을 반복적으로 다운로드합니다.
+</string>
+    <string name="trigger_scheduled">
+예정됨
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+충돌 로그
+</string>
+    <string name="conflict_log_empty">
+기록된 충돌 없음
+</string>
+    <string name="conflict_log_entry">
+%1$s — %2$s 버전을 사용함
+</string>
+
     <!-- Generic -->
     <string name="cancel">취소</string>
     <string name="close">닫다</string>
@@ -2952,6 +3160,12 @@ UFM에 저장
     <string name="saturday">토요일</string>
     <string name="sunday">일요일</string>
     <string name="select_sync_folder">동기화 폴더 선택</string>
+    <string name="q5_minutes">
+5분
+</string>
+    <string name="q10_minutes">
+10분
+</string>
     <string name="q15_minutes">15분</string>
     <string name="q30_minutes">30분</string>
     <string name="q1_hour">1시간</string>

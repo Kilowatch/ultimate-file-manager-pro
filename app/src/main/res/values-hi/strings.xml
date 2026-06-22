@@ -1080,6 +1080,214 @@ PKCS12 पासवर्ड
     <string name="sync_title">फ़ोल्डर सिंक</string>
     <string name="sync_subtitle">नेटवर्क शेयरों का बैकअप</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+उन्नत सिंक
+</string>
+    <string name="advanced_sync_subtitle">
+त्वरित सिंक, केवल वाईफ़ाई और amp; अधिक
+</string>
+    <string name="opening_advanced_sync">
+⚡उन्नत सिंक खोलना
+</string>
+    <string name="advanced_sync_empty_title">
+कोई उन्नत सिंक प्रोफ़ाइल नहीं
+</string>
+    <string name="advanced_sync_empty_desc">
+ऐसी प्रोफ़ाइल बनाएं जो फ़ाइलें बदलने पर तुरंत सिंक हो जाएं, दो-तरफ़ा सिंक, विरोध समाधान और बहुत कुछ के साथ।
+</string>
+    <string name="sync_direction">
+सिंक दिशा
+</string>
+    <string name="sync_filtering">
+सिंक फ़िल्टरिंग
+</string>
+    <string name="destination">
+गंतव्य
+</string>
+    <string name="conflict_handling">
+संघर्ष से निपटना
+</string>
+    <string name="manual">
+नियमावली
+</string>
+    <string name="select_destination">
+गंतव्य चुनें
+</string>
+    <string name="switch_to_twoway">
+टू-वे पर स्विच करें
+</string>
+    <string name="move_files_upload">
+अपलोड करने के बाद फ़ाइलें स्थानांतरित करें
+</string>
+    <string name="move_files_upload_summary">
+गंतव्य पर अपलोड होने के बाद स्रोत फ़ाइलों को हटा दें (कॉपी के बजाय काटें)
+</string>
+    <string name="move_files_download">
+डाउनलोड के बाद फ़ाइलें स्थानांतरित करें
+</string>
+    <string name="move_files_download_summary">
+आपके फ़ोन पर डाउनलोड होने के बाद गंतव्य फ़ाइलें हटा दें (कॉपी करने के बजाय काटें)
+</string>
+    <string name="move_files_conflict">
+सिंक विलोपन के साथ मूव फ़ाइलों का उपयोग नहीं किया जा सकता। समन्वयन विलोपन अक्षम कर दिया गया है.
+</string>
+    <string name="backup_pref_advanced_sync">
+उन्नत सिंक प्रोफ़ाइल
+</string>
+    <string name="filter_all_types">
+सभी प्रकार के
+</string>
+    <string name="filter_only">
+केवल ये
+</string>
+    <string name="filter_skip">
+इन्हें छोड़ें
+</string>
+    <string name="filter_extensions_hint">
+जेपीजी, पीएनजी, mp4
+</string>
+    <string name="filter_extensions_label">
+फाइल एक्सटेंशन
+</string>
+    <string name="filter_exclude_summary">
+इन शब्दों वाले फ़ाइल नामों को छोड़ दिया गया है
+</string>
+    <string name="filter_min_size">
+न्यूनतम फ़ाइल आकार
+</string>
+    <string name="filter_max_size">
+अधिकतम फ़ाइल आकार
+</string>
+    <string name="filter_min_age">
+न्यूनतम फ़ाइल आयु (दिन)
+</string>
+    <string name="filter_max_age">
+अधिकतम फ़ाइल आयु (दिन)
+</string>
+    <string name="filter_size_hint">
+जैसे 10
+</string>
+    <string name="filter_age_hint">
+जैसे 7
+</string>
+    <string name="size_unit_mb">
+एमबी
+</string>
+    <string name="size_unit_gb">
+जीबी
+</string>
+    <string name="filter_exclude_label">
+युक्त फ़ाइल नाम छोड़ें
+</string>
+    <string name="filter_exclude_hint">
+अल्पविराम से अलग किए गए शब्द
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+अपलोड करें
+</string>
+    <string name="sync_direction_upload_desc">
+फ़ोन से दूरस्थ गंतव्य तक फ़ाइलें भेजें
+</string>
+    <string name="sync_direction_download">
+डाउनलोड करना
+</string>
+    <string name="sync_direction_download_desc">
+दूरस्थ गंतव्य से फ़ोन तक फ़ाइलें खींचें
+</string>
+    <string name="sync_direction_twoway">
+दो-तरफा
+</string>
+    <string name="sync_direction_twoway_desc">
+दोनों पक्षों को तालमेल में रखें
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+छोड़ें (सबसे सुरक्षित)
+</string>
+    <string name="conflict_strategy_newest">
+नवीनतम का उपयोग करें
+</string>
+    <string name="conflict_strategy_keep_local">
+स्थानीय रखें
+</string>
+    <string name="conflict_strategy_keep_remote">
+रिमोट रखें
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+तुरंत सिंक
+</string>
+    <string name="trigger_instant_summary">
+स्रोत फ़ोल्डर में फ़ाइलें बदलने पर सिंक करें
+</string>
+    <string name="network_wifi_only">
+केवल वाईफाई पर
+</string>
+    <string name="network_wifi_only_summary">
+सिंक करने से पहले वाईफाई कनेक्शन की प्रतीक्षा करें
+</string>
+    <string name="sync_deletions">
+विलोपन सिंक करें
+</string>
+    <string name="sync_deletions_summary_upload">
+स्रोत से हटाई गई फ़ाइलें अगले सिंक पर गंतव्य से हटा दी जाती हैं। गंतव्य पर मैन्युअल रूप से जोड़ी गई फ़ाइलें सुरक्षित हैं।
+</string>
+    <string name="sync_deletions_summary_download">
+गंतव्य से हटाई गई फ़ाइलें अगले सिंक पर आपके फ़ोन से हटा दी जाती हैं। आपके फ़ोन की अन्य फ़ाइलें सुरक्षित हैं.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ विनाशकारी ऑपरेशन
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ विनाशकारी ऑपरेशन\n
+\n
+\"सिंक विलोपन\" सक्षम होने पर:\n
+• आपके द्वारा स्रोत से हटाई गई फ़ाइलें अगले सिंक पर गंतव्य से स्थायी रूप से हटा दी जाती हैं\n
+• केवल इस प्रोफ़ाइल द्वारा पहले अपलोड की गई फ़ाइलें प्रभावित होती हैं\n
+• गंतव्य में मैन्युअल रूप से रखी गई फ़ाइलें सुरक्षित हैं (ट्रैक नहीं की गईं)\n
+\n
+यदि आप विलोपन नहीं चाहते हैं तो दो-तरफा सिंक पर स्विच करें।\n
+\n
+क्या आप जारी रखना चाहते हैं?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ विनाशकारी ऑपरेशन\n
+\n
+\"सिंक विलोपन\" सक्षम होने पर:\n
+• गंतव्य से हटाई गई फ़ाइलें अगले सिंक पर आपके फ़ोन से स्थायी रूप से हटा दी जाती हैं\n
+• केवल इस प्रोफ़ाइल द्वारा पहले डाउनलोड की गई फ़ाइलें प्रभावित होती हैं\n
+• आपके फ़ोन की अन्य फ़ाइलें सुरक्षित हैं (ट्रैक नहीं की गईं)\n
+\n
+यदि आप विलोपन नहीं चाहते हैं तो टू-वे सिंक पर स्विच करें।\n
+\n
+क्या आप जारी रखना चाहते हैं?
+</string>
+    <string name="download_subfolders">
+सबफ़ोल्डर डाउनलोड करें
+</string>
+    <string name="download_subfolders_summary">
+गंतव्य में सभी सबफ़ोल्डर्स से फ़ाइलों को पुनरावर्ती रूप से डाउनलोड करें
+</string>
+    <string name="trigger_scheduled">
+अनुसूचित
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+संघर्ष लॉग
+</string>
+    <string name="conflict_log_empty">
+कोई संघर्ष दर्ज नहीं किया गया
+</string>
+    <string name="conflict_log_entry">
+%1$s — %2$s संस्करण का उपयोग किया गया
+</string>
+
     <!-- Generic -->
     <string name="cancel">रद्द करना</string>
     <string name="close">बंद करना</string>
@@ -2952,6 +3160,12 @@ PKCS12 पासवर्ड
     <string name="saturday">शनिवार</string>
     <string name="sunday">रविवार</string>
     <string name="select_sync_folder">सिंक फ़ोल्डर चुनें</string>
+    <string name="q5_minutes">
+5 मिनट
+</string>
+    <string name="q10_minutes">
+10 मिनटों
+</string>
     <string name="q15_minutes">15 मिनटों</string>
     <string name="q30_minutes">30 मिनट</string>
     <string name="q1_hour">1 घंटा</string>

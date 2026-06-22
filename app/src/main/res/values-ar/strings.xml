@@ -1080,6 +1080,214 @@ DLNA
     <string name="sync_title">مزامنة المجلد</string>
     <string name="sync_subtitle">النسخ الاحتياطي لمشاركات الشبكة</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+المزامنة المتقدمة
+</string>
+    <string name="advanced_sync_subtitle">
+مزامنة فورية، WiFi فقط&amp; أكثر
+</string>
+    <string name="opening_advanced_sync">
+⚡ فتح المزامنة المتقدمة
+</string>
+    <string name="advanced_sync_empty_title">
+لا توجد ملفات تعريف مزامنة متقدمة
+</string>
+    <string name="advanced_sync_empty_desc">
+قم بإنشاء ملفات تعريف تتم مزامنتها على الفور عند تغيير الملفات، مع المزامنة ثنائية الاتجاه، وحل النزاعات، والمزيد.
+</string>
+    <string name="sync_direction">
+اتجاه المزامنة
+</string>
+    <string name="sync_filtering">
+تصفية المزامنة
+</string>
+    <string name="destination">
+وجهة
+</string>
+    <string name="conflict_handling">
+التعامل مع الصراع
+</string>
+    <string name="manual">
+يدوي
+</string>
+    <string name="select_destination">
+اختر الوجهة
+</string>
+    <string name="switch_to_twoway">
+التبديل إلى اتجاهين
+</string>
+    <string name="move_files_upload">
+نقل الملفات بعد التحميل
+</string>
+    <string name="move_files_upload_summary">
+حذف الملفات المصدر بعد تحميلها إلى الوجهة (قصها بدلاً من نسخها)
+</string>
+    <string name="move_files_download">
+نقل الملفات بعد التحميل
+</string>
+    <string name="move_files_download_summary">
+حذف الملفات الوجهة بعد تنزيلها على هاتفك (قصها بدلاً من نسخها)
+</string>
+    <string name="move_files_conflict">
+لا يمكن استخدام نقل الملفات مع عمليات الحذف المتزامنة. تم تعطيل عمليات حذف المزامنة.
+</string>
+    <string name="backup_pref_advanced_sync">
+ملفات تعريف المزامنة المتقدمة
+</string>
+    <string name="filter_all_types">
+جميع الأنواع
+</string>
+    <string name="filter_only">
+هؤلاء فقط
+</string>
+    <string name="filter_skip">
+تخطي هذه
+</string>
+    <string name="filter_extensions_hint">
+JPG، بابوا نيو غينيا، MP4
+</string>
+    <string name="filter_extensions_label">
+ملحقات الملفات
+</string>
+    <string name="filter_exclude_summary">
+يتم تخطي أسماء الملفات التي تحتوي على هذه الكلمات
+</string>
+    <string name="filter_min_size">
+الحد الأدنى لحجم الملف
+</string>
+    <string name="filter_max_size">
+الحد الأقصى لحجم الملف
+</string>
+    <string name="filter_min_age">
+الحد الأدنى لعمر الملف (أيام)
+</string>
+    <string name="filter_max_age">
+الحد الأقصى لعمر الملف (بالأيام)
+</string>
+    <string name="filter_size_hint">
+على سبيل المثال 10
+</string>
+    <string name="filter_age_hint">
+على سبيل المثال 7
+</string>
+    <string name="size_unit_mb">
+ميغابايت
+</string>
+    <string name="size_unit_gb">
+غيغابايت
+</string>
+    <string name="filter_exclude_label">
+تخطي أسماء الملفات التي تحتوي على
+</string>
+    <string name="filter_exclude_hint">
+كلمات مفصولة بفواصل
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+رفع
+</string>
+    <string name="sync_direction_upload_desc">
+إرسال الملفات من الهاتف إلى الوجهة البعيدة
+</string>
+    <string name="sync_direction_download">
+تحميل
+</string>
+    <string name="sync_direction_download_desc">
+سحب الملفات من الوجهة البعيدة إلى الهاتف
+</string>
+    <string name="sync_direction_twoway">
+في اتجاهين
+</string>
+    <string name="sync_direction_twoway_desc">
+حافظ على مزامنة كلا الجانبين
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+تخطي (الأكثر أمانًا)
+</string>
+    <string name="conflict_strategy_newest">
+استخدم الأحدث
+</string>
+    <string name="conflict_strategy_keep_local">
+احتفظ بالمحلية
+</string>
+    <string name="conflict_strategy_keep_remote">
+ابقِ بعيدًا
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+مزامنة فورية
+</string>
+    <string name="trigger_instant_summary">
+المزامنة عند تغيير الملفات في المجلد المصدر
+</string>
+    <string name="network_wifi_only">
+فقط على شبكة WiFi
+</string>
+    <string name="network_wifi_only_summary">
+انتظر اتصال WiFi قبل المزامنة
+</string>
+    <string name="sync_deletions">
+مزامنة الحذف
+</string>
+    <string name="sync_deletions_summary_upload">
+تتم إزالة الملفات المحذوفة من المصدر من الوجهة في المزامنة التالية. الملفات المضافة يدويًا إلى الوجهة آمنة.
+</string>
+    <string name="sync_deletions_summary_download">
+تتم إزالة الملفات المحذوفة من الوجهة من هاتفك عند المزامنة التالية. الملفات الأخرى الموجودة على هاتفك آمنة.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ عملية مدمرة
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ عملية مدمرة\n
+\n
+مع تمكين \"عمليات الحذف للمزامنة\":\n
+• يتم حذف الملفات التي تحذفها من المصدر نهائيًا من الوجهة في المزامنة التالية\n
+• تتأثر فقط الملفات التي تم تحميلها مسبقًا بواسطة ملف التعريف هذا\n
+• الملفات الموضوعة يدويًا في الوجهة آمنة (لا يتم تعقبها)\n
+\n
+قم بالتبديل إلى المزامنة ثنائية الاتجاه إذا كنت لا تريد عمليات الحذف.\n
+\n
+هل تريد المتابعة؟
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ عملية مدمرة\n
+\n
+مع تمكين \"عمليات الحذف للمزامنة\":\n
+• يتم حذف الملفات المحذوفة من الوجهة نهائيًا من هاتفك عند المزامنة التالية\n
+• تتأثر فقط الملفات التي تم تنزيلها مسبقًا بواسطة ملف التعريف هذا\n
+• الملفات الأخرى الموجودة على هاتفك آمنة (غير متعقبة)\n
+\n
+قم بالتبديل إلى المزامنة ثنائية الاتجاه إذا كنت لا تريد عمليات الحذف.\n
+\n
+هل تريد المتابعة؟
+</string>
+    <string name="download_subfolders">
+تحميل المجلدات الفرعية
+</string>
+    <string name="download_subfolders_summary">
+قم بتنزيل الملفات بشكل متكرر من كافة المجلدات الفرعية في الوجهة
+</string>
+    <string name="trigger_scheduled">
+المقرر
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+سجل الصراع
+</string>
+    <string name="conflict_log_empty">
+لم يتم تسجيل أي صراعات
+</string>
+    <string name="conflict_log_entry">
+%1$s — الإصدار %2$s المستخدم
+</string>
+
     <!-- Generic -->
     <string name="cancel">يلغي</string>
     <string name="close">يغلق</string>
@@ -2950,6 +3158,12 @@ SRT
     <string name="saturday">السبت</string>
     <string name="sunday">الأحد</string>
     <string name="select_sync_folder">حدد مجلد المزامنة</string>
+    <string name="q5_minutes">
+5 دقائق
+</string>
+    <string name="q10_minutes">
+10 دقائق
+</string>
     <string name="q15_minutes">15 دقيقة</string>
     <string name="q30_minutes">30 دقيقة</string>
     <string name="q1_hour">1 ساعة</string>

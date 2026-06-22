@@ -1080,6 +1080,214 @@ No se pudieron descubrir recursos compartidos: %s
     <string name="sync_title">Sincronización de carpetas</string>
     <string name="sync_subtitle">Copia de seguridad en recursos compartidos de red</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Sincronización avanzada
+</string>
+    <string name="advanced_sync_subtitle">
+Sincronización instantánea, solo WiFi y más. más
+</string>
+    <string name="opening_advanced_sync">
+⚡ Abrir sincronización avanzada
+</string>
+    <string name="advanced_sync_empty_title">
+Sin perfiles de sincronización avanzada
+</string>
+    <string name="advanced_sync_empty_desc">
+Cree perfiles que se sincronicen instantáneamente cuando los archivos cambien, con sincronización bidireccional, resolución de conflictos y más.
+</string>
+    <string name="sync_direction">
+Dirección de sincronización
+</string>
+    <string name="sync_filtering">
+Filtrado de sincronización
+</string>
+    <string name="destination">
+Destino
+</string>
+    <string name="conflict_handling">
+Manejo de conflictos
+</string>
+    <string name="manual">
+Manual
+</string>
+    <string name="select_destination">
+Seleccionar destino
+</string>
+    <string name="switch_to_twoway">
+Cambiar a bidireccional
+</string>
+    <string name="move_files_upload">
+Mover archivos después de cargarlos
+</string>
+    <string name="move_files_upload_summary">
+Eliminar archivos de origen después de cargarlos en el destino (cortar en lugar de copiar)
+</string>
+    <string name="move_files_download">
+Mover archivos después de la descarga
+</string>
+    <string name="move_files_download_summary">
+Elimine los archivos de destino después de descargarlos en su teléfono (córtelos en lugar de copiarlos)
+</string>
+    <string name="move_files_conflict">
+Mover archivos no se puede utilizar con eliminaciones sincronizadas. Se han desactivado las eliminaciones sincronizadas.
+</string>
+    <string name="backup_pref_advanced_sync">
+Perfiles de sincronización avanzada
+</string>
+    <string name="filter_all_types">
+Todos los tipos
+</string>
+    <string name="filter_only">
+Sólo estos
+</string>
+    <string name="filter_skip">
+Salta estos
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Extensiones de archivo
+</string>
+    <string name="filter_exclude_summary">
+Se omiten los nombres de archivos que contienen estas palabras.
+</string>
+    <string name="filter_min_size">
+Tamaño mínimo de archivo
+</string>
+    <string name="filter_max_size">
+Tamaño máximo de archivo
+</string>
+    <string name="filter_min_age">
+Antigüedad mínima del archivo (días)
+</string>
+    <string name="filter_max_age">
+Antigüedad máxima del archivo (días)
+</string>
+    <string name="filter_size_hint">
+p.ej. 10
+</string>
+    <string name="filter_age_hint">
+p.ej. 7
+</string>
+    <string name="size_unit_mb">
+MEGABYTE
+</string>
+    <string name="size_unit_gb">
+ES
+</string>
+    <string name="filter_exclude_label">
+Omitir nombres de archivos que contengan
+</string>
+    <string name="filter_exclude_hint">
+palabras separadas por comas
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Subir
+</string>
+    <string name="sync_direction_upload_desc">
+Enviar archivos desde el teléfono a un destino remoto
+</string>
+    <string name="sync_direction_download">
+Descargar
+</string>
+    <string name="sync_direction_download_desc">
+Extraer archivos desde un destino remoto al teléfono
+</string>
+    <string name="sync_direction_twoway">
+bidireccional
+</string>
+    <string name="sync_direction_twoway_desc">
+Mantenga ambos lados sincronizados
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Saltar (más seguro)
+</string>
+    <string name="conflict_strategy_newest">
+Usar el más nuevo
+</string>
+    <string name="conflict_strategy_keep_local">
+Mantener local
+</string>
+    <string name="conflict_strategy_keep_remote">
+Mantener remoto
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Sincronización instantánea
+</string>
+    <string name="trigger_instant_summary">
+Sincronizar cuando los archivos cambian en la carpeta de origen
+</string>
+    <string name="network_wifi_only">
+Sólo en WiFi
+</string>
+    <string name="network_wifi_only_summary">
+Espere la conexión WiFi antes de sincronizar
+</string>
+    <string name="sync_deletions">
+Eliminaciones de sincronización
+</string>
+    <string name="sync_deletions_summary_upload">
+Los archivos eliminados del origen se eliminan del destino en la siguiente sincronización. Los archivos agregados manualmente al destino son seguros.
+</string>
+    <string name="sync_deletions_summary_download">
+Los archivos eliminados del destino se eliminan de su teléfono en la siguiente sincronización. Otros archivos en su teléfono están seguros.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Operación destructiva
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ OPERACIÓN DESTRUCTIVA\n
+\n
+Con \"Eliminaciones sincronizadas\" habilitadas:\n
+• Los archivos que eliminas del origen se ELIMINAN PERMANENTEMENTE del destino en la próxima sincronización\n
+• Solo se ven afectados los archivos cargados previamente por este perfil\n
+• Los archivos colocados manualmente en el destino son SEGUROS (no rastreados)\n
+\n
+Cambie a sincronización bidireccional si no desea eliminarlos.\n
+\n
+¿Quieres continuar?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ OPERACIÓN DESTRUCTIVA\n
+\n
+Con \"Eliminaciones sincronizadas\" habilitadas:\n
+• Los archivos eliminados del destino se ELIMINAN PERMANENTEMENTE de su teléfono en la próxima sincronización\n
+• Solo los archivos descargados previamente por este perfil se ven afectados\n
+• Otros archivos en su teléfono son SEGUROS (no rastreados)\n
+\n
+Cambie a sincronización bidireccional si no desea eliminarlos.\n
+\n
+¿Desea continuar?
+</string>
+    <string name="download_subfolders">
+Descargar subcarpetas
+</string>
+    <string name="download_subfolders_summary">
+Descargar archivos de forma recursiva de todas las subcarpetas del destino
+</string>
+    <string name="trigger_scheduled">
+Programado
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Registro de conflictos
+</string>
+    <string name="conflict_log_empty">
+No se registraron conflictos
+</string>
+    <string name="conflict_log_entry">
+%1$s — versión %2$s usada
+</string>
+
     <!-- Generic -->
     <string name="cancel">Cancelar</string>
     <string name="close">Cerca</string>
@@ -2952,6 +3160,12 @@ Se crea una nueva carpeta con un sufijo numérico (por ejemplo, \"Fotos UFM (1)\
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
     <string name="select_sync_folder">Seleccione la carpeta de sincronización</string>
+    <string name="q5_minutes">
+5 minutos
+</string>
+    <string name="q10_minutes">
+10 minutos
+</string>
     <string name="q15_minutes">15 minutos</string>
     <string name="q30_minutes">30 minutos</string>
     <string name="q1_hour">1 hora</string>

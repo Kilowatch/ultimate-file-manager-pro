@@ -198,6 +198,8 @@ class FileBrowserActivity : AppCompatActivity() {
         const val EXTRA_PICKER_MODE = "extra_picker_mode"
         const val EXTRA_PICKER_EXTENSIONS = "extra_picker_extensions" // comma-separated, e.g. "apk" or "xapk,apks"
         const val EXTRA_SYNC_FOLDER_PICKER = "extra_sync_folder_picker"
+        /** When true, the user is picking a source folder for Advanced Sync */
+        const val EXTRA_ADVANCED_SYNC_FOLDER_PICKER = "extra_advanced_sync_folder_picker"
         /** When true the user is picking a destination folder for Compress */
         const val EXTRA_COMPRESS_DEST_PICKER = "extra_compress_dest_picker"
         /** When true the user is picking a destination folder for Extract */
@@ -247,6 +249,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isPickerMode = false
     private var pickerExtensions: Set<String> = emptySet()
     private var isSyncFolderPickerMode = false
+    private var isAdvancedSyncFolderPickerMode = false
     private var isCompressDestPickerMode = false
     private var isExtractDestPickerMode = false
     private var isImageCompressDestPickerMode = false
@@ -322,6 +325,7 @@ class FileBrowserActivity : AppCompatActivity() {
             storageLabel = "Select ${pickerExtensions.joinToString("/") { ".${it.uppercase()}" }} File"
         }
         isSyncFolderPickerMode = intent.getBooleanExtra(EXTRA_SYNC_FOLDER_PICKER, false)
+        isAdvancedSyncFolderPickerMode = intent.getBooleanExtra(EXTRA_ADVANCED_SYNC_FOLDER_PICKER, false)
         isCompressDestPickerMode = intent.getBooleanExtra(EXTRA_COMPRESS_DEST_PICKER, false)
         isExtractDestPickerMode = intent.getBooleanExtra(EXTRA_EXTRACT_DEST_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
@@ -387,6 +391,10 @@ class FileBrowserActivity : AppCompatActivity() {
             isSyncFolderPickerMode -> {
                 // Re-apply sync FAB in case it was reset after orientation change
                 fabPaste.setOnClickListener { showConfirmSyncLocalFolderDialog() }
+            }
+            isAdvancedSyncFolderPickerMode -> {
+                // Re-apply advanced sync FAB in case it was reset after orientation change
+                fabPaste.setOnClickListener { showConfirmAdvancedSyncLocalFolderDialog() }
             }
             isLocationPickerMode -> {
                 fabPaste.setText(R.string.use_this_folder)
@@ -569,6 +577,26 @@ class FileBrowserActivity : AppCompatActivity() {
                 getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share)
             )
             .setIcon(R.drawable.ic_sync)
+            .setPositiveButton(R.string.btn_continue) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showConfirmAdvancedSyncLocalFolderDialog() {
+        val path = currentDir.absolutePath
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.confirm_source_folder)
+            .setMessage(
+                getString(R.string.use_folder_as_sync_source, path) +
+                getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share)
+            )
+            .setIcon(R.drawable.ic_sync_advanced)
             .setPositiveButton(R.string.btn_continue) { _, _ ->
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_LOCAL_PATH, path)
@@ -1256,6 +1284,18 @@ class FileBrowserActivity : AppCompatActivity() {
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener {
                 showConfirmSyncLocalFolderDialog()
+            }
+            return
+        }
+
+        // Advanced Sync folder picker mode: show New Folder + Use This Folder FAB
+        if (isAdvancedSyncFolderPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            fabPaste.setText(R.string.use_this_folder)
+            fabPaste.setIconResource(R.drawable.ic_sync_advanced)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener {
+                showConfirmAdvancedSyncLocalFolderDialog()
             }
             return
         }

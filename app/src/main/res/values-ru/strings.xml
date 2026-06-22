@@ -1080,6 +1080,214 @@ DLNA
     <string name="sync_title">Синхронизация папок</string>
     <string name="sync_subtitle">Резервное копирование на общие сетевые ресурсы</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Расширенная синхронизация
+</string>
+    <string name="advanced_sync_subtitle">
+Мгновенная синхронизация, только Wi-Fi и усиление; более
+</string>
+    <string name="opening_advanced_sync">
+⚡ Открытие расширенной синхронизации
+</string>
+    <string name="advanced_sync_empty_title">
+Нет расширенных профилей синхронизации
+</string>
+    <string name="advanced_sync_empty_desc">
+Создавайте профили, которые синхронизируются мгновенно при изменении файлов, с двусторонней синхронизацией, разрешением конфликтов и многим другим.
+</string>
+    <string name="sync_direction">
+Направление синхронизации
+</string>
+    <string name="sync_filtering">
+Фильтрация синхронизации
+</string>
+    <string name="destination">
+Место назначения
+</string>
+    <string name="conflict_handling">
+Разрешение конфликтов
+</string>
+    <string name="manual">
+Руководство
+</string>
+    <string name="select_destination">
+Выберите пункт назначения
+</string>
+    <string name="switch_to_twoway">
+Переключиться на двустороннюю связь
+</string>
+    <string name="move_files_upload">
+Перемещение файлов после загрузки
+</string>
+    <string name="move_files_upload_summary">
+Удалить исходные файлы после их загрузки в место назначения (вырезать вместо копирования)
+</string>
+    <string name="move_files_download">
+Перемещение файлов после загрузки
+</string>
+    <string name="move_files_download_summary">
+Удалить файлы назначения после их загрузки на телефон (вырезать вместо копирования)
+</string>
+    <string name="move_files_conflict">
+Переместить файлы нельзя использовать вместе с удалениями синхронизации. Удаление синхронизации отключено.
+</string>
+    <string name="backup_pref_advanced_sync">
+Профили расширенной синхронизации
+</string>
+    <string name="filter_all_types">
+Все типы
+</string>
+    <string name="filter_only">
+Только эти
+</string>
+    <string name="filter_skip">
+Пропустить это
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Расширения файлов
+</string>
+    <string name="filter_exclude_summary">
+Имена файлов, содержащие эти слова, пропускаются.
+</string>
+    <string name="filter_min_size">
+Минимальный размер файла
+</string>
+    <string name="filter_max_size">
+Максимальный размер файла
+</string>
+    <string name="filter_min_age">
+Минимальный возраст файла (дни)
+</string>
+    <string name="filter_max_age">
+Максимальный возраст файла (дни)
+</string>
+    <string name="filter_size_hint">
+например 10
+</string>
+    <string name="filter_age_hint">
+например 7
+</string>
+    <string name="size_unit_mb">
+МБ
+</string>
+    <string name="size_unit_gb">
+ГБ
+</string>
+    <string name="filter_exclude_label">
+Пропускать имена файлов, содержащие
+</string>
+    <string name="filter_exclude_hint">
+слова, разделенные запятыми
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Загрузить
+</string>
+    <string name="sync_direction_upload_desc">
+Отправка файлов с телефона в удаленное место назначения
+</string>
+    <string name="sync_direction_download">
+Скачать
+</string>
+    <string name="sync_direction_download_desc">
+Перетаскивание файлов из удаленного места на телефон
+</string>
+    <string name="sync_direction_twoway">
+двусторонний
+</string>
+    <string name="sync_direction_twoway_desc">
+Синхронизируйте обе стороны
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Пропустить (самый безопасный)
+</string>
+    <string name="conflict_strategy_newest">
+Используйте новейшие
+</string>
+    <string name="conflict_strategy_keep_local">
+Сохраняйте локальный
+</string>
+    <string name="conflict_strategy_keep_remote">
+Держитесь на расстоянии
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Мгновенная синхронизация
+</string>
+    <string name="trigger_instant_summary">
+Синхронизировать при изменении файлов в исходной папке
+</string>
+    <string name="network_wifi_only">
+Только по Wi-Fi
+</string>
+    <string name="network_wifi_only_summary">
+Прежде чем синхронизировать, дождитесь подключения к Wi-Fi.
+</string>
+    <string name="sync_deletions">
+Синхронизировать удаления
+</string>
+    <string name="sync_deletions_summary_upload">
+Файлы, удаленные из источника, удаляются из места назначения при следующей синхронизации. Файлы, добавленные вручную в место назначения, безопасны.
+</string>
+    <string name="sync_deletions_summary_download">
+Файлы, удаленные из места назначения, будут удалены с вашего телефона при следующей синхронизации. Другие файлы на вашем телефоне в безопасности.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Разрушительная операция
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ РАЗРУШИТЕЛЬНАЯ ДЕЙСТВИЯ\n
+\n
+При включенной функции «Синхронизация удалений»:\n
+• Файлы, которые вы удаляете из источника, НАВСЕГДА УДАЛЯЮТСЯ из места назначения при следующей синхронизации.\n
+• Затрагиваются только файлы, ранее загруженные с помощью этого профиля.\n
+• Файлы, помещенные в место назначения вручную, БЕЗОПАСНЫ (не отслеживаются).\n
+\n
+Переключитесь на двустороннюю синхронизацию, если вы не хотите удалять.\n
+\n
+Хотите продолжить?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ РАЗРУШИТЕЛЬНАЯ ДЕЙСТВИЯ\n
+\n
+При включенной функции «Синхронизация удалений»:\n
+• Файлы, удаленные из места назначения, НАВСЕГДА УДАЛЯЮТСЯ с вашего телефона при следующей синхронизации.\n
+• Затрагиваются только файлы, ранее загруженные этим профилем.\n
+• Другие файлы на вашем телефоне БЕЗОПАСНЫ (не отслеживаются).\n
+\n
+Переключитесь на двустороннюю синхронизацию, если вы не хотите удалять.\n
+\n
+Хотите продолжить?
+</string>
+    <string name="download_subfolders">
+Загрузить подпапки
+</string>
+    <string name="download_subfolders_summary">
+Рекурсивно загружать файлы из всех подпапок в месте назначения.
+</string>
+    <string name="trigger_scheduled">
+Запланировано
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Журнал конфликтов
+</string>
+    <string name="conflict_log_empty">
+Конфликтов не зафиксировано
+</string>
+    <string name="conflict_log_entry">
+%1$s — использована версия %2$s
+</string>
+
     <!-- Generic -->
     <string name="cancel">Отмена</string>
     <string name="close">Закрывать</string>
@@ -2952,6 +3160,12 @@ NFS-серверу запрещен доступ. Убедитесь, что п�
     <string name="saturday">Суббота</string>
     <string name="sunday">Воскресенье</string>
     <string name="select_sync_folder">Выберите папку синхронизации</string>
+    <string name="q5_minutes">
+5 минут
+</string>
+    <string name="q10_minutes">
+10 минут
+</string>
     <string name="q15_minutes">15 минут</string>
     <string name="q30_minutes">30 минут</string>
     <string name="q1_hour">1 час</string>

@@ -1080,6 +1080,214 @@ Paylaşımlar keşfedilemedi: %s
     <string name="sync_title">Klasör Senkronizasyonu</string>
     <string name="sync_subtitle">Ağ paylaşımlarına yedekleme</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Gelişmiş Senkronizasyon
+</string>
+    <string name="advanced_sync_subtitle">
+Anında senkronizasyon, yalnızca WiFi ve Daha
+</string>
+    <string name="opening_advanced_sync">
+⚡ Gelişmiş Senkronizasyonu Açma
+</string>
+    <string name="advanced_sync_empty_title">
+Gelişmiş Senkronizasyon Profili Yok
+</string>
+    <string name="advanced_sync_empty_desc">
+İki yönlü senkronizasyon, çakışma çözümü ve daha fazlasıyla, dosyalar değiştiğinde anında senkronize olan profiller oluşturun.
+</string>
+    <string name="sync_direction">
+Senkronizasyon yönü
+</string>
+    <string name="sync_filtering">
+Senkronizasyon filtreleme
+</string>
+    <string name="destination">
+Varış noktası
+</string>
+    <string name="conflict_handling">
+Çatışma yönetimi
+</string>
+    <string name="manual">
+Manuel
+</string>
+    <string name="select_destination">
+Hedef seçin
+</string>
+    <string name="switch_to_twoway">
+İki Yönlüye Geç
+</string>
+    <string name="move_files_upload">
+Yüklemeden sonra dosyaları taşı
+</string>
+    <string name="move_files_upload_summary">
+Kaynak dosyaları hedefe yüklendikten sonra silin (kopyalamak yerine kesin)
+</string>
+    <string name="move_files_download">
+İndirdikten sonra dosyaları taşı
+</string>
+    <string name="move_files_download_summary">
+Hedef dosyaları telefonunuza indirdikten sonra silin (kopyalamak yerine kesin)
+</string>
+    <string name="move_files_conflict">
+Dosyaları taşıma, Senkronizasyon silme işlemleriyle kullanılamaz. Senkronizasyon silmeleri devre dışı bırakıldı.
+</string>
+    <string name="backup_pref_advanced_sync">
+Gelişmiş Senkronizasyon profilleri
+</string>
+    <string name="filter_all_types">
+Tüm türler
+</string>
+    <string name="filter_only">
+Sadece bunlar
+</string>
+    <string name="filter_skip">
+Bunları atla
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Dosya uzantıları
+</string>
+    <string name="filter_exclude_summary">
+Bu kelimeleri içeren dosya adları atlanır
+</string>
+    <string name="filter_min_size">
+Minimum dosya boyutu
+</string>
+    <string name="filter_max_size">
+Maksimum dosya boyutu
+</string>
+    <string name="filter_min_age">
+Minimum dosya yaşı (gün)
+</string>
+    <string name="filter_max_age">
+Maksimum dosya yaşı (gün)
+</string>
+    <string name="filter_size_hint">
+örneğin 10
+</string>
+    <string name="filter_age_hint">
+örneğin 7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+Büyük Britanya
+</string>
+    <string name="filter_exclude_label">
+Aşağıdakileri içeren dosya adlarını atla:
+</string>
+    <string name="filter_exclude_hint">
+virgülle ayrılmış kelimeler
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Yüklemek
+</string>
+    <string name="sync_direction_upload_desc">
+Dosyaları telefondan uzak hedefe gönderin
+</string>
+    <string name="sync_direction_download">
+İndirmek
+</string>
+    <string name="sync_direction_download_desc">
+Dosyaları uzak hedeften telefona çekin
+</string>
+    <string name="sync_direction_twoway">
+İki yönlü
+</string>
+    <string name="sync_direction_twoway_desc">
+Her iki tarafı da senkronize tutun
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Atla (en güvenli)
+</string>
+    <string name="conflict_strategy_newest">
+En yeniyi kullan
+</string>
+    <string name="conflict_strategy_keep_local">
+Yereli koru
+</string>
+    <string name="conflict_strategy_keep_remote">
+Uzak dur
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Anında senkronizasyon
+</string>
+    <string name="trigger_instant_summary">
+Kaynak klasördeki dosyalar değiştiğinde senkronize et
+</string>
+    <string name="network_wifi_only">
+Yalnızca Wi-Fi\'da
+</string>
+    <string name="network_wifi_only_summary">
+Senkronizasyondan önce WiFi bağlantısını bekleyin
+</string>
+    <string name="sync_deletions">
+Silme işlemlerini senkronize et
+</string>
+    <string name="sync_deletions_summary_upload">
+Kaynaktan silinen dosyalar bir sonraki senkronizasyonda hedeften kaldırılır. Hedefe manuel olarak eklenen dosyalar güvenlidir.
+</string>
+    <string name="sync_deletions_summary_download">
+Hedeften silinen dosyalar bir sonraki senkronizasyonda telefonunuzdan kaldırılır. Telefonunuzdaki diğer dosyalar güvendedir.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Yıkıcı Operasyon
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ YOK EDİCİ İŞLEM\n
+\n
+\"Silme işlemlerini senkronize et\" etkinken:\n
+• Kaynaktan sildiğiniz dosyalar bir sonraki senkronizasyonda hedeften KALICI OLARAK SİLİNİR\n
+• Yalnızca bu profil tarafından önceden yüklenen dosyalar etkilenir\n
+• Hedefe manuel olarak yerleştirilen dosyalar GÜVENLİDİR (takip edilmez)\n
+\n
+Silme işlemlerini istemiyorsanız İki yönlü senkronizasyona geçin.\n
+\n
+Devam etmek istiyor musunuz?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ YOK EDİCİ İŞLEM\n
+\n
+\"Silme işlemlerini senkronize et\" etkinken:\n
+• Hedeften silinen dosyalar bir sonraki senkronizasyonda telefonunuzdan KALICI OLARAK SİLİR\n
+• Yalnızca bu profil tarafından önceden indirilen dosyalar etkilenir\n
+• Telefonunuzdaki diğer dosyalar GÜVENLİDİR (takip edilmez)\n
+\n
+Silme işlemlerini istemiyorsanız İki yönlü senkronizasyona geçin.\n
+\n
+Devam etmek istiyor musunuz?
+</string>
+    <string name="download_subfolders">
+Alt klasörleri indir
+</string>
+    <string name="download_subfolders_summary">
+Hedefteki tüm alt klasörlerdeki dosyaları yinelemeli olarak indirin
+</string>
+    <string name="trigger_scheduled">
+planlanmış
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Çatışma Günlüğü
+</string>
+    <string name="conflict_log_empty">
+Hiçbir çakışma kaydedilmedi
+</string>
+    <string name="conflict_log_entry">
+%1$s — %2$s sürümünü kullandı
+</string>
+
     <!-- Generic -->
     <string name="cancel">İptal etmek</string>
     <string name="close">Kapalı</string>
@@ -2952,6 +3160,12 @@ Son eki olan yeni bir klasör oluşturulur (örn. \"UFM Fotoğrafları (1)\").
     <string name="saturday">Cumartesi</string>
     <string name="sunday">Pazar</string>
     <string name="select_sync_folder">Senkronizasyon Klasörünü Seçin</string>
+    <string name="q5_minutes">
+5 dakika
+</string>
+    <string name="q10_minutes">
+10 dakika
+</string>
     <string name="q15_minutes">15 dakika</string>
     <string name="q30_minutes">30 dakika</string>
     <string name="q1_hour">1 saat</string>

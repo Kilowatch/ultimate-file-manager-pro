@@ -543,7 +543,7 @@ class StorageAdapter(
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
@@ -575,6 +575,7 @@ class StorageAdapter(
                     item.isOnlineStoragesTile -> za.kilowatch.ultimatefilemanager.util.DeviceUtils.getOnlineStoragesSubtitle(context)
                     item.isTipJarTile    -> context.getString(R.string.tip_jar_subtitle)
                     item.isSyncTile      -> context.getString(R.string.sync_subtitle)
+                    item.isAdvancedSyncTile -> context.getString(R.string.advanced_sync_subtitle)
                     item.isExtractsTile  -> item.subtitle ?: context.getString(R.string.browse_extracted_apps)
                     item.isFavoriteTile  -> if (item.favoriteIsFolder) context.getString(R.string.favorite_folder) else context.getString(R.string.favorite_file)
                     item.isRecycleBinTile -> item.subtitle ?: context.getString(R.string.recycle_bin_title)

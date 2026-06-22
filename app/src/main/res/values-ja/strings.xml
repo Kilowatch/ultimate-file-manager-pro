@@ -1080,6 +1080,214 @@ DLNA
     <string name="sync_title">フォルダーの同期</string>
     <string name="sync_subtitle">ネットワーク共有へのバックアップ</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+高度な同期
+</string>
+    <string name="advanced_sync_subtitle">
+インスタント同期、WiFi のみ、およびもっと
+</string>
+    <string name="opening_advanced_sync">
+⚡ 高度な同期を開く
+</string>
+    <string name="advanced_sync_empty_title">
+高度な同期プロファイルはありません
+</string>
+    <string name="advanced_sync_empty_desc">
+双方向同期、競合解決などを備え、ファイル変更時に即座に同期するプロファイルを作成します。
+</string>
+    <string name="sync_direction">
+同期方向
+</string>
+    <string name="sync_filtering">
+同期フィルタリング
+</string>
+    <string name="destination">
+行き先
+</string>
+    <string name="conflict_handling">
+競合の処理
+</string>
+    <string name="manual">
+マニュアル
+</string>
+    <string name="select_destination">
+目的地を選択
+</string>
+    <string name="switch_to_twoway">
+双方向に切り替える
+</string>
+    <string name="move_files_upload">
+アップロード後にファイルを移動する
+</string>
+    <string name="move_files_upload_summary">
+ソース ファイルが宛先にアップロードされた後に削除します (コピーではなく切り取り)
+</string>
+    <string name="move_files_download">
+ダウンロード後にファイルを移動する
+</string>
+    <string name="move_files_download_summary">
+携帯電話にダウンロードした後、宛先ファイルを削除します（コピーではなく切り取り）
+</string>
+    <string name="move_files_conflict">
+ファイルの移動は同期削除では使用できません。同期の削除は無効になっています。
+</string>
+    <string name="backup_pref_advanced_sync">
+高度な同期プロファイル
+</string>
+    <string name="filter_all_types">
+全種類
+</string>
+    <string name="filter_only">
+これらだけ
+</string>
+    <string name="filter_skip">
+これらをスキップしてください
+</string>
+    <string name="filter_extensions_hint">
+jpg、png、mp4
+</string>
+    <string name="filter_extensions_label">
+ファイル拡張子
+</string>
+    <string name="filter_exclude_summary">
+これらの単語を含むファイル名はスキップされます
+</string>
+    <string name="filter_min_size">
+最小ファイルサイズ
+</string>
+    <string name="filter_max_size">
+最大ファイルサイズ
+</string>
+    <string name="filter_min_age">
+ファイルの最小保存期間 (日)
+</string>
+    <string name="filter_max_age">
+ファイルの最大保存期間 (日)
+</string>
+    <string name="filter_size_hint">
+例えば10
+</string>
+    <string name="filter_age_hint">
+例えば7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+GB
+</string>
+    <string name="filter_exclude_label">
+を含むファイル名をスキップします。
+</string>
+    <string name="filter_exclude_hint">
+カンマ区切りの単語
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+アップロード
+</string>
+    <string name="sync_direction_upload_desc">
+電話機からリモートの宛先にファイルを送信する
+</string>
+    <string name="sync_direction_download">
+ダウンロード
+</string>
+    <string name="sync_direction_download_desc">
+リモート宛先から電話にファイルをプルする
+</string>
+    <string name="sync_direction_twoway">
+双方向
+</string>
+    <string name="sync_direction_twoway_desc">
+双方の同期を保つ
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+スキップ (最も安全)
+</string>
+    <string name="conflict_strategy_newest">
+最新のものを使用する
+</string>
+    <string name="conflict_strategy_keep_local">
+ローカルに保つ
+</string>
+    <string name="conflict_strategy_keep_remote">
+リモートを保つ
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+インスタント同期
+</string>
+    <string name="trigger_instant_summary">
+ソースフォルダー内のファイルが変更されたときに同期する
+</string>
+    <string name="network_wifi_only">
+WiFi のみ
+</string>
+    <string name="network_wifi_only_summary">
+同期する前に WiFi 接続を待ちます
+</string>
+    <string name="sync_deletions">
+同期の削除
+</string>
+    <string name="sync_deletions_summary_upload">
+ソースから削除されたファイルは、次回の同期時に宛先から削除されます。宛先に手動で追加されたファイルは安全です。
+</string>
+    <string name="sync_deletions_summary_download">
+宛先から削除されたファイルは、次回の同期時に携帯電話から削除されます。携帯電話上の他のファイルは安全です。
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️破壊作戦
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ 破壊的な操作\n
+\n
+「同期の削除」が有効な場合:\n
+• ソースから削除したファイルは、次回の同期時に宛先から完全に削除されます\n
+• このプロファイルによって以前にアップロードされたファイルのみが影響を受けます\n
+• 宛先に手動で配置されたファイルは安全です (追跡されません)\n
+\n
+削除したくない場合は、双方向同期に切り替えてください。\n
+\n
+続行しますか?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ 破壊的な操作\n
+\n
+「同期の削除」が有効な場合:\n
+• 宛先から削除されたファイルは、次回の同期時に携帯電話から完全に削除されます\n
+• このプロファイルによって以前にダウンロードされたファイルのみが影響を受けます\n
+• 携帯電話上の他のファイルは安全です (追跡されません)\n
+\n
+削除したくない場合は、双方向同期に切り替えてください。\n
+\n
+続行しますか?
+</string>
+    <string name="download_subfolders">
+サブフォルダーをダウンロードする
+</string>
+    <string name="download_subfolders_summary">
+宛先内のすべてのサブフォルダーからファイルを再帰的にダウンロードします
+</string>
+    <string name="trigger_scheduled">
+予定されている
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+競合ログ
+</string>
+    <string name="conflict_log_empty">
+競合は記録されませんでした
+</string>
+    <string name="conflict_log_entry">
+%1$s - 使用した %2$s バージョン
+</string>
+
     <!-- Generic -->
     <string name="cancel">キャンセル</string>
     <string name="close">閉じる</string>
@@ -2952,6 +3160,12 @@ UFM に保存
     <string name="saturday">土曜日</string>
     <string name="sunday">日曜日</string>
     <string name="select_sync_folder">同期フォルダーを選択</string>
+    <string name="q5_minutes">
+5分
+</string>
+    <string name="q10_minutes">
+10分
+</string>
     <string name="q15_minutes">15分</string>
     <string name="q30_minutes">30分</string>
     <string name="q1_hour">1時間</string>

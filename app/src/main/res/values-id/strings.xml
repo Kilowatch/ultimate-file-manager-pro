@@ -1080,6 +1080,214 @@ Gagal menemukan pembagian: %s
     <string name="sync_title">Sinkronisasi Folder</string>
     <string name="sync_subtitle">Cadangan ke berbagi jaringan</string>
 
+    <!-- Advanced Sync -->
+    <string name="advanced_sync_title">
+Sinkronisasi Tingkat Lanjut
+</string>
+    <string name="advanced_sync_subtitle">
+Sinkronisasi instan, hanya WiFi &amp; lagi
+</string>
+    <string name="opening_advanced_sync">
+⚡ Membuka Sinkronisasi Lanjutan
+</string>
+    <string name="advanced_sync_empty_title">
+Tidak Ada Profil Sinkronisasi Lanjutan
+</string>
+    <string name="advanced_sync_empty_desc">
+Buat profil yang disinkronkan secara instan saat file diubah, dengan sinkronisasi dua arah, resolusi konflik, dan banyak lagi.
+</string>
+    <string name="sync_direction">
+Sinkronisasi arah
+</string>
+    <string name="sync_filtering">
+Pemfilteran sinkronisasi
+</string>
+    <string name="destination">
+Tujuan
+</string>
+    <string name="conflict_handling">
+Penanganan konflik
+</string>
+    <string name="manual">
+petunjuk
+</string>
+    <string name="select_destination">
+Pilih tujuan
+</string>
+    <string name="switch_to_twoway">
+Beralih ke Dua arah
+</string>
+    <string name="move_files_upload">
+Pindahkan file setelah diunggah
+</string>
+    <string name="move_files_upload_summary">
+Hapus file sumber setelah diunggah ke tujuan (potong, bukan salin)
+</string>
+    <string name="move_files_download">
+Pindahkan file setelah diunduh
+</string>
+    <string name="move_files_download_summary">
+Hapus file tujuan setelah diunduh ke ponsel Anda (potong, bukan salin)
+</string>
+    <string name="move_files_conflict">
+Memindahkan file tidak dapat digunakan dengan penghapusan Sinkronisasi. Penghapusan sinkronisasi telah dinonaktifkan.
+</string>
+    <string name="backup_pref_advanced_sync">
+Profil Sinkronisasi Lanjutan
+</string>
+    <string name="filter_all_types">
+Semua tipe
+</string>
+    <string name="filter_only">
+Hanya ini
+</string>
+    <string name="filter_skip">
+Lewati ini
+</string>
+    <string name="filter_extensions_hint">
+jpg, png, mp4
+</string>
+    <string name="filter_extensions_label">
+Ekstensi file
+</string>
+    <string name="filter_exclude_summary">
+Nama file yang mengandung kata-kata ini dilewati
+</string>
+    <string name="filter_min_size">
+Ukuran file minimal
+</string>
+    <string name="filter_max_size">
+Ukuran file maksimal
+</string>
+    <string name="filter_min_age">
+Usia file minimal (hari)
+</string>
+    <string name="filter_max_age">
+Usia file maksimal (hari)
+</string>
+    <string name="filter_size_hint">
+misalnya 10
+</string>
+    <string name="filter_age_hint">
+misalnya 7
+</string>
+    <string name="size_unit_mb">
+MB
+</string>
+    <string name="size_unit_gb">
+GB
+</string>
+    <string name="filter_exclude_label">
+Lewati nama file yang mengandung
+</string>
+    <string name="filter_exclude_hint">
+kata-kata yang dipisahkan koma
+</string>
+
+    <!-- Advanced Sync Directions -->
+    <string name="sync_direction_upload">
+Mengunggah
+</string>
+    <string name="sync_direction_upload_desc">
+Kirim file dari ponsel ke tujuan jarak jauh
+</string>
+    <string name="sync_direction_download">
+Unduh
+</string>
+    <string name="sync_direction_download_desc">
+Tarik file dari tujuan jarak jauh ke telepon
+</string>
+    <string name="sync_direction_twoway">
+Dua arah
+</string>
+    <string name="sync_direction_twoway_desc">
+Jaga agar kedua sisi tetap sinkron
+</string>
+
+    <!-- Advanced Sync Conflict Strategies -->
+    <string name="conflict_strategy_skip">
+Lewati (paling aman)
+</string>
+    <string name="conflict_strategy_newest">
+Gunakan yang terbaru
+</string>
+    <string name="conflict_strategy_keep_local">
+Tetap lokal
+</string>
+    <string name="conflict_strategy_keep_remote">
+Tetap jauh
+</string>
+
+    <!-- Advanced Sync Triggers & Constraints -->
+    <string name="trigger_instant">
+Sinkronisasi instan
+</string>
+    <string name="trigger_instant_summary">
+Sinkronkan ketika file berubah di folder sumber
+</string>
+    <string name="network_wifi_only">
+Hanya di WiFi
+</string>
+    <string name="network_wifi_only_summary">
+Tunggu koneksi WiFi sebelum menyinkronkan
+</string>
+    <string name="sync_deletions">
+Sinkronkan penghapusan
+</string>
+    <string name="sync_deletions_summary_upload">
+File yang dihapus dari sumber akan dihapus dari tujuan pada sinkronisasi berikutnya. File yang ditambahkan secara manual ke tujuan aman.
+</string>
+    <string name="sync_deletions_summary_download">
+File yang dihapus dari tujuan akan dihapus dari ponsel Anda pada sinkronisasi berikutnya. File lain di ponsel Anda aman.
+</string>
+    <string name="sync_deletions_warning_title">
+⚠️ Operasi Merusak
+</string>
+    <string name="sync_deletions_warning_upload">
+⚠️ OPERASI DESTRUKTIF\n
+\n
+Dengan \"Sinkronisasi penghapusan\" diaktifkan:\n
+• File yang Anda hapus dari sumber DIHAPUS SECARA PERMANEN dari tujuan pada sinkronisasi berikutnya\n
+• Hanya file yang sebelumnya diunggah oleh profil ini yang terpengaruh\n
+• File yang ditempatkan secara manual di tujuan AMAN (tidak terlacak)\n
+\n
+Beralih ke Sinkronisasi dua arah jika Anda tidak ingin dihapus.\n
+\n
+Apakah Anda ingin melanjutkan?
+</string>
+    <string name="sync_deletions_warning_download">
+⚠️ OPERASI DESTRUKTIF\n
+\n
+Dengan \"Sinkronisasi penghapusan\" diaktifkan:\n
+• File yang dihapus dari tujuan DIHAPUS SECARA PERMANEN dari ponsel Anda pada sinkronisasi berikutnya\n
+• Hanya file yang sebelumnya diunduh oleh profil ini yang terpengaruh\n
+• File lain di ponsel Anda AMAN (tidak terlacak)\n
+\n
+Beralih ke Sinkronisasi dua arah jika Anda tidak ingin dihapus.\n
+\n
+Apakah Anda ingin melanjutkan?
+</string>
+    <string name="download_subfolders">
+Unduh subfolder
+</string>
+    <string name="download_subfolders_summary">
+Mengunduh file secara rekursif dari semua subfolder di tujuan
+</string>
+    <string name="trigger_scheduled">
+Dijadwalkan
+</string>
+
+    <!-- Advanced Sync Conflict Log -->
+    <string name="conflict_log_title">
+Catatan Konflik
+</string>
+    <string name="conflict_log_empty">
+Tidak ada konflik yang tercatat
+</string>
+    <string name="conflict_log_entry">
+%1$s — versi %2$s yang digunakan
+</string>
+
     <!-- Generic -->
     <string name="cancel">Membatalkan</string>
     <string name="close">Menutup</string>
@@ -2952,6 +3160,12 @@ Folder baru dengan akhiran angka telah dibuat (misalnya \"Foto UFM (1)\").
     <string name="saturday">Sabtu</string>
     <string name="sunday">Minggu</string>
     <string name="select_sync_folder">Pilih Sinkronkan Folder</string>
+    <string name="q5_minutes">
+5 menit
+</string>
+    <string name="q10_minutes">
+10 menit
+</string>
     <string name="q15_minutes">15 menit</string>
     <string name="q30_minutes">30 menit</string>
     <string name="q1_hour">1 jam</string>

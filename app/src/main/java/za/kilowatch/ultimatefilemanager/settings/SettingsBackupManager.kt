@@ -328,6 +328,9 @@ object SettingsBackupManager {
             items.add(BackupItem(ct.id, "custom_tiles", ct.title, extra))
         }
 
+        // Advanced Sync profiles
+        items.add(BackupItem("advanced_sync_profiles", "advanced_sync", context.getString(R.string.backup_pref_advanced_sync), ""))
+
         return items
     }
 
@@ -473,6 +476,16 @@ object SettingsBackupManager {
             // Custom tiles (version 2+) — only export the tiles the user selected
             val customTilesArr = za.kilowatch.ultimatefilemanager.storage.CustomTileManager.getAllCustomTileDataForExport(context, selectedIds)
             root.put("custom_tiles", customTilesArr)
+
+            // Advanced Sync profiles — export the full JSON file content
+            if (selectedIds.contains("advanced_sync_profiles")) {
+                val advSyncFile = java.io.File(context.filesDir, "advanced_sync_profiles.json")
+                if (advSyncFile.exists()) {
+                    root.put("advanced_sync_profiles", advSyncFile.readText())
+                } else {
+                    root.put("advanced_sync_profiles", "[]")
+                }
+            }
 
             // Embed icon image files as base64 for cross-device portability
             val iconFilesObj = JSONObject()
@@ -623,6 +636,13 @@ object SettingsBackupManager {
                 val extra = obj.optString("subtitle", "").ifEmpty { "$childCount tiles" }
                 customTiles.add(BackupItem(id, "custom_tiles", title, extra))
             }
+        }
+
+        // Advanced Sync profiles — show in import preview if present
+        val advSyncStr = root.optString("advanced_sync_profiles", "")
+        if (advSyncStr.isNotEmpty()) {
+            sharedPrefs.add(BackupItem("advanced_sync_profiles", "shared_preferences",
+                context.getString(R.string.backup_pref_advanced_sync), ""))
         }
 
         return BackupDetails(sharedPrefs, shares, storages, ftpProfiles, renames, smartSortConfigs, customTiles, jsonString)
@@ -813,6 +833,13 @@ object SettingsBackupManager {
                     // absolute paths stored in the prefs JSON need to be rewritten.
                     fixIconPathsInPrefs(context, "tile_icons_prefs", "tile_icons", "tile_icons")
                     fixIconPathsInPrefs(context, "icon_customization_prefs", "icon_overrides", "custom_icons")
+                }
+
+                // Advanced Sync profiles — restore the full JSON file content
+                val advSyncStr = root.optString("advanced_sync_profiles", "")
+                if (advSyncStr.isNotEmpty()) {
+                    val advSyncFile = java.io.File(context.filesDir, "advanced_sync_profiles.json")
+                    advSyncFile.writeText(advSyncStr)
                 }
 
                 true
