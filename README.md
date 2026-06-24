@@ -32,7 +32,7 @@ If you require Google Drive, OneDrive, or Dropbox integrations, please download 
 
 ## 📦 Pre-compiled APKs
 
-Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Release](https://github.com/Kilowatch/UFM/releases).
+Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Release](https://github.com/Kilowatch/ultimate-file-manager-pro/releases).
 
 | Variant | APK File |
 |---------|----------|
