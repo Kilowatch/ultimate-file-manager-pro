@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. Uygulama Ne Yapar?</string>
     <string name="tc_s3_title">3. Risk ve Sorumluluk - Dürüst Gerçek</string>
     <string name="tc_s3a_title">3a. Uygulama İçi Satın Almalar ve Faturalandırma</string>
+    <string name="tc_s3b_title">
+3b. RClone Bulut Entegrasyonu
+</string>
     <string name="tc_s4_title">4. Sorumluluklarınız</string>
     <string name="tc_s5_title">5. İhtiyacımız Olan İzinler ve Nedeni</string>
     <string name="tc_s6_title">6. Kim Neye Sahip?</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">Bahşiş satın alımları isteğe bağlıdır ve Google Play tarafından işlenir. Geri ödeme talepleri, geri ödeme politikalarına ve Güney Afrika Tüketiciyi Koruma Yasası da dahil olmak üzere geçerli yasalara uygun olarak doğrudan Google Play tarafından gerçekleştirilir. KiloWatch geri ödemeleri bağımsız olarak işlemez.</string>
     <string name="tc_s3a_recurring">Abonelik yok. Her ipucu tek seferlik bir sarf malzemesi satın alımıdır. Hiçbir zaman otomatik olarak ücretlendirilmeyeceksiniz.</string>
     <string name="tc_s3a_no_obligation">Bahşiş tamamen isteğe bağlıdır. Tüm özellikler sonsuza kadar ücretsiz olarak kullanılabilir durumda kalır.</string>
+
+    <string name="tc_s3b_body">
+Uygulama, entegre RClone arka ucunu kullanarak çok çeşitli üçüncü taraf bulut depolama sağlayıcılarına bağlanmayı destekler. Bu özelliği kullandığınızda aşağıdaki koşullar geçerli olur:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Doğrudan API İletişimi
+</item>
+        <item>
+Kimlik Bilgisi Güvenliği
+</item>
+        <item>
+Üçüncü Taraf Şartları
+</item>
+        <item>
+Bağlantı Garantisi Yok
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+RClone depolama sağlayıcılarına (Filen, Mega ve diğerleri gibi) yönelik tüm ağ istekleri doğrudan cihazınızdan ilgili sağlayıcının uç noktalarına gerçekleştirilir. KiloWatch sunucularından hiçbir veri geçmez.
+</item>
+        <item>
+RClone yapılandırma profilleriniz ve şifreleriniz, RClone RC arka ucu aracılığıyla cihazda şifrelenir ve uygulamanın özel deposunda rclone_encrypted.json olarak yerel olarak depolanır. Bu dosyayı korumak için cihazınızın güvenliğinin sağlanmasından yalnızca siz sorumlusunuz.
+</item>
+        <item>
+Herhangi bir RClone entegre bulut depolama alanı kullanımınız, ilgili bulut sağlayıcının hizmet şartlarına ve gizlilik politikasına tabidir. Bu uygulama aracılığıyla dosyalara erişirken şartlarına uymalısınız.
+</item>
+        <item>
+Bulut sağlayıcı API\'leri ve uç noktaları bildirimde bulunmaksızın değişebileceğinden, belirli bir RClone sağlayıcısının erişilebilir kalacağını veya kesintisiz çalışacağını garanti edemeyiz.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Bulut sürücülere RClone aracılığıyla bağlanma doğrudan telefonunuzdan veya TV\'nizden yapılır. Bulut dosyalarınızı veya şifrelerinizi asla görmeyiz. Şifreleriniz telefonunuzda şifrelenir ve yapılandırdığınız bulut sağlayıcının şartlarına tabi olursunuz.
+</string>
 
     <string name="tc_s4_body">Bu uygulamayı kullanmak, yanınızda birkaç basit sorumluluğu da beraberinde getirir.</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu
     <string name="pp_s4_title">4. İzinler ve Neden Onlara İhtiyacımız Var</string>
     <string name="pp_s5_title">5. Veri Güvenliği</string>
     <string name="pp_s6_title">6. Google API Hizmetleri - Sınırlı Kullanım Açıklaması</string>
+    <string name="pp_s6b_title">
+6b. RClone Bulut Entegrasyonu — Gizlilik ve amp; Uyumluluk
+</string>
     <string name="pp_s7_title">7. Veri Paylaşımı ve Üçüncü Taraflar</string>
     <string name="pp_s8_title">8. Verileri Ne Kadar Süre Saklıyoruz</string>
     <string name="pp_s9_title">9. Haklarınız</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu
     <string name="pp_s6_permitted_heading">Google Kullanıcı Verilerinin İzin Verilen Kullanımları</string>
     <string name="pp_s6_prohibited_heading">Yasaklanmış Kullanımlar — Google Kullanıcı Verilerini Asla Kullanmayız</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro, yalnızca seçtiğiniz dosya yönetimi işlemlerini gerçekleştirmek için gereken minimum Google Drive izinlerini ister. Hiçbir zaman Gmail\'inize, Google Kişilerinize, Google Takviminize veya diğer Google hizmeti verilerinize erişim talebinde bulunmayız.</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro, 100\'den fazla bulut depolama sağlayıcısına bağlanmayı desteklemek için RClone arka ucunu entegre eder. Tüm yapılandırmalar ve kimlik bilgileri doğrudan cihazınızda yönetilir.
+</string>
+    <string name="pp_s6b_intro">
+Ultimate File Manager Pro\'da RClone depolama entegrasyonunu kullandığınızda uygulama, bulut depolama kimlik bilgilerinizi ve dosya meta verilerinizi yerel olarak işler. Uygulama, seçtiğiniz bulut depolama sağlayıcısının API uç noktasıyla doğrudan iletişim kurar. Bu bağlantıya aracılık etmiyoruz ve bulut kimlik bilgilerinizi veya dosyalarınızı asla toplamıyor, saklamıyor veya sunucularımıza aktarmıyoruz.
+</string>
+    <string name="pp_s6b_local_heading">
+Yerel Kimlik Bilgisi Şifrelemesi
+</string>
+    <string name="pp_s6b_local_body">
+RClone depolama yapılandırmaları için girilen tüm parolalar, belirteçler veya API anahtarları, RClone RC arka ucu aracılığıyla cihaz içi şifreleme kullanılarak gizlenir ve şifrelenir ve uygulamanın özel dizininde rclone_encrypted.json olarak güvenli bir şekilde depolanır. Bu dosyaya diğer uygulamalar tarafından erişilemez ve uygulamayı kaldırdığınızda kalıcı olarak silinir.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Bulut Verilerinin İzin Verilen Kullanımları
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Uzaktan Tarama: Uzak bulut depolama içeriklerinizi görüntülemek için klasör yapılarını ve dosya meta verilerini alma.
+</item>
+        <item>
+Dosya İşlemleri: Açık isteğiniz üzerine uzak depolama alanınızdaki dosyaların yüklenmesi, indirilmesi, yeniden adlandırılması, kopyalanması, taşınması veya silinmesi.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">Kişisel bilgilerinizi veya Google kullanıcı verilerinizi, Ultimate File Manager Pro\'nun dosya yönetimi özelliklerinin sağlanmasıyla doğrudan ilgili olmayan herhangi bir amaç için herhangi bir üçüncü tarafa satmıyoruz, kiralamıyoruz, takas etmiyoruz, aktarmıyoruz veya ifşa etmiyoruz (tam nokta).</string>
     <string name="pp_s7_third_heading">Kullandığımız Üçüncü Taraf Hizmetleri</string>

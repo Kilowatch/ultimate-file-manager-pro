@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. アプリの機能</string>
     <string name="tc_s3_title">3. リスクと責任 — 正直な真実</string>
     <string name="tc_s3a_title">3a.アプリ内購入と請求</string>
+    <string name="tc_s3b_title">
+3b. RClone クラウド統合
+</string>
     <string name="tc_s4_title">4. あなたの責任</string>
     <string name="tc_s5_title">5. 必要な権限とその理由</string>
     <string name="tc_s6_title">6. 誰が何を所有するか</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">チップの購入は任意であり、Google Play によって処理されます。払い戻しリクエストは、Google Play の払い戻しポリシーおよび適用法 (南アフリカ消費者保護法など) に従って Google Play によって直接処理されます。 KiloWatch は独自に返金を処理しません。</string>
     <string name="tc_s3a_recurring">購読はありません。すべてのチップは 1 回限りの消耗品です。自動的に請求されることはありません。</string>
     <string name="tc_s3a_no_obligation">チップは完全に任意です。すべての機能は無料で永久に利用できます。</string>
+
+    <string name="tc_s3b_body">
+このアプリは、統合された RClone バックエンドを使用して、幅広いサードパーティのクラウド ストレージ プロバイダーへの接続をサポートします。この機能を使用する場合、次の条件が適用されます。
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+直接API通信
+</item>
+        <item>
+資格情報のセキュリティ
+</item>
+        <item>
+サードパーティ規約
+</item>
+        <item>
+接続保証なし
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+RClone ストレージ プロバイダー (Filen、Mega など) へのすべてのネットワーク リクエストは、デバイスから各プロバイダーのエンドポイントに対して直接実行されます。 KiloWatch サーバーを通過するデータはありません。
+</item>
+        <item>
+RClone 構成プロファイルとパスワードは、RClone RC バックエンドを介してデバイス上で暗号化され、アプリのプライベート ストレージに rclone_encrypted.json としてローカルに保存されます。このファイルを保護するためにデバイスをセキュリティで保護するのは、お客様自身の責任です。
+</item>
+        <item>
+RClone に統合されたクラウド ストレージの使用には、それぞれのクラウド プロバイダーのサービス利用規約とプライバシー ポリシーが適用されます。このアプリを通じてファイルにアクセスする場合は、その規約に従う必要があります。
+</item>
+        <item>
+クラウド プロバイダーの API とエンドポイントは予告なく変更される可能性があるため、特定の RClone プロバイダーが引き続きアクセス可能であること、または中断されずに機能することを保証することはできません。
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+RClone を介したクラウド ドライブへの接続は、携帯電話またはテレビから直接行われます。私たちがあなたのクラウド ファイルやパスワードを見ることはありません。パスワードは携帯電話上で暗号化されており、設定したクラウド プロバイダーの規約に従うことになります。
+</string>
 
     <string name="tc_s4_body">このアプリを使用するには、ユーザー側にいくつかの簡単な責任が伴います。</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内�
     <string name="pp_s4_title">4. 権限とそれらが必要な理由</string>
     <string name="pp_s5_title">5. データセキュリティ</string>
     <string name="pp_s6_title">6. Google API サービス — 限定的使用の開示</string>
+    <string name="pp_s6b_title">
+6b. RClone クラウド統合 — プライバシーとセキュリティコンプライアンス
+</string>
     <string name="pp_s7_title">7. データ共有とサードパーティ</string>
     <string name="pp_s8_title">8. データの保存期間</string>
     <string name="pp_s9_title">9. お客様の権利</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内�
     <string name="pp_s6_permitted_heading">Google ユーザーデータの許可された使用</string>
     <string name="pp_s6_prohibited_heading">禁止されている用途 - Google では Google ユーザー データを次の目的で使用することはありません</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro は、選択したファイル管理アクションを実行するために必要な最小限の Google ドライブ権限のみを要求します。当社は、お客様の Gmail、Google コンタクト、Google カレンダー、またはその他の Google サービス データへのアクセスを要求することはありません。</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro は RClone バックエンドを統合し、100 を超えるクラウド ストレージ プロバイダーへの接続をサポートします。すべての構成と認証情報はデバイス上で直接管理されます。
+</string>
+    <string name="pp_s6b_intro">
+Ultimate File Manager Pro で RClone ストレージ統合を使用すると、アプリはクラウド ストレージの認証情報とファイル メタデータをローカルで処理します。アプリは、選択したクラウド ストレージ プロバイダーの API エンドポイントと直接通信します。当社はこの接続を仲介せず、お客様のクラウド認証情報やファイルを収集、保存、または当社のサーバーに送信することはありません。
+</string>
+    <string name="pp_s6b_local_heading">
+ローカル認証情報の暗号化
+</string>
+    <string name="pp_s6b_local_body">
+RClone ストレージ構成に入力されたパスワード、トークン、または API キーはすべて、RClone RC バックエンド経由でデバイス上の暗号化を使用して隠蔽および暗号化され、アプリのプライベート ディレクトリに rclone_encrypted.json として安全に保存されます。このファイルは他のアプリケーションからアクセスできず、アプリをアンインストールすると完全に削除されます。
+</string>
+    <string name="pp_s6b_permitted_heading">
+クラウドデータの許可された用途
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+リモート ブラウズ: フォルダー構造とファイル メタデータを取得して、リモート クラウド ストレージのコンテンツを表示します。
+</item>
+        <item>
+ファイル操作: 明示的な要求に応じて、リモート ストレージ上のファイルをアップロード、ダウンロード、名前変更、コピー、移動、または削除します。
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">当社は、Ultimate File Manager Pro のファイル管理機能の提供に直接関係しない目的で、お客様の個人情報または Google ユーザー データを第三者に販売、賃貸、取引、譲渡、開示することはありません。</string>
     <string name="pp_s7_third_heading">当社が使用するサードパーティのサービス</string>

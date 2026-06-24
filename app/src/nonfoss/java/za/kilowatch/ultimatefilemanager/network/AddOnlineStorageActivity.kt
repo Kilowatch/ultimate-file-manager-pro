@@ -79,6 +79,7 @@ class AddOnlineStorageActivity : AppCompatActivity() {
         toggleGroup1.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
                 toggleGroup2.clearChecked()
+                toggleGroup3.clearChecked()
                 toggleGroup4.clearChecked()
                 if (checkedId == R.id.chipOneDrive) {
                     btnAuthenticate.setText(R.string.add_online_storage_auth_onedrive)
@@ -165,6 +166,17 @@ class AddOnlineStorageActivity : AppCompatActivity() {
                 toggleGroup1.clearChecked()
                 btnAuthenticate.setText(R.string.add_online_storage_auth_onedrive) // will be overridden on first tap
             }
+        }
+
+        // TV Focus Routing Reinforcement
+        if (isTv) {
+            findViewById<View?>(R.id.chipAwsS3)?.nextFocusDownId = R.id.chipRclone
+            findViewById<View?>(R.id.chipIDriveE2)?.nextFocusDownId = R.id.chipRclone
+            findViewById<View?>(R.id.chipRclone)?.apply {
+                nextFocusUpId = R.id.chipIDriveE2
+                nextFocusDownId = R.id.btnAuthenticate
+            }
+            findViewById<View?>(R.id.btnAuthenticate)?.nextFocusUpId = R.id.chipRclone
         }
     }
 

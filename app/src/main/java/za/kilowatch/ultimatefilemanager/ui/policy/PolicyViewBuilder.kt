@@ -84,6 +84,22 @@ object PolicyViewBuilder {
                 AlertStyle.INFO))
         })
 
+        // Section 3b — RClone Cloud Integration
+        add(sectionCard(context) {
+            addView(sectionTitle(context, context.getString(R.string.tc_s3b_title), "☁️"))
+            addView(bodyText(context, context.getString(R.string.tc_s3b_body)))
+            addView(spacer(context, if (isTv) 12 else 8))
+            val labels = context.resources.getStringArray(R.array.tc_rclone_labels)
+            val details = context.resources.getStringArray(R.array.tc_rclone_details)
+            for (i in 0 until minOf(labels.size, details.size)) {
+                addView(tableRow(context, labels[i], details[i], i % 2 == 1))
+            }
+            addView(spacer(context, 8))
+            addView(alertBox(context, "💡", context.getString(R.string.plainenglish_summary),
+                context.getString(R.string.tc_s3b_summary),
+                AlertStyle.INFO))
+        })
+
         // Section 4 — Responsibilities
         add(sectionCard(context) {
             addView(sectionTitle(context, context.getString(R.string.tc_s4_title), "✅"))
@@ -307,6 +323,23 @@ object PolicyViewBuilder {
             }
             addView(spacer(context, 8))
             addView(bodyText(context, context.getString(R.string.pp_s6_minimum_access)))
+        })
+
+        // Section 6b — RClone Compliance / Integration
+        add(sectionCard(context) {
+            addView(sectionTitle(context, context.getString(R.string.pp_s6b_title), "☁️"))
+            addView(alertBox(context, "☁️", context.getString(R.string.rclone_title),
+                context.getString(R.string.pp_s6b_compliance_banner), AlertStyle.INFO))
+            addView(spacer(context, 12))
+            addView(bodyText(context, context.getString(R.string.pp_s6b_intro)))
+            addView(spacer(context, 12))
+            addView(subHeading(context, context.getString(R.string.pp_s6b_local_heading)))
+            addView(bodyText(context, context.getString(R.string.pp_s6b_local_body)))
+            addView(spacer(context, 12))
+            addView(subHeading(context, context.getString(R.string.pp_s6b_permitted_heading)))
+            context.resources.getStringArray(R.array.pp_s6b_permitted).forEach { item ->
+                addView(checkRow(context, item, CheckStyle.CHECK))
+            }
         })
 
         // Section 7 — Data sharing

@@ -66,8 +66,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="40dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="40dp">
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
 
             <!-- Provider selection — toggle group populated dynamically -->
             <TextView
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:singleSelection="true"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="12dp"
                 app:selectionRequired="false" />
 
             <!-- Dynamic Fields Card -->
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/tv_btn_default_surface"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
@@ -102,14 +102,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="16dp">
 
                     <!-- Storage Name (display name) — always shown when fields are visible -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="12dp"
                         android:hint="@string/rclone_field_storage_name"
                         app:boxBackgroundColor="@android:color/transparent"
                         app:hintTextColor="@color/tv_text_hint"
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="end"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="12dp">
 
                 <Button
                     android:id="@+id/btnTest"

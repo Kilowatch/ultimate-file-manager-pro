@@ -120,10 +120,17 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             }
             findViewById<View?>(R.id.chipAwsS3)?.apply {
                 nextFocusUpId = R.id.chipWebDav
+                nextFocusDownId = R.id.chipRclone
             }
             findViewById<View?>(R.id.chipIDriveE2)?.apply {
                 nextFocusUpId = R.id.chipWebDav
+                nextFocusDownId = R.id.chipRclone
             }
+            findViewById<View?>(R.id.chipRclone)?.apply {
+                nextFocusUpId = R.id.chipIDriveE2
+                nextFocusDownId = R.id.btnAuthenticate
+            }
+            findViewById<View?>(R.id.btnAuthenticate)?.nextFocusUpId = R.id.chipRclone
         }
 
         btnAuthenticate.setOnClickListener {

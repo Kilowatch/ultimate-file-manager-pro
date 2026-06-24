@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. Que fait l\'application</string>
     <string name="tc_s3_title">3. Risque et responsabilité – La vérité honnête</string>
     <string name="tc_s3a_title">3a. Achats et facturation intégrés</string>
+    <string name="tc_s3b_title">
+3b. Intégration RClone Cloud
+</string>
     <string name="tc_s4_title">4. Vos responsabilités</string>
     <string name="tc_s5_title">5. Autorisations dont nous avons besoin et pourquoi</string>
     <string name="tc_s6_title">6. À qui appartient quoi</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">Les achats de pourboires sont volontaires et traités par Google Play. Les demandes de remboursement sont traitées directement par Google Play conformément à leur politique de remboursement et à la loi applicable, y compris la loi sud-africaine sur la protection des consommateurs. KiloWatch ne traite pas les remboursements de manière indépendante.</string>
     <string name="tc_s3a_recurring">Il n\'y a pas d\'abonnement. Chaque pourboire est un achat de consommable unique. Vous ne serez jamais facturé automatiquement.</string>
     <string name="tc_s3a_no_obligation">Le pourboire est entièrement facultatif. Toutes les fonctionnalités restent disponibles gratuitement, pour toujours.</string>
+
+    <string name="tc_s3b_body">
+L\'application prend en charge la connexion à un large éventail de fournisseurs de stockage cloud tiers à l\'aide du backend RClone intégré. Lorsque vous utilisez cette fonctionnalité, les conditions suivantes s\'appliquent :
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Communication directe avec l\'API
+</item>
+        <item>
+Sécurité des identifiants
+</item>
+        <item>
+Conditions tierces
+</item>
+        <item>
+Aucune garantie de connexion
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+Toutes les requêtes réseau adressées aux fournisseurs de stockage RClone (tels que Filen, Mega et autres) sont effectuées directement depuis votre appareil vers les points de terminaison du fournisseur respectif. Aucune donnée ne transite par les serveurs KiloWatch.
+</item>
+        <item>
+Vos profils de configuration et mots de passe RClone sont cryptés sur l\'appareil via le backend RClone RC et stockés localement sous le nom rclone_encrypted.json dans le stockage privé de l\'application. Vous êtes seul responsable de la sécurisation de votre appareil pour protéger ce fichier.
+</item>
+        <item>
+Votre utilisation de tout stockage cloud intégré à RClone est régie par les conditions de service et la politique de confidentialité de ce fournisseur de cloud respectif. Vous devez respecter leurs conditions lorsque vous accédez aux fichiers via cette application.
+</item>
+        <item>
+Étant donné que les API et les points de terminaison des fournisseurs de cloud peuvent changer sans préavis, nous ne pouvons pas garantir qu\'un fournisseur RClone spécifique restera accessible ou fonctionnera sans interruption.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+La connexion aux lecteurs cloud via RClone se fait directement depuis votre téléphone ou votre téléviseur. Nous ne voyons jamais vos fichiers cloud ou vos mots de passe. Vos mots de passe sont cryptés sur votre téléphone et vous êtes soumis aux conditions du fournisseur de cloud que vous configurez.
+</string>
 
     <string name="tc_s4_body">L\'utilisation de cette application s\'accompagne de quelques responsabilités simples de votre part.</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK : traite les achats facultatifs de pourboires dans l\'applic
     <string name="pp_s4_title">4. Autorisations et pourquoi nous en avons besoin</string>
     <string name="pp_s5_title">5. Sécurité des données</string>
     <string name="pp_s6_title">6. Services API Google – Divulgation à usage limité</string>
+    <string name="pp_s6b_title">
+6b. Intégration RClone Cloud — Confidentialité et confidentialité Conformité
+</string>
     <string name="pp_s7_title">7. Partage de données et tiers</string>
     <string name="pp_s8_title">8. Combien de temps nous conservons les données</string>
     <string name="pp_s9_title">9. Vos droits</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK : traite les achats facultatifs de pourboires dans l\'applic
     <string name="pp_s6_permitted_heading">Utilisations autorisées des données utilisateur de Google</string>
     <string name="pp_s6_prohibited_heading">Utilisations interdites – Nous n\'utilisons jamais les données utilisateur de Google pour</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro ne demande que les autorisations minimales de Google Drive nécessaires pour effectuer les actions de gestion de fichiers que vous choisissez. Nous ne demandons jamais l\'accès à vos données Gmail, Google Contacts, Google Agenda ou toute autre donnée de service Google.</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro intègre le backend RClone pour prendre en charge la connexion à plus de 100 fournisseurs de stockage cloud. Toutes les configurations et informations d\'identification sont gérées directement sur votre appareil.
+</string>
+    <string name="pp_s6b_intro">
+Lorsque vous utilisez l\'intégration de stockage RClone dans Ultimate File Manager Pro, l\'application traite localement vos informations d\'identification de stockage cloud et vos métadonnées de fichiers. L\'application communique directement avec le point de terminaison de l\'API de votre fournisseur de stockage cloud choisi. Nous n\'intervenons pas dans cette connexion et nous ne collectons, ne stockons ni ne transmettons jamais vos informations d\'identification ou fichiers cloud à nos serveurs.
+</string>
+    <string name="pp_s6b_local_heading">
+Chiffrement des informations d\'identification locales
+</string>
+    <string name="pp_s6b_local_body">
+Tous les mots de passe, jetons ou clés API saisis pour les configurations de stockage RClone sont masqués et cryptés à l\'aide de la cryptographie sur l\'appareil via le backend RClone RC et stockés en toute sécurité sous rclone_encrypted.json dans le répertoire privé de l\'application. Ce fichier est inaccessible aux autres applications et est définitivement supprimé lorsque vous désinstallez l\'application.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Utilisations autorisées des données cloud
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Navigation à distance : récupération des structures de dossiers et des métadonnées de fichiers pour afficher le contenu de votre stockage cloud distant.
+</item>
+        <item>
+Opérations sur les fichiers : téléchargement, renommage, copie, déplacement ou suppression de fichiers sur votre stockage distant à votre demande explicite.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">Nous ne vendons, louons, n\'échangeons, ne transférons ni ne divulguons vos informations personnelles ou vos données d\'utilisateur Google à des tiers à des fins non directement liées à la fourniture des fonctionnalités de gestion de fichiers d\'Ultimate File Manager Pro - point final.</string>
     <string name="pp_s7_third_heading">Services tiers que nous utilisons</string>

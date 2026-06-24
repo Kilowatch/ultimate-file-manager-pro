@@ -163,7 +163,7 @@ class LicensesActivity : AppCompatActivity() {
             if (rawId == 0) return staticFallback()
             val json = resources.openRawResource(rawId).bufferedReader().readText()
             val arr = JSONArray(json)
-            (0 until arr.length()).map { i ->
+            val list = (0 until arr.length()).map { i ->
                 val obj = arr.getJSONObject(i)
                 val name = obj.optString("name").ifBlank { obj.optString("groupId") + ":" + obj.optString("artifactId") }
                 val version = obj.optString("version", "")
@@ -180,7 +180,13 @@ class LicensesActivity : AppCompatActivity() {
                     obj.optJSONArray("spdxLicenses")?.optJSONObject(0)?.optString("url", "") ?: ""
                 }
                 LibInfo(name, version, spdx, url)
-            }.sortedBy { it.name.lowercase() }
+            }.toMutableList()
+
+            if (list.none { it.name.contains("rclone", ignoreCase = true) }) {
+                list.add(LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"))
+            }
+
+            list.sortedBy { it.name.lowercase() }
         } catch (e: Exception) {
             staticFallback()
         }
@@ -207,6 +213,7 @@ class LicensesActivity : AppCompatActivity() {
         LibInfo(getString(R.string.bouncycastle_orgbouncycastle), "1.83", getString(R.string.bouncy_castle_license_mitstyle), "https://www.bouncycastle.org/java.html"),
         LibInfo(getString(R.string.coil_iocoilkt), "3.4.0", "Apache-2.0", "https://github.com/coil-kt/coil"),
         LibInfo(getString(R.string.apng4android_comgithubpenfeizhou), "3.0.0", "Apache-2.0", "https://github.com/penfeizhou/APNG4Android"),
+        LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"),
     )
 
     // ── View builders ─────────────────────────────────────────────────────────

@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. Was die App macht</string>
     <string name="tc_s3_title">3. Risiko und Haftung – die ehrliche Wahrheit</string>
     <string name="tc_s3a_title">3a. In-App-Käufe und Abrechnung</string>
+    <string name="tc_s3b_title">
+3b. RClone Cloud-Integration
+</string>
     <string name="tc_s4_title">4. Ihre Verantwortlichkeiten</string>
     <string name="tc_s5_title">5. Berechtigungen, die wir benötigen und warum</string>
     <string name="tc_s6_title">6. Wem gehört was?</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">Trinkgeldkäufe sind freiwillig und werden von Google Play abgewickelt. Rückerstattungsanträge werden direkt von Google Play gemäß deren Rückerstattungsrichtlinien und geltendem Recht, einschließlich des südafrikanischen Verbraucherschutzgesetzes, bearbeitet. KiloWatch wickelt Rückerstattungen nicht unabhängig ab.</string>
     <string name="tc_s3a_recurring">Es gibt keine Abonnements. Bei jedem Trinkgeld handelt es sich um einen einmaligen Verbrauchsmaterialkauf. Es wird Ihnen nie automatisch etwas in Rechnung gestellt.</string>
     <string name="tc_s3a_no_obligation">Trinkgeld ist völlig freiwillig. Alle Funktionen bleiben für immer kostenlos verfügbar.</string>
+
+    <string name="tc_s3b_body">
+Die App unterstützt die Verbindung zu einer Vielzahl von Cloud-Speicher-Drittanbietern über das integrierte RClone-Backend. Wenn Sie diese Funktion nutzen, gelten die folgenden Bedingungen:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Direkte API-Kommunikation
+</item>
+        <item>
+Anmeldeinformationssicherheit
+</item>
+        <item>
+Bedingungen Dritter
+</item>
+        <item>
+Keine Verbindungsgarantie
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+Alle Netzwerkanfragen an RClone-Speicheranbieter (wie Filen, Mega und andere) werden direkt von Ihrem Gerät an die Endpunkte des jeweiligen Anbieters ausgeführt. Es werden keine Daten über die KiloWatch-Server übertragen.
+</item>
+        <item>
+Ihre RClone-Konfigurationsprofile und Passwörter werden auf dem Gerät über das RClone RC-Backend verschlüsselt und lokal als rclone_encrypted.json im privaten Speicher der App gespeichert. Sie allein sind dafür verantwortlich, Ihr Gerät zum Schutz dieser Datei zu sichern.
+</item>
+        <item>
+Ihre Nutzung eines in RClone integrierten Cloud-Speichers unterliegt den Nutzungsbedingungen und Datenschutzrichtlinien des jeweiligen Cloud-Anbieters. Sie müssen deren Bedingungen einhalten, wenn Sie über diese App auf Dateien zugreifen.
+</item>
+        <item>
+Da sich die APIs und Endpunkte von Cloud-Anbietern ohne Vorankündigung ändern können, können wir nicht garantieren, dass ein bestimmter RClone-Anbieter erreichbar bleibt oder unterbrechungsfrei funktioniert.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Die Verbindung zu Cloud-Laufwerken über RClone erfolgt direkt von Ihrem Telefon oder Fernseher aus. Wir sehen niemals Ihre Cloud-Dateien oder Passwörter. Ihre Passwörter werden auf Ihrem Telefon verschlüsselt und Sie unterliegen den Bedingungen des von Ihnen konfigurierten Cloud-Anbieters.
+</string>
 
     <string name="tc_s4_body">Mit der Nutzung dieser App gehen ein paar einfache Aufgaben auf Ihrer Seite einher.</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK – verarbeitet optionale In-App-Tippkäufe auf Amazon-Gerä
     <string name="pp_s4_title">4. Berechtigungen und warum wir sie brauchen</string>
     <string name="pp_s5_title">5. Datensicherheit</string>
     <string name="pp_s6_title">6. Google API-Dienste – Offenlegung der eingeschränkten Nutzung</string>
+    <string name="pp_s6b_title">
+6b. RClone Cloud-Integration – Datenschutz &amp; Einhaltung
+</string>
     <string name="pp_s7_title">7. Datenweitergabe und Dritte</string>
     <string name="pp_s8_title">8. Wie lange wir Daten aufbewahren</string>
     <string name="pp_s9_title">9. Ihre Rechte</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK – verarbeitet optionale In-App-Tippkäufe auf Amazon-Gerä
     <string name="pp_s6_permitted_heading">Zulässige Verwendung von Google-Nutzerdaten</string>
     <string name="pp_s6_prohibited_heading">Verbotene Verwendungen – Wir verwenden niemals Google-Nutzerdaten für</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro fordert nur die minimalen Google Drive-Berechtigungen an, die zum Ausführen der von Ihnen gewählten Dateiverwaltungsaktionen erforderlich sind. Wir fordern niemals Zugriff auf Ihre Gmail-, Google-Kontakte-, Google-Kalender- oder andere Google-Dienstdaten an.</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro integriert das RClone-Backend, um die Verbindung zu über 100 Cloud-Speicheranbietern zu unterstützen. Alle Konfigurationen und Anmeldeinformationen werden direkt auf Ihrem Gerät verwaltet.
+</string>
+    <string name="pp_s6b_intro">
+Wenn Sie die RClone-Speicherintegration in Ultimate File Manager Pro verwenden, verarbeitet die App Ihre Cloud-Speicher-Anmeldeinformationen und Dateimetadaten lokal. Die App kommuniziert direkt mit dem API-Endpunkt Ihres gewählten Cloud-Speicheranbieters. Wir vermitteln diese Verbindung nicht und wir erfassen, speichern oder übertragen Ihre Cloud-Anmeldeinformationen oder Dateien niemals an unsere Server.
+</string>
+    <string name="pp_s6b_local_heading">
+Lokale Verschlüsselung der Anmeldeinformationen
+</string>
+    <string name="pp_s6b_local_body">
+Alle für RClone-Speicherkonfigurationen eingegebenen Passwörter, Token oder API-Schlüssel werden mithilfe der geräteinternen Kryptografie über das RClone RC-Backend verborgen und verschlüsselt und sicher als rclone_encrypted.json im privaten Verzeichnis der App gespeichert. Auf diese Datei können andere Anwendungen nicht zugreifen und sie wird dauerhaft gelöscht, wenn Sie die App deinstallieren.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Zulässige Nutzung von Cloud-Daten
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Remote-Browsing: Abrufen von Ordnerstrukturen und Dateimetadaten zur Anzeige Ihrer Remote-Cloud-Speicherinhalte.
+</item>
+        <item>
+Dateivorgänge: Hochladen, Herunterladen, Umbenennen, Kopieren, Verschieben oder Löschen von Dateien auf Ihrem Remote-Speicher auf Ihren ausdrücklichen Wunsch.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">Wir verkaufen, vermieten, tauschen, übertragen oder geben Ihre persönlichen Daten oder Google-Benutzerdaten nicht an Dritte weiter, und zwar zu Zwecken, die nicht direkt mit der Bereitstellung der Dateiverwaltungsfunktionen von Ultimate File Manager Pro zusammenhängen – Punkt.</string>
     <string name="pp_s7_third_heading">Von uns genutzte Dienste Dritter</string>

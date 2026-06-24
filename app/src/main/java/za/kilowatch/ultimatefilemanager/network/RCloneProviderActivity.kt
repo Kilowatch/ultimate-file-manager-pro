@@ -51,8 +51,8 @@ class RCloneProviderActivity : AppCompatActivity() {
     private lateinit var etStorageName: TextInputEditText
     private lateinit var fieldContainer: LinearLayout
     private lateinit var txtResult: TextView
-    private lateinit var btnTest: View
-    private lateinit var btnSave: View
+    private lateinit var btnTest: android.widget.Button
+    private lateinit var btnSave: android.widget.Button
 
     /** Dynamic field inputs, keyed by the field's config key (e.g. "email", "password"). */
     private val fieldInputs = mutableMapOf<String, TextInputEditText>()
@@ -139,7 +139,7 @@ class RCloneProviderActivity : AppCompatActivity() {
         selectedProvider = provider
         renderFields(provider)
         txtResult.visibility = View.GONE
-        btnSave.isEnabled = false
+        setSaveButtonEnabled(false)
     }
 
     /**
@@ -163,7 +163,6 @@ class RCloneProviderActivity : AppCompatActivity() {
             fieldLayout.tag = field.key
 
             val input = fieldLayout.findViewById<TextInputEditText>(R.id.input)
-            input.hint = getString(field.labelResId)
 
             when (field.inputType) {
                 FieldType.PASSWORD -> {
@@ -296,7 +295,7 @@ class RCloneProviderActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     if (testResult.status == 200L) {
                         showResult(getString(R.string.rclone_test_success), isError = false)
-                        btnSave.isEnabled = true
+                        setSaveButtonEnabled(true)
                     } else {
                         val msg = try {
                             JSONObject(testResult.output).optString("error", testResult.output)
@@ -352,7 +351,7 @@ class RCloneProviderActivity : AppCompatActivity() {
             return
         }
 
-        btnSave.isEnabled = false
+        setSaveButtonEnabled(false)
         setButtonText(btnSave, R.string.rclone_saving)
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -364,7 +363,7 @@ class RCloneProviderActivity : AppCompatActivity() {
                 // rclone always expects its own XOR+base64 encoding in config files.
                 val configMap = buildConfigMap(provider, obscurePasswords = true) ?: run {
                     withContext(Dispatchers.Main) {
-                        btnSave.isEnabled = true
+                        setSaveButtonEnabled(true)
                         setButtonText(btnSave, R.string.rclone_btn_save)
                     }
                     return@launch
@@ -404,13 +403,13 @@ class RCloneProviderActivity : AppCompatActivity() {
             } catch (e: java.io.IOException) {
                 withContext(Dispatchers.Main) {
                     showResult(getString(R.string.rclone_test_failed, "Failed to write config: ${e.message}"), isError = true)
-                    btnSave.isEnabled = true
+                    setSaveButtonEnabled(true)
                     setButtonText(btnSave, R.string.rclone_btn_save)
                 }
             } catch (e: IllegalStateException) {
                 withContext(Dispatchers.Main) {
                     showResult(getString(R.string.rclone_test_failed, "Encryption error: ${e.message}"), isError = true)
-                    btnSave.isEnabled = true
+                    setSaveButtonEnabled(true)
                     setButtonText(btnSave, R.string.rclone_btn_save)
                 }
             } catch (e: Exception) {
@@ -419,7 +418,7 @@ class RCloneProviderActivity : AppCompatActivity() {
                         getString(R.string.rclone_test_failed, e.message ?: "Unknown error"),
                         isError = true
                     )
-                    btnSave.isEnabled = true
+                    setSaveButtonEnabled(true)
                     setButtonText(btnSave, R.string.rclone_btn_save)
                 }
             }
@@ -499,7 +498,18 @@ class RCloneProviderActivity : AppCompatActivity() {
         return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+    private fun setSaveButtonEnabled(enabled: Boolean) {
+        btnSave.isEnabled = enabled
+        val color = if (enabled) {
+            ContextCompat.getColor(this, R.color.ufm_granted)
+        } else {
+            ContextCompat.getColor(this, R.color.btn_disabled_bg)
+        }
+        androidx.core.view.ViewCompat.setBackgroundTintList(btnSave, android.content.res.ColorStateList.valueOf(color))
+        btnSave.setTextColor(android.graphics.Color.WHITE)
+    }
+
     private fun setButtonText(button: View, resId: Int) {
-        (button as? MaterialButton)?.text = getString(resId)
+        (button as? android.widget.TextView)?.text = getString(resId)
     }
 }

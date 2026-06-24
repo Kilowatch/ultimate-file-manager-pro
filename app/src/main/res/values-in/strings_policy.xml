@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. What the App Does</string>
     <string name="tc_s3_title">3. Risk &amp; Liability — The Honest Truth</string>
     <string name="tc_s3a_title">3a. In-App Purchases &amp; Billing</string>
+    <string name="tc_s3b_title">
+3b. RClone Cloud Integration
+</string>
     <string name="tc_s4_title">4. Your Responsibilities</string>
     <string name="tc_s5_title">5. Permissions We Need &amp; Why</string>
     <string name="tc_s6_title">6. Who Owns What</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">Tip purchases are voluntary and processed by Google Play. Refund requests are handled directly by Google Play in accordance with their refund policy and applicable law, including the South African Consumer Protection Act. KiloWatch does not process refunds independently.</string>
     <string name="tc_s3a_recurring">There are no subscriptions. Every tip is a one-time consumable purchase. You will never be charged automatically.</string>
     <string name="tc_s3a_no_obligation">Tipping is entirely optional. All features remain available at no cost, forever.</string>
+
+    <string name="tc_s3b_body">
+The app supports connecting to a wide range of third-party cloud storage providers using the integrated RClone backend. When you use this feature, the following conditions apply:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Direct API Communication
+</item>
+        <item>
+Credential Security
+</item>
+        <item>
+Third-Party Terms
+</item>
+        <item>
+No Connection Guarantee
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+All network requests to RClone storage providers (such as Filen, Mega, and others) are performed directly from your device to the respective provider\'s endpoints. No data passes through KiloWatch servers.
+</item>
+        <item>
+Your RClone configuration profiles and passwords are encrypted on-device via the RClone RC backend and stored locally as rclone_encrypted.json in the app\'s private storage. You are solely responsible for securing your device to protect this file.
+</item>
+        <item>
+Your use of any RClone-integrated cloud storage is governed by the terms of service and privacy policy of that respective cloud provider. You must comply with their terms when accessing files through this app.
+</item>
+        <item>
+Because cloud provider APIs and endpoints can change without notice, we cannot guarantee that any specific RClone provider will remain accessible or function uninterrupted.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Connecting to cloud drives via RClone is done directly from your phone or TV. We never see your cloud files or passwords. Your passwords are encrypted on your phone, and you are subject to the terms of whatever cloud provider you configure.
+</string>
 
     <string name="tc_s4_body">Using this app comes with a few simple responsibilities on your side.</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK — processes optional in-app tip purchases on Amazon device
     <string name="pp_s4_title">4. Permissions &amp; Why We Need Them</string>
     <string name="pp_s5_title">5. Data Security</string>
     <string name="pp_s6_title">6. Google API Services — Limited Use Disclosure</string>
+    <string name="pp_s6b_title">
+6b. RClone Cloud Integration — Privacy &amp; Compliance
+</string>
     <string name="pp_s7_title">7. Data Sharing &amp; Third Parties</string>
     <string name="pp_s8_title">8. How Long We Keep Data</string>
     <string name="pp_s9_title">9. Your Rights</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK — processes optional in-app tip purchases on Amazon device
     <string name="pp_s6_permitted_heading">Permitted Uses of Google User Data</string>
     <string name="pp_s6_prohibited_heading">Prohibited Uses — We Never Use Google User Data For</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro requests only the minimum Google Drive permissions necessary to perform the file management actions you choose. We never request access to your Gmail, Google Contacts, Google Calendar, or any other Google service data.</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro integrates the RClone backend to support connecting to over 100 cloud storage providers. All configurations and credentials are managed directly on your device.
+</string>
+    <string name="pp_s6b_intro">
+When you use the RClone storage integration in Ultimate File Manager Pro, the app processes your cloud storage credentials and file metadata locally. The app communicates directly with your chosen cloud storage provider\'s API endpoint. We do not intermediate this connection, and we never collect, store, or transmit your cloud credentials or files to our servers.
+</string>
+    <string name="pp_s6b_local_heading">
+Local Credential Encryption
+</string>
+    <string name="pp_s6b_local_body">
+Any passwords, tokens, or API keys entered for RClone storage configurations are obscured and encrypted using on-device cryptography via the RClone RC backend and stored securely as rclone_encrypted.json in the app\'s private directory. This file is inaccessible to other applications and is permanently deleted when you uninstall the app.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Permitted Uses of Cloud Data
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Remote Browsing: Retrieving folder structures and file metadata to display your remote cloud storage contents.
+</item>
+        <item>
+File Operations: Uploading, downloading, renaming, copying, moving, or deleting files on your remote storage at your explicit request.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">We do not sell, rent, trade, transfer, or disclose your personal information or Google user data to any third party for any purpose not directly related to providing Ultimate File Manager Pro\'s file management features — full stop.</string>
     <string name="pp_s7_third_heading">Third-Party Services We Use</string>

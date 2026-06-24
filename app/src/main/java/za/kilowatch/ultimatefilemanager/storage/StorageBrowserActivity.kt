@@ -67,6 +67,8 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper
 import za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity
 import androidx.lifecycle.lifecycleScope
+import android.widget.RadioButton
+import com.google.android.material.card.MaterialCardView
 
 /**
  * Displays all available storage volumes (internal, SD card, USB) as cards.
@@ -81,6 +83,8 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private lateinit var recyclerStorage: RecyclerView
     private lateinit var layoutEmptyStorage: android.view.ViewGroup
+    private var btnToggleGrid: ImageView? = null
+    private var btnToggleList: ImageView? = null
     
     private var isPickerMode = false
     private var isKeyfilePickerMode = false
@@ -891,6 +895,32 @@ class StorageBrowserActivity : AppCompatActivity() {
         recyclerStorage = findViewById(R.id.recyclerStorage)
         layoutEmptyStorage = findViewById(R.id.layoutEmptyStorage)
         lottieEmptyStorage = findViewById(R.id.lottieEmptyStorage)
+
+        btnToggleGrid = findViewById(R.id.btnToggleGrid)
+        btnToggleList = findViewById(R.id.btnToggleList)
+
+        btnToggleGrid?.setOnClickListener {
+            val currentMode = MainMenuViewModeManager.loadViewMode(this)
+            if (currentMode != MainMenuViewModeManager.ViewMode.GRID) {
+                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.GRID)
+                applyViewMode()
+            }
+            showViewModeOptions(isListView = false)
+        }
+
+        btnToggleList?.setOnClickListener {
+            val currentMode = MainMenuViewModeManager.loadViewMode(this)
+            if (currentMode != MainMenuViewModeManager.ViewMode.LIST) {
+                MainMenuViewModeManager.saveViewMode(this, MainMenuViewModeManager.ViewMode.LIST)
+                applyViewMode()
+            }
+            showViewModeOptions(isListView = true)
+        }
+
+        if (isTv) {
+            btnToggleGrid?.let { setupTvToggleFocus(it) }
+            btnToggleList?.let { setupTvToggleFocus(it) }
+        }
 
         // Mobile: wire up the MaterialToolbar
         if (!isTv) {
@@ -3693,11 +3723,206 @@ class StorageBrowserActivity : AppCompatActivity() {
                     snapHelper.attachToRecyclerView(recyclerStorage)
                     tvSnapHelper = snapHelper
                 }
+            }
+        }
 
-
+        updateToggleVisuals()
+        if (::storageAdapter.isInitialized) {
+            storageAdapter.notifyDataSetChanged()
         }
     }
-}
+
+    private fun updateToggleVisuals() {
+        val currentMode = MainMenuViewModeManager.loadViewMode(this)
+        val isGrid = currentMode == MainMenuViewModeManager.ViewMode.GRID
+
+        btnToggleGrid?.let { gridBtn ->
+            if (isGrid) {
+                gridBtn.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
+            } else {
+                gridBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else android.graphics.Color.parseColor("#8A9EB5")
+                gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
+            }
+        }
+
+        btnToggleList?.let { listBtn ->
+            if (!isGrid) {
+                listBtn.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                listBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
+            } else {
+                listBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else android.graphics.Color.parseColor("#8A9EB5")
+                listBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
+            }
+        }
+    }
+
+    private fun setupTvToggleFocus(btn: ImageView) {
+        btn.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                btn.setBackgroundResource(R.drawable.selector_tv_icon_btn)
+                btn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            } else {
+                updateToggleVisuals()
+            }
+        }
+    }
+
+    private fun showViewModeOptions(isListView: Boolean) {
+        if (isTv) {
+            showTvViewModeOptions(isListView)
+        } else {
+            val sheet = ViewModeBottomSheet.newInstance(isListView)
+            sheet.onSettingsChanged = {
+                applyViewMode()
+            }
+            sheet.show(supportFragmentManager, ViewModeBottomSheet.TAG)
+        }
+    }
+
+    private fun showTvViewModeOptions(isListView: Boolean) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_view_mode_options_tv, null)
+        val imgDialogIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtDialogTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val layoutColumns = dialogView.findViewById<View>(R.id.layoutColumns)
+        val layoutListSize = dialogView.findViewById<View>(R.id.layoutListSize)
+        val btnTvClose = dialogView.findViewById<View>(R.id.btnTvClose)
+
+        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
+            .setView(dialogView)
+            .create()
+
+        btnTvClose.setOnClickListener { dialog.dismiss() }
+
+        if (isListView) {
+            imgDialogIcon.setImageResource(R.drawable.ic_list_view_custom)
+            txtDialogTitle.text = getString(R.string.layout_list)
+            layoutListSize.visibility = View.VISIBLE
+            layoutColumns.visibility = View.GONE
+
+            val cardLarge = dialogView.findViewById<MaterialCardView>(R.id.cardSizeLarge)
+            val cardMedium = dialogView.findViewById<MaterialCardView>(R.id.cardSizeMedium)
+            val cardSmall = dialogView.findViewById<MaterialCardView>(R.id.cardSizeSmall)
+
+            val rbLarge = dialogView.findViewById<RadioButton>(R.id.rbSizeLarge)
+            val rbMedium = dialogView.findViewById<RadioButton>(R.id.rbSizeMedium)
+            val rbSmall = dialogView.findViewById<RadioButton>(R.id.rbSizeSmall)
+
+            val currentSize = MainMenuViewModeManager.loadItemSize(this)
+            rbLarge.isChecked = currentSize == MainMenuViewModeManager.ItemSize.LARGE
+            rbMedium.isChecked = currentSize == MainMenuViewModeManager.ItemSize.MEDIUM
+            rbSmall.isChecked = currentSize == MainMenuViewModeManager.ItemSize.SMALL
+
+            setupTvCardFocusForDialog(cardLarge)
+            setupTvCardFocusForDialog(cardMedium)
+            setupTvCardFocusForDialog(cardSmall)
+
+            val activeColor = getColor(R.color.tv_accent)
+            val inactiveColor = getColor(R.color.tv_glass_border)
+
+            cardLarge.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.LARGE) activeColor else inactiveColor
+            cardMedium.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.MEDIUM) activeColor else inactiveColor
+            cardSmall.strokeColor = if (currentSize == MainMenuViewModeManager.ItemSize.SMALL) activeColor else inactiveColor
+
+            cardLarge.setOnClickListener {
+                MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.LARGE)
+                applyViewMode()
+                dialog.dismiss()
+            }
+            cardMedium.setOnClickListener {
+                MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.MEDIUM)
+                applyViewMode()
+                dialog.dismiss()
+            }
+            cardSmall.setOnClickListener {
+                MainMenuViewModeManager.saveItemSize(this, MainMenuViewModeManager.ItemSize.SMALL)
+                applyViewMode()
+                dialog.dismiss()
+            }
+        } else {
+            imgDialogIcon.setImageResource(R.drawable.ic_grid_view_custom)
+            txtDialogTitle.text = getString(R.string.layout_grid)
+            layoutColumns.visibility = View.VISIBLE
+            layoutListSize.visibility = View.GONE
+
+            val cardColumns4 = dialogView.findViewById<MaterialCardView>(R.id.cardColumns4)
+            val cardColumns3 = dialogView.findViewById<MaterialCardView>(R.id.cardColumns3)
+
+            val rbColumns4 = dialogView.findViewById<RadioButton>(R.id.rbColumns4)
+            val rbColumns3 = dialogView.findViewById<RadioButton>(R.id.rbColumns3)
+
+            val currentColCount = MainMenuViewModeManager.loadColumnCount(this)
+            rbColumns4.isChecked = currentColCount == 4
+            rbColumns3.isChecked = currentColCount == 3
+
+            setupTvCardFocusForDialog(cardColumns4)
+            setupTvCardFocusForDialog(cardColumns3)
+
+            val activeColor = getColor(R.color.tv_accent)
+            val inactiveColor = getColor(R.color.tv_glass_border)
+
+            cardColumns4.strokeColor = if (currentColCount == 4) activeColor else inactiveColor
+            cardColumns3.strokeColor = if (currentColCount == 3) activeColor else inactiveColor
+
+            cardColumns4.setOnClickListener {
+                MainMenuViewModeManager.saveColumnCount(this, 4)
+                applyViewMode()
+                dialog.dismiss()
+            }
+            cardColumns3.setOnClickListener {
+                MainMenuViewModeManager.saveColumnCount(this, 3)
+                applyViewMode()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun setupTvCardFocusForDialog(card: MaterialCardView) {
+        val yellowFill = getColor(R.color.tv_button_focused_yellow)
+        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val glassColor = getColor(R.color.tv_glass_white_10)
+        val primaryText = getColor(R.color.tv_text_primary)
+        val secondaryText = getColor(R.color.tv_text_secondary)
+
+        card.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                card.setCardBackgroundColor(yellowFill)
+                setTvDialogCardTextColors(card, blackText, blackText)
+                setTvDialogCardRadioTint(card, blackText)
+            } else {
+                card.setCardBackgroundColor(glassColor)
+                setTvDialogCardTextColors(card, primaryText, secondaryText)
+                setTvDialogCardRadioTint(card, getColor(R.color.tv_accent))
+            }
+        }
+    }
+
+    private fun setTvDialogCardTextColors(view: View, primaryColor: Int, secondaryColor: Int) {
+        if (view is TextView) {
+            val isSubtitle = view.textSize < resources.displayMetrics.density * 16
+            view.setTextColor(if (isSubtitle) secondaryColor else primaryColor)
+            return
+        }
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount)
+                setTvDialogCardTextColors(view.getChildAt(i), primaryColor, secondaryColor)
+        }
+    }
+
+    private fun setTvDialogCardRadioTint(view: View, color: Int) {
+        if (view is RadioButton) {
+            view.buttonTintList = android.content.res.ColorStateList.valueOf(color)
+            return
+        }
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount)
+                setTvDialogCardRadioTint(view.getChildAt(i), color)
+        }
+    }
 
 
 

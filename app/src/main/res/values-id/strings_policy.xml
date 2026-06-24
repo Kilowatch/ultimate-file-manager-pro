@@ -21,6 +21,9 @@
     <string name="tc_s2_title">2. Apa yang Dilakukan Aplikasi</string>
     <string name="tc_s3_title">3. Risiko &amp; Kewajiban — Kebenaran yang Jujur</string>
     <string name="tc_s3a_title">3a. Pembelian &amp; Penagihan Dalam Aplikasi</string>
+    <string name="tc_s3b_title">
+3b. Integrasi Cloud RClone
+</string>
     <string name="tc_s4_title">4. Tanggung Jawab Anda</string>
     <string name="tc_s5_title">5. Izin yang Kami Butuhkan &amp; Alasannya</string>
     <string name="tc_s6_title">6. Siapa yang Memiliki Apa</string>
@@ -42,6 +45,41 @@
     <string name="tc_s3a_refunds">Pembelian tip bersifat sukarela dan diproses oleh Google Play. Permintaan pengembalian dana ditangani langsung oleh Google Play sesuai dengan kebijakan pengembalian dana dan hukum yang berlaku, termasuk Undang-Undang Perlindungan Konsumen Afrika Selatan. KiloWatch tidak memproses pengembalian dana secara independen.</string>
     <string name="tc_s3a_recurring">Tidak ada langganan. Setiap tip adalah pembelian sekali pakai. Anda tidak akan pernah ditagih secara otomatis.</string>
     <string name="tc_s3a_no_obligation">Memberi tip sepenuhnya opsional. Semua fitur tetap tersedia tanpa biaya, selamanya.</string>
+
+    <string name="tc_s3b_body">
+Aplikasi ini mendukung koneksi ke berbagai penyedia penyimpanan cloud pihak ketiga menggunakan backend RClone terintegrasi. Saat Anda menggunakan fitur ini, ketentuan berikut ini berlaku:
+</string>
+    <string-array name="tc_rclone_labels">
+        <item>
+Komunikasi API Langsung
+</item>
+        <item>
+Keamanan Kredensial
+</item>
+        <item>
+Ketentuan Pihak Ketiga
+</item>
+        <item>
+Tidak Ada Jaminan Koneksi
+</item>
+    </string-array>
+    <string-array name="tc_rclone_details">
+        <item>
+Semua permintaan jaringan ke penyedia penyimpanan RClone (seperti Filen, Mega, dan lainnya) dilakukan langsung dari perangkat Anda ke titik akhir penyedia masing-masing. Tidak ada data yang melewati server KiloWatch.
+</item>
+        <item>
+Profil konfigurasi RClone dan kata sandi Anda dienkripsi pada perangkat melalui backend RClone RC dan disimpan secara lokal sebagai rclone_encrypted.json di penyimpanan pribadi aplikasi. Anda sepenuhnya bertanggung jawab mengamankan perangkat Anda untuk melindungi file ini.
+</item>
+        <item>
+Penggunaan Anda atas penyimpanan cloud terintegrasi RClone diatur oleh persyaratan layanan dan kebijakan privasi dari masing-masing penyedia cloud. Anda harus mematuhi persyaratan mereka saat mengakses file melalui aplikasi ini.
+</item>
+        <item>
+Karena API dan titik akhir penyedia cloud dapat berubah tanpa pemberitahuan, kami tidak dapat menjamin bahwa penyedia RClone tertentu akan tetap dapat diakses atau berfungsi tanpa gangguan.
+</item>
+    </string-array>
+    <string name="tc_s3b_summary">
+Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau TV Anda. Kami tidak pernah melihat file cloud atau kata sandi Anda. Kata sandi Anda dienkripsi di ponsel Anda, dan Anda tunduk pada ketentuan penyedia cloud apa pun yang Anda konfigurasikan.
+</string>
 
     <string name="tc_s4_body">Menggunakan aplikasi ini disertai dengan beberapa tanggung jawab sederhana di pihak Anda.</string>
 
@@ -243,6 +281,9 @@ Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di peran
     <string name="pp_s4_title">4. Izin &amp; Mengapa Kami Membutuhkannya</string>
     <string name="pp_s5_title">5. Keamanan Data</string>
     <string name="pp_s6_title">6. Layanan Google API — Pengungkapan Penggunaan Terbatas</string>
+    <string name="pp_s6b_title">
+6b. Integrasi RClone Cloud — Privasi &amp; Kepatuhan
+</string>
     <string name="pp_s7_title">7. Berbagi Data &amp; Pihak Ketiga</string>
     <string name="pp_s8_title">8. Berapa Lama Kami Menyimpan Data</string>
     <string name="pp_s9_title">9. Hak Anda</string>
@@ -291,6 +332,30 @@ Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di peran
     <string name="pp_s6_permitted_heading">Penggunaan Data Pengguna Google yang Diizinkan</string>
     <string name="pp_s6_prohibited_heading">Penggunaan yang Dilarang — Kami Tidak Pernah Menggunakan Data Pengguna Google Untuk</string>
     <string name="pp_s6_minimum_access">Ultimate File Manager Pro hanya meminta izin minimum Google Drive yang diperlukan untuk melakukan tindakan pengelolaan file yang Anda pilih. Kami tidak pernah meminta akses ke Gmail, Google Kontak, Google Kalender, atau data layanan Google lainnya.</string>
+    <!-- Section 6b — RClone Integration -->
+    <string name="pp_s6b_compliance_banner">
+Ultimate File Manager Pro mengintegrasikan backend RClone untuk mendukung koneksi ke lebih dari 100 penyedia penyimpanan cloud. Semua konfigurasi dan kredensial dikelola langsung di perangkat Anda.
+</string>
+    <string name="pp_s6b_intro">
+Saat Anda menggunakan integrasi penyimpanan RClone di Ultimate File Manager Pro, aplikasi memproses kredensial penyimpanan cloud dan metadata file Anda secara lokal. Aplikasi ini berkomunikasi langsung dengan titik akhir API penyedia penyimpanan cloud pilihan Anda. Kami tidak menjadi perantara koneksi ini, dan kami tidak pernah mengumpulkan, menyimpan, atau mengirimkan kredensial atau file cloud Anda ke server kami.
+</string>
+    <string name="pp_s6b_local_heading">
+Enkripsi Kredensial Lokal
+</string>
+    <string name="pp_s6b_local_body">
+Kata sandi, token, atau kunci API apa pun yang dimasukkan untuk konfigurasi penyimpanan RClone dikaburkan dan dienkripsi menggunakan kriptografi pada perangkat melalui backend RClone RC dan disimpan dengan aman sebagai rclone_encrypted.json di direktori pribadi aplikasi. File ini tidak dapat diakses oleh aplikasi lain dan dihapus secara permanen saat Anda menghapus instalasi aplikasi.
+</string>
+    <string name="pp_s6b_permitted_heading">
+Penggunaan Data Cloud yang Diizinkan
+</string>
+    <string-array name="pp_s6b_permitted">
+        <item>
+Penjelajahan Jarak Jauh: Mengambil struktur folder dan metadata file untuk menampilkan konten penyimpanan cloud jarak jauh Anda.
+</item>
+        <item>
+Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau menghapus file di penyimpanan jarak jauh atas permintaan eksplisit Anda.
+</item>
+    </string-array>
     <!-- Section 7 — Data Sharing -->
     <string name="pp_s7_nosell_alert">Kami tidak menjual, menyewakan, memperdagangkan, mentransfer, atau mengungkapkan informasi pribadi Anda atau data pengguna Google kepada pihak ketiga mana pun untuk tujuan apa pun yang tidak terkait langsung dengan penyediaan fitur pengelolaan file Ultimate File Manager Pro — titik.</string>
     <string name="pp_s7_third_heading">Layanan Pihak Ketiga yang Kami Gunakan</string>

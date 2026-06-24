@@ -11,7 +11,7 @@
         android:id="@+id/fieldLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:hint="Field"
         app:boxBackgroundColor="@android:color/transparent"
         app:hintTextColor="@color/tv_text_hint"
