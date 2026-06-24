@@ -18,6 +18,7 @@ import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.NfsShareClient
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
+import za.kilowatch.ultimatefilemanager.network.RCloneShareClient
 import za.kilowatch.ultimatefilemanager.network.S3ShareClient
 import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.network.SmbShareClient
@@ -69,25 +70,26 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                         id = foundOnline.id,
                         name = foundOnline.displayName,
                         type = when (foundOnline.provider) {
-                            OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
+                            OnlineStorageProvider.ONEDRIVE    -> ShareType.ONEDRIVE
                             OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
-                            OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
-                            OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
-                            OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
-                            OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
+                            OnlineStorageProvider.DROPBOX      -> ShareType.DROPBOX
+                            OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
+                            OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
+                            OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+                            OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
                         },
-                        host = when {
-                            foundOnline.isWebDavProvider -> foundOnline.webDavUrl ?: ""
-                            else -> foundOnline.s3Endpoint ?: foundOnline.email
+                        host = when (foundOnline.provider) {
+                            OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
+                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavUrl ?: "" else foundOnline.s3Endpoint ?: foundOnline.email
                         },
                         port = 0,
-                        username = when {
-                            foundOnline.isWebDavProvider -> foundOnline.webDavUsername ?: ""
-                            else -> foundOnline.s3AccessKey ?: foundOnline.email
+                        username = when (foundOnline.provider) {
+                            OnlineStorageProvider.RCLONE -> foundOnline.id
+                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavUsername ?: "" else foundOnline.s3AccessKey ?: ""
                         },
-                        password = when {
-                            foundOnline.isWebDavProvider -> foundOnline.webDavPassword ?: ""
-                            else -> foundOnline.s3SecretKey ?: ""
+                        password = when (foundOnline.provider) {
+                            OnlineStorageProvider.RCLONE -> ""
+                            else -> if (foundOnline.isWebDavProvider) foundOnline.webDavPassword ?: "" else foundOnline.s3SecretKey ?: ""
                         },
                         domain = foundOnline.s3Bucket ?: "",
                         remotePath = foundOnline.s3Region ?: "/",
@@ -100,7 +102,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 Log.w(TAG, "Share not found for profile '${profile.name}'")
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
-                        applicationContext.getString(R.string.network_share_not_found_for_profilename),
+                        applicationContext.getString(R.string.network_share_not_found_for_profilename, profile.name),
                         profile.id.hashCode() + 10
                     )
                 }
@@ -109,20 +111,24 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             Log.d(TAG, "Resolved share: '${share.name}' type=${share.type} host=${share.host}")
 
             // Test connection — skip test for online storage types (they handle auth differently)
-            val connError = when (share.type) {
-                ShareType.SMB -> SmbShareClient.testConnection(share)
-                ShareType.NFS -> NfsShareClient.testConnection(share)
-                ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(applicationContext, share)
-                ShareType.WEBDAV -> if (WebDavShareClient.testConnection(share)) null else "WebDAV connection failed"
-                ShareType.DLNA -> "DLNA does not support sync"
-                ShareType.FTP -> FtpShareClient.testConnection(share)
-                else -> null // Online storages (OneDrive, Google Drive, Dropbox, S3) skip test
+            // RCLONE shares also skip the test — they use rclone RC, not direct HTTP.
+            val connError = when {
+                RCloneShareClient.isRCloneShare(share) -> null
+                else -> when (share.type) {
+                    ShareType.SMB    -> SmbShareClient.testConnection(share)
+                    ShareType.NFS    -> NfsShareClient.testConnection(share)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(applicationContext, share)
+                    ShareType.WEBDAV -> if (WebDavShareClient.testConnection(share)) null else "WebDAV connection failed"
+                    ShareType.DLNA   -> "DLNA does not support sync"
+                    ShareType.FTP    -> FtpShareClient.testConnection(share)
+                    else             -> null // OneDrive, Google Drive, Dropbox, S3
+                }
             }
 
             if (connError != null) {
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
-                        applicationContext.getString(R.string.connection_lost_sync_paused_for_profilename),
+                        applicationContext.getString(R.string.connection_lost_sync_paused_for_profilename, profile.name),
                         profile.id.hashCode() + 10
                     )
                 }
@@ -134,7 +140,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             if (!localDir.exists() || !localDir.isDirectory || !localDir.canRead()) {
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
-                        applicationContext.getString(R.string.cannot_read_local_folder_for_profilename),
+                        applicationContext.getString(R.string.cannot_read_local_folder_for_profilename, profile.name),
                         profile.id.hashCode() + 10
                     )
                 }
@@ -206,7 +212,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             uploadFiles(share, profile, filesToUpload, notificationId)
         }
 
-        // Sync deletions (upload direction): only delete previously-synced files
+        // Sync deletions (upload direction): only delete remote files that UFM previously
+        // uploaded AND no longer exist in the local source folder.
+        // We use the PREVIOUS hash set to identify UFM-owned remote files; we never touch
+        // remote files that were added manually (their hashes are not in previousHashes).
         if (profile.syncDeletions && profile.syncedFileHashes.isNotBlank()) {
             val previousHashes = try {
                 org.json.JSONArray(profile.syncedFileHashes).let { arr ->
@@ -218,6 +227,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 for (remoteFile in remoteFiles) {
                     if (remoteFile.isDirectory) continue
                     val hash = sha256(remoteFile.name)
+                    // Only delete if UFM uploaded it before AND it is no longer in the local folder
                     if (hash in previousHashes && remoteFile.name !in currentLocalNames) {
                         try {
                             deleteRemoteFileByType(share, "${profile.remotePath.trimEnd('/')}/${remoteFile.name}")
@@ -230,14 +240,16 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             }
         }
 
-        // Persist hash tracking: merge new upload hashes with existing tracked hashes
-        val oldHashes = try {
-            org.json.JSONArray(profile.syncedFileHashes).let { arr ->
-                (0 until arr.length()).map { arr.getString(it) }.toSet()
-            }
-        } catch (e: Exception) { emptySet() }
-        val newHashes = oldHashes + filesToUpload.map { sha256(it.name) }
-        profile.syncedFileHashes = org.json.JSONArray(newHashes.toList()).toString()
+        // Persist hash tracking: replace with the CURRENT local file set (all files that now
+        // exist locally), not an ever-growing accumulation. This ensures:
+        //  - Hashes of locally-deleted files are removed → their remote copies won't be
+        //    deleted again if they were already removed this run.
+        //  - Only files UFM currently "owns" (present locally) are tracked.
+        val currentLocalHashes = (localDir.list()?.toSet() ?: emptySet())
+            .filter { !File(localDir, it).isDirectory }
+            .map { sha256(it) }
+            .toSet()
+        profile.syncedFileHashes = org.json.JSONArray(currentLocalHashes.toList()).toString()
         val repo = AdvancedSyncProfileRepository.getInstance(applicationContext)
         repo.save(profile)
     }
@@ -278,8 +290,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             downloadFiles(share, profile, localDir, filesToDownload, notificationId)
         }
 
-        // Sync deletions (download direction): only delete files that were synced
-        // in a PRIOR sync (identified by SHA-256 hash).
+        // Sync deletions (download direction): only delete local files that UFM previously
+        // downloaded AND no longer exist on the remote.
         if (profile.syncDeletions && profile.syncedFileHashes.isNotBlank()) {
             val previousHashes = try {
                 org.json.JSONArray(profile.syncedFileHashes).let { arr ->
@@ -291,6 +303,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 for (localFile in localDir.list()?.map { File(localDir, it) } ?: emptyList()) {
                     if (localFile.isDirectory) continue
                     val hash = sha256(localFile.name)
+                    // Only delete if UFM downloaded it before AND it no longer exists on the remote
                     if (hash in previousHashes && localFile.name !in remoteNames && localFile.delete()) {
                         Log.d(TAG, "Download deletion: removed '${localFile.name}' from local")
                     }
@@ -298,14 +311,16 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             }
         }
 
-        // Persist hash tracking: merge new download hashes with existing tracked hashes
-        val oldHashes = try {
-            org.json.JSONArray(profile.syncedFileHashes).let { arr ->
-                (0 until arr.length()).map { arr.getString(it) }.toSet()
-            }
-        } catch (e: Exception) { emptySet() }
-        val newHashes = oldHashes + filesToDownload.map { sha256(it.name) }
-        profile.syncedFileHashes = org.json.JSONArray(newHashes.toList()).toString()
+        // Persist hash tracking: replace with the CURRENT remote file set (all files that
+        // now exist on remote), not an ever-growing accumulation. This ensures:
+        //  - Hashes of remotely-deleted files are removed → locally-downloaded copies
+        //    already cleaned up this run won't trigger a second delete next run.
+        //  - Only files UFM currently "owns" (present on remote) are tracked.
+        val currentRemoteHashes = remoteFiles
+            .filter { !it.isDirectory }
+            .map { sha256(it.name) }
+            .toSet()
+        profile.syncedFileHashes = org.json.JSONArray(currentRemoteHashes.toList()).toString()
         val repo = AdvancedSyncProfileRepository.getInstance(applicationContext)
         repo.save(profile)
     }
@@ -422,6 +437,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun listFilesByType(share: NetworkShare, remotePath: String): List<NetworkFile> {
+        // RCLONE: use RCloneShareClient directly
+        if (RCloneShareClient.isRCloneShare(share)) {
+            return RCloneShareClient.listFiles(share, remotePath)
+        }
         // Try direct client first, fall back to reflection-based online storage clients
         val directResult = try {
             when (share.type) {
@@ -450,6 +469,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun mkdirByType(share: NetworkShare, remotePath: String) {
+        // RCLONE: use RCloneShareClient directly
+        if (RCloneShareClient.isRCloneShare(share)) {
+            RCloneShareClient.mkdir(share, remotePath)
+            return
+        }
         val directSuccess = try {
             when (share.type) {
                 ShareType.SMB -> { SmbShareClient.mkdir(share, remotePath); true }
@@ -466,7 +490,6 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         }
         if (!directSuccess) {
             OnlineSyncHelper.tryMkdir(share, remotePath)
-            // mkdir failures for SFTP/SCP are not critical — silently continue
         }
     }
 
@@ -512,14 +535,22 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
             try {
                 val remoteFilePath = "${profile.remotePath.trimEnd('/')}/$name"
-                val inStream = FileInputStream(file)
-                val outStream = openOutputStreamForType(share, remoteFilePath)
-                inStream.use { input ->
-                    outStream.use { output ->
-                        CopyHelper.copy(input, output, file.length())
+                val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                    sourceName = name,
+                    sourceSize = file.length(),
+                    verifyDestSize = { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, remoteFilePath) },
+                    doCopy = {
+                        val inStream = FileInputStream(file)
+                        val outStream = openOutputStreamForType(share, remoteFilePath)
+                        inStream.use { input ->
+                            outStream.use { output ->
+                                CopyHelper.copy(input, output, file.length())
+                            }
+                        }
                     }
-                }
-                syncedCount++
+                )
+                if (success) syncedCount++
+                else Log.e(TAG, "Upload failed after retries for $name")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to upload file $name", e)
             }
@@ -529,7 +560,12 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         // Move files (cut): delete source files after successful upload
         if (profile.moveFiles && syncedCount > 0) {
             for (file in files) {
-                if (file.delete()) {
+                val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(
+                    share, "${profile.remotePath.trimEnd('/')}/${file.name}"
+                )
+                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        remoteSize, file.length(), file.name
+                    ) && file.delete()) {
                     Log.d(TAG, "Moved (deleted source): ${file.name}")
                 }
             }
@@ -539,6 +575,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun openOutputStreamForType(share: NetworkShare, remotePath: String): OutputStream {
+        // RCLONE: use RCloneShareClient directly (temp file + copyfile upload)
+        if (RCloneShareClient.isRCloneShare(share)) {
+            return RCloneShareClient.openOutputStream(share, remotePath)
+        }
         val directResult = try {
             when (share.type) {
                 ShareType.SMB -> SmbShareClient.openOutputStream(share, remotePath)
@@ -600,17 +640,28 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 } else {
                     File(localDir, name)
                 }
-                val inStream = openInputStreamForType(share, remoteFilePath)
-                inStream.use { input ->
-                    localFile.outputStream().use { output ->
-                        CopyHelper.copy(input, output, remoteFile.size)
+                val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                    sourceName = name,
+                    sourceSize = remoteFile.size,
+                    verifyDestSize = { localFile.length() },
+                    doCopy = {
+                        val inStream = openInputStreamForType(share, remoteFilePath)
+                        inStream.use { input ->
+                            localFile.outputStream().use { output ->
+                                CopyHelper.copy(input, output, remoteFile.size)
+                            }
+                        }
                     }
+                )
+                if (success) {
+                    // Preserve remote modification timestamp
+                    if (remoteFile.lastModified > 0L) {
+                        localFile.setLastModified(remoteFile.lastModified)
+                    }
+                    syncedCount++
+                } else {
+                    Log.e(TAG, "Download failed after retries for $name")
                 }
-                // Preserve remote modification timestamp
-                if (remoteFile.lastModified > 0L) {
-                    localFile.setLastModified(remoteFile.lastModified)
-                }
-                syncedCount++
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to download file $name", e)
             }
@@ -621,11 +672,23 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             for (remoteFile in files) {
                 val rfPath = if (remoteFile.path.isNotEmpty() && remoteFile.path != remoteFile.name)
                     remoteFile.path else "${profile.remotePath.trimEnd('/')}/${remoteFile.name}"
-                try {
-                    deleteRemoteFileByType(share, rfPath)
-                    Log.d(TAG, "Moved (deleted remote): ${remoteFile.name}")
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to delete remote '${remoteFile.name}' after download", e)
+                // Recompute local file path matching the download loop logic
+                val rName = remoteFile.name
+                val localFile = if (profile.downloadSubfolders && remoteFile.path.length > rName.length) {
+                    val relativePath = remoteFile.path.removePrefix(profile.remotePath.trimEnd('/')).trimStart('/')
+                    File(localDir, relativePath)
+                } else {
+                    File(localDir, rName)
+                }
+                // Zero-byte guard: only delete remote source if local file has data
+                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        localFile.length(), remoteFile.size, remoteFile.name)) {
+                    try {
+                        deleteRemoteFileByType(share, rfPath)
+                        Log.d(TAG, "Moved (deleted remote): ${remoteFile.name}")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to delete remote '${remoteFile.name}' after download", e)
+                    }
                 }
             }
         }
@@ -635,6 +698,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun deleteRemoteFileByType(share: NetworkShare, remotePath: String) {
+        // RCLONE: use RCloneShareClient directly
+        if (RCloneShareClient.isRCloneShare(share)) {
+            RCloneShareClient.deleteFile(share, remotePath)
+            return
+        }
         val directSuccess = try {
             when (share.type) {
                 ShareType.SMB -> { SmbShareClient.deleteFile(share, remotePath); true }
@@ -651,11 +719,14 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         }
         if (!directSuccess) {
             OnlineSyncHelper.tryDeleteFile(share, remotePath)
-            // Don't fall through to FTP — delete semantics vary by protocol
         }
     }
 
     private suspend fun openInputStreamForType(share: NetworkShare, remotePath: String): InputStream {
+        // RCLONE: use RCloneShareClient directly (downloads to temp file)
+        if (RCloneShareClient.isRCloneShare(share)) {
+            return RCloneShareClient.openInputStream(share, remotePath).first
+        }
         val directResult = try {
             when (share.type) {
                 ShareType.SMB -> SmbShareClient.openInputStream(share, remotePath)

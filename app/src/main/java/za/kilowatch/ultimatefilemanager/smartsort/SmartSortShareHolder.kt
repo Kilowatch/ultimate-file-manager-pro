@@ -5,6 +5,7 @@ import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
 import za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider
 import za.kilowatch.ultimatefilemanager.network.ShareType
+import za.kilowatch.ultimatefilemanager.network.RCloneShareClient
 import za.kilowatch.ultimatefilemanager.UfmApplication
 
 object SmartSortShareHolder {
@@ -39,12 +40,21 @@ object SmartSortShareHolder {
                     OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
                     OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
                     OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+                    OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
                 },
-                host = online.email,
+                host = when (online.provider) {
+                    OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
+                    else -> online.email
+                },
+                username = when (online.provider) {
+                    OnlineStorageProvider.RCLONE -> online.id
+                    else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: ""
+                },
                 port = 0,
                 remotePath = when {
+                    online.provider == OnlineStorageProvider.RCLONE -> ""
                     online.isWebDavProvider -> online.webDavUrl ?: ""
-                    else                   -> online.s3Endpoint ?: ""
+                    else -> online.s3Endpoint ?: ""
                 }
             )
         }

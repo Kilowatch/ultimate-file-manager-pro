@@ -5584,5 +5584,77 @@ Sending file…
     <string name="pro_badge">
 PRO
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClone
+</string>
+    <string name="add_online_storage_auth_rclone">
+Set Up Storage
+</string>
+    <string name="rclone_title">
+RClone Cloud Storage
+</string>
+    <string name="rclone_select_provider">
+Select Provider
+</string>
+    <string name="rclone_btn_test">
+Test Connection
+</string>
+    <string name="rclone_btn_save">
+Save
+</string>
+    <string name="rclone_test_success">
+Connection successful
+</string>
+    <string name="rclone_test_failed">
+Connection failed: %s
+</string>
+    <string name="rclone_save_success">
+RClone provider saved
+</string>
+    <string name="rclone_field_email">
+Email
+</string>
+    <string name="rclone_field_password">
+Password
+</string>
+    <string name="rclone_field_api_key">
+API Key
+</string>
+    <string name="rclone_provider_filen">
+Filen
+</string>
+    <string name="rclone_field_storage_name">
+Storage Name
+</string>
+    <string name="rclone_error_no_init">
+RClone is not initialized
+</string>
+    <string name="rclone_error_no_network">
+No network connection
+</string>
+    <string name="rclone_saving">
+Saving…
+</string>
+    <string name="rclone_testing">
+Testing…
+</string>
+    <string name="field_required">
+This field is required
+</string>
+    <string name="rclone_provider_drime">
+Drime
+</string>
+    <string name="rclone_field_access_token">
+API Access Token
+</string>
+    <string name="rclone_field_help_link">
+How to get this?
+</string>
+    <string name="rclone_provider_mega">
+Mega
+</string>
 </resources>
+
 

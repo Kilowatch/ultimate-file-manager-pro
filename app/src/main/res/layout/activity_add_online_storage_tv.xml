@@ -271,6 +271,41 @@
                     android:nextFocusDown="@+id/btnAuthenticate" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
+            <!-- Row 4: RClone providers -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupProvider4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:singleSelection="true"
+                app:selectionRequired="false">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipRclone"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="@string/add_online_storage_rclone"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_rclone"
+                    app:iconSize="24dp"
+                    app:backgroundTint="@color/selector_tv_toggle_btn_bg"
+                    app:iconTint="@color/selector_tv_toggle_btn_text"
+                    android:textColor="@color/selector_tv_toggle_btn_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="16dp"
+                    app:strokeColor="@color/tv_glass_border"
+                    app:strokeWidth="2dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:focusable="true"
+                    android:nextFocusUp="@+id/chipIDriveE2"
+                    android:nextFocusDown="@+id/btnAuthenticate" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <TextView
                 android:id="@+id/tvOneDriveNote"

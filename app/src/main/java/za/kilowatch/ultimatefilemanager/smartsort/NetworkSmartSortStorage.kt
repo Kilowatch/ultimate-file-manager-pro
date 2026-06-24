@@ -22,6 +22,7 @@ class NetworkSmartSortStorage(
                 ShareType.DROPBOX -> DropboxShareClient.listFiles(share, path)
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, path)
                 ShareType.WEBDAV -> WebDavShareClient.listFiles(share, path)
+                ShareType.WEBDAV -> WebDavShareClient.listFiles(share, path)
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }
         } catch (e: Exception) {
@@ -45,6 +46,7 @@ class NetworkSmartSortStorage(
                 ShareType.DROPBOX -> { DropboxShareClient.mkdir(share, path); true }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.mkdir(share, path); true }
                 ShareType.WEBDAV -> { WebDavShareClient.mkdir(share, path); true }
+                ShareType.WEBDAV -> { WebDavShareClient.mkdir(share, path); true }
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }
         } catch (e: Exception) {
@@ -65,6 +67,7 @@ class NetworkSmartSortStorage(
                 ShareType.DROPBOX -> { DropboxShareClient.rename(share, from, to); true }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.rename(share, from, to); true }
                 ShareType.WEBDAV -> { WebDavShareClient.rename(share, from, to); true }
+                ShareType.WEBDAV -> { WebDavShareClient.rename(share, from, to); true }
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }
         } catch (e: Exception) {
@@ -81,6 +84,7 @@ class NetworkSmartSortStorage(
                 ShareType.TV -> { TvShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong()); true }
                 ShareType.GOOGLE_DRIVE -> { GoogleDriveShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong()); true }
                 ShareType.DROPBOX -> { DropboxShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
+                ShareType.WEBDAV -> { WebDavShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
                 ShareType.WEBDAV -> { WebDavShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.uploadStream(share, path, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
                 ShareType.SMB -> {
@@ -113,6 +117,7 @@ class NetworkSmartSortStorage(
                 ShareType.DROPBOX -> { DropboxShareClient.deleteFile(share, path); true }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.deleteFile(share, path); true }
                 ShareType.WEBDAV -> { WebDavShareClient.deleteFile(share, path); true }
+                ShareType.WEBDAV -> { WebDavShareClient.deleteFile(share, path); true }
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }
         } catch (_: Exception) { false }
@@ -130,6 +135,7 @@ class NetworkSmartSortStorage(
                 ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, path.substringBeforeLast("/"))
                 ShareType.DROPBOX -> DropboxShareClient.listFiles(share, path.substringBeforeLast("/"))
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, path.substringBeforeLast("/"))
+                ShareType.WEBDAV -> WebDavShareClient.listFiles(share, path.substringBeforeLast("/"))
                 ShareType.WEBDAV -> WebDavShareClient.listFiles(share, path.substringBeforeLast("/"))
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }

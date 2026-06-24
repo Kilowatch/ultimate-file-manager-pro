@@ -59,6 +59,8 @@ app/store/
 .opencode/
 .vscode/
 .plans/
+rclone/
+rclone-custom/
 CLAUDE.md
 GEMINI.md
 .approval/

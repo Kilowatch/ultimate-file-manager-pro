@@ -94,6 +94,7 @@ object WebDavShareClient {
      * Returns true if the server responds with 207 Multi-Status.
      */
     suspend fun testConnection(share: NetworkShare): Boolean = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.testConnection(share)
         try {
             val request = buildRequest("PROPFIND", resolveUrl(share, ""), share)
                 .addHeader("Depth", "0")
@@ -109,6 +110,7 @@ object WebDavShareClient {
 
     suspend fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> =
         withContext(Dispatchers.IO) {
+            if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.listFiles(share, remotePath)
             val url = resolveUrl(share, remotePath)
             // shareRootPath is the server-path prefix that belongs to the share base URL.
             // e.g. share.host = "http://host:8081/seafdav/"  → shareRootPath = "/seafdav"
@@ -132,6 +134,7 @@ object WebDavShareClient {
         }
 
     suspend fun mkdir(share: NetworkShare, remotePath: String) = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.mkdir(share, remotePath)
         val url = resolveUrl(share, remotePath).trimEnd('/') + "/"
         GoRoLog.i(TAG, "mkdir: creating collection at $url")
         val request = buildRequest("MKCOL", url, share)
@@ -146,6 +149,7 @@ object WebDavShareClient {
     }
 
     suspend fun deleteFile(share: NetworkShare, remotePath: String) = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.deleteFile(share, remotePath)
         val url = resolveUrl(share, remotePath)
         val request = buildRequest("DELETE", url, share).delete().build()
         client.newCall(request).execute().use { response ->
@@ -156,10 +160,12 @@ object WebDavShareClient {
     }
 
     suspend fun deleteDir(share: NetworkShare, remotePath: String) =
-        deleteFile(share, remotePath.trimEnd('/') + "/")   // WebDAV DELETE is recursive for collections
+        if (RCloneShareClient.isRCloneShare(share)) RCloneShareClient.deleteDir(share, remotePath)
+        else deleteFile(share, remotePath.trimEnd('/') + "/")   // WebDAV DELETE is recursive for collections
 
-    suspend fun rename(share: NetworkShare, fromPath: String, toPath: String) =
+    suspend fun rename(share: NetworkShare, fromPath: String, toPath: String, isDirectory: Boolean = false) =
         withContext(Dispatchers.IO) {
+            if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.rename(share, fromPath, toPath, isDirectory)
             val fromUrl = resolveUrl(share, fromPath)
             val toUrl   = resolveUrl(share, toPath)
             val request = buildRequest("MOVE", fromUrl, share)
@@ -176,6 +182,7 @@ object WebDavShareClient {
 
     suspend fun openInputStream(share: NetworkShare, remotePath: String): Pair<InputStream, Long> =
         withContext(Dispatchers.IO) {
+            if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.openInputStream(share, remotePath)
             openInputStreamInternal(share, remotePath, null).let { response ->
                 val length = response.header("Content-Length")?.toLongOrNull() ?: -1L
                 Pair(response.body!!.byteStream(), length)
@@ -187,6 +194,7 @@ object WebDavShareClient {
         remotePath: String,
         rangeHeader: String?
     ): okhttp3.Response = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) throw IOException("RClone does not support range-streaming via okhttp3.Response")
         openInputStreamInternal(share, remotePath, rangeHeader)
     }
 
@@ -194,9 +202,13 @@ object WebDavShareClient {
         share: NetworkShare,
         remotePath: String,
         rangeHeader: String?
-    ): okhttp3.Response = openInputStreamInternal(share, remotePath, rangeHeader)
+    ): okhttp3.Response {
+        if (RCloneShareClient.isRCloneShare(share)) throw IOException("RClone does not support range-streaming via okhttp3.Response")
+        return openInputStreamInternal(share, remotePath, rangeHeader)
+    }
 
     fun getFileSizeSync(share: NetworkShare, remotePath: String): Long {
+        if (RCloneShareClient.isRCloneShare(share)) return RCloneShareClient.getFileSizeSync(share, remotePath)
         val url     = resolveUrl(share, remotePath)
         val request = buildRequest("HEAD", url, share).head().build()
         client.newCall(request).execute().use { response ->
@@ -216,6 +228,7 @@ object WebDavShareClient {
      * @return An [IRandomAccessFile] backed by stateless HTTP Range requests.
      */
     fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile {
+        if (RCloneShareClient.isRCloneShare(share)) return RCloneShareClient.openRandomAccessFile(share, remotePath)
         val fileSize = getFileSizeSync(share, remotePath)
         return object : IRandomAccessFile {
             override val size: Long = fileSize
@@ -263,6 +276,7 @@ object WebDavShareClient {
         totalSize: Long,
         onProgress: (Long) -> Unit
     ) = withContext(Dispatchers.IO) {
+        if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.uploadStream(share, remotePath, inputStream, totalSize)
         val url = resolveUrl(share, remotePath)
         GoRoLog.i(TAG, "uploadStream: PUT to $url, size=$totalSize")
 
@@ -297,6 +311,7 @@ object WebDavShareClient {
 
     suspend fun openOutputStream(share: NetworkShare, remotePath: String): OutputStream =
         withContext(Dispatchers.IO) {
+            if (RCloneShareClient.isRCloneShare(share)) return@withContext RCloneShareClient.openOutputStream(share, remotePath)
             val tempFile = File(UfmApplication.instance.cacheDir, "webdav_upload_${System.currentTimeMillis()}.tmp")
             object : OutputStream() {
                 private val fileOut = FileOutputStream(tempFile)

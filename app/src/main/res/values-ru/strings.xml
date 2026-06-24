@@ -5584,5 +5584,77 @@ PIN-код сеанса
     <string name="pro_badge">
 ПРО
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClone
+</string>
+    <string name="add_online_storage_auth_rclone">
+Настроить хранилище
+</string>
+    <string name="rclone_title">
+Облачное хранилище RClone
+</string>
+    <string name="rclone_select_provider">
+Выберите поставщика
+</string>
+    <string name="rclone_btn_test">
+Тестовое соединение
+</string>
+    <string name="rclone_btn_save">
+Сохранять
+</string>
+    <string name="rclone_test_success">
+Соединение успешно
+</string>
+    <string name="rclone_test_failed">
+Не удалось подключиться: %s
+</string>
+    <string name="rclone_save_success">
+Поставщик RClone сохранен.
+</string>
+    <string name="rclone_field_email">
+Электронная почта
+</string>
+    <string name="rclone_field_password">
+Пароль
+</string>
+    <string name="rclone_field_api_key">
+API-ключ
+</string>
+    <string name="rclone_provider_filen">
+Филен
+</string>
+    <string name="rclone_field_storage_name">
+Имя хранилища
+</string>
+    <string name="rclone_error_no_init">
+RClone не инициализируется
+</string>
+    <string name="rclone_error_no_network">
+Нет подключения к сети
+</string>
+    <string name="rclone_saving">
+Сохранение…
+</string>
+    <string name="rclone_testing">
+Тестирование…
+</string>
+    <string name="field_required">
+Это поле обязательно к заполнению
+</string>
+    <string name="rclone_provider_drime">
+Дриме
+</string>
+    <string name="rclone_field_access_token">
+Токен доступа к API
+</string>
+    <string name="rclone_field_help_link">
+Как это получить?
+</string>
+    <string name="rclone_provider_mega">
+Мега
+</string>
 </resources>
+
 

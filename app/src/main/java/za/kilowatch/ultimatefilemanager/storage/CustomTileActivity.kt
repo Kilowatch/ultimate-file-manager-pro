@@ -515,7 +515,37 @@ class CustomTileActivity : AppCompatActivity() {
                 }
                 startActivity(intent)
             }
+            item.isOnlineStorage -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", true)
+                        putExtra("isOnlineStorage", true)
+                        putExtra("share_id", item.onlineStorage?.id)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                    return
+                }
+                val intent = Intent(this, za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity::class.java).apply {
+                    putExtra("isOnlineStorage", true)
+                    putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
+                    putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    applyPickerExtras()
+                }
+                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
+            }
             item.isNetworkRoot -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", true)
+                        putExtra("share_id", item.networkShare?.id)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                    return
+                }
                 val intent = Intent(this, za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity::class.java).apply {
                     if (item.networkShare?.type == za.kilowatch.ultimatefilemanager.network.ShareType.TV) {
                         putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_PAIRED_DEVICE_ID, item.networkShare?.id)
@@ -528,6 +558,16 @@ class CustomTileActivity : AppCompatActivity() {
                 if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
             item.isFavoriteTile -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", false)
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                    return
+                }
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
@@ -536,6 +576,16 @@ class CustomTileActivity : AppCompatActivity() {
                 if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
             }
             else -> {
+                if (isDrivePicker) {
+                    val data = Intent().apply {
+                        putExtra("is_network", false)
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    }
+                    setResult(RESULT_OK, data)
+                    finish()
+                    return
+                }
                 // Physical storage or unknown — open file browser
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
                     putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.mountPath)

@@ -655,6 +655,8 @@ class ImageCompressActivity : AppCompatActivity() {
                     .use { out -> CopyHelper.copy(inp, out) }
                 ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, remotePath)
                     .use { out -> CopyHelper.copy(inp, out) }
+                ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, remotePath)
+                    .use { out -> CopyHelper.copy(inp, out) }
                 ShareType.NFS -> NfsShareClient.openOutputStream(share, remotePath)
                     .use { out -> CopyHelper.copy(inp, out) }
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")

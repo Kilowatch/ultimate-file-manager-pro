@@ -175,21 +175,28 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 }
 
                 try {
-                    val inStream = FileInputStream(fileToUpload)
-                        
-                    val outStream: OutputStream = when (share.type) {
-                        ShareType.SMB -> SmbShareClient.openOutputStream(share, "${profile.remotePath.trimEnd('/')}/$name")
-                        ShareType.NFS -> NfsShareClient.openOutputStream(share, "${profile.remotePath.trimEnd('/')}/$name")
-                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
-                        else -> FtpShareClient.openOutputStream(share, "${profile.remotePath.trimEnd('/')}/$name")
-                    }
-                    
-                    inStream.use { input ->
-                        outStream.use { output ->
-                            za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, fileToUpload.length())
+                    val remoteFilePath = "${profile.remotePath.trimEnd('/')}/$name"
+                    val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                        sourceName = name,
+                        sourceSize = fileToUpload.length(),
+                        verifyDestSize = { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, remoteFilePath) },
+                        doCopy = {
+                            val inStream = FileInputStream(fileToUpload)
+                            val outStream: OutputStream = when (share.type) {
+                                ShareType.SMB -> SmbShareClient.openOutputStream(share, remoteFilePath)
+                                ShareType.NFS -> NfsShareClient.openOutputStream(share, remoteFilePath)
+                                ShareType.DLNA -> throw UnsupportedOperationException("DLNA does not support sync")
+                                else -> FtpShareClient.openOutputStream(share, remoteFilePath)
+                            }
+                            inStream.use { input ->
+                                outStream.use { output ->
+                                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, fileToUpload.length())
+                                }
+                            }
                         }
-                    }
-                    syncedCount++
+                    )
+                    if (success) syncedCount++
+                    else Log.e(TAG, "Upload failed after retries for $name")
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to upload file $name", e)
                 }

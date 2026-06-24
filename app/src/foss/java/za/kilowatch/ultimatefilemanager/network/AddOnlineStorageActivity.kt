@@ -67,11 +67,13 @@ class AddOnlineStorageActivity : AppCompatActivity() {
         // Group 1 (Google Drive / OneDrive) is fully hidden.
         val toggleGroup2 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider2)
         val toggleGroup3 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider3)
+        val toggleGroup4 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider4)
         val btnAuthenticate = findViewById<MaterialButton>(R.id.btnAuthenticate)
 
         toggleGroup2.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 toggleGroup3.clearChecked()
+                toggleGroup4.clearChecked()
                 when (checkedId) {
                     R.id.chipDropbox -> { /* chip hidden — should never fire */ }
                     R.id.chipWebDav  -> btnAuthenticate.setText(R.string.add_online_storage_auth_webdav)
@@ -82,9 +84,20 @@ class AddOnlineStorageActivity : AppCompatActivity() {
         toggleGroup3.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
                 toggleGroup2.clearChecked()
+                toggleGroup4.clearChecked()
                 when (checkedId) {
                     R.id.chipAwsS3    -> btnAuthenticate.setText(R.string.add_online_storage_auth_aws_s3)
                     R.id.chipIDriveE2 -> btnAuthenticate.setText(R.string.add_online_storage_auth_idrive_e2)
+                }
+            }
+        }
+
+        toggleGroup4.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                toggleGroup2.clearChecked()
+                toggleGroup3.clearChecked()
+                if (checkedId == R.id.chipRclone) {
+                    btnAuthenticate.setText(R.string.add_online_storage_auth_rclone)
                 }
             }
         }
@@ -116,15 +129,18 @@ class AddOnlineStorageActivity : AppCompatActivity() {
         btnAuthenticate.setOnClickListener {
             val id2 = toggleGroup2.checkedButtonId
             val id3 = toggleGroup3.checkedButtonId
+            val id4 = toggleGroup4.checkedButtonId
             val checkedId = when {
                 id2 != View.NO_ID -> id2
                 id3 != View.NO_ID -> id3
+                id4 != View.NO_ID -> id4
                 else              -> View.NO_ID
             }
             when (checkedId) {
                 R.id.chipWebDav   -> startWebDavSetupFlow()
                 R.id.chipAwsS3    -> startS3AuthFlow(OnlineStorageProvider.AWS_S3)
                 R.id.chipIDriveE2 -> startS3AuthFlow(OnlineStorageProvider.IDRIVE_E2)
+                R.id.chipRclone   -> startRCloneFlow()
             }
         }
     }
@@ -151,6 +167,12 @@ class AddOnlineStorageActivity : AppCompatActivity() {
     private fun startWebDavSetupFlow() {
         if (isConnected) return
         startActivity(Intent(this, WebDavSetupActivity::class.java))
+        finish()
+    }
+
+    private fun startRCloneFlow() {
+        if (isConnected) return
+        startActivity(Intent(this, RCloneProviderActivity::class.java))
         finish()
     }
 }

@@ -1055,6 +1055,7 @@ class FileServer(
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3       -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2   -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV      -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE      -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
             },
             host = storage.s3Endpoint ?: storage.email,
             domain = storage.s3Bucket ?: "",
@@ -1678,6 +1679,7 @@ class FileServer(
                 za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, remotePath) }
                 za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, remotePath) }
                 za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, remotePath) }
+                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, remotePath) }
                 za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, remotePath)
                 za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, remotePath)
             }
@@ -1817,6 +1819,10 @@ class FileServer(
                     runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, targetPath) }
                     true
                 }
+                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
+                    runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, targetPath) }
+                    true
+                }
                 za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> {
                     za.kilowatch.ultimatefilemanager.network.NfsShareClient.mkdir(share, targetPath)
                     true
@@ -1917,6 +1923,10 @@ class FileServer(
                     }
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> {
                         za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, remotePath)
+                        true
+                    }
+                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
+                        za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, remotePath)
                         true
                     }
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
@@ -2032,6 +2042,10 @@ class FileServer(
                 }
                 za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> {
                     runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.rename(share, remotePath, newRemotePath) }
+                    true
+                }
+                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
+                    runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, remotePath, newRemotePath) }
                     true
                 }
                 za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
@@ -2166,6 +2180,7 @@ class FileServer(
                             za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.rename(destShare, srcRemote, destRemote) }
                             za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.rename(destShare, srcRemote, destRemote) }
                              za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(destShare, srcRemote, destRemote) }
+                             za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(destShare, srcRemote, destRemote) }
                              za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.rename(destShare, srcRemote, destRemote)
                              za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                         }
@@ -2179,6 +2194,7 @@ class FileServer(
                              za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, srcRemote).first }
                              za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcRemote).first }
                              za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcRemote).first }
+                               za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcRemote).first }
                                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcRemote).first }
                               za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcRemote)
                               za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(srcShare, srcRemote)
@@ -2202,6 +2218,7 @@ class FileServer(
                                  za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(destShare, destRemote) }
                                  za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(destShare, destRemote) }
                                  za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, destRemote) }
+                                 za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, destRemote) }
                                   za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(destShare, destRemote)
                                   else -> throw Exception("Unhandled share type")
                              }
@@ -2219,6 +2236,7 @@ class FileServer(
                                       za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
+                                      za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(srcShare, srcRemote)
                                       za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                   }
@@ -2232,6 +2250,7 @@ class FileServer(
                                       za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(srcShare, srcRemote) }
+                                      za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(srcShare, srcRemote)
                                       za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
@@ -2261,6 +2280,7 @@ class FileServer(
                              za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(destShare, destRemote) }
                              za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(destShare, destRemote) }
                                  za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(destShare, destRemote) }
+                               za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, destRemote) }
                                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, destRemote) }
                                za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(destShare, destRemote)
                               else -> throw Exception("Unhandled share type")
@@ -2294,6 +2314,7 @@ class FileServer(
                          za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcRemote).first }
                              za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcRemote).first }
                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcRemote).first }
+                           za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcRemote).first }
                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcRemote)
                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(srcShare, srcRemote)
                      }
@@ -2311,6 +2332,7 @@ class FileServer(
                                   za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(srcShare, srcRemote) }
                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
+                                   za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(srcShare, srcRemote)
                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                               }
@@ -2324,6 +2346,7 @@ class FileServer(
                                   za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(srcShare, srcRemote) }
                                   za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(srcShare, srcRemote) }
                                       za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(srcShare, srcRemote) }
+                                   za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(srcShare, srcRemote) }
                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(srcShare, srcRemote)
                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
@@ -2573,6 +2596,8 @@ class FileServer(
                         runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
                         runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
+                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
+                        runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->
                         za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, destPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.DLNA ->
@@ -2646,6 +2671,7 @@ class FileServer(
                     za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> runBlocking { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> runBlocking { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> runBlocking { za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(share, destPath) }
+                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> runBlocking { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, destPath) }
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, destPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
@@ -2777,6 +2803,10 @@ class FileServer(
                     val (stream, fileSize) = za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, remotePath)
                     Pair(java.io.BufferedInputStream(stream), fileSize)
                 }
+                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> {
+                    val (stream, fileSize) = za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, remotePath)
+                    Pair(java.io.BufferedInputStream(stream), fileSize)
+                }
                 za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> {
                     Log.d(TAG, "Downloading from NFS: $remotePath")
                     val stream = za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(share, remotePath)
@@ -2873,6 +2903,7 @@ class FileServer(
                     za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, currentPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, currentPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, currentPath)
+                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, currentPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, currentPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, currentPath)
                     za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, currentPath)
@@ -2981,6 +3012,7 @@ class FileServer(
                                     za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(share, filePath).first
                                     za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(share, filePath).first
                                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(share, filePath).first
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, filePath).first
                                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, filePath).first
                                     za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(share, filePath)
                                     za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.openInputStream(share, filePath)

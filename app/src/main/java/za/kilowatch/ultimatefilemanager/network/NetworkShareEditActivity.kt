@@ -1292,7 +1292,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 ShareType.NFS  -> NfsShareClient.testConnection(share)
                 ShareType.DLNA -> DlnaShareClient.testConnection(share)
                 ShareType.TV, ShareType.ONEDRIVE, ShareType.GOOGLE_DRIVE,
-                ShareType.DROPBOX, ShareType.AWS_S3, ShareType.IDRIVE_E2,
+                ShareType.DROPBOX, ShareType.AWS_S3, ShareType.IDRIVE_E2, ShareType.WEBDAV,
                 ShareType.WEBDAV -> null
             }
             runOnUiThread {

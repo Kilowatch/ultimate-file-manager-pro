@@ -16,13 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom tile create/edit dialog on TV: the "Show in folder/file pickers" toggle switch now responds to OK/Enter on the remote — D-pad focus reaches the row and pressing toggles the switch.
 - Custom tile create/edit dialog on TV: the icon preview now responds to OK/Enter on the remote — pressing opens the built-in icon picker with D-pad navigable grid items.
 
-## [1.5.8] — 2026-06-22
+## [1.5.8] — 2026-06-23
 
 ### Added
 - New Advanced Sync system — fully independent sync engine alongside existing Folder Sync, with support for upload, download, and two-way bidirectional sync across all storage types (SMB, NFS, FTP, SFTP/SCP, WebDAV, S3, Google Drive, Dropbox, OneDrive)
 - Instant sync trigger using FileObserver with configurable per-profile toggle, 5-second debounce, and battery-aware skipping below 15%
 - Conflict resolution for two-way sync with four strategies: skip, use newest, keep local, keep remote — conflicts are logged per profile
 - Sync deletions with SHA-256 hashed tracking — files deleted from source are removed from destination on next sync, with no plain-text file names written to disk
+- RClone cloud storage integration — "RClone" chip in Online Shares > Add Storage, with data-driven provider setup Activity (mobile + TV)
+- First RClone provider: Filen (Email, Password, API Key fields) with Test Connection and password-obscured save via rclone RC
+- RCloneConfig.kt with config builder functions for all 112 supported RClone storage providers
+- RCloneAdd.md reference guide covering .aar rebuild, provider addition, and troubleshooting
+- Full RClone cloud storage browsing — list files, create folders, delete, rename, copy, move, upload, and download with the same UI as S3/WebDAV via `RCloneShareClient`
 - Move files (cut) option for upload and download directions — source files are deleted after successful transfer, mutually exclusive with sync deletions
 - Download subfolders toggle for download direction — recursively fetches files from all subdirectories preserving folder structure
 - WiFi-only constraint per profile using WorkManager NetworkType.UNMETERED

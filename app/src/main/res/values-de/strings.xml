@@ -5584,5 +5584,77 @@ Datei wird gesendet…
     <string name="pro_badge">
 PRO
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClone
+</string>
+    <string name="add_online_storage_auth_rclone">
+Speicher einrichten
+</string>
+    <string name="rclone_title">
+RClone Cloud-Speicher
+</string>
+    <string name="rclone_select_provider">
+Wählen Sie Anbieter aus
+</string>
+    <string name="rclone_btn_test">
+Testverbindung
+</string>
+    <string name="rclone_btn_save">
+Speichern
+</string>
+    <string name="rclone_test_success">
+Verbindung erfolgreich
+</string>
+    <string name="rclone_test_failed">
+Verbindung fehlgeschlagen: %s
+</string>
+    <string name="rclone_save_success">
+RClone-Anbieter gespeichert
+</string>
+    <string name="rclone_field_email">
+E-Mail
+</string>
+    <string name="rclone_field_password">
+Passwort
+</string>
+    <string name="rclone_field_api_key">
+API-Schlüssel
+</string>
+    <string name="rclone_provider_filen">
+Filen
+</string>
+    <string name="rclone_field_storage_name">
+Speichername
+</string>
+    <string name="rclone_error_no_init">
+RClone ist nicht initialisiert
+</string>
+    <string name="rclone_error_no_network">
+Keine Netzwerkverbindung
+</string>
+    <string name="rclone_saving">
+Sparen…
+</string>
+    <string name="rclone_testing">
+Testen…
+</string>
+    <string name="field_required">
+Dieses Feld ist erforderlich
+</string>
+    <string name="rclone_provider_drime">
+Drime
+</string>
+    <string name="rclone_field_access_token">
+API-Zugriffstoken
+</string>
+    <string name="rclone_field_help_link">
+Wie bekomme ich das?
+</string>
+    <string name="rclone_provider_mega">
+Mega
+</string>
 </resources>
+
 

@@ -21,6 +21,8 @@
         <exclude domain="file" path="vault/"/>
         <exclude domain="file" path="vault_mirror/"/>
         <exclude domain="file" path="ssh_keys/"/>
+        <exclude domain="file" path="rclone_encrypted.json"/>
+        <exclude domain="file" path="online_storages.json"/>
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="acceptance_prefs.xml"/>
@@ -35,5 +37,7 @@
         <exclude domain="file" path="vault/"/>
         <exclude domain="file" path="vault_mirror/"/>
         <exclude domain="file" path="ssh_keys/"/>
+        <exclude domain="file" path="rclone_encrypted.json"/>
+        <exclude domain="file" path="online_storages.json"/>
     </device-transfer>
 </data-extraction-rules>

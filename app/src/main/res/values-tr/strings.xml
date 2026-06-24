@@ -5584,5 +5584,77 @@ Dosya gönderiliyor…
     <string name="pro_badge">
 PRO
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClon
+</string>
+    <string name="add_online_storage_auth_rclone">
+Depolamayı Ayarlama
+</string>
+    <string name="rclone_title">
+RClone Bulut Depolama
+</string>
+    <string name="rclone_select_provider">
+Sağlayıcı Seçin
+</string>
+    <string name="rclone_btn_test">
+Bağlantıyı Test Et
+</string>
+    <string name="rclone_btn_save">
+Kaydetmek
+</string>
+    <string name="rclone_test_success">
+Bağlantı başarılı
+</string>
+    <string name="rclone_test_failed">
+Bağlantı başarısız oldu: %s
+</string>
+    <string name="rclone_save_success">
+RClone sağlayıcısı kaydedildi
+</string>
+    <string name="rclone_field_email">
+E-posta
+</string>
+    <string name="rclone_field_password">
+Şifre
+</string>
+    <string name="rclone_field_api_key">
+API Anahtarı
+</string>
+    <string name="rclone_provider_filen">
+Filen
+</string>
+    <string name="rclone_field_storage_name">
+Depolama Adı
+</string>
+    <string name="rclone_error_no_init">
+RClone başlatılmadı
+</string>
+    <string name="rclone_error_no_network">
+Ağ bağlantısı yok
+</string>
+    <string name="rclone_saving">
+Kaydediliyor…
+</string>
+    <string name="rclone_testing">
+Test…
+</string>
+    <string name="field_required">
+Bu alan zorunludur
+</string>
+    <string name="rclone_provider_drime">
+Drime
+</string>
+    <string name="rclone_field_access_token">
+API Erişim Jetonu
+</string>
+    <string name="rclone_field_help_link">
+Bu nasıl elde edilir?
+</string>
+    <string name="rclone_provider_mega">
+Mega
+</string>
 </resources>
+
 

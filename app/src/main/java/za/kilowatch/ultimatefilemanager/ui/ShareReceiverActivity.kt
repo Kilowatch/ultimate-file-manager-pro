@@ -356,6 +356,10 @@ class ShareReceiverActivity : AppCompatActivity() {
                         za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, remoteFilePath)
                             .use { output -> input.copyTo(output) }
                     }
+                    ShareType.WEBDAV -> {
+                        za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, remoteFilePath)
+                            .use { output -> input.copyTo(output) }
+                    }
                     ShareType.NFS -> {
                         za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(share, remoteFilePath)
                             .use { output -> input.copyTo(output) }
@@ -381,14 +385,21 @@ class ShareReceiverActivity : AppCompatActivity() {
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
                 za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
+                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
             }
             return NetworkShare(
                 id = fromOnline.id,
                 name = fromOnline.displayName,
                 type = providerType,
-                host = if (fromOnline.isWebDavProvider) (fromOnline.webDavUrl ?: fromOnline.email) else (fromOnline.s3Endpoint ?: fromOnline.email),
+                host = when (fromOnline.provider) {
+                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                    else -> if (fromOnline.isWebDavProvider) (fromOnline.webDavUrl ?: fromOnline.email) else (fromOnline.s3Endpoint ?: fromOnline.email)
+                },
                 port = 0,
-                username = if (fromOnline.isWebDavProvider) (fromOnline.webDavUsername ?: fromOnline.email) else (fromOnline.s3AccessKey ?: fromOnline.email),
+                username = when (fromOnline.provider) {
+                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> fromOnline.id
+                    else -> if (fromOnline.isWebDavProvider) (fromOnline.webDavUsername ?: fromOnline.email) else (fromOnline.s3AccessKey ?: fromOnline.email)
+                },
                 password = if (fromOnline.isWebDavProvider) (fromOnline.webDavPassword ?: "") else (fromOnline.s3SecretKey ?: ""),
                 domain = fromOnline.s3Bucket ?: "",
                 remotePath = fromOnline.s3Region ?: "/",

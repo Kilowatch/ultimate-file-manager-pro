@@ -120,6 +120,7 @@ object BatchRenameExecutor {
                         ShareType.DROPBOX -> DropboxShareClient.rename(share, nf.path, targetPath)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, nf.path, targetPath)
                         ShareType.WEBDAV -> WebDavShareClient.rename(share, nf.path, targetPath)
+                        ShareType.WEBDAV -> WebDavShareClient.rename(share, nf.path, targetPath)
                         ShareType.NFS -> NfsShareClient.rename(share, nf.path, targetPath)
                         ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                     }

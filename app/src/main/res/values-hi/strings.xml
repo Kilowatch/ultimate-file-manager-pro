@@ -5584,5 +5584,77 @@ AMOLED
     <string name="pro_badge">
 प्रो
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+आरक्लोन
+</string>
+    <string name="add_online_storage_auth_rclone">
+भंडारण स्थापित करें
+</string>
+    <string name="rclone_title">
+आरक्लोन क्लाउड स्टोरेज
+</string>
+    <string name="rclone_select_provider">
+प्रदाता का चयन करें
+</string>
+    <string name="rclone_btn_test">
+परीक्षण कनेक्शन
+</string>
+    <string name="rclone_btn_save">
+बचाना
+</string>
+    <string name="rclone_test_success">
+कनेक्शन सफल
+</string>
+    <string name="rclone_test_failed">
+कनेक्शन विफल: %s
+</string>
+    <string name="rclone_save_success">
+आरक्लोन प्रदाता सहेजा गया
+</string>
+    <string name="rclone_field_email">
+ईमेल
+</string>
+    <string name="rclone_field_password">
+पासवर्ड
+</string>
+    <string name="rclone_field_api_key">
+एपीआई कुंजी
+</string>
+    <string name="rclone_provider_filen">
+फाइलन
+</string>
+    <string name="rclone_field_storage_name">
+भंडारण का नाम
+</string>
+    <string name="rclone_error_no_init">
+RClone प्रारंभ नहीं किया गया है
+</string>
+    <string name="rclone_error_no_network">
+कोई नेटवर्क कनेक्शन नहीं है
+</string>
+    <string name="rclone_saving">
+सहेजा जा रहा है...
+</string>
+    <string name="rclone_testing">
+परीक्षण...
+</string>
+    <string name="field_required">
+यह फ़ील्ड आवश्यक है
+</string>
+    <string name="rclone_provider_drime">
+ड्रिमे
+</string>
+    <string name="rclone_field_access_token">
+एपीआई एक्सेस टोकन
+</string>
+    <string name="rclone_field_help_link">
+इसको कैसे लें?
+</string>
+    <string name="rclone_provider_mega">
+मेगा
+</string>
 </resources>
+
 

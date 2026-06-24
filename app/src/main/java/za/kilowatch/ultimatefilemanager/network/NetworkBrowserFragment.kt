@@ -67,6 +67,7 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private lateinit var share: NetworkShare
+    private var originalRemotePath: String = ""
     private var currentPath: String = ""
     private var isTv: Boolean = false
     private var isTwinWindow: Boolean = false
@@ -139,16 +140,20 @@ class NetworkBrowserFragment : Fragment() {
                         OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
                         OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
                         OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+                        OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
                     },
-                    host = when {
-                        online.isWebDavProvider -> online.webDavUrl ?: ""
-                        else                    -> online.s3Endpoint ?: online.email
+                    host = when (online.provider) {
+                        OnlineStorageProvider.RCLONE -> RCloneShareClient.RCLONE_HOST_MARKER
+                        else -> if (online.isWebDavProvider) online.webDavUrl ?: "" else online.s3Endpoint ?: online.email
                     },
                     domain = online.s3Bucket ?: "",
                     remotePath = online.s3Region ?: "",
-                    username = when {
-                        online.isWebDavProvider -> online.webDavUsername ?: ""
-                        else                    -> online.s3AccessKey ?: online.email
+                    username = when (online.provider) {
+                        // Use online.id as the rclone remote name — matches the section
+                        // key in the encrypted config file and the name registered via
+                        // launchRCloneBrowse, so all three stay in sync.
+                        OnlineStorageProvider.RCLONE -> online.id
+                        else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: online.email
                     },
                     password = when {
                         online.isWebDavProvider -> online.webDavPassword ?: ""
@@ -162,6 +167,8 @@ class NetworkBrowserFragment : Fragment() {
                 } ?: return
             }
         }
+
+        originalRemotePath = share.remotePath
 
         isTv = context.packageManager.hasSystemFeature("android.software.leanback")
         isTwinWindow = arguments?.getBoolean(ARG_IS_TWIN_WINDOW, false) == true
@@ -450,19 +457,34 @@ class NetworkBrowserFragment : Fragment() {
                         }
                     } else {
                         // Inside a discovered share
-                        val parts = currentPath.trimStart('/').split("/", limit = 2)
-                        val shareName = parts[0]
-                        val innerPath = parts.getOrElse(1) { "" }
-                        // Update share to the effective copy so all file operations
-                        // (copy, delete, rename, etc.) use the correct remotePath
-                        share = share.copy(remotePath = "/$shareName")
-                        fileAdapter.share = share
-                        var files = SmbShareClient.listFiles(share, innerPath)
-                        files = files.filter { it.name != ".." }
-                        withContext(Dispatchers.Main) {
-                            currentFiles = files
-                            performSearch(edtSearch.text.toString().trim())
-                            updateSubtitle()
+                        val existingShare = share.remotePath.trimStart('/')
+                        if (existingShare.isNotEmpty()) {
+                            // Already navigated into a share — currentPath is relative to share root
+                            var files = SmbShareClient.listFiles(share, currentPath.trimStart('/'))
+                            files = files.filter { it.name != ".." }
+                            withContext(Dispatchers.Main) {
+                                progressBar.visibility = View.GONE
+                                currentFiles = files
+                                performSearch(edtSearch.text.toString().trim())
+                                updateSubtitle()
+                            }
+                        } else {
+                            // First navigation into a share — extract share name from currentPath
+                            val parts = currentPath.trimStart('/').split("/", limit = 2)
+                            val shareName = parts[0]
+                            val innerPath = parts.getOrElse(1) { "" }
+                            // Update share to the effective copy so all file operations
+                            // (copy, delete, rename, etc.) use the correct remotePath
+                            share = share.copy(remotePath = "/$shareName")
+                            fileAdapter.share = share
+                            var files = SmbShareClient.listFiles(share, innerPath)
+                            files = files.filter { it.name != ".." }
+                            withContext(Dispatchers.Main) {
+                                progressBar.visibility = View.GONE
+                                currentFiles = files
+                                performSearch(edtSearch.text.toString().trim())
+                                updateSubtitle()
+                            }
                         }
                     }
                     return@launch
@@ -597,10 +619,17 @@ class NetworkBrowserFragment : Fragment() {
             return true
         }
         if (currentPath.isEmpty() || currentPath == "/") return false
-        
+
         val lastSlash = currentPath.lastIndexOf('/')
         lastExitedPath = currentPath
-        currentPath = if (lastSlash <= 0) "/" else currentPath.substring(0, lastSlash)
+        currentPath = if (lastSlash <= 0) {
+            // Going back from "/shareName" → go to server root
+            share = share.copy(remotePath = originalRemotePath)
+            fileAdapter.share = share
+            ""
+        } else {
+            currentPath.substring(0, lastSlash)
+        }
         loadDirectory()
         return true
     }
@@ -783,21 +812,37 @@ class NetworkBrowserFragment : Fragment() {
             }
     }
 
+    /**
+     * Strips the share-name prefix from [path] when in server-mode.
+     * In server-mode, share.remotePath already encodes the share name (e.g. "/docker"),
+     * so currentPath contains it as a leading segment (e.g. "/docker/_projects").
+     * Passing the raw currentPath to SmbShareClient produces a duplicate segment.
+     */
+    private fun stripSharePrefix(path: String): String {
+        if (!share.isServerMode || share.remotePath.isEmpty()) return path
+        val prefix = share.remotePath.trimStart('/')
+        return when {
+            path.startsWith("$prefix/") -> path.removePrefix("$prefix/")
+            path == prefix              -> ""
+            else                        -> path
+        }
+    }
+
     private fun createNetworkTextFile(filename: String) {
         val share = this.share
         val currentPath = this.currentPath
-        val remotePath = if (currentPath.isEmpty()) filename else "$currentPath/$filename"
+        val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
         // Clear any stale network save bridge
         za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved = null
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val existingNames = try {
                     val files = when (share.type) {
-                        ShareType.SMB -> SmbShareClient.listFiles(share, currentPath)
-                        ShareType.FTP -> FtpShareClient.listFiles(share, currentPath)
-                        ShareType.TV -> TvShareClient.listFiles(share, currentPath)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
-                        ShareType.NFS -> NfsShareClient.listFiles(share, currentPath)
+                        ShareType.SMB -> SmbShareClient.listFiles(share, cleanPath)
+                        ShareType.FTP -> FtpShareClient.listFiles(share, cleanPath)
+                        ShareType.TV -> TvShareClient.listFiles(share, cleanPath)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, cleanPath)
+                        ShareType.NFS -> NfsShareClient.listFiles(share, cleanPath)
                         else -> emptyList()
                     }
                     files.map { it.name }.toSet()
@@ -815,7 +860,7 @@ class NetworkBrowserFragment : Fragment() {
                     candidate
                 } else filename
 
-                val finalPath = if (currentPath.isEmpty()) finalName else "$currentPath/$finalName"
+                val finalPath = if (cleanPath.isEmpty()) finalName else "$cleanPath/$finalName"
 
                 when (share.type) {
                     ShareType.SMB -> SmbShareClient.openOutputStream(share, finalPath).use { }
@@ -940,7 +985,8 @@ class NetworkBrowserFragment : Fragment() {
             .setPositiveButton(R.string.new_folder_create) { _, _ ->
                 val name = editText.text.toString().trim()
                 if (name.isNotEmpty()) {
-                    val targetPath = if (currentPath.isEmpty()) name else "$currentPath/$name"
+                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
+                    val targetPath = if (cleanPath.isEmpty()) name else "$cleanPath/$name"
                     lifecycleScope.launch(Dispatchers.IO) {
                         try {
                             when (share.type) {
@@ -998,7 +1044,7 @@ class NetworkBrowserFragment : Fragment() {
                                 ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, file.path, targetPath)
                                 ShareType.DROPBOX      -> DropboxShareClient.rename(share, file.path, targetPath)
                                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, file.path, targetPath)
-                                ShareType.WEBDAV       -> WebDavShareClient.rename(share, file.path, targetPath)
+                                ShareType.WEBDAV       -> WebDavShareClient.rename(share, file.path, targetPath, file.isDirectory)
                                 ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
                             }
                             withContext(Dispatchers.Main) { 

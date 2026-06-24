@@ -320,6 +320,9 @@ class SmartSortEngine {
                 ShareType.WEBDAV -> {
                     WebDavShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
                 }
+                ShareType.WEBDAV -> {
+                    WebDavShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                }
                 ShareType.NFS -> {
                     NfsShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
                 }
@@ -478,9 +481,31 @@ class SmartSortEngine {
             else -> null
         }
         if (data != null && dstStorage.writeBytes(dstPath, data)) {
-            srcStorage.delete(srcPath)
-            return true
+            // Zero-byte guard: verify destination has data before deleting source
+            val destSize = getSmartSortDestSize(dstStorage, dstPath)
+            if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                    destSize, data.size.toLong(), File(srcPath).name)) {
+                srcStorage.delete(srcPath)
+                return true
+            }
         }
         return false
+    }
+
+    /**
+     * Returns the size of a file at [path] on the given [storage].
+     * Used for zero-byte verification before source deletion in move operations.
+     */
+    private suspend fun getSmartSortDestSize(storage: SmartSortStorage, path: String): Long {
+        return when (storage) {
+            is LocalSmartSortStorage -> try { File(path).length() } catch (_: Exception) { -1L }
+            is NetworkSmartSortStorage -> {
+                val share = storage.getShare()
+                try {
+                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, path)
+                } catch (_: Exception) { -1L }
+            }
+            else -> -1L
+        }
     }
 }

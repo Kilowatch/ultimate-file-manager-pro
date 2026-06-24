@@ -308,10 +308,26 @@ class TwinWindowActivity : AppCompatActivity() {
             handleMediaFileSelected(index, networkFile.path, networkFile.name, shareId, null)
         }
         fragment.onCloseTwinWindow = {
+            val liveShare = fragment.getShare()
+            // In server-mode SMB, the fragment's share.remotePath holds the active SMB share name
+            // (e.g. "/Share") and getCurrentPath() is relative to that share root (e.g. "/Camera").
+            // NetworkBrowserActivity expects EXTRA_INITIAL_PATH to be the full path with the share
+            // name as the first segment (e.g. "Share/Camera") so it can re-derive the share name
+            // on first navigation. Without this reconstruction, the share name is dropped and the
+            // subfolder name (e.g. "Camera") is mistakenly used as the SMB share name.
+            val initialPath = if (liveShare.isServerMode) {
+                val shareName = liveShare.remotePath.trimStart('/')
+                val subPath   = fragment.getCurrentPath().trimStart('/')
+                if (shareName.isEmpty()) subPath
+                else if (subPath.isEmpty()) shareName
+                else "$shareName/$subPath"
+            } else {
+                fragment.getCurrentPath()
+            }
             val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, fragment.getShare().id)
-                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, fragment.getShare().name)
-                putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, fragment.getCurrentPath())
+                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, liveShare.id)
+                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, liveShare.name)
+                putExtra(NetworkBrowserActivity.EXTRA_INITIAL_PATH, initialPath)
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             }
             startActivity(intent)

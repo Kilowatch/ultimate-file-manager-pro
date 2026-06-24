@@ -556,12 +556,18 @@ object UfmFileSystemBridge {
                 OnlineStorageProvider.AWS_S3,
                 OnlineStorageProvider.IDRIVE_E2    -> storage.s3Endpoint ?: ""
                 OnlineStorageProvider.WEBDAV        -> storage.webDavUrl ?: ""
+                OnlineStorageProvider.RCLONE        -> RCloneShareClient.RCLONE_HOST_MARKER
             },
             domain     = storage.s3Bucket ?: "",
             remotePath = storage.s3Region ?: "",
-            username   = when {
-                storage.isWebDavProvider -> storage.webDavUsername ?: ""
-                else                     -> storage.s3AccessKey ?: ""
+            username   = when (storage.provider) {
+                // Use storage.id as the rclone remote name — matches the section key
+                // in the encrypted config and launchRCloneBrowse/ensureRemoteCreated.
+                OnlineStorageProvider.RCLONE -> storage.id
+                else -> when {
+                    storage.isWebDavProvider -> storage.webDavUsername ?: ""
+                    else                     -> storage.s3AccessKey ?: ""
+                }
             },
             password   = when {
                 storage.isWebDavProvider -> storage.webDavPassword ?: ""
@@ -574,6 +580,7 @@ object UfmFileSystemBridge {
                 OnlineStorageProvider.AWS_S3       -> ShareType.AWS_S3
                 OnlineStorageProvider.IDRIVE_E2    -> ShareType.IDRIVE_E2
                 OnlineStorageProvider.WEBDAV       -> ShareType.WEBDAV
+                OnlineStorageProvider.RCLONE       -> ShareType.WEBDAV
             }
         )
     }

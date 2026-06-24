@@ -5582,5 +5582,77 @@ XML / العلامات
     <string name="pro_badge">
 للمحترفين
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClone
+</string>
+    <string name="add_online_storage_auth_rclone">
+إعداد التخزين
+</string>
+    <string name="rclone_title">
+تخزين سحابي RClone
+</string>
+    <string name="rclone_select_provider">
+حدد الموفر
+</string>
+    <string name="rclone_btn_test">
+اتصال الاختبار
+</string>
+    <string name="rclone_btn_save">
+يحفظ
+</string>
+    <string name="rclone_test_success">
+تم الاتصال بنجاح
+</string>
+    <string name="rclone_test_failed">
+فشل الاتصال: %s
+</string>
+    <string name="rclone_save_success">
+تم حفظ موفر RClone
+</string>
+    <string name="rclone_field_email">
+بريد إلكتروني
+</string>
+    <string name="rclone_field_password">
+كلمة المرور
+</string>
+    <string name="rclone_field_api_key">
+مفتاح واجهة برمجة التطبيقات
+</string>
+    <string name="rclone_provider_filen">
+فيلين
+</string>
+    <string name="rclone_field_storage_name">
+اسم التخزين
+</string>
+    <string name="rclone_error_no_init">
+لم تتم تهيئة RClone
+</string>
+    <string name="rclone_error_no_network">
+لا يوجد اتصال بالشبكة
+</string>
+    <string name="rclone_saving">
+توفير…
+</string>
+    <string name="rclone_testing">
+اختبار…
+</string>
+    <string name="field_required">
+هذه الخانة مطلوبه
+</string>
+    <string name="rclone_provider_drime">
+دريم
+</string>
+    <string name="rclone_field_access_token">
+رمز الوصول لواجهة برمجة التطبيقات
+</string>
+    <string name="rclone_field_help_link">
+كيفية الحصول على هذا؟
+</string>
+    <string name="rclone_provider_mega">
+ميجا
+</string>
 </resources>
+
 

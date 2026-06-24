@@ -5584,5 +5584,77 @@ Web サーバーが実行中です。接続を待っています…
     <string name="pro_badge">
 プロ
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RCローン
+</string>
+    <string name="add_online_storage_auth_rclone">
+ストレージのセットアップ
+</string>
+    <string name="rclone_title">
+RClone クラウド ストレージ
+</string>
+    <string name="rclone_select_provider">
+プロバイダーの選択
+</string>
+    <string name="rclone_btn_test">
+テスト接続
+</string>
+    <string name="rclone_btn_save">
+保存
+</string>
+    <string name="rclone_test_success">
+接続成功
+</string>
+    <string name="rclone_test_failed">
+接続に失敗しました: %s
+</string>
+    <string name="rclone_save_success">
+RClone プロバイダーが保存されました
+</string>
+    <string name="rclone_field_email">
+電子メール
+</string>
+    <string name="rclone_field_password">
+パスワード
+</string>
+    <string name="rclone_field_api_key">
+APIキー
+</string>
+    <string name="rclone_provider_filen">
+フィレン
+</string>
+    <string name="rclone_field_storage_name">
+ストレージ名
+</string>
+    <string name="rclone_error_no_init">
+RClone が初期化されていません
+</string>
+    <string name="rclone_error_no_network">
+ネットワーク接続がありません
+</string>
+    <string name="rclone_saving">
+保存中…
+</string>
+    <string name="rclone_testing">
+テスト中…
+</string>
+    <string name="field_required">
+この項目は必須です
+</string>
+    <string name="rclone_provider_drime">
+ドリメ
+</string>
+    <string name="rclone_field_access_token">
+APIアクセストークン
+</string>
+    <string name="rclone_field_help_link">
+これを入手するにはどうすればよいですか?
+</string>
+    <string name="rclone_provider_mega">
+メガ
+</string>
 </resources>
+
 

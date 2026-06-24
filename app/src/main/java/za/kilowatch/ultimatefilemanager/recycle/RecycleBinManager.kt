@@ -337,6 +337,7 @@ object RecycleBinManager {
                 ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.mkdir(share, dirPath)
                 ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.mkdir(share, dirPath)
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, dirPath)
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, dirPath)
                 ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.mkdir(share, dirPath)
                 ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.mkdir(share, dirPath)
                 ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.mkdir(share, dirPath)
@@ -360,6 +361,7 @@ object RecycleBinManager {
                 ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.uploadStream(share, toPath, stream, fileSize) {}
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.uploadStream(share, toPath, stream, fileSize) {}
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.uploadStream(share, toPath, stream, fileSize) {}
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.uploadStream(share, toPath, stream, fileSize) {}
                 ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openOutputStream(share, toPath).use { out -> stream.copyTo(out) }
             }
         }
@@ -378,6 +380,7 @@ object RecycleBinManager {
                 ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(share, path).first
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(share, path).first
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
                 ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.openInputStream(share, path)
             }
         } catch (_: Exception) { null }
@@ -395,6 +398,7 @@ object RecycleBinManager {
             ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.rename(share, from, to)
             ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.rename(share, from, to)
             ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, from, to)
+            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, from, to)
             ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.rename(share, from, to)
         }
     }
@@ -406,6 +410,7 @@ object RecycleBinManager {
                 ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteDir(share, path)
                 ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteDir(share, path)
                 ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(share, path)
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteDir(share, path)
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteDir(share, path)
                 ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.deleteDir(share, path)
                 else -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(share, path)
@@ -421,6 +426,7 @@ object RecycleBinManager {
                 ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, path)
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, path)
                 ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(share, path)
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                 ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.deleteFile(share, path)
             }
@@ -444,6 +450,7 @@ object RecycleBinManager {
                     za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
                     za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
                     za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
+                    za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
                 }
                 return NetworkShare(
                     id = fromOnline.id,
@@ -490,6 +497,7 @@ object RecycleBinManager {
                 ShareType.GOOGLE_DRIVE -> { za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, ""); true }
                 ShareType.DROPBOX -> { za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, ""); true }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, ""); true }
+                ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, ""); true }
                 ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, ""); true }
                 ShareType.DLNA -> { za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, ""); true }
             }

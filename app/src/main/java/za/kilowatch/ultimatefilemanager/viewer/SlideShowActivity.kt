@@ -1237,6 +1237,7 @@ class SlideShowAdapter(
                         ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, fileRemotePath).first
+                        ShareType.WEBDAV                     -> WebDavShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.NFS                         -> NfsShareClient.openInputStream(share, fileRemotePath)
                         ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, fileRemotePath)
                     }

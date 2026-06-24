@@ -5584,5 +5584,77 @@ PIN이 잘못되었습니다. 다시 시도해 주세요.
     <string name="pro_badge">
 찬성
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RC클론
+</string>
+    <string name="add_online_storage_auth_rclone">
+저장소 설정
+</string>
+    <string name="rclone_title">
+RClone 클라우드 스토리지
+</string>
+    <string name="rclone_select_provider">
+제공업체 선택
+</string>
+    <string name="rclone_btn_test">
+연결 테스트
+</string>
+    <string name="rclone_btn_save">
+구하다
+</string>
+    <string name="rclone_test_success">
+연결 성공
+</string>
+    <string name="rclone_test_failed">
+연결 실패: %s
+</string>
+    <string name="rclone_save_success">
+RClone 공급자가 저장되었습니다.
+</string>
+    <string name="rclone_field_email">
+이메일
+</string>
+    <string name="rclone_field_password">
+비밀번호
+</string>
+    <string name="rclone_field_api_key">
+API 키
+</string>
+    <string name="rclone_provider_filen">
+필렌
+</string>
+    <string name="rclone_field_storage_name">
+저장소 이름
+</string>
+    <string name="rclone_error_no_init">
+RClone이 초기화되지 않았습니다.
+</string>
+    <string name="rclone_error_no_network">
+네트워크 연결 없음
+</string>
+    <string name="rclone_saving">
+절약…
+</string>
+    <string name="rclone_testing">
+테스트 중…
+</string>
+    <string name="field_required">
+이 필드는 필수입니다
+</string>
+    <string name="rclone_provider_drime">
+드림
+</string>
+    <string name="rclone_field_access_token">
+API 액세스 토큰
+</string>
+    <string name="rclone_field_help_link">
+이것을 얻는 방법?
+</string>
+    <string name="rclone_provider_mega">
+메가
+</string>
 </resources>
+
 

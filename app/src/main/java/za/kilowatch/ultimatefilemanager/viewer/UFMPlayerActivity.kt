@@ -43,6 +43,7 @@ import za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient
 import za.kilowatch.ultimatefilemanager.network.DropboxShareClient
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.OnedriveShareClient
+import za.kilowatch.ultimatefilemanager.network.S3ShareClient
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.IOException
@@ -92,6 +93,7 @@ class UFMPlayerActivity : Activity() {
     private var currentIndex = 0
     private var shareId: String = ""
     private var shareHost: String = ""
+    private var shareUsername: String = ""
     private var shareName: String = ""
     private var provider: String = ""
     private var remotePathExtra: String = ""
@@ -186,6 +188,7 @@ class UFMPlayerActivity : Activity() {
 
         shareId = intent.getStringExtra("shareId") ?: ""
         shareHost = intent.getStringExtra("shareHost") ?: ""
+        shareUsername = intent.getStringExtra("shareUsername") ?: ""
         shareName = intent.getStringExtra("shareName") ?: ""
         provider = intent.getStringExtra("provider") ?: ""
         initialFileSize = intent.getLongExtra("initialSize", 0L)
@@ -920,16 +923,47 @@ class UFMPlayerActivity : Activity() {
         if (share?.isServerMode == true && remotePathExtra.isNotEmpty()) {
             share = share.copy(remotePath = remotePathExtra)
         }
+        // Also check OnlineStorageRepository (covers RCLONE, Filen, Drime, WebDAV, etc.)
+        if (share == null) {
+            val online = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
+                .getInstance(this).getById(shareId)
+            if (online != null) {
+                share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                    id = online.id,
+                    name = online.displayName,
+                    type = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE     -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX      -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3       -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2    -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV       -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE       -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                    },
+                    host = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email else online.s3Endpoint ?: online.email
+                    },
+                    username = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
+                        else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: ""
+                    },
+                    password = if (online.isWebDavProvider) online.webDavPassword ?: "" else online.s3SecretKey ?: "",
+                    readOnly = false
+                )
+            }
+        }
         if (share == null && shareHost.isNotEmpty()) {
             GoRoLog.d("UFMPlayer", "Share not found in repo, creating dummy for $shareHost")
             share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
                 id = shareId,
                 host = shareHost,
+                username = shareUsername,
                 name = shareName,
-                type = when (provider) {
-                    "GOOGLE_DRIVE" -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                    "DLNA" -> za.kilowatch.ultimatefilemanager.network.ShareType.DLNA
-                    else -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
+                type = try {
+                    za.kilowatch.ultimatefilemanager.network.ShareType.valueOf(provider)
+                } catch (_: Exception) {
+                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
                 }
             )
         }
@@ -944,8 +978,8 @@ class UFMPlayerActivity : Activity() {
         
         Thread {
             try {
-                val mediaSource = if (provider == "GOOGLE_DRIVE" || provider == "ONEDRIVE") {
-                    val (url, token) = if (provider == "GOOGLE_DRIVE") {
+                val mediaSource = if (share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE) {
+                    val (url, token) = if (share.type == ShareType.GOOGLE_DRIVE) {
                         GoogleDriveShareClient.getStreamingUrlAndTokenSync(share, path)
                     } else {
                         OnedriveShareClient.getStreamingUrlAndTokenSync(share, path)
@@ -962,7 +996,7 @@ class UFMPlayerActivity : Activity() {
                         )
                         .setUserAgent(Util.getUserAgent(this@UFMPlayerActivity, "UFM"))
                     DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-                } else if (provider == "NFS") {
+                } else if (share.type == ShareType.NFS) {
                     val ext = path.substringAfterLast('.').lowercase()
                     val mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
                         ?: "video/mp4"
@@ -1010,8 +1044,8 @@ class UFMPlayerActivity : Activity() {
                 try {
                     retriever = MediaMetadataRetriever()
                     
-                    if (provider == "GOOGLE_DRIVE" || provider == "ONEDRIVE") {
-                        val (url, token) = if (provider == "GOOGLE_DRIVE") {
+                    if (share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE) {
+                        val (url, token) = if (share.type == ShareType.GOOGLE_DRIVE) {
                             GoogleDriveShareClient.getStreamingUrlAndTokenSync(share, path)
                         } else {
                             OnedriveShareClient.getStreamingUrlAndTokenSync(share, path)
@@ -1024,6 +1058,11 @@ class UFMPlayerActivity : Activity() {
                             ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
                             ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
                             ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
+                            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
+                            ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
+                            ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
                             else -> throw IllegalStateException("Unsupported share type for random access")
                         }
                         retriever.setDataSource(CommonMediaDataSource(randomAccessFile))
@@ -1165,6 +1204,10 @@ class UfmMedia3DataSource(
                 ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
                 ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
                 ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
+                ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
+                ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
                 else -> throw IllegalStateException("Unsupported share type for random access")
             }
         } catch (e: Exception) {

@@ -622,6 +622,13 @@
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
 
         <activity
+            android:name=".network.RCloneProviderActivity"
+            android:exported="false"
+            android:label="@string/rclone_title"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
             android:name=".network.NetworkShareEditActivity"
             android:exported="false"
             android:label="@string/network_edit_title_add" />

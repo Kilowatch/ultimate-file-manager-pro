@@ -227,6 +227,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                             ShareType.AWS_S3,
                             ShareType.IDRIVE_E2    -> S3ShareClient.openInputStream(share, networkFile.path).first
                             ShareType.WEBDAV       -> WebDavShareClient.openInputStream(share, networkFile.path).first
+                            ShareType.WEBDAV       -> WebDavShareClient.openInputStream(share, networkFile.path).first
                             ShareType.NFS          -> NfsShareClient.openInputStream(share, networkFile.path)
                             ShareType.DLNA       -> DlnaShareClient.openInputStream(share, networkFile.path)
                         }

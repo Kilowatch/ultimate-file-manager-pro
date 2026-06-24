@@ -482,6 +482,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                             ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, path).first
                             ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, path).first
                             ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
+                            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(share, path).first
                             ShareType.NFS -> NfsShareClient.openInputStream(share, path)
                             ShareType.DLNA -> DlnaShareClient.openInputStream(share, path)
                         }
@@ -667,6 +668,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.DROPBOX -> DropboxShareClient.mkdir(share, newPath)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, newPath)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, newPath)
+                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.mkdir(share, newPath)
                         ShareType.NFS -> NfsShareClient.mkdir(share, newPath)
                         ShareType.DLNA -> DlnaShareClient.mkdir(share, newPath)
                     }
@@ -685,6 +687,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, newPath).close()
                         ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, newPath).close()
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.openOutputStream(share, newPath).close() }
+                        ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, newPath).close() }
                         ShareType.WEBDAV -> { za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(share, newPath).close() }
                         ShareType.NFS -> NfsShareClient.openOutputStream(share, newPath).close()
                         ShareType.DLNA -> DlnaShareClient.openOutputStream(share, newPath).close()
@@ -718,6 +721,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.DROPBOX -> DropboxShareClient.deleteFile(share, path)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, path)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
+                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.NFS -> NfsShareClient.deleteFile(share, path)
                         ShareType.DLNA -> DlnaShareClient.deleteFile(share, path)
                     }
@@ -731,6 +735,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.deleteFile(share, path)
                         ShareType.DROPBOX -> DropboxShareClient.deleteFile(share, path)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, path)
+                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, path)
                         ShareType.NFS -> NfsShareClient.deleteDir(share, path)
                         ShareType.DLNA -> DlnaShareClient.deleteDir(share, path)
@@ -765,6 +770,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                     ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, path, newPath)
                     ShareType.DROPBOX -> DropboxShareClient.rename(share, path, newPath)
                     ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, path, newPath)
+                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, path, newPath)
                     ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(share, path, newPath)
                     ShareType.NFS -> NfsShareClient.rename(share, path, newPath)
                     ShareType.DLNA -> DlnaShareClient.rename(share, path, newPath)
@@ -880,6 +886,8 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 ->
                         za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, path)
+                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
+                        za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV ->
                         za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     za.kilowatch.ultimatefilemanager.network.ShareType.NFS ->

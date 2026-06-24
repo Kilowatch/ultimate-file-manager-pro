@@ -5584,5 +5584,77 @@ Mengirim berkas…
     <string name="pro_badge">
 PRO
 </string>
+
+    <!-- RClone Cloud Storage Support -->
+    <string name="add_online_storage_rclone">
+RClon
+</string>
+    <string name="add_online_storage_auth_rclone">
+Siapkan Penyimpanan
+</string>
+    <string name="rclone_title">
+Penyimpanan Cloud RClone
+</string>
+    <string name="rclone_select_provider">
+Pilih Penyedia
+</string>
+    <string name="rclone_btn_test">
+Uji Koneksi
+</string>
+    <string name="rclone_btn_save">
+Menyimpan
+</string>
+    <string name="rclone_test_success">
+Koneksi berhasil
+</string>
+    <string name="rclone_test_failed">
+Koneksi gagal: %s
+</string>
+    <string name="rclone_save_success">
+Penyedia RClone disimpan
+</string>
+    <string name="rclone_field_email">
+E-mail
+</string>
+    <string name="rclone_field_password">
+Kata sandi
+</string>
+    <string name="rclone_field_api_key">
+Kunci API
+</string>
+    <string name="rclone_provider_filen">
+Filen
+</string>
+    <string name="rclone_field_storage_name">
+Nama Penyimpanan
+</string>
+    <string name="rclone_error_no_init">
+RClone tidak diinisialisasi
+</string>
+    <string name="rclone_error_no_network">
+Tidak ada koneksi jaringan
+</string>
+    <string name="rclone_saving">
+Penghematan…
+</string>
+    <string name="rclone_testing">
+Pengujian…
+</string>
+    <string name="field_required">
+Bidang ini wajib diisi
+</string>
+    <string name="rclone_provider_drime">
+Drime
+</string>
+    <string name="rclone_field_access_token">
+Token Akses API
+</string>
+    <string name="rclone_field_help_link">
+Bagaimana cara mendapatkan ini?
+</string>
+    <string name="rclone_provider_mega">
+Mega
+</string>
 </resources>
+
 

@@ -3,7 +3,7 @@ package za.kilowatch.ultimatefilemanager.network
 import za.kilowatch.ultimatefilemanager.R
 import java.util.UUID
 
-enum class OnlineStorageProvider { ONEDRIVE, GOOGLE_DRIVE, DROPBOX, AWS_S3, IDRIVE_E2, WEBDAV }
+enum class OnlineStorageProvider { ONEDRIVE, GOOGLE_DRIVE, DROPBOX, AWS_S3, IDRIVE_E2, WEBDAV, RCLONE }
 
 data class OnlineStorage(
     val id: String = UUID.randomUUID().toString(),
@@ -53,6 +53,7 @@ data class OnlineStorage(
             OnlineStorageProvider.AWS_S3       -> context.getString(R.string.add_online_storage_aws_s3)
             OnlineStorageProvider.IDRIVE_E2    -> context.getString(R.string.add_online_storage_idrive_e2)
             OnlineStorageProvider.WEBDAV       -> context.getString(R.string.add_online_storage_webdav)
+            OnlineStorageProvider.RCLONE       -> context.getString(R.string.add_online_storage_rclone)
         }
     }
 }
@@ -65,6 +66,7 @@ fun OnlineStorageProvider.getFriendlyName(context: android.content.Context): Str
         OnlineStorageProvider.AWS_S3       -> context.getString(R.string.add_online_storage_aws_s3)
         OnlineStorageProvider.IDRIVE_E2    -> context.getString(R.string.add_online_storage_idrive_e2)
         OnlineStorageProvider.WEBDAV       -> context.getString(R.string.add_online_storage_webdav)
+        OnlineStorageProvider.RCLONE       -> context.getString(R.string.add_online_storage_rclone)
     }
 }
 

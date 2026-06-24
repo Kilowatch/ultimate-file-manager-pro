@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.ensureActive
 import kotlin.coroutines.coroutineContext
@@ -193,7 +194,7 @@ object TransferConflictHelper {
             android.util.Log.w("TransferConflictHelper", "copyLocalToLocalAtomic: src == dest, skipping self-copy: ${src.canonicalPath}")
             return dest
         }
-        if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(src.absolutePath) || 
+        if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(src.absolutePath) ||
             za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(dest.absolutePath)) {
             val actualDest = when (action) {
                 ConflictAction.KEEP_BOTH -> uniqueLocalFile(dest.parentFile!!, dest.name)
@@ -223,12 +224,23 @@ object TransferConflictHelper {
                 // Secure cache copy: write to temp then atomically rename
                 val tempFile = File(actualDest.parent, "${actualDest.name}.ufm_tmp")
                 try {
-                    FileInputStream(src).use { inp ->
-                        FileOutputStream(tempFile).use { out ->
-                            CopyHelper.copy(inp, out, sourceSize, onProgress)
+                    // Zero-byte guard with auto-retry
+                    val copySucceeded = FileTransferGuard.guardedCopy(
+                        sourceName = src.name,
+                        sourceSize = sourceSize,
+                        verifyDestSize = { tempFile.length() },
+                        doCopy = {
+                            FileInputStream(src).use { inp ->
+                                FileOutputStream(tempFile).use { out ->
+                                    CopyHelper.copy(inp, out, sourceSize, onProgress)
+                                }
+                            }
                         }
+                    )
+                    if (!copySucceeded) {
+                        throw Exception("Copy failed after retries: destination is 0 bytes for ${src.name}")
                     }
-                    // Verify copy integrity before replacing destination
+                    // Verify full integrity (not just zero-byte)
                     if (tempFile.length() != sourceSize) {
                         throw Exception("Copy integrity check failed: expected $sourceSize bytes, got ${tempFile.length()}")
                     }
@@ -244,10 +256,20 @@ object TransferConflictHelper {
                 }
             } else {
                 // Standard direct copy: stream straight to final destination
-                FileInputStream(src).use { inp ->
-                    FileOutputStream(actualDest).use { out ->
-                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                val copySucceeded = FileTransferGuard.guardedCopy(
+                    sourceName = src.name,
+                    sourceSize = sourceSize,
+                    verifyDestSize = { actualDest.length() },
+                    doCopy = {
+                        FileInputStream(src).use { inp ->
+                            FileOutputStream(actualDest).use { out ->
+                                CopyHelper.copy(inp, out, sourceSize, onProgress)
+                            }
+                        }
                     }
+                )
+                if (!copySucceeded) {
+                    throw Exception("Copy failed after retries: destination is 0 bytes for ${src.name}")
                 }
                 if (actualDest.length() != sourceSize) {
                     throw Exception("Copy integrity check failed: expected $sourceSize bytes, got ${actualDest.length()}")
@@ -289,66 +311,87 @@ object TransferConflictHelper {
             tmp
         } else { src }
         try {
-            if (destShare.type == ShareType.TV) {
-                FileInputStream(actualSrc).use { inp ->
-                    TvShareClient.uploadStream(destShare, tmpPath, inp, sourceSize)
-                }
-                TvShareClient.rename(destShare, tmpPath, destPath)
-            } else {
-                // Cloud providers buffer the entire file locally in openOutputStream then upload
-                // silently on close(), causing progress to jump to 100% instantly and the dialog
-                // to freeze for the duration of the real upload. Bypass openOutputStream and call
-                // uploadStream directly so the onProgress callback fires during actual HTTP transfer.
-                if (destShare.type == ShareType.ONEDRIVE ||
-                    destShare.type == ShareType.GOOGLE_DRIVE ||
-                    destShare.type == ShareType.DROPBOX) {
-                    withContext(Dispatchers.IO) {
+            // Zero-byte guard with auto-retry — wraps upload + rename into a single
+            // doCopy lambda. verifyDestSize queries the final remote file size after
+            // the rename has completed.
+            val uploadSucceeded = FileTransferGuard.guardedCopy(
+                sourceName = src.name,
+                sourceSize = sourceSize,
+                verifyDestSize = { getRemoteFileSize(destShare, destPath) },
+                doCopy = {
+                    if (destShare.type == ShareType.TV) {
                         FileInputStream(actualSrc).use { inp ->
-                            when (destShare.type) {
-                                ShareType.ONEDRIVE ->
-                                    za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
-                                ShareType.GOOGLE_DRIVE ->
-                                    za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
-                                ShareType.DROPBOX ->
-                                    za.kilowatch.ultimatefilemanager.network.DropboxShareClient.uploadStream(destShare, tmpPath, inp, sourceSize) { copied ->
-                                        onProgress?.invoke(copied, sourceSize)
+                            TvShareClient.uploadStream(destShare, tmpPath, inp, sourceSize)
+                        }
+                        TvShareClient.rename(destShare, tmpPath, destPath)
+                    } else {
+                        // Cloud providers buffer the entire file locally in openOutputStream then upload
+                        // silently on close(), causing progress to jump to 100% instantly and the dialog
+                        // to freeze for the duration of the real upload. Bypass openOutputStream and call
+                        // uploadStream directly so the onProgress callback fires during actual HTTP transfer.
+                        if (destShare.type == ShareType.ONEDRIVE ||
+                            destShare.type == ShareType.GOOGLE_DRIVE ||
+                            destShare.type == ShareType.DROPBOX ||
+                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(destShare)) {
+                            if (za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(destShare)) {
+                                // rclone: stream via operations/copyfile with real-time core/stats progress
+                                za.kilowatch.ultimatefilemanager.network.RCloneShareClient.uploadWithProgress(
+                                    destShare, actualSrc, tmpPath, sourceSize, onProgress
+                                )
+                            } else {
+                                withContext(Dispatchers.IO) {
+                                    FileInputStream(actualSrc).use { inp ->
+                                        when (destShare.type) {
+                                            ShareType.ONEDRIVE ->
+                                                za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
+                                            ShareType.GOOGLE_DRIVE ->
+                                                za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.uploadStream(destShare, tmpPath, inp, sourceSize, onProgress)
+                                            ShareType.DROPBOX ->
+                                                za.kilowatch.ultimatefilemanager.network.DropboxShareClient.uploadStream(destShare, tmpPath, inp, sourceSize) { copied ->
+                                                    onProgress?.invoke(copied, sourceSize)
+                                                }
+                                            else -> {}
+                                        }
                                     }
+                                }
+                            } // end else (non-rclone cloud)
+                        } else {
+                            val outStream = when (destShare.type) {
+                                ShareType.SMB -> SmbShareClient.openOutputStream(destShare, tmpPath) { conn -> onConnectionReady?.invoke(conn) }
+                                ShareType.FTP -> FtpShareClient.openOutputStream(destShare, tmpPath)
+                                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(destShare, tmpPath)
+                                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(destShare, tmpPath)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(destShare, tmpPath)
+                                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, tmpPath)
+                                else -> throw Exception("Unsupported share type")
+                            }
+                            withContext(Dispatchers.IO) {
+                                FileInputStream(actualSrc).use { inp ->
+                                    outStream.use { out ->
+                                        CopyHelper.copy(inp, out, sourceSize, onProgress)
+                                    }
+                                }
+                            }
+                        }
+                        if (useTmp) {
+                            when (destShare.type) {
+                                ShareType.SMB -> SmbShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.FTP -> FtpShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.rename(destShare, tmpPath, destPath)
+                                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(destShare, tmpPath, destPath)
                                 else -> {}
                             }
                         }
                     }
-                } else {
-                    val outStream = when (destShare.type) {
-                        ShareType.SMB -> SmbShareClient.openOutputStream(destShare, tmpPath) { conn -> onConnectionReady?.invoke(conn) }
-                        ShareType.FTP -> FtpShareClient.openOutputStream(destShare, tmpPath)
-                        ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(destShare, tmpPath)
-                        ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(destShare, tmpPath)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(destShare, tmpPath)
-                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(destShare, tmpPath)
-                        else -> throw Exception("Unsupported share type")
-                    }
-                    withContext(Dispatchers.IO) {
-                        FileInputStream(actualSrc).use { inp ->
-                            outStream.use { out ->
-                                CopyHelper.copy(inp, out, sourceSize, onProgress)
-                            }
-                        }
-                    }
                 }
-                if (useTmp) {
-                    when (destShare.type) {
-                        ShareType.SMB -> SmbShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.FTP -> FtpShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.rename(destShare, tmpPath, destPath)
-                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.rename(destShare, tmpPath, destPath)
-                        else -> {}
-                    }
-                }
+            )
+            if (!uploadSucceeded) {
+                throw Exception("Upload failed after retries: destination is 0 bytes for ${src.name}")
             }
         } catch (e: Exception) {
             // Best-effort cleanup of the incomplete temp file
@@ -405,25 +448,43 @@ object TransferConflictHelper {
             actualDest
         }
         try {
-            val inStream = when (srcShare.type) {
-                ShareType.SMB -> SmbShareClient.openInputStream(srcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
-                ShareType.FTP -> FtpShareClient.openInputStream(srcShare, srcFile.path)
-                ShareType.TV  -> TvShareClient.openInputStream(srcShare, srcFile.path)
-                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, srcFile.path)
-                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcFile.path)
-                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, srcFile.path).first
-                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, srcFile.path).first
-                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcFile.path).first
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcFile.path).first
-                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcFile.path).first
-                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-            }
-            withContext(Dispatchers.IO) {
-                inStream.use { inp ->
-                    FileOutputStream(tempFile).use { out ->
-                        CopyHelper.copy(inp, out, srcFile.size, onProgress)
+            // Zero-byte guard with auto-retry (wraps both rclone and streaming paths)
+            val downloadSucceeded = FileTransferGuard.guardedCopy(
+                sourceName = srcFile.name,
+                sourceSize = srcFile.size,
+                verifyDestSize = { tempFile.length() },
+                doCopy = {
+                    if (za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(srcShare)) {
+                        // rclone: stream via operations/copyfile with real-time core/stats progress
+                        za.kilowatch.ultimatefilemanager.network.RCloneShareClient.downloadWithProgress(
+                            srcShare, srcFile.path, tempFile, srcFile.size, onProgress
+                        )
+                    } else {
+                        val inStream = when (srcShare.type) {
+                            ShareType.SMB -> SmbShareClient.openInputStream(srcShare, srcFile.path) { conn -> onConnectionReady?.invoke(conn) }
+                            ShareType.FTP -> FtpShareClient.openInputStream(srcShare, srcFile.path)
+                            ShareType.TV  -> TvShareClient.openInputStream(srcShare, srcFile.path)
+                            ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, srcFile.path)
+                            ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, srcFile.path)
+                            ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, srcFile.path).first
+                            ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, srcFile.path).first
+                            ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, srcFile.path).first
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, srcFile.path).first
+                            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, srcFile.path).first
+                            ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                        }
+                        withContext(Dispatchers.IO) {
+                            inStream.use { inp ->
+                                FileOutputStream(tempFile).use { out ->
+                                    CopyHelper.copy(inp, out, srcFile.size, onProgress)
+                                }
+                            }
+                        }
                     }
                 }
+            )
+            if (!downloadSucceeded) {
+                throw Exception("Download failed after retries: destination is 0 bytes for ${srcFile.name}")
             }
             if (srcFile.size > 0 && tempFile.length() != srcFile.size) {
                 throw Exception("Download integrity check failed: expected ${srcFile.size} bytes, got ${tempFile.length()}")
@@ -624,18 +685,22 @@ object TransferConflictHelper {
     }
 
     suspend fun deleteNetworkDirRecursively(share: NetworkShare, dirPath: String) {
-        if (share.type == ShareType.SMB || share.type == ShareType.TV || share.type == ShareType.SFTP || share.type == ShareType.SCP) {
+        // All share types except FTP support a single native "delete directory recursively" call.
+        // FTP has no recursive delete command and must traverse manually.
+        // DLNA is read-only and should never reach here.
+        if (share.type != ShareType.FTP && share.type != ShareType.DLNA) {
             try {
                 GoRoLog.d("TransferConflictHelper", "deleteNetworkDirRecursively: using native recursive delete for ${share.type} at $dirPath")
                 when (share.type) {
-                    ShareType.SMB -> SmbShareClient.deleteDir(share, dirPath)
-                    ShareType.TV  -> TvShareClient.deleteDir(share, dirPath)
-                    ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, dirPath, true)
-                    ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, dirPath)
-                    ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, dirPath)
-                    ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, dirPath)
-                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, dirPath)
-                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, dirPath)
+                    ShareType.SMB                        -> SmbShareClient.deleteDir(share, dirPath)
+                    ShareType.TV                         -> TvShareClient.deleteDir(share, dirPath)
+                    ShareType.SFTP, ShareType.SCP        -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, dirPath, true)
+                    ShareType.NFS                        -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(share, dirPath)
+                    ShareType.WEBDAV                     -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteDir(share, dirPath)
+                    ShareType.ONEDRIVE                   -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, dirPath)
+                    ShareType.GOOGLE_DRIVE               -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, dirPath)
+                    ShareType.DROPBOX                    -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, dirPath)
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, "$dirPath/")
                     else -> {}
                 }
                 return
@@ -695,10 +760,10 @@ object TransferConflictHelper {
                 ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, dirPath)
                 ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, dirPath)
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, "$dirPath/")
-                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, dirPath)
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteDir(share, dirPath)
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             }
-            } catch (e: Exception) {
+        } catch (e: Exception) {
             GoRoLog.w("TransferConflictHelper", "deleteNetworkDirRecursively: failed to rmdir $dirPath: ${e.message}")
         }
     }
@@ -714,52 +779,64 @@ object TransferConflictHelper {
         onConnectionReady: ((AutoCloseable) -> Unit)? = null,
         cacheDir: File? = null
     ) {
-        withContext(Dispatchers.IO) {
-            val inStream = when (srcShare.type) {
-                ShareType.SMB -> SmbShareClient.openInputStream(srcShare, source.path)
-                ShareType.FTP -> FtpShareClient.openInputStream(srcShare, source.path)
-                ShareType.TV  -> TvShareClient.openInputStream(srcShare, source.path)
-                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, source.path)
-                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, source.path)
-                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, source.path).first
-                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, source.path).first
-                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, source.path).first
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, source.path).first
-                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, source.path).first
-                ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-            }
+        // Zero-byte guard with auto-retry — this function previously had no
+        // size verification at all (FR-04 gap).
+        val copySucceeded = FileTransferGuard.guardedCopy(
+            sourceName = source.name,
+            sourceSize = source.size,
+            verifyDestSize = { getRemoteFileSize(dstShare, dstPath) },
+            doCopy = {
+                withContext(Dispatchers.IO) {
+                    val inStream = when (srcShare.type) {
+                        ShareType.SMB -> SmbShareClient.openInputStream(srcShare, source.path)
+                        ShareType.FTP -> FtpShareClient.openInputStream(srcShare, source.path)
+                        ShareType.TV  -> TvShareClient.openInputStream(srcShare, source.path)
+                        ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openInputStream(srcShare, source.path)
+                        ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openInputStream(srcShare, source.path)
+                        ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openInputStream(srcShare, source.path).first
+                        ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openInputStream(srcShare, source.path).first
+                        ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openInputStream(srcShare, source.path).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openInputStream(srcShare, source.path).first
+                        ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openInputStream(srcShare, source.path).first
+                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                    }
 
-            if (dstShare.type == ShareType.TV) {
-                val tempFile = File.createTempFile("ufm_nettv_", ".tmp", cacheDir)
-                try {
-                    inStream.use { inp -> tempFile.outputStream().use { out ->
-                        CopyHelper.copy(inp, out, source.size) { copied, total ->
-                            onProgress(source.name, copied, total, fileIndex, totalFiles)
+                    if (dstShare.type == ShareType.TV) {
+                        val tempFile = File.createTempFile("ufm_nettv_", ".tmp", cacheDir)
+                        try {
+                            inStream.use { inp -> tempFile.outputStream().use { out ->
+                                CopyHelper.copy(inp, out, source.size) { copied, total ->
+                                    onProgress(source.name, copied, total, fileIndex, totalFiles)
+                                }
+                            } }
+                            tempFile.inputStream().use { inp ->
+                                TvShareClient.uploadStream(dstShare, dstPath, inp, tempFile.length())
+                            }
+                        } finally { tempFile.delete() }
+                    } else {
+                        val outStream = when (dstShare.type) {
+                            ShareType.SMB -> SmbShareClient.openOutputStream(dstShare, dstPath) { conn -> onConnectionReady?.invoke(conn) }
+                            ShareType.FTP -> FtpShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(dstShare, dstPath)
+                            ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(dstShare, dstPath)
+                            else -> throw Exception("Unhandled destination share type")
                         }
-                    } }
-                    tempFile.inputStream().use { inp ->
-                        TvShareClient.uploadStream(dstShare, dstPath, inp, tempFile.length())
+                        inStream.use { inp -> outStream.use { out ->
+                            CopyHelper.copy(inp, out, source.size) { copied, total ->
+                                onProgress(source.name, copied, total, fileIndex, totalFiles)
+                            }
+                        } }
                     }
-                } finally { tempFile.delete() }
-            } else {
-                val outStream = when (dstShare.type) {
-                    ShareType.SMB -> SmbShareClient.openOutputStream(dstShare, dstPath) { conn -> onConnectionReady?.invoke(conn) }
-                    ShareType.FTP -> FtpShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.openOutputStream(dstShare, dstPath)
-                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.openOutputStream(dstShare, dstPath)
-                    else -> throw Exception("Unhandled destination share type")
                 }
-                inStream.use { inp -> outStream.use { out ->
-                    CopyHelper.copy(inp, out, source.size) { copied, total ->
-                        onProgress(source.name, copied, total, fileIndex, totalFiles)
-                    }
-                } }
             }
+        )
+        if (!copySucceeded) {
+            throw Exception("Network-to-network copy failed after retries: destination is 0 bytes for ${source.name}")
         }
     }
 
@@ -778,17 +855,135 @@ object TransferConflictHelper {
             onProgress(src.name, sourceSize, sourceSize, fileIndex, totalFiles)
             return
         }
-        withContext(Dispatchers.IO) {
-            val sourceSize = src.length()
-            onProgress(src.name, 0, sourceSize, fileIndex, totalFiles)
-            
-            FileInputStream(src).use { inp ->
-                FileOutputStream(dst).use { out ->
-                    CopyHelper.copy(inp, out, sourceSize) { copied, total ->
-                        onProgress(src.name, copied, total, fileIndex, totalFiles)
+        val sourceSize = src.length()
+        onProgress(src.name, 0, sourceSize, fileIndex, totalFiles)
+
+        val copySucceeded = FileTransferGuard.guardedCopy(
+            sourceName = src.name,
+            sourceSize = sourceSize,
+            verifyDestSize = { dst.length() },
+            doCopy = {
+                withContext(Dispatchers.IO) {
+                    FileInputStream(src).use { inp ->
+                        FileOutputStream(dst).use { out ->
+                            CopyHelper.copy(inp, out, sourceSize) { copied, total ->
+                                onProgress(src.name, copied, total, fileIndex, totalFiles)
+                            }
+                        }
                     }
                 }
             }
+        )
+        if (!copySucceeded) {
+            throw Exception("Local-to-local copy failed after retries: destination is 0 bytes for ${src.name}")
         }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // FILE SIZE QUERY — remote file size retrieval for post-copy verification
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    /**
+     * Queries the size of a file on a remote share.
+     *
+     * Supports all share types including RClone (via `operations/stat`),
+     * SMB (via dedicated `getFileSize`), and standard listFile-based queries.
+     *
+     * For cloud storage types (OneDrive, Google Drive, Dropbox, S3, WebDAV,
+     * rclone), an internal short retry (3 × 500 ms) is used to account for
+     * delayed metadata propagation — some providers do not immediately reflect
+     * the size of a newly uploaded file.
+     *
+     * @param share      The network share to query.
+     * @param remotePath Full remote path to the file.
+     * @return The file size in bytes, or -1 if the file does not exist or
+     *         the size cannot be determined.
+     */
+    suspend fun getRemoteFileSize(share: NetworkShare, remotePath: String): Long {
+        return try {
+            // RClone: use dedicated operations/stat endpoint
+            if (za.kilowatch.ultimatefilemanager.network.RCloneShareClient.isRCloneShare(share)) {
+                val size = withContext(Dispatchers.IO) {
+                    za.kilowatch.ultimatefilemanager.network.RCloneShareClient.getFileSizeSync(share, remotePath)
+                }
+                if (size <= 0L) {
+                    // Brief retry for delayed metadata
+                    var s = size
+                    for (i in 1..3) {
+                        delay(500)
+                        s = withContext(Dispatchers.IO) {
+                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.getFileSizeSync(share, remotePath)
+                        }
+                        if (s > 0L) return s
+                    }
+                    return s
+                }
+                return size
+            }
+
+            // Handle root-level files correctly: when '/' is absent,
+            // parent is "" (not the entire path) and name is the whole path.
+            val parent = remotePath.substringBeforeLast('/', "").ifEmpty { "/" }
+            val name = remotePath.substringAfterLast('/')
+
+            val size = when (share.type) {
+                ShareType.SMB -> {
+                    // SMB has dedicated getFileSize — use it when available
+                    za.kilowatch.ultimatefilemanager.network.SmbShareClient.getFileSize(share, remotePath)
+                        ?: za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, parent)
+                            .firstOrNull { it.name == name }?.size ?: -1L
+                }
+                ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, parent)
+                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.DLNA -> -1L  // read-only
+            }
+
+            // Cloud storage delayed-propagation mitigation
+            if (size <= 0L && isCloudStorageType(share.type)) {
+                var s = size
+                for (i in 1..3) {
+                    delay(500)
+                    s = when (share.type) {
+                        ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, parent)
+                            .firstOrNull { it.name == name }?.size ?: -1L
+                        ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, parent)
+                            .firstOrNull { it.name == name }?.size ?: -1L
+                        ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, parent)
+                            .firstOrNull { it.name == name }?.size ?: -1L
+                        else -> s
+                    }
+                    if (s > 0L) return s
+                }
+            }
+
+            size
+        } catch (e: Exception) {
+            GoRoLog.w("TransferConflictHelper", "getRemoteFileSize failed for $remotePath: ${e.message}")
+            -1L
+        }
+    }
+
+    /** Returns `true` for cloud/remote storage types where metadata
+     *  propagation may be delayed after a write. */
+    private fun isCloudStorageType(type: ShareType): Boolean = when (type) {
+        ShareType.ONEDRIVE, ShareType.GOOGLE_DRIVE, ShareType.DROPBOX,
+        ShareType.AWS_S3, ShareType.IDRIVE_E2, ShareType.WEBDAV -> true
+        else -> false
     }
 }

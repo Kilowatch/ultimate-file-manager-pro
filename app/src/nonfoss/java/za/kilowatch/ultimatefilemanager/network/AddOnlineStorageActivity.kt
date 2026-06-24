@@ -65,6 +65,7 @@ class AddOnlineStorageActivity : AppCompatActivity() {
         val toggleGroup1 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider1)
         val toggleGroup2 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider2)
         val toggleGroup3 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider3)
+        val toggleGroup4 = findViewById<MaterialButtonToggleGroup>(R.id.toggleGroupProvider4)
         val btnAuthenticate = findViewById<MaterialButton>(R.id.btnAuthenticate)
         val tvOneDriveNote = findViewById<TextView>(R.id.tvOneDriveNote)
 
@@ -77,7 +78,8 @@ class AddOnlineStorageActivity : AppCompatActivity() {
 
         toggleGroup1.addOnButtonCheckedListener { group, checkedId, isChecked ->
             if (isChecked) {
-                toggleGroup2.clearChecked() // Deselect from second row
+                toggleGroup2.clearChecked()
+                toggleGroup4.clearChecked()
                 if (checkedId == R.id.chipOneDrive) {
                     btnAuthenticate.setText(R.string.add_online_storage_auth_onedrive)
                     tvOneDriveNote.visibility = View.VISIBLE
@@ -92,6 +94,7 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             if (isChecked) {
                 toggleGroup1.clearChecked()
                 toggleGroup3.clearChecked()
+                toggleGroup4.clearChecked()
                 tvOneDriveNote.visibility = View.GONE
                 when (checkedId) {
                     R.id.chipDropbox -> btnAuthenticate.setText(R.string.add_online_storage_auth_dropbox)
@@ -104,6 +107,7 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             if (isChecked) {
                 toggleGroup1.clearChecked()
                 toggleGroup2.clearChecked()
+                toggleGroup4.clearChecked()
                 tvOneDriveNote.visibility = View.GONE
                 if (checkedId == R.id.chipAwsS3) {
                     btnAuthenticate.setText(R.string.add_online_storage_auth_aws_s3)
@@ -113,14 +117,29 @@ class AddOnlineStorageActivity : AppCompatActivity() {
             }
         }
 
+        // RClone row — clear other rows when selected
+        toggleGroup4.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                toggleGroup1.clearChecked()
+                toggleGroup2.clearChecked()
+                toggleGroup3.clearChecked()
+                tvOneDriveNote.visibility = View.GONE
+                if (checkedId == R.id.chipRclone) {
+                    btnAuthenticate.setText(R.string.add_online_storage_auth_rclone)
+                }
+            }
+        }
+
         btnAuthenticate.setOnClickListener {
             val id1 = toggleGroup1.checkedButtonId
             val id2 = toggleGroup2.checkedButtonId
             val id3 = toggleGroup3.checkedButtonId
+            val id4 = toggleGroup4.checkedButtonId
             val checkedId = when {
                 id1 != View.NO_ID -> id1
                 id2 != View.NO_ID -> id2
                 id3 != View.NO_ID -> id3
+                id4 != View.NO_ID -> id4
                 else -> View.NO_ID
             }
 
@@ -131,6 +150,7 @@ class AddOnlineStorageActivity : AppCompatActivity() {
                 R.id.chipWebDav      -> startWebDavSetupFlow()
                 R.id.chipAwsS3       -> startS3AuthFlow(OnlineStorageProvider.AWS_S3)
                 R.id.chipIDriveE2    -> startS3AuthFlow(OnlineStorageProvider.IDRIVE_E2)
+                R.id.chipRclone      -> startRCloneFlow()
             }
         }
 
@@ -215,6 +235,12 @@ class AddOnlineStorageActivity : AppCompatActivity() {
     private fun startWebDavSetupFlow() {
         if (isConnected) return
         startActivity(Intent(this, WebDavSetupActivity::class.java))
+        finish()
+    }
+
+    private fun startRCloneFlow() {
+        if (isConnected) return
+        startActivity(Intent(this, RCloneProviderActivity::class.java))
         finish()
     }
 

@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 171          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.5.7"      // Shown in Play Store listing
+val appVersionCode = 172          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.5.8"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 android {
@@ -431,6 +431,9 @@ dependencies {
     // libnfs: native NFS v2/v3/v4 client via JNI (built from source in src/main/cpp/)
 
 
+
+    // RClone library for cloud storage support (Drime, Filen, MEGA)
+    implementation(files("libs/rclone.aar"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

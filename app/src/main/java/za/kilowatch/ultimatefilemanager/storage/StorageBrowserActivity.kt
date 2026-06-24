@@ -1,4 +1,4 @@
-﻿package za.kilowatch.ultimatefilemanager.storage
+package za.kilowatch.ultimatefilemanager.storage
 
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
 
@@ -3089,11 +3089,18 @@ class StorageBrowserActivity : AppCompatActivity() {
                                             za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
                                             za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
                                             za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
                                         },
-                                        host = onlineShare.email,
+                                        host = when (onlineShare.provider) {
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                                            else -> if (onlineShare.isWebDavProvider) onlineShare.webDavUrl ?: onlineShare.email else onlineShare.s3Endpoint ?: onlineShare.email
+                                        },
                                         port = 0,
-                                        username = onlineShare.email,
-                                        password = "",
+                                        username = when (onlineShare.provider) {
+                                            za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> onlineShare.id
+                                            else -> if (onlineShare.isWebDavProvider) onlineShare.webDavUsername ?: "" else onlineShare.s3AccessKey ?: ""
+                                        },
+                                        password = if (onlineShare.isWebDavProvider) onlineShare.webDavPassword ?: "" else onlineShare.s3SecretKey ?: "",
                                         remotePath = "/",
                                         readOnly = false
                                     )

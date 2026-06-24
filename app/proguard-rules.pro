@@ -313,3 +313,14 @@
 -dontwarn org.jboss.marshalling.MarshallerFactory
 -dontwarn org.jboss.marshalling.MarshallingConfiguration
 -dontwarn org.jboss.marshalling.Unmarshaller
+
+# ── RClone / Gomobile .aar ──────────────────────────────
+# Keep all Gomobile-generated classes (Gomobile, RcloneRPCResult)
+# and the Go runtime bridge classes (go.Seq, go.Universe, etc.)
+# to prevent ClassNotFoundException / UnsatisfiedLinkError in release builds.
+-keep class gomobile.** { *; }
+-keepclassmembers class gomobile.** { *; }
+-keep class go.** { *; }
+-keepclassmembers class go.** { *; }
+-keep class go.Seq { *; }
+-keep class org.rclone.** { *; }

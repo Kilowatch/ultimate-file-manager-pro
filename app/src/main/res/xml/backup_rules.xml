@@ -18,4 +18,6 @@
     <exclude domain="file" path="vault/"/>
     <exclude domain="file" path="vault_mirror/"/>
     <exclude domain="file" path="ssh_keys/"/>
+    <exclude domain="file" path="rclone_encrypted.json"/>
+    <exclude domain="file" path="online_storages.json"/>
 </full-backup-content>

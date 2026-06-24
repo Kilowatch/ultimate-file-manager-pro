@@ -335,6 +335,7 @@ class SafPickerActivity : AppCompatActivity() {
                     ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, path)
                     ShareType.AWS_S3, ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, path)
                     ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
+                    ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, path)
                     ShareType.NFS -> NfsShareClient.listFiles(share, path)
                     ShareType.DLNA -> DlnaShareClient.listFiles(share, path)
                 }
