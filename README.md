@@ -2,12 +2,21 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Get it on Google Play](https://img.shields.io/badge/Google%20Play-Ultimate%20File%20Manager%20Pro-green.svg?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager)
+[![Sponsor](https://img.shields.io/badge/Sponsor-Kilowatch-pink.svg?logo=github-sponsors&logoColor=white)](https://github.com/sponsors/Kilowatch)
 [![XDA Forum](https://img.shields.io/badge/XDA-Forum-orange.svg)](https://xdaforums.com/t/app-free-ultimate-file-manager-pro-dual-pane-android-mobile-android-tv-foss-edition-available.4791958/)
 [![Reddit](https://img.shields.io/badge/Reddit-FF4500.svg?logo=reddit&logoColor=white)](https://www.reddit.com/r/UFManagerPro/)
 
 Ultimate File Manager Pro (UFM) is a powerful, dual-pane file manager for Android and Android TV, built for power users.
 
 This repository contains the **Free and Open Source Software (FOSS) edition** of UFM.
+
+---
+
+## 💖 Support the Project
+
+If you find Ultimate File Manager Pro helpful, consider supporting its development! Tips and sponsorships are **completely optional** but greatly appreciated—they help keep the project actively maintained and free of ads/trackers.
+
+* [Sponsor @Kilowatch on GitHub](https://github.com/sponsors/Kilowatch)
 
 ---
 
