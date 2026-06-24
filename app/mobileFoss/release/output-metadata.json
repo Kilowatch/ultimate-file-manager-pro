@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 150,
-      "versionName": "1.4.7-FOSS",
+      "versionCode": 172,
+      "versionName": "1.5.8-FOSS",
       "outputFile": "app-mobile-foss-release.apk"
     }
   ],

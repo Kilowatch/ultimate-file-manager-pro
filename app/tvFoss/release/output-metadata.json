@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 151,
-      "versionName": "1.4.7-FOSS",
+      "versionCode": 173,
+      "versionName": "1.5.8-FOSS",
       "outputFile": "app-tv-foss-release.apk"
     }
   ],

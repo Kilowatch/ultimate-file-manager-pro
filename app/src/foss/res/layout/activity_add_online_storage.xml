@@ -238,7 +238,34 @@
                     android:insetBottom="0dp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
+            <!-- RClone provider row -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupProvider4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleSelection="true">
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipRclone"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="1"
+                    android:text="@string/add_online_storage_rclone"
+                    android:textSize="13sp"
+                    android:maxLines="1"
+                    app:icon="@drawable/ic_rclone"
+                    app:backgroundTint="@color/selector_protocol_bg"
+                    app:iconTint="@color/selector_protocol_text"
+                    android:textColor="@color/selector_protocol_text"
+                    app:iconGravity="textStart"
+                    android:gravity="center"
+                    app:cornerRadius="12dp"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <TextView
                 android:id="@+id/tvOneDriveNote"

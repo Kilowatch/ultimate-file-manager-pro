@@ -32,7 +32,14 @@ If you require Google Drive, OneDrive, or Dropbox integrations, please download 
 
 ## 📦 Pre-compiled APKs
 
-There are no pre-compiled APKs hosted directly in the releases of this repository. Users and developers must generate and sign the APKs themselves using the build instructions below.
+Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Release](https://github.com/Kilowatch/UFM/releases).
+
+| Variant | APK File |
+|---------|----------|
+| **Mobile** (phones & tablets) | `app-mobile-foss-release.apk` |
+| **TV** (Android TV / Fire TV) | `app-tv-foss-release.apk` |
+
+Users and developers may also generate and sign the APKs themselves using the build instructions below.
 
 ---
 
