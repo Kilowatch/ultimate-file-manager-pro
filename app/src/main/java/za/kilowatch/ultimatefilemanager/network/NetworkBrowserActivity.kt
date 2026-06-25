@@ -697,6 +697,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 } else {
                     currentPath
                 }
+                android.util.Log.d("TPath", "Open twin window (mobile): share.id=${share.id} share.name=${share.name} serverMode=${share.isServerMode} remotePath='${share.remotePath}' currentPath='$currentPath' twinInitialPath='$twinInitialPath'")
                 val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity::class.java).apply {
                     putExtra(za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity.EXTRA_TOP_SHARE_ID, share.id)
                     putExtra(za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity.EXTRA_TOP_SHARE_PATH, twinInitialPath)
@@ -1076,6 +1077,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 } else {
                     currentPath
                 }
+                android.util.Log.d("TPath", "Open twin window (TV): share.id=${share.id} share.name=${share.name} serverMode=${share.isServerMode} remotePath='${share.remotePath}' currentPath='$currentPath' twinInitialPath='$twinInitialPath'")
                 val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity::class.java).apply {
                     putExtra(za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity.EXTRA_TOP_SHARE_ID, share.id)
                     putExtra(za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity.EXTRA_TOP_SHARE_PATH, twinInitialPath)

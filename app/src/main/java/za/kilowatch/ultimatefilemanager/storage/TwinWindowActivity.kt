@@ -324,12 +324,14 @@ class TwinWindowActivity : AppCompatActivity() {
             handleMediaFileSelected(index, file.absolutePath, file.name, null, null)
         }
         fragment.onCloseTwinWindow = {
+            val closePath = fragment.getCurrentDir().absolutePath
+            android.util.Log.d("TPath", "Close twin window (local): index=$index mountPath='${fragment.getRootPath()}' currentDir='$closePath'")
             val intent = Intent(this, FileBrowserActivity::class.java).apply {
                 putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, fragment.getRootPath())
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, fragment.getStorageLabel())
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, fragment.getStorageId())
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, fragment.getStorageType())
-                putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, fragment.getCurrentDir().absolutePath)
+                putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, closePath)
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             }
             startActivity(intent)
@@ -358,15 +360,24 @@ class TwinWindowActivity : AppCompatActivity() {
             // name as the first segment (e.g. "Share/Camera") so it can re-derive the share name
             // on first navigation. Without this reconstruction, the share name is dropped and the
             // subfolder name (e.g. "Camera") is mistakenly used as the SMB share name.
+            // IMPORTANT: getCurrentPath() may already include the share name (e.g. "PrivateDL/MM")
+            // when the twin window was initialised with a path containing the share name.
+            // Strip any existing share name prefix before reconstructing, to avoid duplication.
+            val rawPath = fragment.getCurrentPath().trimStart('/')
             val initialPath = if (liveShare.isServerMode) {
                 val shareName = liveShare.remotePath.trimStart('/')
-                val subPath   = fragment.getCurrentPath().trimStart('/')
-                if (shareName.isEmpty()) subPath
-                else if (subPath.isEmpty()) shareName
-                else "$shareName/$subPath"
+                val stripped = if (rawPath.startsWith("$shareName/")) {
+                    rawPath.removePrefix("$shareName/")
+                } else if (rawPath == shareName) {
+                    ""
+                } else {
+                    rawPath
+                }
+                if (stripped.isEmpty()) shareName else "$shareName/$stripped"
             } else {
-                fragment.getCurrentPath()
+                rawPath
             }
+            android.util.Log.d("TPath", "Close twin window (network): index=$index share.id=${liveShare.id} serverMode=${liveShare.isServerMode} rawPath='$rawPath' initialPath='$initialPath'")
             val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
                 putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, liveShare.id)
                 putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, liveShare.name)
