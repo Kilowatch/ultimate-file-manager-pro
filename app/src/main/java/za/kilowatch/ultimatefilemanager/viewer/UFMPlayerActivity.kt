@@ -964,7 +964,8 @@ class UFMPlayerActivity : Activity() {
                     za.kilowatch.ultimatefilemanager.network.ShareType.valueOf(provider)
                 } catch (_: Exception) {
                     za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                }
+                },
+                remotePath = remotePathExtra
             )
         }
 

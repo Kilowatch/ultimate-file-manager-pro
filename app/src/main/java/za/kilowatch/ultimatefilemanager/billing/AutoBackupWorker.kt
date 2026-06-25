@@ -137,7 +137,14 @@ class AutoBackupWorker(
 
         return try {
             val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
-            val share = repo.getById(shareId) ?: return false
+            var share = repo.getById(shareId) ?: return false
+            val innerPath = if (share.isServerMode && netPath.isNotEmpty()) {
+                val segments = netPath.trimStart('/').split("/", limit = 2)
+                share = share.copy(remotePath = "/${segments[0]}")
+                segments.getOrElse(1) { "" }
+            } else {
+                netPath
+            }
 
             val configFile = File(localDir, "ufm_backup.UFMConfig")
             val themeFile = File(localDir, "ufm_icons_theme.UFMTheme")
@@ -148,7 +155,7 @@ class AutoBackupWorker(
 
             for (file in filesToUpload) {
                 val remoteName = file.name
-                val remotePath = if (netPath.isEmpty()) remoteName else "$netPath/$remoteName"
+                val remotePath = if (innerPath.isEmpty()) remoteName else "$innerPath/$remoteName"
                 val inp = file.inputStream()
                 try {
                     when (share.type) {

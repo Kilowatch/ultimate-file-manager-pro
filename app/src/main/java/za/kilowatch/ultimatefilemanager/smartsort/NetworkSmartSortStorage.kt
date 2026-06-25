@@ -9,7 +9,10 @@ class NetworkSmartSortStorage(
     private val share: NetworkShare
 ) : SmartSortStorage {
 
+    private val isUnsupported: Boolean = share.isServerMode
+
     override suspend fun listFiles(path: String): List<SmartSortFileEntry> = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext emptyList()
         val netFiles = try {
             when (share.type) {
                 ShareType.SMB -> SmbShareClient.listFiles(share, path)
@@ -34,6 +37,7 @@ class NetworkSmartSortStorage(
     }
 
     override suspend fun mkdirs(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext false
         try {
             when (share.type) {
                 ShareType.SMB -> { SmbShareClient.mkdir(share, path); true }
@@ -55,6 +59,7 @@ class NetworkSmartSortStorage(
     }
 
     override suspend fun rename(from: String, to: String): Boolean = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext false
         try {
             when (share.type) {
                 ShareType.SMB -> { SmbShareClient.rename(share, from, to); true }
@@ -76,6 +81,7 @@ class NetworkSmartSortStorage(
     }
 
     override suspend fun writeBytes(path: String, data: ByteArray): Boolean = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext false
         val noProgress: (Long) -> Unit = {}
         try {
             when (share.type) {
@@ -105,6 +111,7 @@ class NetworkSmartSortStorage(
     }
 
     override suspend fun delete(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext false
         try {
             when (share.type) {
                 ShareType.SMB -> { SmbShareClient.deleteFile(share, path); true }
@@ -124,6 +131,7 @@ class NetworkSmartSortStorage(
     }
 
     override suspend fun exists(path: String): Boolean = withContext(Dispatchers.IO) {
+        if (isUnsupported) return@withContext false
         try {
             val files = when (share.type) {
                 ShareType.SMB -> SmbShareClient.listFiles(share, path.substringBeforeLast("/"))

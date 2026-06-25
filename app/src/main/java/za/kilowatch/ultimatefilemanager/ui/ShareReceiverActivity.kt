@@ -315,8 +315,15 @@ class ShareReceiverActivity : AppCompatActivity() {
     }
 
     private suspend fun saveToNetwork(uri: Uri, shareId: String, netPath: String) {
-        val share = resolveShareById(shareId) ?: throw IllegalStateException("Share not found: $shareId")
-        val remoteFilePath = if (netPath.isEmpty()) sharedFileName else "$netPath/$sharedFileName"
+        var share = resolveShareById(shareId) ?: throw IllegalStateException("Share not found: $shareId")
+        val innerPath = if (share.isServerMode && netPath.isNotEmpty()) {
+            val segments = netPath.trimStart('/').split("/", limit = 2)
+            share = share.copy(remotePath = "/${segments[0]}")
+            segments.getOrElse(1) { "" }
+        } else {
+            netPath
+        }
+        val remoteFilePath = if (innerPath.isEmpty()) sharedFileName else "$innerPath/$sharedFileName"
 
         withContext(Dispatchers.IO) {
             contentResolver.openInputStream(uri)?.use { input ->

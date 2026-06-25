@@ -108,6 +108,17 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 }
                 return Result.failure()
             }
+
+            if (share.isServerMode) {
+                Log.w(TAG, "Server-mode SMB shares are not supported for sync")
+                if (profile.notificationsEnabled) {
+                    showErrorNotification(
+                        applicationContext.getString(R.string.network_share_not_found_for_profilename, profile.name),
+                        profile.id.hashCode() + 10
+                    )
+                }
+                return Result.failure()
+            }
             Log.d(TAG, "Resolved share: '${share.name}' type=${share.type} host=${share.host}")
 
             // Test connection — skip test for online storage types (they handle auth differently)

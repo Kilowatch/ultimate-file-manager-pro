@@ -632,8 +632,13 @@ class ImageCompressActivity : AppCompatActivity() {
      * The local temp [file] is deleted after a successful upload.
      */
     private suspend fun uploadCompressedFile(file: File, remoteName: String) {
-        val share = resolveShareById(networkShareId ?: return) ?: return
-        val remotePath = if (networkPath.isNullOrEmpty()) remoteName else "${networkPath}/$remoteName"
+        var share = resolveShareById(networkShareId ?: return) ?: return
+        val netPath = networkPath
+        if (share.isServerMode && !netPath.isNullOrEmpty()) {
+            val segments = netPath.trimStart('/').split("/", limit = 2)
+            share = share.copy(remotePath = "/${segments[0]}")
+        }
+        val remotePath = if (netPath.isNullOrEmpty()) remoteName else "${netPath}/$remoteName"
 
         val inp = file.inputStream()
         try {

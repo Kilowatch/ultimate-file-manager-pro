@@ -460,7 +460,8 @@ class NetworkBrowserFragment : Fragment() {
                         val existingShare = share.remotePath.trimStart('/')
                         if (existingShare.isNotEmpty()) {
                             // Already navigated into a share — currentPath is relative to share root
-                            var files = SmbShareClient.listFiles(share, currentPath.trimStart('/'))
+                            val innerPath = stripSharePrefix(currentPath.trimStart('/'))
+                            var files = SmbShareClient.listFiles(share, innerPath)
                             files = files.filter { it.name != ".." }
                             withContext(Dispatchers.Main) {
                                 progressBar.visibility = View.GONE
@@ -618,15 +619,36 @@ class NetworkBrowserFragment : Fragment() {
             fileAdapter.exitSelectionMode()
             return true
         }
-        if (currentPath.isEmpty() || currentPath == "/") return false
+        if (currentPath.isEmpty() || currentPath == "/") {
+            // At share root — go back to server root (discovered shares)
+            if (share.isServerMode && share.remotePath.isNotEmpty()) {
+                share = share.copy(remotePath = originalRemotePath)
+                fileAdapter.share = share
+                loadDirectory()
+                return true
+            }
+            return false
+        }
 
         val lastSlash = currentPath.lastIndexOf('/')
         lastExitedPath = currentPath
         currentPath = if (lastSlash <= 0) {
-            // Going back from "/shareName" → go to server root
-            share = share.copy(remotePath = originalRemotePath)
-            fileAdapter.share = share
-            ""
+            // Going back from the last path segment.
+            val trimmedPath = currentPath.trimStart('/')
+            val shareName = share.remotePath.trimStart('/')
+            if (share.isServerMode && shareName.isNotEmpty() && trimmedPath != shareName) {
+                // At a subfolder level — go to share root (show share's contents).
+                // Use share name so loadDirectory enters the already-navigated branch
+                // instead of the "discover shares" root path.
+                "/$shareName"
+            } else {
+                // At share root or non-server mode — go back to root (server root or empty).
+                if (share.isServerMode) {
+                    share = share.copy(remotePath = originalRemotePath)
+                    fileAdapter.share = share
+                }
+                ""
+            }
         } else {
             currentPath.substring(0, lastSlash)
         }
@@ -1031,7 +1053,8 @@ class NetworkBrowserFragment : Fragment() {
             .setPositiveButton(R.string.rename_confirm) { _, _ ->
                 val newName = editText.text.toString().trim()
                 if (newName.isNotEmpty() && newName != file.name) {
-                    val targetPath = if (currentPath.isEmpty()) newName else "$currentPath/$newName"
+                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
+                    val targetPath = if (cleanPath.isEmpty()) newName else "$cleanPath/$newName"
                     lifecycleScope.launch(Dispatchers.IO) {
                         try {
                             when (share.type) {

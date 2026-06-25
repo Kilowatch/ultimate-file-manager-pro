@@ -69,6 +69,18 @@ object UfmFileSystemBridge {
     // Only logs the URI scheme so no paths or credentials appear in logcat.
     private fun schemeOf(uri: String) = uri.substringBefore("://")
 
+    /** Resolves an SMB share by ID, handling server-mode remotePath override from the URI path. */
+    private fun resolveSmbShare(context: Context, id: String, path: String): NetworkShare? {
+        val share = NetworkShareRepository.getInstance(context).getById(id) ?: return null
+        if (share.isServerMode) {
+            val segments = path.trimStart('/').split("/", limit = 2)
+            val shareName = segments.getOrElse(0) { "" }
+            if (shareName.isNotEmpty()) return share.copy(remotePath = "/$shareName")
+            return null // server-mode share needs a share name in the path
+        }
+        return share
+    }
+
     private const val TAG = "UfmBridge"
 
     fun exists(context: Context, uri: String): Boolean {
@@ -99,7 +111,7 @@ object UfmFileSystemBridge {
                 } ?: emptyList()
             }
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id) ?: return emptyList()
+                val share = resolveSmbShare(context, id, path) ?: return emptyList()
                 SmbShareClient.listFiles(share, path)
             }
             "ftp" -> {
@@ -164,7 +176,7 @@ object UfmFileSystemBridge {
                 NetworkFile(f.name, f.absolutePath, f.isDirectory, f.length(), f.lastModified())
             }
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id) ?: return null
+                val share = resolveSmbShare(context, id, path) ?: return null
                 val parentPath = getParentPath(path)
                 val name = getFileName(path)
                 if (path.isEmpty() || path == "/") return NetworkFile("root", "/", true, 0, 0)
@@ -191,7 +203,7 @@ object UfmFileSystemBridge {
                 fis
             }
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id)!!
+                val share = resolveSmbShare(context, id, path) ?: throw IOException("SMB share not found: $id")
                 runBlocking {
                     val stream = SmbShareClient.openInputStream(share, path)
                     if (startOffset > 0) stream.skip(startOffset)
@@ -261,7 +273,7 @@ object UfmFileSystemBridge {
         return when (scheme) {
             "file" -> File(path).outputStream()
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id)!!
+                val share = resolveSmbShare(context, id, path) ?: throw IOException("SMB share not found: $id")
                 runBlocking { SmbShareClient.openOutputStream(share, path) }
             }
             "ftp" -> {
@@ -318,7 +330,7 @@ object UfmFileSystemBridge {
         when (scheme) {
             "file" -> File(path).mkdirs()
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id)!!
+                val share = resolveSmbShare(context, id, path) ?: throw IOException("SMB share not found: $id")
                 SmbShareClient.mkdir(share, path)
             }
             "ftp" -> {
@@ -383,7 +395,7 @@ object UfmFileSystemBridge {
                 }
             }
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id)!!
+                val share = resolveSmbShare(context, id, path) ?: throw IOException("SMB share not found: $id")
                 runBlocking {
                     if (metadata.isDirectory) SmbShareClient.deleteDir(share, path)
                     else SmbShareClient.deleteFile(share, path)
@@ -449,7 +461,7 @@ object UfmFileSystemBridge {
         when (scheme) {
             "file" -> File(path).renameTo(File(newPath))
             "smb" -> {
-                val share = NetworkShareRepository.getInstance(context).getById(id)!!
+                val share = resolveSmbShare(context, id, path) ?: throw IOException("SMB share not found: $id")
                 SmbShareClient.rename(share, path, newPath)
             }
             "ftp" -> {

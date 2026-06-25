@@ -492,13 +492,17 @@ class SlideShowActivity : AppCompatActivity() {
                     DefaultMediaSourceFactory(dataSourceFactory)
                         .createMediaSource(MediaItem.fromUri(Uri.fromFile(localFile)))
                 } else {
-                    val share = NetworkShareRepository.getInstance(context).getById(shareId)
+                    var share = NetworkShareRepository.getInstance(context).getById(shareId)
                         ?: NetworkShare(
                             id = shareId,
                             host = shareHost,
                             name = shareName,
                             type = ShareType.valueOf(provider)
                         )
+                    // Server-mode SMB: override remotePath from intent extra
+                    if (share.isServerMode && remotePathExtra.isNotEmpty()) {
+                        share = share.copy(remotePath = remotePathExtra)
+                    }
 
                     if (provider == "GOOGLE_DRIVE" || provider == "ONEDRIVE") {
                         val (url, token) = if (provider == "GOOGLE_DRIVE") {

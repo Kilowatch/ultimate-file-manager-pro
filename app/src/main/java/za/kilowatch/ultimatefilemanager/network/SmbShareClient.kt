@@ -489,7 +489,14 @@ object SmbShareClient {
     }
 
     private fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
-        val parts = basePath.trimStart('/').split("/", limit = 2)
+        val clean = basePath.trimStart('/')
+        if (clean.isBlank()) {
+            throw IllegalArgumentException(
+                "splitSharePath: basePath is empty — server-mode SMB share used without remotePath override. " +
+                "share.remotePath='$basePath' subPath='$subPath'"
+            )
+        }
+        val parts = clean.split("/", limit = 2)
         val shareName = parts.getOrElse(0) { "" }
         val inner = parts.getOrElse(1) { "" }
         val combined = listOf(inner, subPath.trimStart('/')).filter { it.isNotBlank() }.joinToString("\\")

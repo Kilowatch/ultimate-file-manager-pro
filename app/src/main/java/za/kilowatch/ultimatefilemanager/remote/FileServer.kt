@@ -993,6 +993,7 @@ class FileServer(
         // Append Network Shares to the volumes list
         val networkShares = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context).getAll()
         for (share in networkShares) {
+            if (share.isServerMode) continue // Server-mode SMB needs dynamic share selection
             val obj = JSONObject().apply {
                 put("label", share.name) // Keep share name as is, but maybe add "Network Share" as type
                 put("path", "net:${share.id}") 
@@ -1033,6 +1034,10 @@ class FileServer(
         val netRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
         val share = netRepo.getById(shareId)
         if (share != null) {
+            if (share.isServerMode) {
+                Log.w(TAG, "resolveShare: server-mode SMB shares not supported in remote server")
+                return null
+            }
             Log.d(TAG, "resolveShare: found network share '${share.name}'")
             return share
         }

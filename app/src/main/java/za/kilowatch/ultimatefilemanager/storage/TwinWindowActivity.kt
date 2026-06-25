@@ -71,6 +71,12 @@ class TwinWindowActivity : AppCompatActivity() {
     private var pane1: Fragment? = null
     private var pane2: Fragment? = null
 
+    // Tracks pane 1's original type for restoration after closing the player.
+    // Pane 1 can be seeded as either local (default) or network (via intent extras).
+    private var pane1IsNetwork: Boolean = false
+    private var pane1ShareId: String? = null
+    private var pane1SharePath: String = ""
+
 
     private var selectedPaneIndex: Int = 1 // 1 or 2
 
@@ -90,6 +96,12 @@ class TwinWindowActivity : AppCompatActivity() {
                 if (selectedPaneIndex == 2) {
                     za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager
                         .savePane2Selection(this, "network", shareId = shareId)
+                }
+                // Track pane 1 type so restorePane(1) can restore correctly
+                if (selectedPaneIndex == 1) {
+                    pane1IsNetwork = true
+                    pane1ShareId = shareId
+                    pane1SharePath = intent.getStringExtra(EXTRA_TOP_SHARE_PATH) ?: ""
                 }
                 setupNetworkPane(selectedPaneIndex, shareId, requestInitialFocus = true)
             } else if (isApps) {
@@ -177,9 +189,20 @@ class TwinWindowActivity : AppCompatActivity() {
         val topSharePath  = intent.getStringExtra(EXTRA_TOP_SHARE_PATH) ?: ""
 
         when {
-            topLocalPath != null -> setupLocalPane(1, topLocalPath, topLocalLabel, topLocalInitialPath, requestInitialFocus = true)
-            topShareId   != null -> setupNetworkPane(1, topShareId, topSharePath, requestInitialFocus = true)
-            else                 -> setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
+            topLocalPath != null -> {
+                pane1IsNetwork = false
+                setupLocalPane(1, topLocalPath, topLocalLabel, topLocalInitialPath, requestInitialFocus = true)
+            }
+            topShareId   != null -> {
+                pane1IsNetwork = true
+                pane1ShareId = topShareId
+                pane1SharePath = topSharePath
+                setupNetworkPane(1, topShareId, topSharePath, requestInitialFocus = true)
+            }
+            else                 -> {
+                pane1IsNetwork = false
+                setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
+            }
         }
 
         // Restore pane 2's last remembered storage selection.
@@ -251,8 +274,26 @@ class TwinWindowActivity : AppCompatActivity() {
                 )
             }
             is NetworkBrowserFragment -> {
-                prefs.savePane2InitialPath(this, f.getCurrentPath())
-                prefs.savePane2Selection(this, "network", shareId = f.getShare().id)
+                val share = f.getShare()
+                val rawPath = f.getCurrentPath().trimStart('/')
+                val shareName = share.remotePath.trimStart('/')
+                // For share-mode, remotePath is already in the repo — save path as-is (relative).
+                // For server-mode, include share name prefix so first-navigation can extract it.
+                val savedPath = if (share.isServerMode) {
+                    val strippedPath = if (rawPath.startsWith("$shareName/")) {
+                        rawPath.removePrefix("$shareName/")
+                    } else if (rawPath == shareName) {
+                        ""
+                    } else {
+                        rawPath
+                    }
+                    if (strippedPath.isEmpty()) shareName else "$shareName/$strippedPath"
+                } else {
+                    rawPath
+                }
+                android.util.Log.d("AfterVideo", "onStop savePane2: rawPath='$rawPath' savedPath='$savedPath' serverMode=${share.isServerMode} shareId=${share.id}")
+                prefs.savePane2InitialPath(this, savedPath)
+                prefs.savePane2Selection(this, "network", shareId = share.id)
             }
             else -> { /* AppBrowser — no sub-path to save */ }
         }
@@ -305,7 +346,9 @@ class TwinWindowActivity : AppCompatActivity() {
         }
         fragment.onActionRequested = { action -> onActionRequested(fragment, action) }
         fragment.onMediaFileSelected = { networkFile ->
-            handleMediaFileSelected(index, networkFile.path, networkFile.name, shareId, null)
+            val liveShare = fragment.getShare()
+            val remotePath = liveShare?.remotePath ?: ""
+            handleMediaFileSelected(index, networkFile.path, networkFile.name, shareId, null, remotePath)
         }
         fragment.onCloseTwinWindow = {
             val liveShare = fragment.getShare()
@@ -368,8 +411,23 @@ class TwinWindowActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun handleMediaFileSelected(index: Int, filePath: String, fileName: String, shareId: String?, provider: String?) {
+    private fun handleMediaFileSelected(index: Int, filePath: String, fileName: String, shareId: String?, provider: String?, remotePath: String = "") {
         if (!SideBySideVideoPreferenceManager.isEnabled(this)) {
+            if (shareId != null) {
+                // Network file — route to UFMPlayerActivity instead of local FileViewerRouter
+                val share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this).getById(shareId)
+                if (share != null) {
+                    val intent = Intent(this, za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java).apply {
+                        putExtra("shareId", shareId)
+                        putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH, remotePath)
+                        putExtra("shareHost", share.host)
+                        putExtra("shareName", share.name)
+                        putExtra("initialPath", filePath)
+                    }
+                    startActivity(intent)
+                    return
+                }
+            }
             val file = java.io.File(filePath)
             if (file.exists()) {
                 FileViewerRouter.openFile(this, file)
@@ -388,10 +446,10 @@ class TwinWindowActivity : AppCompatActivity() {
 
         if (otherIsPlayingUnmuted) {
             showAudioConflictDialog { muteNew ->
-                replacePaneWithPlayer(index, filePath, fileName, shareId, provider, muteNew)
+                replacePaneWithPlayer(index, filePath, fileName, shareId, provider, muteNew, remotePath)
             }
         } else {
-            replacePaneWithPlayer(index, filePath, fileName, shareId, provider, false)
+            replacePaneWithPlayer(index, filePath, fileName, shareId, provider, false, remotePath)
         }
     }
 
@@ -405,7 +463,63 @@ class TwinWindowActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun replacePaneWithPlayer(index: Int, filePath: String, fileName: String, shareId: String?, provider: String?, startMuted: Boolean) {
+    private fun replacePaneWithPlayer(index: Int, filePath: String, fileName: String, shareId: String?, provider: String?, startMuted: Boolean, remotePath: String = "") {
+        // Save the current pane's state before replacing it with the player,
+        // so restorePane can correctly restore the pane after the player closes.
+        val exitingFragment = getPaneFragment(index)
+        val prefs = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        if (exitingFragment is za.kilowatch.ultimatefilemanager.network.NetworkBrowserFragment) {
+            val netFrag = exitingFragment
+            val liveShare = netFrag.getShare()
+            // Normalise the current path: strip any existing share name prefix first,
+            // then reconstruct with the canonical share name. This avoids duplicating
+            // the share name when getCurrentPath() already contains it (e.g. from the
+            // twin window initial path like "PrivateDL/MM").
+            val rawPath = netFrag.getCurrentPath().trimStart('/')
+            val shareName = liveShare.remotePath.trimStart('/')
+            // For server-mode, the path needs the share name prefix so the first-navigation
+            // logic can extract it on restore (repo has remotePath=""). For share-mode,
+            // remotePath is already set in the repo, so save the path as-is (relative).
+            val canonPath = if (liveShare.isServerMode) {
+                val strippedPath = if (rawPath.startsWith("$shareName/")) {
+                    rawPath.removePrefix("$shareName/")
+                } else if (rawPath == shareName) {
+                    ""
+                } else {
+                    rawPath
+                }
+                if (strippedPath.isEmpty()) shareName else "$shareName/$strippedPath"
+            } else {
+                rawPath
+            }
+            if (index == 2) {
+                android.util.Log.d("AfterVideo", "replacePaneWithPlayer(2): saving path='$canonPath' shareId=${liveShare.id} rawPath='$rawPath' serverMode=${liveShare.isServerMode}")
+                prefs.savePane2InitialPath(this, canonPath)
+                prefs.savePane2Selection(this, "network", shareId = liveShare.id)
+            } else {
+                pane1IsNetwork = true
+                pane1ShareId = liveShare.id
+                pane1SharePath = canonPath
+                android.util.Log.d("AfterVideo", "replacePaneWithPlayer(1): saving path='$canonPath' shareId=${liveShare.id}")
+            }
+        } else if (exitingFragment is za.kilowatch.ultimatefilemanager.storage.FileBrowserFragment) {
+            val localFrag = exitingFragment
+            val localPath = localFrag.getCurrentDir().absolutePath
+            if (index == 2) {
+                prefs.savePane2InitialPath(this, localPath)
+                prefs.savePane2Selection(this, "local", path = localFrag.getRootPath().ifEmpty { internalPath }, label = localFrag.getStorageLabel().ifEmpty { "Storage" })
+            } else {
+                // For pane 1 local, save the current path so restorePane(1) can restore it
+                // Instead of always going to internalPath root
+                pane1IsNetwork = false
+                // Store the path for local pane 1 restore
+                // We'll use pane1SharePath as a generic "restore path" regardless of type
+                pane1SharePath = localPath
+                android.util.Log.d("AfterVideo", "replacePaneWithPlayer(1-local): saving path='$localPath'")
+            }
+            android.util.Log.d("AfterVideo", "replacePaneWithPlayer($index-local): saving path='$localPath'")
+        }
         val ext = fileName.substringAfterLast(".").lowercase()
         val isVideo = FileViewerRouter.isVideo(ext) || !FileViewerRouter.isAudio(ext)
         val fragment = TwinWindowPlayerFragment.newInstance(
@@ -413,9 +527,12 @@ class TwinWindowActivity : AppCompatActivity() {
             fileName = fileName,
             isVideo = isVideo,
             paneIndex = index,
-            startMuted = startMuted
+            startMuted = startMuted,
+            shareId = shareId,
+            remotePath = remotePath
         )
         fragment.onClosePlayer = {
+            android.util.Log.d("AfterVideo", "onClosePlayer called: index=$index shareId=$shareId remotePath=$remotePath pane1IsNetwork=$pane1IsNetwork pane1ShareId=$pane1ShareId")
             collapsePanes()
             restorePane(index)
         }
@@ -463,10 +580,25 @@ class TwinWindowActivity : AppCompatActivity() {
         val p2ShareId = prefs.getPane2ShareId(this)
         val p2InitialPath = prefs.getPane2InitialPath(this) ?: ""
         val p2PathValid = p2Path != null && java.io.File(p2Path).exists()
+        android.util.Log.d("AfterVideo", "restorePane: index=$index p2Type=$p2Type p2ShareId=$p2ShareId p2InitialPath=$p2InitialPath pane1IsNetwork=$pane1IsNetwork pane1ShareId=$pane1ShareId")
 
         if (index == 1) {
-            setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
+            // Restore pane 1 to its saved type and path
+            if (pane1IsNetwork && pane1ShareId != null) {
+                android.util.Log.d("AfterVideo", "restorePane(1): restoring network share id=$pane1ShareId path=$pane1SharePath")
+                setupNetworkPane(1, pane1ShareId!!, pane1SharePath, requestInitialFocus = true)
+            } else {
+                val savedLocalPath = pane1SharePath
+                if (savedLocalPath.isNotEmpty() && java.io.File(savedLocalPath).exists()) {
+                    android.util.Log.d("AfterVideo", "restorePane(1): restoring local path=$savedLocalPath mount=$internalPath")
+                    setupLocalPane(1, internalPath, internalLabel, initialPath = savedLocalPath, requestInitialFocus = true)
+                } else {
+                    android.util.Log.d("AfterVideo", "restorePane(1): restoring local storage root")
+                    setupLocalPane(1, internalPath, internalLabel, requestInitialFocus = true)
+                }
+            }
         } else {
+            android.util.Log.d("AfterVideo", "restorePane(2): type=$p2Type shareId=$p2ShareId initPath=$p2InitialPath")
             when {
                 p2Type == "network" && p2ShareId != null -> setupNetworkPane(2, p2ShareId, p2InitialPath, requestInitialFocus = true)
                 p2Type == "apps" -> setupAppPane(2)

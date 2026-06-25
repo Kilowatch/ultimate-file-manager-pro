@@ -448,8 +448,8 @@ class DocumentScannerActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun uploadToNetwork(tempFile: File, shareId: String, remotePath: String) {
-        val share = NetworkShareRepository.getInstance(this).getById(shareId)
+    private suspend fun uploadToNetwork(tempFile: File, shareId: String, netPath: String) {
+        var share = NetworkShareRepository.getInstance(this).getById(shareId)
             ?: OnlineStorageRepository.getInstance(this).getById(shareId)?.let { online ->
                 za.kilowatch.ultimatefilemanager.network.NetworkShare(
                     id = online.id,
@@ -472,23 +472,32 @@ class DocumentScannerActivity : AppCompatActivity() {
                 )
             } ?: throw java.io.IOException("Network share not found: $shareId")
 
+        // Server-mode SMB: extract share name from the first segment of netPath
+        val fileRemotePath = if (share.isServerMode && netPath.isNotEmpty()) {
+            val segments = netPath.trimStart('/').split("/", limit = 2)
+            share = share.copy(remotePath = "/${segments[0]}")
+            segments.getOrElse(1) { "" }
+        } else {
+            netPath
+        }
+
         val input = java.io.FileInputStream(tempFile)
         when (share.type) {
-            ShareType.SMB -> SmbShareClient.openOutputStream(share, remotePath)
-            ShareType.FTP -> FtpShareClient.openOutputStream(share, remotePath)
-            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, remotePath)
-            ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, remotePath)
-            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, remotePath)
-            ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, remotePath)
-            ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, remotePath)
+            ShareType.SMB -> SmbShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.FTP -> FtpShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, fileRemotePath)
+            ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, fileRemotePath)
             ShareType.SFTP, ShareType.SCP -> {
                 // SshShareClient.openOutputStream is not a suspend function,
                 // use withContext to bridge onto IO dispatcher
                 withContext(Dispatchers.IO) {
-                    SshShareClient.openOutputStream(share, remotePath)
+                    SshShareClient.openOutputStream(share, fileRemotePath)
                 }
             }
-            ShareType.NFS -> NfsShareClient.openOutputStream(share, remotePath)
+            ShareType.NFS -> NfsShareClient.openOutputStream(share, fileRemotePath)
             ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
             else -> throw java.io.IOException("Saving to ${share.type} is not supported yet")
         }.use { output ->

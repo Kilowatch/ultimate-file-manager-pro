@@ -1,6 +1,8 @@
 package za.kilowatch.ultimatefilemanager.ui
 
 import za.kilowatch.ultimatefilemanager.util.safeDirectoryPath
+import za.kilowatch.ultimatefilemanager.network.NetworkFile
+import za.kilowatch.ultimatefilemanager.network.SmbDiscovery
 
 import android.app.Activity
 import android.content.Context
@@ -325,7 +327,19 @@ class SafPickerActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val files = when (share.type) {
+                val files = if (share.type == ShareType.SMB && share.isServerMode && path.isEmpty()) {
+                    // Server-mode SMB at root — discover shares
+                    val shareNames = SmbDiscovery.listShares(
+                        share.host, share.username, share.password, share.domain
+                    ).filter { name ->
+                        SmbShareClient.isShareAccessible(
+                            share.host, name, share.username, share.password, share.domain
+                        )
+                    }
+                    shareNames.map { name ->
+                        NetworkFile(name = name, path = "/$name", isDirectory = true)
+                    }
+                } else when (share.type) {
                     ShareType.SMB -> SmbShareClient.listFiles(share, path)
                     ShareType.FTP -> FtpShareClient.listFiles(share, path)
                     ShareType.TV  -> TvShareClient.listFiles(share, path)

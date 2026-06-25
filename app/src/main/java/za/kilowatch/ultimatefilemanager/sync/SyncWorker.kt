@@ -56,6 +56,11 @@ class SyncWorker(appContext: Context, params: WorkerParameters) :
                 return Result.failure()
             }
 
+            if (share.isServerMode) {
+                android.util.Log.w("SyncWorker", "Server-mode SMB shares are not supported for sync")
+                return Result.failure()
+            }
+
             // Test connection — null = success, non-null = error message
             val connError = when (share.type) {
                 ShareType.SMB -> SmbShareClient.testConnection(share)

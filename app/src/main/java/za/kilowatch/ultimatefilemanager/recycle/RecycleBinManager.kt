@@ -437,7 +437,13 @@ object RecycleBinManager {
         return try {
             // Check NetworkShareRepository (SMB, FTP, SFTP, SCP, WebDAV)
             val fromRepo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(appContext).getById(storageId)
-            if (fromRepo != null) return fromRepo
+            if (fromRepo != null) {
+                if (fromRepo.isServerMode) {
+                    android.util.Log.w("RecycleBin", "Server-mode SMB shares not supported in recycle bin")
+                    return null
+                }
+                return fromRepo
+            }
 
             // Check OnlineStorageRepository (S3, OneDrive, Google Drive, Dropbox, WebDAV)
             val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(appContext)

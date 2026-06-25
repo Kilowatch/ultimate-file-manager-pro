@@ -2104,8 +2104,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             statusText.text = getString(R.string.uploading_to_destsharename)
                         }
-                        val remotePath = if (dest.remotePath.isEmpty()) archiveName
-                                         else "${dest.remotePath}/$archiveName"
+                        val cleanDestPath = if (dest.share.isServerMode) {
+                            stripSharePrefix(dest.remotePath.trimStart('/'))
+                        } else {
+                            dest.remotePath
+                        }
+                        val remotePath = if (cleanDestPath.isEmpty()) archiveName
+                                         else "$cleanDestPath/$archiveName"
                         val inStream = tempArchiveFile.inputStream()
                         try {
                             when (dest.share.type) {
@@ -2584,7 +2589,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
             .setPositiveButton(getString(R.string.rename_confirm)) { _, _ ->
                 val newName = editText.text.toString().trim()
                 if (newName.isNotEmpty() && newName != file.name) {
-                    val targetPath = if (currentPath.isEmpty()) newName else "$currentPath/$newName"
+                    val cleanPath = stripSharePrefix(currentPath.trimStart('/'))
+                    val targetPath = if (cleanPath.isEmpty()) newName else "$cleanPath/$newName"
                     lifecycleScope.launch(Dispatchers.IO) {
                         try {
                             when (share.type) {

@@ -21,12 +21,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.datasource.DataSource
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
-import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 
 class TwinWindowPlayerFragment : Fragment() {
 
@@ -58,6 +61,8 @@ class TwinWindowPlayerFragment : Fragment() {
     private var isVideo: Boolean = true
     private var paneIndex: Int = 1
     private var startMuted: Boolean = false
+    private var shareId: String? = null
+    private var remotePath: String? = null
 
     private var isMuted: Boolean = false
     private var isRepeat: Boolean = false
@@ -106,13 +111,17 @@ class TwinWindowPlayerFragment : Fragment() {
         private const val ARG_IS_VIDEO = "is_video"
         private const val ARG_PANE_INDEX = "pane_index"
         private const val ARG_START_MUTED = "start_muted"
+        private const val ARG_SHARE_ID = "share_id"
+        private const val ARG_REMOTE_PATH = "remote_path"
 
         fun newInstance(
             filePath: String,
             fileName: String,
             isVideo: Boolean,
             paneIndex: Int,
-            startMuted: Boolean = false
+            startMuted: Boolean = false,
+            shareId: String? = null,
+            remotePath: String? = null
         ): TwinWindowPlayerFragment {
             val fragment = TwinWindowPlayerFragment()
             fragment.arguments = Bundle().apply {
@@ -121,6 +130,8 @@ class TwinWindowPlayerFragment : Fragment() {
                 putBoolean(ARG_IS_VIDEO, isVideo)
                 putInt(ARG_PANE_INDEX, paneIndex)
                 putBoolean(ARG_START_MUTED, startMuted)
+                putString(ARG_SHARE_ID, shareId)
+                putString(ARG_REMOTE_PATH, remotePath)
             }
             return fragment
         }
@@ -134,6 +145,8 @@ class TwinWindowPlayerFragment : Fragment() {
             isVideo = it.getBoolean(ARG_IS_VIDEO, true)
             paneIndex = it.getInt(ARG_PANE_INDEX, 1)
             startMuted = it.getBoolean(ARG_START_MUTED, false)
+            shareId = it.getString(ARG_SHARE_ID)
+            remotePath = it.getString(ARG_REMOTE_PATH)
         }
     }
 
@@ -337,12 +350,39 @@ class TwinWindowPlayerFragment : Fragment() {
             playerView.visibility = View.VISIBLE
         }
 
-        val mediaItem = MediaItem.fromUri(Uri.fromFile(File(filePath)))
         val newPlayer = ExoPlayer.Builder(requireContext()).build()
+
+        if (shareId != null) {
+            // Network file — use UfmMedia3DataSource
+            val repo = NetworkShareRepository.getInstance(requireContext())
+            var share = repo.getById(shareId!!)
+            if (share?.isServerMode == true && !remotePath.isNullOrEmpty()) {
+                share = share.copy(remotePath = remotePath!!)
+            }
+            if (share != null) {
+                val dataSourceFactory = DataSource.Factory {
+                    UfmMedia3DataSource(share, filePath)
+                }
+                val mediaSource = DefaultMediaSourceFactory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(
+                        android.net.Uri.parse("ufm://${filePath.replace(" ", "%20")}")
+                    ))
+                newPlayer.setMediaSource(mediaSource)
+                newPlayer.prepare()
+            } else {
+                // Share not found — close player and return
+                loadingSpinner.visibility = View.GONE
+                onClosePlayer?.invoke()
+                return
+            }
+        } else {
+            // Local file
+            val mediaItem = MediaItem.fromUri(Uri.fromFile(File(filePath)))
+            newPlayer.setMediaItem(mediaItem)
+            newPlayer.prepare()
+        }
         player = newPlayer
         playerView.player = newPlayer
-        newPlayer.setMediaItem(mediaItem)
-        newPlayer.prepare()
 
         newPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {

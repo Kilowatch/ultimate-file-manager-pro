@@ -90,7 +90,19 @@ object BatchRenameExecutor {
 
         for ((type, group) in byType) {
             // All items in a group share the same share object (or should)
-            val share = group.firstOrNull()?.second?.networkShare ?: continue
+            var share = group.firstOrNull()?.second?.networkShare ?: continue
+
+            // Server-mode SMB: extract share name from first segment of item paths.
+            // Assumes all items in the group are from the same share, so the first
+            // item's path is representative (e.g. "ShareName/sub/file.txt" → "ShareName").
+            if (share.isServerMode && share.remotePath.isEmpty()) {
+                val firstItem = group.firstOrNull()?.second
+                val samplePath = firstItem?.networkFile?.path?.trimStart('/')
+                if (!samplePath.isNullOrEmpty()) {
+                    val segments = samplePath.split("/", limit = 2)
+                    share = share.copy(remotePath = "/${segments[0]}")
+                }
+            }
 
             if (!connectivityChecker()) {
                 group.forEach { (_, item) ->
