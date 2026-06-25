@@ -828,7 +828,12 @@ class StorageAdapter(
             // Check for saved built-in icon resource override
             val savedRes = tileIconRes[item.id] ?: 0
             if (savedRes != 0 && savedRes != item.iconRes) {
-                icon.setImageResource(savedRes)
+                try {
+                    icon.setImageResource(savedRes)
+                } catch (_: Exception) {
+                    // Stale resource ID survived migration (e.g. severely old prefs).
+                    // Fall through and let the caller render the default item.iconRes.
+                }
             }
         }
     }

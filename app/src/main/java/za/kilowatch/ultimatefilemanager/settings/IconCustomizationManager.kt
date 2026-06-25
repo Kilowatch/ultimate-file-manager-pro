@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.settings
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.ImageView
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.storage.TileIconManager
@@ -340,15 +341,46 @@ object IconCustomizationManager {
         return try {
             val json = JSONObject(raw)
             val result = mutableMapOf<String, IconOverride>()
+            var needsMigration = false
+
             json.keys().forEach { id ->
                 val value = json.get(id)
                 if (value is JSONObject) {
-                    result[id] = IconOverride(
-                        customPath = value.optString("path", null)?.takeIf { it.isNotEmpty() },
-                        builtinRes = value.optInt("res", 0)
-                    )
+                    val path = value.optString("path", null)?.takeIf { it.isNotEmpty() }
+
+                    // Prefer stable name (new format)
+                    val resName = value.optString("res_name", null)?.takeIf { it.isNotEmpty() }
+                    val resolvedRes: Int
+                    if (resName != null) {
+                        resolvedRes = TileIconManager.resolveResId(context, resName)
+                    } else {
+                        // Legacy: raw numeric ID — resolve to name and flag for migration
+                        val legacyRes = value.optInt("res", 0)
+                        resolvedRes = if (legacyRes != 0) {
+                            val resolved = TileIconManager.resolveResName(context, legacyRes)
+                            if (resolved != null) {
+                                needsMigration = true
+                                TileIconManager.resolveResId(context, resolved)
+                            } else {
+                                Log.w("IconCustomizationManager",
+                                    "Dropping stale builtinRes 0x${legacyRes.toString(16)} " +
+                                    "for icon '$id' — drawable no longer exists")
+                                needsMigration = true
+                                0
+                            }
+                        } else 0
+                    }
+
+                    if (path != null || resolvedRes != 0) {
+                        result[id] = IconOverride(customPath = path, builtinRes = resolvedRes)
+                    }
                 }
             }
+
+            if (needsMigration) {
+                saveAllOverrides(context, result)
+            }
+
             result
         } catch (_: Exception) {
             emptyMap()
@@ -360,7 +392,9 @@ object IconCustomizationManager {
         entries.forEach { (id, entry) ->
             val obj = JSONObject()
             if (!entry.customPath.isNullOrEmpty()) obj.put("path", entry.customPath)
-            if (entry.builtinRes != 0) obj.put("res", entry.builtinRes)
+            // Persist by name (build-stable) instead of raw resource ID
+            val nameToStore = TileIconManager.resolveResName(context, entry.builtinRes)
+            if (!nameToStore.isNullOrEmpty()) obj.put("res_name", nameToStore)
             json.put(id, obj)
         }
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

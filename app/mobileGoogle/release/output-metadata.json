@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 172,
-      "versionName": "1.5.8-GOOGLE",
+      "versionCode": 175,
+      "versionName": "1.5.9-GOOGLE",
       "outputFile": "app-mobile-google-release.apk"
     }
   ],

@@ -3,7 +3,9 @@ package za.kilowatch.ultimatefilemanager.storage
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import org.json.JSONObject
+import za.kilowatch.ultimatefilemanager.R
 import java.io.File
 import java.io.FileOutputStream
 
@@ -14,8 +16,12 @@ object TileIconManager {
     const val MAX_SIZE_BYTES = 1 * 1024 * 1024  // 1 MB
     private const val ICON_DIR = "tile_icons"
 
-    /** Internal entry stored in JSON: `{ "path": "...", "res": 123 }` */
-    private data class IconEntry(val path: String?, val iconRes: Int)
+    /**
+     * Internal entry stored in JSON.
+     * New format:  `{ "path": "...", "res_name": "ic_folder" }`
+     * Legacy compat: `{ "path": "...", "res": 123456789 }` (auto-migrated on first read)
+     */
+    private data class IconEntry(val path: String?, val iconRes: Int, val iconResName: String? = null)
 
     // ── Persistence — file path ─────────────────────────────────────────
 
@@ -47,7 +53,8 @@ object TileIconManager {
         if (iconRes == 0 && (existing?.path.isNullOrEmpty())) {
             entries.remove(tileId)
         } else {
-            entries[tileId] = IconEntry(existing?.path, iconRes)
+            val resName = resolveResName(context, iconRes)
+            entries[tileId] = IconEntry(existing?.path, iconRes, resName)
         }
         saveAllEntries(context, entries)
     }
@@ -59,6 +66,32 @@ object TileIconManager {
     fun getAllTileIconRes(context: Context): Map<String, Int> {
         return loadAllEntries(context).mapValues { it.value.iconRes }
             .filter { it.value != 0 }
+    }
+
+    /**
+     * Returns the drawable resource name for [resId], e.g. "ic_folder".
+     * Returns null if the ID is 0 or the name cannot be resolved.
+     */
+    internal fun resolveResName(context: Context, resId: Int): String? {
+        if (resId == 0) return null
+        return try {
+            context.resources.getResourceEntryName(resId)
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Resolves a drawable entry name (e.g. "ic_folder") back to the current
+     * build's resource ID.  Returns 0 if the drawable no longer exists.
+     */
+    internal fun resolveResId(context: Context, name: String): Int {
+        return try {
+            val id = context.resources.getIdentifier(name, "drawable", context.packageName)
+            id
+        } catch (_: Exception) {
+            0
+        }
     }
 
     // ── Clear ──────────────────────────────────────────────────────────
@@ -201,24 +234,76 @@ object TileIconManager {
 
     // ── Internal persistence ───────────────────────────────────────────
 
-    /** JSON schema: `{ "tileId": { "path": "...", "res": 123 } }` or legacy string. */
+    /**
+     * JSON schema (new): `{ "tileId": { "path": "...", "res_name": "ic_folder" } }`
+     * Legacy compat:     `{ "tileId": { "path": "...", "res": 123456789 } }`
+     *                    `{ "tileId": "path/to/icon.png" }` (v1 string migration)
+     *
+     * When a legacy numeric-only "res" entry is found, we resolve it to a name
+     * via [resolveResId]/[resolveResName] and rewrite the prefs so future reads
+     * use the stable name. If the numeric ID can no longer be resolved the entry
+     * is silently dropped (icon falls back to the tile's default icon).
+     */
     private fun loadAllEntries(context: Context): Map<String, IconEntry> {
         val raw = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .getString(KEY_ICONS, null) ?: return emptyMap()
         return try {
             val json = JSONObject(raw)
             val result = mutableMapOf<String, IconEntry>()
+            var needsMigration = false
+
             json.keys().forEach { id ->
                 val value = json.get(id)
-                result[id] = when (value) {
-                    is String -> IconEntry(value, 0)               // v1 migration
-                    is JSONObject -> IconEntry(
-                        path    = value.optString("path", null)?.takeIf { it.isNotEmpty() },
-                        iconRes = value.optInt("res", 0)
-                    )
+                val entry: IconEntry? = when (value) {
+                    // v1 legacy: bare string path
+                    is String -> IconEntry(path = value, iconRes = 0, iconResName = null)
+
+                    is JSONObject -> {
+                        val path = value.optString("path", null)?.takeIf { it.isNotEmpty() }
+
+                        // Prefer stable name (new format)
+                        val resName = value.optString("res_name", null)?.takeIf { it.isNotEmpty() }
+                        if (resName != null) {
+                            val resId = resolveResId(context, resName)
+                            IconEntry(path = path, iconRes = resId, iconResName = resName)
+                        } else {
+                            // Legacy: raw numeric ID — resolve to name and flag for migration
+                            val legacyRes = value.optInt("res", 0)
+                            if (legacyRes != 0) {
+                                val resolved = resolveResName(context, legacyRes)
+                                if (resolved != null) {
+                                    // Successfully resolved — re-read current ID for this session
+                                    needsMigration = true
+                                    IconEntry(
+                                        path = path,
+                                        iconRes = resolveResId(context, resolved),
+                                        iconResName = resolved
+                                    )
+                                } else {
+                                    // Stale / unknown resource ID — drop the icon override safely
+                                    Log.w("TileIconManager",
+                                        "Dropping stale iconRes 0x${legacyRes.toString(16)} " +
+                                        "for tile '$id' — drawable no longer exists")
+                                    needsMigration = true
+                                    if (path != null) IconEntry(path = path, iconRes = 0, iconResName = null)
+                                    else null
+                                }
+                            } else {
+                                IconEntry(path = path, iconRes = 0, iconResName = null)
+                            }
+                        }
+                    }
+
                     else -> null
-                } ?: return@forEach
+                }
+                if (entry != null) result[id] = entry
             }
+
+            // Auto-migrate legacy prefs so the next cold-start is already on the new format
+            if (needsMigration) {
+                saveAllEntries(context, result)
+            }
+
             result
         } catch (_: Exception) {
             emptyMap()
@@ -230,7 +315,11 @@ object TileIconManager {
         entries.forEach { (id, entry) ->
             val obj = JSONObject()
             if (!entry.path.isNullOrEmpty()) obj.put("path", entry.path)
-            if (entry.iconRes != 0) obj.put("res", entry.iconRes)
+            // Always persist by name (build-stable). Fall back to a fresh name lookup
+            // if the entry was created before the iconResName field existed.
+            val nameToStore = entry.iconResName
+                ?: entry.iconRes.takeIf { it != 0 }?.let { resolveResName(context, it) }
+            if (!nameToStore.isNullOrEmpty()) obj.put("res_name", nameToStore)
             json.put(id, obj)
         }
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

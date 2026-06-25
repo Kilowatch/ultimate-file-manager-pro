@@ -235,7 +235,9 @@ object ThemePackManager {
                 }
             } else if (override.builtinRes != 0) {
                 entry.put("type", "builtin")
-                entry.put("res", override.builtinRes)
+                entry.put("res", override.builtinRes)  // keep for backward compat with older app versions
+                val resName = TileIconManager.resolveResName(context, override.builtinRes)
+                if (!resName.isNullOrEmpty()) entry.put("res_name", resName)
             } else {
                 continue
             }
@@ -264,7 +266,9 @@ object ThemePackManager {
             } else {
                 val res = tileRes[tileId] ?: continue
                 entry.put("type", "builtin")
-                entry.put("res", res)
+                entry.put("res", res)  // keep for backward compat with older app versions
+                val resName = TileIconManager.resolveResName(context, res)
+                if (!resName.isNullOrEmpty()) entry.put("res_name", resName)
             }
             iconsObj.put(iconId, entry)
         }
@@ -307,7 +311,13 @@ object ThemePackManager {
 
             when (type) {
                 "builtin" -> {
-                    val res = entry.optInt("res", 0)
+                    // Prefer stable name; fall back to legacy numeric ID for old packs
+                    val resName = entry.optString("res_name", null)?.takeIf { it.isNotEmpty() }
+                    val res: Int = if (resName != null) {
+                        TileIconManager.resolveResId(context, resName)
+                    } else {
+                        entry.optInt("res", 0)
+                    }
                     if (res != 0) {
                         result[iconId] = IconOverride(null, res)
                     }
