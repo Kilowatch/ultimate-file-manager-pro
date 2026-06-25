@@ -62,6 +62,40 @@ object RCloneConfig {
         "pass" to pass
     )
 
+    /**
+     * Builds the rclone.conf section for a Koofr remote.
+     *
+     * Koofr authenticates via email (user) and password.
+     * An optional custom server endpoint can be provided for different
+     * datacenter regions or self-hosted instances.
+     *
+     * Note: rclone's Koofr backend has [IsPassword] set on the password field,
+     * so it obscures the password automatically — [pass] should be RAW, not
+     * pre-obscured via core/obscure.
+     *
+     * @param user     The Koofr account email address.
+     * @param password The Koofr account password (RAW — rclone obscures it).
+     * @param endpoint Optional custom server endpoint (e.g. "https://app.koofr.net").
+     *                 When set, also sends provider="other" so the custom
+     *                 endpoint is used. When null or blank, uses the default
+     *                 Koofr provider (https://app.koofr.net).
+     */
+    fun koofrConfig(user: String, password: String, endpoint: String? = null): Map<String, String> {
+        val map = mutableMapOf(
+            "type" to "koofr",
+            "provider" to "koofr",
+            "user" to user,
+            "password" to password
+        )
+        // Custom endpoint → switch to "other" provider (backend scopes
+        // the endpoint option to Provider:"other")
+        if (!endpoint.isNullOrBlank() && endpoint != "https://app.koofr.net") {
+            map["provider"] = "other"
+            map["endpoint"] = endpoint
+        }
+        return map
+    }
+
     // ─────────────────────────────────────────────
     // Core writer — builds rclone.conf from a map
     // (public for testing / one-off use, but prefer saveEncrypted for production)

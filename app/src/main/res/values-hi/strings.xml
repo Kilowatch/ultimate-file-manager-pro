@@ -5655,6 +5655,15 @@ RClone प्रारंभ नहीं किया गया है
     <string name="rclone_provider_mega">
 मेगा
 </string>
+    <string name="rclone_provider_koofr">
+Koofr
+</string>
+    <string name="rclone_field_server_url">
+सर्वर यूआरएल
+</string>
+    <string name="rclone_field_koofr_password_hint">
+अपने Koofr अकाउंट सेटिंग में जेनरेट किए गए ऐप पासवर्ड का उपयोग करें, न कि अपने लॉगिन पासवर्ड का
+</string>
 </resources>
 
 

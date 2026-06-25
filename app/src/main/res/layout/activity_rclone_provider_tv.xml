@@ -78,13 +78,22 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="12dp" />
 
-            <com.google.android.material.button.MaterialButtonToggleGroup
+            <LinearLayout
                 android:id="@+id/toggleGroupProvider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleSelection="true"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/toggleGroupProvider2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"
-                app:selectionRequired="false" />
+                android:orientation="horizontal"
+                android:weightSum="3" />
 
             <!-- Dynamic Fields Card -->
             <com.google.android.material.card.MaterialCardView

@@ -5,6 +5,19 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.9] — 2026-06-25
+
+### Fixed
+- SMB Server-Mode — all features now correctly populate the share name when establishing connections. Fixes browse navigation, media playback, file operations (compress, scanner, share receiver, backup, batch rename), and SAF picker for server-mode shares.
+- Share-name duplication — folder navigation and rename dialogs no longer produce `\\server\ShareName\ShareName\` paths in either the browser or twin window.
+- Twin window pane restoration — after closing a video, panes (local, share-mode, server-mode) now restore to their correct folder instead of `/storage/emulated/0`.
+- Back navigation in server-mode SMB — pressing back from a subfolder now correctly navigates to the share root before the share list.
+- Sync and Smart Sort now gracefully reject server-mode shares with a logged warning instead of crashing.
+- Recycle Bin safe-fail for server-mode shares — no longer crashes when attempting trash operations.
+
+### Security
+- Added `splitSharePath` guard against empty basePath — throws `IllegalArgumentException` instead of silently passing empty share names, preventing future `connectShare("")` crashes.
+
 ## [1.5.7] — 2026-06-21
 
 ### Added

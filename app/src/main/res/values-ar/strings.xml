@@ -5653,6 +5653,15 @@ RClone
     <string name="rclone_provider_mega">
 ميجا
 </string>
+    <string name="rclone_provider_koofr">
+كوفر
+</string>
+    <string name="rclone_field_server_url">
+عنوان URL للخادم
+</string>
+    <string name="rclone_field_koofr_password_hint">
+استخدم كلمة مرور التطبيق التي تم إنشاؤها في إعدادات حساب Koofr، وليس كلمة مرور تسجيل الدخول الخاصة بك
+</string>
 </resources>
 
 

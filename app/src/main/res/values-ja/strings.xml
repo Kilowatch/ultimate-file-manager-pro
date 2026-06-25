@@ -5655,6 +5655,15 @@ APIアクセストークン
     <string name="rclone_provider_mega">
 メガ
 </string>
+    <string name="rclone_provider_koofr">
+クーファー
+</string>
+    <string name="rclone_field_server_url">
+サーバーURL
+</string>
+    <string name="rclone_field_koofr_password_hint">
+ログイン パスワードではなく、Koofr アカウント設定で生成されたアプリ パスワードを使用してください
+</string>
 </resources>
 
 

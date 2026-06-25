@@ -5655,6 +5655,15 @@ Wie bekomme ich das?
     <string name="rclone_provider_mega">
 Mega
 </string>
+    <string name="rclone_provider_koofr">
+Koofr
+</string>
+    <string name="rclone_field_server_url">
+Server-URL
+</string>
+    <string name="rclone_field_koofr_password_hint">
+Verwenden Sie ein in Ihren Koofr-Kontoeinstellungen generiertes App-Passwort, nicht Ihr Login-Passwort
+</string>
 </resources>
 
 

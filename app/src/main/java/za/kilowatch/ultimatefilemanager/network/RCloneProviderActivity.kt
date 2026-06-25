@@ -46,7 +46,8 @@ class RCloneProviderActivity : AppCompatActivity() {
     private var selectedProvider: RCloneProviderInfo? = null
 
     // Views
-    private lateinit var toggleGroup: MaterialButtonToggleGroup
+    private lateinit var toggleGroup: LinearLayout
+    private lateinit var toggleGroup2: LinearLayout
     private lateinit var cardFields: View
     private lateinit var etStorageName: TextInputEditText
     private lateinit var fieldContainer: LinearLayout
@@ -87,6 +88,7 @@ class RCloneProviderActivity : AppCompatActivity() {
 
     private fun bindViews() {
         toggleGroup = findViewById(R.id.toggleGroupProvider)
+        toggleGroup2 = findViewById(R.id.toggleGroupProvider2)
         cardFields = findViewById(R.id.cardFields)
         etStorageName = findViewById(R.id.etStorageName)
         fieldContainer = findViewById(R.id.fieldContainer)
@@ -96,42 +98,77 @@ class RCloneProviderActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
-        toggleGroup.addOnButtonCheckedListener { group, checkedId, isChecked ->
-            if (isChecked) {
-                val chip = group.findViewById<View>(checkedId)
-                val providerId = chip?.tag as? String
-                onProviderSelected(providerId)
-            }
-        }
-
         btnTest.setOnClickListener { testConnection() }
         btnSave.setOnClickListener { saveProvider() }
     }
 
     private fun populateProviderChips() {
         toggleGroup.removeAllViews()
-        ALL_RCLONE_PROVIDERS.forEach { provider ->
+        toggleGroup2.removeAllViews()
+
+        val maxRow1 = minOf(3, ALL_RCLONE_PROVIDERS.size)
+        for (i in ALL_RCLONE_PROVIDERS.indices) {
+            val provider = ALL_RCLONE_PROVIDERS[i]
+            val parent = if (i < maxRow1) toggleGroup else toggleGroup2
             val chip = layoutInflater.inflate(
                 if (isTv) R.layout.item_tv_toggle_chip
                 else R.layout.item_mobile_toggle_chip,
-                toggleGroup,
+                parent,
                 false
             ) as MaterialButton
             chip.id = View.generateViewId()
             chip.tag = provider.id
             chip.text = getString(provider.nameResId)
             chip.setIconResource(provider.iconResId)
-            toggleGroup.addView(chip)
+            
+            // Set click listener to select this provider
+            chip.setOnClickListener {
+                selectProviderChip(provider.id)
+            }
+            
+            parent.addView(chip)
+        }
+
+        // Align Row 2 buttons with Row 1 by adding dummy invisible buttons if needed
+        val row1Count = toggleGroup.childCount
+        val row2Count = toggleGroup2.childCount
+        if (row1Count > 0 && row2Count > 0 && row2Count < row1Count) {
+            val dummiesNeeded = row1Count - row2Count
+            for (d in 0 until dummiesNeeded) {
+                val dummy = layoutInflater.inflate(
+                    if (isTv) R.layout.item_tv_toggle_chip
+                    else R.layout.item_mobile_toggle_chip,
+                    toggleGroup2,
+                    false
+                ) as MaterialButton
+                dummy.id = View.generateViewId()
+                dummy.visibility = View.INVISIBLE
+                dummy.isEnabled = false
+                dummy.isClickable = false
+                dummy.isFocusable = false
+                dummy.isCheckable = false
+                toggleGroup2.addView(dummy)
+            }
         }
 
         // Auto-select the first provider
         if (ALL_RCLONE_PROVIDERS.isNotEmpty()) {
-            val firstChip = toggleGroup.getChildAt(0)
-            if (firstChip is MaterialButton) {
-                firstChip.isChecked = true
-                onProviderSelected(ALL_RCLONE_PROVIDERS[0].id)
+            selectProviderChip(ALL_RCLONE_PROVIDERS[0].id)
+        }
+    }
+
+    private fun selectProviderChip(providerId: String?) {
+        val groups = listOf(toggleGroup, toggleGroup2)
+        for (group in groups) {
+            for (i in 0 until group.childCount) {
+                val child = group.getChildAt(i) as? MaterialButton ?: continue
+                val isTarget = child.tag == providerId
+                if (child.isChecked != isTarget) {
+                    child.isChecked = isTarget
+                }
             }
         }
+        onProviderSelected(providerId)
     }
 
     private fun onProviderSelected(providerId: String?) {
@@ -164,6 +201,11 @@ class RCloneProviderActivity : AppCompatActivity() {
 
             val input = fieldLayout.findViewById<TextInputEditText>(R.id.input)
 
+            // Pre-populate default value if set
+            if (!field.defaultValue.isNullOrBlank()) {
+                input.setText(field.defaultValue)
+            }
+
             when (field.inputType) {
                 FieldType.PASSWORD -> {
                     input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -180,6 +222,11 @@ class RCloneProviderActivity : AppCompatActivity() {
 
             fieldInputs[field.key] = input
             fieldContainer.addView(fieldRoot)
+
+            // Show helper text below the field (e.g. guidance about app passwords)
+            if (field.helperTextResId != null) {
+                fieldLayout.helperText = getString(field.helperTextResId)
+            }
 
             // Show a "How to get this?" help link if the field has a setup URL
             if (field.helpUrl != null) {
@@ -450,6 +497,9 @@ class RCloneProviderActivity : AppCompatActivity() {
                 return null
             }
 
+            // Skip non-required fields with blank values (e.g. optional URL)
+            if (!field.required && value.isBlank()) continue
+
             map[field.key] = if (obscurePasswords &&
                 (field.inputType == FieldType.PASSWORD || field.inputType == FieldType.API_KEY)) {
                 obscurePassword(value)
@@ -457,6 +507,23 @@ class RCloneProviderActivity : AppCompatActivity() {
                 value
             }
         }
+
+        // Koofr-specific: the backend's password option is scoped to
+        // Provider:"koofr", so we MUST set provider explicitly.
+        // When endpoint differs from the default, we also send it +
+        // switch to provider="other" so rclone uses the custom endpoint.
+        if (provider.typeName == "koofr") {
+            val endpointVal = map["endpoint"]
+            if (endpointVal.isNullOrBlank() || endpointVal == "https://app.koofr.net") {
+                // Default endpoint — let backend handle it, skip sending it
+                map.remove("endpoint")
+                map["provider"] = "koofr"
+            } else {
+                // Custom endpoint — must use "other" provider
+                map["provider"] = "other"
+            }
+        }
+
         return map
     }
 

@@ -5655,6 +5655,15 @@ API 액세스 토큰
     <string name="rclone_provider_mega">
 메가
 </string>
+    <string name="rclone_provider_koofr">
+쿠퍼
+</string>
+    <string name="rclone_field_server_url">
+서버 URL
+</string>
+    <string name="rclone_field_koofr_password_hint">
+로그인 비밀번호가 아닌 Koofr 계정 설정에서 생성된 앱 비밀번호를 사용하세요.
+</string>
 </resources>
 
 

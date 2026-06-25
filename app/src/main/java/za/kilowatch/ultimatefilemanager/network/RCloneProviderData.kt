@@ -23,6 +23,7 @@ enum class FieldType {
  * @param labelResId  Translatable string resource for the field label.
  * @param inputType   The type of input widget to render.
  * @param required    Whether the field must be filled before Save is enabled.
+ * @param defaultValue Optional default value pre-filled into the input field.
  */
 data class RCloneProviderField(
     val key: String,
@@ -30,7 +31,11 @@ data class RCloneProviderField(
     val inputType: FieldType,
     val required: Boolean = true,
     /** URL to setup instructions shown as a clickable link below the field, or null for no link. */
-    val helpUrl: String? = null
+    val helpUrl: String? = null,
+    /** Default value pre-filled into the input field (e.g. placeholder URL). */
+    val defaultValue: String? = null,
+    /** Helper text shown below the field to guide the user. */
+    @StringRes val helperTextResId: Int? = null
 )
 
 /**
@@ -115,6 +120,33 @@ val ALL_RCLONE_PROVIDERS: List<RCloneProviderInfo> = listOf(
                 key = "pass",
                 labelResId = R.string.rclone_field_password,
                 inputType = FieldType.PASSWORD
+            )
+        )
+    ),
+    RCloneProviderInfo(
+        id = "koofr",
+        nameResId = R.string.rclone_provider_koofr,
+        iconResId = R.drawable.ic_rclone,
+        typeName = "koofr",
+        fields = listOf(
+            RCloneProviderField(
+                key = "user",
+                labelResId = R.string.rclone_field_email,
+                inputType = FieldType.TEXT
+            ),
+            RCloneProviderField(
+                key = "password",
+                labelResId = R.string.rclone_field_password,
+                inputType = FieldType.PASSWORD,
+                helpUrl = "https://app.koofr.net/app/admin/preferences/password",
+                helperTextResId = R.string.rclone_field_koofr_password_hint
+            ),
+            RCloneProviderField(
+                key = "endpoint",
+                labelResId = R.string.rclone_field_server_url,
+                inputType = FieldType.TEXT,
+                required = false,
+                defaultValue = "https://app.koofr.net"
             )
         )
     )

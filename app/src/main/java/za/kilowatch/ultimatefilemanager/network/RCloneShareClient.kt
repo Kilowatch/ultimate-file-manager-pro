@@ -1,7 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
@@ -513,8 +512,16 @@ object RCloneShareClient {
     )
 
     /**
-     * Core implementation: runs [operations/copyfile] and polls [core/stats]
-     * every 300 ms in parallel so the caller gets live byte-count updates.
+     * Core implementation: launches [operations/copyfile] as an async rclone job
+     * (`_async: true`) and polls [core/stats] + [job/status] every 300 ms so the
+     * caller gets live byte-count updates.
+     *
+     * Using `_async: true` is critical because the gomobile JNI bridge serialises
+     * all Go method calls onto a single OS thread.  A synchronous
+     * [operations/copyfile] blocks that thread for the entire transfer, starving
+     * every [core/stats] poll — resulting in 0 % → 100 % progress with nothing
+     * in between.  With `_async: true`, rclone runs the transfer in its own Go
+     * goroutine and the Kotlin side can poll freely.
      */
     private suspend fun transferWithProgress(
         share: NetworkShare,
@@ -537,30 +544,70 @@ object RCloneShareClient {
             return@withContext
         }
 
-        kotlinx.coroutines.coroutineScope {
-            // Launch the blocking copy on a separate IO thread
-            val copyJob = launch(Dispatchers.IO) {
-                rcloneCall(share, "operations/copyfile", JSONObject().apply {
-                    put("srcFs", srcFs); put("srcRemote", srcRemote)
-                    put("dstFs", dstFs); put("dstRemote", dstRemote)
-                })
-            }
+        // ── Async job mode ────────────────────────────────────────────────────
+        // The gomobile JNI bridge serialises all Go method calls onto a single
+        // OS thread.  Calling operations/copyfile synchronously blocks that
+        // thread for the entire transfer, so every subsequent core/stats poll
+        // is queued behind it — producing 0 % → 100 % progress with nothing
+        // in between.
+        //
+        // Fix: pass _async:true so rclone starts the transfer in its own Go
+        // goroutine and returns a jobId immediately.  We can then poll
+        // core/stats (byte progress) and job/status (completion flag) freely
+        // from Kotlin without any JNI contention.
+        // ─────────────────────────────────────────────────────────────────────
 
-            // Poll stats every 300 ms while copy is running
-            while (copyJob.isActive) {
-                kotlinx.coroutines.delay(300)
-                try {
-                    val stats = JSONObject(rcloneCall(share, "core/stats", JSONObject()))
-                    val transferred = stats.optLong("bytes", 0L)
-                    if (transferred > 0L) {
-                        val total = if (fileSize > 0L) fileSize
-                                    else stats.optLong("totalBytes", -1L)
-                        onProgress(transferred.coerceAtMost(if (total > 0) total else Long.MAX_VALUE), total)
+        // Launch the copy as an async rclone job
+        val asyncParams = JSONObject().apply {
+            put("srcFs", srcFs); put("srcRemote", srcRemote)
+            put("dstFs", dstFs); put("dstRemote", dstRemote)
+            put("_async", true)
+        }
+        val startResult = JSONObject(rcloneCall(share, "operations/copyfile", asyncParams))
+        val jobId = startResult.optLong("jobid", -1L)
+        if (jobId < 0) {
+            // Unexpected: async response had no jobid — transfer may have already
+            // completed synchronously (e.g. zero-byte file). Emit 100% and return.
+            onProgress(fileSize, fileSize)
+            return@withContext
+        }
+
+        // Poll until the job finishes
+        var jobFinished = false
+        var jobError: String? = null
+        while (!jobFinished) {
+            kotlinx.coroutines.delay(300)
+
+            // ① Update byte-progress from global stats
+            try {
+                val stats = JSONObject(rcloneCall(share, "core/stats", JSONObject()))
+                val transferred = stats.optLong("bytes", 0L)
+                if (transferred > 0L) {
+                    val total = if (fileSize > 0L) fileSize
+                                else stats.optLong("totalBytes", -1L)
+                    onProgress(
+                        transferred.coerceAtMost(if (total > 0) total else Long.MAX_VALUE),
+                        total
+                    )
+                }
+            } catch (_: Exception) { /* stats not yet available — skip */ }
+
+            // ② Check job completion
+            try {
+                val jobStatus = JSONObject(
+                    rcloneCall(share, "job/status", JSONObject().apply { put("jobid", jobId) })
+                )
+                if (jobStatus.optBoolean("finished", false)) {
+                    jobFinished = true
+                    if (!jobStatus.optBoolean("success", true)) {
+                        jobError = jobStatus.optString("error", "unknown rclone error")
                     }
-                } catch (_: Exception) { /* stats not yet available — skip */ }
-            }
+                }
+            } catch (_: Exception) { /* job not yet visible — retry next tick */ }
+        }
 
-            copyJob.join()
+        if (jobError != null) {
+            throw java.io.IOException("rclone operations/copyfile async job failed: $jobError")
         }
 
         // Final 100 %

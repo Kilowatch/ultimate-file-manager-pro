@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -11,7 +12,7 @@
         android:id="@+id/fieldLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="4dp"
         android:hint="Field"
         app:boxStrokeColor="@color/ufm_primary"
         app:endIconMode="none">

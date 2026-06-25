@@ -62,6 +62,7 @@ app/store/
 rclone/
 rclone-custom/
 CLAUDE.md
+build_rclone_aar.py
 GEMINI.md
 .approval/
 approval-ui/
