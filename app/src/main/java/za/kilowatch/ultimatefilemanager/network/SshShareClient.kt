@@ -98,6 +98,27 @@ object SshShareClient {
         }
     }
 
+    /**
+     * Returns the size of [path] on the remote SFTP server in bytes,
+     * or `-1L` if the file does not exist or the stat fails.
+     *
+     * Uses a direct SFTP `lstat` call rather than a directory listing so the
+     * result reflects the server's current on-disk metadata immediately after a
+     * write — no stale directory-entry race.
+     */
+    fun getFileSize(share: NetworkShare, path: String): Long {
+        return try {
+            withPooledSession(share) { session ->
+                SftpClientFactory.instance().createSftpClient(session).use { sftp ->
+                    sftp.lstat(path).size
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "getFileSize failed for '$path': ${e.message}")
+            -1L
+        }
+    }
+
     fun mkdir(share: NetworkShare, path: String) {
         withPooledSession(share) { session ->
             sftpOrExec(session,

@@ -177,6 +177,23 @@ object SmbSessionPool {
         protocol = share.smbProtocol
     )
 
+    /**
+     * Short-lived config for use **only** in [SmbShareClient.testConnection].
+     *
+     * 10 s connect + 10 s read — tight enough to fail fast if the server is
+     * genuinely unreachable, but still long enough for a NAS that briefly spins
+     * up its disk. The connection created with this config is dedicated (never
+     * returned to the pool) so a slow probe never contaminates a pooled session.
+     */
+    internal fun buildTestConfig(): SmbConfig =
+        SmbConfig.builder()
+            .withTimeout(10L, TimeUnit.SECONDS)
+            .withSoTimeout(10L, TimeUnit.SECONDS)
+            .withSocketFactory(KeepAliveSocketFactory(8000))
+            .withSigningRequired(false)
+            .withEncryptData(false)
+            .build()
+
     private fun buildConfig(protocol: String, forWrite: Boolean, dedicated: Boolean = false): SmbConfig {
         // Pooled connections use a finite socket timeout (120 s) — long enough that
         // a user browsing files won't see the connection die between folder taps,

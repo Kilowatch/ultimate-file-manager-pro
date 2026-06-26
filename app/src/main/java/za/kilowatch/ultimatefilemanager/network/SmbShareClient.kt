@@ -389,18 +389,33 @@ object SmbShareClient {
 
     /** Returns null on success, or an error sentinel / message string on failure. */
     fun testConnection(share: NetworkShare): String? {
-        return runCatching {
-            withDiskShare(share) { diskShare, basePath ->
-                // Actually attempt a directory listing to verify read access.
-                // Connecting to the share name alone can succeed for GUEST even on
-                // password-protected shares; a listing attempt will produce
-                // STATUS_ACCESS_DENIED if the credentials are insufficient.
-                // The SMB connect itself has a bounded timeout (10s) via KeepAliveSocketFactory,
-                // so a separate TCP probe is unnecessary.
-                diskShare.list(basePath.ifBlank { "" })
-            }
-            null // success
-        }.getOrElse { e -> friendlyMessage(e.message ?: e.javaClass.simpleName) }
+        // Use a dedicated, short-timeout client so:
+        //  1. A slow NAS (spinning up its disk) fails in ≤10 s instead of ≤120 s.
+        //  2. The probe is never placed in the session pool, so a timeout can't
+        //     poison subsequent real sync operations.
+        // One retry with 2 s back-off handles transient NAS spin-up delays.
+        var lastError: String? = null
+        for (attempt in 1..2) {
+            if (attempt == 2) Thread.sleep(2000)
+            val client = SMBClient(SmbSessionPool.buildTestConfig())
+            val error = runCatching {
+                client.use { smb ->
+                    val conn    = smb.connect(share.host, share.effectivePort)
+                    val auth    = authContext(share)
+                    val session = conn.authenticate(auth)
+                    val (shareName, basePath) = splitSharePath(share.remotePath, "")
+                    val diskShare = session.connectShare(shareName) as DiskShare
+                    diskShare.use { ds -> ds.list(basePath.ifBlank { "" }) }
+                }
+                null // success
+            }.getOrElse { e -> friendlyMessage(e.message ?: e.javaClass.simpleName) }
+
+            if (error == null) return null  // success on this attempt
+            lastError = error
+            android.util.Log.w("SmbShareClient",
+                "testConnection attempt $attempt failed: $lastError")
+        }
+        return lastError
     }
 
     /**

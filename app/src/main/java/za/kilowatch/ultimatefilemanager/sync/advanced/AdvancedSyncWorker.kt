@@ -526,6 +526,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         share: NetworkShare, profile: AdvancedSyncProfile, files: List<File>, notificationId: Int
     ) {
         var syncedCount = 0
+        // Track which files were fully and verifiably uploaded so the move-files
+        // loop never deletes a source whose upload was never confirmed successful.
+        val uploadedFiles = mutableListOf<File>()
+
         for ((index, file) in files.withIndex()) {
             val name = file.name
             if (profile.notificationsEnabled) {
@@ -560,17 +564,22 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                         }
                     }
                 )
-                if (success) syncedCount++
-                else Log.e(TAG, "Upload failed after retries for $name")
+                if (success) {
+                    syncedCount++
+                    uploadedFiles.add(file)
+                } else {
+                    Log.e(TAG, "Upload failed after retries for $name")
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to upload file $name", e)
             }
         }
 
         Log.d(TAG, "Upload complete: $syncedCount/${files.size} files synced for '${profile.name}'")
-        // Move files (cut): delete source files after successful upload
-        if (profile.moveFiles && syncedCount > 0) {
-            for (file in files) {
+        // Move files (cut): delete source files after successful upload.
+        // Only files in uploadedFiles (confirmed successful) are eligible for deletion.
+        if (profile.moveFiles && uploadedFiles.isNotEmpty()) {
+            for (file in uploadedFiles) {
                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(
                     share, "${profile.remotePath.trimEnd('/')}/${file.name}"
                 )
@@ -584,6 +593,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         profile.lastSyncTime = System.currentTimeMillis()
         profile.lastSyncFileCount = syncedCount
     }
+
 
     private suspend fun openOutputStreamForType(share: NetworkShare, remotePath: String): OutputStream {
         // RCLONE: use RCloneShareClient directly (temp file + copyfile upload)

@@ -937,8 +937,10 @@ object TransferConflictHelper {
                     .firstOrNull { it.name == name }?.size ?: -1L
                 ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, parent)
                     .firstOrNull { it.name == name }?.size ?: -1L
-                ShareType.SFTP, ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, parent)
-                    .firstOrNull { it.name == name }?.size ?: -1L
+                ShareType.SFTP, ShareType.SCP ->
+                    // Direct lstat on the file path — avoids stale directory-listing
+                    // metadata that can lag after a write and cause false 0-byte results.
+                    za.kilowatch.ultimatefilemanager.network.SshShareClient.getFileSize(share, remotePath)
                 ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, parent)
                     .firstOrNull { it.name == name }?.size ?: -1L
                 ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, parent)
