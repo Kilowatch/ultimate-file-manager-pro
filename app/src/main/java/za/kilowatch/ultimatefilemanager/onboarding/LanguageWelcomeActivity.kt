@@ -48,7 +48,8 @@ class LanguageWelcomeActivity : AppCompatActivity() {
         LanguageItem(LocaleHelper.LOCALE_AR, "Arabic (العربية)", "sa.svg"),
         LanguageItem(LocaleHelper.LOCALE_HI, "Hindi (हिन्दी)", "in.svg"),
         LanguageItem(LocaleHelper.LOCALE_JA, "Japanese (日本語)", "jp.svg"),
-        LanguageItem(LocaleHelper.LOCALE_KO, "Korean (한국어)", "kr.svg")
+        LanguageItem(LocaleHelper.LOCALE_KO, "Korean (한국어)", "kr.svg"),
+        LanguageItem(LocaleHelper.LOCALE_UK, "Ukrainian (українська)", "ua.svg")
     )
 
     override fun attachBaseContext(newBase: Context) {

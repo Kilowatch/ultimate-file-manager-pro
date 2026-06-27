@@ -491,6 +491,7 @@ class SettingsActivity : AppCompatActivity() {
             LocaleHelper.LOCALE_PT -> getString(R.string.language_portuguese)
             LocaleHelper.LOCALE_RU -> getString(R.string.language_russian)
             LocaleHelper.LOCALE_TR -> getString(R.string.language_turkish)
+            LocaleHelper.LOCALE_UK -> getString(R.string.language_ukrainian)
             else                   -> getString(R.string.language_system_default)
         }
 

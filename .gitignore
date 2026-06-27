@@ -39,6 +39,7 @@ app/google-services.json
 *.pfx
 # Keys folder (review before publishing — may contain secrets)
 Keys/
+screenshots/
 # Amazon store files
 Amazon/
 Amazon Store/

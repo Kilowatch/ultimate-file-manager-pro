@@ -13,6 +13,9 @@
     <string name="language_portuguese">Português (Português)</string>
     <string name="language_russian">Russo (Русский)</string>
     <string name="language_turkish">Turco (Türkçe)</string>
+    <string name="language_ukrainian">
+Ucraniano (українська)
+</string>
     <string name="select_language">Selecione o idioma</string>
     <string name="language_system_default">Padrão do sistema</string>
 

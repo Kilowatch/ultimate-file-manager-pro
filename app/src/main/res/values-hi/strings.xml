@@ -13,6 +13,9 @@
     <string name="language_portuguese">पुर्तगाली (Português)</string>
     <string name="language_russian">रूसी (Русский)</string>
     <string name="language_turkish">तुर्की (Türkçe)</string>
+    <string name="language_ukrainian">
+यूक्रेनी (українська)
+</string>
     <string name="select_language">भाषा चुने</string>
     <string name="language_system_default">प्रणालीगत चूक</string>
 

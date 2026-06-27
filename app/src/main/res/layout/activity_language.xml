@@ -782,6 +782,60 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Ukrainian Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardUkrainian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            app:cardBackgroundColor="@color/mobile_glass_card"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="@dimen/margin_md">
+
+                <FrameLayout
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_icon_circle_accent">
+                    <ImageView
+                        android:id="@+id/imgUkrainian"
+                        android:layout_width="28dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/margin_md"
+                    android:text="@string/language_ukrainian"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <RadioButton
+                    android:id="@+id/rbUkrainian"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#FF0284C7"
+                    android:clickable="false" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

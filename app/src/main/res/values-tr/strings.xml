@@ -13,6 +13,9 @@
     <string name="language_portuguese">Portekizce (Português)</string>
     <string name="language_russian">Rusça (Русский)</string>
     <string name="language_turkish">Türkçe (Türkçe)</string>
+    <string name="language_ukrainian">
+Ukraynaca (українська)
+</string>
     <string name="select_language">Dil Seçiniz</string>
     <string name="language_system_default">Sistem Varsayılanı</string>
 

@@ -13,6 +13,9 @@
     <string name="language_portuguese">البرتغالية (Português)</string>
     <string name="language_russian">الروسية (Русский)</string>
     <string name="language_turkish">التركية (Türkçe)</string>
+    <string name="language_ukrainian">
+الأوكرانية (українська)
+</string>
     <string name="select_language">اختر اللغة</string>
     <string name="language_system_default">النظام الافتراضي</string>
 

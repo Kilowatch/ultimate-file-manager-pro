@@ -13,6 +13,9 @@
     <string name="language_portuguese">Bahasa Portugis (Português)</string>
     <string name="language_russian">Bahasa Rusia (Русский)</string>
     <string name="language_turkish">Bahasa Turki (Türkçe)</string>
+    <string name="language_ukrainian">
+Ukraina (українська)
+</string>
     <string name="select_language">Pilih Bahasa</string>
     <string name="language_system_default">Bawaan Sistem</string>
 

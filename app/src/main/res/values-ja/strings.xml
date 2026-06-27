@@ -13,6 +13,9 @@
     <string name="language_portuguese">ポルトガル語 (Português)</string>
     <string name="language_russian">ロシア語 (Русский)</string>
     <string name="language_turkish">トルコ語 (テュルクチェ)</string>
+    <string name="language_ukrainian">
+ウクライナ語 (українська)
+</string>
     <string name="select_language">言語の選択</string>
     <string name="language_system_default">システムのデフォルト</string>
 

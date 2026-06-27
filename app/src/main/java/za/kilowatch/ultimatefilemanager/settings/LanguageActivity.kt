@@ -37,6 +37,7 @@ class LanguageActivity : AppCompatActivity() {
     private lateinit var cardPortuguese:    MaterialCardView
     private lateinit var cardRussian:       MaterialCardView
     private lateinit var cardTurkish:       MaterialCardView
+    private lateinit var cardUkrainian:     MaterialCardView
 
     private lateinit var rbSystemDefault:   RadioButton
     private lateinit var rbEnglish:         RadioButton
@@ -51,6 +52,7 @@ class LanguageActivity : AppCompatActivity() {
     private lateinit var rbPortuguese:      RadioButton
     private lateinit var rbRussian:         RadioButton
     private lateinit var rbTurkish:         RadioButton
+    private lateinit var rbUkrainian:       RadioButton
 
     private var isTv = false
 
@@ -104,6 +106,7 @@ class LanguageActivity : AppCompatActivity() {
         cardPortuguese    = findViewById(R.id.cardPortuguese)
         cardRussian       = findViewById(R.id.cardRussian)
         cardTurkish       = findViewById(R.id.cardTurkish)
+        cardUkrainian     = findViewById(R.id.cardUkrainian)
 
         rbSystemDefault   = findViewById(R.id.rbSystemDefault)
         rbEnglish         = findViewById(R.id.rbEnglish)
@@ -118,6 +121,7 @@ class LanguageActivity : AppCompatActivity() {
         rbPortuguese      = findViewById(R.id.rbPortuguese)
         rbRussian         = findViewById(R.id.rbRussian)
         rbTurkish         = findViewById(R.id.rbTurkish)
+        rbUkrainian       = findViewById(R.id.rbUkrainian)
 
         loadFlag(R.id.imgEnglish, "gb.svg")
         loadFlag(R.id.imgGerman, "de.svg")
@@ -131,6 +135,7 @@ class LanguageActivity : AppCompatActivity() {
         loadFlag(R.id.imgPortuguese, "br.svg")
         loadFlag(R.id.imgRussian, "ru.svg")
         loadFlag(R.id.imgTurkish, "tr.svg")
+        loadFlag(R.id.imgUkrainian, "ua.svg")
 
         updateSelection(LocaleHelper.getSavedLocale(this))
 
@@ -148,6 +153,8 @@ class LanguageActivity : AppCompatActivity() {
         cardRussian.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_RU) }
         cardTurkish.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_TR) }
 
+        cardUkrainian.setOnClickListener     { selectLanguage(LocaleHelper.LOCALE_UK) }
+
         if (isTv) {
             setupTvCardFocus(cardSystemDefault)
             setupTvCardFocus(cardEnglish)
@@ -162,6 +169,7 @@ class LanguageActivity : AppCompatActivity() {
             setupTvCardFocus(cardPortuguese)
             setupTvCardFocus(cardRussian)
             setupTvCardFocus(cardTurkish)
+            setupTvCardFocus(cardUkrainian)
         }
     }
 
@@ -194,7 +202,8 @@ class LanguageActivity : AppCompatActivity() {
         rbPortuguese.isChecked    = locale == LocaleHelper.LOCALE_PT
         rbRussian.isChecked       = locale == LocaleHelper.LOCALE_RU
         rbTurkish.isChecked       = locale == LocaleHelper.LOCALE_TR
- 
+        rbUkrainian.isChecked     = locale == LocaleHelper.LOCALE_UK
+
         cardSystemDefault.strokeColor = if (locale == LocaleHelper.LOCALE_DEFAULT) activeColor else inactiveColor
         cardEnglish.strokeColor       = if (locale == LocaleHelper.LOCALE_EN)       activeColor else inactiveColor
         cardGerman.strokeColor        = if (locale == LocaleHelper.LOCALE_DE)       activeColor else inactiveColor
@@ -208,6 +217,7 @@ class LanguageActivity : AppCompatActivity() {
         cardPortuguese.strokeColor    = if (locale == LocaleHelper.LOCALE_PT)       activeColor else inactiveColor
         cardRussian.strokeColor       = if (locale == LocaleHelper.LOCALE_RU)       activeColor else inactiveColor
         cardTurkish.strokeColor       = if (locale == LocaleHelper.LOCALE_TR)       activeColor else inactiveColor
+        cardUkrainian.strokeColor     = if (locale == LocaleHelper.LOCALE_UK)       activeColor else inactiveColor
     }
 
     private fun setupTvCardFocus(card: MaterialCardView) {
