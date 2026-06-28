@@ -3736,6 +3736,15 @@ Setiap tip membantu menjaga UFM Pro tetap gratis untuk semua orang.
     <string name="tip_jar_offline_subtitle">
 Hubungkan ke internet untuk melihat kemajuan tip jar secara langsung.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Popup Kemajuan Tip Jar
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Tampilkan kemajuan tip jar di layar utama
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Kemajuan tip jar disembunyikan di layar utama
+</string>
     <string name="tip_jar_thanks_label">
 Terima kasih!
 </string>

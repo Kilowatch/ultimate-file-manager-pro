@@ -3736,6 +3736,15 @@ FTP не поддерживает аутентификацию по ключу S
     <string name="tip_jar_offline_subtitle">
 Подключитесь к Интернету, чтобы следить за ходом работы с банкой советов в реальном времени.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Всплывающее окно с прогрессом в банке подсказок
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Показывать прогресс в банке подсказок на главном экране
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Прогресс в банке подсказок скрыт на главном экране
+</string>
     <string name="tip_jar_thanks_label">
 Спасибо!
 </string>

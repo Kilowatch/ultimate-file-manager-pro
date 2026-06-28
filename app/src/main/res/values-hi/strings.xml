@@ -3736,6 +3736,15 @@ FTP SSH कुंजी प्रमाणीकरण का समर्थन
     <string name="tip_jar_offline_subtitle">
 लाइव टिप जार प्रगति देखने के लिए इंटरनेट से कनेक्ट करें।
 </string>
+    <string name="settings_tip_jar_popup_title">
+टिप जार प्रगति पॉपअप
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+मुख्य स्क्रीन पर टिप जार की प्रगति दिखाएं
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+टिप जार की प्रगति मुख्य स्क्रीन पर छिपी हुई है
+</string>
     <string name="tip_jar_thanks_label">
 धन्यवाद!
 </string>

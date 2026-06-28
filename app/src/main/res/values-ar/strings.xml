@@ -3734,6 +3734,15 @@ DLNA
     <string name="tip_jar_offline_subtitle">
 اتصل بالإنترنت لرؤية تقدم جرة النصائح المباشرة.
 </string>
+    <string name="settings_tip_jar_popup_title">
+تلميح جرة التقدم المنبثقة
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+إظهار تقدم جرة التلميح على الشاشة الرئيسية
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+تقدم نصيحة الجرة مخفي على الشاشة الرئيسية
+</string>
     <string name="tip_jar_thanks_label">
 شكرًا لك!
 </string>

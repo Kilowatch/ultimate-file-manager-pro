@@ -3736,6 +3736,15 @@ Chaque astuce permet de garder UFM Pro gratuit pour tout le monde.
     <string name="tip_jar_offline_subtitle">
 Connectez-vous à Internet pour voir la progression du pot de pourboires en direct.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Fenêtre contextuelle de progression du pot de conseils
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Afficher la progression du pot de pourboires sur l\'écran principal
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Progression du pot de pourboires masquée sur l\'écran principal
+</string>
     <string name="tip_jar_thanks_label">
 Merci!
 </string>

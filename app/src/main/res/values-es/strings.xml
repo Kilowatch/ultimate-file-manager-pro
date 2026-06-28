@@ -3736,6 +3736,15 @@ Cada consejo ayuda a que UFM Pro sea gratuito para todos.
     <string name="tip_jar_offline_subtitle">
 Conéctese a Internet para ver el progreso del tarro de propinas en vivo.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Ventana emergente de progreso del tarro de sugerencias
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Mostrar el progreso del tarro de propinas en la pantalla principal
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Progreso del tarro de propinas oculto en la pantalla principal
+</string>
     <string name="tip_jar_thanks_label">
 ¡Gracias!
 </string>

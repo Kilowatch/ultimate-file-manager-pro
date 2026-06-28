@@ -3736,6 +3736,15 @@ Her ipucu, UFM Pro\'nun herkes için ücretsiz kalmasına yardımcı olur.
     <string name="tip_jar_offline_subtitle">
 Canlı ipucu kavanozunun ilerlemesini görmek için internete bağlanın.
 </string>
+    <string name="settings_tip_jar_popup_title">
+İpucu Kavanoz İlerleme Açılır Penceresi
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+İpucu kavanozunun ilerleme durumunu ana ekranda göster
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+İpucu kavanozunun ilerleme durumu ana ekranda gizlendi
+</string>
     <string name="tip_jar_thanks_label">
 Teşekkür ederim!
 </string>

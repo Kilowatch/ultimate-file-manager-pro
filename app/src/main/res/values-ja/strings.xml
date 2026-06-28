@@ -3736,6 +3736,15 @@ FTP は SSH キー認証をサポートしていません。最初にユーザ�
     <string name="tip_jar_offline_subtitle">
 インターネットに接続して、ライブチップジャーの進行状況を確認します。
 </string>
+    <string name="settings_tip_jar_popup_title">
+ヒントジャーの進行状況ポップアップ
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+メイン画面にチップジャーの進行状況を表示
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+ヒントジャーの進行状況がメイン画面に表示されない
+</string>
     <string name="tip_jar_thanks_label">
 ありがとう！
 </string>

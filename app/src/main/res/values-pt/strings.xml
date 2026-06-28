@@ -3736,6 +3736,15 @@ Cada dica ajuda a manter o UFM Pro gratuito para todos.
     <string name="tip_jar_offline_subtitle">
 Conecte-se à Internet para ver o progresso do jar de dicas ao vivo.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Pop-up de progresso do jar de dicas
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Mostrar o progresso do jar de dicas na tela principal
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Progresso do jar de dicas oculto na tela principal
+</string>
     <string name="tip_jar_thanks_label">
 Obrigado!
 </string>

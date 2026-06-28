@@ -3736,6 +3736,15 @@ Jeder Tipp trägt dazu bei, dass UFM Pro für alle kostenlos bleibt.
     <string name="tip_jar_offline_subtitle">
 Stellen Sie eine Verbindung zum Internet her, um den Fortschritt des Trinkgeldglases live zu verfolgen.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Tip-Jar-Fortschritts-Popup
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Zeigt den Fortschritt des Trinkgeldbehälters auf dem Hauptbildschirm an
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+Der Fortschritt des Trinkgeldglases wird auf dem Hauptbildschirm ausgeblendet
+</string>
     <string name="tip_jar_thanks_label">
 Danke schön!
 </string>

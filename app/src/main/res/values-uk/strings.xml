@@ -7127,6 +7127,15 @@ USB накопичувач
     <string name="tip_jar_offline_subtitle">
 Підключіться до Інтернету, щоб у реальному часі бачити прогрес підказки.
 </string>
+    <string name="settings_tip_jar_popup_title">
+Спливаюче вікно прогресу банку підказок
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+Показати прогрес баночки підказок на головному екрані
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+На головному екрані прихований прогрес баночки підказок
+</string>
     <string name="tip_jar_thanks_label">
 дякую!
 </string>

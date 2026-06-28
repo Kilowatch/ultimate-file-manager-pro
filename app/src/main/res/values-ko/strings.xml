@@ -3736,6 +3736,15 @@ FTP는 SSH 키 인증을 지원하지 않습니다. 먼저 사용자 이름과 �
     <string name="tip_jar_offline_subtitle">
 실시간 팁 병 진행 상황을 보려면 인터넷에 연결하세요.
 </string>
+    <string name="settings_tip_jar_popup_title">
+팁 항아리 진행 팝업
+</string>
+    <string name="settings_tip_jar_popup_subtitle_on">
+기본 화면에 팁 병 진행 상황 표시
+</string>
+    <string name="settings_tip_jar_popup_subtitle_off">
+메인 화면에 팁병 진행 상황이 숨겨져 있음
+</string>
     <string name="tip_jar_thanks_label">
 감사합니다!
 </string>
