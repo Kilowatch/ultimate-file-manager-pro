@@ -67,6 +67,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchGridIndicators: SwitchMaterial
     private lateinit var txtGridIndicatorsSubtitle: TextView
 
+    private lateinit var switchTipJarPopup: SwitchMaterial
+    private lateinit var txtTipJarPopupSubtitle: TextView
+
     private lateinit var cardNetworkThumbnails: MaterialCardView
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
@@ -307,6 +310,20 @@ class SettingsActivity : AppCompatActivity() {
         cardGridIndicators.setOnClickListener { toggleGridIndicators() }
         switchGridIndicators.setOnCheckedChangeListener(null)
 
+        // Tip Jar Progress Popup toggle — ON = show, OFF = hide (default ON)
+        val cardTipJarPopup = findViewById<MaterialCardView>(R.id.cardTipJarPopup)
+        if (cardTipJarPopup != null) {
+            switchTipJarPopup = findViewById(R.id.switchTipJarPopup)
+            txtTipJarPopupSubtitle = findViewById(R.id.txtTipJarPopupSubtitle)
+
+            val popupEnabled = za.kilowatch.ultimatefilemanager.billing.LoyaltyPrefs.isTipJarPopupEnabled(this)
+            switchTipJarPopup.isChecked = popupEnabled
+            updateTipJarPopupSubtitle(popupEnabled)
+
+            cardTipJarPopup.setOnClickListener { toggleTipJarPopup() }
+            switchTipJarPopup.setOnCheckedChangeListener(null)
+        }
+
         // File Server System Tiles row (mobile-only)
         val cardFileServerTiles = findViewById<MaterialCardView?>(R.id.cardFileServerTiles)
         cardFileServerTiles?.setOnClickListener {
@@ -411,6 +428,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardTipJarPopup)?.let { setupTvCardFocus(it) }
         }
 
         // Icons row
@@ -590,6 +608,13 @@ class SettingsActivity : AppCompatActivity() {
             val hidden = GridIndicatorsPreferenceManager.isHidden(this)
             switchGridIndicators.isChecked = hidden
             updateGridIndicatorsSubtitle(hidden)
+        }
+
+        // Refresh Tip Jar Popup subtitle
+        if (::switchTipJarPopup.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.billing.LoyaltyPrefs.isTipJarPopupEnabled(this)
+            switchTipJarPopup.isChecked = enabled
+            updateTipJarPopupSubtitle(enabled)
         }
 
         // Refresh Main Menu View Mode subtitle
@@ -887,6 +912,21 @@ class SettingsActivity : AppCompatActivity() {
         updateGridIndicatorsSubtitle(newValue)
     }
 
+    private fun toggleTipJarPopup() {
+        val newValue = !switchTipJarPopup.isChecked
+        switchTipJarPopup.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.billing.LoyaltyPrefs.setTipJarPopupEnabled(this, newValue)
+        updateTipJarPopupSubtitle(newValue)
+    }
+
+    private fun updateTipJarPopupSubtitle(enabled: Boolean) {
+        txtTipJarPopupSubtitle.text = if (enabled) {
+            getString(R.string.settings_tip_jar_popup_subtitle_on)
+        } else {
+            getString(R.string.settings_tip_jar_popup_subtitle_off)
+        }
+    }
+
     private fun updateGridIndicatorsSubtitle(hidden: Boolean) {
         txtGridIndicatorsSubtitle.text = if (hidden) {
             getString(R.string.settings_grid_indicators_subtitle_on)
@@ -963,7 +1003,8 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardAutoplayNext, "settings_autoplay_next", R.drawable.ic_play),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
-            CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list)
+            CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),
+            CardIcon(R.id.cardTipJarPopup, "settings_tip_jar_popup", R.drawable.ic_tip_jar_glow)
         )
 
         for (card in cards) {

@@ -2472,6 +2472,9 @@
     <string name="tip_jar_progress_title_format">Tip jar progress • %1$s</string>
     <string name="tip_jar_desc_label">Every tip helps keep UFM Pro free for everyone.</string>
     <string name="tip_jar_offline_subtitle">Connect to the internet to see live tip jar progress.</string>
+    <string name="settings_tip_jar_popup_title">Tip Jar Progress Popup</string>
+    <string name="settings_tip_jar_popup_subtitle_on">Show tip jar progress on the main screen</string>
+    <string name="settings_tip_jar_popup_subtitle_off">Tip jar progress hidden on the main screen</string>
     <string name="tip_jar_thanks_label">Thank you!</string>
     <string name="tip_jar_awesome_label">You\'re awesome!</string>
     <string name="tip_jar_global_label">Global</string>

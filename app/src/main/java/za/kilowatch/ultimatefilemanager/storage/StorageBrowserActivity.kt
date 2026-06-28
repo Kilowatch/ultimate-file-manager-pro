@@ -941,6 +941,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 } else if (!LoyaltyPrefs.getHasEverBeenOnline(this)) {
                     // Device has never been online — never show the progress card in any session
                     cardTipJar.visibility = View.GONE
+                } else if (!LoyaltyPrefs.isTipJarPopupEnabled(this)) {
+                    cardTipJar.visibility = View.GONE
                 } else {
                     cardTipJar.visibility = View.VISIBLE
                     hasShownTipJarThisSession = true
@@ -991,6 +993,8 @@ class StorageBrowserActivity : AppCompatActivity() {
                 if (hasShownTipJarThisSession) {
                     tvTipJar.visibility = View.GONE
                 } else if (!LoyaltyPrefs.getHasEverBeenOnline(this)) {
+                    tvTipJar.visibility = View.GONE
+                } else if (!LoyaltyPrefs.isTipJarPopupEnabled(this)) {
                     tvTipJar.visibility = View.GONE
                 } else {
                     tvTipJar.visibility = View.VISIBLE

@@ -9,6 +9,9 @@ object LoyaltyPrefs {
     // Local lifetime tip total
     private const val KEY_TOTAL_TIPPED = "total_tipped"
 
+    // Whether the tip jar progress popup is enabled (default true)
+    private const val KEY_TIP_JAR_POPUP_ENABLED = "tip_jar_popup_enabled"
+
     // Whether the device has ever been online (persistent flag, never reset)
     private const val KEY_HAS_EVER_BEEN_ONLINE = "has_ever_been_online"
 
@@ -30,6 +33,20 @@ object LoyaltyPrefs {
     fun addTip(context: Context, amount: Int) {
         val current = getTotalTipped(context)
         getPrefs(context).edit().putInt(KEY_TOTAL_TIPPED, current + amount).apply()
+    }
+
+    // ─── Tip jar popup toggle ────────────────────────────────
+
+    /**
+     * Whether the tip jar progress popup (mobile card / TV bar) is enabled.
+     * Defaults to true. Can be toggled in Settings.
+     */
+    fun isTipJarPopupEnabled(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_TIP_JAR_POPUP_ENABLED, true)
+    }
+
+    fun setTipJarPopupEnabled(context: Context, enabled: Boolean) {
+        getPrefs(context).edit().putBoolean(KEY_TIP_JAR_POPUP_ENABLED, enabled).apply()
     }
 
     // ─── "Ever been online" flag ─────────────────────────────
