@@ -3724,6 +3724,33 @@ Yönetmek için dokunun
     <string name="no_locations_available">Kullanılabilir konum yok</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+İpucu kavanozu ilerlemesi
+</string>
+    <string name="tip_jar_progress_title_format">
+İpucu kavanozunun ilerleme durumu • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Her ipucu, UFM Pro\'nun herkes için ücretsiz kalmasına yardımcı olur.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Canlı ipucu kavanozunun ilerlemesini görmek için internete bağlanın.
+</string>
+    <string name="tip_jar_thanks_label">
+Teşekkür ederim!
+</string>
+    <string name="tip_jar_awesome_label">
+Harikasın!
+</string>
+    <string name="tip_jar_global_label">
+Küresel
+</string>
+    <string name="tip_jar_global_title">
+Küresel İlerleme
+</string>
+    <string name="tip_jar_global_desc">
+Bu ayki topluluk katkıları
+</string>
     <string name="loyalty_card_title">Destekçi Sadakat Kartı</string>
     <string name="loyalty_amount_tipped_label">Bahşiş edilen tutar</string>
     <string name="loyalty_goal_static">hedef: $15</string>

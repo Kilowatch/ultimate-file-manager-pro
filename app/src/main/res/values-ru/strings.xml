@@ -3724,6 +3724,33 @@ FTP не поддерживает аутентификацию по ключу S
     <string name="no_locations_available">Нет доступных мест</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Прогресс в банке подсказок
+</string>
+    <string name="tip_jar_progress_title_format">
+Прогресс в банке подсказок • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Каждый совет помогает сделать UFM Pro бесплатным для всех.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Подключитесь к Интернету, чтобы следить за ходом работы с банкой советов в реальном времени.
+</string>
+    <string name="tip_jar_thanks_label">
+Спасибо!
+</string>
+    <string name="tip_jar_awesome_label">
+Ты потрясающий!
+</string>
+    <string name="tip_jar_global_label">
+Глобальный
+</string>
+    <string name="tip_jar_global_title">
+Глобальный прогресс
+</string>
+    <string name="tip_jar_global_desc">
+Взносы сообщества в этом месяце
+</string>
     <string name="loyalty_card_title">Карта лояльности для спонсоров</string>
     <string name="loyalty_amount_tipped_label">Сумма чаевых</string>
     <string name="loyalty_goal_static">цель: $15</string>

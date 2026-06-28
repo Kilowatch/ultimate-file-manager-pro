@@ -3724,6 +3724,33 @@ Toque para gerenciar
     <string name="no_locations_available">Nenhum local disponível</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Progresso do jar de dicas
+</string>
+    <string name="tip_jar_progress_title_format">
+Progresso do jar de dicas • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Cada dica ajuda a manter o UFM Pro gratuito para todos.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Conecte-se à Internet para ver o progresso do jar de dicas ao vivo.
+</string>
+    <string name="tip_jar_thanks_label">
+Obrigado!
+</string>
+    <string name="tip_jar_awesome_label">
+Você é incrível!
+</string>
+    <string name="tip_jar_global_label">
+Global
+</string>
+    <string name="tip_jar_global_title">
+Progresso Global
+</string>
+    <string name="tip_jar_global_desc">
+Contribuições da comunidade este mês
+</string>
     <string name="loyalty_card_title">Cartão Fidelidade Apoiador</string>
     <string name="loyalty_amount_tipped_label">Valor da gorjeta</string>
     <string name="loyalty_goal_static">meta: $15</string>

@@ -3724,6 +3724,33 @@ FTP は SSH キー認証をサポートしていません。最初にユーザ�
     <string name="no_locations_available">利用できる場所がありません</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+チップジャーの進捗状況
+</string>
+    <string name="tip_jar_progress_title_format">
+ヒント瓶の進行状況 • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+すべてのヒントは、UFM Pro を誰でも無料で利用できるようにするのに役立ちます。
+</string>
+    <string name="tip_jar_offline_subtitle">
+インターネットに接続して、ライブチップジャーの進行状況を確認します。
+</string>
+    <string name="tip_jar_thanks_label">
+ありがとう！
+</string>
+    <string name="tip_jar_awesome_label">
+あなたは素晴らしいです！
+</string>
+    <string name="tip_jar_global_label">
+グローバル
+</string>
+    <string name="tip_jar_global_title">
+世界的な進歩
+</string>
+    <string name="tip_jar_global_desc">
+今月のコミュニティ貢献
+</string>
     <string name="loyalty_card_title">サポーターポイントカード</string>
     <string name="loyalty_amount_tipped_label">チップ金額</string>
     <string name="loyalty_goal_static">目標: $15</string>

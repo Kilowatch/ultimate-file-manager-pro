@@ -3722,6 +3722,33 @@ DLNA
     <string name="no_locations_available">لا توجد مواقع متاحة</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+تقدم جرة نصيحة
+</string>
+    <string name="tip_jar_progress_title_format">
+نصيحة بشأن تقدم الجرة • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+تساعد كل نصيحة في إبقاء UFM Pro مجانيًا للجميع.
+</string>
+    <string name="tip_jar_offline_subtitle">
+اتصل بالإنترنت لرؤية تقدم جرة النصائح المباشرة.
+</string>
+    <string name="tip_jar_thanks_label">
+شكرًا لك!
+</string>
+    <string name="tip_jar_awesome_label">
+أنت رائع!
+</string>
+    <string name="tip_jar_global_label">
+عالمي
+</string>
+    <string name="tip_jar_global_title">
+التقدم العالمي
+</string>
+    <string name="tip_jar_global_desc">
+مساهمات المجتمع هذا الشهر
+</string>
     <string name="loyalty_card_title">بطاقة ولاء الداعم</string>
     <string name="loyalty_amount_tipped_label">المبلغ مقلوب</string>
     <string name="loyalty_goal_static">الهدف: $15</string>

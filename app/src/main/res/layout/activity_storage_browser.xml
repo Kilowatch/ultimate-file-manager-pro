@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/mobile_glass_header"
+        android:elevation="6dp"
         app:liftOnScroll="true"
         app:liftOnScrollTargetViewId="@id/recyclerStorage"
         app:layout_constraintTop_toTopOf="parent"
@@ -117,6 +118,150 @@
 
 
     <!-- ══════════════════════════════════════════════════
+         TIP JAR PROGRESS CARD
+         ══════════════════════════════════════════════════ -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardTipJarProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginTop="@dimen/margin_md"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
+        app:rippleColor="@color/mobile_glass_ripple"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:baselineAligned="false"
+            android:padding="16dp">
+
+            <!-- Jar Icon (left) -->
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_tip_jar_glow"
+                android:contentDescription="@null"
+                android:layout_marginEnd="14dp" />
+
+            <!-- Center details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/txtTipJarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-black"
+                    tools:text="Tip jar progress • June 2025" />
+
+                <TextView
+                    android:id="@+id/tip_jar_desc_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/tip_jar_desc_label"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="2dp"
+                    android:fontFamily="sans-serif" />
+
+                <!-- Progress bar and percentage -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="12dp">
+
+                    <ProgressBar
+                        android:id="@+id/progressTipJar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="8dp"
+                        android:layout_weight="1"
+                        android:progressDrawable="@drawable/bg_tip_jar_progress"
+                        android:max="100" />
+
+                    <TextView
+                        android:id="@+id/txtTipJarPercent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:textColor="@color/tile_tip_jar_accent"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-black" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Vertical Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="56dp"
+                android:background="@color/mobile_glass_stroke"
+                android:layout_marginHorizontal="14dp" />
+
+            <!-- Right layout -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:minWidth="80dp"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_heart_outline"
+                    android:contentDescription="@null"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tip_jar_thanks_label"
+                    android:textColor="@color/tile_tip_jar_accent"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/tip_jar_awesome_label"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- ══════════════════════════════════════════════════
          SECTION HEADING
          ══════════════════════════════════════════════════ -->
     <RelativeLayout
@@ -125,7 +270,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_md"
         android:layout_marginTop="@dimen/margin_md"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintTop_toBottomOf="@id/cardTipJarProgress"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout

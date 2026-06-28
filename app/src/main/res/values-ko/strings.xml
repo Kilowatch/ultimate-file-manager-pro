@@ -3724,6 +3724,33 @@ FTP는 SSH 키 인증을 지원하지 않습니다. 먼저 사용자 이름과 �
     <string name="no_locations_available">사용 가능한 위치가 없습니다.</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+팁병 진행
+</string>
+    <string name="tip_jar_progress_title_format">
+팁 병 진행률 • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+모든 팁은 UFM Pro를 모든 사람에게 무료로 유지하는 데 도움이 됩니다.
+</string>
+    <string name="tip_jar_offline_subtitle">
+실시간 팁 병 진행 상황을 보려면 인터넷에 연결하세요.
+</string>
+    <string name="tip_jar_thanks_label">
+감사합니다!
+</string>
+    <string name="tip_jar_awesome_label">
+당신은 정말 대단해요!
+</string>
+    <string name="tip_jar_global_label">
+글로벌
+</string>
+    <string name="tip_jar_global_title">
+글로벌 진행
+</string>
+    <string name="tip_jar_global_desc">
+이번 달 커뮤니티 기여
+</string>
     <string name="loyalty_card_title">서포터 로열티 카드</string>
     <string name="loyalty_amount_tipped_label">팁 금액</string>
     <string name="loyalty_goal_static">목표: $15</string>

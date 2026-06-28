@@ -3724,6 +3724,33 @@ Appuyez pour gérer
     <string name="no_locations_available">Aucun emplacement disponible</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Progression du pot de pourboires
+</string>
+    <string name="tip_jar_progress_title_format">
+Progression du pot de pourboires • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Chaque astuce permet de garder UFM Pro gratuit pour tout le monde.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Connectez-vous à Internet pour voir la progression du pot de pourboires en direct.
+</string>
+    <string name="tip_jar_thanks_label">
+Merci!
+</string>
+    <string name="tip_jar_awesome_label">
+Tu es génial !
+</string>
+    <string name="tip_jar_global_label">
+Mondial
+</string>
+    <string name="tip_jar_global_title">
+Progrès mondial
+</string>
+    <string name="tip_jar_global_desc">
+Contributions de la communauté ce mois-ci
+</string>
     <string name="loyalty_card_title">Carte de fidélité des supporters</string>
     <string name="loyalty_amount_tipped_label">Montant du pourboire</string>
     <string name="loyalty_goal_static">objectif : $15</string>

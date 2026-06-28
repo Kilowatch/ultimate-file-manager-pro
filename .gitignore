@@ -42,6 +42,9 @@ Keys/
 screenshots/
 # Amazon store files
 Amazon/
+scripts/
+server/
+URL/
 Amazon Store/
 
 # ── 🔴 SENSITIVE: Signing Configuration ──────────────────────

@@ -3724,6 +3724,33 @@ FTP SSH कुंजी प्रमाणीकरण का समर्थन
     <string name="no_locations_available">कोई स्थान उपलब्ध नहीं है</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+टिप जार प्रगति
+</string>
+    <string name="tip_jar_progress_title_format">
+टिप जार प्रगति • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+प्रत्येक टिप यूएफएम प्रो को सभी के लिए निःशुल्क रखने में मदद करती है।
+</string>
+    <string name="tip_jar_offline_subtitle">
+लाइव टिप जार प्रगति देखने के लिए इंटरनेट से कनेक्ट करें।
+</string>
+    <string name="tip_jar_thanks_label">
+धन्यवाद!
+</string>
+    <string name="tip_jar_awesome_label">
+तुम कमाल हो!
+</string>
+    <string name="tip_jar_global_label">
+वैश्विक
+</string>
+    <string name="tip_jar_global_title">
+वैश्विक प्रगति
+</string>
+    <string name="tip_jar_global_desc">
+इस महीने सामुदायिक योगदान
+</string>
     <string name="loyalty_card_title">समर्थक लॉयल्टी कार्ड</string>
     <string name="loyalty_amount_tipped_label">टिप दी गई राशि</string>
     <string name="loyalty_goal_static">लक्ष्य: $15</string>

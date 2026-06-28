@@ -2468,6 +2468,15 @@
     <string name="no_locations_available">No locations available</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">Tip jar progress</string>
+    <string name="tip_jar_progress_title_format">Tip jar progress • %1$s</string>
+    <string name="tip_jar_desc_label">Every tip helps keep UFM Pro free for everyone.</string>
+    <string name="tip_jar_offline_subtitle">Connect to the internet to see live tip jar progress.</string>
+    <string name="tip_jar_thanks_label">Thank you!</string>
+    <string name="tip_jar_awesome_label">You\'re awesome!</string>
+    <string name="tip_jar_global_label">Global</string>
+    <string name="tip_jar_global_title">Global Progress</string>
+    <string name="tip_jar_global_desc">Community contributions this month</string>
     <string name="loyalty_card_title">Supporter Loyalty Card</string>
     <string name="loyalty_amount_tipped_label">Amount tipped</string>
     <string name="loyalty_goal_static">goal: $15</string>

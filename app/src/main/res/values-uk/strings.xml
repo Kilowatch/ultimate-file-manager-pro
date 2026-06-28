@@ -7115,6 +7115,33 @@ USB накопичувач
 </string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Підказка банок прогрес
+</string>
+    <string name="tip_jar_progress_title_format">
+Перебіг баночки підказок • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Кожна порада допомагає залишати UFM Pro безкоштовним для всіх.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Підключіться до Інтернету, щоб у реальному часі бачити прогрес підказки.
+</string>
+    <string name="tip_jar_thanks_label">
+дякую!
+</string>
+    <string name="tip_jar_awesome_label">
+Ви чудові!
+</string>
+    <string name="tip_jar_global_label">
+Глобальний
+</string>
+    <string name="tip_jar_global_title">
+Глобальний прогрес
+</string>
+    <string name="tip_jar_global_desc">
+Внески спільноти цього місяця
+</string>
     <string name="loyalty_card_title">
 Картка лояльності прихильника
 </string>

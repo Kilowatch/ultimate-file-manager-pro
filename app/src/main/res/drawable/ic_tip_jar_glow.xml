@@ -1,0 +1,78 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Sparkles on the left -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M 10,12 Q 10,16 14,16 Q 10,16 10,20 Q 10,16 6,16 Q 10,16 10,12 Z"/>
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M 12,25 Q 12,28 15,28 Q 12,28 12,31 Q 12,28 9,28 Q 12,28 12,25 Z"/>
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M 6,21 Q 6,23 8,23 Q 6,23 6,25 Q 6,23 4,23 Q 6,23 6,21 Z"/>
+
+    <!-- Glass jar inner background fill (faint glass reflection/glow) -->
+    <path
+        android:fillColor="#15FFFFFF"
+        android:pathData="M 24,22 C 24,22 22,26 21,28 C 19.5,31 19,34 19,38 L 19,50 C 19,53.3 21.7,56 25,56 L 39,56 C 42.3,56 45,53.3 45,50 L 45,38 C 45,34 44.5,31 43,28 C 42,26 40,22 40,22 Z"/>
+
+    <!-- Floating heart inside the jar (gradient filled) -->
+    <path
+        android:pathData="M 32,47 L 30.8,45.9 C 26.5,42.0 23.7,39.5 23.7,36.3 C 23.7,33.7 25.7,31.7 28.3,31.7 C 29.8,31.7 31.2,32.4 32,33.5 C 32.8,32.4 34.2,31.7 35.7,31.7 C 38.3,31.7 40.3,33.7 40.3,36.3 C 40.3,39.5 37.5,42.0 33.2,45.9 L 32,47 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="23.7"
+                android:startY="31.7"
+                android:endX="40.3"
+                android:endY="47.0">
+                <item android:color="#FF00E5FF" android:offset="0.0" />
+                <item android:color="#FF2979FF" android:offset="0.5" />
+                <item android:color="#FF651FFF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Glass jar outer outline stroke -->
+    <path
+        android:strokeColor="#B0FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 24,22 C 24,22 22,26 21,28 C 19.5,31 19,34 19,38 L 19,50 C 19,53.3 21.7,56 25,56 L 39,56 C 42.3,56 45,53.3 45,50 L 45,38 C 45,34 44.5,31 43,28 C 42,26 40,22 40,22 Z"/>
+
+    <!-- Glass highlight accent line on the left side to look 3D -->
+    <path
+        android:strokeColor="#80FFFFFF"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M 22,30 C 20.5,33 20.2,36 20.2,39 L 20.2,48 C 20.2,49 20.8,50 21.5,50"/>
+
+    <!-- Glass neck outline line -->
+    <path
+        android:strokeColor="#B0FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M 25,22 L 39,22"/>
+
+    <!-- Jar Lid (gradient filled) -->
+    <path
+        android:pathData="M 24,14 C 23.5,14 23,14.5 23,15 C 23,15.5 23,21 23,21 C 23,21.5 23.5,22 24,22 L 40,22 C 40.5,22 41,21.5 41,21 C 41,21 41,15.5 41,15 C 41,14.5 40.5,14 40,14 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="23.0"
+                android:startY="14.0"
+                android:endX="41.0"
+                android:endY="22.0">
+                <item android:color="#FF00B0FF" android:offset="0.0" />
+                <item android:color="#FF2979FF" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+</vector>

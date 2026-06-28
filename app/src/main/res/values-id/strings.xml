@@ -3724,6 +3724,33 @@ Ketuk untuk mengelola
     <string name="no_locations_available">Tidak ada lokasi yang tersedia</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Kemajuan stoples tip
+</string>
+    <string name="tip_jar_progress_title_format">
+Kemajuan stoples tip • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Setiap tip membantu menjaga UFM Pro tetap gratis untuk semua orang.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Hubungkan ke internet untuk melihat kemajuan tip jar secara langsung.
+</string>
+    <string name="tip_jar_thanks_label">
+Terima kasih!
+</string>
+    <string name="tip_jar_awesome_label">
+Kamu luar biasa!
+</string>
+    <string name="tip_jar_global_label">
+Global
+</string>
+    <string name="tip_jar_global_title">
+Kemajuan Global
+</string>
+    <string name="tip_jar_global_desc">
+Kontribusi komunitas bulan ini
+</string>
     <string name="loyalty_card_title">Kartu Loyalitas Pendukung</string>
     <string name="loyalty_amount_tipped_label">Jumlah yang diberikan</string>
     <string name="loyalty_goal_static">sasaran: $15</string>

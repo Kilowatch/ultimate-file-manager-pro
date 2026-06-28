@@ -75,7 +75,8 @@ object TipCelebrationHelper {
         activity: Activity,
         sku: String,
         rootView: ViewGroup,
-        coffeeIcon: ImageView? = null
+        coffeeIcon: ImageView? = null,
+        onDismissed: (() -> Unit)? = null
     ) {
         val ctx = activity.applicationContext
 
@@ -109,7 +110,7 @@ object TipCelebrationHelper {
 
         launchConfetti(rootView, colors, overlay)
         coffeeIcon?.let { animateCoffeeIcon(it) }
-        showCelebrationCard(activity, rootView, overlay, title)
+        showCelebrationCard(activity, rootView, overlay, title, onDismissed)
     }
 
     // ─── Haptic feedback ─────────────────────────────────────────────────────
@@ -183,7 +184,8 @@ object TipCelebrationHelper {
         activity: Activity,
         root: ViewGroup,
         overlay: FrameLayout,
-        title: String
+        title: String,
+        onDismissed: (() -> Unit)? = null
     ) {
         val ctx = activity
 
@@ -279,13 +281,13 @@ object TipCelebrationHelper {
         }
 
         // Dismiss on scrim tap or after 4.5 s
-        val dismiss = { dismissCard(card, scrim, overlay, root) }
+        val dismiss = { dismissCard(card, scrim, overlay, root, onDismissed) }
         scrim.setOnClickListener { dismiss() }
         card.setOnClickListener { dismiss() }
         root.postDelayed({ dismiss() }, 4_500L)
     }
 
-    private fun dismissCard(card: View, scrim: View, overlay: FrameLayout, root: ViewGroup) {
+    private fun dismissCard(card: View, scrim: View, overlay: FrameLayout, root: ViewGroup, onDismissed: (() -> Unit)? = null) {
         val fadeOut = AnimatorSet().apply {
             playTogether(
                 ObjectAnimator.ofFloat(card,  View.ALPHA, 1f, 0f),
@@ -297,6 +299,7 @@ object TipCelebrationHelper {
         fadeOut.start()
         root.postDelayed({
             root.removeView(overlay)
+            onDismissed?.invoke()
         }, 300L)
     }
 

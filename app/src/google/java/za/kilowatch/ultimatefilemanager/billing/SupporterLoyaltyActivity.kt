@@ -1,6 +1,9 @@
 package za.kilowatch.ultimatefilemanager.billing
 
+import android.content.Context
 import android.content.res.ColorStateList
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +16,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import java.util.concurrent.TimeUnit
 
 class SupporterLoyaltyActivity : AppCompatActivity() {
 
@@ -38,6 +49,17 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     private lateinit var txtStatGoalLabel: TextView
     private lateinit var txtStatGoal: TextView
     
+    private lateinit var progressGlobal: android.widget.ProgressBar
+    private lateinit var txtGlobalPercent: TextView
+    private lateinit var txtGlobalTitle: TextView
+    private var cardGlobalProgress: View? = null
+
+    /** Shared OkHttpClient for global progress API calls. */
+    private val tipJarClient = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .build()
+
     private lateinit var txtThankYou: TextView
     private lateinit var txtLoading: TextView
     private var coffeeIcon: ImageView? = null
@@ -88,6 +110,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         // Google Play path
         initBilling()
         refreshLoyaltyUI()
+        fetchGlobalProgress()
     }
 
     private fun setupViews(isTv: Boolean) {
@@ -121,6 +144,11 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         }
 
         progressBar      = findViewById(R.id.progressBar)
+        progressGlobal   = findViewById(R.id.progressGlobal)
+        txtGlobalPercent = findViewById(R.id.txtGlobalPercent)
+        txtGlobalTitle   = findViewById(R.id.txtGlobalTitle)
+        cardGlobalProgress = findViewById(R.id.cardGlobalProgress)
+        cardGlobalProgress?.visibility = View.GONE
         gridStamps       = findViewById(R.id.gridStamps)
         txtTippedTitle   = findViewById(R.id.txtTippedTitle)
         txtToGoTitle     = findViewById(R.id.txtToGoTitle)
@@ -154,10 +182,10 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     
     private fun setupStampsGrid() {
         gridStamps.removeAllViews()
-        // TV: tiny stamps so 3 rows fits neatly; mobile: standard size
-        val stampSizeDp = if (isTv) 22 else 40
-        val marginDp    = if (isTv) 2  else 4
-        gridStamps.columnCount = 5
+        // TV: tiny stamps in a single horizontal row; mobile: standard size
+        val stampSizeDp = if (isTv) 16 else 40
+        val marginDp    = if (isTv) 1  else 4
+        gridStamps.columnCount = if (isTv) 15 else 5
 
         val stampSize = (stampSizeDp * resources.displayMetrics.density).toInt()
         val margin    = (marginDp    * resources.displayMetrics.density).toInt()
@@ -196,9 +224,9 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     private fun initBilling() {
         billingManager = BillingManager(
             context = this,
-            onPurchaseSuccess = { sku -> 
-                handlePurchaseSuccess(sku) 
-                showThankYou(sku) 
+            onPurchaseSuccess = { sku ->
+                handlePurchaseSuccess(sku)
+                showThankYou(sku) { fetchGlobalProgress() }
             },
             onError = { msg ->
                 Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
@@ -320,7 +348,93 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         txtTierBadge.text = badgeText
     }
 
-    private fun showThankYou(sku: String) {
+    // ─── Internet check ───────────────────────────────────────────────────────
+
+    /**
+     * Returns true if the device has an active internet connection.
+     */
+    private fun isInternetAvailable(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = cm.activeNetwork ?: return false
+        val capabilities = cm.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
+    // ─── Global progress fetch ────────────────────────────────────────────────
+
+    /**
+     * Fetch the global community progress from the server.
+     * On success: updates the global progress card UI and caches the values.
+     * On failure: card stays hidden (cardGlobalProgress is GONE).
+     */
+    private fun fetchGlobalProgress() {
+        if (!isInternetAvailable()) {
+            cardGlobalProgress?.visibility = View.GONE
+            return
+        }
+
+        // Show cached values immediately if available, then fetch fresh
+        val cachedPercent = LoyaltyPrefs.getCachedPercent(this)
+        val cachedMonth = LoyaltyPrefs.getCachedMonth(this)
+        if (cachedMonth.isNotEmpty()) {
+            updateGlobalProgressBar(cachedPercent, cachedMonth)
+            cardGlobalProgress?.visibility = View.VISIBLE
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url("https://www.kilowatch.co.za/UFM/api/progress.php")
+                    .get()
+                    .build()
+
+                val response = tipJarClient.newCall(request).execute()
+                val body = response.body?.string()
+
+                if (!response.isSuccessful || body == null) {
+                    return@launch
+                }
+
+                val json = JSONObject(body)
+                val percent = json.optInt("percent", 0).coerceIn(0, 100)
+                val month = json.optString("month", "")
+
+                if (month.isNotEmpty()) {
+                    LoyaltyPrefs.saveCachedProgress(this@SupporterLoyaltyActivity, percent, month)
+                    withContext(Dispatchers.Main) {
+                        updateGlobalProgressBar(percent, month)
+                        cardGlobalProgress?.visibility = View.VISIBLE
+                    }
+                }
+            } catch (_: Exception) {
+                // Network error — card stays hidden or shows cached values already set
+            }
+        }
+    }
+
+    /**
+     * Update the global progress card UI with the given values.
+     * Called on the main thread.
+     */
+    private fun updateGlobalProgressBar(percent: Int, month: String) {
+        progressGlobal.progress = percent
+        txtGlobalPercent.text = getString(R.string.loyalty_value_format, percent) + "%"
+        val raw = getString(R.string.tip_jar_progress_title_format, month)
+        val spannable = android.text.SpannableString(raw)
+        val accentColor = androidx.core.content.ContextCompat.getColor(this, R.color.tile_tip_jar_accent)
+        val start = raw.indexOf(month)
+        if (start >= 0) {
+            spannable.setSpan(
+                android.text.style.ForegroundColorSpan(accentColor),
+                start,
+                start + month.length,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        txtGlobalTitle.text = spannable
+    }
+
+    private fun showThankYou(sku: String, onDismissed: (() -> Unit)? = null) {
         val message = when (sku) {
             BillingManager.SKU_ESPRESSO -> getString(R.string.tip_jar_thanks_espresso)
             BillingManager.SKU_LATTE    -> getString(R.string.tip_jar_thanks_latte)
@@ -335,7 +449,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             activity   = this,
             sku        = sku,
             rootView   = root,
-            coffeeIcon = coffeeIcon
+            coffeeIcon = coffeeIcon,
+            onDismissed = onDismissed
         )
     }
 

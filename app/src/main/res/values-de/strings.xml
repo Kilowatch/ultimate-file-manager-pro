@@ -3724,6 +3724,33 @@ Zum Verwalten tippen
     <string name="no_locations_available">Keine Standorte verfügbar</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Trinkgeld für den Fortschritt des Glases
+</string>
+    <string name="tip_jar_progress_title_format">
+Fortschritt des Trinkgeldglases • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Jeder Tipp trägt dazu bei, dass UFM Pro für alle kostenlos bleibt.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Stellen Sie eine Verbindung zum Internet her, um den Fortschritt des Trinkgeldglases live zu verfolgen.
+</string>
+    <string name="tip_jar_thanks_label">
+Danke schön!
+</string>
+    <string name="tip_jar_awesome_label">
+Du bist großartig!
+</string>
+    <string name="tip_jar_global_label">
+Global
+</string>
+    <string name="tip_jar_global_title">
+Globaler Fortschritt
+</string>
+    <string name="tip_jar_global_desc">
+Community-Beiträge in diesem Monat
+</string>
     <string name="loyalty_card_title">Unterstützer-Treuekarte</string>
     <string name="loyalty_amount_tipped_label">Trinkgeldbetrag</string>
     <string name="loyalty_goal_static">Ziel: $15</string>

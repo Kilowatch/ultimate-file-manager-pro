@@ -3724,6 +3724,33 @@ Toca para administrar
     <string name="no_locations_available">No hay ubicaciones disponibles</string>
 
     <!-- Supporter Loyalty Card -->
+    <string name="tip_jar_progress_label">
+Progreso del tarro de propinas
+</string>
+    <string name="tip_jar_progress_title_format">
+Progreso del tarro de propinas • %1$s
+</string>
+    <string name="tip_jar_desc_label">
+Cada consejo ayuda a que UFM Pro sea gratuito para todos.
+</string>
+    <string name="tip_jar_offline_subtitle">
+Conéctese a Internet para ver el progreso del tarro de propinas en vivo.
+</string>
+    <string name="tip_jar_thanks_label">
+¡Gracias!
+</string>
+    <string name="tip_jar_awesome_label">
+¡Eres increíble!
+</string>
+    <string name="tip_jar_global_label">
+Global
+</string>
+    <string name="tip_jar_global_title">
+Progreso global
+</string>
+    <string name="tip_jar_global_desc">
+Contribuciones de la comunidad este mes
+</string>
     <string name="loyalty_card_title">Tarjeta de Fidelización de Partidario</string>
     <string name="loyalty_amount_tipped_label">Monto de propina</string>
     <string name="loyalty_goal_static">objetivo: $15</string>

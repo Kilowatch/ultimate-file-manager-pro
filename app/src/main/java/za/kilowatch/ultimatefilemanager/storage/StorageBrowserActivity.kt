@@ -20,6 +20,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.view.KeyEvent
@@ -56,6 +60,7 @@ import za.kilowatch.ultimatefilemanager.ui.policy.PolicySelectionActivity
 import za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
+import za.kilowatch.ultimatefilemanager.billing.LoyaltyPrefs
 import za.kilowatch.ultimatefilemanager.settings.SettingsBackupManager
 import za.kilowatch.ultimatefilemanager.settings.ThemePackManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -172,6 +177,7 @@ class StorageBrowserActivity : AppCompatActivity() {
          * flag and shows a Shizuku-guidance card in place of the invisible USB volume.
          */
         var usbSelinuxBlocked = false
+        var hasShownTipJarThisSession = false
         /** When true, the user is picking a source folder for Folder Sync */
         const val EXTRA_SYNC_FOLDER_PICKER = "extra_sync_folder_picker"
         /** When true, the user is picking a source folder for Advanced Sync */
@@ -927,6 +933,89 @@ class StorageBrowserActivity : AppCompatActivity() {
             toolbar = findViewById<MaterialToolbar>(R.id.toolbar)?.also { tb ->
                 setSupportActionBar(tb)
                 supportActionBar?.setDisplayShowTitleEnabled(false) // Prevent default title hijacking
+            }
+            val cardTipJar = findViewById<View>(R.id.cardTipJarProgress)
+            if (cardTipJar != null) {
+                if (hasShownTipJarThisSession) {
+                    cardTipJar.visibility = View.GONE
+                } else if (!LoyaltyPrefs.getHasEverBeenOnline(this)) {
+                    // Device has never been online — never show the progress card in any session
+                    cardTipJar.visibility = View.GONE
+                } else {
+                    cardTipJar.visibility = View.VISIBLE
+                    hasShownTipJarThisSession = true
+
+                    // Show cached progress immediately, then fetch live data from server
+                    applyCachedTipJarProgress()
+                    fetchTipJarProgress()
+
+                    cardTipJar.setOnClickListener {
+                        if (isAmazon && !BuildConfig.AMAZON_IAP_ENABLED) {
+                            // Tip Jar not yet available on Amazon — show notice and don't open the activity
+                            android.widget.Toast.makeText(
+                                this,
+                                getString(R.string.billing_unavailable_amazon_coming_soon),
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            val intent = Intent(this, SupporterLoyaltyActivity::class.java)
+                            startActivity(intent)
+                        }
+                    }
+
+                    handler.postDelayed({
+                        val parent = findViewById<android.view.ViewGroup>(R.id.main)
+                        if (parent != null) {
+                            val transition = android.transition.TransitionSet().apply {
+                                addTransition(android.transition.Fade(android.transition.Fade.OUT).apply {
+                                    addTarget(cardTipJar)
+                                })
+                                addTransition(android.transition.Slide(android.view.Gravity.TOP).apply {
+                                    addTarget(cardTipJar)
+                                })
+                                addTransition(android.transition.ChangeBounds())
+                                duration = 600
+                            }
+                            android.transition.TransitionManager.beginDelayedTransition(parent, transition)
+                            cardTipJar.visibility = View.GONE
+                        }
+                    }, 10000)
+                }
+            }
+        }
+
+        // TV: thin tip jar notification bar
+        if (isTv) {
+            val tvTipJar = findViewById<View>(R.id.tipJarTvNotification)
+            if (tvTipJar != null) {
+                if (hasShownTipJarThisSession) {
+                    tvTipJar.visibility = View.GONE
+                } else if (!LoyaltyPrefs.getHasEverBeenOnline(this)) {
+                    tvTipJar.visibility = View.GONE
+                } else {
+                    tvTipJar.visibility = View.VISIBLE
+                    hasShownTipJarThisSession = true
+
+                    // Show cached progress immediately, then fetch live data
+                    applyTvTipJarCachedValues()
+                    fetchTipJarProgress()
+
+                    // Auto-hide after 10 seconds with fade transition
+                    handler.postDelayed({
+                        val parent = findViewById<android.view.ViewGroup>(R.id.main)
+                        if (parent != null) {
+                            val transition = android.transition.TransitionSet().apply {
+                                addTransition(android.transition.Fade(android.transition.Fade.OUT).apply {
+                                    addTarget(tvTipJar)
+                                })
+                                addTransition(android.transition.ChangeBounds())
+                                duration = 600
+                            }
+                            android.transition.TransitionManager.beginDelayedTransition(parent, transition)
+                            tvTipJar.visibility = View.GONE
+                        }
+                    }, 10000)
+                }
             }
         }
 
@@ -3668,7 +3757,218 @@ class StorageBrowserActivity : AppCompatActivity() {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = cm.activeNetwork ?: return false
         val capabilities = cm.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        val available = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        if (available) {
+            LoyaltyPrefs.setHasEverBeenOnline(this, true)
+        }
+        return available
+    }
+
+    // ─── Tip Jar Server Fetch ────────────────────────────────
+
+    /** Shared OkHttpClient for tip jar API calls. */
+    private val tipJarClient = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .build()
+
+    /**
+     * Build a spannable title string with the month highlighted in the accent colour.
+     */
+    private fun buildTipJarTitleSpan(month: String): CharSequence {
+        val raw = getString(R.string.tip_jar_progress_title_format, month)
+        val spannable = android.text.SpannableString(raw)
+        val color = androidx.core.content.ContextCompat.getColor(this, R.color.tile_tip_jar_accent)
+        val start = raw.indexOf(month)
+        if (start >= 0) {
+            spannable.setSpan(
+                android.text.style.ForegroundColorSpan(color),
+                start,
+                start + month.length,
+                android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        return spannable
+    }
+
+    // ─── Tip Jar Server Fetch ────────────────────────────────
+
+    /**
+     * Fetches the current month's tip jar progress from the server.
+     *
+     * The server returns a simple JSON object:
+     *   {"percent": 47, "month": "July 2025"}
+     *
+     * On success: updates the progress bar, percentage text, and month label,
+     * and caches the values in LoyaltyPrefs.
+     * On failure: uses cached values from LoyaltyPrefs. If no cache exists,
+     * shows 0% with an offline subtitle.
+     */
+    private fun fetchTipJarProgress() {
+        // Skip the network call if we're offline — go straight to cached values
+        if (!isInternetAvailable()) {
+            applyCachedTipJarProgress()
+            applyTvTipJarCachedValues()
+            return
+        }
+
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url("https://www.kilowatch.co.za/UFM/api/progress.php")
+                    .get()
+                    .build()
+
+                val response = tipJarClient.newCall(request).execute()
+                val body = response.body?.string()
+
+                if (!response.isSuccessful || body == null) {
+                    // Server error — use cached values
+                    withContext(Dispatchers.Main) {
+                        applyCachedTipJarProgress()
+                        applyTvTipJarCachedValues()
+                    }
+                    return@launch
+                }
+
+                val json = JSONObject(body)
+                val percent = json.optInt("percent", 0).coerceIn(0, 100)
+                val month = json.optString("month", "")
+
+                if (month.isNotEmpty()) {
+                    // Cache the server response
+                    LoyaltyPrefs.saveCachedProgress(this@StorageBrowserActivity, percent, month)
+
+                    // Update UI on the main thread
+                    withContext(Dispatchers.Main) {
+                        updateTipJarCard(percent, month)
+                        updateTvTipJarCard(percent, month)
+                    }
+                } else {
+                    // Malformed response — fall back to cache
+                    withContext(Dispatchers.Main) {
+                        applyCachedTipJarProgress()
+                        applyTvTipJarCachedValues()
+                    }
+                }
+
+            } catch (e: Exception) {
+                // Network error, timeout, parse error — use cached values
+                withContext(Dispatchers.Main) {
+                    applyCachedTipJarProgress()
+                    applyTvTipJarCachedValues()
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the tip jar card with the given server values.
+     * Called on the main thread after a successful fetch.
+     */
+    private fun updateTipJarCard(percent: Int, month: String) {
+        val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressTipJar) ?: return
+        val percentTv = findViewById<TextView>(R.id.txtTipJarPercent) ?: return
+        val titleTv = findViewById<TextView>(R.id.txtTipJarTitle)
+
+        // Update progress bar
+        progressBar.progress = percent
+
+        // Update percentage text
+        percentTv.text = getString(R.string.loyalty_value_format, percent) + "%"
+
+        // Update title with server month
+        if (titleTv != null && month.isNotEmpty()) {
+            titleTv.text = buildTipJarTitleSpan(month)
+        }
+
+        // Restore the normal subtitle (in case it was changed to the offline message)
+        val descView = findViewById<TextView>(R.id.tip_jar_desc_label)
+        if (descView != null) {
+            descView.text = getString(R.string.tip_jar_desc_label)
+            descView.visibility = View.VISIBLE
+        }
+    }
+
+    /**
+     * Apply cached (or default) tip jar progress values.
+     * Called when the server fetch fails or returns invalid data.
+     */
+    private fun applyCachedTipJarProgress() {
+        val cachedPercent = LoyaltyPrefs.getCachedPercent(this)
+        val cachedMonth = LoyaltyPrefs.getCachedMonth(this)
+
+        val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressTipJar) ?: return
+        val percentTv = findViewById<TextView>(R.id.txtTipJarPercent) ?: return
+
+        progressBar.progress = cachedPercent
+
+        if (cachedMonth.isNotEmpty()) {
+            percentTv.text = getString(R.string.loyalty_value_format, cachedPercent) + "%"
+            val titleTv = findViewById<TextView>(R.id.txtTipJarTitle)
+            if (titleTv != null) {
+                titleTv.text = buildTipJarTitleSpan(cachedMonth)
+            }
+
+            // Restore normal subtitle text + visibility
+            val descView = findViewById<TextView>(R.id.tip_jar_desc_label)
+            if (descView != null) {
+                descView.text = getString(R.string.tip_jar_desc_label)
+                descView.visibility = View.VISIBLE
+            }
+        } else {
+            // No cache — show 0% with offline subtitle
+            percentTv.text = "0%"
+            val descView = findViewById<TextView>(R.id.tip_jar_desc_label)
+            if (descView != null) {
+                descView.text = getString(R.string.tip_jar_offline_subtitle)
+                descView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    // ─── TV Tip Jar Notification ─────────────────────────────────
+
+    /**
+     * Update the TV notification bar with the given server values.
+     * Called on the main thread after a successful fetch.
+     * Uses findViewById which safely returns null on mobile.
+     */
+    private fun updateTvTipJarCard(percent: Int, month: String) {
+        val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressTvTipJar) ?: return
+        val percentTv = findViewById<TextView>(R.id.txtTvTipJarPercent) ?: return
+        val titleTv = findViewById<TextView>(R.id.txtTvTipJarTitle)
+
+        progressBar.progress = percent
+        percentTv.text = getString(R.string.loyalty_value_format, percent) + "%"
+
+        if (titleTv != null && month.isNotEmpty()) {
+            titleTv.text = buildTipJarTitleSpan(month)
+        }
+    }
+
+    /**
+     * Apply cached (or default) tip jar progress values to the TV notification bar.
+     * Called when the server fetch fails or returns invalid data.
+     */
+    private fun applyTvTipJarCachedValues() {
+        val cachedPercent = LoyaltyPrefs.getCachedPercent(this)
+        val cachedMonth = LoyaltyPrefs.getCachedMonth(this)
+
+        val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressTvTipJar) ?: return
+        val percentTv = findViewById<TextView>(R.id.txtTvTipJarPercent) ?: return
+
+        progressBar.progress = cachedPercent
+
+        if (cachedMonth.isNotEmpty()) {
+            percentTv.text = getString(R.string.loyalty_value_format, cachedPercent) + "%"
+            val titleTv = findViewById<TextView>(R.id.txtTvTipJarTitle)
+            if (titleTv != null) {
+                titleTv.text = buildTipJarTitleSpan(cachedMonth)
+            }
+        } else {
+            percentTv.text = "0%"
+        }
     }
 
     private fun applyViewMode() {
