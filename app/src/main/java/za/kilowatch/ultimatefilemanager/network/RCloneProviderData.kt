@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.network
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 
 /**
@@ -67,101 +68,122 @@ data class RCloneProviderInfo(
  * @see RCloneProviderInfo
  * @see RCloneProviderField
  */
-val ALL_RCLONE_PROVIDERS: List<RCloneProviderInfo> = listOf(
-    RCloneProviderInfo(
-        id = "filen",
-        nameResId = R.string.rclone_provider_filen,
-        iconResId = R.drawable.ic_rclone,
-        typeName = "filen",
-        fields = listOf(
-            RCloneProviderField(
-                key = "email",
-                labelResId = R.string.rclone_field_email,
-                inputType = FieldType.TEXT
-            ),
-            RCloneProviderField(
-                key = "password",
-                labelResId = R.string.rclone_field_password,
-                inputType = FieldType.PASSWORD
-            ),
-            RCloneProviderField(
-                key = "api_key",
-                labelResId = R.string.rclone_field_api_key,
-                inputType = FieldType.API_KEY
-            )
-        )
-    ),
-    RCloneProviderInfo(
-        id = "drime",
-        nameResId = R.string.rclone_provider_drime,
-        iconResId = R.drawable.ic_rclone,
-        typeName = "drime",
-        fields = listOf(
-            RCloneProviderField(
-                key = "access_token",
-                labelResId = R.string.rclone_field_access_token,
-                inputType = FieldType.TEXT,
-                helpUrl = "https://app.drime.cloud/developer"
-            )
-        )
-    ),
-    RCloneProviderInfo(
-        id = "mega",
-        nameResId = R.string.rclone_provider_mega,
-        iconResId = R.drawable.ic_rclone,
-        typeName = "mega",
-        fields = listOf(
-            RCloneProviderField(
-                key = "user",
-                labelResId = R.string.rclone_field_email,
-                inputType = FieldType.TEXT
-            ),
-            RCloneProviderField(
-                key = "pass",
-                labelResId = R.string.rclone_field_password,
-                inputType = FieldType.PASSWORD
-            )
-        )
-    ),
-    RCloneProviderInfo(
-        id = "koofr",
-        nameResId = R.string.rclone_provider_koofr,
-        iconResId = R.drawable.ic_rclone,
-        typeName = "koofr",
-        fields = listOf(
-            RCloneProviderField(
-                key = "user",
-                labelResId = R.string.rclone_field_email,
-                inputType = FieldType.TEXT
-            ),
-            RCloneProviderField(
-                key = "password",
-                labelResId = R.string.rclone_field_password,
-                inputType = FieldType.PASSWORD,
-                helpUrl = "https://app.koofr.net/app/admin/preferences/password",
-                helperTextResId = R.string.rclone_field_koofr_password_hint
-            ),
-            RCloneProviderField(
-                key = "endpoint",
-                labelResId = R.string.rclone_field_server_url,
-                inputType = FieldType.TEXT,
-                required = false,
-                defaultValue = "https://app.koofr.net"
-            )
-        )
-    ),
-    RCloneProviderInfo(
-        id = "premiumizeme",
-        nameResId = R.string.rclone_provider_premiumizeme,
-        iconResId = R.drawable.ic_rclone,
-        typeName = "premiumizeme",
-        fields = listOf(
-            RCloneProviderField(
-                key = "api_key",
-                labelResId = R.string.rclone_field_api_key,
-                inputType = FieldType.API_KEY,
-                helpUrl = "https://www.premiumize.me/account"
+val ALL_RCLONE_PROVIDERS: List<RCloneProviderInfo> = buildList {
+    add(
+        RCloneProviderInfo(
+            id = "filen",
+            nameResId = R.string.rclone_provider_filen,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "filen",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "email",
+                    labelResId = R.string.rclone_field_email,
+                    inputType = FieldType.TEXT
+                ),
+                RCloneProviderField(
+                    key = "password",
+                    labelResId = R.string.rclone_field_password,
+                    inputType = FieldType.PASSWORD
+                ),
+                RCloneProviderField(
+                    key = "api_key",
+                    labelResId = R.string.rclone_field_api_key,
+                    inputType = FieldType.API_KEY
+                )
             )
         )
     )
-)
+    add(
+        RCloneProviderInfo(
+            id = "drime",
+            nameResId = R.string.rclone_provider_drime,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "drime",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "access_token",
+                    labelResId = R.string.rclone_field_access_token,
+                    inputType = FieldType.TEXT,
+                    helpUrl = "https://app.drime.cloud/developer"
+                )
+            )
+        )
+    )
+    add(
+        RCloneProviderInfo(
+            id = "mega",
+            nameResId = R.string.rclone_provider_mega,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "mega",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "user",
+                    labelResId = R.string.rclone_field_email,
+                    inputType = FieldType.TEXT
+                ),
+                RCloneProviderField(
+                    key = "pass",
+                    labelResId = R.string.rclone_field_password,
+                    inputType = FieldType.PASSWORD
+                )
+            )
+        )
+    )
+    add(
+        RCloneProviderInfo(
+            id = "koofr",
+            nameResId = R.string.rclone_provider_koofr,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "koofr",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "user",
+                    labelResId = R.string.rclone_field_email,
+                    inputType = FieldType.TEXT
+                ),
+                RCloneProviderField(
+                    key = "password",
+                    labelResId = R.string.rclone_field_password,
+                    inputType = FieldType.PASSWORD,
+                    helpUrl = "https://app.koofr.net/app/admin/preferences/password",
+                    helperTextResId = R.string.rclone_field_koofr_password_hint
+                ),
+                RCloneProviderField(
+                    key = "endpoint",
+                    labelResId = R.string.rclone_field_server_url,
+                    inputType = FieldType.TEXT,
+                    required = false,
+                    defaultValue = "https://app.koofr.net"
+                )
+            )
+        )
+    )
+    add(
+        RCloneProviderInfo(
+            id = "premiumizeme",
+            nameResId = R.string.rclone_provider_premiumizeme,
+            iconResId = R.drawable.ic_rclone,
+            typeName = "premiumizeme",
+            fields = listOf(
+                RCloneProviderField(
+                    key = "api_key",
+                    labelResId = R.string.rclone_field_api_key,
+                    inputType = FieldType.API_KEY,
+                    helpUrl = "https://www.premiumize.me/account"
+                )
+            )
+        )
+    )
+    if (BuildConfig.BOX_ENABLED) {
+        add(
+            RCloneProviderInfo(
+                id = "box",
+                nameResId = R.string.rclone_provider_box,
+                iconResId = R.drawable.ic_rclone,
+                typeName = "box",
+                fields = emptyList()
+            )
+        )
+    }
+}

@@ -3448,6 +3448,44 @@ https://myaccount.google.com/permissions\n
     <string name="onedrive_auth_profile_failed">प्रामाणिक सफलता, लेकिन खाता विवरण प्राप्त करने में विफल</string>
     <string name="auth_library_loading">प्रमाणीकरण लाइब्रेरी लोड हो रही है...</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+अधिकृत बॉक्स
+</string>
+    <string name="box_device_code_subtitle">
+किसी अन्य डिवाइस का उपयोग करके अपने टीवी को लिंक करें
+</string>
+    <string name="box_device_code_step1">
+1. अपने फोन या कंप्यूटर पर, यहां जाएं:
+</string>
+    <string name="box_device_code_step2">
+2. नीचे दिखाया गया कोड दर्ज करें:
+</string>
+    <string name="box_device_code_scan_qr">
+या QR कोड स्कैन करें
+</string>
+    <string name="box_code_expires_in">
+कोड %1$s में समाप्त होता है
+</string>
+    <string name="box_code_expired">
+कोड समाप्त हो गया. कृपया पुनः प्रारंभ करें।
+</string>
+    <string name="box_auth_waiting">
+प्राधिकरण के लिए इंतजार करो…
+</string>
+    <string name="box_auth_success">
+%1$s के रूप में कनेक्ट किया गया
+</string>
+    <string name="box_auth_failed">
+प्रमाणीकरण प्रारंभ करने में विफल: %1$s
+</string>
+    <string name="box_auth_network_error">
+नेटवर्क त्रुटि। अपने कनेक्शन की जांच करें और पुन: प्रयास करें।
+</string>
+    <string name="box_auth_denied">
+प्राधिकरण अस्वीकार कर दिया गया या रद्द कर दिया गया।
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">शिज़ुकु</string>
     <string name="shizuku_subtitle">शिज़ुकु प्रबंधक</string>
@@ -5702,6 +5740,21 @@ Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
 प्रीमियमीकरण करें
+</string>
+    <string name="rclone_provider_box">
+डिब्बा
+</string>
+    <string name="rclone_btn_authenticate">
+प्रमाणित
+</string>
+    <string name="rclone_box_auth_success">
+प्रमाणीकरण सफल
+</string>
+    <string name="rclone_box_auth_failed">
+प्रमाणीकरण विफल: %s
+</string>
+    <string name="rclone_auth_required">
+कृपया सहेजने से पहले प्रमाणित करें
 </string>
     <string name="rclone_field_server_url">
 सर्वर यूआरएल

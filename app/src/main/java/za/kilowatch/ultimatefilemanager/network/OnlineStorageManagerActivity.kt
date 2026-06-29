@@ -189,7 +189,7 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                 // premiumizeme's Config callback always returns OAuth state,
                 // which deadlocks on Android.  Bypass it by relying on the config
                 // file that decryptToTempFile already wrote — rclone reads lazily.
-                if (providerType != "premiumizeme") {
+                if (providerType != "premiumizeme" && providerType != "box") {
                     val createParams = org.json.JSONObject().apply {
                         put("name", storage.id)
                         put("type", providerType)
@@ -204,7 +204,7 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                         return@launch
                     }
                 } else {
-                    GoRoLog.i("RClone", "Skipping config/create for premiumizeme — using file-based config")
+                    GoRoLog.i("RClone", "Skipping config/create for $providerType — using file-based config")
                 }
 
                 // Navigate to the browser
@@ -256,8 +256,16 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
             private val del  = view.findViewById<ImageView?>(R.id.btnDelete)
 
             fun bind(storage: OnlineStorage) {
-                txtEmail.text = storage.email
-                txtProvider.text = storage.provider.getFriendlyName(itemView.context)
+                txtEmail.text = storage.displayName.ifBlank { storage.email }
+                txtProvider.text = if (storage.provider == OnlineStorageProvider.RCLONE && storage.refreshToken == RCloneProviderActivity.BOX_REFRESH_TOKEN_MARKER) {
+                    if (storage.email.isNotBlank()) {
+                        "${itemView.context.getString(R.string.rclone_provider_box)} - ${storage.email}"
+                    } else {
+                        itemView.context.getString(R.string.rclone_provider_box)
+                    }
+                } else {
+                    storage.provider.getFriendlyName(itemView.context)
+                }
 
                 if (storage.isCredentialsStripped) {
                     layoutWarning?.visibility = View.VISIBLE

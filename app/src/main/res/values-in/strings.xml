@@ -3448,6 +3448,44 @@ To fix this:\n
     <string name="onedrive_auth_profile_failed">Auth success, but failed to get account details</string>
     <string name="auth_library_loading">Authentication library loading…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+Authorize Box
+</string>
+    <string name="box_device_code_subtitle">
+Link your TV using another device
+</string>
+    <string name="box_device_code_step1">
+1. On your phone or computer, go to:
+</string>
+    <string name="box_device_code_step2">
+2. Enter the code shown below:
+</string>
+    <string name="box_device_code_scan_qr">
+Or scan QR Code
+</string>
+    <string name="box_code_expires_in">
+Code expires in %1$s
+</string>
+    <string name="box_code_expired">
+Code expired. Please restart.
+</string>
+    <string name="box_auth_waiting">
+Waiting for authorization…
+</string>
+    <string name="box_auth_success">
+Connected as %1$s
+</string>
+    <string name="box_auth_failed">
+Failed to start authentication: %1$s
+</string>
+    <string name="box_auth_network_error">
+Network error. Please check your connection and try again.
+</string>
+    <string name="box_auth_denied">
+Authorization was denied or cancelled.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">Shizuku</string>
     <string name="shizuku_subtitle">Shizuku Manager</string>
@@ -5702,6 +5740,21 @@ Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
 Premiumize
+</string>
+    <string name="rclone_provider_box">
+Box
+</string>
+    <string name="rclone_btn_authenticate">
+Authenticate
+</string>
+    <string name="rclone_box_auth_success">
+Authentication successful
+</string>
+    <string name="rclone_box_auth_failed">
+Authentication failed: %s
+</string>
+    <string name="rclone_auth_required">
+Please authenticate before saving
 </string>
     <string name="rclone_field_server_url">
 Server URL

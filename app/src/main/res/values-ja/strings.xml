@@ -3448,6 +3448,44 @@ UFM は Google ドライブ アカウントで認証できませんでした。�
     <string name="onedrive_auth_profile_failed">認証は成功しましたが、アカウントの詳細を取得できませんでした</string>
     <string name="auth_library_loading">認証ライブラリを読み込み中…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+承認ボックス
+</string>
+    <string name="box_device_code_subtitle">
+別のデバイスを使用してテレビをリンクする
+</string>
+    <string name="box_device_code_step1">
+1. 携帯電話またはコンピュータで、次の場所に移動します。
+</string>
+    <string name="box_device_code_step2">
+2. 以下に示すコードを入力します。
+</string>
+    <string name="box_device_code_scan_qr">
+またはQRコードをスキャンしてください
+</string>
+    <string name="box_code_expires_in">
+コードの有効期限は %1$s に切れます
+</string>
+    <string name="box_code_expired">
+コードの有効期限が切れました。再起動してください。
+</string>
+    <string name="box_auth_waiting">
+承認を待っています…
+</string>
+    <string name="box_auth_success">
+%1$s として接続されています
+</string>
+    <string name="box_auth_failed">
+認証の開始に失敗しました: %1$s
+</string>
+    <string name="box_auth_network_error">
+ネットワークエラー。接続を確認して、もう一度試してください。
+</string>
+    <string name="box_auth_denied">
+承認が拒否またはキャンセルされました。
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">しずく</string>
     <string name="shizuku_subtitle">しずくマネージャー</string>
@@ -5702,6 +5740,21 @@ APIアクセストークン
 </string>
     <string name="rclone_provider_premiumizeme">
 プレミアム化
+</string>
+    <string name="rclone_provider_box">
+箱
+</string>
+    <string name="rclone_btn_authenticate">
+認証する
+</string>
+    <string name="rclone_box_auth_success">
+認証成功
+</string>
+    <string name="rclone_box_auth_failed">
+認証に失敗しました: %s
+</string>
+    <string name="rclone_auth_required">
+保存する前に認証してください
 </string>
     <string name="rclone_field_server_url">
 サーバーURL

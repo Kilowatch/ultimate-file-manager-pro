@@ -76,6 +76,17 @@ object RCloneShareClient {
             try {
                 val versionResult = gomobile.Gomobile.rcloneRPC("core/version", "{}")
                 if (versionResult.status == 200L) {
+                    // rclone is already initialized elsewhere — but we still need to set
+                    // the config path so config/create writes to the correct location.
+                    val ctx = UfmApplication.instance
+                    val tempFile = RCloneConfig.decryptToTempFile(ctx)
+                    if (tempFile != null) {
+                        gomobile.Gomobile.rcloneRPC(
+                            "config/setpath",
+                            """{"path": "${tempFile.absolutePath}"}"""
+                        )
+                        GoRoLog.d(TAG, "Config path set to ${tempFile.absolutePath} (reusing existing rclone)")
+                    }
                     initialized = true
                     GoRoLog.i(TAG, "rclone already initialized, reusing existing instance")
                     return
@@ -89,6 +100,7 @@ object RCloneShareClient {
                 ?: throw IOException("No RClone configuration found — please add a provider first")
             gomobile.Gomobile.rcloneInitialize()
             val pathJson = JSONObject().apply { put("path", tempFile.absolutePath) }
+            GoRoLog.d(TAG, "ensureInitialized: setting config path to ${tempFile.absolutePath}")
             val setResult = gomobile.Gomobile.rcloneRPC("config/setpath", pathJson.toString())
             if (setResult.status != 200L) {
                 tempFile.delete()
@@ -182,6 +194,76 @@ object RCloneShareClient {
             RCloneConfig.cleanTempConfig(UfmApplication.instance)
         }
         synchronized(createdRemotesLock) { createdRemotes.clear() }
+    }
+
+    /**
+     * Performs a full, clean rclone initialization for a specific [storage] entry,
+     * then registers the remote so it is immediately available for RC calls.
+     *
+     * This mirrors the logic in [OnlineStorageManagerActivity.launchRCloneBrowse] and
+     * must be called on a **background thread** before launching [NetworkBrowserActivity]
+     * for any RClone provider — regardless of which screen initiates the browse.
+     *
+     * Steps:
+     *  1. If rclone is already running, finalize it to clear any stale Fs cache.
+     *  2. Decrypt credentials to a temp rclone.conf.
+     *  3. Call [gomobile.Gomobile.rcloneInitialize] + `config/setpath`.
+     *  4. Call `config/create` for this specific remote (skipped for premiumizeme
+     *     and box which rely on the file-based config).
+     *  5. Mark [initialized] and add the remote to [createdRemotes].
+     *
+     * @throws IOException if no config is found or initialization fails.
+     */
+    suspend fun prepareForBrowse(storage: OnlineStorage) = withContext(Dispatchers.IO) {
+        synchronized(initLock) {
+            // Finalize any stale rclone state so the Fs cache is cleared.
+            // The gomobile library caches filesystem instances by remote name, so
+            // a previous session pointing at a different remote/config must be
+            // reset before we can create a new one reliably.
+            if (initialized) {
+                try { gomobile.Gomobile.rcloneFinalize() } catch (_: Exception) {}
+                initialized = false
+            }
+            synchronized(createdRemotesLock) { createdRemotes.clear() }
+        }
+
+        val ctx = UfmApplication.instance
+
+        val configFile = RCloneConfig.decryptToTempFile(ctx)
+            ?: throw IOException("RClone credentials not found for ${storage.displayName}. Please re-add the storage.")
+
+        gomobile.Gomobile.rcloneInitialize()
+        gomobile.Gomobile.rcloneRPC("config/setpath", """{"path": "${configFile.absolutePath}"}""")
+
+        // Read the encrypted config to get provider parameters for this remote.
+        val providers = RCloneConfig.readEncrypted(ctx)
+        // Look up by storage.id; fall back to the first entry for backward compat.
+        val remoteName = storage.id
+        val providerConfig = providers[remoteName]
+            ?: providers.keys.firstOrNull()?.let { providers[it] }
+        val providerType = providerConfig?.get("type") ?: ""
+
+        // premiumizeme and box rely on the file written by decryptToTempFile above —
+        // calling config/create for them triggers a blocking OAuth callback on Android.
+        if (providerType != "premiumizeme" && providerType != "box" && providerConfig != null) {
+            val params = JSONObject(providerConfig.filterKeys { it != "type" } as Map<*, *>)
+            val createParams = JSONObject().apply {
+                put("name", remoteName)
+                put("type", providerType)
+                put("parameters", params)
+            }
+            val result = gomobile.Gomobile.rcloneRPC("config/create", createParams.toString())
+            if (result.status != 200L) {
+                GoRoLog.e(TAG, "prepareForBrowse: config/create failed for $remoteName: ${result.output}")
+                throw IOException("Failed to initialize RClone remote: ${result.output}")
+            }
+        } else {
+            GoRoLog.i(TAG, "prepareForBrowse: skipping config/create for $providerType — using file-based config")
+        }
+
+        synchronized(initLock) { initialized = true }
+        synchronized(createdRemotesLock) { createdRemotes.add(remoteName) }
+        GoRoLog.i(TAG, "prepareForBrowse: rclone ready for remote '$remoteName' (type=$providerType)")
     }
 
     // ── Sentinel detection ──────────────────────────────────────────────

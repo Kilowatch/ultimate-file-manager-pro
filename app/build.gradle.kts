@@ -156,6 +156,8 @@ android {
             buildConfigField("Boolean", "AMAZON_RATING_ENABLED", "false")
             // OneDrive (MSAL) is available on Google Play builds.
             buildConfigField("Boolean", "ONEDRIVE_ENABLED", "true")
+            // Box — available on Google Play builds.
+            buildConfigField("Boolean", "BOX_ENABLED", "true")
         }
         create("amazon") {
             dimension = "store"
@@ -166,6 +168,8 @@ android {
             // OneDrive is disabled on Amazon builds: MSAL pulls in Google Play Services
             // (com.google.android.gms:*) which Amazon's policy scanner rejects.
             buildConfigField("Boolean", "ONEDRIVE_ENABLED", "false")
+            // Box — available on Amazon builds (no Google Play Services dependency).
+            buildConfigField("Boolean", "BOX_ENABLED", "true")
         }
 
         create("foss") {
@@ -178,6 +182,7 @@ android {
             buildConfigField("Boolean", "ONEDRIVE_ENABLED", "false")
             buildConfigField("Boolean", "GOOGLE_DRIVE_ENABLED", "false")
             buildConfigField("Boolean", "DROPBOX_ENABLED", "false")
+            buildConfigField("Boolean", "BOX_ENABLED", "false")
         }
 
     }

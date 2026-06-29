@@ -3448,6 +3448,44 @@ Pour résoudre ce problème :\n
     <string name="onedrive_auth_profile_failed">Authentification réussie, mais échec d\'obtention des détails du compte</string>
     <string name="auth_library_loading">Chargement de la bibliothèque d\'authentification…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+Boîte d\'autorisation
+</string>
+    <string name="box_device_code_subtitle">
+Associez votre téléviseur à l\'aide d\'un autre appareil
+</string>
+    <string name="box_device_code_step1">
+1. Sur votre téléphone ou votre ordinateur, accédez à :
+</string>
+    <string name="box_device_code_step2">
+2. Entrez le code ci-dessous :
+</string>
+    <string name="box_device_code_scan_qr">
+Ou scannez le QR Code
+</string>
+    <string name="box_code_expires_in">
+Le code expire dans %1$s
+</string>
+    <string name="box_code_expired">
+Code expiré. Veuillez redémarrer.
+</string>
+    <string name="box_auth_waiting">
+En attente d\'autorisation…
+</string>
+    <string name="box_auth_success">
+Connecté en tant que %1$s
+</string>
+    <string name="box_auth_failed">
+Échec du démarrage de l\'authentification : %1$s
+</string>
+    <string name="box_auth_network_error">
+Erreur réseau. Veuillez vérifier votre connexion et réessayer.
+</string>
+    <string name="box_auth_denied">
+L\'autorisation a été refusée ou annulée.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">Shizuku</string>
     <string name="shizuku_subtitle">Directeur Shizuku</string>
@@ -5702,6 +5740,21 @@ Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
 Premiumiser
+</string>
+    <string name="rclone_provider_box">
+Boîte
+</string>
+    <string name="rclone_btn_authenticate">
+Authentifier
+</string>
+    <string name="rclone_box_auth_success">
+Authentification réussie
+</string>
+    <string name="rclone_box_auth_failed">
+Échec de l\'authentification : %s
+</string>
+    <string name="rclone_auth_required">
+Veuillez vous authentifier avant d\'enregistrer
 </string>
     <string name="rclone_field_server_url">
 URL du serveur

@@ -17,6 +17,7 @@ import androidx.core.widget.NestedScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -34,6 +35,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import org.json.JSONObject
 import java.io.File
 
@@ -45,6 +47,12 @@ import java.io.File
  * and Save (writes to rclone.conf via [RCloneConfig]).
  */
 class RCloneProviderActivity : AppCompatActivity() {
+
+    companion object {
+        /** Type marker stored in [OnlineStorage.refreshToken] to distinguish Box
+         *  from other RClone providers in the storage list display. */
+        const val BOX_REFRESH_TOKEN_MARKER = "box"
+    }
 
     private var isTv = false
     private var selectedProvider: RCloneProviderInfo? = null
@@ -76,6 +84,36 @@ class RCloneProviderActivity : AppCompatActivity() {
 
     /** Tracks whether rclone has been initialized for this session. */
     private var rcloneInitialized = false
+
+    // ── Box OAuth state ─────────────────────────────────────────────────────────
+    private var boxTokenJson: String? = null
+    private var boxEmail: String = ""
+
+    private val boxAuthLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        GoRoLog.d("BoxAuth", "=== boxAuthLauncher result ===")
+        GoRoLog.d("BoxAuth", "resultCode=${result.resultCode} (RESULT_OK=$RESULT_OK)")
+        if (result.resultCode == RESULT_OK) {
+            boxTokenJson = result.data?.getStringExtra(BoxAuthActivity.EXTRA_TOKEN_JSON)
+            boxEmail = result.data?.getStringExtra(BoxAuthActivity.EXTRA_EMAIL) ?: ""
+            GoRoLog.d("BoxAuth", "Token received: ${boxTokenJson != null}, email=$boxEmail")
+            if (boxTokenJson != null) {
+                if (etStorageName.text.isNullOrBlank()) {
+                    etStorageName.setText(boxEmail)
+                }
+                setSaveButtonEnabled(true)
+                showResult(getString(R.string.rclone_box_auth_success), isError = false)
+                GoRoLog.d("BoxAuth", "Save enabled — user can now save")
+            } else {
+                GoRoLog.e("BoxAuth", "RESULT_OK but no token_json extra in intent data")
+            }
+        } else {
+            GoRoLog.e("BoxAuth", "Auth cancelled or failed (resultCode=${result.resultCode})")
+            showResult(getString(R.string.rclone_box_auth_failed, "Authorization cancelled"), isError = true)
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -166,7 +204,7 @@ class RCloneProviderActivity : AppCompatActivity() {
         cardFields = findViewById(R.id.cardFields)
         etStorageName = findViewById(R.id.etStorageName)
         etStorageName.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
+            if (hasFocus && !isTv) {
                 svFields.post {
                     val parent = etStorageName.parent as? View
                     if (parent != null) {
@@ -182,7 +220,13 @@ class RCloneProviderActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
-        btnTest.setOnClickListener { testConnection() }
+        btnTest.setOnClickListener {
+            if (selectedProvider?.id == "box") {
+                authenticateBox()
+            } else {
+                testConnection()
+            }
+        }
         btnSave.setOnClickListener { saveProvider() }
     }
 
@@ -299,6 +343,7 @@ class RCloneProviderActivity : AppCompatActivity() {
      * within the fields section. Shows the indicator only when content overflows.
      */
     private fun updateFieldsScrollThumbPosition() {
+        if (isTv || !::svFields.isInitialized) return
         val contentHeight = svFields.getChildAt(0)?.height ?: return
         val viewHeight = svFields.height
         val hasOverflow = contentHeight > viewHeight
@@ -368,7 +413,17 @@ class RCloneProviderActivity : AppCompatActivity() {
         etStorageName.setText("")   // Clear storage name on provider switch
         renderFields(provider)
         txtResult.visibility = View.GONE
-        setSaveButtonEnabled(false)
+
+        if (provider.id == "box") {
+            // Box uses OAuth instead of credential testing
+            boxTokenJson = null
+            boxEmail = ""
+            setButtonText(btnTest, R.string.rclone_btn_authenticate)
+            setSaveButtonEnabled(false)
+        } else {
+            setButtonText(btnTest, R.string.rclone_btn_test)
+            setSaveButtonEnabled(false)
+        }
     }
 
     /**
@@ -414,7 +469,7 @@ class RCloneProviderActivity : AppCompatActivity() {
 
             fieldInputs[field.key] = input
             input.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
+                if (hasFocus && !isTv) {
                     svFields.post {
                         svFields.smoothScrollTo(0, fieldContainer.top + fieldRoot.top)
                     }
@@ -470,9 +525,33 @@ class RCloneProviderActivity : AppCompatActivity() {
         }
 
         cardFields.visibility = View.VISIBLE
-        svFields.post {
-            updateFieldsScrollThumbPosition()
+        if (!isTv) {
+            svFields.post {
+                updateFieldsScrollThumbPosition()
+            }
         }
+    }
+
+    /**
+     * Launches the Box OAuth flow. Dispatches to [BoxAuthActivity] (mobile)
+     * or [BoxDeviceCodeAuthActivity] (TV). The result is handled by
+     * [boxAuthLauncher].
+     */
+    private fun authenticateBox() {
+        GoRoLog.d("BoxAuth", "=== authenticateBox() called ===")
+        GoRoLog.d("BoxAuth", "isTv=$isTv, networkAvailable=${isNetworkAvailable()}")
+        if (!isNetworkAvailable()) {
+            showResult(getString(R.string.rclone_error_no_network), isError = true)
+            return
+        }
+        val intent = if (isTv) {
+            GoRoLog.d("BoxAuth", "Launching BoxDeviceCodeAuthActivity (TV)")
+            Intent(this, BoxDeviceCodeAuthActivity::class.java)
+        } else {
+            GoRoLog.d("BoxAuth", "Launching BoxAuthActivity (Mobile)")
+            Intent(this, BoxAuthActivity::class.java)
+        }
+        boxAuthLauncher.launch(intent)
     }
 
     private fun testConnection() {
@@ -652,6 +731,44 @@ class RCloneProviderActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
+                if (provider.id == "box") {
+                    // ── Box-specific save path ──────────────────────────────────────
+                    // Box uses OAuth tokens stored directly in the config — no need to
+                    // initialise rclone or call core/obscure (boxConfig is a pure map builder).
+                    val tokenJson = boxTokenJson
+                    if (tokenJson == null) {
+                        withContext(Dispatchers.Main) {
+                            showResult(getString(R.string.rclone_auth_required), isError = true)
+                            setSaveButtonEnabled(true)
+                            setButtonText(btnSave, R.string.rclone_btn_save)
+                        }
+                        return@launch
+                    }
+                    val configMap = RCloneConfig.boxConfig(tokenJson)
+                    val existingProviders = RCloneConfig.readEncrypted(this@RCloneProviderActivity)
+                    val mergedProviders = existingProviders.toMutableMap()
+
+                    val storage = OnlineStorage(
+                        provider = OnlineStorageProvider.RCLONE,
+                        email = boxEmail,
+                        displayName = displayName,
+                        refreshToken = BOX_REFRESH_TOKEN_MARKER
+                    )
+                    OnlineStorageRepository.getInstance(this@RCloneProviderActivity).save(storage)
+
+                    mergedProviders[storage.id] = configMap
+                    mergedProviders.remove(RCloneShareClient.REMOTE_NAME)
+                    RCloneConfig.saveEncrypted(this@RCloneProviderActivity, mergedProviders)
+                    RCloneShareClient.resetInitialized()
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@RCloneProviderActivity, R.string.rclone_save_success, Toast.LENGTH_SHORT).show()
+                        setResult(RESULT_OK)
+                        finish()
+                    }
+                    return@launch
+                }
+
                 // Ensure rclone is initialized so core/obscure RPC is available
                 ensureRcloneInitialized()
 

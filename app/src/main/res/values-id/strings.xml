@@ -3448,6 +3448,44 @@ Untuk memperbaikinya:\n
     <string name="onedrive_auth_profile_failed">Otentikasi berhasil, tetapi gagal mendapatkan detail akun</string>
     <string name="auth_library_loading">Pemuatan pustaka autentikasi…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+Kotak Otorisasi
+</string>
+    <string name="box_device_code_subtitle">
+Tautkan TV Anda menggunakan perangkat lain
+</string>
+    <string name="box_device_code_step1">
+1. Di ponsel atau komputer Anda, buka:
+</string>
+    <string name="box_device_code_step2">
+2. Masukkan kode yang ditunjukkan di bawah ini:
+</string>
+    <string name="box_device_code_scan_qr">
+Atau pindai Kode QR
+</string>
+    <string name="box_code_expires_in">
+Masa berlaku kode habis dalam %1$s
+</string>
+    <string name="box_code_expired">
+Kode sudah habis masa berlakunya. Silakan mulai ulang.
+</string>
+    <string name="box_auth_waiting">
+Menunggu otorisasi…
+</string>
+    <string name="box_auth_success">
+Terhubung sebagai %1$s
+</string>
+    <string name="box_auth_failed">
+Gagal memulai autentikasi: %1$s
+</string>
+    <string name="box_auth_network_error">
+Kesalahan jaringan. Silakan periksa koneksi Anda dan coba lagi.
+</string>
+    <string name="box_auth_denied">
+Otorisasi ditolak atau dibatalkan.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">Shizuku</string>
     <string name="shizuku_subtitle">Manajer Shizuku</string>
@@ -5702,6 +5740,21 @@ Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
 Premiumkan
+</string>
+    <string name="rclone_provider_box">
+Kotak
+</string>
+    <string name="rclone_btn_authenticate">
+Otentikasi
+</string>
+    <string name="rclone_box_auth_success">
+Otentikasi berhasil
+</string>
+    <string name="rclone_box_auth_failed">
+Autentikasi gagal: %s
+</string>
+    <string name="rclone_auth_required">
+Harap autentikasi sebelum menyimpan
 </string>
     <string name="rclone_field_server_url">
 URL server

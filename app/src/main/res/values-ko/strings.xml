@@ -3448,6 +3448,44 @@ UFM이 Google 드라이브 계정으로 인증할 수 없습니다. 연결 토�
     <string name="onedrive_auth_profile_failed">인증에 성공했지만 계정 세부정보를 가져오지 못했습니다.</string>
     <string name="auth_library_loading">인증 라이브러리 로드 중…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+박스 승인
+</string>
+    <string name="box_device_code_subtitle">
+다른 장치를 사용하여 TV 연결
+</string>
+    <string name="box_device_code_step1">
+1. 휴대폰이나 컴퓨터에서 다음으로 이동합니다.
+</string>
+    <string name="box_device_code_step2">
+2. 아래 표시된 코드를 입력하세요.
+</string>
+    <string name="box_device_code_scan_qr">
+또는 QR 코드를 스캔하세요.
+</string>
+    <string name="box_code_expires_in">
+코드는 %1$s 후에 만료됩니다.
+</string>
+    <string name="box_code_expired">
+코드가 만료되었습니다. 다시 시작하세요.
+</string>
+    <string name="box_auth_waiting">
+승인을 기다리는 중…
+</string>
+    <string name="box_auth_success">
+%1$s로 연결됨
+</string>
+    <string name="box_auth_failed">
+인증 시작 실패: %1$s
+</string>
+    <string name="box_auth_network_error">
+네트워크 오류입니다. 연결을 확인하고 다시 시도해 주세요.
+</string>
+    <string name="box_auth_denied">
+승인이 거부되거나 취소되었습니다.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">시즈쿠</string>
     <string name="shizuku_subtitle">시즈쿠 매니저</string>
@@ -5702,6 +5740,21 @@ API 액세스 토큰
 </string>
     <string name="rclone_provider_premiumizeme">
 프리미엄화하다
+</string>
+    <string name="rclone_provider_box">
+상자
+</string>
+    <string name="rclone_btn_authenticate">
+인증하다
+</string>
+    <string name="rclone_box_auth_success">
+인증 성공
+</string>
+    <string name="rclone_box_auth_failed">
+인증 실패: %s
+</string>
+    <string name="rclone_auth_required">
+저장하기 전에 인증하세요
 </string>
     <string name="rclone_field_server_url">
 서버 URL

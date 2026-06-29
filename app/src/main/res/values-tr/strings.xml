@@ -3448,6 +3448,44 @@ Bunu düzeltmek için:\n
     <string name="onedrive_auth_profile_failed">Kimlik doğrulama başarılı ancak hesap ayrıntıları alınamadı</string>
     <string name="auth_library_loading">Kimlik doğrulama kitaplığı yükleniyor…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+Yetki Kutusu
+</string>
+    <string name="box_device_code_subtitle">
+TV\'nizi başka bir cihaz kullanarak bağlayın
+</string>
+    <string name="box_device_code_step1">
+1. Telefonunuzda veya bilgisayarınızda şu adrese gidin:
+</string>
+    <string name="box_device_code_step2">
+2. Aşağıda gösterilen kodu girin:
+</string>
+    <string name="box_device_code_scan_qr">
+Veya QR Kodunu tarayın
+</string>
+    <string name="box_code_expires_in">
+Kodun süresi %1$s içinde doluyor
+</string>
+    <string name="box_code_expired">
+Kodun süresi doldu. Lütfen yeniden başlatın.
+</string>
+    <string name="box_auth_waiting">
+Yetki bekleniyor…
+</string>
+    <string name="box_auth_success">
+%1$s olarak bağlanıldı
+</string>
+    <string name="box_auth_failed">
+Kimlik doğrulama başlatılamadı: %1$s
+</string>
+    <string name="box_auth_network_error">
+Ağ hatası. Lütfen bağlantınızı kontrol edip tekrar deneyin.
+</string>
+    <string name="box_auth_denied">
+Yetki reddedildi veya iptal edildi.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">Şizuku</string>
     <string name="shizuku_subtitle">Shizuku Teknik Direktörü</string>
@@ -5702,6 +5740,21 @@ Küfür
 </string>
     <string name="rclone_provider_premiumizeme">
 Premiumlaştır
+</string>
+    <string name="rclone_provider_box">
+Kutu
+</string>
+    <string name="rclone_btn_authenticate">
+Kimlik doğrulama
+</string>
+    <string name="rclone_box_auth_success">
+Kimlik doğrulama başarılı
+</string>
+    <string name="rclone_box_auth_failed">
+Kimlik doğrulama başarısız oldu: %s
+</string>
+    <string name="rclone_auth_required">
+Lütfen kaydetmeden önce kimliğinizi doğrulayın
 </string>
     <string name="rclone_field_server_url">
 Sunucu URL\'si

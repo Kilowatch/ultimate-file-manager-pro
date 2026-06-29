@@ -607,6 +607,19 @@
             </intent-filter>
         </activity>
 
+        <!-- Box TV: Device Authorization Grant -->
+        <activity
+            android:name=".network.BoxDeviceCodeAuthActivity"
+            android:exported="false"
+            android:label="@string/rclone_provider_box"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <!-- Box Mobile: OAuth via embedded WebView (no external redirect needed) -->
+        <activity
+            android:name=".network.BoxAuthActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
         <activity
             android:name=".network.S3SetupActivity"
             android:exported="false"

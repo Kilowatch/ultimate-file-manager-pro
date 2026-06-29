@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.lifecycleScope
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -516,24 +517,48 @@ class CustomTileActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             item.isOnlineStorage -> {
+                val storage = item.onlineStorage
+                val isRClone = storage?.provider == za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE
+
                 if (isDrivePicker) {
+                    // Drive picker only returns a result — no network I/O here.
                     val data = Intent().apply {
                         putExtra("is_network", true)
                         putExtra("isOnlineStorage", true)
-                        putExtra("share_id", item.onlineStorage?.id)
+                        putExtra("share_id", storage?.id)
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                     }
                     setResult(RESULT_OK, data)
                     finish()
                     return
                 }
-                val intent = Intent(this, za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity::class.java).apply {
-                    putExtra("isOnlineStorage", true)
-                    putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                    putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
-                    applyPickerExtras()
+
+                val launchBrowser = {
+                    val intent = Intent(this, za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity::class.java).apply {
+                        putExtra("isOnlineStorage", true)
+                        putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                        putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                        applyPickerExtras()
+                    }
+                    if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
                 }
-                if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)
+
+                if (isRClone && storage != null) {
+                    lifecycleScope.launch {
+                        try {
+                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.prepareForBrowse(storage)
+                            launchBrowser()
+                        } catch (e: Exception) {
+                            android.widget.Toast.makeText(
+                                this@CustomTileActivity,
+                                "RClone error: ${e.message}",
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                } else {
+                    launchBrowser()
+                }
             }
             item.isNetworkRoot -> {
                 if (isDrivePicker) {

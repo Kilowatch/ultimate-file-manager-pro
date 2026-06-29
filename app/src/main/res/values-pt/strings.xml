@@ -3448,6 +3448,44 @@ Para corrigir isso:\n
     <string name="onedrive_auth_profile_failed">Autenticação bem-sucedida, mas não foi possível obter os detalhes da conta</string>
     <string name="auth_library_loading">Carregando biblioteca de autenticação…</string>
 
+    <!-- Box Cloud Storage -->
+    <string name="box_device_code_title">
+Autorizar caixa
+</string>
+    <string name="box_device_code_subtitle">
+Vincule sua TV usando outro dispositivo
+</string>
+    <string name="box_device_code_step1">
+1. No seu telefone ou computador, acesse:
+</string>
+    <string name="box_device_code_step2">
+2. Digite o código mostrado abaixo:
+</string>
+    <string name="box_device_code_scan_qr">
+Ou escaneie o QR Code
+</string>
+    <string name="box_code_expires_in">
+O código expira em %1$s
+</string>
+    <string name="box_code_expired">
+O código expirou. Por favor reinicie.
+</string>
+    <string name="box_auth_waiting">
+Aguardando autorização…
+</string>
+    <string name="box_auth_success">
+Conectado como %1$s
+</string>
+    <string name="box_auth_failed">
+Falha ao iniciar a autenticação: %1$s
+</string>
+    <string name="box_auth_network_error">
+Erro de rede. Verifique sua conexão e tente novamente.
+</string>
+    <string name="box_auth_denied">
+A autorização foi negada ou cancelada.
+</string>
+
     <!-- Shizuku Manager -->
     <string name="shizuku_title">Shizuku</string>
     <string name="shizuku_subtitle">Gerente Shizuku</string>
@@ -5702,6 +5740,21 @@ Koofr
 </string>
     <string name="rclone_provider_premiumizeme">
 Premiumizar
+</string>
+    <string name="rclone_provider_box">
+Caixa
+</string>
+    <string name="rclone_btn_authenticate">
+Autenticar
+</string>
+    <string name="rclone_box_auth_success">
+Autenticação bem-sucedida
+</string>
+    <string name="rclone_box_auth_failed">
+Falha na autenticação: %s
+</string>
+    <string name="rclone_auth_required">
+Autentique antes de salvar
 </string>
     <string name="rclone_field_server_url">
 URL do servidor

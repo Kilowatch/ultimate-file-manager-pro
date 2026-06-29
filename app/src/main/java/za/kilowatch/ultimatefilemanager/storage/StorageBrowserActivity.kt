@@ -1700,106 +1700,155 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
             item.isOnlineStorage -> {
-                if (isKeyfilePickerMode || isCertPickerMode) {
-                    pickerLauncher.launch(
-                        Intent(this, NetworkBrowserActivity::class.java).apply {
-                            putExtra("isOnlineStorage", true)
-                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
-                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                val storage = item.onlineStorage
+                val isRClone = storage?.provider == za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE
+
+                /**
+                 * Runs [block] immediately for non-RClone providers.
+                 * For RClone providers, calls [RCloneShareClient.prepareForBrowse] on a
+                 * background thread first, then runs [block] on the main thread.
+                 * Shows a toast if initialization fails.
+                 */
+                fun launchWithRCloneInit(block: () -> Unit) {
+                    if (isRClone && storage != null) {
+                        lifecycleScope.launch {
+                            try {
+                                za.kilowatch.ultimatefilemanager.network.RCloneShareClient.prepareForBrowse(storage)
+                                block()
+                            } catch (e: Exception) {
+                                android.widget.Toast.makeText(
+                                    this@StorageBrowserActivity,
+                                    "RClone error: ${e.message}",
+                                    android.widget.Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
-                    )
+                    } else {
+                        block()
+                    }
+                }
+
+                if (isKeyfilePickerMode || isCertPickerMode) {
+                    launchWithRCloneInit {
+                        pickerLauncher.launch(
+                            Intent(this, NetworkBrowserActivity::class.java).apply {
+                                putExtra("isOnlineStorage", true)
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                            }
+                        )
+                    }
                 } else if (isPickerMode) {
                     if (isDrivePicker) {
+                        // Drive picker only returns a result — no network I/O here.
                         val data = Intent().apply {
                             putExtra("is_network", true)
                             putExtra("isOnlineStorage", true)
-                            putExtra("share_id", item.onlineStorage?.id)
+                            putExtra("share_id", storage?.id)
                             putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
                         }
                         setResult(RESULT_OK, data)
                         finish()
                     } else {
+                        launchWithRCloneInit {
+                            val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                                putExtra("isOnlineStorage", true)
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                            }
+                            pickerLauncher.launch(intent)
+                        }
+                    }
+                } else if (isQuickTransferPickerMode) {
+                    launchWithRCloneInit {
                         val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
                             putExtra("isOnlineStorage", true)
-                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
-                            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, pickerExtensions)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
+                            putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
+                                this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
                         }
                         pickerLauncher.launch(intent)
                     }
-                } else if (isQuickTransferPickerMode) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, true)
-                        putExtra(NetworkBrowserActivity.EXTRA_QUICK_TRANSFER_OP,
-                            this@StorageBrowserActivity.intent.getStringExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_OP))
-                    }
-                    pickerLauncher.launch(intent)
                 } else if (isLocationPickerMode) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(NetworkBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(NetworkBrowserActivity.EXTRA_LOCATION_PICKER, true)
+                        }
+                        pickerLauncher.launch(intent)
                     }
-                    pickerLauncher.launch(intent)
                 } else if (isShareDestPickerMode) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_DEST_PICKER, true)
+                        }
+                        pickerLauncher.launch(intent)
                     }
-                    pickerLauncher.launch(intent)
                 } else if (isScannerFolderPicker) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+                        }
+                        pickerLauncher.launch(intent)
                     }
-                    pickerLauncher.launch(intent)
                 } else if (isAutoBackupFolderPicker) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+                        }
+                        pickerLauncher.launch(intent)
                     }
-                    pickerLauncher.launch(intent)
                 } else if (isImageCompressDestPickerMode) {
-                    val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                        putExtra("isOnlineStorage", true)
-                        putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                        putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                        putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                    launchWithRCloneInit {
+                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                            putExtra("isOnlineStorage", true)
+                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                            putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+                        }
+                        pickerLauncher.launch(intent)
                     }
-                    pickerLauncher.launch(intent)
                 } else {
                     val isDefaultTwinWindow = za.kilowatch.ultimatefilemanager.settings.TwinWindowPreferenceManager.isDefaultStartup(this)
                     if (isDefaultTwinWindow && !isCompressDestPickerMode && !isQuickTransferPickerMode) {
+                        // Twin Window: launch directly — TwinWindowActivity handles its own init.
                         val intent = Intent(this, TwinWindowActivity::class.java).apply {
-                            putExtra(TwinWindowActivity.EXTRA_TOP_SHARE_ID, item.onlineStorage?.id)
+                            putExtra(TwinWindowActivity.EXTRA_TOP_SHARE_ID, storage?.id)
                         }
                         startActivity(intent)
                         showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
                     } else {
-                        val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
-                            putExtra("isOnlineStorage", true)
-                            putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, item.onlineStorage?.id)
-                            putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${item.onlineStorage?.email}")
-                            if (isCompressDestPickerMode) {
-                                putExtra(NetworkBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                        launchWithRCloneInit {
+                            val intent = Intent(this, NetworkBrowserActivity::class.java).apply {
+                                putExtra("isOnlineStorage", true)
+                                putExtra(NetworkBrowserActivity.EXTRA_SHARE_ID, storage?.id)
+                                putExtra(NetworkBrowserActivity.EXTRA_STORAGE_LABEL, "${item.label} - ${storage?.email}")
+                                if (isCompressDestPickerMode) {
+                                    putExtra(NetworkBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
+                                }
                             }
+                            startActivity(intent)
                         }
-                        startActivity(intent)
                     }
                 }
             }
+
             item.isFavoriteTile -> {
                 if (item.favoriteIsFolder) {
                     val intent = if (item.favoriteIsNetwork) {

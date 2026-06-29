@@ -80,6 +80,22 @@ object RCloneConfig {
      *                 endpoint is used. When null or blank, uses the default
      *                 Koofr provider (https://app.koofr.net).
      */
+    /**
+     * Builds the rclone.conf section for a Box remote.
+     *
+     * Box authenticates via OAuth 2.0. The [tokenJson] is the full OAuth token
+     * response JSON (access_token + refresh_token + expiry) returned by the
+     * OAuth flow.
+     *
+     * box_sub_type is always "user" (not "enterprise") for consumer accounts.
+     *
+     * @param tokenJson The full OAuth token JSON string from Box's token endpoint.
+     */
+    fun boxConfig(tokenJson: String): Map<String, String> = mapOf(
+        "type" to "box",
+        "token" to tokenJson
+    )
+
     fun koofrConfig(user: String, password: String, endpoint: String? = null): Map<String, String> {
         val map = mutableMapOf(
             "type" to "koofr",

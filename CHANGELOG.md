@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Range selection in edit mode: long press a file to set an anchor, then long press another file to select everything between them (local, network, and online storage; mobile and TV)
 - Premiumize.me cloud storage support via RClone (API key auth, mobile + TV)
+- Box cloud storage support via RClone (OAuth 2.0) — mobile & TV, Google Play & Amazon builds only. Users authenticate through their browser (mobile) or device code (TV).
 - RClone provider selector: new scrollable list view with 3 visible items, custom scrollbar, and "Scroll for more providers" hint
 - RCloneProviderViewModel for rotation state preservation
 
@@ -17,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RClone provider selector: Test Connection and Save buttons stacked full-width (both filled)
 - RClone provider selector: clearing storage name and all fields on provider switch (also applies to TV)
 - Network Shares → Add Share: clearing all connection fields when switching share types (applies to mobile and TV)
+
+### Fixed
+- Fixed RClone storages failing to load from the Main Menu after a force close by ensuring the clean-up and remote registration sequence matches the Online Storage browser initialization.
+- Fixed Box RClone storage creation overwriting the user-defined storage name with the account email address upon authentication completion.
 
 ## [1.5.9] — 2026-06-25
 
