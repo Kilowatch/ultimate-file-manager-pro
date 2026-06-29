@@ -99,6 +99,14 @@ class FileAdapter(
     var isSelectionMode = false
         private set
 
+    /**
+     * Tracks the adapter position of the last long-pressed item for range selection.
+     * When the user long-presses a second file while in selection mode, all file entries
+     * between this anchor and the new position are selected. Reset to [RecyclerView.NO_POSITION]
+     * on [exitSelectionMode], [deselectAll], and [submitList].
+     */
+    var longPressAnchorIndex: Int = RecyclerView.NO_POSITION
+
     fun submitList(
         newFiles: List<File>, 
         indexedPaths: Set<String> = emptySet(), 
@@ -227,6 +235,7 @@ class FileAdapter(
     fun selectAll() {
         isSelectionMode = true
         selectedPaths.clear()
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         files.forEach { selectedPaths.add(it.absolutePath) }
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedPaths.size)
@@ -238,6 +247,7 @@ class FileAdapter(
     /** Deselect all while staying in selection mode. */
     fun deselectAll() {
         selectedPaths.clear()
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(0)
     }
@@ -246,6 +256,7 @@ class FileAdapter(
     fun exitSelectionMode() {
         selectedPaths.clear()
         isSelectionMode = false
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(0)
     }
@@ -253,6 +264,12 @@ class FileAdapter(
     /**
      * Enter selection mode and select the item at [position].
      * Called by the TV RecyclerView key listener on D-pad long-press.
+     *
+     * Behaviour depends on the current selection state:
+     * - Not in selection mode → enter mode, set anchor, select the file.
+     * - In selection mode + no anchor → set anchor, select the file.
+     * - In selection mode + valid anchor → range-select from anchor to [position],
+     *   then update the anchor to [position].
      */
     fun enterSelectionModeAt(position: Int) {
         if (position < 0 || position >= items.size) return
@@ -260,10 +277,36 @@ class FileAdapter(
         val file = item.javaFile
         if (!isSelectionMode) {
             isSelectionMode = true
+            longPressAnchorIndex = position
+            selectedPaths.add(file.absolutePath)
+        } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
+            // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
+            longPressAnchorIndex = position
+            selectedPaths.add(file.absolutePath)
+        } else {
+            // Already in selection mode with an anchor — do range selection
+            selectRange(longPressAnchorIndex, position)
+            longPressAnchorIndex = position
         }
-        selectedPaths.add(file.absolutePath)
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedPaths.size)
+    }
+
+    /**
+     * Selects every file entry between [fromPos] and [toPos] in the adapter's [items] list,
+     * inclusive of both endpoints. Date-group headers ([ListItem.Header]) are silently skipped.
+     * Works in both directions (order of arguments does not matter).
+     */
+    private fun selectRange(fromPos: Int, toPos: Int) {
+        val start = minOf(fromPos, toPos)
+        val end = maxOf(fromPos, toPos)
+        for (i in start..end) {
+            val entry = items[i]
+            if (entry is ListItem.FileEntry) {
+                selectedPaths.add(entry.javaFile.absolutePath)
+            }
+            // Headers (ListItem.Header) are automatically skipped
+        }
     }
 
     private fun toggleSelection(file: File) {
@@ -627,7 +670,13 @@ class FileAdapter(
                     if (item is ListItem.FileEntry) {
                         val currentFile = item.javaFile
                         if (isSelectionMode) {
+                            val wasSelected = currentFile.absolutePath in selectedPaths
                             toggleSelection(currentFile)
+                            if (!wasSelected) {
+                                // File was newly added to the selection — update the anchor
+                                // so the next long press ranges from this position.
+                                longPressAnchorIndex = pos
+                            }
                             notifyItemChanged(pos)
                         } else {
                             // Pass the icon container as the shared element view for image transitions
@@ -637,7 +686,7 @@ class FileAdapter(
                 }
             }
 
-            // Long-press to enter selection mode (or show context menu)
+            // Long-press to enter selection mode, set anchor, or do range selection.
             itemView.setOnLongClickListener {
                 val pos = bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
@@ -645,10 +694,26 @@ class FileAdapter(
                     if (item is ListItem.FileEntry) {
                         val currentFile = item.javaFile
                         if (onItemLongClick != null) {
+                            // Delegated (SearchActivity context menu path)
                             onItemLongClick.invoke(currentFile)
                         } else if (!isSelectionMode) {
+                            // First long press: enter selection mode, set anchor, select file
                             isSelectionMode = true
+                            longPressAnchorIndex = pos
                             selectedPaths.add(currentFile.absolutePath)
+                            notifyItemRangeChanged(0, itemCount)
+                            onSelectionChanged(selectedPaths.size)
+                        } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
+                            // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
+                            longPressAnchorIndex = pos
+                            selectedPaths.add(currentFile.absolutePath)
+                            notifyItemRangeChanged(0, itemCount)
+                            onSelectionChanged(selectedPaths.size)
+                        } else if (longPressAnchorIndex != RecyclerView.NO_POSITION) {
+                            // Second (or subsequent) long press while in selection mode:
+                            // range-select from anchor to this position, then update anchor
+                            selectRange(longPressAnchorIndex, pos)
+                            longPressAnchorIndex = pos
                             notifyItemRangeChanged(0, itemCount)
                             onSelectionChanged(selectedPaths.size)
                         }

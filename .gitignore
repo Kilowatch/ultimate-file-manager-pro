@@ -91,6 +91,13 @@ build_output.txt
 # tv_promo_1280x720.png
 # Roboto-Bold.ttf
 
+# ── Build & Deploy Tool ─────────────────────────────────────---
+build_tool_vault.json
+build_tool_config.json
+build_output/
+APKScripts/
+build.bat
+
 # ── Python / Scripts (Internal Dev Tools) ────────────────────
 # Comment these out if you WANT to include your helper scripts:
 translate_strings*.py

@@ -69,6 +69,14 @@ class NetworkFileAdapter(
     var isSelectionMode = false
         private set
 
+    /**
+     * Tracks the adapter position of the last long-pressed item for range selection.
+     * When a second long press occurs while in selection mode, all file entries
+     * between this anchor and the new position are selected. Reset on
+     * [exitSelectionMode], [deselectAll], and [submitList].
+     */
+    var longPressAnchorIndex: Int = RecyclerView.NO_POSITION
+
     private var searchBasePath: String? = null
 
     private val dateFormat = SimpleDateFormat("MMM dd, yyyy • HH:mm", Locale.getDefault())
@@ -126,7 +134,8 @@ class NetworkFileAdapter(
         if (selectedFiles.size != prevSelectionSize) {
             onSelectionChanged(selectedFiles.size)
         }
-        
+        longPressAnchorIndex = RecyclerView.NO_POSITION
+
         items.clear()
         if (isGroupedByDate) {
             val folders = newFiles.filter { it.isDirectory }
@@ -172,12 +181,14 @@ class NetworkFileAdapter(
     
     fun selectAll() {
         selectedFiles.addAll(files)
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedFiles.size)
     }
 
     fun deselectAll() {
         selectedFiles.clear()
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(0)
     }
@@ -187,6 +198,7 @@ class NetworkFileAdapter(
     fun exitSelectionMode() {
         isSelectionMode = false
         selectedFiles.clear()
+        longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(0)
     }
@@ -194,15 +206,49 @@ class NetworkFileAdapter(
     /**
      * Enter selection mode and select the item at [position].
      * Called by the TV RecyclerView key listener on D-pad long-press.
+     *
+     * Behaviour depends on the current selection state:
+     * - Not in selection mode → enter mode, set anchor, select the file.
+     * - In selection mode + no anchor → set anchor, select the file.
+     * - In selection mode + valid anchor → range-select from anchor to [position],
+     *   then update the anchor to [position].
      */
     fun enterSelectionModeAt(position: Int) {
         if (position < 0 || position >= items.size) return
         val item = items[position] as? za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry ?: return
         val file = item.file
-        if (!isSelectionMode) isSelectionMode = true
-        selectedFiles.add(file)
+        if (!isSelectionMode) {
+            isSelectionMode = true
+            longPressAnchorIndex = position
+            selectedFiles.add(file)
+        } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
+            // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
+            longPressAnchorIndex = position
+            selectedFiles.add(file)
+        } else {
+            // Already in selection mode with an anchor — do range selection
+            selectRange(longPressAnchorIndex, position)
+            longPressAnchorIndex = position
+        }
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedFiles.size)
+    }
+
+    /**
+     * Selects every file entry between [fromPos] and [toPos] in the adapter's [items] list,
+     * inclusive of both endpoints. Date-group headers ([ListItem.Header]) are silently skipped.
+     * Works in both directions (order of arguments does not matter).
+     */
+    private fun selectRange(fromPos: Int, toPos: Int) {
+        val start = minOf(fromPos, toPos)
+        val end = maxOf(fromPos, toPos)
+        for (i in start..end) {
+            val entry = items[i]
+            if (entry is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
+                selectedFiles.add(entry.file)
+            }
+            // Headers are automatically skipped
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -301,7 +347,13 @@ class NetworkFileAdapter(
                     if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
                         val file = item.file
                         if (isSelectionMode) {
+                            val wasSelected = file in selectedFiles
                             toggleSelection(file)
+                            if (!wasSelected) {
+                                // File was newly added to the selection — update the anchor
+                                // so the next long press ranges from this position.
+                                longPressAnchorIndex = pos
+                            }
                         } else {
                             onItemClick(file)
                         }
@@ -316,11 +368,25 @@ class NetworkFileAdapter(
                     if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
                         val file = item.file
                         if (!isSelectionMode) {
+                            // First long press: enter selection mode, set anchor, select file
                             isSelectionMode = true
-                            toggleSelection(file)
+                            longPressAnchorIndex = pos
+                            selectedFiles.add(file)
                             notifyItemRangeChanged(0, itemCount)
-                        } else {
-                            toggleSelection(file)
+                            onSelectionChanged(selectedFiles.size)
+                        } else if (longPressAnchorIndex == RecyclerView.NO_POSITION) {
+                            // Already in selection mode but no anchor (e.g. after selectAll/deselectAll)
+                            longPressAnchorIndex = pos
+                            selectedFiles.add(file)
+                            notifyItemRangeChanged(0, itemCount)
+                            onSelectionChanged(selectedFiles.size)
+                        } else if (longPressAnchorIndex != RecyclerView.NO_POSITION) {
+                            // Second (or subsequent) long press while in selection mode:
+                            // range-select from anchor to this position, then update anchor
+                            selectRange(longPressAnchorIndex, pos)
+                            longPressAnchorIndex = pos
+                            notifyItemRangeChanged(0, itemCount)
+                            onSelectionChanged(selectedFiles.size)
                         }
                     }
                 }

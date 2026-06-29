@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.6.1] — 2026-06-29
 
 ### Added
+- Range selection in edit mode: long press a file to set an anchor, then long press another file to select everything between them (local, network, and online storage; mobile and TV)
 - Premiumize.me cloud storage support via RClone (API key auth, mobile + TV)
 - RClone provider selector: new scrollable list view with 3 visible items, custom scrollbar, and "Scroll for more providers" hint
 - RCloneProviderViewModel for rotation state preservation
