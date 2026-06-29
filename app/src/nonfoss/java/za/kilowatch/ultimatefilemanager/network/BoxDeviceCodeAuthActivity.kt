@@ -1,12 +1,18 @@
 package za.kilowatch.ultimatefilemanager.network
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
+import android.text.InputType
 import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -14,11 +20,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
@@ -33,18 +41,12 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
- * TV Box OAuth 2.0 authentication using the Device Authorization Grant (RFC 8628).
+ * TV Box OAuth 2.0 authentication using a QR code + manual code entry flow.
  *
- * Reuses the OneDrive device code layout (activity_onedrive_device_code_auth_tv.xml).
- *
- * Flow:
- *  1. Request a device code from Box's OAuth token endpoint.
- *  2. Display user_code, verification_url, and QR code on screen.
- *  3. Poll the token endpoint until the user authorizes on another device.
- *  4. On success, return token JSON + email via intent result.
- *
- * NOTE: Reuses `activity_onedrive_device_code_auth_tv.xml` layout — if that
- * layout is modified for OneDrive-specific content, verify Box is not affected.
+ * Box doesn't support device code grant and WebView D-pad focus is unreliable
+ * on TV, so this shows the OAuth URL as a QR code. The user opens it on their
+ * phone, authorizes, and enters the auth code from the redirect URL into the
+ * TV. All UI is built programmatically to avoid layout conflicts.
  */
 class BoxDeviceCodeAuthActivity : AppCompatActivity() {
 
@@ -56,8 +58,7 @@ class BoxDeviceCodeAuthActivity : AppCompatActivity() {
     }
     private val gson = Gson()
 
-    private var countDownTimer: CountDownTimer? = null
-    private var pollingActive = false
+    private var codeInput: TextInputEditText? = null
 
     companion object {
         const val EXTRA_TOKEN_JSON = "token_json"
@@ -73,247 +74,261 @@ class BoxDeviceCodeAuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        setContentView(R.layout.activity_onedrive_device_code_auth_tv)
+        // Build the full screen programmatically — no XML layout
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor("#1A1A2E"))
+            id = View.generateViewId()
+        }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        setContentView(root)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
             insets
         }
 
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
-            pollingActive = false
-            finish()
+        // ── Header with back button ──
+        val header = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(16), dp(16), dp(16), dp(16))
         }
-        findViewById<TextView>(R.id.txtAuthTitle).text = getString(R.string.box_device_code_title)
-        findViewById<TextView>(R.id.txtStatus).text = getString(R.string.box_auth_waiting)
-
-        startDeviceCodeFlow()
-    }
-
-    override fun onDestroy() {
-        pollingActive = false
-        countDownTimer?.cancel()
-        super.onDestroy()
-    }
-
-    private data class DeviceCodeResponse(
-        val device_code: String,
-        val user_code: String,
-        val verification_url: String,
-        val expires_in: Int,
-        val interval: Int = 5
-    )
-
-    private fun startDeviceCodeFlow() {
-        findViewById<ProgressBar>(R.id.progressQr).visibility = View.VISIBLE
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val response = fetchDeviceCode()
-                withContext(Dispatchers.Main) {
-                    updateUiWithDeviceCode(response)
-                    startPolling(response)
-                }
-            } catch (e: Exception) {
-                GoRoLog.e("BoxDeviceAuth", "Failed to get device code", e)
-                withContext(Dispatchers.Main) {
-                    showAuthErrorDialog(getString(R.string.box_auth_failed, e.message ?: "Unknown error"))
-                }
+        val btnBack = ImageView(this).apply {
+            setImageResource(R.drawable.ic_arrow_back)
+            setPadding(dp(12), dp(12), dp(12), dp(12))
+            setBackgroundResource(R.drawable.selector_tv_icon_btn)
+            isFocusable = true
+            setOnClickListener { finish() }
+            layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
+        }
+        val title = TextView(this).apply {
+            text = getString(R.string.box_device_code_title)
+            textSize = 28f
+            setTextColor(getColor(R.color.tv_text_primary))
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+                marginStart = dp(24)
             }
         }
-    }
+        header.addView(btnBack)
+        header.addView(title)
+        root.addView(header)
 
-    private suspend fun fetchDeviceCode(): DeviceCodeResponse = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .add("client_id", BoxOAuthConfig.CLIENT_ID)
-            .add("scope", BoxOAuthConfig.SCOPE)
-            .build()
-
-        httpClient.newCall(
-            Request.Builder()
-                .url("https://api.box.com/oauth2/token")
-                .post(formBody)
-                .build()
-        ).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            if (!response.isSuccessful) throw IOException("Device code request failed (${response.code}): $body")
-            val json = gson.fromJson(body, JsonObject::class.java)
-            DeviceCodeResponse(
-                device_code = json.get("device_code").asString,
-                user_code = json.get("user_code").asString,
-                verification_url = json.get("verification_url").asString,
-                expires_in = json.get("expires_in").asInt,
-                interval = if (json.has("interval")) json.get("interval").asInt else 5
+        // ── Scrollable content ──
+        val scroll = ScrollView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f
             )
         }
-    }
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(dp(32), dp(32), dp(32), dp(32))
+        }
+        scroll.addView(content)
+        root.addView(scroll)
 
-    private fun updateUiWithDeviceCode(response: DeviceCodeResponse) {
-        findViewById<ProgressBar>(R.id.progressQr).visibility = View.GONE
-        findViewById<TextView>(R.id.txtVerificationUrl).text = response.verification_url
-        findViewById<TextView>(R.id.txtUserCode).text = response.user_code
+        // ── Generate OAuth URL ──
+        val authUri = android.net.Uri.parse("https://account.box.com/api/oauth2/authorize").buildUpon()
+            .appendQueryParameter("client_id", BoxOAuthConfig.CLIENT_ID)
+            .appendQueryParameter("redirect_uri", BoxOAuthConfig.REDIRECT_URI)
+            .appendQueryParameter("response_type", "code")
+            .appendQueryParameter("scope", BoxOAuthConfig.SCOPE)
+            .build()
+        val authUrl = authUri.toString()
 
-        // Generate QR code from the verification URL (240dp = the CardView size in the layout)
-        val qrImage = findViewById<ImageView>(R.id.imgQrCode)
-        val qrSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240f, resources.displayMetrics).toInt()
-        QrCodeUtils.generateQrCode(response.verification_url, qrSizePx)?.let { bitmap ->
+        // ── QR Code ──
+        val qrImage = ImageView(this).apply {
+            val size = dp(220)
+            layoutParams = LinearLayout.LayoutParams(size, size)
+        }
+        content.addView(qrImage)
+
+        val progressQr = ProgressBar(this).apply {
+            layoutParams = LinearLayout.LayoutParams(dp(48), dp(48))
+        }
+        content.addView(progressQr)
+
+        // Generate QR in background
+        val qrSizePx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 220f, resources.displayMetrics).toInt()
+        QrCodeUtils.generateQrCode(authUrl, qrSizePx)?.let { bitmap ->
             qrImage.setImageBitmap(bitmap)
             qrImage.visibility = View.VISIBLE
+            progressQr.visibility = View.GONE
+        } ?: run { progressQr.visibility = View.GONE }
+
+        // ── URL (scrollable horizontally) ──
+        val urlLabel = TextView(this).apply {
+            text = "Scan the QR code or open this URL on your phone:"
+            textSize = 14f
+            setTextColor(getColor(R.color.tv_text_secondary))
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(16) }
+        }
+        content.addView(urlLabel)
+
+        val urlScroll = HorizontalScrollView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(4) }
+        }
+        val urlText = TextView(this).apply {
+            text = authUrl
+            textSize = 12f
+            setTextColor(getColor(R.color.tv_accent))
+        }
+        urlScroll.addView(urlText)
+        content.addView(urlScroll)
+
+        // ── Instruction text ──
+        val instr = TextView(this).apply {
+            text = "After authorizing, your browser will redirect to a page that says " +
+                   "the site cannot be reached. Look in the address bar for code=... " +
+                   "and copy that value, then paste it below."
+            textSize = 14f
+            setTextColor(getColor(R.color.tv_text_secondary))
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(20) }
+        }
+        content.addView(instr)
+
+        // ── Code input ──
+        val inputLayout = TextInputLayout(this).apply {
+            hint = "Paste the auth code here"
+            boxBackgroundMode = TextInputLayout.BOX_BACKGROUND_OUTLINE
+            setBoxBackgroundColorResource(android.R.color.transparent)
+            defaultHintTextColor = android.content.res.ColorStateList.valueOf(
+                getColor(R.color.tv_text_hint)
+            )
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(16) }
+        }
+        codeInput = TextInputEditText(this).apply {
+            inputType = InputType.TYPE_CLASS_TEXT
+            setTextColor(getColor(R.color.tv_text_primary))
+        }.also { inputLayout.addView(it) }
+        content.addView(inputLayout)
+
+        // ── Buttons ──
+        val btnRow = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.END
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = dp(16) }
         }
 
-        // Start countdown timer
-        val expiryTextView = findViewById<TextView>(R.id.txtExpiry)
-        countDownTimer = object : CountDownTimer(response.expires_in * 1000L, 1000L) {
-            override fun onTick(millisUntilFinished: Long) {
-                val seconds = millisUntilFinished / 1000
-                val minutes = seconds / 60
-                val secs = seconds % 60
-                expiryTextView.text = getString(
-                    R.string.box_code_expires_in,
-                    "%02d:%02d".format(minutes, secs)
-                )
+        val btnCancel = MaterialButton(this).apply {
+            text = getString(R.string.cancel)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply { marginEnd = dp(8) }
+        }
+        val btnOk = MaterialButton(this).apply {
+            text = getString(R.string.btn_ok)
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        btnOk.setOnClickListener {
+            val code = codeInput?.text?.toString()?.trim() ?: ""
+            if (code.isNotBlank()) {
+                btnOk.isEnabled = false
+                exchangeCode(code)
             }
+        }
+        btnCancel.setOnClickListener { finish() }
 
-            override fun onFinish() {
-                expiryTextView.text = getString(R.string.box_code_expired)
-                findViewById<TextView>(R.id.txtStatus).text = getString(R.string.box_code_expired)
-                pollingActive = false
-            }
-        }.start()
-
-        // Show polling indicator
-        findViewById<View>(R.id.layoutPolling).visibility = View.VISIBLE
-    }
-
-    private fun startPolling(response: DeviceCodeResponse) {
-        pollingActive = true
-        lifecycleScope.launch(Dispatchers.IO) {
-            while (pollingActive) {
-                delay((response.interval * 1000L).coerceAtLeast(2000L))
-                if (!pollingActive) break
-
-                try {
-                    val tokenResponse = pollForToken(response.device_code)
-                    if (tokenResponse != null) {
-                        pollingActive = false
-                        withContext(Dispatchers.Main) {
-                            handleAuthSuccess(tokenResponse)
-                        }
-                        return@launch
-                    }
-                } catch (e: Exception) {
-                    if (e.message?.contains("authorization_pending") == true ||
-                        e.message?.contains("slow_down") == true) {
-                        // Continue polling — these are expected
-                        continue
-                    }
-                    GoRoLog.e("BoxDeviceAuth", "Polling error", e)
-                    // Don't stop on transient errors
+        // TV focus styling
+        listOf(btnOk, btnCancel).forEach { btn ->
+            btn.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    v.setBackgroundColor(getColor(R.color.tv_button_focused_yellow))
+                    (v as MaterialButton).setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                } else {
+                    v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
+                    (v as MaterialButton).setTextColor(getColor(R.color.tv_text_primary))
                 }
             }
         }
+
+        btnRow.addView(btnCancel)
+        btnRow.addView(btnOk)
+        content.addView(btnRow)
     }
 
-    /**
-     * Polls Box's token endpoint. Returns the token JSON on success, or null
-     * if the user hasn't authorized yet (authorization_pending).
-     */
-    private suspend fun pollForToken(deviceCode: String): JsonObject? = withContext(Dispatchers.IO) {
-        val formBody = FormBody.Builder()
-            .add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
-            .add("client_id", BoxOAuthConfig.CLIENT_ID)
-            .add("client_secret", BoxOAuthConfig.CLIENT_SECRET)
-            .add("device_code", deviceCode)
-            .build()
+    private fun dp(value: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), resources.displayMetrics
+        ).toInt()
+    }
 
-        httpClient.newCall(
-            Request.Builder()
-                .url("https://api.box.com/oauth2/token")
-                .post(formBody)
-                .build()
-        ).execute().use { response ->
-            val body = response.body?.string() ?: ""
-            if (!response.isSuccessful) {
-                val errorJson = try {
-                    gson.fromJson(body, JsonObject::class.java)
-                } catch (_: Exception) { null }
-                val errorCode = errorJson?.get("error")?.asString ?: ""
-                if (errorCode == "authorization_pending" || errorCode == "slow_down") {
-                    return@use null
+    private fun exchangeCode(code: String) {
+        lifecycleScope.launch {
+            try {
+                GoRoLog.d("BoxDeviceAuth", "Exchanging manual code for tokens...")
+
+                val tokenResponse = withContext(Dispatchers.IO) {
+                    val formBody = FormBody.Builder()
+                        .add("code", code)
+                        .add("client_id", BoxOAuthConfig.CLIENT_ID)
+                        .add("client_secret", BoxOAuthConfig.CLIENT_SECRET)
+                        .add("redirect_uri", BoxOAuthConfig.REDIRECT_URI)
+                        .add("grant_type", "authorization_code")
+                        .build()
+
+                    httpClient.newCall(
+                        Request.Builder()
+                            .url("https://api.box.com/oauth2/token")
+                            .post(formBody)
+                            .build()
+                    ).execute().use { response ->
+                        val body = response.body?.string() ?: ""
+                        if (!response.isSuccessful) throw IOException("Token exchange failed (${response.code}): $body")
+                        gson.fromJson(body, JsonObject::class.java)
+                    }
                 }
-                throw IOException("Token poll failed (${response.code}): $body")
-            }
-            gson.fromJson(body, JsonObject::class.java)
-        }
-    }
 
-    private suspend fun handleAuthSuccess(tokenResponse: JsonObject) {
-        countDownTimer?.cancel()
-        val accessToken = tokenResponse.get("access_token").asString
+                val accessToken = tokenResponse.get("access_token").asString
 
-        try {
-            val userInfo = fetchUserInfo(accessToken)
-            val email = userInfo.get("login").asString
-            val tokenJson = gson.toJson(tokenResponse)
+                val userInfo = withContext(Dispatchers.IO) {
+                    httpClient.newCall(
+                        Request.Builder()
+                            .url("https://api.box.com/2.0/users/me")
+                            .header("Authorization", "Bearer $accessToken")
+                            .get()
+                            .build()
+                    ).execute().use { response ->
+                        if (!response.isSuccessful) throw IOException("Userinfo failed: ${response.code}")
+                        gson.fromJson(response.body?.string(), JsonObject::class.java)
+                    }
+                }
 
-            GoRoLog.d("BoxDeviceAuth", "Auth success for $email")
-            Toast.makeText(this@BoxDeviceCodeAuthActivity, "Connected to $email", Toast.LENGTH_SHORT).show()
+                val email = userInfo.get("login").asString
+                val tokenJson = gson.toJson(tokenResponse)
 
-            val resultIntent = Intent().apply {
-                putExtra(EXTRA_TOKEN_JSON, tokenJson)
-                putExtra(EXTRA_EMAIL, email)
-            }
-            setResult(RESULT_OK, resultIntent)
-            finish()
-        } catch (e: Exception) {
-            GoRoLog.e("BoxDeviceAuth", "Userinfo failed after auth success", e)
-            withContext(Dispatchers.Main) {
-                showAuthErrorDialog(getString(R.string.box_auth_failed, e.message ?: "User info error"))
-            }
-        }
-    }
+                GoRoLog.d("BoxDeviceAuth", "Auth success for $email")
+                Toast.makeText(this@BoxDeviceCodeAuthActivity, "Connected to $email", Toast.LENGTH_SHORT).show()
 
-    private suspend fun fetchUserInfo(accessToken: String): JsonObject = withContext(Dispatchers.IO) {
-        httpClient.newCall(
-            Request.Builder()
-                .url("https://api.box.com/2.0/users/me")
-                .header("Authorization", "Bearer $accessToken")
-                .get()
-                .build()
-        ).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("Userinfo failed: ${response.code}")
-            gson.fromJson(response.body?.string(), JsonObject::class.java)
-        }
-    }
-
-    private fun showAuthErrorDialog(message: String) {
-        if (isFinishing || isDestroyed) return
-
-        val dialogView = layoutInflater.inflate(R.layout.dialog_policy_blocked_tv, null)
-        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setCancelable(true)
-            .setView(dialogView)
-            .create()
-
-        dialogView.findViewById<TextView>(R.id.txtPolicyDetails)?.text = message
-        dialogView.findViewById<View>(R.id.btnPolicyOk).setOnClickListener {
-            dialog.dismiss()
-            finish()
-        }
-
-        val btnOk = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPolicyOk)
-        btnOk.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                v.setBackgroundColor(getColor(R.color.tv_button_focused_yellow))
-                (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_button_focused_yellow_text))
-            } else {
-                v.setBackgroundColor(getColor(R.color.tv_glass_white_10))
-                (v as com.google.android.material.button.MaterialButton).setTextColor(getColor(R.color.tv_text_primary))
+                val resultIntent = Intent().apply {
+                    putExtra(EXTRA_TOKEN_JSON, tokenJson)
+                    putExtra(EXTRA_EMAIL, email)
+                }
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            } catch (e: Exception) {
+                GoRoLog.e("BoxDeviceAuth", "Failed to exchange code", e)
+                codeInput?.text = null
+                codeInput?.isEnabled = true
+                Toast.makeText(this@BoxDeviceCodeAuthActivity,
+                    getString(R.string.box_auth_failed, e.message ?: "Error"), Toast.LENGTH_LONG).show()
             }
         }
-        btnOk.requestFocus()
-        dialog.show()
     }
 }

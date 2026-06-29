@@ -415,12 +415,17 @@ class RCloneProviderActivity : AppCompatActivity() {
         txtResult.visibility = View.GONE
 
         if (provider.id == "box") {
-            // Box uses OAuth instead of credential testing
+            // Box uses OAuth instead of credential testing.
+            // Only show Authenticate if no token has been obtained yet
+            // (prevents race with boxAuthLauncher on activity restore).
+            if (boxTokenJson == null) {
+                setButtonText(btnTest, R.string.rclone_btn_authenticate)
+                setSaveButtonEnabled(false)
+            }
+        } else {
+            // Switching away from Box — clear any stored OAuth state
             boxTokenJson = null
             boxEmail = ""
-            setButtonText(btnTest, R.string.rclone_btn_authenticate)
-            setSaveButtonEnabled(false)
-        } else {
             setButtonText(btnTest, R.string.rclone_btn_test)
             setSaveButtonEnabled(false)
         }
@@ -544,13 +549,9 @@ class RCloneProviderActivity : AppCompatActivity() {
             showResult(getString(R.string.rclone_error_no_network), isError = true)
             return
         }
-        val intent = if (isTv) {
-            GoRoLog.d("BoxAuth", "Launching BoxDeviceCodeAuthActivity (TV)")
-            Intent(this, BoxDeviceCodeAuthActivity::class.java)
-        } else {
-            GoRoLog.d("BoxAuth", "Launching BoxAuthActivity (Mobile)")
-            Intent(this, BoxAuthActivity::class.java)
-        }
+        // Both mobile and TV use WebView OAuth (TV needs D-pad JS injection).
+        GoRoLog.d("BoxAuth", "Launching BoxAuthActivity (WebView)")
+        val intent = Intent(this, BoxAuthActivity::class.java)
         boxAuthLauncher.launch(intent)
     }
 

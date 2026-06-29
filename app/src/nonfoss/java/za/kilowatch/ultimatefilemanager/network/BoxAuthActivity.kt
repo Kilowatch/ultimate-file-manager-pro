@@ -94,6 +94,9 @@ class BoxAuthActivity : AppCompatActivity() {
             savePassword = false
         }
 
+        // Focus the WebView so it receives key events for D-pad handling
+        webView.requestFocus()
+
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView,
@@ -118,6 +121,27 @@ class BoxAuthActivity : AppCompatActivity() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 GoRoLog.d("BoxAuth", "Page finished: ${url?.take(100)}")
                 progressBar.visibility = View.GONE
+                // Poll for the dynamically-rendered grant button.
+                // Give it tabindex and a yellow focus ring so the system D-pad
+                // can navigate between Grant/Deny and the user can see where focus is.
+                view?.evaluateJavascript(
+                    "javascript:(function(){" +
+                    "  var t=setInterval(function(){" +
+                    "    var g=document.querySelector('button[data-target-id=\"Button-grantAccessButtonLabel\"]');" +
+                    "    var d=document.querySelector('button[data-target-id=\"Button-denyAccessButtonLabel\"]');" +
+                    "    if(!g)return;clearInterval(t);" +
+                    "    [g,d].forEach(function(el){" +
+                    "      if(!el)return;" +
+                    "      el.tabIndex=0;" +
+                    "      el.style.outline='none';" +
+                    "      el.addEventListener('focus',function(){this.style.outline='3px solid #FFD700';});" +
+                    "      el.addEventListener('blur',function(){this.style.outline='none';});" +
+                    "    });" +
+                    "    g.focus();" +
+                    "  },200);" +
+                    "  setTimeout(function(){clearInterval(t);},20000);" +
+                    "})()", null
+                )
             }
 
             override fun onReceivedError(
