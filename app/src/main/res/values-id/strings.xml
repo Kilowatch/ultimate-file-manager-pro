@@ -5637,6 +5637,9 @@ Penyimpanan Cloud RClone
     <string name="rclone_select_provider">
 Pilih Penyedia
 </string>
+    <string name="rclone_select_provider_hint">
+Gulir untuk penyedia lainnya
+</string>
     <string name="rclone_btn_test">
 Uji Koneksi
 </string>
@@ -5696,6 +5699,9 @@ Mega
 </string>
     <string name="rclone_provider_koofr">
 Koofr
+</string>
+    <string name="rclone_provider_premiumizeme">
+Premiumkan
 </string>
     <string name="rclone_field_server_url">
 URL server

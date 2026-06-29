@@ -5637,6 +5637,9 @@ AMOLED
     <string name="rclone_select_provider">
 प्रदाता का चयन करें
 </string>
+    <string name="rclone_select_provider_hint">
+अधिक प्रदाताओं के लिए स्क्रॉल करें
+</string>
     <string name="rclone_btn_test">
 परीक्षण कनेक्शन
 </string>
@@ -5696,6 +5699,9 @@ RClone प्रारंभ नहीं किया गया है
 </string>
     <string name="rclone_provider_koofr">
 Koofr
+</string>
+    <string name="rclone_provider_premiumizeme">
+प्रीमियमीकरण करें
 </string>
     <string name="rclone_field_server_url">
 सर्वर यूआरएल

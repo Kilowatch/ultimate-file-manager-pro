@@ -5,6 +5,18 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] — 2026-06-29
+
+### Added
+- Premiumize.me cloud storage support via RClone (API key auth, mobile + TV)
+- RClone provider selector: new scrollable list view with 3 visible items, custom scrollbar, and "Scroll for more providers" hint
+- RCloneProviderViewModel for rotation state preservation
+
+### Changed
+- RClone provider selector: Test Connection and Save buttons stacked full-width (both filled)
+- RClone provider selector: clearing storage name and all fields on provider switch (also applies to TV)
+- Network Shares → Add Share: clearing all connection fields when switching share types (applies to mobile and TV)
+
 ## [1.5.9] — 2026-06-25
 
 ### Fixed

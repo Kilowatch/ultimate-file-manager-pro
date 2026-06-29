@@ -143,6 +143,25 @@ object RCloneShareClient {
             put("parameters", params)
         }
 
+        // premiumizeme's Config callback always returns OAuth state, which
+        // can deadlock on Android.  Bypass it by writing directly to the config
+        // file — rclone reads remotes lazily from the file on each access.
+        if (type == "premiumizeme") {
+            val ctx2 = UfmApplication.instance
+            val configFile = RCloneConfig.decryptToTempFile(ctx2)
+            if (configFile != null) {
+                GoRoLog.i(TAG, "Remote '$remoteName' already in config file, skipping config/create")
+                gomobile.Gomobile.rcloneRPC(
+                    "config/setpath",
+                    """{"path": "${configFile.absolutePath}"}"""
+                )
+                synchronized(createdRemotesLock) { createdRemotes.add(remoteName) }
+            } else {
+                GoRoLog.w(TAG, "No config file for premiumizeme remote $remoteName")
+            }
+            return
+        }
+
         val result = gomobile.Gomobile.rcloneRPC("config/create", createParams.toString())
         if (result.status == 200L) {
             synchronized(createdRemotesLock) { createdRemotes.add(remoteName) }

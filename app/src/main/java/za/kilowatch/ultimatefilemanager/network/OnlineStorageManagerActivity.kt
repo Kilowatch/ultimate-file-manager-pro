@@ -185,18 +185,26 @@ class OnlineStorageManagerActivity : AppCompatActivity() {
                 // Use storage.id as the unique remote name — matches the key
                 // used in the encrypted config file, so the temp .conf and the
                 // in-memory RC remote are always in sync.
-                val createParams = org.json.JSONObject().apply {
-                    put("name", storage.id)
-                    put("type", providerJson.optString("type", providerId))
-                    put("parameters", providerJson)
-                }
-                val createResult = gomobile.Gomobile.rcloneRPC("config/create", createParams.toString())
-                if (createResult.status != 200L) {
-                    GoRoLog.e("RClone", "Failed to create remote: ${createResult.output}")
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(ctx, "Failed to initialize: ${createResult.output}", Toast.LENGTH_LONG).show()
+                val providerType = providerJson.optString("type", providerId)
+                // premiumizeme's Config callback always returns OAuth state,
+                // which deadlocks on Android.  Bypass it by relying on the config
+                // file that decryptToTempFile already wrote — rclone reads lazily.
+                if (providerType != "premiumizeme") {
+                    val createParams = org.json.JSONObject().apply {
+                        put("name", storage.id)
+                        put("type", providerType)
+                        put("parameters", providerJson)
                     }
-                    return@launch
+                    val createResult = gomobile.Gomobile.rcloneRPC("config/create", createParams.toString())
+                    if (createResult.status != 200L) {
+                        GoRoLog.e("RClone", "Failed to create remote: ${createResult.output}")
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(ctx, "Failed to initialize: ${createResult.output}", Toast.LENGTH_LONG).show()
+                        }
+                        return@launch
+                    }
+                } else {
+                    GoRoLog.i("RClone", "Skipping config/create for premiumizeme — using file-based config")
                 }
 
                 // Navigate to the browser

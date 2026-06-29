@@ -149,5 +149,19 @@ val ALL_RCLONE_PROVIDERS: List<RCloneProviderInfo> = listOf(
                 defaultValue = "https://app.koofr.net"
             )
         )
+    ),
+    RCloneProviderInfo(
+        id = "premiumizeme",
+        nameResId = R.string.rclone_provider_premiumizeme,
+        iconResId = R.drawable.ic_rclone,
+        typeName = "premiumizeme",
+        fields = listOf(
+            RCloneProviderField(
+                key = "api_key",
+                labelResId = R.string.rclone_field_api_key,
+                inputType = FieldType.API_KEY,
+                helpUrl = "https://www.premiumize.me/account"
+            )
+        )
     )
 )

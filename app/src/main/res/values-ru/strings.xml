@@ -5637,6 +5637,9 @@ RClone
     <string name="rclone_select_provider">
 Выберите поставщика
 </string>
+    <string name="rclone_select_provider_hint">
+Прокрутите, чтобы увидеть больше провайдеров
+</string>
     <string name="rclone_btn_test">
 Тестовое соединение
 </string>
@@ -5696,6 +5699,9 @@ RClone не инициализируется
 </string>
     <string name="rclone_provider_koofr">
 Куфр
+</string>
+    <string name="rclone_provider_premiumizeme">
+Премиумизировать
 </string>
     <string name="rclone_field_server_url">
 URL-адрес сервера

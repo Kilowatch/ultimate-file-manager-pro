@@ -5637,6 +5637,9 @@ Almacenamiento en la nube RClone
     <string name="rclone_select_provider">
 Seleccionar Proveedor
 </string>
+    <string name="rclone_select_provider_hint">
+Desplácese para ver más proveedores
+</string>
     <string name="rclone_btn_test">
 Conexión de prueba
 </string>
@@ -5696,6 +5699,9 @@ Mega
 </string>
     <string name="rclone_provider_koofr">
 Koofr
+</string>
+    <string name="rclone_provider_premiumizeme">
+Premiumizar
 </string>
     <string name="rclone_field_server_url">
 URL del servidor

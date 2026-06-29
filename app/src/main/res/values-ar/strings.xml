@@ -5635,6 +5635,9 @@ RClone
     <string name="rclone_select_provider">
 حدد الموفر
 </string>
+    <string name="rclone_select_provider_hint">
+قم بالتمرير للحصول على المزيد من مقدمي الخدمة
+</string>
     <string name="rclone_btn_test">
 اتصال الاختبار
 </string>
@@ -5694,6 +5697,9 @@ RClone
 </string>
     <string name="rclone_provider_koofr">
 كوفر
+</string>
+    <string name="rclone_provider_premiumizeme">
+قسط
 </string>
     <string name="rclone_field_server_url">
 عنوان URL للخادم

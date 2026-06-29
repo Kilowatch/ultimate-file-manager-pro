@@ -5637,6 +5637,9 @@ RClone Bulut Depolama
     <string name="rclone_select_provider">
 Sağlayıcı Seçin
 </string>
+    <string name="rclone_select_provider_hint">
+Daha fazla sağlayıcı için kaydırın
+</string>
     <string name="rclone_btn_test">
 Bağlantıyı Test Et
 </string>
@@ -5696,6 +5699,9 @@ Mega
 </string>
     <string name="rclone_provider_koofr">
 Küfür
+</string>
+    <string name="rclone_provider_premiumizeme">
+Premiumlaştır
 </string>
     <string name="rclone_field_server_url">
 Sunucu URL\'si

@@ -5637,6 +5637,9 @@ RClone Cloud-Speicher
     <string name="rclone_select_provider">
 Wählen Sie Anbieter aus
 </string>
+    <string name="rclone_select_provider_hint">
+Scrollen Sie nach weiteren Anbietern
+</string>
     <string name="rclone_btn_test">
 Testverbindung
 </string>
@@ -5696,6 +5699,9 @@ Mega
 </string>
     <string name="rclone_provider_koofr">
 Koofr
+</string>
+    <string name="rclone_provider_premiumizeme">
+Premiumisieren
 </string>
     <string name="rclone_field_server_url">
 Server-URL

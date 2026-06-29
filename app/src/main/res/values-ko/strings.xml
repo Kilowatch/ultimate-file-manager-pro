@@ -5637,6 +5637,9 @@ RClone 클라우드 스토리지
     <string name="rclone_select_provider">
 제공업체 선택
 </string>
+    <string name="rclone_select_provider_hint">
+더 많은 공급자를 보려면 스크롤하세요.
+</string>
     <string name="rclone_btn_test">
 연결 테스트
 </string>
@@ -5696,6 +5699,9 @@ API 액세스 토큰
 </string>
     <string name="rclone_provider_koofr">
 쿠퍼
+</string>
+    <string name="rclone_provider_premiumizeme">
+프리미엄화하다
 </string>
     <string name="rclone_field_server_url">
 서버 URL

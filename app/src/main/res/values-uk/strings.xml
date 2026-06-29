@@ -9300,6 +9300,9 @@ RClone
     <string name="rclone_select_provider">
 Виберіть Постачальник
 </string>
+    <string name="rclone_select_provider_hint">
+Перейдіть до інших постачальників
+</string>
     <string name="rclone_btn_test">
 Тестове підключення
 </string>
@@ -9359,6 +9362,9 @@ RClone не ініціалізовано
 </string>
     <string name="rclone_provider_koofr">
 Koofr
+</string>
+    <string name="rclone_provider_premiumizeme">
+Преміум
 </string>
     <string name="rclone_field_server_url">
 URL-адреса сервера

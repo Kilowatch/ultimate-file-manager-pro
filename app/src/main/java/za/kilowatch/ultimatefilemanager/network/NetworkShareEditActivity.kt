@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.network
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +68,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
     /** True only after a test connection has succeeded for the current form values. */
     private var connectionTested = false
+
+    /** Tracks the last selected share type ID to avoid re-clearing fields on re-tap. */
+    private var previousTypeId: Int? = null
 
     // Views
     private lateinit var etName:          TextInputEditText
@@ -149,7 +153,14 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            // Add 30dp extra padding when the soft keyboard is visible
+            val extraKeyboardPadding = if (ime.bottom > 0) {
+                TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 30f, resources.displayMetrics
+                ).toInt()
+            } else 0
+            v.setPadding(sb.left, sb.top, sb.right, sb.bottom + ime.bottom + extraKeyboardPadding)
             insets
         }
 
@@ -296,6 +307,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
         }
 
         val onTypeChange: (Int) -> Unit = { checkedId ->
+            // Clear all provider-specific fields when switching to a different type.
+            // Re-tapping the same type chip does NOT clear fields.
+            if (previousTypeId == null || previousTypeId != checkedId) {
+                clearShareFields()
+            }
+            previousTypeId = checkedId
+
             val isSmb = (checkedId == R.id.rbSmb || checkedId == R.id.chipSmb)
             val isSsh = (checkedId == R.id.rbSftp || checkedId == R.id.chipSftp ||
                          checkedId == R.id.rbScp || checkedId == R.id.chipScp)
@@ -375,6 +393,42 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 rgSmbConnectionType?.checkedRadioButtonId == R.id.rbSmbServer
         layerPath.visibility = if (isServer) View.GONE else View.VISIBLE
         btnBrowseShares.visibility = if (isServer) View.GONE else View.VISIBLE
+    }
+
+    /**
+     * Clears all connection-specific fields. Called when the user switches
+     * share types so that no stale credentials carry over.
+     *
+     * Preserves: [etName] (display name), [rgAccess] (Read Only / Read Write).
+     * Also discards any in-progress edit reference so switching back to the
+     * previous type does not restore old field values.
+     */
+    private fun clearShareFields() {
+        etHost.setText("")
+        etPort.setText("")
+        etUsername.setText("")
+        etPassword.setText("")
+        etDomain.setText("WORKGROUP")
+        etPath.setText("")
+        etPrivateKey.setText("")
+        cbUseKeychain.isChecked = false
+        txtDlnaSelectedDevice.visibility = View.GONE
+        txtDlnaSelectedDevice.text = ""
+        selectedDlnaServer = null
+        rgSmbProtocol.check(R.id.rbSmbAuto)
+        // Reset SMB connection type to Share
+        chipSmbShare?.isChecked = true
+        chipSmbServer?.isChecked = false
+        rgSmbConnectionType?.check(R.id.rbSmbShare)
+        txtHostKeyFingerprint.visibility = View.GONE
+        txtHostKeyFingerprint.text = ""
+        txtResult.visibility = View.GONE
+        cardSshAuth.visibility = View.GONE
+        btnToggleSshAuth.text = getString(R.string.network_btn_show_ssh_auth)
+        btnSave.isEnabled = false
+        connectionTested = false
+        // Discard the edit reference so switching back doesn't restore old data
+        existingShare = null
     }
 
     /** Hide all non-DLNA fields and show DLNA device picker. */

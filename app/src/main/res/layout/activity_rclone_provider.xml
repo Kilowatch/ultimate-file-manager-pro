@@ -58,12 +58,14 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Parent ScrollView wrapping the entire content area — both sections move up when keyboard opens -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/svParent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:clipToPadding="false"
-        android:paddingBottom="40dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -72,13 +74,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
-            android:paddingTop="32dp">
+            android:paddingTop="20dp"
+            android:paddingBottom="24dp">
 
             <!-- Provider Selection Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardProviderList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -96,24 +99,61 @@
                         android:text="@string/rclone_select_provider"
                         android:textColor="@color/mobile_card_text_secondary"
                         android:textSize="12sp"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="4dp" />
 
-                    <!-- Provider chips row 1 — first 3 providers -->
-                    <LinearLayout
-                        android:id="@+id/toggleGroupProvider"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="3" />
+                        android:text="@string/rclone_select_provider_hint"
+                        android:textColor="@color/mobile_card_text_secondary"
+                        android:textSize="10sp"
+                        android:layout_marginBottom="8dp" />
 
-                    <!-- Provider chips row 2 — remaining providers (4th+) -->
                     <LinearLayout
-                        android:id="@+id/toggleGroupProvider2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal"
-                        android:weightSum="3" />
+                        android:layout_height="208dp"
+                        android:orientation="horizontal">
+
+                        <androidx.core.widget.NestedScrollView
+                            android:id="@+id/svProviderList"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:scrollbars="none"
+                            android:overScrollMode="never">
+
+                            <LinearLayout
+                                android:id="@+id/providerListContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+
+                        </androidx.core.widget.NestedScrollView>
+
+                        <!-- Custom scroll indicator -->
+                        <FrameLayout
+                            android:id="@+id/scrollIndicator"
+                            android:layout_width="6dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginVertical="6dp"
+                            android:layout_marginStart="8dp">
+
+                            <!-- Yellow track background -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/scrollbar_thumb_rclone" />
+
+                            <!-- Moving dark thumb -->
+                            <View
+                                android:id="@+id/scrollThumb"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/scrollbar_thumb_dark" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -123,90 +163,136 @@
                 android:id="@+id/cardFields"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/mobile_glass_stroke"
                 app:strokeWidth="1dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Storage Name (display name) — always shown when fields are visible -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:hint="@string/rclone_field_storage_name"
-                        app:boxStrokeColor="@color/ufm_primary">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etStorageName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingVertical="12dp"
-                            android:textSize="16sp"
-                            android:inputType="text" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
                     <LinearLayout
-                        android:id="@+id/fieldContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                        android:orientation="horizontal">
+
+                        <androidx.core.widget.NestedScrollView
+                            android:id="@+id/svFields"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:scrollbars="none"
+                            android:overScrollMode="never">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <!-- Storage Name (display name) — always shown when fields are visible -->
+                                <com.google.android.material.textfield.TextInputLayout
+                                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="12dp"
+                                    android:hint="@string/rclone_field_storage_name"
+                                    app:boxStrokeColor="@color/ufm_primary">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/etStorageName"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingVertical="12dp"
+                                        android:textSize="16sp"
+                                        android:inputType="text" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/fieldContainer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical" />
+
+                                <!-- Result text -->
+                                <TextView
+                                    android:id="@+id/txtResult"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone"
+                                    android:padding="12dp"
+                                    android:textSize="14sp" />
+
+                                <!-- Buttons: Test Connection (top), Save (bottom), stacked full-width -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="8dp">
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btnTest"
+                                        style="@style/Widget.MaterialComponents.Button"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="48dp"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="@string/rclone_btn_test"
+                                        app:cornerRadius="12dp"
+                                        android:backgroundTint="@color/ufm_primary"
+                                        android:textColor="@android:color/white" />
+
+                                    <com.google.android.material.button.MaterialButton
+                                        android:id="@+id/btnSave"
+                                        style="@style/Widget.MaterialComponents.Button"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="48dp"
+                                        android:text="@string/rclone_btn_save"
+                                        app:cornerRadius="12dp"
+                                        android:backgroundTint="@color/ufm_primary"
+                                        android:textColor="@android:color/white"
+                                        android:enabled="false" />
+
+                                </LinearLayout>   <!-- closes buttons container -->
+
+                            </LinearLayout>   <!-- closes inner content -->
+                        </androidx.core.widget.NestedScrollView>
+
+                        <!-- Custom scroll indicator for fields section -->
+                        <FrameLayout
+                            android:id="@+id/scrollIndicatorFields"
+                            android:layout_width="6dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginVertical="6dp"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone">
+
+                            <!-- Yellow track background -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/scrollbar_thumb_rclone" />
+
+                            <!-- Moving dark thumb -->
+                            <View
+                                android:id="@+id/scrollThumbFields"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:background="@drawable/scrollbar_thumb_dark" />
+
+                        </FrameLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Result text -->
-            <TextView
-                android:id="@+id/txtResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:padding="12dp"
-                android:textSize="14sp" />
-
-            <!-- Button row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:layout_marginTop="8dp">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnTest"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/rclone_btn_test"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="@color/ufm_primary"
-                    android:textColor="@color/ufm_primary" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:text="@string/rclone_btn_save"
-                    app:cornerRadius="12dp"
-                    android:backgroundTint="@color/ufm_primary"
-                    android:textColor="@android:color/white"
-                    android:enabled="false" />
-
-            </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

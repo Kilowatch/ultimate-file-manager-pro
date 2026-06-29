@@ -3271,6 +3271,7 @@
     <string name="add_online_storage_auth_rclone">Set Up Storage</string>
     <string name="rclone_title">RClone Cloud Storage</string>
     <string name="rclone_select_provider">Select Provider</string>
+    <string name="rclone_select_provider_hint">Scroll for more providers</string>
     <string name="rclone_btn_test">Test Connection</string>
     <string name="rclone_btn_save">Save</string>
     <string name="rclone_test_success">Connection successful</string>
@@ -3291,6 +3292,7 @@
     <string name="rclone_field_help_link">How to get this?</string>
     <string name="rclone_provider_mega">Mega</string>
     <string name="rclone_provider_koofr">Koofr</string>
+    <string name="rclone_provider_premiumizeme">Premiumize</string>
     <string name="rclone_field_server_url">Server URL</string>
     <string name="rclone_field_koofr_password_hint">Use an app password generated in your Koofr account settings, not your login password</string>
 </resources>
