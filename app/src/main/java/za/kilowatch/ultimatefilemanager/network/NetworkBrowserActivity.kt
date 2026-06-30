@@ -47,6 +47,7 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
@@ -1745,6 +1746,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             (errMessage.contains("unauthorized", ignoreCase = true) ||
                              errMessage.contains("invalid_token", ignoreCase = true) ||
                              errMessage.contains("expired_token", ignoreCase = true))
+
+                    GoRoLog.d("NetworkBrowser", "Err msg: $errMessage")
+                    GoRoLog.d("NetworkBrowser", "isConnectionError=$isConnectionError isGDriveScopeError=$isGDriveScopeError isGDriveAuthError=$isGDriveAuthError isRCloneBoxAuthError=$isRCloneBoxAuthError")
 
                     val tvEmptyState = findViewById<TextView>(R.id.txtEmptyState)
                     val cardGuide = findViewById<View>(R.id.cardScopeErrorGuide)

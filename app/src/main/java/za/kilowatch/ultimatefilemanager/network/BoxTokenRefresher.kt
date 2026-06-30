@@ -96,6 +96,7 @@ object BoxTokenRefresher {
 
         val responseBody = httpClient.newCall(request).execute().use { response ->
             val body = response.body?.string() ?: ""
+            GoRoLog.d(TAG, "Box refresh HTTP ${response.code}: ${body.take(200)}")
             if (!response.isSuccessful) {
                 val errorSummary = try {
                     val err = JSONObject(body)
@@ -103,6 +104,7 @@ object BoxTokenRefresher {
                 } catch (_: Exception) {
                     body
                 }
+                GoRoLog.e(TAG, "Box token refresh failed (${response.code}): $errorSummary")
                 throw IOException("Box token refresh failed (${response.code}): $errorSummary")
             }
             body
@@ -115,6 +117,9 @@ object BoxTokenRefresher {
         if (expiresIn > 0) {
             val expiry = Instant.now().plus(Duration.ofSeconds(expiresIn.toLong()))
             tokenJson.put("expiry", expiry.toString())
+            GoRoLog.d(TAG, "Computed expiry: $expiry (expires_in=$expiresIn)")
+        } else {
+            GoRoLog.w(TAG, "Box refresh response has no expires_in field")
         }
 
         val enrichedJson = tokenJson.toString()

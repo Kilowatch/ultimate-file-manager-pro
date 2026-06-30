@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.network
 import android.content.Context
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
+import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 
 /**
@@ -27,6 +28,7 @@ import java.io.File
 object RCloneConfig {
 
     private const val ENCRYPTED_CONFIG_FILE = "rclone_encrypted.json"
+    private const val TAG = "RCloneConfig"
 
     // ─────────────────────────────────────────────
     // Provider config builders
@@ -312,37 +314,51 @@ object RCloneConfig {
      * to the current time minus a 5-minute buffer (to avoid near-expiry races
      * during active use).
      *
-     * If no `expiry` field is present, the token is treated as **not expired**.
-     * This handles the common case where the token was obtained directly from
-     * the initial Box OAuth flow — Box's raw response contains `expires_in`
-     * (seconds from issue), not an absolute `expiry` timestamp. The `expiry`
-     * field is only added after [BoxTokenRefresher] has run a refresh cycle.
+     * If no `expiry` field is present but a `refresh_token` IS present, the
+     * token is treated as **expired**. This handles the common case where the
+     * token was obtained directly from the initial Box OAuth flow — Box's raw
+     * response contains `expires_in` (seconds from issue), not an absolute
+     * `expiry` timestamp. Without an `expiry` field we cannot know when the
+     * token was issued, so the conservative approach is to attempt a refresh.
+     * If the refresh_token is still valid, the refresh succeeds; if not,
+     * [RCloneShareClient]'s Layer 3 fallback handles it.
      *
-     * @return true if the token has an `expiry` field and it is in the past
-     *         (with the 5-minute buffer). Returns false if no `expiry` field is
-     *         present or if the field cannot be parsed (conservative — defers to
-     *         rclone's internal handling).
+     * If neither `expiry` nor a non-empty `refresh_token` is present, returns
+     * false (conservative — defers to rclone's internal handling).
+     *
+     * @return true if the token should be refreshed (expired or plausibly expired)
      */
     fun isTokenExpired(tokenJson: String): Boolean {
         val obj = try {
             JSONObject(tokenJson)
         } catch (_: Exception) {
+            GoRoLog.w(TAG, "isTokenExpired: cannot parse token JSON, assuming expired")
             return true
         }
-        if (!obj.has("expiry")) return false
 
-        val expiryStr = obj.optString("expiry", "")
-        if (expiryStr.isEmpty()) return false
-
-        return try {
-            val expiry = java.time.Instant.parse(expiryStr)
-            // 5-minute buffer: treat as expired 5 minutes before actual expiry
-            java.time.Instant.now().isAfter(expiry.minusSeconds(300))
-        } catch (_: Exception) {
-            // If we can't parse the expiry, assume it's still valid
-            // (defensive — better to let rclone handle the 401)
-            false
+        // If there's an explicit `expiry` field, check it against the clock
+        if (obj.has("expiry")) {
+            val expiryStr = obj.optString("expiry", "")
+            if (expiryStr.isNotEmpty()) {
+                return try {
+                    val expiry = java.time.Instant.parse(expiryStr)
+                    val isExpired = java.time.Instant.now().isAfter(expiry.minusSeconds(300))
+                    GoRoLog.d(TAG, "isTokenExpired: expiry=$expiryStr isExpired=$isExpired")
+                    isExpired
+                } catch (_: Exception) {
+                    GoRoLog.w(TAG, "isTokenExpired: could not parse expiry='$expiryStr', assuming not expired")
+                    false
+                }
+            }
         }
+
+        // No `expiry` field — this is a token straight from Box's OAuth flow.
+        // If it has a refresh_token, assume the access_token is expired so we
+        // proactively refresh it.
+        val hasRefreshToken = obj.has("refresh_token") &&
+                obj.optString("refresh_token", "").isNotEmpty()
+        GoRoLog.d(TAG, "isTokenExpired: no expiry field, hasRefreshToken=$hasRefreshToken → expired=$hasRefreshToken")
+        return hasRefreshToken
     }
 
     /**

@@ -315,15 +315,24 @@ object RCloneShareClient {
         if (!isRCloneShare(share)) return false
         val remoteName = getRemoteName(share)
         // Check cache first — avoids decrypting the config on every RC call
-        boxRemoteCache[remoteName]?.let { return it }
+        val cached = boxRemoteCache[remoteName]
+        if (cached != null) {
+            GoRoLog.d(TAG, "isBoxRemote($remoteName): cache hit → $cached")
+            return cached
+        }
         // Cache miss — read the encrypted config
         val result = try {
+            // Use readEncrypted which decrypts the config
             val providers = RCloneConfig.readEncrypted(UfmApplication.instance)
-            providers[remoteName]?.get("type") == "box"
-        } catch (_: Exception) {
+            val type = providers[remoteName]?.get("type")
+            GoRoLog.d(TAG, "isBoxRemote($remoteName): config type='$type'")
+            type == "box"
+        } catch (e: Exception) {
+            GoRoLog.w(TAG, "isBoxRemote($remoteName): config read failed: ${e.message}")
             false
         }
         boxRemoteCache[remoteName] = result
+        GoRoLog.i(TAG, "isBoxRemote($remoteName)=$result (cached)")
         return result
     }
 
@@ -344,9 +353,14 @@ object RCloneShareClient {
      * @throws IOException if the RC call fails or returns a non-200 status
      */
     private fun rcloneCall(share: NetworkShare, method: String, params: JSONObject = JSONObject()): String {
+        GoRoLog.d(TAG, "rcloneCall: method=$method remote=${getRemoteName(share)} host=${share.host}")
+
         // Layer 1: Proactive Box token refresh before any RC call
         if (isBoxRemote(share)) {
+            GoRoLog.d(TAG, "rcloneCall: Box remote detected, attempting proactive refresh")
             proactiveBoxTokenRefreshSync(share)
+        } else {
+            GoRoLog.d(TAG, "rcloneCall: not a Box remote, skipping proactive refresh")
         }
 
         ensureInitialized()
@@ -393,18 +407,25 @@ object RCloneShareClient {
                     put("remote", normalizePath(remotePath))
                 })
             } catch (e: IOException) {
+                GoRoLog.w(TAG, "listFiles error: ${e.message}")
+                GoRoLog.d(TAG, "listFiles: isBoxRemote=${isBoxRemote(share)} isAuthError=${isAuthError(e.message)}")
+
                 // Layer 3: 401 recovery for Box remotes — attempt one
                 // automatic refresh-and-retry cycle before giving up.
                 if (isBoxRemote(share) && isAuthError(e.message)) {
+                    GoRoLog.i(TAG, "Layer 3: attempting token refresh and retry")
                     if (attemptTokenRefreshAndRetry(share)) {
+                        GoRoLog.i(TAG, "Layer 3: retry succeeded, calling rclone again")
                         // Retry the call once with the freshly-refreshed token
                         rcloneCall(share, "operations/list", JSONObject().apply {
                             put("remote", normalizePath(remotePath))
                         })
                     } else {
+                        GoRoLog.e(TAG, "Layer 3: retry failed, propagating original error")
                         throw e  // refresh failed — propagate the original error
                     }
                 } else {
+                    GoRoLog.d(TAG, "listFiles: not a recoverable Box auth error, propagating")
                     throw e  // not a Box auth error — propagate as-is
                 }
             }
@@ -879,17 +900,42 @@ object RCloneShareClient {
     private fun proactiveBoxTokenRefreshSync(share: NetworkShare) {
         try {
             val remoteName = getRemoteName(share)
+            GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: checking $remoteName")
+
             val providers = RCloneConfig.readEncrypted(UfmApplication.instance)
-            val providerConfig = providers[remoteName] ?: return
-            if (providerConfig["type"] != "box") return
-            val tokenJson = providerConfig["token"] ?: return
-            if (!RCloneConfig.isTokenExpired(tokenJson)) return
+            val providerConfig = providers[remoteName]
+            if (providerConfig == null) {
+                GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: no config for $remoteName")
+                return
+            }
+            if (providerConfig["type"] != "box") {
+                GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: provider type is '${providerConfig["type"]}', not box")
+                return
+            }
+
+            val tokenJson = providerConfig["token"]
+            if (tokenJson == null) {
+                GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: no token in config for $remoteName")
+                return
+            }
+
+            val isExpired = RCloneConfig.isTokenExpired(tokenJson)
+            if (!isExpired) {
+                GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: token not expired, skipping")
+                return
+            }
+            GoRoLog.i(TAG, "proactiveBoxTokenRefreshSync: token expired, refreshing...")
 
             val parsed = JSONObject(tokenJson)
             val refreshToken = parsed.optString(BOX_REFRESH_TOKEN_FIELD, "")
-            if (refreshToken.isEmpty()) return
+            if (refreshToken.isEmpty()) {
+                GoRoLog.w(TAG, "proactiveBoxTokenRefreshSync: no refresh_token in token JSON")
+                return
+            }
 
+            GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: calling BoxTokenRefresher...")
             val newTokenJson = BoxTokenRefresher.refreshTokenSync(refreshToken)
+            GoRoLog.d(TAG, "proactiveBoxTokenRefreshSync: refresh succeeded, persisting...")
             RCloneConfig.updateBoxToken(UfmApplication.instance, remoteName, newTokenJson)
             GoRoLog.i(TAG, "Proactively refreshed Box token for $remoteName")
         } catch (e: Exception) {
