@@ -12,6 +12,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.io.RandomAccessFile as JavaRandomAccessFile
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * RClone cloud storage client — mirrors [WebDavShareClient]'s public API but
@@ -119,6 +120,15 @@ object RCloneShareClient {
     private val createdRemotesLock = Any()
 
     /**
+     * Cache of remote names confirmed as Box OAuth providers.
+     *
+     * Avoids decrypting the encrypted config on every [rcloneCall] just to check
+     * the provider type. Populated lazily by [isBoxRemote]. Cleared when
+     * providers are added or removed via [resetInitialized].
+     */
+    private val boxRemoteCache = ConcurrentHashMap<String, Boolean>()
+
+    /**
      * Ensures a specific remote (by [remoteName]) exists in rclone's in-memory config.
      * If it hasn't been created yet this session, reads the encrypted provider config
      * and calls `config/create`. This is robust against both fresh starts (where
@@ -194,6 +204,7 @@ object RCloneShareClient {
             RCloneConfig.cleanTempConfig(UfmApplication.instance)
         }
         synchronized(createdRemotesLock) { createdRemotes.clear() }
+        boxRemoteCache.clear()
     }
 
     /**
@@ -229,11 +240,28 @@ object RCloneShareClient {
 
         val ctx = UfmApplication.instance
 
+        // Layer 1 (belt-and-suspenders): Proactive Box token refresh before
+        // rclone even initialises. The main proactive check in [rcloneCall]
+        // covers all entry points, but this catches the case where we're about
+        // to spend time decrypting and initialising with a known-stale token.
+        if (storage.refreshToken == RCloneProviderActivity.BOX_REFRESH_TOKEN_MARKER) {
+            proactiveBoxTokenRefreshSync(NetworkShare(
+                host = RCLONE_HOST_MARKER,
+                username = storage.id,
+                name = storage.displayName
+            ))
+        }
+
         val configFile = RCloneConfig.decryptToTempFile(ctx)
             ?: throw IOException("RClone credentials not found for ${storage.displayName}. Please re-add the storage.")
 
         gomobile.Gomobile.rcloneInitialize()
         gomobile.Gomobile.rcloneRPC("config/setpath", """{"path": "${configFile.absolutePath}"}""")
+
+        // Layer 2: Sync any token changes that may have been written to the
+        // temp config by rclone's internal PutToken() during initialization
+        // back to the encrypted store.
+        syncBoxTokenToEncrypted(storage.id)
 
         // Read the encrypted config to get provider parameters for this remote.
         val providers = RCloneConfig.readEncrypted(ctx)
@@ -274,6 +302,31 @@ object RCloneShareClient {
     /** Returns the rclone remote name (the "fs" prefix for RC calls). */
     fun getRemoteName(share: NetworkShare): String = share.username.ifBlank { REMOTE_NAME }
 
+    /**
+     * Returns true if [share] is an RClone share backed by a Box OAuth provider.
+     *
+     * Results are cached in [boxRemoteCache] after the first lookup to avoid
+     * repeated decryption of the encrypted config on every RC call. The cache
+     * is cleared when providers are added or removed via [resetInitialized].
+     *
+     * Returns false if the config cannot be read (safe to call at any time).
+     */
+    fun isBoxRemote(share: NetworkShare): Boolean {
+        if (!isRCloneShare(share)) return false
+        val remoteName = getRemoteName(share)
+        // Check cache first — avoids decrypting the config on every RC call
+        boxRemoteCache[remoteName]?.let { return it }
+        // Cache miss — read the encrypted config
+        val result = try {
+            val providers = RCloneConfig.readEncrypted(UfmApplication.instance)
+            providers[remoteName]?.get("type") == "box"
+        } catch (_: Exception) {
+            false
+        }
+        boxRemoteCache[remoteName] = result
+        return result
+    }
+
     // ── RC call helpers ─────────────────────────────────────────────────
 
     /**
@@ -282,10 +335,20 @@ object RCloneShareClient {
      * remote for this [share] has been explicitly registered in the session.
      * The "fs" key is automatically set to the remote name if not already present.
      *
+     * Layer 1 (Proactive Refresh): Before any RC call, checks if this is a Box
+     * remote with an expired token and refreshes it pre-emptively. This covers
+     * ALL entry points — both the Main Menu path (via [ensureInitialized]) and
+     * the Online Storages path (via [prepareForBrowse]).
+     *
      * @return the JSON output on success (status 200)
      * @throws IOException if the RC call fails or returns a non-200 status
      */
     private fun rcloneCall(share: NetworkShare, method: String, params: JSONObject = JSONObject()): String {
+        // Layer 1: Proactive Box token refresh before any RC call
+        if (isBoxRemote(share)) {
+            proactiveBoxTokenRefreshSync(share)
+        }
+
         ensureInitialized()
         val remoteName = getRemoteName(share)
         // Always ensure the remote exists in-memory — covers both fresh app starts
@@ -325,24 +388,46 @@ object RCloneShareClient {
 
     suspend fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> =
         withContext(Dispatchers.IO) {
-            val json = rcloneCall(share, "operations/list", JSONObject().apply {
-                put("remote", normalizePath(remotePath))
-            })
-            val result = mutableListOf<NetworkFile>()
-            val response = JSONObject(json)
-            val list = response.optJSONArray("list") ?: return@withContext result
-            for (i in 0 until list.length()) {
-                val item = list.getJSONObject(i)
-                result.add(NetworkFile(
-                    name         = item.optString("Name", ""),
-                    path         = item.optString("Path", ""),
-                    isDirectory  = item.optBoolean("IsDir", false),
-                    size         = item.optLong("Size", 0L),
-                    lastModified = parseRcloneTime(item.optString("ModTime", ""))
-                ))
+            val json = try {
+                rcloneCall(share, "operations/list", JSONObject().apply {
+                    put("remote", normalizePath(remotePath))
+                })
+            } catch (e: IOException) {
+                // Layer 3: 401 recovery for Box remotes — attempt one
+                // automatic refresh-and-retry cycle before giving up.
+                if (isBoxRemote(share) && isAuthError(e.message)) {
+                    if (attemptTokenRefreshAndRetry(share)) {
+                        // Retry the call once with the freshly-refreshed token
+                        rcloneCall(share, "operations/list", JSONObject().apply {
+                            put("remote", normalizePath(remotePath))
+                        })
+                    } else {
+                        throw e  // refresh failed — propagate the original error
+                    }
+                } else {
+                    throw e  // not a Box auth error — propagate as-is
+                }
             }
-            result
+            parseFileList(json)
         }
+
+    /** Parses the JSON response from an rclone operations/list call. */
+    private fun parseFileList(json: String): List<NetworkFile> {
+        val result = mutableListOf<NetworkFile>()
+        val response = JSONObject(json)
+        val list = response.optJSONArray("list") ?: return result
+        for (i in 0 until list.length()) {
+            val item = list.getJSONObject(i)
+            result.add(NetworkFile(
+                name         = item.optString("Name", ""),
+                path         = item.optString("Path", ""),
+                isDirectory  = item.optBoolean("IsDir", false),
+                size         = item.optLong("Size", 0L),
+                lastModified = parseRcloneTime(item.optString("ModTime", ""))
+            ))
+        }
+        return result
+    }
 
     // ── Directory operations ────────────────────────────────────────────
 
@@ -716,6 +801,144 @@ object RCloneShareClient {
     }
 
     // ── Internal helpers ────────────────────────────────────────────────
+
+    /** Sentinel value in the Box OAuth token JSON used to mark the refresh token field. */
+    private const val BOX_REFRESH_TOKEN_FIELD = "refresh_token"
+
+    /**
+     * Layer 3 (Emergency Recovery): Attempts a full Box token refresh-and-retry
+     * cycle when a 401 is detected.
+     *
+     * Steps:
+     * 1. Reads the stored refresh_token from encrypted config
+     * 2. Calls Box's OAuth endpoint via [BoxTokenRefresher]
+     * 3. Persists the new token to encrypted storage
+     * 4. Finalizes and re-initializes rclone with the updated config
+     *
+     * @return true if the cycle completed and the caller should retry,
+     *         false if recovery failed (error already logged).
+     */
+    private fun attemptTokenRefreshAndRetry(share: NetworkShare): Boolean {
+        return try {
+            GoRoLog.i(TAG, "Layer 3: Attempting Box token refresh and retry for ${getRemoteName(share)}")
+            val ctx = UfmApplication.instance
+            val remoteName = getRemoteName(share)
+            val providers = RCloneConfig.readEncrypted(ctx)
+            val config = providers[remoteName] ?: return false
+            val tokenJson = config["token"] ?: return false
+            val parsed = JSONObject(tokenJson)
+            val refreshToken = parsed.optString(BOX_REFRESH_TOKEN_FIELD, "")
+            if (refreshToken.isEmpty()) return false
+
+            val newTokenJson = kotlinx.coroutines.runBlocking {
+                BoxTokenRefresher.refreshToken(refreshToken)
+            }
+            RCloneConfig.updateBoxToken(ctx, remoteName, newTokenJson)
+
+            // Reset rclone so it picks up the new token from the updated config
+            val configFile = RCloneConfig.decryptToTempFile(ctx) ?: return false
+            gomobile.Gomobile.rcloneFinalize()
+            gomobile.Gomobile.rcloneInitialize()
+            gomobile.Gomobile.rcloneRPC(
+                "config/setpath",
+                """{"path": "${configFile.absolutePath}"}"""
+            )
+            synchronized(createdRemotesLock) { createdRemotes.clear() }
+
+            GoRoLog.i(TAG, "Layer 3: Box token refreshed and rclone re-initialised — will retry")
+            true
+        } catch (e: Exception) {
+            GoRoLog.e(TAG, "Layer 3: Box token refresh + retry failed", e)
+            false
+        }
+    }
+
+    /**
+     * Returns true if [message] suggests a 401 authentication/authorisation error
+     * from the rclone Box backend.
+     */
+    private fun isAuthError(message: String?): Boolean {
+        if (message == null) return false
+        return message.contains("401") && (
+            message.contains("unauthorized", ignoreCase = true) ||
+            message.contains("invalid_token", ignoreCase = true) ||
+            message.contains("expired_token", ignoreCase = true)
+        )
+    }
+
+    /**
+     * Synchronous proactive Box token refresh for use from [rcloneCall].
+     *
+     * Silently returns if:
+     * - The share is not a Box remote
+     * - The stored token is not expired
+     * - The refresh_token is missing
+     * - The HTTP call fails (the error is logged, and the caller will handle
+     *   the resulting 401 via Layer 3)
+     */
+    private fun proactiveBoxTokenRefreshSync(share: NetworkShare) {
+        try {
+            val remoteName = getRemoteName(share)
+            val providers = RCloneConfig.readEncrypted(UfmApplication.instance)
+            val providerConfig = providers[remoteName] ?: return
+            if (providerConfig["type"] != "box") return
+            val tokenJson = providerConfig["token"] ?: return
+            if (!RCloneConfig.isTokenExpired(tokenJson)) return
+
+            val parsed = JSONObject(tokenJson)
+            val refreshToken = parsed.optString(BOX_REFRESH_TOKEN_FIELD, "")
+            if (refreshToken.isEmpty()) return
+
+            val newTokenJson = BoxTokenRefresher.refreshTokenSync(refreshToken)
+            RCloneConfig.updateBoxToken(UfmApplication.instance, remoteName, newTokenJson)
+            GoRoLog.i(TAG, "Proactively refreshed Box token for $remoteName")
+        } catch (e: Exception) {
+            GoRoLog.w(TAG, "Proactive Box token refresh failed (will retry on error): ${e.message}")
+        }
+    }
+
+    /**
+     * Extracts the Box OAuth token JSON from an rclone.conf-style INI section.
+     *
+     * Looks for a section header `[storageId]` and reads the `token = {...}`
+     * value from it. Returns null if the section or token is not found.
+     */
+    private fun extractBoxTokenFromConfig(configText: String, storageId: String): String? {
+        val sectionRegex = Regex(
+            """\[$storageId]\n(.*?)(?=\n\[|\z)""",
+            setOf(RegexOption.DOT_MATCHES_ALL)
+        )
+        val section = sectionRegex.find(configText)?.groupValues?.getOrNull(1) ?: return null
+        val tokenRegex = Regex("""^token\s*=\s*(\{.+\})$""", setOf(RegexOption.MULTILINE))
+        return tokenRegex.find(section)?.groupValues?.getOrNull(1)
+    }
+
+    /**
+     * Layer 2 (Post-Sync): Reads the temp rclone.conf, extracts the Box token,
+     * and saves it to encrypted storage if it differs from what's currently stored.
+     *
+     * This catches token refreshes that rclone's Go library performed internally
+     * (via PutToken) during initialization or active operations.
+     */
+    private fun syncBoxTokenToEncrypted(storageId: String) {
+        try {
+            val ctx = UfmApplication.instance
+            val tempFile = File(ctx.cacheDir, "rclone/rclone_temp.conf")
+            if (!tempFile.exists()) return
+
+            val tempConfig = tempFile.readText()
+            val tokenInTemp = extractBoxTokenFromConfig(tempConfig, storageId) ?: return
+
+            val encryptedProviders = RCloneConfig.readEncrypted(ctx)
+            val encryptedToken = encryptedProviders[storageId]?.get("token")
+            if (tokenInTemp == encryptedToken) return  // unchanged
+
+            RCloneConfig.updateBoxToken(ctx, storageId, tokenInTemp)
+            GoRoLog.i(TAG, "Synced refreshed Box token back to encrypted store for $storageId")
+        } catch (e: Exception) {
+            GoRoLog.w(TAG, "Box token sync failed (non-fatal): ${e.message}")
+        }
+    }
 
     /** Normalises a remote path — strips leading slash if present. */
     private fun normalizePath(path: String): String {

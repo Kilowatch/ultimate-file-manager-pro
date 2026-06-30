@@ -3436,6 +3436,21 @@ Bunu düzeltmek için:\n
 5. Oturum açma işlemini tamamlayın ve istenen tüm izinleri kabul edin\n
 6. Drive dosyalarınız artık doğru şekilde yüklenmelidir
 </string>
+    <string name="rclone_box_401_error_title">
+Kutu — Oturumun Süresi Doldu
+</string>
+    <string name="rclone_box_401_error_guide">
+Box.com oturumunuzun süresi doldu ve otomatik olarak yenilenemedi.\n
+\n
+Bunu düzeltmek için:\n
+\n
+1. UFM\'nin Çevrimiçi Depolama Alanlarına gidin\n
+2. Listede Box hesabınızı bulun\n
+3. \"Sil\"e dokunun\n
+4. \"Depolama Ekle\" → RClone → Kutu\n
+5\'ya dokunun. Oturum açma işlemini tamamlayın\n
+6. Box dosyalarınız artık doğru şekilde yüklenmelidir
+</string>
     <string name="onedrive_device_code_subtitle">TV\'nizi başka bir cihaz kullanarak bağlayın</string>
     <string name="onedrive_device_code_step1">1. Telefonunuzda veya bilgisayarınızda şu adrese gidin:</string>
     <string name="onedrive_device_code_step2">2. Aşağıda gösterilen kodu girin:</string>

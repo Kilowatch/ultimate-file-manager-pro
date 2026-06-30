@@ -262,6 +262,89 @@ object RCloneConfig {
         File(context.filesDir, ENCRYPTED_CONFIG_FILE).delete()
     }
 
+    // ─────────────────────────────────────────────
+    // Box OAuth token helpers
+    // ─────────────────────────────────────────────
+
+    /**
+     * Finds the first Box OAuth provider entry in the encrypted config and
+     * returns its (storageId, tokenJson) pair.
+     *
+     * Returns null if no Box provider exists or the encrypted config cannot
+     * be read (no config yet, decryption failure).
+     */
+    fun getBoxTokenEntry(context: Context): Pair<String, String>? {
+        val providers = try {
+            readEncrypted(context)
+        } catch (_: Exception) {
+            return null
+        }
+        for ((storageId, config) in providers) {
+            if (config["type"] == "box") {
+                val token = config["token"] ?: continue
+                return storageId to token
+            }
+        }
+        return null
+    }
+
+    /**
+     * Updates the `token` value for a specific Box provider in the encrypted
+     * config. Re-reads the full config, patches the entry by [storageId],
+     * re-encrypts, and saves.
+     *
+     * @throws IllegalArgumentException if [storageId] is not found in the config
+     * @throws IllegalStateException if re-encryption fails
+     */
+    fun updateBoxToken(context: Context, storageId: String, newTokenJson: String) {
+        val providers = readEncrypted(context).toMutableMap()
+        val entry = providers[storageId]?.toMutableMap()
+            ?: throw IllegalArgumentException("No RClone provider found with storageId=$storageId")
+        entry["token"] = newTokenJson
+        providers[storageId] = entry
+        saveEncrypted(context, providers)
+    }
+
+    /**
+     * Checks whether a Box OAuth token JSON has an expired `expiry` timestamp.
+     *
+     * If the JSON has an `expiry` field, it is parsed as ISO 8601 and compared
+     * to the current time minus a 5-minute buffer (to avoid near-expiry races
+     * during active use).
+     *
+     * If no `expiry` field is present, the token is treated as **not expired**.
+     * This handles the common case where the token was obtained directly from
+     * the initial Box OAuth flow — Box's raw response contains `expires_in`
+     * (seconds from issue), not an absolute `expiry` timestamp. The `expiry`
+     * field is only added after [BoxTokenRefresher] has run a refresh cycle.
+     *
+     * @return true if the token has an `expiry` field and it is in the past
+     *         (with the 5-minute buffer). Returns false if no `expiry` field is
+     *         present or if the field cannot be parsed (conservative — defers to
+     *         rclone's internal handling).
+     */
+    fun isTokenExpired(tokenJson: String): Boolean {
+        val obj = try {
+            JSONObject(tokenJson)
+        } catch (_: Exception) {
+            return true
+        }
+        if (!obj.has("expiry")) return false
+
+        val expiryStr = obj.optString("expiry", "")
+        if (expiryStr.isEmpty()) return false
+
+        return try {
+            val expiry = java.time.Instant.parse(expiryStr)
+            // 5-minute buffer: treat as expired 5 minutes before actual expiry
+            java.time.Instant.now().isAfter(expiry.minusSeconds(300))
+        } catch (_: Exception) {
+            // If we can't parse the expiry, assume it's still valid
+            // (defensive — better to let rclone handle the 401)
+            false
+        }
+    }
+
     /**
      * Deletes the temp config directory.
      */

@@ -3434,6 +3434,21 @@ https://myaccount.google.com/permissions\n
 5. أكمل عملية تسجيل الدخول واقبل كافة الأذونات المطلوبة\n
 6. من المفترض الآن أن يتم تحميل ملفات Drive بشكل صحيح
 </string>
+    <string name="rclone_box_401_error_title">
+المربع — انتهت الجلسة
+</string>
+    <string name="rclone_box_401_error_guide">
+لقد انتهت صلاحية جلسة Box.com الخاصة بك ولا يمكن تجديدها تلقائيًا.\n
+\n
+لإصلاح هذه المشكلة:\n
+\n
+1. انتقل إلى مخازن UFM عبر الإنترنت\n
+2. ابحث عن حساب Box الخاص بك في القائمة\n
+3. انقر على \"حذف\"\n
+4. اضغط على \"إضافة وحدة تخزين\" ← RClone ← Box\n
+5. أكمل عملية تسجيل الدخول\n
+6. يجب الآن تحميل ملفات Box الخاصة بك بشكل صحيح
+</string>
     <string name="onedrive_device_code_subtitle">قم بربط جهاز التلفزيون الخاص بك باستخدام جهاز آخر</string>
     <string name="onedrive_device_code_step1">1. على هاتفك أو جهاز الكمبيوتر الخاص بك، انتقل إلى:</string>
     <string name="onedrive_device_code_step2">2. أدخل الرمز الموضح أدناه:</string>

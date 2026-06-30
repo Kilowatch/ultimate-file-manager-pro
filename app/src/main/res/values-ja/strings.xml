@@ -3436,6 +3436,21 @@ UFM は Google ドライブ アカウントで認証できませんでした。�
 5.サインイン プロセスを完了し、要求された権限をすべて受け入れます\n
 6.ドライブ ファイルが正しく読み込まれるはずです
 </string>
+    <string name="rclone_box_401_error_title">
+ボックス - セッションが期限切れになりました
+</string>
+    <string name="rclone_box_401_error_guide">
+Box.com セッションの有効期限が切れたため、自動的に更新できませんでした。\n
+\n
+これを修正するには:\n
+\n
+1. UFM のオンライン ストレージに移動します\n
+2.リストで Box アカウントを見つけます\n
+3. 「削除」をタップします\n
+4. [ストレージの追加] → RClone → Box\n
+5. をタップします。サインイン プロセスを完了します\n
+6. Box ファイルが正しく読み込まれるはずです。
+</string>
     <string name="onedrive_device_code_subtitle">別のデバイスを使用してテレビをリンクする</string>
     <string name="onedrive_device_code_step1">1. 携帯電話またはコンピュータで、次の場所に移動します。</string>
     <string name="onedrive_device_code_step2">2. 以下に示すコードを入力します。</string>

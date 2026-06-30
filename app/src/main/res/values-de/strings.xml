@@ -3436,6 +3436,21 @@ Um dieses Problem zu beheben:\n
 5. Schließen Sie den Anmeldevorgang ab und akzeptieren Sie alle angeforderten Berechtigungen\n
 6. Ihre Drive-Dateien sollten jetzt korrekt geladen werden
 </string>
+    <string name="rclone_box_401_error_title">
+Feld – Sitzung abgelaufen
+</string>
+    <string name="rclone_box_401_error_guide">
+Ihre Box.com-Sitzung ist abgelaufen und konnte nicht automatisch erneuert werden.\n
+\n
+So beheben Sie das Problem:\n
+\n
+1. Gehen Sie zu den Online-Speichern von UFM\n
+2. Suchen Sie Ihr Box-Konto in der Liste\n
+3. Tippen Sie auf „Löschen“\n
+4. Tippen Sie auf „Speicher hinzufügen“ → RClone → Box\n
+5. Schließen Sie den Anmeldevorgang ab\n
+6. Ihre Box-Dateien sollten jetzt korrekt geladen werden
+</string>
     <string name="onedrive_device_code_subtitle">Verknüpfen Sie Ihren Fernseher mit einem anderen Gerät</string>
     <string name="onedrive_device_code_step1">1. Gehen Sie auf Ihrem Telefon oder Computer zu:</string>
     <string name="onedrive_device_code_step2">2. Geben Sie den unten angezeigten Code ein:</string>

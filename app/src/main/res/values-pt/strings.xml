@@ -3436,6 +3436,21 @@ Para corrigir isso:\n
 5. Conclua o processo de login e aceite todas as permissões solicitadas\n
 6. Seus arquivos do Drive agora devem carregar corretamente
 </string>
+    <string name="rclone_box_401_error_title">
+Caixa – Sessão expirada
+</string>
+    <string name="rclone_box_401_error_guide">
+Sua sessão do Box.com expirou e não pôde ser renovada automaticamente.\n
+\n
+Para corrigir isso:\n
+\n
+1. Acesse os Armazenamentos Online da UFM\n
+2. Encontre sua conta Box na lista\n
+3. Toque em \"Excluir\"\n
+4. Toque em \"Adicionar armazenamento\" → RClone → Box\n
+5. Conclua o processo de login\n
+6. Seus arquivos do Box agora devem carregar corretamente
+</string>
     <string name="onedrive_device_code_subtitle">Vincule sua TV usando outro dispositivo</string>
     <string name="onedrive_device_code_step1">1. No seu telefone ou computador, acesse:</string>
     <string name="onedrive_device_code_step2">2. Digite o código mostrado abaixo:</string>

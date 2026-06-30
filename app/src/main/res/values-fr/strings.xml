@@ -3436,6 +3436,21 @@ Pour résoudre ce problème :\n
 5. Terminez le processus de connexion et acceptez toutes les autorisations demandées.\n
 6. Vos fichiers Drive devraient maintenant se charger correctement
 </string>
+    <string name="rclone_box_401_error_title">
+Boîte — Session expirée
+</string>
+    <string name="rclone_box_401_error_guide">
+Votre session Box.com a expiré et n\'a pas pu être renouvelée automatiquement.\n
+\n
+Pour résoudre ce problème :\n
+\n
+1. Accédez aux stockages en ligne d\'UFM\n
+2. Recherchez votre compte Box dans la liste\n
+3. Appuyez sur \"Supprimer\"\n
+4. Appuyez sur \"Ajouter du stockage\" → RClone → Box\n
+5. Terminez le processus de connexion\n
+6. Vos fichiers Box devraient maintenant se charger correctement
+</string>
     <string name="onedrive_device_code_subtitle">Associez votre téléviseur à l\'aide d\'un autre appareil</string>
     <string name="onedrive_device_code_step1">1. Sur votre téléphone ou votre ordinateur, accédez à :</string>
     <string name="onedrive_device_code_step2">2. Entrez le code ci-dessous :</string>

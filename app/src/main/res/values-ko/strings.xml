@@ -3436,6 +3436,21 @@ UFM이 Google 드라이브 계정으로 인증할 수 없습니다. 연결 토�
 5. 로그인 프로세스를 완료하고 요청된 모든 권한을 수락합니다.\n
 6. 이제 드라이브 파일이 올바르게 로드됩니다.
 </string>
+    <string name="rclone_box_401_error_title">
+상자 — 세션이 만료되었습니다
+</string>
+    <string name="rclone_box_401_error_guide">
+Box.com 세션이 만료되어 자동으로 갱신될 수 없습니다.\n
+\n
+이 문제를 해결하려면:\n
+\n
+1. UFM의 온라인 저장소로 이동합니다\n
+2. 목록에서 Box 계정을 찾으세요.\n
+3. \'삭제\'를 탭하세요.\n
+4. \"스토리지 추가\" → RClone → Box를 탭하세요.\n
+5. 로그인 프로세스를 완료하세요.\n
+6. 이제 Box 파일이 올바르게 로드됩니다.
+</string>
     <string name="onedrive_device_code_subtitle">다른 장치를 사용하여 TV 연결</string>
     <string name="onedrive_device_code_step1">1. 휴대폰이나 컴퓨터에서 다음으로 이동합니다.</string>
     <string name="onedrive_device_code_step2">2. 아래 표시된 코드를 입력하세요.</string>

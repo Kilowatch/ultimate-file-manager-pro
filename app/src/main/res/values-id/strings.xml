@@ -3436,6 +3436,21 @@ Untuk memperbaikinya:\n
 5. Selesaikan proses masuk dan terima semua izin yang diminta\n
 6. File Drive Anda sekarang seharusnya dimuat dengan benar
 </string>
+    <string name="rclone_box_401_error_title">
+Kotak — Sesi Berakhir
+</string>
+    <string name="rclone_box_401_error_guide">
+Sesi Box.com Anda telah kedaluwarsa dan tidak dapat diperpanjang secara otomatis.\n
+\n
+Untuk memperbaikinya:\n
+\n
+1. Buka Penyimpanan Online UFM\n
+2. Temukan akun Box Anda di daftar\n
+3. Ketuk \"Hapus\"\n
+4. Ketuk \"Tambahkan Penyimpanan\" → RClone → Kotak\n
+5. Selesaikan proses masuk\n
+6. File Box Anda sekarang seharusnya dimuat dengan benar
+</string>
     <string name="onedrive_device_code_subtitle">Tautkan TV Anda menggunakan perangkat lain</string>
     <string name="onedrive_device_code_step1">1. Di ponsel atau komputer Anda, buka:</string>
     <string name="onedrive_device_code_step2">2. Masukkan kode yang ditunjukkan di bawah ini:</string>

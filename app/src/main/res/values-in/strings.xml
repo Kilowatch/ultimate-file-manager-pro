@@ -3436,6 +3436,21 @@ To fix this:\n
 5. Complete the sign-in process and accept all requested permissions\n
 6. Your Drive files should now load correctly
 </string>
+    <string name="rclone_box_401_error_title">
+Box — Session Expired
+</string>
+    <string name="rclone_box_401_error_guide">
+Your Box.com session has expired and could not be renewed automatically.\n
+\n
+To fix this:\n
+\n
+1. Go to UFM\'s Online Storages\n
+2. Find your Box account in the list\n
+3. Tap \"Delete\"\n
+4. Tap \"Add Storage\" → RClone → Box\n
+5. Complete the sign-in process\n
+6. Your Box files should now load correctly
+</string>
     <string name="onedrive_device_code_subtitle">Link your TV using another device</string>
     <string name="onedrive_device_code_step1">1. On your phone or computer, go to:</string>
     <string name="onedrive_device_code_step2">2. Enter the code shown below:</string>

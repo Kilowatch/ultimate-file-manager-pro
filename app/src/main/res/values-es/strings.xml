@@ -3436,6 +3436,21 @@ Para solucionar este problema:\n
 5. Complete el proceso de inicio de sesión y acepte todos los permisos solicitados\n
 6. Tus archivos de Drive ahora deberían cargarse correctamente
 </string>
+    <string name="rclone_box_401_error_title">
+Cuadro: Sesión caducada
+</string>
+    <string name="rclone_box_401_error_guide">
+Su sesión de Box.com expiró y no se pudo renovar automáticamente.\n
+\n
+Para solucionar este problema:\n
+\n
+1. Vaya a los Almacenamientos en línea de UFM\n
+2. Encuentra tu cuenta de Box en la lista\n
+3. Toque \"Eliminar\"\n
+4. Toque \"Agregar almacenamiento\" → RClone → Box\n
+5. Complete el proceso de inicio de sesión\n
+6. Tus archivos de Box ahora deberían cargarse correctamente
+</string>
     <string name="onedrive_device_code_subtitle">Vincula tu televisor usando otro dispositivo</string>
     <string name="onedrive_device_code_step1">1. En su teléfono o computadora, vaya a:</string>
     <string name="onedrive_device_code_step2">2. Ingrese el código que se muestra a continuación:</string>

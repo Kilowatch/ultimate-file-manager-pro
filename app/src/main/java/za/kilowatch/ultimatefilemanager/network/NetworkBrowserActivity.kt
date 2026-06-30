@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -1738,6 +1740,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                              errMessage.contains("Invalid Credentials") ||
                              errMessage.contains("UNAUTHENTICATED"))
 
+                    val isRCloneBoxAuthError = share.host == RCloneShareClient.RCLONE_HOST_MARKER &&
+                            errMessage.contains("401") &&
+                            (errMessage.contains("unauthorized", ignoreCase = true) ||
+                             errMessage.contains("invalid_token", ignoreCase = true) ||
+                             errMessage.contains("expired_token", ignoreCase = true))
+
                     val tvEmptyState = findViewById<TextView>(R.id.txtEmptyState)
                     val cardGuide = findViewById<View>(R.id.cardScopeErrorGuide)
                     val tvGuide = findViewById<TextView>(R.id.txtScopeErrorGuide)
@@ -1759,6 +1767,23 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         val guide = "${getString(R.string.gdrive_401_error_title)}\n\n${getString(R.string.gdrive_401_error_guide)}"
                         tvGuide.text = guide
                         cardGuide.visibility = View.VISIBLE
+                    } else if (isRCloneBoxAuthError) {
+                        // Check connectivity first — if offline, show connection error
+                        val cm = this@NetworkBrowserActivity.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+                        val isOnline = cm?.activeNetwork?.let {
+                            cm.getNetworkCapabilities(it)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        } ?: false
+                        if (!isOnline) {
+                            tvEmptyState.text = getString(R.string.network_connection_restored_first)
+                            tvEmptyState.visibility = View.VISIBLE
+                            cardGuide.visibility = View.GONE
+                        } else {
+                            imgEmptyIcon.visibility = View.GONE
+                            tvEmptyState.visibility = View.GONE
+                            val guide = "${getString(R.string.rclone_box_401_error_title)}\n\n${getString(R.string.rclone_box_401_error_guide)}"
+                            tvGuide.text = guide
+                            cardGuide.visibility = View.VISIBLE
+                        }
                     } else {
                         tvEmptyState.text = "Error loading directory:\n$errMessage"
                         tvEmptyState.visibility = View.VISIBLE
