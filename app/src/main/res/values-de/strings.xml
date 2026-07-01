@@ -1318,6 +1318,72 @@ Portmapper (Port 111) auf dem NFS-Server kann nicht erreicht werden. Stellen Sie
     <string name="nfs_error_permission_denied">
 NFS-Server verweigert den Zugriff. Überprüfen Sie, ob der Exportpfad korrekt ist und der Server Verbindungen von diesem Gerät zulässt.
 </string>
+    <string name="nfs_error_auth_rejected">
+Der NFS-Server hat die Authentifizierung abgelehnt. Der Server erfordert möglicherweise eine andere Sicherheitsvariante oder eine andere Berechtigungsprüfung.
+</string>
+    <string name="nfs_error_connection_failed">
+Es kann keine Verbindung zum NFS-Server hergestellt werden. Überprüfen Sie, ob der Server in diesem Netzwerk läuft und erreichbar ist.
+</string>
+    <string name="nfs_error_path_not_found">
+Der angegebene Exportpfad wurde auf dem NFS-Server nicht gefunden. Überprüfen Sie, ob der Pfad korrekt ist und exportiert wird.
+</string>
+    <string name="nfs_error_service_unavailable">
+Der NFS-Dienst (rpcbind/portmapper) ist auf dem Server nicht verfügbar.
+</string>
+    <string name="nfs_error_version_mismatch">
+Der NFS-Server unterstützt die angeforderte Protokollversion nicht. Versuchen Sie es mit einer anderen NFS-Version.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Verbindungsdiagnose
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Hostname wird aufgelöst
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Hostname konnte nicht aufgelöst werden
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+NFS-Port 2049 ist erreichbar
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+NFS-Port 2049 kann nicht erreicht werden
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (Port 111) ist erreichbar
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Portmapper (Port 111) kann nicht erreicht werden
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Debug-Protokoll
+</string>
+    <string name="nfs_debug_log_copy">
+Debug-Protokoll kopieren
+</string>
+    <string name="nfs_debug_log_copied">
+Debug-Protokoll in die Zwischenablage kopiert
+</string>
+    <string name="nfs_debug_log_empty">
+Kein Debug-Protokoll verfügbar
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+NFS-Version
+</string>
+    <string name="nfs_version_auto">
+Auto
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Kachel verschieben</string>

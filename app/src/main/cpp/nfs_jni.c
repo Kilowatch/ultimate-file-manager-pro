@@ -18,6 +18,9 @@
 #include "libnfs-raw.h"
 #include "libnfs-raw-nfs.h"
 #include "libnfs-raw-mount.h"
+// Note: libnfs-private.h intentionally NOT included — it redefines sockaddr_storage
+// which clashes with NDK 28 headers. All needed declarations are in the public
+// headers above (rpc_set_auth, rpc_set_timeout, libnfs_authunix_create, etc).
 
 
 
@@ -31,6 +34,17 @@
 
 static struct nfs_context *ctx_from_handle(jlong handle) {
     return (struct nfs_context *)(intptr_t)handle;
+}
+
+/* Safely access the rpc_context pointer from an nfs_context.
+ * nfs_context->rpc is the FIRST field (offset 0), so we can extract it
+ * via memcpy without including libnfs-private.h (which conflicts with NDK 28). */
+static struct rpc_context *get_rpc_from_nfs(struct nfs_context *nfs) {
+    struct rpc_context *rpc = NULL;
+    if (nfs) {
+        memcpy(&rpc, nfs, sizeof(rpc));
+    }
+    return rpc;
 }
 
 static void throw_io(JNIEnv *env, const char *msg) {
@@ -99,6 +113,77 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetVersion(
     nfs_set_version(ctx_from_handle(handle), version);
 }
 
+/*
+ * void nfsSetAuthFlavor(long handle, int authFlavor, int uid, int gid)
+ * Force the RPC authentication flavor to AUTH_SYS with explicit UNIX credentials.
+ *   authFlavor: 1 = AUTH_SYS (AUTH_UNIX), 0 = AUTH_NONE
+ *   uid/gid: passed explicitly to avoid needing libnfs-private.h struct access
+ */
+JNIEXPORT void JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetAuthFlavor(
+        JNIEnv *env, jclass clazz, jlong handle,
+        jint authFlavor, jint uid, jint gid) {
+    struct nfs_context *nfs = ctx_from_handle(handle);
+    struct rpc_context *rpc = get_rpc_from_nfs(nfs);
+    if (!rpc) return;
+
+    if (authFlavor == 1) {
+        struct AUTH *auth = libnfs_authunix_create(
+            "android-nfs", (uint32_t)uid, (uint32_t)gid, 0, NULL);
+        if (auth) {
+            rpc_set_auth(rpc, auth);
+            LOGI("nfsSetAuthFlavor: set AUTH_SYS (uid=%d, gid=%d)", uid, gid);
+        } else {
+            LOGE("nfsSetAuthFlavor: libnfs_authunix_create returned NULL");
+        }
+    }
+    // flavor 0 = AUTH_NONE (no-op, default stays as AUTH_UNIX)
+}
+
+/*
+ * void nfsSetTimeout(long handle, int timeoutMs)
+ * Override the default RPC reply timeout.
+ * Default in libnfs is 60,000ms. We set 5,000ms for fast error surfacing.
+ */
+JNIEXPORT void JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetTimeout(
+        JNIEnv *env, jclass clazz, jlong handle, jint timeoutMs) {
+    struct nfs_context *nfs = ctx_from_handle(handle);
+    struct rpc_context *rpc = get_rpc_from_nfs(nfs);
+    if (rpc) {
+        rpc_set_timeout(rpc, timeoutMs);
+        LOGI("nfsSetTimeout: set to %dms", timeoutMs);
+    }
+}
+
+/*
+ * String nfsGetLastRpcError(long handle)
+ * Returns the last RPC-level error string.
+ */
+JNIEXPORT jstring JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsGetLastRpcError(
+        JNIEnv *env, jclass clazz, jlong handle) {
+    struct nfs_context *nfs = ctx_from_handle(handle);
+    if (!nfs) return (*env)->NewStringUTF(env, "null handle");
+    return (*env)->NewStringUTF(env, nfs_get_error(nfs));
+}
+
+/*
+ * void nfsSetDebug(long handle, int level)
+ * Enable verbose RPC logging to logcat.
+ *   0 = off, 1+ = verbose
+ */
+JNIEXPORT void JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetDebug(
+        JNIEnv *env, jclass clazz, jlong handle, jint level) {
+    struct nfs_context *nfs = ctx_from_handle(handle);
+    struct rpc_context *rpc = get_rpc_from_nfs(nfs);
+    if (rpc) {
+        rpc_set_debug(rpc, level);
+        LOGI("nfsSetDebug: set level=%d", level);
+    }
+}
+
 /* ── Mount / Unmount ──────────────────────────────────────────────────────── */
 
 /*
@@ -121,8 +206,9 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsMount(
 
     if (ret != 0) {
         const char *err = nfs_get_error(nfs);
-        LOGE("nfs_mount failed: %s (ret=%d)", err, ret);
-        return (*env)->NewStringUTF(env, err);
+        const char *safe_err = (err && *err) ? err : "nfs_mount failed (no detail from libnfs)";
+        LOGE("nfs_mount failed: %s (ret=%d)", safe_err, ret);
+        return (*env)->NewStringUTF(env, safe_err);
     }
     return NULL; /* success */
 }
@@ -138,23 +224,42 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsMountUrl(
     struct nfs_context *nfs = ctx_from_handle(handle);
     const char *url = (*env)->GetStringUTFChars(env, jUrl, NULL);
 
+    /* nfs_parse_url_dir: parses the URL AND applies all query parameters
+     * (version=, nfsport=, mountport=, uid=, gid=, timeo=, etc.) directly
+     * to the nfs_context as a side-effect, while returning the FULL path
+     * as the mount target. nfs_parse_url_full must NOT be used here — it
+     * treats the last path segment as a "file" component and strips it,
+     * turning e.g. /srv/nfs/testshare into /srv/nfs at the mount layer. */
     struct nfs_url *nfs_url = nfs_parse_url_dir(nfs, url);
     (*env)->ReleaseStringUTFChars(env, jUrl, url);
 
     if (!nfs_url) {
         const char *err = nfs_get_error(nfs);
-        LOGE("nfs_parse_url_full failed: %s", err);
-        return (*env)->NewStringUTF(env, err);
+        const char *safe_err = (err && *err) ? err : "nfs_parse_url_dir failed (bad URL or rejected parameter)";
+        LOGE("nfs_parse_url_dir failed: %s", safe_err);
+        return (*env)->NewStringUTF(env, safe_err);
     }
 
-    LOGI("nfs_mount via URL: server=%s export=%s", nfs_url->server, nfs_url->path);
+    LOGI("nfs_mount via URL: server=%s path=%s (nfs version=%d)",
+         nfs_url->server, nfs_url->path, nfs_get_version(nfs));
     int ret = nfs_mount(nfs, nfs_url->server, nfs_url->path);
     nfs_destroy_url(nfs_url);
 
     if (ret != 0) {
-        const char *err = nfs_get_error(nfs);
-        LOGE("nfs_mount (URL) failed: %s (ret=%d)", err, ret);
-        return (*env)->NewStringUTF(env, err);
+        const char *nfs_err = nfs_get_error(nfs);
+        /* nfs_mount() ends with nfs_set_error(nfs, rpc_get_error(rpc)).
+         * If the rpc error was empty, nfs_err is also empty. Log both for
+         * diagnosis. */
+        if (nfs_err && *nfs_err) {
+            LOGE("nfs_mount (URL) failed: %s (ret=%d)", nfs_err, ret);
+            return (*env)->NewStringUTF(env, nfs_err);
+        }
+        /* libnfs didn't populate its error string — capture errno directly */
+        char fallback[256];
+        snprintf(fallback, sizeof(fallback),
+                 "nfs_mount failed: ret=%d errno=%d (%s)", ret, errno, strerror(errno));
+        LOGE("%s", fallback);
+        return (*env)->NewStringUTF(env, fallback);
     }
     return NULL;
 }

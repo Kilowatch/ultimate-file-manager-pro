@@ -37,6 +37,18 @@ object LibNfsBridge {
     /** Set NFS protocol version: 3 (NFSv3) or 4 (NFSv4). Default is v3. */
     @JvmStatic external fun nfsSetVersion(handle: Long, version: Int)
 
+    /** Force the RPC authentication flavor. 1 = AUTH_SYS, 0 = AUTH_NONE. uid/gid for AUTH_UNIX. */
+    @JvmStatic external fun nfsSetAuthFlavor(handle: Long, authFlavor: Int, uid: Int, gid: Int)
+
+    /** Override the default RPC reply timeout (ms). Default in libnfs is 60000. */
+    @JvmStatic external fun nfsSetTimeout(handle: Long, timeoutMs: Int)
+
+    /** Get the last RPC-level error string. */
+    @JvmStatic external fun nfsGetLastRpcError(handle: Long): String
+
+    /** Enable debug logging. 0 = off, 1+ = verbose. */
+    @JvmStatic external fun nfsSetDebug(handle: Long, level: Int)
+
     /* ── Mount ─────────────────────────────────────────────────────────────── */
 
     /**

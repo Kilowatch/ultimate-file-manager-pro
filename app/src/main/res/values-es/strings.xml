@@ -1318,6 +1318,72 @@ No se puede acceder a Portmapper (puerto 111) en el servidor NFS. Asegúrese de 
     <string name="nfs_error_permission_denied">
 El servidor NFS denegó el acceso. Compruebe que la ruta de exportación sea correcta y que el servidor permita conexiones desde este dispositivo.
 </string>
+    <string name="nfs_error_auth_rejected">
+El servidor NFS rechazó la autenticación. Es posible que el servidor requiera un tipo de seguridad diferente o que se verifiquen permisos.
+</string>
+    <string name="nfs_error_connection_failed">
+No se puede conectar al servidor NFS. Verifique que el servidor esté funcionando y sea accesible en esta red.
+</string>
+    <string name="nfs_error_path_not_found">
+La ruta de exportación especificada no se encontró en el servidor NFS. Compruebe que la ruta sea correcta y exportada.
+</string>
+    <string name="nfs_error_service_unavailable">
+El servicio NFS (rpcbind/portmapper) no está disponible en el servidor.
+</string>
+    <string name="nfs_error_version_mismatch">
+El servidor NFS no admite la versión del protocolo solicitada. Pruebe con una versión de NFS diferente.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Diagnóstico de conexión
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+El nombre de host se resuelve
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+No se pudo resolver el nombre de host
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+Se puede acceder al puerto NFS 2049
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+No se puede alcanzar el puerto NFS 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (puerto 111) es accesible
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+No se puede acceder a Portmapper (puerto 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Registro de depuración
+</string>
+    <string name="nfs_debug_log_copy">
+Copiar registro de depuración
+</string>
+    <string name="nfs_debug_log_copied">
+Registro de depuración copiado al portapapeles
+</string>
+    <string name="nfs_debug_log_empty">
+No hay ningún registro de depuración disponible
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+Versión NFS
+</string>
+    <string name="nfs_version_auto">
+Auto
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Mover mosaico</string>

@@ -1318,6 +1318,72 @@ JPG، بابوا نيو غينيا، MP4
     <string name="nfs_error_permission_denied">
 رفض خادم NFS الوصول. تأكد من صحة مسار التصدير وأن الخادم يسمح بالاتصالات من هذا الجهاز.
 </string>
+    <string name="nfs_error_auth_rejected">
+رفض خادم NFS المصادقة. قد يتطلب الخادم نكهة أمان مختلفة أو التحقق من الإذن.
+</string>
+    <string name="nfs_error_connection_failed">
+لا يمكن الاتصال بخادم NFS. تأكد من أن الخادم يعمل ويمكن الوصول إليه على هذه الشبكة.
+</string>
+    <string name="nfs_error_path_not_found">
+لم يتم العثور على مسار التصدير المحدد على خادم NFS. تأكد من صحة المسار وتصديره.
+</string>
+    <string name="nfs_error_service_unavailable">
+خدمة NFS (rpcbind/portmapper) غير متوفرة على الخادم.
+</string>
+    <string name="nfs_error_version_mismatch">
+لا يدعم خادم NFS إصدار البروتوكول المطلوب. جرب إصدار NFS مختلف.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+تشخيص الاتصال
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+تم حل اسم المضيف
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+لا يمكن حل اسم المضيف
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+يمكن الوصول إلى منفذ NFS 2049
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+لا يمكن الوصول إلى منفذ NFS 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+يمكن الوصول إلى Portmapper (المنفذ 111).
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+لا يمكن الوصول إلى Portmapper (المنفذ 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+سجل التصحيح
+</string>
+    <string name="nfs_debug_log_copy">
+انسخ سجل التصحيح
+</string>
+    <string name="nfs_debug_log_copied">
+تم نسخ سجل التصحيح إلى الحافظة
+</string>
+    <string name="nfs_debug_log_empty">
+لا يوجد سجل تصحيح متاح
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+نسخة نفس
+</string>
+    <string name="nfs_version_auto">
+آلي
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">نقل البلاط</string>

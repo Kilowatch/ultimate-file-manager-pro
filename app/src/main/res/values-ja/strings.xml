@@ -1318,6 +1318,72 @@ NFS サーバー上のポートマッパー (ポート 111) に到達できま�
     <string name="nfs_error_permission_denied">
 NFS サーバーがアクセスを拒否しました。エクスポート パスが正しいこと、およびサーバーがこのデバイスからの接続を許可していることを確認してください。
 </string>
+    <string name="nfs_error_auth_rejected">
+NFS サーバーが認証を拒否しました。サーバーでは、別のセキュリティ フレーバーまたはアクセス許可のチェックが必要になる場合があります。
+</string>
+    <string name="nfs_error_connection_failed">
+NFSサーバーに接続できません。サーバーが実行中であり、このネットワーク上で到達可能であることを確認してください。
+</string>
+    <string name="nfs_error_path_not_found">
+指定されたエクスポート パスが NFS サーバー上に見つかりませんでした。パスが正しくエクスポートされていることを確認してください。
+</string>
+    <string name="nfs_error_service_unavailable">
+NFS サービス (rpcbind/portmapper) はサーバーでは使用できません。
+</string>
+    <string name="nfs_error_version_mismatch">
+NFS サーバーは、要求されたプロトコルのバージョンをサポートしていません。別の NFS バージョンを試してください。
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+接続診断
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+ホスト名が解決される
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+ホスト名を解決できませんでした
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+NFS ポート 2049 に到達可能です
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+NFS ポート 2049 に到達できません
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+ポートマッパー (ポート 111) に到達可能
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+ポートマッパー (ポート 111) にアクセスできません
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+デバッグログ
+</string>
+    <string name="nfs_debug_log_copy">
+デバッグログのコピー
+</string>
+    <string name="nfs_debug_log_copied">
+デバッグログがクリップボードにコピーされました
+</string>
+    <string name="nfs_debug_log_empty">
+利用可能なデバッグ ログがありません
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+NFS バージョン
+</string>
+    <string name="nfs_version_auto">
+自動
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">タイルの移動</string>

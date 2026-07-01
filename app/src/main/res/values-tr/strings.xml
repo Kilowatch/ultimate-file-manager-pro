@@ -1318,6 +1318,72 @@ NFS sunucusunda Portmapper\'a (bağlantı noktası 111) ulaşılamıyor. Portmap
     <string name="nfs_error_permission_denied">
 NFS sunucusu erişimi reddetti. Dışa aktarma yolunun doğru olduğunu ve sunucunun bu cihazdan bağlantılara izin verdiğini kontrol edin.
 </string>
+    <string name="nfs_error_auth_rejected">
+NFS sunucusu kimlik doğrulamayı reddetti. Sunucu farklı bir güvenlik türü veya izin kontrolü gerektirebilir.
+</string>
+    <string name="nfs_error_connection_failed">
+NFS sunucusuna bağlanılamıyor. Sunucunun bu ağda çalıştığını ve erişilebilir olduğunu kontrol edin.
+</string>
+    <string name="nfs_error_path_not_found">
+Belirtilen dışa aktarma yolu NFS sunucusunda bulunamadı. Yolun doğru olduğunu ve dışa aktarıldığını kontrol edin.
+</string>
+    <string name="nfs_error_service_unavailable">
+NFS hizmeti (rpcbind/portmapper) sunucuda mevcut değil.
+</string>
+    <string name="nfs_error_version_mismatch">
+NFS sunucusu istenen protokol sürümünü desteklemiyor. Farklı bir NFS sürümünü deneyin.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Bağlantı Teşhisi
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Ana makine adı çözülür
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Ana makine adı çözülemedi
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+NFS bağlantı noktası 2049\'a erişilebilir
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+NFS bağlantı noktası 2049\'a ulaşılamıyor
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper\'a (bağlantı noktası 111) ulaşılabilir
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Portmapper\'a ulaşılamıyor (bağlantı noktası 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Hata Ayıklama Günlüğü
+</string>
+    <string name="nfs_debug_log_copy">
+Hata Ayıklama Günlüğünü Kopyala
+</string>
+    <string name="nfs_debug_log_copied">
+Hata ayıklama günlüğü panoya kopyalandı
+</string>
+    <string name="nfs_debug_log_empty">
+Hata ayıklama günlüğü yok
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+NFS Sürümü
+</string>
+    <string name="nfs_version_auto">
+Otomatik
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Döşemeyi Taşı</string>

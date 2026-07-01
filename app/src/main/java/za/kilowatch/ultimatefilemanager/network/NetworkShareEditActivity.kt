@@ -27,6 +27,8 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.VaultCrypto
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -131,6 +133,13 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var etPrivateKey:    TextInputEditText
     private lateinit var btnPickKey:      View
     private lateinit var cbUseKeychain:   com.google.android.material.checkbox.MaterialCheckBox
+
+    // NFS-specific views
+    private var layerNfsVersion:  View? = null
+    private var rgNfsVersion:    RadioGroup? = null
+    private var layerNfsDebugLog: View? = null
+    private var txtNfsDebugLog:  TextView? = null
+    private var btnCopyDebugLog: View? = null
 
     private val pickKeyLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         uri?.let { handleKeyPicked(it) }
@@ -258,6 +267,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnPickKey       = findViewById(R.id.btnPickKey)
         cbUseKeychain    = findViewById(R.id.cbUseKeychain)
         btnToggleSshAuth = findViewById(R.id.btnToggleSshAuth)
+        layerNfsVersion  = findViewById(R.id.layerNfsVersion)
+        rgNfsVersion     = findViewById(R.id.rgNfsVersion)
+        layerNfsDebugLog = findViewById(R.id.layerNfsDebugLog)
+        txtNfsDebugLog   = findViewById(R.id.txtNfsDebugLog)
+        btnCopyDebugLog  = findViewById(R.id.btnCopyDebugLog)
     }
 
     private fun handleKeyPicked(uri: Uri) {
@@ -467,6 +481,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
         applyConnectionTypeVisibility(isSmb)
         txtDlnaSelectedDevice.visibility = View.GONE
 
+        // NFS-specific visibility
+        tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
+        tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
+        layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
+
         btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
         cardSshAuth.visibility = View.GONE
         btnToggleSshAuth.text = getString(R.string.network_btn_show_ssh_auth)
@@ -647,6 +666,16 @@ class NetworkShareEditActivity : AppCompatActivity() {
         val isNfs = (share.type == ShareType.NFS)
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
+
+        // NFS version selector visibility + state
+        layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
+        if (isNfs) {
+            when (share.nfsVersion) {
+                0 -> rgNfsVersion?.check(R.id.rbNfsAuto)
+                4 -> rgNfsVersion?.check(R.id.rbNfs4)
+                else -> rgNfsVersion?.check(R.id.rbNfs3) // default v3
+            }
+        }
 
         // DLNA-specific visibility when editing an existing DLNA share
         if (share.type == ShareType.DLNA) {
@@ -1285,7 +1314,14 @@ class NetworkShareEditActivity : AppCompatActivity() {
             isServerMode = isServerMode,
             hostKeyFingerprint = if (existingShare != null &&
                 (host != existingShare!!.host || (etPort.text?.toString()?.trim()?.toIntOrNull() ?: 0) != existingShare!!.port)
-            ) null else existingShare?.hostKeyFingerprint
+            ) null else existingShare?.hostKeyFingerprint,
+            nfsVersion = if (type == ShareType.NFS && rgNfsVersion != null) {
+                when (rgNfsVersion!!.checkedRadioButtonId) {
+                    R.id.rbNfsAuto -> 0
+                    R.id.rbNfs4 -> 4
+                    else -> 3
+                }
+            } else 3
         )
     }
 
@@ -1343,7 +1379,24 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 }
                 ShareType.FTP  -> FtpShareClient.testConnection(share)
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(this, share)
-                ShareType.NFS  -> NfsShareClient.testConnection(share)
+                ShareType.NFS  -> {
+                    Log.i("NFS_TEST", "=== NFS Connection Test: ${share.host}:${share.effectivePort} path=${share.remotePath} version=${share.nfsVersion} uid=${share.username} ===")
+                    // Diagnostics pre-check before mount attempt
+                    val diagnostics = kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
+                        NfsDiagnostics.runDiagnostics(share.host)
+                    }
+                    Log.i("NFS_TEST", "Diagnostics: dns=${diagnostics.hostResolved} (${diagnostics.resolveTimeMs}ms) port2049=${diagnostics.port2049Reachable} port111=${diagnostics.port111Reachable}")
+                    if (!diagnostics.hostResolved) {
+                        Log.e("NFS_TEST", "FAIL: DNS resolution failed for ${share.host}")
+                        getString(R.string.nfs_diagnostics_dns_fail)
+                    } else if (diagnostics.port2049Reachable == false) {
+                        Log.e("NFS_TEST", "FAIL: TCP connect to ${share.host}:2049 failed")
+                        getString(R.string.nfs_diagnostics_port2049_fail)
+                    } else {
+                        Log.i("NFS_TEST", "Pre-checks passed, attempting NFS mount...")
+                        NfsShareClient.testConnection(share)
+                    }
+                }
                 ShareType.DLNA -> DlnaShareClient.testConnection(share)
                 ShareType.TV, ShareType.ONEDRIVE, ShareType.GOOGLE_DRIVE,
                 ShareType.DROPBOX, ShareType.AWS_S3, ShareType.IDRIVE_E2, ShareType.WEBDAV,
@@ -1384,6 +1437,16 @@ class NetworkShareEditActivity : AppCompatActivity() {
             getString(R.string.nfs_error_portmapper_unreachable)
         NfsShareClient.ErrorSentinel.PERMISSION_DENIED ->
             getString(R.string.nfs_error_permission_denied)
+        NfsShareClient.ErrorSentinel.AUTH_REJECTED ->
+            getString(R.string.nfs_error_auth_rejected)
+        NfsShareClient.ErrorSentinel.CONNECTION_FAILED ->
+            getString(R.string.nfs_error_connection_failed)
+        NfsShareClient.ErrorSentinel.PATH_NOT_FOUND ->
+            getString(R.string.nfs_error_path_not_found)
+        NfsShareClient.ErrorSentinel.SERVICE_UNAVAILABLE ->
+            getString(R.string.nfs_error_service_unavailable)
+        NfsShareClient.ErrorSentinel.VERSION_MISMATCH ->
+            getString(R.string.nfs_error_version_mismatch)
         else -> sentinel
     }
 
@@ -1428,5 +1491,21 @@ class NetworkShareEditActivity : AppCompatActivity() {
         txtResult.setTextColor(
             getColor(if (isError) R.color.status_error else R.color.ufm_primary_light)
         )
+
+        // Show NFS debug log section when an NFS error is displayed
+        if (isError && layerNfsDebugLog != null) {
+            val lastEntry = NfsDebugLogger.lastEntry()
+            if (lastEntry != null) {
+                layerNfsDebugLog?.visibility = View.VISIBLE
+                txtNfsDebugLog?.text = NfsDebugLogger.exportSummary()
+                btnCopyDebugLog?.setOnClickListener {
+                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(
+                        ClipData.newPlainText("NFS Debug Log", NfsDebugLogger.exportSummary())
+                    )
+                    Toast.makeText(this, R.string.nfs_debug_log_copied, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 }

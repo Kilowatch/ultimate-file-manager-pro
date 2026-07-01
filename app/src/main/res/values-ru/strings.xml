@@ -1318,6 +1318,72 @@ jpg, png, mp4
     <string name="nfs_error_permission_denied">
 NFS-серверу запрещен доступ. Убедитесь, что путь экспорта указан правильно и что сервер разрешает подключения с этого устройства.
 </string>
+    <string name="nfs_error_auth_rejected">
+Сервер NFS отклонил аутентификацию. Серверу может потребоваться другой вариант безопасности или проверка разрешений.
+</string>
+    <string name="nfs_error_connection_failed">
+Невозможно подключиться к серверу NFS. Убедитесь, что сервер работает и доступен в этой сети.
+</string>
+    <string name="nfs_error_path_not_found">
+Указанный путь экспорта не найден на сервере NFS. Убедитесь, что путь правильный и экспортирован.
+</string>
+    <string name="nfs_error_service_unavailable">
+Служба NFS (rpcbind/portmapper) недоступна на сервере.
+</string>
+    <string name="nfs_error_version_mismatch">
+Сервер NFS не поддерживает запрошенную версию протокола. Попробуйте другую версию NFS.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Диагностика соединения
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Имя хоста разрешается
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Имя хоста не может быть разрешено
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+Порт NFS 2049 доступен
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+Невозможно подключиться к порту NFS 2049.
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (порт 111) доступен
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Невозможно подключиться к Portmapper (порт 111).
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Журнал отладки
+</string>
+    <string name="nfs_debug_log_copy">
+Копировать журнал отладки
+</string>
+    <string name="nfs_debug_log_copied">
+Журнал отладки скопирован в буфер обмена.
+</string>
+    <string name="nfs_debug_log_empty">
+Нет журнала отладки
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+Версия НФС
+</string>
+    <string name="nfs_version_auto">
+Авто
+</string>
+    <string name="nfs_version_3">
+НФСv3
+</string>
+    <string name="nfs_version_4">
+НФСv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Переместить плитку</string>

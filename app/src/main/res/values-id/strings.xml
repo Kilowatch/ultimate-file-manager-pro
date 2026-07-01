@@ -1318,6 +1318,72 @@ Tidak dapat menjangkau Portmapper (port 111) di server NFS. Pastikan layanan Por
     <string name="nfs_error_permission_denied">
 Server NFS menolak akses. Periksa apakah jalur ekspor sudah benar dan server mengizinkan koneksi dari perangkat ini.
 </string>
+    <string name="nfs_error_auth_rejected">
+Server NFS menolak otentikasi. Server mungkin memerlukan rasa keamanan atau izin yang berbeda untuk diperiksa.
+</string>
+    <string name="nfs_error_connection_failed">
+Tidak dapat terhubung ke server NFS. Periksa apakah server berjalan dan dapat dijangkau di jaringan ini.
+</string>
+    <string name="nfs_error_path_not_found">
+Jalur ekspor yang ditentukan tidak ditemukan di server NFS. Periksa apakah jalurnya benar dan diekspor.
+</string>
+    <string name="nfs_error_service_unavailable">
+Layanan NFS (rpcbind/portmapper) tidak tersedia di server.
+</string>
+    <string name="nfs_error_version_mismatch">
+Server NFS tidak mendukung versi protokol yang diminta. Coba versi NFS lain.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Diagnostik Koneksi
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Nama host terselesaikan
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Nama host tidak dapat diselesaikan
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+Port NFS 2049 dapat dijangkau
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+Tidak dapat mencapai port NFS 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (port 111) dapat dijangkau
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Tidak dapat mencapai Portmapper (port 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Log Debug
+</string>
+    <string name="nfs_debug_log_copy">
+Salin Log Debug
+</string>
+    <string name="nfs_debug_log_copied">
+Log debug disalin ke papan klip
+</string>
+    <string name="nfs_debug_log_empty">
+Tidak ada log debug yang tersedia
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+Versi NFS
+</string>
+    <string name="nfs_version_auto">
+Mobil
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Pindahkan Ubin</string>

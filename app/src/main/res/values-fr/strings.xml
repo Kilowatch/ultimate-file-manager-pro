@@ -1318,6 +1318,72 @@ Impossible d\'atteindre Portmapper (port 111) sur le serveur NFS. Assurez-vous q
     <string name="nfs_error_permission_denied">
 Le serveur NFS a refusé l\'accès. Vérifiez que le chemin d\'exportation est correct et que le serveur autorise les connexions depuis cet appareil.
 </string>
+    <string name="nfs_error_auth_rejected">
+Le serveur NFS a rejeté l\'authentification. Le serveur peut nécessiter une version de sécurité différente ou une vérification des autorisations.
+</string>
+    <string name="nfs_error_connection_failed">
+Impossible de se connecter au serveur NFS. Vérifiez que le serveur est en cours d\'exécution et accessible sur ce réseau.
+</string>
+    <string name="nfs_error_path_not_found">
+Le chemin d\'exportation spécifié est introuvable sur le serveur NFS. Vérifiez que le chemin est correct et exporté.
+</string>
+    <string name="nfs_error_service_unavailable">
+Le service NFS (rpcbind/portmapper) n\'est pas disponible sur le serveur.
+</string>
+    <string name="nfs_error_version_mismatch">
+Le serveur NFS ne prend pas en charge la version de protocole demandée. Essayez une autre version de NFS.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Diagnostic de connexion
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Le nom d\'hôte est résolu
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Le nom d\'hôte n\'a pas pu être résolu
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+Le port NFS 2049 est accessible
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+Impossible d\'atteindre le port NFS 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (port 111) est accessible
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Impossible d\'atteindre Portmapper (port 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Journal de débogage
+</string>
+    <string name="nfs_debug_log_copy">
+Copier le journal de débogage
+</string>
+    <string name="nfs_debug_log_copied">
+Journal de débogage copié dans le presse-papiers
+</string>
+    <string name="nfs_debug_log_empty">
+Aucun journal de débogage disponible
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+Version NFS
+</string>
+    <string name="nfs_version_auto">
+Auto
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Déplacer la tuile</string>

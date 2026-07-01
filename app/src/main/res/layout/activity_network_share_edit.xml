@@ -501,6 +501,55 @@
                             android:imeOptions="actionNext" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!-- NFS Version Selector (NFS only) -->
+                    <LinearLayout
+                        android:id="@+id/layerNfsVersion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/nfs_version"
+                            android:textColor="@color/mobile_text_primary"
+                            android:textSize="14sp" />
+
+                        <RadioGroup
+                            android:id="@+id/rgNfsVersion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/rbNfsAuto"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/nfs_version_auto"
+                                android:textColor="@color/mobile_text_primary" />
+
+                            <RadioButton
+                                android:id="@+id/rbNfs3"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/nfs_version_3"
+                                android:textColor="@color/mobile_text_primary" />
+
+                            <RadioButton
+                                android:id="@+id/rbNfs4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/nfs_version_4"
+                                android:textColor="@color/mobile_text_primary" />
+                        </RadioGroup>
+                    </LinearLayout>
+
                     <!-- Domain (SMB only) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilDomain"
@@ -753,6 +802,47 @@
                 android:gravity="center"
                 android:visibility="gone"
                 android:background="@drawable/bg_glass_card_dark" />
+
+            <!-- NFS Debug Log (shown on NFS errors) -->
+            <LinearLayout
+                android:id="@+id/layerNfsDebugLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_glass_card_dark">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/nfs_debug_log"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtNfsDebugLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="monospace"
+                    android:padding="8dp"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="11sp"
+                    android:background="@android:color/black"
+                    android:alpha="0.8" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCopyDebugLog"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nfs_debug_log_copy"
+                    android:textColor="@color/ufm_primary" />
+            </LinearLayout>
 
             <!-- Test Connection -->
             <com.google.android.material.button.MaterialButton

@@ -431,8 +431,6 @@ dependencies {
     implementation("com.tom-roush:pdfbox-android:2.0.27.0") {
         exclude(group = "org.bouncycastle")
     }
-    // NFS v3 client library for network share access (legacy — kept for fallback)
-    implementation("com.emc.ecs:nfs-client:1.1.0")
     // libnfs: native NFS v2/v3/v4 client via JNI (built from source in src/main/cpp/)
 
 

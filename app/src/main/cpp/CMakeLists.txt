@@ -30,6 +30,7 @@ target_include_directories(nfs_jni PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/libnfs/portmap
     ${CMAKE_CURRENT_SOURCE_DIR}/libnfs/rquota
     ${CMAKE_CURRENT_BINARY_DIR}/libnfs   # for generated config.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/libnfs/lib   # for libnfs-private.h (rpc struct access)
 )
 
 # Link the libnfs static library (target name is "nfs" from libnfs's CMake)

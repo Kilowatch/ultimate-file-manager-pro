@@ -22,6 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed RClone storages failing to load from the Main Menu after a force close by ensuring the clean-up and remote registration sequence matches the Online Storage browser initialization.
 - Fixed Box RClone storage creation overwriting the user-defined storage name with the account email address upon authentication completion.
+- NFS mounts now default to AUTH_SYS authentication, fixing the "seal broken" / RPCSEC_GSS auth rejection that prevented mounting against standard NFS servers
+- RPC AUTH_ERROR/MSG_DENIED replies are now handled as immediate terminal failures (previously surfaced as ~60-second socket timeout)
+- Removed the EMC nfs-client-java fallback (libnfs is now the sole NFS backend), eliminating the suspected GSS credential source
+
+### Added
+- 5 new differentiated NFS error messages (auth rejection, connection failure, path not found, service unavailable, version mismatch)
+- Network diagnostics pre-check (DNS resolution + TCP port 2049 + port 111) runs automatically during connection test
+- NFS version selector (Auto / NFSv3 / NFSv4) on the share edit form
+- Exportable debug log with human-readable summary for failed mount attempts
+- Structured debug logging with ring buffer (last 20 mount attempts recorded)
 
 ## [1.5.9] — 2026-06-25
 

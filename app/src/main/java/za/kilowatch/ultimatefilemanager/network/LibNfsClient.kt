@@ -39,6 +39,11 @@ object LibNfsClient {
         const val STALE_HANDLE = NfsShareClient.ErrorSentinel.STALE_HANDLE
         const val PORTMAPPER_UNREACHABLE = NfsShareClient.ErrorSentinel.PORTMAPPER_UNREACHABLE
         const val PERMISSION_DENIED = NfsShareClient.ErrorSentinel.PERMISSION_DENIED
+        const val AUTH_REJECTED = NfsShareClient.ErrorSentinel.AUTH_REJECTED
+        const val CONNECTION_FAILED = NfsShareClient.ErrorSentinel.CONNECTION_FAILED
+        const val PATH_NOT_FOUND = NfsShareClient.ErrorSentinel.PATH_NOT_FOUND
+        const val SERVICE_UNAVAILABLE = NfsShareClient.ErrorSentinel.SERVICE_UNAVAILABLE
+        const val VERSION_MISMATCH = NfsShareClient.ErrorSentinel.VERSION_MISMATCH
     }
 
     /* ── Helpers ─────────────────────────────────────────────────────────────── */
@@ -58,68 +63,184 @@ object LibNfsClient {
             params.add("nfsport=$port")
         }
 
-        // NFS version from share config (default: v3)
-        // share.username is repurposed as UID for NFS; no version field yet
-        // Could be extended with a share.nfsVersion property
+        // NFS version from share config (0 = auto, 3 = v3, 4 = v4)
+        if (share.nfsVersion > 0) {
+            params.add("version=${share.nfsVersion}")
+        }
+
+        // Encode the timeout in the URL so nfs_parse_url_full applies it to ALL
+        // sub-RPCs (portmapper, mountd, nfsd) — rpc_set_timeout() only covers the
+        // main context and is ignored by the internal connections NFSv3 opens for
+        // the MOUNT protocol. libnfs timeo= is in deciseconds (1/10s units).
+        // Minimum accepted by libnfs is 100 (= 10 seconds).
+        params.add("timeo=100") // 100 × 0.1s = 10 seconds
+
+        // For NFSv3, pin mountd to port 20048 so we bypass portmapper dynamic-port
+        // discovery. Without this, the client asks portmapper what port mountd is on,
+        // then connects to that random high port — which is never forwarded through
+        // NAT/portproxy, causing a 130-second timeout. NFSv4 ignores this param.
+        if ((share.nfsVersion == 0 || share.nfsVersion == 3)) {
+            params.add("mountport=20048")
+        }
 
         val query = if (params.isEmpty()) "" else "?" + params.joinToString("&")
         return "nfs://$host$export$query"
     }
 
-    private fun normalizePath(path: String): String {
+    /** @internal Shared with [NfsShareClient] callers. */
+    fun normalizePath(path: String): String {
         var p = path.trim().replace('\\', '/')
         if (!p.startsWith("/")) p = "/$p"
         if (p.length > 1 && p.endsWith("/")) p = p.removeSuffix("/")
         return p
     }
 
-    private fun buildChildPath(parentPath: String, childName: String): String {
+    /** @internal Shared with [NfsShareClient] callers. */
+    fun buildChildPath(parentPath: String, childName: String): String {
         val p = normalizePath(parentPath)
         return if (p == "/") "/$childName" else "$p/$childName"
+    }
+
+    /**
+     * Mount using an explicit NFS version (must be 3 or 4).
+     * Returns (contextHandle, null) on success, (0, errorMessage) on failure.
+     * The caller is responsible for destroying the handle on success.
+     */
+    private fun mountContextForVersion(share: NetworkShare, version: Int): Pair<Long, String?> {
+        // Build a share copy with the explicit version so buildNfsUrl produces
+        // the correct URL params (version=, mountport=, etc.).
+        val vShare = if (share.nfsVersion == version) share else share.copy(nfsVersion = version)
+
+        Log.d(TAG, "mountContext: starting for ${vShare.host}:${vShare.effectivePort} path=${vShare.remotePath}")
+
+        val t0 = System.currentTimeMillis()
+        val handle = LibNfsBridge.nfsInit()
+        if (handle == 0L) {
+            Log.e(TAG, "mountContext: nfsInit returned 0 (FAILED)")
+            return 0L to "Failed to create NFS context"
+        }
+        Log.d(TAG, "mountContext: nfsInit OK handle=$handle (${System.currentTimeMillis() - t0}ms)")
+
+        val uid = vShare.username.toIntOrNull() ?: 0
+
+        val t1 = System.currentTimeMillis()
+        LibNfsBridge.nfsSetAuthFlavor(handle, 1, uid, 0)
+        Log.d(TAG, "mountContext: nfsSetAuthFlavor(AUTH_SYS, uid=$uid) (${System.currentTimeMillis() - t1}ms)")
+
+        LibNfsBridge.nfsSetTimeout(handle, 5_000)
+        Log.d(TAG, "mountContext: nfsSetTimeout(5000)")
+
+        LibNfsBridge.nfsSetVersion(handle, version)
+        Log.d(TAG, "mountContext: nfsSetVersion($version)")
+
+        LibNfsBridge.nfsSetUid(handle, uid)
+        LibNfsBridge.nfsSetGid(handle, 0)
+        Log.d(TAG, "mountContext: nfsSetUid($uid) nfsSetGid(0)")
+
+        LibNfsBridge.nfsSetDebug(handle, 1)
+
+        val url = buildNfsUrl(vShare)
+        Log.i(TAG, "mountContext: calling nfsMountUrl(\"$url\") (uid=$uid, version=$version)")
+
+        val t2 = System.currentTimeMillis()
+        val err = LibNfsBridge.nfsMountUrl(handle, url)
+        val mountDuration = System.currentTimeMillis() - t2
+        if (err != null) {
+            Log.e(TAG, "mountContext: nfsMountUrl FAILED after ${mountDuration}ms: $err")
+            val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
+            if (rpcErr.isNotEmpty() && rpcErr != err) {
+                Log.e(TAG, "mountContext: last RPC error: $rpcErr")
+            }
+            LibNfsBridge.nfsDestroy(handle)
+            return 0L to err
+        }
+        Log.i(TAG, "mountContext: mount succeeded (${System.currentTimeMillis() - t0}ms total)")
+        return handle to null
     }
 
     /**
      * Create and mount an NFS context for the given share.
      * Returns a pair of (contextHandle, null) on success,
      * or (0, errorMessage) on failure.
+     *
+     * When [NetworkShare.nfsVersion] is 0 (auto), NFSv3 is tried first;
+     * if it fails, NFSv4 is attempted automatically as a fallback.
+     * This covers all callers — listFiles, readFile, writeFile, etc.
      */
     private fun mountContext(share: NetworkShare): Pair<Long, String?> {
-        val handle = LibNfsBridge.nfsInit()
-        if (handle == 0L) {
-            return 0L to "Failed to create NFS context"
+        if (share.nfsVersion != 0) {
+            // Explicit version — mount once, no fallback.
+            return mountContextForVersion(share, share.nfsVersion)
         }
 
-        // Set UID/GID
-        val uid = share.username.toIntOrNull() ?: 0
-        LibNfsBridge.nfsSetUid(handle, uid)
-        LibNfsBridge.nfsSetGid(handle, 0)
-
-        // Mount via URL (supports custom port and version)
-        val url = buildNfsUrl(share)
-        Log.i(TAG, "Mounting: $url")
-        val err = LibNfsBridge.nfsMountUrl(handle, url)
-        if (err != null) {
-            LibNfsBridge.nfsDestroy(handle)
-            Log.e(TAG, "Mount failed: $err")
-            return 0L to err
+        // Auto-detect: try NFSv3 first, then NFSv4.
+        Log.i(TAG, "mountContext: nfsVersion=auto — trying NFSv3 first")
+        val (v3Handle, v3Err) = mountContextForVersion(share, 3)
+        if (v3Handle != 0L) {
+            Log.i(TAG, "mountContext: auto-detected NFSv3 ✓")
+            return v3Handle to null
         }
-        return handle to null
+
+        Log.w(TAG, "mountContext: NFSv3 failed ($v3Err) — falling back to NFSv4")
+        val (v4Handle, v4Err) = mountContextForVersion(share, 4)
+        if (v4Handle != 0L) {
+            Log.i(TAG, "mountContext: auto-detected NFSv4 ✓")
+            return v4Handle to null
+        }
+
+        Log.e(TAG, "mountContext: auto-detect exhausted — v3: $v3Err | v4: $v4Err")
+        // Surface the v3 error (tried first); append v4 error for diagnostics.
+        val combined = "NFSv3: $v3Err | NFSv4: ${v4Err ?: "failed"}"
+        return 0L to combined
     }
 
     /**
      * Classify a raw libnfs error message into a sentinel key for the UI.
+     * Maps RPC/NFS protocol errors to user-facing categories.
      */
     private fun classifyError(rawMessage: String): String {
+        if (rawMessage.isBlank()) return "NFS_UNKNOWN_ERROR"
         val msg = rawMessage.lowercase()
         return when {
+            // Auth / MSG_DENIED / AUTH_ERROR (root cause #1)
+            msg.contains("msg_denied") || msg.contains("auth_error") ||
+            msg.contains("auth_bogus_creds") || msg.contains("seal broken") ||
+            msg.contains("authentication error") || msg.contains("auth rejected") ->
+                ErrorSentinel.AUTH_REJECTED
+
+            // Stale file handle
             msg.contains("stale") || msg.contains("nfs3err_stale") ->
                 ErrorSentinel.STALE_HANDLE
+
+            // Permission denied
             msg.contains("permission denied") || msg.contains("access denied") ||
             msg.contains("nfs3err_acces") ->
                 ErrorSentinel.PERMISSION_DENIED
-            msg.contains("portmap") || msg.contains("rpcbind") ||
-            msg.contains("connection refused") ->
+
+            // Path / export not found
+            msg.contains("no such file") || msg.contains("no such export") ||
+            msg.contains("nfs3err_noent") || msg.contains("not found") ->
+                ErrorSentinel.PATH_NOT_FOUND
+
+            // Portmapper / rpcbind unreachable
+            msg.contains("portmap") || msg.contains("rpcbind") ->
                 ErrorSentinel.PORTMAPPER_UNREACHABLE
+
+            // Connection refused / timeout (TCP-level)
+            msg.contains("connection refused") || msg.contains("connection timed out") ||
+            msg.contains("econnrefused") || msg.contains("ehostunreach") ||
+            msg.contains("enetunreach") ->
+                ErrorSentinel.CONNECTION_FAILED
+
+            // NFS version mismatch
+            msg.contains("version") && (msg.contains("mismatch") || msg.contains("not supported")) ->
+                ErrorSentinel.VERSION_MISMATCH
+
+            // Service not available (RPC layer)
+            msg.contains("program not registered") || msg.contains("prog_unavail") ||
+            msg.contains("proc_unavail") ->
+                ErrorSentinel.SERVICE_UNAVAILABLE
+
             else -> rawMessage
         }
     }
@@ -127,19 +248,73 @@ object LibNfsClient {
     /* ── Public API (mirrors NfsShareClient) ────────────────────────────────── */
 
     fun testConnection(share: NetworkShare): String? {
-        val (handle, mountErr) = mountContext(share)
-        if (mountErr != null) return classifyError(mountErr)
+        val startTime = System.currentTimeMillis()
+        val stages = mutableListOf<RpcStage>()
+        var finalError: String? = null
+        val versionLabel = when (share.nfsVersion) { 0 -> "auto" 3 -> "NFSv3" 4 -> "NFSv4" else -> "v${share.nfsVersion}" }
+        Log.i(TAG, "testConnection: START host=${share.host} port=${share.effectivePort} version=$versionLabel")
 
+        // Stage 1: NFS context init + mount.
+        // mountContext() handles auto-detect (v=0) internally: tries NFSv3 first,
+        // falls back to NFSv4 automatically if NFSv3 fails.
+        val initStart = System.currentTimeMillis()
+        val (handle, mountErr) = mountContext(share)
+        val mountDuration = System.currentTimeMillis() - initStart
+        stages.add(RpcStage("NFS init + mount ($versionLabel)", mountErr == null, mountErr, mountDuration))
+
+        if (mountErr != null) {
+            Log.e(TAG, "testConnection: mount failed after ${mountDuration}ms — error=$mountErr")
+            finalError = classifyError(mountErr)
+            val totalTime = System.currentTimeMillis() - startTime
+            Log.e(TAG, "testConnection: classified as \"$finalError\" (total=${totalTime}ms)")
+            recordDebugEntry(share, stages, finalError, totalTime)
+            return finalError
+        }
+        Log.i(TAG, "testConnection: mount OK (${mountDuration}ms)")
+
+        // Stage 2: List root directory to verify mount
+        val listStart = System.currentTimeMillis()
         return try {
+            Log.d(TAG, "testConnection: calling nfsListDir(/, ...)")
             val entries = LibNfsBridge.nfsListDir(handle, "/")
-            Log.i(TAG, "testConnection OK — ${entries?.size ?: 0} entries in root")
+            val listDuration = System.currentTimeMillis() - listStart
+            stages.add(RpcStage("List root directory", true, "${entries?.size ?: 0} entries", listDuration))
+            Log.i(TAG, "testConnection: nfsListDir OK — ${entries?.size ?: 0} entries in root (${listDuration}ms)")
+            finalError = null
             null // success
         } catch (e: Exception) {
-            Log.e(TAG, "testConnection listDir failed", e)
-            classifyError(e.message ?: e.javaClass.simpleName)
+            val listDuration = System.currentTimeMillis() - listStart
+            Log.e(TAG, "testConnection: nfsListDir FAILED after ${listDuration}ms", e)
+            val msg = e.message ?: e.javaClass.simpleName
+            stages.add(RpcStage("List root directory", false, msg, listDuration))
+            finalError = classifyError(msg)
+            Log.e(TAG, "testConnection: listDir error classified as \"$finalError\"")
+            finalError
         } finally {
             LibNfsBridge.nfsDestroy(handle)
+            val totalTime = System.currentTimeMillis() - startTime
+            recordDebugEntry(share, stages, finalError, totalTime)
+            Log.i(TAG, "testConnection: END result=${finalError ?: "SUCCESS"} (${totalTime}ms)")
         }
+    }
+
+    /**
+     * Record a debug entry for the last mount attempt.
+     */
+    private fun recordDebugEntry(share: NetworkShare, stages: List<RpcStage>, finalError: String?, durationMs: Long) {
+        NfsDebugLogger.record(
+            NfsDebugEntry(
+                timestamp = System.currentTimeMillis(),
+                host = share.host,
+                path = share.remotePath,
+                port = share.effectivePort,
+                versionAttempted = share.nfsVersion.takeIf { it > 0 } ?: 3,
+                authFlavor = share.nfsAuthFlavor,
+                stages = stages,
+                finalError = finalError,
+                durationMs = durationMs
+            )
+        )
     }
 
     fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> {

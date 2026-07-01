@@ -1318,6 +1318,72 @@ Cannot reach Portmapper (port 111) on the NFS server. Ensure the Portmapper/rpcb
     <string name="nfs_error_permission_denied">
 NFS server denied access. Check that the export path is correct and that the server allows connections from this device.
 </string>
+    <string name="nfs_error_auth_rejected">
+NFS server rejected authentication. The server may require a different security flavor or permission checked.
+</string>
+    <string name="nfs_error_connection_failed">
+Cannot connect to the NFS server. Check that the server is running and reachable on this network.
+</string>
+    <string name="nfs_error_path_not_found">
+The specified export path was not found on the NFS server. Check that the path is correct and exported.
+</string>
+    <string name="nfs_error_service_unavailable">
+The NFS service (rpcbind/portmapper) is not available on the server.
+</string>
+    <string name="nfs_error_version_mismatch">
+The NFS server does not support the requested protocol version. Try a different NFS version.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Connection Diagnostics
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Hostname resolves
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Hostname could not be resolved
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+NFS port 2049 is reachable
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+Cannot reach NFS port 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (port 111) is reachable
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Cannot reach Portmapper (port 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Debug Log
+</string>
+    <string name="nfs_debug_log_copy">
+Copy Debug Log
+</string>
+    <string name="nfs_debug_log_copied">
+Debug log copied to clipboard
+</string>
+    <string name="nfs_debug_log_empty">
+No debug log available
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+NFS Version
+</string>
+    <string name="nfs_version_auto">
+Auto
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Pindahkan Ubin</string>

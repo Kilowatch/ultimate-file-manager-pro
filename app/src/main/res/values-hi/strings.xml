@@ -1318,6 +1318,72 @@ PKCS12 पासवर्ड
     <string name="nfs_error_permission_denied">
 एनएफएस सर्वर ने पहुंच से इनकार कर दिया। जांचें कि निर्यात पथ सही है और सर्वर इस डिवाइस से कनेक्शन की अनुमति देता है।
 </string>
+    <string name="nfs_error_auth_rejected">
+एनएफएस सर्वर ने प्रमाणीकरण अस्वीकार कर दिया। सर्वर को एक अलग सुरक्षा फ्लेवर या अनुमति की जाँच की आवश्यकता हो सकती है।
+</string>
+    <string name="nfs_error_connection_failed">
+एनएफएस सर्वर से कनेक्ट नहीं हो सकता। जांचें कि सर्वर चल रहा है और इस नेटवर्क पर पहुंच योग्य है।
+</string>
+    <string name="nfs_error_path_not_found">
+निर्दिष्ट निर्यात पथ एनएफएस सर्वर पर नहीं मिला। जांचें कि पथ सही है और निर्यात किया गया है।
+</string>
+    <string name="nfs_error_service_unavailable">
+एनएफएस सेवा (आरपीसीबाइंड/पोर्टमैपर) सर्वर पर उपलब्ध नहीं है।
+</string>
+    <string name="nfs_error_version_mismatch">
+एनएफएस सर्वर अनुरोधित प्रोटोकॉल संस्करण का समर्थन नहीं करता है। कोई भिन्न NFS संस्करण आज़माएँ.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+कनेक्शन निदान
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+होस्टनाम हल हो जाता है
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+होस्टनाम का समाधान नहीं किया जा सका
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+एनएफएस पोर्ट 2049 पहुंच योग्य है
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+एनएफएस पोर्ट 2049 तक नहीं पहुंच सकता
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+पोर्टमैपर (पोर्ट 111) पहुंच योग्य है
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+पोर्टमैपर तक नहीं पहुंच सकता (पोर्ट 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+लॉग को डीबग करें
+</string>
+    <string name="nfs_debug_log_copy">
+डिबग लॉग कॉपी करें
+</string>
+    <string name="nfs_debug_log_copied">
+डिबग लॉग को क्लिपबोर्ड पर कॉपी किया गया
+</string>
+    <string name="nfs_debug_log_empty">
+कोई डिबग लॉग उपलब्ध नहीं है
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+एनएफएस संस्करण
+</string>
+    <string name="nfs_version_auto">
+ऑटो
+</string>
+    <string name="nfs_version_3">
+एनएफएसवी3
+</string>
+    <string name="nfs_version_4">
+एनएफएसवी4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">टाइल हटाएँ</string>

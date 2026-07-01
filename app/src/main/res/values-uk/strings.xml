@@ -2394,6 +2394,72 @@ GB
     <string name="nfs_error_permission_denied">
 Серверу NFS заборонено доступ. Переконайтеся, що шлях експорту правильний і що сервер дозволяє підключення з цього пристрою.
 </string>
+    <string name="nfs_error_auth_rejected">
+Сервер NFS відхилив автентифікацію. Для сервера може знадобитися інший варіант захисту або перевірка дозволу.
+</string>
+    <string name="nfs_error_connection_failed">
+Не вдається підключитися до сервера NFS. Переконайтеся, що сервер працює та доступний у цій мережі.
+</string>
+    <string name="nfs_error_path_not_found">
+Зазначений шлях експорту не знайдено на сервері NFS. Перевірте, чи шлях правильний і експортований.
+</string>
+    <string name="nfs_error_service_unavailable">
+Служба NFS (rpcbind/portmapper) недоступна на сервері.
+</string>
+    <string name="nfs_error_version_mismatch">
+Сервер NFS не підтримує запитану версію протоколу. Спробуйте іншу версію NFS.
+</string>
+
+    <!-- NFS Connection Diagnostics -->
+    <string name="nfs_diagnostics_title">
+Діагностика підключення
+</string>
+    <string name="nfs_diagnostics_dns_ok">
+Ім\'я хосту вирішується
+</string>
+    <string name="nfs_diagnostics_dns_fail">
+Не вдалося визначити ім’я хосту
+</string>
+    <string name="nfs_diagnostics_port2049_ok">
+Порт NFS 2049 доступний
+</string>
+    <string name="nfs_diagnostics_port2049_fail">
+Не вдається отримати доступ до порту NFS 2049
+</string>
+    <string name="nfs_diagnostics_port111_ok">
+Portmapper (порт 111) доступний
+</string>
+    <string name="nfs_diagnostics_port111_fail">
+Не вдається отримати доступ до Portmapper (порт 111)
+</string>
+
+    <!-- NFS Debug Log -->
+    <string name="nfs_debug_log">
+Журнал налагодження
+</string>
+    <string name="nfs_debug_log_copy">
+Копіювати журнал налагодження
+</string>
+    <string name="nfs_debug_log_copied">
+Журнал налагодження скопійовано в буфер обміну
+</string>
+    <string name="nfs_debug_log_empty">
+Немає журналу налагодження
+</string>
+
+    <!-- NFS Version Selector -->
+    <string name="nfs_version">
+Версія NFS
+</string>
+    <string name="nfs_version_auto">
+Авто
+</string>
+    <string name="nfs_version_3">
+NFSv3
+</string>
+    <string name="nfs_version_4">
+NFSv4
+</string>
 
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">
