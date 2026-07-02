@@ -424,7 +424,7 @@ class FileServer(
                             is PartData.FileItem -> {
                                 val tmpFile = File(context.cacheDir, "upload_${UUID.randomUUID()}.tmp")
                                 part.provider().toInputStream().use { input ->
-                                    tmpFile.outputStream().use { output -> input.copyTo(output) }
+                                    tmpFile.outputStream().use { output -> input.copyTo(output, bufferSize = 256 * 1024) }
                                 }
                                 result["file"] = tmpFile.absolutePath
                             }
@@ -646,23 +646,23 @@ class FileServer(
     }
 
     private fun proxyToKtor(clientSocket: java.net.Socket, targetHost: String, targetPort: Int) {
-        clientSocket.soTimeout = 30000
+        clientSocket.soTimeout = 0
         var targetSocket: java.net.Socket? = null
         try {
             targetSocket = java.net.Socket(targetHost, targetPort)
-            targetSocket.soTimeout = 30000
+            targetSocket.soTimeout = 0
             val clientIn = clientSocket.getInputStream()
             val clientOut = clientSocket.getOutputStream()
             val targetIn = targetSocket.getInputStream()
             val targetOut = targetSocket.getOutputStream()
 
             val c2t = thread(name = "proxy-c2t", start = false) {
-                try { clientIn.copyTo(targetOut) } catch (_: Exception) {}
+                try { clientIn.copyTo(targetOut, bufferSize = 256 * 1024) } catch (_: Exception) {}
                 runCatching { targetSocket?.close() }
                 runCatching { clientSocket.close() }
             }
             val t2c = thread(name = "proxy-t2c", start = false) {
-                try { targetIn.copyTo(clientOut) } catch (_: Exception) {}
+                try { targetIn.copyTo(clientOut, bufferSize = 256 * 1024) } catch (_: Exception) {}
                 runCatching { clientSocket.close() }
                 runCatching { targetSocket?.close() }
             }
@@ -736,9 +736,9 @@ class FileServer(
                     val ct = ContentType.parse(contentType)
                     val stream = body()
                     if (length > 0L) {
-                        call.respondOutputStream(ct, status, length) { stream.use { it.copyTo(this) } }
+                        call.respondOutputStream(ct, status, length) { stream.use { it.copyTo(this, bufferSize = 256 * 1024) } }
                     } else {
-                        call.respondOutputStream(ct, status) { stream.use { it.copyTo(this) } }
+                        call.respondOutputStream(ct, status) { stream.use { it.copyTo(this, bufferSize = 256 * 1024) } }
                     }
                 }
             }

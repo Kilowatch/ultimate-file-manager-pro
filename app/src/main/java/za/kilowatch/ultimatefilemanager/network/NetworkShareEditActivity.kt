@@ -303,6 +303,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
     }
 
     private fun setupTypeToggle() {
+        // Ensure SMB is the default protocol for both mobile and TV
+        chipSmb?.isChecked = true
+        rgType?.check(R.id.rbSmb)
         val isSmbNow = rbSmb?.isChecked == true || chipSmb?.isChecked == true
         val isDlnaNow = chipDlna?.isChecked == true || rbDlna?.isChecked == true
         tilDomain.visibility       = if (isSmbNow) View.VISIBLE else View.GONE
@@ -400,7 +403,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private fun applyConnectionTypeVisibility(isSmb: Boolean) {
         if (!isSmb) {
             layerPath.visibility = View.VISIBLE
-            btnBrowseShares.visibility = View.VISIBLE
+            btnBrowseShares.visibility = View.GONE
             return
         }
         val isServer = chipSmbServer?.isChecked == true ||
@@ -457,6 +460,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnScanHosts.visibility = View.GONE
         layerSmbProtocol?.visibility = View.GONE
         layerSmbConnectionType?.visibility = View.GONE
+        layerNfsVersion?.visibility = View.GONE
         btnToggleSshAuth.visibility = View.GONE
         cardSshAuth.visibility = View.GONE
         txtHostKeyFingerprint.visibility = View.GONE

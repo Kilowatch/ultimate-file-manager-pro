@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New "Include file names containing" filter option in Advanced Sync profile filtering — works as the inverse of the existing "Skip" filter, with Include running first then Skip. Supports comma-separated words, case-insensitive matching, and composes with Skip for fine-grained control.
 - Local destination support for Advanced Sync profiles — select internal storage, USB, or SD card as the sync destination alongside existing network shares. All direction modes (Upload, Download, Two-way) work with local destinations, including filtering, move files, and sync deletions.
 
+### Fixed
+- Fixed "Available Shares" button showing for non-SMB protocols in the Add Share screen (mobile and TV)
+- Fixed NFS Version selector remaining visible when switching to DLNA in the Add Share screen
+- Fixed SMB not being explicitly selected as the default protocol on opening Add Share
+
 ## [1.6.1] — 2026-06-29
 
 ### Added
