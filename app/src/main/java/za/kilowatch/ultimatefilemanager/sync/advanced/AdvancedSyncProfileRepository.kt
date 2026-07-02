@@ -58,6 +58,8 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                         localDisplayPath = o.getString("localDisplayPath"),
                         networkShareId = o.getString("networkShareId"),
                         remotePath = o.getString("remotePath"),
+                        destLocalUri = o.optString("destLocalUri", ""),
+                        destLocalDisplayPath = o.optString("destLocalDisplayPath", ""),
                         direction = o.optString("direction", "upload"),
                         conflictStrategy = o.optString("conflictStrategy", "skip"),
                         scheduleType = o.optString("scheduleType", "interval"),
@@ -73,6 +75,7 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                         extensionMode = o.optString("extensionMode", "all"),
                         extensionFilters = o.optString("extensionFilters", ""),
                         excludePatterns = o.optString("excludePatterns", ""),
+                        includePatterns = o.optString("includePatterns", ""),
                         minSizeBytes = o.optLong("minSizeBytes", 0L),
                         maxSizeBytes = o.optLong("maxSizeBytes", 0L),
                         minSizeIsGB = o.optBoolean("minSizeIsGB", false),
@@ -103,6 +106,8 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                 put("localDisplayPath", p.localDisplayPath)
                 put("networkShareId", p.networkShareId)
                 put("remotePath", p.remotePath)
+                put("destLocalUri", p.destLocalUri)
+                put("destLocalDisplayPath", p.destLocalDisplayPath)
                 put("direction", p.direction)
                 put("conflictStrategy", p.conflictStrategy)
                 put("scheduleType", p.scheduleType)
@@ -118,6 +123,7 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                 put("extensionMode", p.extensionMode)
                 put("extensionFilters", p.extensionFilters)
                 put("excludePatterns", p.excludePatterns)
+                put("includePatterns", p.includePatterns)
                 put("minSizeBytes", p.minSizeBytes)
                 put("maxSizeBytes", p.maxSizeBytes)
                 put("minSizeIsGB", p.minSizeIsGB)

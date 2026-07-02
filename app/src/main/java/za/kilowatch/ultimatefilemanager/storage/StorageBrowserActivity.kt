@@ -1387,6 +1387,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                     }
                     if (isSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_SYNC_FOLDER_PICKER, true)
                     if (isAdvancedSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
+                    if (isAdvancedSyncDestPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
                     if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
                     if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
                     if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
@@ -2064,6 +2065,9 @@ class StorageBrowserActivity : AppCompatActivity() {
             }
             if (isAdvancedSyncFolderPickerMode) {
                 putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
+            }
+            if (isAdvancedSyncDestPickerMode) {
+                putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
             }
             if (isCompressDestPickerMode) {
                 putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)

@@ -1180,11 +1180,40 @@ MB
     <string name="size_unit_gb">
 GB
 </string>
+    <string name="filter_include_label">
+다음을 포함하는 파일 이름 포함
+</string>
+    <string name="filter_include_hint">
+쉼표로 구분된 단어
+</string>
+    <string name="filter_include_summary">
+해당 단어가 포함된 파일 이름만 동기화됩니다.
+</string>
     <string name="filter_exclude_label">
 다음을 포함하는 파일 이름 건너뛰기
 </string>
     <string name="filter_exclude_hint">
 쉼표로 구분된 단어
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+로컬 폴더
+</string>
+    <string name="advanced_sync_dest_select">
+목적지 선택
+</string>
+    <string name="advanced_sync_same_path_warning">
+소스 및 대상 폴더가 동일하거나 중첩되어 있습니다. 이로 인해 예기치 않은 결과가 발생할 수 있습니다. 계속하시겠습니까?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+이 장치의 파일을 로컬 폴더로 복사
+</string>
+    <string name="advanced_sync_local_download_desc">
+로컬 폴더에서 이 장치로 파일 복사
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+로컬 폴더 간 양방향으로 파일 동기화
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ Bluetooth 또는 WiFi를 통해 TV 제어
     <string name="extract_here_1">여기서 추출하세요</string>
     <string name="extract_contents_to_path">내용을 추출하여:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">다음 폴더를 동기화 소스로 사용하시겠습니까?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+대상 폴더 확인
+</string>
+    <string name="use_folder_as_sync_destination">
+다음 폴더를 동기화 대상으로 사용하시겠습니까?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">처리 중…</string>
     <string name="code_must_be_exactly_16">코드는 정확히 16자여야 합니다.</string>
     <string name="network_share_required">네트워크 공유 필요</string>
@@ -3256,6 +3294,9 @@ UFM에 저장
     <string name="edit">편집하다</string>
     <string name="sync_now">지금 동기화</string>
     <string name="network_share_not_found_for_profilename">%1$s에 대한 네트워크 공유를 찾을 수 없습니다.</string>
+    <string name="local_sync_failed_for_profilename">
+%1$s에 대한 로컬 동기화에 실패했습니다.
+</string>
     <string name="connection_lost_sync_paused_for_profilename">연결이 끊겼습니다. %1$s에 대한 동기화가 일시중지되었습니다.</string>
     <string name="cannot_read_local_folder_for_profilename">%1$s에 대한 로컬 폴더를 읽을 수 없습니다.</string>
     <string name="failed_to_access_remote_path_for_profilename">%1$s에 대한 원격 경로에 액세스하지 못했습니다.</string>

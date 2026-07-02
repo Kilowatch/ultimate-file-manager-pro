@@ -32,6 +32,8 @@ data class AdvancedSyncProfile(
     val localDisplayPath: String,
     val networkShareId: String,
     val remotePath: String,
+    val destLocalUri: String = "",                // local destination path (empty when network dest)
+    val destLocalDisplayPath: String = "",        // human-readable name for local destination
     // --- Direction & conflict ---
     val direction: String = "upload",               // "upload" | "download" | "twoway"
     val conflictStrategy: String = "skip",           // "skip" | "newest" | "keep_local" | "keep_remote"
@@ -49,6 +51,7 @@ data class AdvancedSyncProfile(
     val moveFiles: Boolean = false,                  // true = delete source files after successful transfer (cut instead of copy)
     val extensionMode: String = "all",               // "all" | "only" | "skip"
     val extensionFilters: String = "",               // comma-separated extensions for "only" or "skip" mode
+    val includePatterns: String = "",                // comma-separated name patterns to require (include filter)
     val excludePatterns: String = "",                // comma-separated name patterns to exclude
     val minSizeBytes: Long = 0L,                     // minimum file size in bytes (0 = no limit)
     val maxSizeBytes: Long = 0L,                     // maximum file size in bytes (0 = no limit)

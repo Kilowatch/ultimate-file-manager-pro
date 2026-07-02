@@ -1180,11 +1180,40 @@ MB
     <string name="size_unit_gb">
 GB
 </string>
+    <string name="filter_include_label">
+を含むファイル名を含める
+</string>
+    <string name="filter_include_hint">
+カンマ区切りの単語
+</string>
+    <string name="filter_include_summary">
+これらの単語を含むファイル名のみが同期されます
+</string>
     <string name="filter_exclude_label">
 を含むファイル名をスキップします。
 </string>
     <string name="filter_exclude_hint">
 カンマ区切りの単語
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+ローカルフォルダー
+</string>
+    <string name="advanced_sync_dest_select">
+目的地を選択してください
+</string>
+    <string name="advanced_sync_same_path_warning">
+ソース フォルダーと宛先フォルダーが同じか、ネストされています。これにより、予期しない結果が生じる可能性があります。続けますか?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+このデバイスからローカル フォルダーにファイルをコピーします
+</string>
+    <string name="advanced_sync_local_download_desc">
+ローカルフォルダーからこのデバイスにファイルをコピーします
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+ローカルフォルダー間でファイルを双方向で同期します
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ Bluetooth または WiFi 経由でテレビを制御
     <string name="extract_here_1">ここから抜粋</string>
     <string name="extract_contents_to_path">内容を次の場所に抽出します。\n\n%1$s</string>
     <string name="use_folder_as_sync_source">次のフォルダーを同期ソースとして使用しますか?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+保存先フォルダーの確認
+</string>
+    <string name="use_folder_as_sync_destination">
+次のフォルダを同期先として使用しますか?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">処理…</string>
     <string name="code_must_be_exactly_16">コードは正確に 16 文字である必要があります</string>
     <string name="network_share_required">ネットワーク共有が必要です</string>
@@ -3256,6 +3294,9 @@ UFM に保存
     <string name="edit">編集</string>
     <string name="sync_now">今すぐ同期</string>
     <string name="network_share_not_found_for_profilename">%1$s のネットワーク共有が見つかりません</string>
+    <string name="local_sync_failed_for_profilename">
+%1$s のローカル同期に失敗しました
+</string>
     <string name="connection_lost_sync_paused_for_profilename">接続が失われました。 %1$s の同期が一時停止されました。</string>
     <string name="cannot_read_local_folder_for_profilename">%1$s のローカル フォルダーを読み取れません。</string>
     <string name="failed_to_access_remote_path_for_profilename">%1$s のリモート パスにアクセスできませんでした。</string>

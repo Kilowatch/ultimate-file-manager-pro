@@ -1180,11 +1180,40 @@ MB
     <string name="size_unit_gb">
 Büyük Britanya
 </string>
+    <string name="filter_include_label">
+Aşağıdakileri içeren dosya adlarını dahil edin:
+</string>
+    <string name="filter_include_hint">
+virgülle ayrılmış kelimeler
+</string>
+    <string name="filter_include_summary">
+Yalnızca bu kelimeleri içeren dosya adları senkronize edilir
+</string>
     <string name="filter_exclude_label">
 Aşağıdakileri içeren dosya adlarını atla:
 </string>
     <string name="filter_exclude_hint">
 virgülle ayrılmış kelimeler
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+Yerel klasör
+</string>
+    <string name="advanced_sync_dest_select">
+Hedef Seçin
+</string>
+    <string name="advanced_sync_same_path_warning">
+Kaynak ve hedef klasörler aynı veya iç içe. Bu beklenmeyen sonuçlara neden olabilir. Devam etmek istiyor musun?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+Dosyaları bu cihazdan yerel bir klasöre kopyalayın
+</string>
+    <string name="advanced_sync_local_download_desc">
+Dosyaları yerel bir klasörden bu cihaza kopyalayın
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+Dosyaları yerel klasörler arasında her iki yönde senkronize edin
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ TV\'yi Bluetooth veya WiFi üzerinden kontrol etme
     <string name="extract_here_1">Buradan Çıkart</string>
     <string name="extract_contents_to_path">İçeriği şuraya çıkarın:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">Aşağıdaki klasör senkronizasyon kaynağı olarak kullanılsın mı?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+Hedef Klasörü Onayla
+</string>
+    <string name="use_folder_as_sync_destination">
+Senkronizasyon hedefi olarak aşağıdaki klasör kullanılsın mı?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">İşleme…</string>
     <string name="code_must_be_exactly_16">Kod tam olarak 16 karakterden oluşmalıdır</string>
     <string name="network_share_required">Ağ Paylaşımı Gerekli</string>
@@ -3256,6 +3294,9 @@ Son eki olan yeni bir klasör oluşturulur (örn. \"UFM Fotoğrafları (1)\").
     <string name="edit">Düzenlemek</string>
     <string name="sync_now">Şimdi Senkronize Et</string>
     <string name="network_share_not_found_for_profilename">%1$s için ağ paylaşımı bulunamadı</string>
+    <string name="local_sync_failed_for_profilename">
+%1$s için yerel senkronizasyon başarısız oldu
+</string>
     <string name="connection_lost_sync_paused_for_profilename">Bağlantı kesildi. Senkronizasyon %1$s için duraklatıldı.</string>
     <string name="cannot_read_local_folder_for_profilename">%1$s için yerel klasör okunamıyor.</string>
     <string name="failed_to_access_remote_path_for_profilename">%1$s için uzak yola erişilemedi.</string>

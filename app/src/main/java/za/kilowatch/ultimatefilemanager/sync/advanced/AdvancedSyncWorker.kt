@@ -56,6 +56,55 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
         Log.d(TAG, "Starting sync for profile '${profile.name}' (id=${profile.id}, dir=${profile.direction}, dest=${profile.networkShareId})")
 
+        // ── Local destination path ──────────────────────────────────────────────
+        if (profile.destLocalUri.isNotEmpty()) {
+            Log.d(TAG, "Using local destination: ${profile.destLocalUri}")
+            val localDir = File(profile.localUri)
+            val destDir = File(profile.destLocalUri)
+            if (!localDir.exists() || !localDir.isDirectory || !localDir.canRead()) {
+                if (profile.notificationsEnabled) {
+                    showErrorNotification(
+                        applicationContext.getString(R.string.cannot_read_local_folder_for_profilename, profile.name),
+                        profile.id.hashCode() + 10
+                    )
+                }
+                return Result.failure()
+            }
+            if (!destDir.exists()) destDir.mkdirs()
+            if (!destDir.exists() || !destDir.isDirectory) {
+                Log.w(TAG, "Cannot access destination directory: ${profile.destLocalUri}")
+                if (profile.notificationsEnabled) {
+                    showErrorNotification(
+                        applicationContext.getString(R.string.cannot_read_local_folder_for_profilename, profile.name),
+                        profile.id.hashCode() + 10
+                    )
+                }
+                return Result.failure()
+            }
+            try {
+                when (profile.direction) {
+                    "upload" -> doLocalUpload(profile, localDir, destDir, notificationId)
+                    "download" -> doLocalDownload(profile, localDir, destDir, notificationId)
+                    "twoway" -> doLocalTwoway(profile, localDir, destDir, notificationId)
+                    else -> Log.w(TAG, "Unknown direction: ${profile.direction}")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Local sync failed", e)
+                if (profile.notificationsEnabled) {
+                    showErrorNotification(
+                        applicationContext.getString(R.string.local_sync_failed_for_profilename, profile.name),
+                        profile.id.hashCode() + 10
+                    )
+                }
+                return Result.failure()
+            }
+            if (profile.notificationsEnabled) {
+                val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                nm.cancel(notificationId)
+            }
+            return Result.success()
+        }
+
         try {
             // Resolve share — try network shares first, then online storages
             var share = NetworkShareRepository.getInstance(applicationContext).getById(profile.networkShareId)
@@ -414,6 +463,263 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
         profile.lastSyncTime = System.currentTimeMillis()
         profile.lastSyncFileCount = toUpload.size + toDownload.size
+    }
+
+    // ── Local copy: source → dest (both local) ─────────────────────────────────
+
+    private suspend fun doLocalUpload(
+        profile: AdvancedSyncProfile, srcDir: File, destDir: File, notificationId: Int
+    ) {
+        val destFiles = destDir.list()?.map { it to File(destDir, it) }?.toMap() ?: emptyMap()
+        val destSizes = destFiles.mapValues { it.value.length() }
+        val destTimestamps = destFiles.mapValues { it.value.lastModified() }
+
+        val srcFiles = (srcDir.list()?.map { File(srcDir, it) } ?: emptyList())
+            .filter { passesFilters(it.name, profile) }
+            .filter { passesSizeAgeFilters(it, profile) }
+        Log.d(TAG, "doLocalUpload: ${srcFiles.size} files after filter in '${srcDir.path}'")
+
+        val filesToCopy = srcFiles.filter { file ->
+            if (file.isDirectory) return@filter false
+            val destFile = destFiles[file.name]
+            destFile == null
+                || destFile.length() != file.length()
+                || (destFile.lastModified() < file.lastModified() && file.lastModified() > 0L)
+        }
+
+        var syncedCount = 0
+        val copiedFiles = mutableListOf<File>()
+
+        for ((index, file) in filesToCopy.withIndex()) {
+            if (profile.notificationsEnabled) {
+                notifyProgress(profile.name, index + 1, filesToCopy.size, notificationId)
+            }
+            try {
+                val destFile = File(destDir, file.name)
+                val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                    sourceName = file.name,
+                    sourceSize = file.length(),
+                    verifyDestSize = { destFile.length() },
+                    doCopy = {
+                        FileInputStream(file).use { input ->
+                            destFile.outputStream().use { output ->
+                                za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, file.length())
+                            }
+                        }
+                    }
+                )
+                if (success) {
+                    destFile.setLastModified(file.lastModified())
+                    syncedCount++
+                    copiedFiles.add(file)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to copy '${file.name}' locally", e)
+            }
+        }
+
+        // Move files: delete source after successful copy
+        if (profile.moveFiles) {
+            for (file in copiedFiles) {
+                val destFile = File(destDir, file.name)
+                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        destFile.length(), file.length(), file.name) && file.delete()) {
+                    Log.d(TAG, "Moved (deleted source): ${file.name}")
+                }
+            }
+        }
+
+        // Sync deletions
+        if (profile.syncDeletions && profile.syncedFileHashes.isNotBlank()) {
+            val previousHashes = try {
+                org.json.JSONArray(profile.syncedFileHashes).let { arr ->
+                    (0 until arr.length()).map { arr.getString(it) }.toSet()
+                }
+            } catch (e: Exception) { emptySet() }
+            if (previousHashes.isNotEmpty()) {
+                val currentSrcNames = srcDir.list()?.toSet() ?: emptySet()
+                for (destFileName in destDir.list() ?: emptyArray()) {
+                    val destFile = File(destDir, destFileName)
+                    if (destFile.isDirectory) continue
+                    val hash = sha256(destFileName)
+                    if (hash in previousHashes && destFileName !in currentSrcNames && destFile.delete()) {
+                        Log.d(TAG, "Local deletion: removed '${destFileName}' from destination")
+                    }
+                }
+            }
+        }
+
+        // Persist hash tracking
+        val currentHashes = (srcDir.list()?.toSet() ?: emptySet())
+            .filter { !File(srcDir, it).isDirectory }
+            .map { sha256(it) }
+            .toSet()
+        profile.syncedFileHashes = org.json.JSONArray(currentHashes.toList()).toString()
+        val repo = AdvancedSyncProfileRepository.getInstance(applicationContext)
+        repo.save(profile)
+
+        profile.lastSyncTime = System.currentTimeMillis()
+        profile.lastSyncFileCount = syncedCount
+    }
+
+    private suspend fun doLocalDownload(
+        profile: AdvancedSyncProfile, srcDir: File, destDir: File, notificationId: Int
+    ) {
+        // For download direction, source = destDir (the "remote" local folder), dest = srcDir
+        doLocalUpload(
+            profile.copy(direction = "upload"),
+            destDir, srcDir, notificationId
+        )
+    }
+
+    private suspend fun doLocalTwoway(
+        profile: AdvancedSyncProfile, srcDir: File, destDir: File, notificationId: Int
+    ) {
+        val destFiles = destDir.list()?.map { it to File(destDir, it) }?.toMap() ?: emptyMap()
+        val destSizes = destFiles.mapValues { it.value.length() }
+        val destTimestamps = destFiles.mapValues { it.value.lastModified() }
+
+        val srcFiles = (srcDir.list()?.map { File(srcDir, it) } ?: emptyList())
+            .filter { passesFilters(it.name, profile) }
+            .filter { passesSizeAgeFilters(it, profile) }
+        val srcMap = srcFiles.associateBy { it.name }
+
+        val toUpload = mutableListOf<File>()
+        val toDownloadFiles = mutableListOf<String>()
+        val conflicts = mutableListOf<Pair<File, String>>()
+        val conflictLog = JSONArray()
+
+        for (srcFile in srcFiles) {
+            if (srcFile.isDirectory) continue
+            val name = srcFile.name
+            val destFile = destFiles[name]
+            val destSize = destSizes[name]
+            val destTime = destTimestamps[name] ?: 0L
+
+            if (destFile == null) {
+                toUpload.add(srcFile)
+            } else if (destSize != srcFile.length()) {
+                val srcMod = srcFile.lastModified()
+                if (srcMod > destTime && destTime > 0L) {
+                    toUpload.add(srcFile)
+                } else if (destTime > srcMod && srcMod > 0L) {
+                    toDownloadFiles.add(name)
+                } else {
+                    conflicts.add(Pair(srcFile, name))
+                }
+            } else if (destTime > srcFile.lastModified() && destTime > 0L) {
+                toDownloadFiles.add(name)
+            }
+        }
+
+        // Files only on destination → download to source
+        for (destFileName in destDir.list() ?: emptyArray()) {
+            if (File(destDir, destFileName).isDirectory) continue
+            if (destFileName !in srcMap.keys) toDownloadFiles.add(destFileName)
+        }
+
+        // Resolve conflicts
+        for ((srcFile, conflictName) in conflicts) {
+            val destFile = destFiles[conflictName] ?: continue
+            when (profile.conflictStrategy) {
+                "newest" -> {
+                    if (srcFile.lastModified() >= destFile.lastModified()) {
+                        toUpload.add(srcFile)
+                        logConflict(conflictLog, srcFile.name, "upload (newer locally)")
+                    } else {
+                        toDownloadFiles.add(conflictName)
+                        logConflict(conflictLog, conflictName, "download (newer remotely)")
+                    }
+                }
+                "keep_local" -> { toUpload.add(srcFile); logConflict(conflictLog, srcFile.name, "keep_local") }
+                "keep_remote" -> { toDownloadFiles.add(conflictName); logConflict(conflictLog, conflictName, "keep_remote") }
+                else -> logConflict(conflictLog, srcFile.name, "skipped")
+            }
+        }
+
+        // Execute uploads (source → dest)
+        var syncedCount = 0
+        if (toUpload.isNotEmpty()) {
+            for ((index, file) in toUpload.withIndex()) {
+                if (profile.notificationsEnabled) {
+                    notifyProgress(profile.name, index + 1, toUpload.size, notificationId)
+                }
+                try {
+                    val destFile = File(destDir, file.name)
+                    val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                        sourceName = file.name,
+                        sourceSize = file.length(),
+                        verifyDestSize = { destFile.length() },
+                        doCopy = {
+                            FileInputStream(file).use { input ->
+                                destFile.outputStream().use { output ->
+                                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, file.length())
+                                }
+                            }
+                        }
+                    )
+                    if (success) {
+                        destFile.setLastModified(file.lastModified())
+                        syncedCount++
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to copy '${file.name}' locally (twoway)", e)
+                }
+            }
+        }
+
+        // Execute downloads (dest → source)
+        if (toDownloadFiles.isNotEmpty()) {
+            for ((index, name) in toDownloadFiles.withIndex()) {
+                val srcFile = File(srcDir, name)
+                val destFile = File(destDir, name)
+                if (!destFile.exists() || destFile.isDirectory) continue
+                if (profile.notificationsEnabled) {
+                    notifyProgress(profile.name, index + 1, toDownloadFiles.size, notificationId + 1)
+                }
+                try {
+                    val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
+                        sourceName = name,
+                        sourceSize = destFile.length(),
+                        verifyDestSize = { srcFile.length() },
+                        doCopy = {
+                            FileInputStream(destFile).use { input ->
+                                srcFile.outputStream().use { output ->
+                                    za.kilowatch.ultimatefilemanager.util.CopyHelper.copy(input, output, destFile.length())
+                                }
+                            }
+                        }
+                    )
+                    if (success) {
+                        srcFile.setLastModified(destFile.lastModified())
+                        syncedCount++
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to download '${name}' locally (twoway)", e)
+                }
+            }
+        }
+
+        if (conflictLog.length() > 0) profile.conflictLogJson = conflictLog.toString(2)
+        profile.lastSyncTime = System.currentTimeMillis()
+        profile.lastSyncFileCount = syncedCount
+    }
+
+    /** Show a progress notification during sync. */
+    private fun notifyProgress(profileName: String, index: Int, total: Int, notificationId: Int) {
+        val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setContentTitle(applicationContext.getString(R.string.advanced_sync_title))
+            .setContentText(
+                applicationContext.getString(
+                    R.string.syncing_profilename_index_1filestouploadsize,
+                    profileName, index, total
+                )
+            )
+            .setSmallIcon(R.drawable.ic_sync_advanced)
+            .setOngoing(true)
+            .build()
+        val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nm.notify(notificationId, notification)
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
@@ -858,6 +1164,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             val matchesExt = fileExt.isNotEmpty() && exts.any { fileExt == it || fileExt.contains(it) }
             if (profile.extensionMode == "only" && !matchesExt) return false
             if (profile.extensionMode == "skip" && matchesExt) return false
+        }
+        // Name include pattern filter (runs first: include → exclude)
+        if (profile.includePatterns.isNotBlank()) {
+            val patterns = profile.includePatterns.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
+            if (patterns.none { lower.contains(it) }) return false
         }
         // Name exclude pattern filter
         if (profile.excludePatterns.isNotBlank()) {

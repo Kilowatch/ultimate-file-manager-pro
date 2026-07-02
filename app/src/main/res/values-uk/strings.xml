@@ -2230,11 +2230,40 @@ MB
     <string name="size_unit_gb">
 GB
 </string>
+    <string name="filter_include_label">
+Включіть імена файлів, що містять
+</string>
+    <string name="filter_include_hint">
+слова, розділені комами
+</string>
+    <string name="filter_include_summary">
+Синхронізуються лише імена файлів, які містять ці слова
+</string>
     <string name="filter_exclude_label">
 Пропустити імена файлів, що містять
 </string>
     <string name="filter_exclude_hint">
 слова, розділені комами
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+Локальна папка
+</string>
+    <string name="advanced_sync_dest_select">
+Виберіть пункт призначення
+</string>
+    <string name="advanced_sync_same_path_warning">
+Вихідна та цільова папки однакові або вкладені. Це може призвести до неочікуваних результатів. Ви хочете продовжити?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+Скопіюйте файли з цього пристрою в локальну папку
+</string>
+    <string name="advanced_sync_local_download_desc">
+Скопіюйте файли з локальної папки на цей пристрій
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+Синхронізація файлів між локальними папками в обох напрямках
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -4015,6 +4044,15 @@ UFM не підтримує вибір цих папок за допомогою
 </string>
     <string name="use_folder_as_sync_source">
 Використовувати таку папку як джерело синхронізації?\n
+\n
+%1$s\n
+\n
+</string>
+    <string name="confirm_destination_folder">
+Підтвердьте папку призначення
+</string>
+    <string name="use_folder_as_sync_destination">
+Використовувати таку папку як місце призначення для синхронізації?\n
 \n
 %1$s\n
 \n
@@ -6093,6 +6131,9 @@ Smart Sort завершено
 </string>
     <string name="network_share_not_found_for_profilename">
 Спільний доступ до мережі не знайдено для %1$s
+</string>
+    <string name="local_sync_failed_for_profilename">
+Помилка локальної синхронізації для %1$s
 </string>
     <string name="connection_lost_sync_paused_for_profilename">
 З\'єднання втрачено. Синхронізацію для %1$s призупинено.

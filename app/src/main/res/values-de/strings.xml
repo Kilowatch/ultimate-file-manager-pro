@@ -1180,11 +1180,40 @@ MB
     <string name="size_unit_gb">
 GB
 </string>
+    <string name="filter_include_label">
+Fügen Sie Dateinamen hinzu, die enthalten
+</string>
+    <string name="filter_include_hint">
+durch Kommas getrennte Wörter
+</string>
+    <string name="filter_include_summary">
+Nur Dateinamen, die diese Wörter enthalten, werden synchronisiert
+</string>
     <string name="filter_exclude_label">
 Überspringen Sie Dateinamen, die enthalten
 </string>
     <string name="filter_exclude_hint">
 durch Kommas getrennte Wörter
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+Lokaler Ordner
+</string>
+    <string name="advanced_sync_dest_select">
+Wählen Sie Ziel aus
+</string>
+    <string name="advanced_sync_same_path_warning">
+Die Quell- und Zielordner sind gleich oder verschachtelt. Dies kann zu unerwarteten Ergebnissen führen. Möchten Sie fortfahren?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+Kopieren Sie Dateien von diesem Gerät in einen lokalen Ordner
+</string>
+    <string name="advanced_sync_local_download_desc">
+Kopieren Sie Dateien aus einem lokalen Ordner auf dieses Gerät
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+Synchronisieren Sie Dateien in beide Richtungen zwischen lokalen Ordnern
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ Steuern Sie den Fernseher über Bluetooth oder WLAN
     <string name="extract_here_1">Hier extrahieren</string>
     <string name="extract_contents_to_path">Inhalt extrahieren nach:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">Möchten Sie den folgenden Ordner als Synchronisierungsquelle verwenden?\n\n%1$s\n\n</string>
+    <string name="confirm_destination_folder">
+Bestätigen Sie den Zielordner
+</string>
+    <string name="use_folder_as_sync_destination">
+Den folgenden Ordner als Synchronisierungsziel verwenden?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">Verarbeitung...</string>
     <string name="code_must_be_exactly_16">Der Code muss genau 16 Zeichen lang sein</string>
     <string name="network_share_required">Netzwerkfreigabe erforderlich</string>
@@ -3256,6 +3294,9 @@ Ein neuer Ordner mit einem Nummernsuffix wird erstellt (z. B. „UFM Photos (1)�
     <string name="edit">Bearbeiten</string>
     <string name="sync_now">Jetzt synchronisieren</string>
     <string name="network_share_not_found_for_profilename">Netzwerkfreigabe für %1$s nicht gefunden</string>
+    <string name="local_sync_failed_for_profilename">
+Lokale Synchronisierung für %1$s fehlgeschlagen
+</string>
     <string name="connection_lost_sync_paused_for_profilename">Verbindung verloren. Synchronisierung für %1$s angehalten.</string>
     <string name="cannot_read_local_folder_for_profilename">Der lokale Ordner für %1$s kann nicht gelesen werden.</string>
     <string name="failed_to_access_remote_path_for_profilename">Auf den Remote-Pfad für %1$s konnte nicht zugegriffen werden.</string>

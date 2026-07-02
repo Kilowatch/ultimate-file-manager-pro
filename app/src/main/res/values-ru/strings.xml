@@ -1180,11 +1180,40 @@ jpg, png, mp4
     <string name="size_unit_gb">
 ГБ
 </string>
+    <string name="filter_include_label">
+Включите имена файлов, содержащие
+</string>
+    <string name="filter_include_hint">
+слова, разделенные запятыми
+</string>
+    <string name="filter_include_summary">
+Синхронизируются только имена файлов, содержащие эти слова.
+</string>
     <string name="filter_exclude_label">
 Пропускать имена файлов, содержащие
 </string>
     <string name="filter_exclude_hint">
 слова, разделенные запятыми
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+Локальная папка
+</string>
+    <string name="advanced_sync_dest_select">
+Выберите пункт назначения
+</string>
+    <string name="advanced_sync_same_path_warning">
+Папки источника и назначения одинаковые или вложенные. Это может привести к неожиданным результатам. Хотите продолжить?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+Скопируйте файлы с этого устройства в локальную папку
+</string>
+    <string name="advanced_sync_local_download_desc">
+Скопируйте файлы из локальной папки на это устройство
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+Синхронизировать файлы в обоих направлениях между локальными папками
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ Portmapper (порт 111) доступен
     <string name="extract_here_1">Извлечь здесь</string>
     <string name="extract_contents_to_path">Извлеките содержимое в:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">Использовать следующую папку в качестве источника синхронизации?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+Подтвердите папку назначения
+</string>
+    <string name="use_folder_as_sync_destination">
+Использовать следующую папку в качестве места назначения для синхронизации?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">Обработка…</string>
     <string name="code_must_be_exactly_16">Код должен состоять ровно из 16 символов.</string>
     <string name="network_share_required">Требуется общий доступ к сети</string>
@@ -3256,6 +3294,9 @@ Portmapper (порт 111) доступен
     <string name="edit">Редактировать</string>
     <string name="sync_now">Синхронизировать сейчас</string>
     <string name="network_share_not_found_for_profilename">Сетевой ресурс не найден для %1$s</string>
+    <string name="local_sync_failed_for_profilename">
+Не удалось выполнить локальную синхронизацию для %1$s
+</string>
     <string name="connection_lost_sync_paused_for_profilename">Соединение потеряно. Синхронизация приостановлена ​​на %1$s.</string>
     <string name="cannot_read_local_folder_for_profilename">Невозможно прочитать локальную папку для %1$s.</string>
     <string name="failed_to_access_remote_path_for_profilename">Не удалось получить доступ к удаленному пути для %1$s.</string>

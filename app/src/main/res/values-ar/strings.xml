@@ -1180,11 +1180,40 @@ JPG، بابوا نيو غينيا، MP4
     <string name="size_unit_gb">
 غيغابايت
 </string>
+    <string name="filter_include_label">
+تضمين أسماء الملفات التي تحتوي على
+</string>
+    <string name="filter_include_hint">
+كلمات مفصولة بفواصل
+</string>
+    <string name="filter_include_summary">
+تتم مزامنة أسماء الملفات التي تحتوي على هذه الكلمات فقط
+</string>
     <string name="filter_exclude_label">
 تخطي أسماء الملفات التي تحتوي على
 </string>
     <string name="filter_exclude_hint">
 كلمات مفصولة بفواصل
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+المجلد المحلي
+</string>
+    <string name="advanced_sync_dest_select">
+اختر الوجهة
+</string>
+    <string name="advanced_sync_same_path_warning">
+المجلدات المصدر والوجهة متماثلة أو متداخلة. قد يسبب هذا نتائج غير متوقعة. هل تريد الاستمرار؟
+</string>
+    <string name="advanced_sync_local_upload_desc">
+انسخ الملفات من هذا الجهاز إلى مجلد محلي
+</string>
+    <string name="advanced_sync_local_download_desc">
+انسخ الملفات من مجلد محلي إلى هذا الجهاز
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+مزامنة الملفات في كلا الاتجاهين بين المجلدات المحلية
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ SRT
     <string name="extract_here_1">استخراج هنا</string>
     <string name="extract_contents_to_path">استخراج المحتويات إلى:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">هل تريد استخدام المجلد التالي كمصدر للمزامنة؟\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+تأكيد مجلد الوجهة
+</string>
+    <string name="use_folder_as_sync_destination">
+هل تريد استخدام المجلد التالي كوجهة للمزامنة؟\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">يعالج…</string>
     <string name="code_must_be_exactly_16">يجب أن يتكون الرمز من 16 حرفًا بالضبط</string>
     <string name="network_share_required">مشاركة الشبكة مطلوبة</string>
@@ -3254,6 +3292,9 @@ SRT
     <string name="edit">يحرر</string>
     <string name="sync_now">مزامنة الآن</string>
     <string name="network_share_not_found_for_profilename">لم يتم العثور على مشاركة الشبكة لـ %1$s</string>
+    <string name="local_sync_failed_for_profilename">
+فشلت المزامنة المحلية لـ %1$s
+</string>
     <string name="connection_lost_sync_paused_for_profilename">تم فقدان الاتصال. توقفت المزامنة مؤقتًا لمدة %1$s.</string>
     <string name="cannot_read_local_folder_for_profilename">لا يمكن قراءة المجلد المحلي لـ %1$s.</string>
     <string name="failed_to_access_remote_path_for_profilename">فشل الوصول إلى المسار البعيد لـ %1$s.</string>

@@ -101,7 +101,11 @@ class AdvancedSyncProfileAdapter(
 
             // Paths
             txtSource.text = profile.localDisplayPath
-            txtDest.text = profile.remotePath.ifEmpty { "/" }
+            txtDest.text = if (profile.destLocalUri.isNotEmpty()) {
+                profile.destLocalDisplayPath
+            } else {
+                profile.remotePath.ifEmpty { "/" }
+            }
 
             // Last sync
             if (profile.lastSyncTime > 0) {

@@ -1180,11 +1180,40 @@ Mo
     <string name="size_unit_gb">
 FR
 </string>
+    <string name="filter_include_label">
+Inclure les noms de fichiers contenant
+</string>
+    <string name="filter_include_hint">
+mots séparés par des virgules
+</string>
+    <string name="filter_include_summary">
+Seuls les noms de fichiers contenant ces mots sont synchronisés
+</string>
     <string name="filter_exclude_label">
 Ignorer les noms de fichiers contenant
 </string>
     <string name="filter_exclude_hint">
 mots séparés par des virgules
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+Dossier local
+</string>
+    <string name="advanced_sync_dest_select">
+Sélectionnez une destination
+</string>
+    <string name="advanced_sync_same_path_warning">
+Les dossiers source et destination sont identiques ou imbriqués. Cela peut entraîner des résultats inattendus. Voulez-vous continuer ?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+Copier les fichiers de cet appareil vers un dossier local
+</string>
+    <string name="advanced_sync_local_download_desc">
+Copier les fichiers d\'un dossier local vers cet appareil
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+Synchronisez les fichiers dans les deux sens entre les dossiers locaux
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ Contrôlez la télévision via Bluetooth ou WiFi
     <string name="extract_here_1">Extrait ici</string>
     <string name="extract_contents_to_path">Extraire le contenu vers :\n\n%1$s</string>
     <string name="use_folder_as_sync_source">Utiliser le dossier suivant comme source de synchronisation ?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+Confirmer le dossier de destination
+</string>
+    <string name="use_folder_as_sync_destination">
+Utiliser le dossier suivant comme destination de synchronisation ?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">Traitement…</string>
     <string name="code_must_be_exactly_16">Le code doit contenir exactement 16 caractères</string>
     <string name="network_share_required">Partage réseau requis</string>
@@ -3256,6 +3294,9 @@ Un nouveau dossier avec un suffixe numérique est créé (par exemple \"UFM Phot
     <string name="edit">Modifier</string>
     <string name="sync_now">Synchroniser maintenant</string>
     <string name="network_share_not_found_for_profilename">Partage réseau introuvable pour %1$s</string>
+    <string name="local_sync_failed_for_profilename">
+Échec de la synchronisation locale pour %1$s
+</string>
     <string name="connection_lost_sync_paused_for_profilename">Connexion perdue. Synchronisation interrompue pendant %1$s.</string>
     <string name="cannot_read_local_folder_for_profilename">Impossible de lire le dossier local pour %1$s.</string>
     <string name="failed_to_access_remote_path_for_profilename">Échec de l\'accès au chemin distant pour %1$s.</string>

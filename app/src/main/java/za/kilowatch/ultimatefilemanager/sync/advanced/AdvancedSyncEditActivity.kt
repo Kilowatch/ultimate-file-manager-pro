@@ -37,6 +37,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     private var localDisplayPath: String = ""
     private var selectedNetworkShareId: String? = null
     private var selectedRemotePath: String = ""
+    private var destLocalUri: String = ""
+    private var destLocalDisplayPath: String = ""
     private var selectedIntervalMinutes: Int = 60
 
     private lateinit var editName: TextInputEditText
@@ -79,6 +81,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     private var txtFilterExtensionsLabel: android.widget.TextView? = null
     private lateinit var editFilterExtensions: TextInputEditText
     private lateinit var editExcludePatterns: TextInputEditText
+    private lateinit var editIncludePatterns: TextInputEditText
     private lateinit var editMinSize: TextInputEditText
     private lateinit var editMaxSize: TextInputEditText
     private lateinit var toggleMinSizeUnit: com.google.android.material.button.MaterialButtonToggleGroup
@@ -128,6 +131,21 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             }
             selectedRemotePath = path
             txtRemotePath.text = if (path.isEmpty()) "/" else "/$path"
+            updateDirectionDescription()
+        }
+    }
+
+    /** Launches StorageBrowserActivity for local destination picker */
+    private val destLocalFolderLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val path = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: return@registerForActivityResult
+            destLocalUri = path
+            destLocalDisplayPath = java.io.File(path).name.ifEmpty { path }
+            txtRemotePath.text = path
+            updateDirectionDescription()
         }
     }
 
@@ -194,6 +212,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         layoutFilterExtensions = findViewById<View>(R.id.layoutFilterExtensions)
         editFilterExtensions = findViewById(R.id.editFilterExtensions)
         editExcludePatterns = findViewById(R.id.editExcludePatterns)
+        editIncludePatterns = findViewById(R.id.editIncludePatterns)
         editMinSize = findViewById(R.id.editMinSize)
         editMaxSize = findViewById(R.id.editMaxSize)
         toggleMinSizeUnit = findViewById(R.id.toggleMinSizeUnit)
@@ -218,31 +237,40 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             val netShares = NetworkShareRepository.getInstance(this).getAll()
             val onlineStorages = OnlineStorageRepository.getInstance(this).getAll()
 
-            if (netShares.isEmpty() && onlineStorages.isEmpty()) {
-                Toast.makeText(this, R.string.please_add_a_share_connection_in_network_shares_then_come_back_to_create_a_sync_profile, Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
+            // Build combined list: "Local folder" first, then network shares, then online storages
+            val labels = mutableListOf<String>()
+            val itemTypes = mutableListOf<String>() // "local" | "net" | "online"
+            val itemIds = mutableListOf<String>()   // share/online id, empty for local
 
-            // Build combined list: network shares first, then online storages
-            val items = mutableListOf<Pair<String, String>>() // label, type/id
-            val types = mutableListOf<String>() // "net" or "online"
+            labels.add(getString(R.string.advanced_sync_local_folder))
+            itemTypes.add("local")
+            itemIds.add("")
 
             netShares.forEach { share ->
-                items.add(Pair(share.name.ifEmpty { share.host }, share.id))
-                types.add("net")
+                labels.add(share.name.ifEmpty { share.host })
+                itemTypes.add("net")
+                itemIds.add(share.id)
             }
             onlineStorages.forEach { storage ->
-                items.add(Pair(storage.displayName, storage.id))
-                types.add("online")
+                labels.add(storage.displayName)
+                itemTypes.add("online")
+                itemIds.add(storage.id)
             }
 
             MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.select_destination)
-                .setItems(items.map { it.first }.toTypedArray()) { _, which ->
-                    val (label, id) = items[which]
-                    val type = types[which]
-                    android.util.Log.d("AdvSyncDest", "Selected dest: $label (id=$id, type=$type)")
+                .setItems(labels.toTypedArray()) { _, which ->
+                    val type = itemTypes[which]
+                    val id = itemIds[which]
+                    android.util.Log.d("AdvSyncDest", "Selected dest: type=$type, id=$id")
                     when (type) {
+                        "local" -> {
+                            // Launch local folder picker in destination mode
+                            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+                                putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_DEST_PICKER, true)
+                            }
+                            destLocalFolderLauncher.launch(intent)
+                        }
                         "net" -> {
                             selectedNetworkShareId = id
                             launchNetworkBrowserForDest(id, isOnline = false)
@@ -361,11 +389,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
     private fun selectDirection(dir: String) {
         selectedDirection = dir
-        txtDirectionDesc.setText(when (dir) {
-            "download" -> R.string.sync_direction_download_desc
-            "twoway" -> R.string.sync_direction_twoway_desc
-            else -> R.string.sync_direction_upload_desc
-        })
+        updateDirectionDescription()
         // Update visual selection state for chips
         val selectedId = when (dir) {
             "download" -> R.id.chipDirectionDownload
@@ -382,6 +406,21 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             }
         }
         updateDirectionSections()
+    }
+
+    private fun updateDirectionDescription() {
+        val isLocal = destLocalUri.isNotEmpty()
+        txtDirectionDesc.setText(when {
+            isLocal && selectedDirection == "download" -> R.string.advanced_sync_local_download_desc
+            isLocal && selectedDirection == "twoway" -> R.string.advanced_sync_local_twoway_desc
+            isLocal -> R.string.advanced_sync_local_upload_desc
+            selectedDirection == "download" -> R.string.sync_direction_download_desc
+            selectedDirection == "twoway" -> R.string.sync_direction_twoway_desc
+            else -> R.string.sync_direction_upload_desc
+        })
+        // Update destination button label
+        val btnBrowse = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBrowseRemote)
+        btnBrowse?.text = getString(if (isLocal) R.string.advanced_sync_dest_select else R.string.browse_remote)
     }
 
     private fun updateDirectionSections() {
@@ -456,7 +495,13 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
 
         selectedNetworkShareId = profile.networkShareId
         selectedRemotePath = profile.remotePath
-        txtRemotePath.text = if (profile.remotePath.isEmpty()) "/" else "/${profile.remotePath}"
+        destLocalUri = profile.destLocalUri
+        destLocalDisplayPath = profile.destLocalDisplayPath
+        if (profile.destLocalUri.isNotEmpty()) {
+            txtRemotePath.text = profile.destLocalDisplayPath.ifEmpty { profile.destLocalUri }
+        } else {
+            txtRemotePath.text = if (profile.remotePath.isEmpty()) "/" else "/${profile.remotePath}"
+        }
 
         // Direction
         selectDirection(profile.direction)
@@ -529,6 +574,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         switchMoveFiles.isChecked = profile.moveFiles
         editFilterExtensions.setText(profile.extensionFilters)
         editExcludePatterns.setText(profile.excludePatterns)
+        editIncludePatterns.setText(profile.includePatterns)
         editMinSize.setText(if (profile.minSizeBytes > 0) {
             ((if (profile.minSizeIsGB) profile.minSizeBytes / (1024*1024*1024) else profile.minSizeBytes / (1024*1024)).toString())
         } else "")
@@ -560,11 +606,38 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     private fun saveProfile() {
         val name = editName.text.toString().trim()
 
-        if (name.isEmpty() || localUri.isEmpty() || selectedNetworkShareId == null) {
+        // Validate: must have name, source path, and either a network share or local destination
+        val hasNetworkDest = selectedNetworkShareId != null && selectedNetworkShareId!!.isNotEmpty()
+        val hasLocalDest = destLocalUri.isNotEmpty()
+        if (name.isEmpty() || localUri.isEmpty() || (!hasNetworkDest && !hasLocalDest)) {
             Toast.makeText(this, R.string.please_fill_all_required_fields, Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Warn if source and local destination are the same or nested
+        if (hasLocalDest) {
+            val srcCanonical = java.io.File(localUri).canonicalPath
+            val destCanonical = java.io.File(destLocalUri).canonicalPath
+            if (srcCanonical == destCanonical ||
+                destCanonical.startsWith(srcCanonical + java.io.File.separator) ||
+                srcCanonical.startsWith(destCanonical + java.io.File.separator)) {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.important_warning)
+                    .setMessage(R.string.advanced_sync_same_path_warning)
+                    .setIcon(R.drawable.ic_warning)
+                    .setPositiveButton(R.string.btn_continue) { _, _ ->
+                        proceedSaveProfile(name)
+                    }
+                    .setNegativeButton(R.string.cancel, null)
+                    .show()
+                return
+            }
+        }
+
+        proceedSaveProfile(name)
+    }
+
+    private fun proceedSaveProfile(name: String) {
         val scheduleType = when {
             (chipScheduled as? com.google.android.material.button.MaterialButton)?.isChecked == true -> "scheduled"
             (chipManual as? com.google.android.material.button.MaterialButton)?.isChecked == true -> "manual"
@@ -604,8 +677,10 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             name = name,
             localUri = localUri,
             localDisplayPath = localDisplayPath,
-            networkShareId = selectedNetworkShareId!!,
+            networkShareId = selectedNetworkShareId ?: "",
             remotePath = selectedRemotePath,
+            destLocalUri = destLocalUri,
+            destLocalDisplayPath = destLocalDisplayPath,
             direction = selectedDirection,
             conflictStrategy = selectedConflictStrategy,
             scheduleType = scheduleType,
@@ -625,6 +700,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             },
             extensionFilters = editFilterExtensions.text.toString().trim(),
             excludePatterns = editExcludePatterns.text.toString().trim(),
+            includePatterns = editIncludePatterns.text.toString().trim(),
             minSizeBytes = (editMinSize.text.toString().toDoubleOrNull() ?: 0.0).let {
                 (it * if (toggleMinSizeUnit.checkedButtonId == R.id.chipSizeMinGB) 1024*1024*1024 else 1024*1024).toLong()
             },

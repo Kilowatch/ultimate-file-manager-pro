@@ -433,6 +433,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:hint="@string/filter_include_label"
+                app:hintTextColor="@color/tv_text_hint"
+                android:textColorHint="@color/tv_text_hint"
+                app:boxBackgroundColor="@android:color/transparent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editIncludePatterns"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="18sp"
+                    android:hint="@string/filter_include_hint"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/filter_include_summary"
+                android:textColor="@color/tv_text_hint"
+                android:textSize="12sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:hint="@string/filter_exclude_label"
                 app:hintTextColor="@color/tv_text_hint"
                 android:textColorHint="@color/tv_text_hint"

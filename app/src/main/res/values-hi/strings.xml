@@ -1180,11 +1180,40 @@ PKCS12 पासवर्ड
     <string name="size_unit_gb">
 जीबी
 </string>
+    <string name="filter_include_label">
+युक्त फ़ाइल नाम शामिल करें
+</string>
+    <string name="filter_include_hint">
+अल्पविराम से अलग किए गए शब्द
+</string>
+    <string name="filter_include_summary">
+केवल इन शब्दों वाले फ़ाइल नाम समन्वयित हैं
+</string>
     <string name="filter_exclude_label">
 युक्त फ़ाइल नाम छोड़ें
 </string>
     <string name="filter_exclude_hint">
 अल्पविराम से अलग किए गए शब्द
+</string>
+
+    <!-- Advanced Sync Destination -->
+    <string name="advanced_sync_local_folder">
+स्थानीय फोल्डर
+</string>
+    <string name="advanced_sync_dest_select">
+गंतव्य का चयन करें
+</string>
+    <string name="advanced_sync_same_path_warning">
+स्रोत और गंतव्य फ़ोल्डर समान या नेस्टेड हैं। इससे अप्रत्याशित परिणाम हो सकते हैं. क्या आप जारी रखना चाहते हैं?
+</string>
+    <string name="advanced_sync_local_upload_desc">
+इस डिवाइस से फ़ाइलों को स्थानीय फ़ोल्डर में कॉपी करें
+</string>
+    <string name="advanced_sync_local_download_desc">
+स्थानीय फ़ोल्डर से फ़ाइलों को इस डिवाइस पर कॉपी करें
+</string>
+    <string name="advanced_sync_local_twoway_desc">
+स्थानीय फ़ोल्डरों के बीच दोनों दिशाओं में फ़ाइलें सिंक करें
 </string>
 
     <!-- Advanced Sync Directions -->
@@ -2186,6 +2215,15 @@ PKCS12 पासवर्ड
     <string name="extract_here_1">यहाँ निकालें</string>
     <string name="extract_contents_to_path">इसमें सामग्री निकालें:\n\n%1$s</string>
     <string name="use_folder_as_sync_source">सिंक स्रोत के रूप में निम्नलिखित फ़ोल्डर का उपयोग करें?\n\n%1$s</string>
+    <string name="confirm_destination_folder">
+गंतव्य फ़ोल्डर की पुष्टि करें
+</string>
+    <string name="use_folder_as_sync_destination">
+सिंक गंतव्य के रूप में निम्नलिखित फ़ोल्डर का उपयोग करें?\n
+\n
+%1$s\n
+\n
+</string>
     <string name="processing">प्रसंस्करण...</string>
     <string name="code_must_be_exactly_16">कोड बिल्कुल 16 अक्षर का होना चाहिए</string>
     <string name="network_share_required">नेटवर्क शेयर आवश्यक</string>
@@ -3256,6 +3294,9 @@ PKCS12 पासवर्ड
     <string name="edit">संपादन करना</string>
     <string name="sync_now">अभी सिंक करें</string>
     <string name="network_share_not_found_for_profilename">%1$s के लिए नेटवर्क शेयर नहीं मिला</string>
+    <string name="local_sync_failed_for_profilename">
+%1$s के लिए स्थानीय सिंक विफल रहा
+</string>
     <string name="connection_lost_sync_paused_for_profilename">कनेक्शन टूट गया। %1$s के लिए सिंक रोका गया।</string>
     <string name="cannot_read_local_folder_for_profilename">%1$s के लिए स्थानीय फ़ोल्डर नहीं पढ़ सकता।</string>
     <string name="failed_to_access_remote_path_for_profilename">%1$s के लिए दूरस्थ पथ तक पहुंचने में विफल।</string>
