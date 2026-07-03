@@ -246,23 +246,28 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         )
         val ARCHIVE_EXTENSIONS = setOf("zip")
 
-        fun matchesFilter(file: java.io.File, filter: FilterType): Boolean {
+        fun matchesExtension(ext: String, filter: FilterType): Boolean {
             if (filter == FilterType.ALL) return true
-            if (file.isDirectory) return true // Always show folders
-            val ext = file.extension.lowercase()
+            val lower = ext.lowercase()
             return when (filter) {
-                FilterType.IMAGES -> ext in IMAGE_EXTENSIONS
-                FilterType.VIDEOS -> ext in VIDEO_EXTENSIONS
-                FilterType.AUDIO -> ext in AUDIO_EXTENSIONS
-                FilterType.DOCUMENTS -> ext in DOCUMENT_EXTENSIONS
-                FilterType.APKS -> ext in APK_EXTENSIONS
+                FilterType.IMAGES -> lower in IMAGE_EXTENSIONS
+                FilterType.VIDEOS -> lower in VIDEO_EXTENSIONS
+                FilterType.AUDIO -> lower in AUDIO_EXTENSIONS
+                FilterType.DOCUMENTS -> lower in DOCUMENT_EXTENSIONS
+                FilterType.APKS -> lower in APK_EXTENSIONS
                 FilterType.OTHER -> {
-                    ext !in IMAGE_EXTENSIONS && ext !in VIDEO_EXTENSIONS &&
-                    ext !in AUDIO_EXTENSIONS && ext !in DOCUMENT_EXTENSIONS &&
-                    ext !in APK_EXTENSIONS
+                    lower !in IMAGE_EXTENSIONS && lower !in VIDEO_EXTENSIONS &&
+                    lower !in AUDIO_EXTENSIONS && lower !in DOCUMENT_EXTENSIONS &&
+                    lower !in APK_EXTENSIONS
                 }
                 else -> true
             }
+        }
+
+        fun matchesFilter(file: java.io.File, filter: FilterType): Boolean {
+            if (filter == FilterType.ALL) return true
+            if (file.isDirectory) return true // Always show folders
+            return matchesExtension(file.extension, filter)
         }
     }
 }

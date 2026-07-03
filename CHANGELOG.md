@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local destination support for Advanced Sync profiles — select internal storage, USB, or SD card as the sync destination alongside existing network shares. All direction modes (Upload, Download, Two-way) work with local destinations, including filtering, move files, and sync deletions.
 
 ### Fixed
+- Fixed SFTP/SCP folder navigation in NetworkBrowserActivity using relative paths — now uses absolute paths, fixing `SSH_FX_NO_SUCH_FILE` errors on servers where the session working directory is not `/`
+- Fixed file-type filters in NetworkBrowserFragment checking `File.isDirectory` on the local filesystem instead of `NetworkFile.isDirectory`, fixing directory visibility on remote shares
+- Fixed swallowed `CancellationException` in NetworkBrowserFragment coroutines that could cause spurious error snackbars on cancelled loads
+- Fixed race condition in NetworkBrowserActivity where rapid folder taps could produce stale directory listings from orphaned coroutines
 - Fixed "Available Shares" button showing for non-SMB protocols in the Add Share screen (mobile and TV)
 - Fixed NFS Version selector remaining visible when switching to DLNA in the Add Share screen
 - Fixed SMB not being explicitly selected as the default protocol on opening Add Share

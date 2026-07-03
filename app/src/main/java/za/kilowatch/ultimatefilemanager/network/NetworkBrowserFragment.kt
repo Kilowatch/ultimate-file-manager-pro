@@ -512,6 +512,7 @@ class NetworkBrowserFragment : Fragment() {
                     updateSubtitle()
                 }
             } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) throw e
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     showPremiumSnackbar(getString(R.string.error_loading_emessage, e.message ?: "Unknown error"))
@@ -1276,7 +1277,14 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun sortAndFilterFiles(files: List<NetworkFile>): List<NetworkFile> {
-        val filtered = files.filter { za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesFilter(File(it.path), filterType) }
+        val filtered = files.filter { file ->
+            if (filterType == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
+            else if (file.isDirectory) true
+            else {
+                val ext = file.name.substringAfterLast(".").lowercase()
+                za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesExtension(ext, filterType)
+            }
+        }
         val secondaryComparator: Comparator<NetworkFile> = when (sortMode) {
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: NetworkFile -> f.name }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { f: NetworkFile -> if (f.isDirectory) 0L else f.size }

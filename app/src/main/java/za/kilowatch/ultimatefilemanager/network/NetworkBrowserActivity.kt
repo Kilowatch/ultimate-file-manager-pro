@@ -163,6 +163,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var share: NetworkShare
     private var originalRemotePath: String = ""
     private lateinit var currentPath: String
+    private var loadJob: kotlinx.coroutines.Job? = null
     
     // UI Elements
     private lateinit var txtTitle: TextView
@@ -787,7 +788,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     if (share.type == ShareType.TV && initialRootPath == null) {
                         initialRootPath = file.path // Cache the first mount point we ever click
                     }
-                    currentPath = if (share.type == ShareType.TV || share.type == ShareType.DLNA) file.path else if (currentPath.isEmpty()) file.name else "$currentPath/${file.name}"
+                    currentPath = if (share.type == ShareType.TV || share.type == ShareType.DLNA || share.type == ShareType.SFTP || share.type == ShareType.SCP) file.path else if (currentPath.isEmpty()) file.name else "$currentPath/${file.name}"
                     loadDirectory()
                 } else if (isPickerMode) {
                     downloadAndReturnFile(file)
@@ -1637,7 +1638,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         updateSubtitle()
         updateBreadcrumbs()
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        loadJob?.cancel()
+        loadJob = lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // Server-mode SMB: intercept at root to discover shares
                 if (share.type == ShareType.SMB && share.isServerMode) {
