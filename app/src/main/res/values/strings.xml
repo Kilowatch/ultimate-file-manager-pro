@@ -902,6 +902,15 @@
     <string name="nfs_version_3">NFSv3</string>
     <string name="nfs_version_4">NFSv4</string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">Scanning for NFS servers</string>
+    <string name="nfs_scanning">Scanning NFS servers</string>
+    <string name="nfs_no_servers_found">No NFS servers found on this network</string>
+    <string name="nfs_scan_btn">Scan for NFS servers</string>
+    <string name="nfs_server_with_exports">%1$s (%2$d exports)</string>
+    <string name="nfs_exports_unreachable">Server reachable but could not list exports</string>
+    <string name="nfs_no_exports">(no exports)</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Move Tile</string>
     <string name="tile_move_up">▲  Move Up</string>

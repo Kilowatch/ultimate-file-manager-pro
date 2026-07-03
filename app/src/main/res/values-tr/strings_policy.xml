@@ -121,6 +121,9 @@ Bulut sürücülere RClone aracılığıyla bağlanma doğrudan telefonunuzdan v
         <item>Depolama Dizini Oluşturucu — anında arama ve olağanüstü hızlı tarama için yerel bir dosya meta veri dizini oluşturun.</item>
         <item>Depolama Erişim Çerçevesi — diğer uygulamalar dosyalarınıza UFM\'nin belge sağlayıcısı aracılığıyla erişebilir.</item>
         <item>İpucu Kavanozu — geliştiriciyi desteklemek için isteğe bağlı tek seferlik satın alımlar; Uygulama bahşiş vermeden her zaman ücretsizdir.</item>
+        <item>
+UFM Medya Oynatıcı — arka planda oynatma, bildirim kontrolleri, Resim İçinde Resim modu ve çalma listesi yönetimi ile ses ve video dosyalarını oynatın.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Dosya İşlemleri: Açık isteğiniz üzerine uzak depolama alanınızdaki dosya
         <item>S3/S3 Uyumlu Depolama Kimlik Bilgileri (AWS S3, MinIO, IDrive E2 vb.)</item>
         <item>Dizinlenmiş Dosya Meta Verileri (SQLite/Room)</item>
         <item>Dil Seçimi (Çerez)</item>
+        <item>
+Medya Oynatma Durumu
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Şifrelenmiş dosyalara güvenli erişim · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Dosya İşlemleri: Açık isteğiniz üzerine uzak depolama alanınızdaki dosya
         <item>S3 klasörlerine bağlanmak için Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı · Uygulamaya özel depolama</item>
         <item>Hızlı göz atma ve arama için yerel bir SQLite/Room veritabanında depolanan dosya meta verileri (adlar, boyutlar, tarihler) — Ayarlar -&gt; Depolama Dizini Oluşturucu · Uygulamaya özel depolama yoluyla yönetilebilir</item>
         <item>Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı</item>
+        <item>
+Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

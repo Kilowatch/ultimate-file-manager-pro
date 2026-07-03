@@ -430,6 +430,16 @@
                             android:contentDescription="@string/smb_cd_scan"
                             android:visibility="visible"
                             app:tint="@color/mobile_text_primary" />
+                        <ImageButton
+                            android:id="@+id/btnScanNfsHosts"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_icon_circle_accent"
+                            android:src="@drawable/ic_search"
+                            android:contentDescription="@string/nfs_scan_btn"
+                            android:visibility="gone"
+                            app:tint="@color/mobile_text_primary" />
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

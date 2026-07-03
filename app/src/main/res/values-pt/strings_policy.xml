@@ -121,6 +121,9 @@ A conexão com unidades em nuvem via RClone é feita diretamente do seu telefone
         <item>Indexador de armazenamento — crie um índice local de metadados de arquivos para pesquisa instantânea e navegação extremamente rápida.</item>
         <item>Estrutura de acesso ao armazenamento — outros aplicativos podem acessar seus arquivos por meio do provedor de documentos do UFM.</item>
         <item>Tip Jar — compras únicas opcionais para apoiar o desenvolvedor; o aplicativo é sempre gratuito, sem gorjeta.</item>
+        <item>
+UFM Media Player — reproduza arquivos de áudio e vídeo com reprodução em segundo plano, controles de notificação, modo Picture-in-Picture e gerenciamento de lista de reprodução.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Operações de arquivo: upload, download, renomeação, cópia, movimentação o
         <item>Credenciais de armazenamento compatíveis com S3/S3 (AWS S3, MinIO, IDrive E2, etc.)</item>
         <item>Metadados de arquivos indexados (SQLite/Room)</item>
         <item>Seleção de idioma (cookie)</item>
+        <item>
+Estado de reprodução de mídia
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Acesso seguro a arquivos criptografados · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Operações de arquivo: upload, download, renomeação, cópia, movimentação o
         <item>ID da chave de acesso e chave de acesso secreta para conexão com buckets S3 · Armazenamento privado do aplicativo</item>
         <item>Metadados de arquivos (nomes, tamanhos, datas) para navegação e pesquisa rápidas armazenados em um banco de dados SQLite/Room local — podem ser gerenciados em Configurações -&gt; Indexador de armazenamento · Armazenamento privado do aplicativo</item>
         <item>Um cookie (ufm_lang) lembra sua escolha de idioma durante a sessão e durante as reinicializações do navegador · Armazenamento do navegador da Web</item>
+        <item>
+Um cookie (ufm_lang) lembra sua escolha de idioma durante a sessão e durante as reinicializações do navegador · Armazenamento do navegador da Web
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

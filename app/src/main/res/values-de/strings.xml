@@ -1414,6 +1414,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+Suche nach NFS-Servern
+</string>
+    <string name="nfs_scanning">
+Scannen von NFS-Servern
+</string>
+    <string name="nfs_no_servers_found">
+In diesem Netzwerk wurden keine NFS-Server gefunden
+</string>
+    <string name="nfs_scan_btn">
+Suchen Sie nach NFS-Servern
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d Exporte)
+</string>
+    <string name="nfs_exports_unreachable">
+Server erreichbar, konnte aber keine Exporte auflisten
+</string>
+    <string name="nfs_no_exports">
+(keine Exporte)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Kachel verschieben</string>
     <string name="tile_move_up">▲ Nach oben bewegen</string>

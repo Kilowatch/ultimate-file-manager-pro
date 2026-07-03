@@ -1,20 +1,9 @@
 package za.kilowatch.ultimatefilemanager.network
 
 import android.util.Log
-import androidx.annotation.WorkerThread
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-
-/**
- * Represents an NFS server discovered on the local network along with
- * its available exports.
- */
-data class NfsDiscoveredServer(
-    val ip: String,
-    val exports: List<String>,
-    val exportsError: String? = null  // null = exports listed OK
-)
 
 /**
  * High-level NFS client backed by libnfs (native, via JNI).
@@ -29,7 +18,6 @@ data class NfsDiscoveredServer(
 object LibNfsClient {
 
     private const val TAG = "LibNfsClient"
-
 
     /** Whether the native library loaded successfully. */
     val isAvailable: Boolean by lazy {
@@ -69,11 +57,7 @@ object LibNfsClient {
         val export = normalizePath(share.remotePath)
         val params = mutableListOf<String>()
 
-        // Always pin nfsport — even at the default 2049.
-        // Without this, libnfs contacts portmapper (port 111) to ask "what port
-        // is NFS on?" before every mount. That portmapper RPC hangs for the full
-        // timeo duration when port 111 is firewalled or slow, causing 10-second
-        // mount timeouts even though port 2049 is directly reachable.
+        // If user set a non-default port, pass it to libnfs (bypasses Portmapper)
         val port = share.effectivePort
         if (port != 2049) {
             params.add("nfsport=$port")
@@ -179,35 +163,34 @@ object LibNfsClient {
      * Returns a pair of (contextHandle, null) on success,
      * or (0, errorMessage) on failure.
      *
-     * When [NetworkShare.nfsVersion] is 0 (auto), NFSv4 is tried first;
-     * if it fails, NFSv3 is attempted automatically as a fallback.
+     * When [NetworkShare.nfsVersion] is 0 (auto), NFSv3 is tried first;
+     * if it fails, NFSv4 is attempted automatically as a fallback.
      * This covers all callers — listFiles, readFile, writeFile, etc.
      */
-    @WorkerThread
     private fun mountContext(share: NetworkShare): Pair<Long, String?> {
         if (share.nfsVersion != 0) {
             // Explicit version — mount once, no fallback.
             return mountContextForVersion(share, share.nfsVersion)
         }
 
-        // Auto-detect: try NFSv4 first (no portmapper required), then NFSv3.
-        Log.i(TAG, "mountContext: nfsVersion=auto — trying NFSv4 first")
-        val (v4Handle, v4Err) = mountContextForVersion(share, 4)
-        if (v4Handle != 0L) {
-            Log.i(TAG, "mountContext: auto-detected NFSv4 ✓")
-            return v4Handle to null
-        }
-
-        Log.w(TAG, "mountContext: NFSv4 failed ($v4Err) — falling back to NFSv3")
+        // Auto-detect: try NFSv3 first, then NFSv4.
+        Log.i(TAG, "mountContext: nfsVersion=auto — trying NFSv3 first")
         val (v3Handle, v3Err) = mountContextForVersion(share, 3)
         if (v3Handle != 0L) {
             Log.i(TAG, "mountContext: auto-detected NFSv3 ✓")
             return v3Handle to null
         }
 
-        Log.e(TAG, "mountContext: auto-detect exhausted — v4: $v4Err | v3: $v3Err")
-        // Surface the v4 error (tried first); append v3 error for diagnostics.
-        val combined = "NFSv4: $v4Err | NFSv3: ${v3Err ?: "failed"}"
+        Log.w(TAG, "mountContext: NFSv3 failed ($v3Err) — falling back to NFSv4")
+        val (v4Handle, v4Err) = mountContextForVersion(share, 4)
+        if (v4Handle != 0L) {
+            Log.i(TAG, "mountContext: auto-detected NFSv4 ✓")
+            return v4Handle to null
+        }
+
+        Log.e(TAG, "mountContext: auto-detect exhausted — v3: $v3Err | v4: $v4Err")
+        // Surface the v3 error (tried first); append v4 error for diagnostics.
+        val combined = "NFSv3: $v3Err | NFSv4: ${v4Err ?: "failed"}"
         return 0L to combined
     }
 

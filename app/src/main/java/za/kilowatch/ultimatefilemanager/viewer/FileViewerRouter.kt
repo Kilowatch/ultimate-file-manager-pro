@@ -212,12 +212,13 @@ object FileViewerRouter {
             "zip" -> Intent(context, ZipViewerActivity::class.java)
             "7z" -> Intent(context, SevenZipViewerActivity::class.java)
             in AUDIO_EXTENSIONS, in VIDEO_EXTENSIONS -> {
-                // Mobile: UFMPlayerActivity (ExoPlayer with background playback)
-                // TV: keep the old MediaPlayerActivity (new features not supported on TV)
-                if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
-                    openInPlayer(context, file)
-                    return
-                }
+                // Keep the original MediaPlayerActivity path for built-in viewer
+                // (the UFM Media Player with background playback is available
+                // through the Open With dialog's "UFM Media Player" button or
+                // when it's set as the default via DefaultOpenManager.Action.PLAYER,
+                // both of which route through openInPlayer()).
+                // For network files, NetworkBrowserActivity.startUfmPlayer()
+                // handles credentials properly.
                 Intent(context, MediaPlayerActivity::class.java).apply {
                     putExtra(FileViewerRouter.EXTRA_IS_VIDEO, ext !in AUDIO_EXTENSIONS)
                 }

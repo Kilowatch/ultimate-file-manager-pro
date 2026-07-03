@@ -1414,6 +1414,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+NFS サーバーのスキャン
+</string>
+    <string name="nfs_scanning">
+NFS サーバーのスキャン
+</string>
+    <string name="nfs_no_servers_found">
+このネットワーク上に NFS サーバーが見つかりません
+</string>
+    <string name="nfs_scan_btn">
+NFS サーバーのスキャン
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d エクスポート)
+</string>
+    <string name="nfs_exports_unreachable">
+サーバーに到達できましたが、エクスポートをリストできませんでした
+</string>
+    <string name="nfs_no_exports">
+(輸出はありません)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">タイルの移動</string>
     <string name="tile_move_up">▲上に移動</string>

@@ -1414,6 +1414,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+NFS 서버 검색 중
+</string>
+    <string name="nfs_scanning">
+NFS 서버 스캔 중
+</string>
+    <string name="nfs_no_servers_found">
+이 네트워크에서 NFS 서버를 찾을 수 없습니다.
+</string>
+    <string name="nfs_scan_btn">
+NFS 서버 검색
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d 내보내기)
+</string>
+    <string name="nfs_exports_unreachable">
+서버에 연결할 수 있지만 내보내기를 나열할 수 없습니다.
+</string>
+    <string name="nfs_no_exports">
+(내보내기 없음)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">타일 ​​이동</string>
     <string name="tile_move_up">▲ 위로 이동</string>

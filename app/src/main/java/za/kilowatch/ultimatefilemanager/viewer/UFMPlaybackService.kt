@@ -96,7 +96,6 @@ class UFMPlaybackService : Service() {
 
         /** Convenience: start the service with a playback intent. */
         fun start(context: Context, intent: Intent) {
-            GoRoLog.i("UFMPlaybackService", "start() called — initialPath=${intent.getStringExtra("initialPath")?.take(50)}")
             val serviceIntent = Intent(context, UFMPlaybackService::class.java).apply {
                 putExtras(intent.extras ?: Bundle())
                 action = ACTION_PLAY
@@ -159,7 +158,6 @@ class UFMPlaybackService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        GoRoLog.i("UFMPlaybackService", "onCreate()")
         alive.set(true)
         createNotificationChannel()
         registerHeadsetPlugReceiver()
@@ -168,7 +166,6 @@ class UFMPlaybackService : Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        GoRoLog.i("UFMPlaybackService", "onStartCommand() action=${intent?.action} hasExtras=${intent?.extras?.keySet()?.size}")
         when (intent?.action) {
             ACTION_PLAY -> handlePlayAction(intent)
             ACTION_PAUSE -> pause()
@@ -206,7 +203,6 @@ class UFMPlaybackService : Service() {
     }
 
     override fun onDestroy() {
-        GoRoLog.i("UFMPlaybackService", "onDestroy()")
         super.onDestroy()
         alive.set(false)
         stopNotificationUpdates()
@@ -238,9 +234,9 @@ class UFMPlaybackService : Service() {
         shareName: String?,
         provider: String?,
         remotePath: String?,
-        fileSize: Long
+        fileSize: Long,
+        isServerMode: Boolean = false
     ) {
-        GoRoLog.i("UFMPlaybackService", "startPlayback: paths=${paths.size} startIndex=$startIndex shareId=$shareId")
         // Build QueueItems from the path list
         val items = paths.mapIndexed { index, path ->
             val ext = path.substringAfterLast('.', "").lowercase()
@@ -259,7 +255,7 @@ class UFMPlaybackService : Service() {
 
         queueManager.setQueue(items, startIndex)
         initialFileSize = fileSize
-        networkShare = provider?.let { buildNetworkShare(shareId, shareHost, shareUsername, shareName, it) }
+        networkShare = provider?.let { buildNetworkShare(shareId, shareHost, shareUsername, shareName, it, remotePath, isServerMode) }
 
         playCurrent()
         playbackCallback?.onQueueChanged(queueManager.queue)
@@ -347,12 +343,7 @@ class UFMPlaybackService : Service() {
     // ── Internal Playback ───────────────────────────────────────────
 
     private fun playCurrent() {
-        val item = queueManager.currentItem
-        if (item == null) {
-            GoRoLog.e("UFMPlaybackService", "playCurrent: queue is empty or currentItem is null")
-            return
-        }
-        GoRoLog.i("UFMPlaybackService", "playCurrent: ${item.path.takeLast(50)} isVideo=${item.isVideo} shareId=${item.shareId}")
+        val item = queueManager.currentItem ?: return
         val fileName = item.path.substringAfterLast('/')
 
         // Reset skip-autoplay-once on new track
@@ -380,15 +371,17 @@ class UFMPlaybackService : Service() {
 
         // Build media source
         val isNetwork = networkShare != null
-        GoRoLog.i("UFMPlaybackService", "playCurrent: isNetwork=$isNetwork player==null=${player==null}")
         val mediaSource = if (isNetwork) {
             // Network file
-            val share = networkShare ?: run {
+            var share = networkShare ?: run {
                 GoRoLog.e("UFMPlaybackService", "playCurrent: networkShare is null but isNetwork=true")
                 return
             }
+
+                // Strip server-mode prefix to avoid duplicated path segments (e.g. "MM/MM/file.mp4")
+            val cleanPath = stripSharePrefix(share, item.path)
             val dataSourceFactory = DataSource.Factory {
-                UfmMedia3DataSource(share, item.path)
+                UfmMedia3DataSource(share, cleanPath)
             }
             androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${item.path.replace(" ", "%20")}")))
@@ -586,7 +579,6 @@ class UFMPlaybackService : Service() {
 
     private fun buildNotification(): Notification {
         val item = queueManager.currentItem
-        GoRoLog.i("UFMPlaybackService", "buildNotification: item=${item?.path?.takeLast(30)} title=${item?.title?.take(30)}")
         val title = item?.title ?: item?.path?.substringAfterLast('/') ?: getString(R.string.app_name)
         val artist = item?.artist ?: getString(R.string.audio_no_metadata)
         val isPlaying = player?.isPlaying == true
@@ -626,7 +618,6 @@ class UFMPlaybackService : Service() {
             .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
 
         // Add seekbar + time for expanded notification
-        GoRoLog.i("UFMPlaybackService", "buildNotification: dur=$dur pos=$pos timeDisplay=$timeDisplay")
         if (dur > 0 && dur < Long.MAX_VALUE) {
             builder.setProgress(dur.toInt(), pos.toInt(), false)
         }
@@ -696,7 +687,6 @@ class UFMPlaybackService : Service() {
             return
         }
         val playlist = intent.getStringArrayListExtra("playlist")
-        GoRoLog.i("UFMPlaybackService", "handlePlayAction: path=$initialPath playlistSize=${playlist?.size} provider=${intent.getStringExtra("provider")}")
         val playlistFinal: ArrayList<String> = playlist ?: arrayListOf(initialPath)
         val startIndex = playlistFinal.indexOf(initialPath).coerceAtLeast(0)
 
@@ -709,7 +699,8 @@ class UFMPlaybackService : Service() {
             shareName = intent.getStringExtra("shareName"),
             provider = intent.getStringExtra("provider"),
             remotePath = intent.getStringExtra(NetworkBrowserActivity.EXTRA_REMOTE_PATH),
-            fileSize = intent.getLongExtra("initialSize", 0L)
+            fileSize = intent.getLongExtra("initialSize", 0L),
+            isServerMode = intent.getBooleanExtra("isServerMode", false)
         )
     }
 
@@ -781,7 +772,7 @@ class UFMPlaybackService : Service() {
                 handler.post { updateNotification() }
 
             } catch (e: Exception) {
-                GoRoLog.e("UFMPlaybackService", "Failed to extract metadata", e)
+                GoRoLog.d("UFMPlaybackService", "Metadata extraction skipped (non-fatal): ${e.message?.take(80)}")
             } finally {
                 try { retriever?.release() } catch (_: Exception) {}
             }
@@ -795,24 +786,100 @@ class UFMPlaybackService : Service() {
         shareHost: String?,
         shareUsername: String?,
         shareName: String?,
-        provider: String
+        provider: String,
+        remotePathFromIntent: String? = null,
+        isServerMode: Boolean = false
     ): NetworkShare? {
-        val type = try { ShareType.valueOf(provider) } catch (_: Exception) { return null }
+        // First try to look up the full share from the repository (includes password, port, domain, etc.)
+        if (!shareId.isNullOrEmpty()) {
+            val repo = NetworkShareRepository.getInstance(this)
+            val allShares = repo.getAll()
+            val repoShare = allShares.firstOrNull { it.id == shareId }
+            if (repoShare != null) {
+                // Server-mode shares: the browser's in-memory remotePath reflects the user's current
+                // navigation (e.g. "PrivateDL"), but the stored value may be empty. Override it.
+                val resolved = if (repoShare.isServerMode && !remotePathFromIntent.isNullOrEmpty()) {
+                    repoShare.copy(remotePath = remotePathFromIntent)
+                } else repoShare
+                return resolved
+            }
+
+            // Also check OnlineStorageRepository
+            val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this)
+            val online = onlineRepo.getById(shareId)
+            if (online != null) {
+                val mappedShare = NetworkShare(
+                    id = online.id,
+                    name = online.displayName,
+                    type = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
+                    },
+                    host = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE ->
+                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email
+                                else online.s3Endpoint ?: online.email
+                    },
+                    username = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
+                        else -> if (online.isWebDavProvider) online.webDavUsername ?: ""
+                                else online.s3AccessKey ?: ""
+                    },
+                    password = if (online.isWebDavProvider) online.webDavPassword ?: ""
+                              else online.s3SecretKey ?: "",
+                    readOnly = false
+                )
+                return mappedShare
+            }
+        }
+
+        // Fallback: create from extras
+        val type = try { ShareType.valueOf(provider) } catch (_: Exception) {
+            return null
+        }
+
         return NetworkShare(
             id = shareId ?: "",
             name = shareName ?: "",
             host = shareHost ?: "",
             username = shareUsername ?: "",
             type = type,
-            remotePath = "",
-            port = 0
+            remotePath = remotePathFromIntent ?: "",
+            port = 0,
+            isServerMode = isServerMode
         )
+    }
+
+    /**
+     * Strips the share-name prefix from [path] for server-mode SMB shares.
+     * In server-mode, [share.remotePath] already encodes the share name (e.g. "/MM"),
+     * and the file path includes it as a leading segment too. This matches the
+     * [stripSharePrefix] logic in NetworkBrowserActivity to avoid duplicate path segments.
+     */
+    private fun stripSharePrefix(share: NetworkShare, path: String): String {
+        // Server-mode SMB shares encode the share name in remotePath (e.g. "/MM").
+        // File paths include this as a leading segment — strip it to avoid
+        // duplication when splitSharePath extracts the shareName.
+        if (!share.isServerMode || share.remotePath.isEmpty()) return path
+        val prefix = share.remotePath.trimStart('/')
+        val clean = path.trimStart('/')
+        return when {
+            clean.startsWith("$prefix/") -> clean.removePrefix("$prefix/")
+            clean == prefix              -> ""
+            else                         -> clean
+        }
     }
 
     private fun buildRandomAccessFile(share: NetworkShare, path: String): IRandomAccessFile? {
         return try {
             when (share.type) {
-                ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, path)
+                ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, stripSharePrefix(share, path))
                 ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, path)
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
                 ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)

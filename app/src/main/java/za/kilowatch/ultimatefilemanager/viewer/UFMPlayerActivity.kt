@@ -197,11 +197,7 @@ class UFMPlayerActivity : Activity() {
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            GoRoLog.i("UFMPlayerActivity", "onServiceConnected")
-            val binder = service as? UFMPlaybackService.LocalBinder ?: run {
-                GoRoLog.e("UFMPlayerActivity", "onServiceConnected: binder is not LocalBinder")
-                return
-            }
+            val binder = service as? UFMPlaybackService.LocalBinder ?: return
             playbackService = binder.getService().also { svc ->
                 // Set player reference for track operations
                 player = svc.getPlayer()
@@ -220,7 +216,6 @@ class UFMPlayerActivity : Activity() {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            GoRoLog.w("UFMPlayerActivity", "onServiceDisconnected")
             player = null
             playerView.player = null
             playbackService = null
@@ -381,7 +376,6 @@ class UFMPlayerActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
-        GoRoLog.i("UFMPlayerActivity", "onCreate() initialPath=${intent.getStringExtra("initialPath")?.take(60)} playlistSize=${intent.getStringArrayListExtra("playlist")?.size}")
 
         // Edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)

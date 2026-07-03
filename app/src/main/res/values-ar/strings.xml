@@ -1414,6 +1414,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+البحث عن خوادم NFS
+</string>
+    <string name="nfs_scanning">
+فحص خوادم NFS
+</string>
+    <string name="nfs_no_servers_found">
+لم يتم العثور على خوادم NFS على هذه الشبكة
+</string>
+    <string name="nfs_scan_btn">
+البحث عن خوادم NFS
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d عمليات التصدير)
+</string>
+    <string name="nfs_exports_unreachable">
+يمكن الوصول إلى الخادم ولكن لا يمكن إدراج الصادرات
+</string>
+    <string name="nfs_no_exports">
+(لا الصادرات)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">نقل البلاط</string>
     <string name="tile_move_up">▲ تحرك لأعلى</string>

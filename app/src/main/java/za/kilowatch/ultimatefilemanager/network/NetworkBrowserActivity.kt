@@ -4189,6 +4189,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             putExtra("shareUsername", share.username)
             putExtra("shareName", share.name)
             putExtra("provider", share.type.name)
+            putExtra("isServerMode", share.isServerMode)
             putExtra("initialPath", file.path)
             putExtra("initialSize", file.size)
             putExtra("sizesMap", java.util.HashMap(sizesMap))

@@ -1414,6 +1414,29 @@ PKCS12 पासवर्ड
 एनएफएसवी4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+एनएफएस सर्वर के लिए स्कैनिंग
+</string>
+    <string name="nfs_scanning">
+एनएफएस सर्वर को स्कैन करना
+</string>
+    <string name="nfs_no_servers_found">
+इस नेटवर्क पर कोई एनएफएस सर्वर नहीं मिला
+</string>
+    <string name="nfs_scan_btn">
+एनएफएस सर्वर के लिए स्कैन करें
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d निर्यात)
+</string>
+    <string name="nfs_exports_unreachable">
+सर्वर पहुंच योग्य है लेकिन निर्यात सूचीबद्ध नहीं कर सका
+</string>
+    <string name="nfs_no_exports">
+(कोई निर्यात नहीं)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">टाइल हटाएँ</string>
     <string name="tile_move_up">▲ ऊपर बढ़ें</string>

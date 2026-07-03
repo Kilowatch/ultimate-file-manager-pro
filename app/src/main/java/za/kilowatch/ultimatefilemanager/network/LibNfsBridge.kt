@@ -121,4 +121,11 @@ object LibNfsBridge {
 
     /** List available NFS exports on a server (no context needed). */
     @JvmStatic external fun nfsListExports(server: String): Array<String>?
+
+    /**
+     * Discover NFS servers on the local network via RPC broadcast.
+     * Returns server IP strings, or null if discovery failed.
+     * Wraps libnfs's nfs_find_local_servers().
+     */
+    @JvmStatic external fun nfsFindLocalServers(): Array<String>?
 }

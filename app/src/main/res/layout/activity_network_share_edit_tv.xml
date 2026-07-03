@@ -293,6 +293,17 @@
                         android:contentDescription="@string/smb_cd_scan"
                         android:focusable="true"
                         app:tint="@color/selector_tv_smb_icon_tint" />
+                    <ImageButton
+                        android:id="@+id/btnScanNfsHosts"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        android:src="@drawable/ic_search"
+                        android:contentDescription="@string/nfs_scan_btn"
+                        android:visibility="gone"
+                        android:focusable="true"
+                        app:tint="@color/tv_accent" />
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

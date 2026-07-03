@@ -119,6 +119,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
     private lateinit var btnSave:         View
     private lateinit var txtTitle:        TextView
     private lateinit var btnScanHosts:    ImageButton
+    private lateinit var btnScanNfsHosts: ImageButton
     private lateinit var btnBrowseShares: ImageButton
 
     // SMB Connection Type toggle (Share / Server)
@@ -199,11 +200,12 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnTest.setOnClickListener { testConnection() }
         btnSave.setOnClickListener { saveShare() }
 
-        // SMB / DLNA discovery buttons
+        // Discovery / browse buttons
         btnScanHosts.setOnClickListener {
             val isDlna = chipDlna?.isChecked == true
             if (isDlna) showDlnaScanDialog() else showScanDialog()
         }
+        btnScanNfsHosts.setOnClickListener { showNfsScanDialog() }
         btnSelectDlnaDevice.setOnClickListener { showDlnaScanDialog() }
         btnBrowseShares.setOnClickListener { showShareBrowserDialog() }
     }
@@ -241,6 +243,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         btnSave          = findViewById(R.id.btnSave)
         txtTitle         = findViewById(R.id.txtToolbarTitle)
         btnScanHosts     = findViewById(R.id.btnScanHosts)
+        btnScanNfsHosts  = findViewById(R.id.btnScanNfsHosts)
         btnBrowseShares  = findViewById(R.id.btnBrowseShares)
 
         // SMB Connection Type toggle
@@ -458,6 +461,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         tilDomain.visibility = View.GONE
         btnBrowseShares.visibility = View.GONE
         btnScanHosts.visibility = View.GONE
+        btnScanNfsHosts.visibility = View.GONE
         layerSmbProtocol?.visibility = View.GONE
         layerSmbConnectionType?.visibility = View.GONE
         layerNfsVersion?.visibility = View.GONE
@@ -489,6 +493,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         tilUsername.visibility = if (isNfs) View.GONE else View.VISIBLE
         tilPassword.visibility = if (isNfs) View.GONE else View.VISIBLE
         layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
+        btnScanNfsHosts.visibility = if (isNfs) View.VISIBLE else View.GONE
 
         btnToggleSshAuth.visibility = if (isSsh) View.VISIBLE else View.GONE
         cardSshAuth.visibility = View.GONE
@@ -673,6 +678,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
 
         // NFS version selector visibility + state
         layerNfsVersion?.visibility = if (isNfs) View.VISIBLE else View.GONE
+        btnScanNfsHosts.visibility = if (isNfs) View.VISIBLE else View.GONE
         if (isNfs) {
             when (share.nfsVersion) {
                 0 -> rgNfsVersion?.check(R.id.rbNfsAuto)
@@ -1104,6 +1110,178 @@ class NetworkShareEditActivity : AppCompatActivity() {
         }.start()
     }
 
+    // ── NFS Scan Dialog ────────────────────────────────────────────────────────
+
+    private fun showNfsScanDialog() {
+        Log.i("NFS_SCAN", "showNfsScanDialog: opening NFS server discovery dialog...")
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_smb_scan_tv else R.layout.dialog_smb_scan_mobile,
+            null
+        )
+
+        val layerScanning = dialogView.findViewById<View>(R.id.layerScanning)
+        val layerResults  = dialogView.findViewById<View>(R.id.layerResults)
+        val txtNoHosts    = dialogView.findViewById<TextView>(R.id.txtNoHosts)
+        val rvHosts       = dialogView.findViewById<RecyclerView>(R.id.rvHosts)
+        val txtScanTitle  = dialogView.findViewById<TextView>(R.id.txtScanTitle)
+        val txtScanningLabel = dialogView.findViewById<TextView>(R.id.txtScanningLabel)
+
+        // Override SMB defaults with NFS-specific strings
+        txtScanTitle?.text = getString(R.string.nfs_scan_title)
+        txtScanningLabel?.text = getString(R.string.nfs_scanning)
+        txtNoHosts.text = getString(R.string.nfs_no_servers_found)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        var cancelled = false
+        dialogView.findViewById<View>(R.id.btnScanCancel).setOnClickListener {
+            cancelled = true
+            dialog.dismiss()
+        }
+        dialog.setOnDismissListener { cancelled = true }
+        dialog.show()
+
+        // Show results area immediately so servers appear progressively
+        layerScanning.visibility = View.VISIBLE
+        layerResults.visibility  = View.VISIBLE
+        txtNoHosts.visibility = View.GONE
+        rvHosts.visibility    = View.VISIBLE
+        rvHosts.layoutManager = LinearLayoutManager(this)
+
+        val serverList = mutableListOf<NfsDiscoveredServer>()
+
+        fun rebuildAdapter() {
+            val items = serverList.flatMap { srv ->
+                if (srv.exports.isNotEmpty() && srv.exports.size <= 3) {
+                    // Show each export path alongside the IP for small sets.
+                    srv.exports.map { export ->
+                        "${srv.ip}  —  $export" to export
+                    }
+                } else if (srv.exports.isNotEmpty()) {
+                    // Many exports: show the count, opening picker on tap.
+                    srv.exports.map { export ->
+                        getString(R.string.nfs_server_with_exports, srv.ip, srv.exports.size) to export
+                    }
+                } else if (srv.exportsError != null) {
+                    listOf(srv.ip to srv.exportsError)
+                } else {
+                    listOf("${srv.ip}  ${getString(R.string.nfs_no_exports)}" to "")
+                }
+            }
+            rvHosts.adapter = SimpleStringAdapter(
+                items.map { it.first },
+                R.layout.item_smb_host,
+                R.id.txtHostIp
+            ) { selected ->
+                // Find the server whose IP is the prefix of the selected item
+                val server = serverList.find { selected.startsWith(it.ip) } ?: return@SimpleStringAdapter
+                val exportsForServer = server.exports
+                if (exportsForServer.size == 1) {
+                    // Single export — pre-fill both host and path
+                    etHost.setText(server.ip)
+                    etPath.setText(exportsForServer[0])
+                    resetConnectionTested()
+                    dialog.dismiss()
+                } else if (exportsForServer.isNotEmpty()) {
+                    // Multiple exports — show export picker
+                    dialog.dismiss()
+                    showNfsExportPicker(server)
+                } else {
+                    // No exports — just pre-fill host
+                    etHost.setText(server.ip)
+                    resetConnectionTested()
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        // Start scan on background thread with cancellation support
+        Log.i("NFS_SCAN", "showNfsScanDialog: starting scan background thread...")
+        Thread {
+            Log.i("NFS_SCAN", "showNfsScanDialog: calling NfsDiscovery.scanLan()...")
+            val scanStart = System.currentTimeMillis()
+            val results = NfsDiscovery.scanLan(
+                context = this,
+                onServerFound = { server ->
+                    runOnUiThread {
+                        if (cancelled) return@runOnUiThread
+                        Log.i("NFS_SCAN", "showNfsScanDialog: received server: ${server.ip}  exports=${server.exports.size}")
+                        serverList.add(server)
+                        rebuildAdapter()
+                    }
+                },
+                cancelled = { cancelled }
+            )
+            val scanTime = System.currentTimeMillis() - scanStart
+            Log.i("NFS_SCAN", "showNfsScanDialog: scanLan returned ${results.size} server(s) in ${scanTime}ms")
+            for (srv in results) {
+                Log.i("NFS_SCAN", "  Result: ${srv.ip}  exports=${srv.exports}  error=${srv.exportsError}")
+            }
+            runOnUiThread {
+                if (cancelled) return@runOnUiThread
+                Log.i("NFS_SCAN", "showNfsScanDialog: scan complete — ${results.size} servers, ${serverList.size} in UI list")
+                layerScanning.visibility = View.GONE
+                if (serverList.isEmpty()) {
+                    Log.w("NFS_SCAN", "showNfsScanDialog: no servers found, showing empty state")
+                    txtNoHosts.visibility = View.VISIBLE
+                    rvHosts.visibility    = View.GONE
+                } else {
+                    Log.i("NFS_SCAN", "showNfsScanDialog: ${serverList.size} server(s) in list, rebuilding adapter")
+                }
+            }
+        }.start()
+    }
+
+    /**
+     * Shows an export picker dialog for a server that has multiple exports.
+     * Lets the user pick which export path to mount.
+     */
+    private fun showNfsExportPicker(server: NfsDiscoveredServer) {
+        val isTv = DeviceUtils.isTvDevice(this)
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_smb_shares_tv else R.layout.dialog_smb_shares_mobile,
+            null
+        )
+
+        val layerLoading    = dialogView.findViewById<View>(R.id.layerLoading)
+        val layerSharesList = dialogView.findViewById<View>(R.id.layerSharesList)
+        val txtNoShares     = dialogView.findViewById<TextView>(R.id.txtNoShares)
+        val rvShares        = dialogView.findViewById<RecyclerView>(R.id.rvShares)
+        val txtSharesTitle  = dialogView.findViewById<TextView>(R.id.txtSharesTitle)
+
+        // Override labels
+        txtSharesTitle?.text = getString(R.string.nfs_scan_title)
+        txtNoShares.text = getString(R.string.nfs_no_servers_found)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialogView.findViewById<View>(R.id.btnSharesCancel).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+
+        layerLoading.visibility = View.GONE
+        layerSharesList.visibility = View.VISIBLE
+        rvShares.visibility = View.VISIBLE
+        txtNoShares.visibility = View.GONE
+        rvShares.layoutManager = LinearLayoutManager(this)
+        rvShares.adapter = SimpleStringAdapter(
+            server.exports,
+            R.layout.item_smb_share,
+            R.id.txtShareName
+        ) { export ->
+            etHost.setText(server.ip)
+            etPath.setText(export)
+            resetConnectionTested()
+            dialog.dismiss()
+        }
+    }
+
     /** Quick TCP connect to [host]:[port] with [timeoutMs] timeout. */
     private fun tryConnect(host: String, port: Int, timeoutMs: Int): Boolean {
         return try {
@@ -1385,21 +1563,10 @@ class NetworkShareEditActivity : AppCompatActivity() {
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(this, share)
                 ShareType.NFS  -> {
                     Log.i("NFS_TEST", "=== NFS Connection Test: ${share.host}:${share.effectivePort} path=${share.remotePath} version=${share.nfsVersion} uid=${share.username} ===")
-                    // Diagnostics pre-check before mount attempt
-                    val diagnostics = kotlinx.coroutines.runBlocking(kotlinx.coroutines.Dispatchers.IO) {
-                        NfsDiagnostics.runDiagnostics(share.host)
-                    }
-                    Log.i("NFS_TEST", "Diagnostics: dns=${diagnostics.hostResolved} (${diagnostics.resolveTimeMs}ms) port2049=${diagnostics.port2049Reachable} port111=${diagnostics.port111Reachable}")
-                    if (!diagnostics.hostResolved) {
-                        Log.e("NFS_TEST", "FAIL: DNS resolution failed for ${share.host}")
-                        getString(R.string.nfs_diagnostics_dns_fail)
-                    } else if (diagnostics.port2049Reachable == false) {
-                        Log.e("NFS_TEST", "FAIL: TCP connect to ${share.host}:2049 failed")
-                        getString(R.string.nfs_diagnostics_port2049_fail)
-                    } else {
-                        Log.i("NFS_TEST", "Pre-checks passed, attempting NFS mount...")
-                        NfsShareClient.testConnection(share)
-                    }
+                    // No port probes — the RPC handshake itself is the connectivity check.
+                    // libnfs's mount call handles DNS resolution, TCP connection, and
+                    // protocol negotiation internally.
+                    NfsShareClient.testConnection(share)
                 }
                 ShareType.DLNA -> DlnaShareClient.testConnection(share)
                 ShareType.TV, ShareType.ONEDRIVE, ShareType.GOOGLE_DRIVE,

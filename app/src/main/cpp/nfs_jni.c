@@ -584,23 +584,69 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsListExports(
         JNIEnv *env, jclass clazz, jstring jServer) {
     const char *server = (*env)->GetStringUTFChars(env, jServer, NULL);
 
+    LOGI("nfsListExports: querying exports from %s ...", server);
     struct exportnode *exports = mount_getexports(server);
     (*env)->ReleaseStringUTFChars(env, jServer, server);
+
+    if (!exports) {
+        LOGW("nfsListExports: mount_getexports(%s) returned NULL", server);
+        return NULL;
+    }
 
     /* Count */
     int count = 0;
     struct exportnode *e = exports;
     while (e) { count++; e = e->ex_next; }
+    LOGI("nfsListExports(%s): %d export(s) found", server, count);
 
     jclass strCls = (*env)->FindClass(env, "java/lang/String");
     jobjectArray result = (*env)->NewObjectArray(env, count, strCls, NULL);
     e = exports;
     int i = 0;
     while (e) {
+        LOGI("nfsListExports(%s): export[%d] = \"%s\"", server, i, e->ex_dir);
         (*env)->SetObjectArrayElement(env, result, i++,
                                       (*env)->NewStringUTF(env, e->ex_dir));
         e = e->ex_next;
     }
     mount_free_export_list(exports);
+    LOGI("nfsListExports(%s): returning %d exports OK", server, count);
+    return result;
+}
+
+/*
+ * String[] nfsFindLocalServers()
+ * Broadcast-discover NFS servers on the local network.
+ * Returns an array of IP address strings, or NULL if none found / error.
+ */
+JNIEXPORT jobjectArray JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsFindLocalServers(
+        JNIEnv *env, jclass clazz) {
+    LOGI("nfsFindLocalServers: calling nfs_find_local_servers() ...");
+    struct nfs_server_list *srvrs = nfs_find_local_servers();
+    if (!srvrs) {
+        LOGW("nfsFindLocalServers: nfs_find_local_servers returned NULL (no servers or timeout)");
+        return NULL;
+    }
+    LOGI("nfsFindLocalServers: nfs_find_local_servers returned non-NULL, counting...");
+
+    /* Count */
+    int count = 0;
+    struct nfs_server_list *s = srvrs;
+    while (s) { count++; s = s->next; }
+    LOGI("nfsFindLocalServers: %d server(s) found via broadcast", count);
+
+    jclass strCls = (*env)->FindClass(env, "java/lang/String");
+    jobjectArray result = (*env)->NewObjectArray(env, count, strCls, NULL);
+    s = srvrs;
+    int i = 0;
+    while (s) {
+        LOGI("nfsFindLocalServers: server[%d] = %s", i, s->addr);
+        (*env)->SetObjectArrayElement(env, result, i++,
+                                      (*env)->NewStringUTF(env, s->addr));
+        s = s->next;
+    }
+    free_nfs_srvr_list(srvrs);
+    LOGI("nfsFindLocalServers: returning %d servers OK", count);
     return result;
 }

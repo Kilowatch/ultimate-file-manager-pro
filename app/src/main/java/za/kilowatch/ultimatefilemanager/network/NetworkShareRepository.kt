@@ -113,7 +113,9 @@ class NetworkShareRepository private constructor(private val context: Context) {
                         dlnaConnectionManagerUrl = o.optString("dlnaConnectionManagerUrl", ""),
                         isCredentialsStripped = o.optBoolean("isCredentialsStripped", false),
                         isServerMode = o.optBoolean("isServerMode", false),
-                        hostKeyFingerprint = decryptOrPlain(o.optString("hostKeyFingerprint", ""), "hostKeyFingerprint").ifEmpty { null }
+                        hostKeyFingerprint = decryptOrPlain(o.optString("hostKeyFingerprint", ""), "hostKeyFingerprint").ifEmpty { null },
+                        nfsVersion = o.optInt("nfsVersion", 3),
+                        nfsAuthFlavor = o.optInt("nfsAuthFlavor", 1)
                     )
                 )
             }
@@ -157,6 +159,8 @@ class NetworkShareRepository private constructor(private val context: Context) {
                 put("isCredentialsStripped", s.isCredentialsStripped)
                 put("isServerMode", s.isServerMode)
                 put("hostKeyFingerprint", s.hostKeyFingerprint?.let { VaultCrypto.encryptString(it) } ?: "")
+                put("nfsVersion", s.nfsVersion)
+                put("nfsAuthFlavor", s.nfsAuthFlavor)
             })
         }
         file.writeText(arr.toString(2))

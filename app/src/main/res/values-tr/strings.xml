@@ -1414,6 +1414,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+NFS sunucuları taranıyor
+</string>
+    <string name="nfs_scanning">
+NFS sunucuları taranıyor
+</string>
+    <string name="nfs_no_servers_found">
+Bu ağda NFS sunucusu bulunamadı
+</string>
+    <string name="nfs_scan_btn">
+NFS sunucularını tarayın
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d dışa aktarma)
+</string>
+    <string name="nfs_exports_unreachable">
+Sunucuya erişilebiliyor ancak dışa aktarımlar listelenemiyor
+</string>
+    <string name="nfs_no_exports">
+(ihracat yok)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">Döşemeyi Taşı</string>
     <string name="tile_move_up">▲ Yukarı Taşı</string>
@@ -5883,6 +5906,92 @@ Sunucu URL\'si
 </string>
     <string name="rclone_field_koofr_password_hint">
 Giriş şifrenizi değil, Koofr hesap ayarlarınızda oluşturulan bir uygulama şifresini kullanın
+</string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+Arka plan video modu
+</string>
+    <string name="settings_background_video_subtitle_pip">
+Resim İçinde Resim
+</string>
+    <string name="settings_background_video_subtitle_audio">
+Yalnızca ses
+</string>
+    <string name="settings_mini_player_title">
+Mini oynatıcıyı göster
+</string>
+    <string name="settings_mini_player_subtitle_on">
+Oynarken oyuncu çubuğunu gösterir
+</string>
+    <string name="settings_mini_player_subtitle_off">
+Gizlenmiş
+</string>
+    <string name="settings_resume_playback_title">
+Kesintiden sonra devam et
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+Aramalardan sonra otomatik olarak devam eder
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+Kesintiden sonra duraklatılmış durumda kalır
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+Oynamak
+</string>
+    <string name="mini_player_pause_content_desc">
+Duraklat
+</string>
+    <string name="mini_player_close_content_desc">
+Oyuncuyu kapat
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+Sonraki
+</string>
+    <string name="next_track_cancel">
+İptal etmek
+</string>
+    <string name="next_track_skip">
+Atlamak
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+Oynatma Sırası
+</string>
+    <string name="queue_empty">
+Sıra boş
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+Bilinmeyen Sanatçı
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+Medya Oynatma
+</string>
+    <string name="notification_channel_description">
+Şu anda oynatılan medyaya ilişkin kontroller
+</string>
+    <string name="notification_playing">
+Oynanıyor
+</string>
+    <string name="notification_paused">
+Duraklatıldı
+</string>
+    <string name="notification_error_network">
+Sonraki dosya yüklenemedi
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+UFM Oynatıcı Ayarları
 </string>
 </resources>
 

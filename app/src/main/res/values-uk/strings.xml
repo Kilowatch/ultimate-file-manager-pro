@@ -2490,6 +2490,29 @@ NFSv3
 NFSv4
 </string>
 
+    <!-- NFS Server Discovery -->
+    <string name="nfs_scan_title">
+Сканування серверів NFS
+</string>
+    <string name="nfs_scanning">
+Сканування серверів NFS
+</string>
+    <string name="nfs_no_servers_found">
+У цій мережі не знайдено серверів NFS
+</string>
+    <string name="nfs_scan_btn">
+Сканувати сервери NFS
+</string>
+    <string name="nfs_server_with_exports">
+%1$s (%2$d експорт)
+</string>
+    <string name="nfs_exports_unreachable">
+Сервер доступний, але не вдалося отримати список експорту
+</string>
+    <string name="nfs_no_exports">
+(без експорту)
+</string>
+
     <!-- Tile Reorder -->
     <string name="tile_reorder_title">
 Перемістити плитку
@@ -9546,6 +9569,92 @@ URL-адреса сервера
 </string>
     <string name="rclone_field_koofr_password_hint">
 Використовуйте пароль програми, створений у налаштуваннях облікового запису Koofr, а не пароль для входу
+</string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+Режим фонового відео
+</string>
+    <string name="settings_background_video_subtitle_pip">
+Картинка в картинці
+</string>
+    <string name="settings_background_video_subtitle_audio">
+Лише аудіо
+</string>
+    <string name="settings_mini_player_title">
+Показати міні-плеєр
+</string>
+    <string name="settings_mini_player_subtitle_on">
+Показує панель програвача під час гри
+</string>
+    <string name="settings_mini_player_subtitle_off">
+Прихований
+</string>
+    <string name="settings_resume_playback_title">
+Відновити після перерви
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+Автоматичне відновлення після дзвінка
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+Залишається на паузі після переривання
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+грати
+</string>
+    <string name="mini_player_pause_content_desc">
+Пауза
+</string>
+    <string name="mini_player_close_content_desc">
+Закрити плеєр
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+Далі
+</string>
+    <string name="next_track_cancel">
+Скасувати
+</string>
+    <string name="next_track_skip">
+Пропустити
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+Черга відтворення
+</string>
+    <string name="queue_empty">
+Черга порожня
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+Невідомий художник
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+Відтворення медіа
+</string>
+    <string name="notification_channel_description">
+Елементи керування медіафайлами, які зараз відтворюються
+</string>
+    <string name="notification_playing">
+Граючи
+</string>
+    <string name="notification_paused">
+Призупинено
+</string>
+    <string name="notification_error_network">
+Не вдалося завантажити наступний файл
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+Налаштування плеєра UFM
 </string>
 </resources>
 
