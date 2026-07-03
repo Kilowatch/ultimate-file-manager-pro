@@ -121,6 +121,9 @@ Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau 
         <item>Pengindeks Penyimpanan — membuat indeks lokal metadata file untuk pencarian instan dan penelusuran cepat.</item>
         <item>Kerangka Akses Penyimpanan — aplikasi lain dapat mengakses file Anda melalui penyedia dokumen UFM.</item>
         <item>Tip Jar — pembelian satu kali opsional untuk mendukung pengembang; aplikasi ini selalu gratis tanpa memberi tip.</item>
+        <item>
+UFM Media Player — memutar file audio dan video dengan pemutaran latar belakang, kontrol notifikasi, mode Gambar-dalam-Gambar, dan manajemen daftar putar.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau
         <item>Kredensial Penyimpanan yang Kompatibel dengan S3 / S3 (AWS S3, MinIO, IDrive E2, dll.)</item>
         <item>Metadata File Terindeks (SQLite/Ruangan)</item>
         <item>Pemilihan Bahasa (Cookie)</item>
+        <item>
+Status Pemutaran Media
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Akses aman ke file terenkripsi · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau
         <item>Access Key ID dan Secret Access Key untuk menghubungkan ke bucket S3 · Penyimpanan pribadi aplikasi</item>
         <item>Metadata file (nama, ukuran, tanggal) untuk penelusuran dan pencarian cepat yang disimpan dalam database SQLite/Ruangan lokal — dapat dikelola melalui Pengaturan -&gt; Pengindeks Penyimpanan · Penyimpanan pribadi aplikasi</item>
         <item>Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web</item>
+        <item>
+Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

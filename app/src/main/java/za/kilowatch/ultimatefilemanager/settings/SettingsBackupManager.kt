@@ -277,6 +277,7 @@ object SettingsBackupManager {
         add("cache_copy_prefs",          context.getString(R.string.backup_pref_cache_copy))
         add("video_thumbnail_time_prefs",context.getString(R.string.backup_pref_video_thumb_time))
         add("autoplay_prefs",            context.getString(R.string.backup_pref_autoplay))
+        add("ufm_player_prefs",          context.getString(R.string.backup_pref_ufm_player))
         add("breadcrumbs_prefs",         context.getString(R.string.backup_pref_breadcrumbs))
         add("grid_indicators_prefs",     context.getString(R.string.backup_pref_grid_indicators))
         add("scrolling_text_prefs",      context.getString(R.string.backup_pref_scrolling_text))
@@ -562,6 +563,7 @@ object SettingsBackupManager {
                 "tile_order_prefs"          to R.string.backup_pref_tile_order,
                 "cache_copy_prefs"          to R.string.backup_pref_cache_copy,
                 "autoplay_prefs"            to R.string.backup_pref_autoplay,
+                "ufm_player_prefs"          to R.string.backup_pref_ufm_player,
                 "breadcrumbs_prefs"         to R.string.backup_pref_breadcrumbs,
                 "grid_indicators_prefs"     to R.string.backup_pref_grid_indicators,
                 "scrolling_text_prefs"      to R.string.backup_pref_scrolling_text,

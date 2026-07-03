@@ -121,6 +121,9 @@ La conexión a unidades en la nube a través de RClone se realiza directamente d
         <item>Storage Indexer: cree un índice local de metadatos de archivos para realizar búsquedas instantáneas y una navegación increíblemente rápida.</item>
         <item>Marco de acceso al almacenamiento: otras aplicaciones pueden acceder a sus archivos a través del proveedor de documentos de UFM.</item>
         <item>Tip Jar: compras únicas opcionales para ayudar al desarrollador; La aplicación siempre es gratuita sin propinas.</item>
+        <item>
+UFM Media Player: reproduce archivos de audio y video con reproducción en segundo plano, controles de notificación, modo Imagen en imagen y administración de listas de reproducción.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Operaciones de archivos: cargar, descargar, cambiar el nombre, copiar, mover o e
         <item>Credenciales de almacenamiento compatibles con S3/S3 (AWS S3, MinIO, IDrive E2, etc.)</item>
         <item>Metadatos de archivos indexados (SQLite/Room)</item>
         <item>Selección de idioma (Cookie)</item>
+        <item>
+Estado de reproducción multimedia
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Acceso seguro a archivos cifrados · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Operaciones de archivos: cargar, descargar, cambiar el nombre, copiar, mover o e
         <item>ID de clave de acceso y clave de acceso secreta para conectarse a depósitos S3 · Almacenamiento privado de la aplicación</item>
         <item>Metadatos de archivos (nombres, tamaños, fechas) para una navegación y búsqueda rápidas almacenados en una base de datos SQLite/Room local; se pueden administrar a través de Configuración -&gt; Indexador de almacenamiento · Almacenamiento privado de la aplicación</item>
         <item>Una cookie (ufm_lang) recuerda su elección de idioma durante la sesión y cuando se reinicia el navegador · Almacenamiento del navegador web</item>
+        <item>
+Una cookie (ufm_lang) recuerda su elección de idioma durante la sesión y cuando se reinicia el navegador · Almacenamiento del navegador web
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

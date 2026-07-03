@@ -121,6 +121,9 @@ Die Verbindung zu Cloud-Laufwerken über RClone erfolgt direkt von Ihrem Telefon
         <item>Storage Indexer – Erstellen Sie einen lokalen Index der Dateimetadaten für sofortige Suche und blitzschnelles Browsen.</item>
         <item>Storage Access Framework – andere Apps können über den Dokumentenanbieter von UFM auf Ihre Dateien zugreifen.</item>
         <item>Tip Jar – optionale einmalige Käufe zur Unterstützung des Entwicklers; Die App ist immer kostenlos, ohne Trinkgeld.</item>
+        <item>
+UFM Media Player – Spielen Sie Audio- und Videodateien mit Hintergrundwiedergabe, Benachrichtigungssteuerung, Bild-in-Bild-Modus und Wiedergabelistenverwaltung ab.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Dateivorgänge: Hochladen, Herunterladen, Umbenennen, Kopieren, Verschieben oder
         <item>S3/S3-kompatible Speicheranmeldeinformationen (AWS S3, MinIO, IDrive E2 usw.)</item>
         <item>Indizierte Dateimetadaten (SQLite/Room)</item>
         <item>Sprachauswahl (Cookie)</item>
+        <item>
+Medienwiedergabestatus
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Sicherer Zugriff auf verschlüsselte Dateien · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Dateivorgänge: Hochladen, Herunterladen, Umbenennen, Kopieren, Verschieben oder
         <item>Zugriffsschlüssel-ID und geheimer Zugriffsschlüssel für die Verbindung zu S3-Buckets · Privater App-Speicher</item>
         <item>Dateimetadaten (Namen, Größen, Daten) für schnelles Durchsuchen und Suchen, gespeichert in einer lokalen SQLite-/Room-Datenbank – können über Einstellungen -&gt; Speicherindexer · Privater App-Speicher verwaltet werden</item>
         <item>Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der gesamten Sitzung und bei jedem Browser-Neustart. · Speicherung im Webbrowser</item>
+        <item>
+Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der gesamten Sitzung und bei jedem Browser-Neustart. · Speicherung im Webbrowser
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

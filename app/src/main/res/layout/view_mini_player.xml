@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/miniPlayer"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:background="@drawable/bg_ufm_controls"
+    android:clickable="true"
+    android:focusable="true"
+    android:elevation="8dp"
+    android:visibility="gone">
+
+    <!-- Slim progress bar at top edge -->
+    <ProgressBar
+        android:id="@+id/miniProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="top"
+        android:max="1000"
+        android:progress="0"
+        android:progressTint="@color/ufm_primary"
+        android:backgroundTint="@android:color/transparent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
+
+        <!-- Thumbnail -->
+        <ImageView
+            android:id="@+id/miniThumbnail"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_audio"
+            app:tint="@color/ufm_text_secondary" />
+
+        <!-- Title + Artist -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/miniTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/miniArtist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:textColor="@color/ufm_text_secondary"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Play/Pause -->
+        <ImageButton
+            android:id="@+id/miniBtnPlayPause"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_play"
+            android:contentDescription="@string/mini_player_play_content_desc"
+            app:tint="@android:color/white" />
+
+        <!-- Skip Next -->
+        <ImageButton
+            android:id="@+id/miniBtnNext"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_skip_next"
+            android:contentDescription="@string/next_track_skip"
+            app:tint="@android:color/white" />
+
+        <!-- Close -->
+        <ImageButton
+            android:id="@+id/miniBtnClose"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/mini_player_close_content_desc"
+            app:tint="@color/ufm_text_secondary" />
+    </LinearLayout>
+</FrameLayout>

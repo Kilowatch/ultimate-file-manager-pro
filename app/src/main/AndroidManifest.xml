@@ -9,6 +9,7 @@
     <!-- Sync foreground service -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <!-- Legacy storage (API < 33) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -705,7 +706,8 @@
             android:name=".viewer.UFMPlayerActivity"
             android:exported="false"
             android:theme="@style/Theme.UFM.Player"
-            android:configChanges="orientation|screenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|locale" />
+            android:supportsPictureInPicture="true"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation|fontScale|locale" />
 
         <activity
             android:name=".viewer.SlideShowActivity"
@@ -798,6 +800,12 @@
         <service
             android:name=".server.FileServerService"
             android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- UFM Media Player — Background Playback -->
+        <service
+            android:name=".viewer.UFMPlaybackService"
+            android:foregroundServiceType="mediaPlayback"
             android:exported="false" />
 
         <!-- Required for WorkManager Foreground Service in Android 14+ -->

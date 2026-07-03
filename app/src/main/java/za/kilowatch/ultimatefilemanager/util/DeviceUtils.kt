@@ -30,6 +30,14 @@ object DeviceUtils {
      * Used to disable Google Play–dependent features (Billing, Play Store URLs)
      * which do not work on Fire OS.
      */
+    /**
+     * Returns true if Picture-in-Picture mode is supported on this device.
+     * PiP requires Android 8.0 (API 26) or higher.
+     */
+    fun isPiPSupported(): Boolean {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+    }
+
     fun isAmazonDevice(context: Context): Boolean {
         return Build.MANUFACTURER.equals("Amazon", ignoreCase = true) ||
                context.packageManager.hasSystemFeature("amazon.hardware.fire_tv")

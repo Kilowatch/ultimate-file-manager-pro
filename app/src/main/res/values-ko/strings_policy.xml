@@ -121,6 +121,9 @@ RClone을 통해 클라우드 드라이브에 연결하는 것은 휴대폰이�
         <item>Storage Indexer — 즉각적인 검색과 매우 빠른 탐색을 위해 파일 메타데이터의 로컬 인덱스를 생성합니다.</item>
         <item>저장소 액세스 프레임워크 — 다른 앱은 UFM의 문서 제공자를 통해 파일에 액세스할 수 있습니다.</item>
         <item>Tip Jar — 개발자를 지원하기 위한 일회성 구매 옵션입니다. 앱은 팁 없이 항상 무료입니다.</item>
+        <item>
+UFM 미디어 플레이어 — 백그라운드 재생, 알림 제어, Picture-in-Picture 모드 및 재생 목록 관리를 통해 오디오 및 비디오 파일을 재생합니다.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ RClone 스토리지 구성을 위해 입력된 모든 비밀번호, 토큰 또�
         <item>S3/S3 호환 스토리지 자격 증명(AWS S3, MinIO, IDrive E2 등)</item>
         <item>색인화된 파일 메타데이터(SQLite/Room)</item>
         <item>언어 선택(쿠키)</item>
+        <item>
+미디어 재생 상태
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>암호화된 파일에 대한 보안 액세스 · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ RClone 스토리지 구성을 위해 입력된 모든 비밀번호, 토큰 또�
         <item>S3 버킷 연결을 위한 액세스 키 ID 및 비밀 액세스 키 · 앱 프라이빗 스토리지</item>
         <item>로컬 SQLite/Room 데이터베이스에 저장된 빠른 탐색 및 검색을 위한 파일 메타데이터(이름, 크기, 날짜) — 설정 -&gt; 스토리지 인덱서 · 앱 개인 스토리지를 통해 관리 가능</item>
         <item>쿠키(ufm_lang)는 세션 전체와 브라우저 재시작 시 귀하의 언어 선택을 기억합니다. · 웹 브라우저 저장</item>
+        <item>
+쿠키(ufm_lang)는 세션 전체와 브라우저 재시작 시 귀하의 언어 선택을 기억합니다. · 웹 브라우저 저장
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

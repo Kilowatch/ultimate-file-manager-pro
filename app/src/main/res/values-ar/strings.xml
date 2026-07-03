@@ -5882,6 +5882,92 @@ RClone
     <string name="rclone_field_koofr_password_hint">
 استخدم كلمة مرور التطبيق التي تم إنشاؤها في إعدادات حساب Koofr، وليس كلمة مرور تسجيل الدخول الخاصة بك
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+وضع الفيديو في الخلفية
+</string>
+    <string name="settings_background_video_subtitle_pip">
+صورة داخل صورة
+</string>
+    <string name="settings_background_video_subtitle_audio">
+الصوت فقط
+</string>
+    <string name="settings_mini_player_title">
+عرض لاعب صغير
+</string>
+    <string name="settings_mini_player_subtitle_on">
+يظهر شريط اللاعب عند اللعب
+</string>
+    <string name="settings_mini_player_subtitle_off">
+مختفي
+</string>
+    <string name="settings_resume_playback_title">
+استئناف بعد انقطاع
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+استئناف تلقائي بعد المكالمات
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+يبقى متوقفا مؤقتا بعد انقطاع
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+يلعب
+</string>
+    <string name="mini_player_pause_content_desc">
+يوقف
+</string>
+    <string name="mini_player_close_content_desc">
+إغلاق اللاعب
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+التالي
+</string>
+    <string name="next_track_cancel">
+يلغي
+</string>
+    <string name="next_track_skip">
+يتخطى
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+قائمة انتظار التشغيل
+</string>
+    <string name="queue_empty">
+قائمة الانتظار فارغة
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+فنان غير معروف
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+تشغيل الوسائط
+</string>
+    <string name="notification_channel_description">
+عناصر التحكم في الوسائط التي يتم تشغيلها حاليًا
+</string>
+    <string name="notification_playing">
+اللعب
+</string>
+    <string name="notification_paused">
+متوقف مؤقتًا
+</string>
+    <string name="notification_error_network">
+لا يمكن تحميل الملف التالي
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+إعدادات مشغل UFM
+</string>
 </resources>
 
 

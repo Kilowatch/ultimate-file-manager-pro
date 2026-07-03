@@ -211,11 +211,16 @@ object FileViewerRouter {
             in PDF_EXTENSIONS -> Intent(context, PdfViewerActivity::class.java)
             "zip" -> Intent(context, ZipViewerActivity::class.java)
             "7z" -> Intent(context, SevenZipViewerActivity::class.java)
-            in AUDIO_EXTENSIONS -> Intent(context, MediaPlayerActivity::class.java).apply {
-                putExtra(EXTRA_IS_VIDEO, false)
-            }
-            in VIDEO_EXTENSIONS -> Intent(context, MediaPlayerActivity::class.java).apply {
-                putExtra(EXTRA_IS_VIDEO, true)
+            in AUDIO_EXTENSIONS, in VIDEO_EXTENSIONS -> {
+                // Mobile: UFMPlayerActivity (ExoPlayer with background playback)
+                // TV: keep the old MediaPlayerActivity (new features not supported on TV)
+                if (!za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
+                    openInPlayer(context, file)
+                    return
+                }
+                Intent(context, MediaPlayerActivity::class.java).apply {
+                    putExtra(FileViewerRouter.EXTRA_IS_VIDEO, ext !in AUDIO_EXTENSIONS)
+                }
             }
             in SPREADSHEET_EXTENSIONS -> Intent(context, SpreadsheetViewerActivity::class.java)
             in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS -> 

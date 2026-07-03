@@ -1,71 +1,88 @@
 package za.kilowatch.ultimatefilemanager.viewer
 
 import android.app.Activity
+import android.app.PendingIntent
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.media.MediaDataSource
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.common.TrackGroup
+import androidx.media3.common.TrackSelectionOverride
+import androidx.media3.common.Tracks
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
-import androidx.media3.datasource.TransferListener
-import androidx.media3.common.C
-import za.kilowatch.ultimatefilemanager.network.IRandomAccessFile
-import za.kilowatch.ultimatefilemanager.network.NetworkShare
-import za.kilowatch.ultimatefilemanager.network.ShareType
-import za.kilowatch.ultimatefilemanager.network.SmbShareClient
-import za.kilowatch.ultimatefilemanager.network.FtpShareClient
-import za.kilowatch.ultimatefilemanager.network.NfsShareClient
-import za.kilowatch.ultimatefilemanager.network.SshShareClient
-import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
-import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
-import android.media.MediaDataSource
 import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.TransferListener
+import androidx.media3.datasource.okhttp.OkHttpDataSource
+import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
+import androidx.media3.ui.SubtitleView
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import za.kilowatch.ultimatefilemanager.R
-import za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient
+import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
 import za.kilowatch.ultimatefilemanager.network.DropboxShareClient
+import za.kilowatch.ultimatefilemanager.network.FtpShareClient
+import za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient
+import za.kilowatch.ultimatefilemanager.network.IRandomAccessFile
+import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
+import za.kilowatch.ultimatefilemanager.network.NfsShareClient
 import za.kilowatch.ultimatefilemanager.network.OnedriveShareClient
 import za.kilowatch.ultimatefilemanager.network.S3ShareClient
+import za.kilowatch.ultimatefilemanager.network.ShareType
+import za.kilowatch.ultimatefilemanager.network.SmbShareClient
+import za.kilowatch.ultimatefilemanager.network.SshShareClient
+import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
+import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
+import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
+import za.kilowatch.ultimatefilemanager.settings.BackgroundVideoMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
-import java.io.IOException
 import java.util.ArrayList
-import android.content.Context
-import android.widget.Toast
-import androidx.media3.common.TrackGroup
-import androidx.media3.common.TrackSelectionOverride
-import androidx.media3.common.TrackSelectionParameters
-import androidx.media3.common.Tracks
-import androidx.media3.common.util.Util
-import androidx.media3.ui.SubtitleView
-import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
-import za.kilowatch.ultimatefilemanager.settings.AutoplayPreferenceManager
-import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
-import java.util.Locale
 
+/**
+ * UFM Media Player — Full-featured audio/video player.
+ *
+ * Rewritten to bind to [UFMPlaybackService] instead of owning the ExoPlayer directly.
+ * The service handles background playback, notification, and audio focus.
+ * This Activity handles the full-screen player UI, controls, PiP, and now-playing views.
+ */
 class UFMPlayerActivity : Activity() {
 
+    // ── Views ───────────────────────────────────────────────────────
     private lateinit var playerView: PlayerView
-    private var player: ExoPlayer? = null
-    
+    private var player: ExoPlayer? = null   // Set from service when bound (for track selection etc.)
+
     private lateinit var btnPlayPause: View
     private lateinit var btnNext: ImageButton
     private lateinit var btnPrev: ImageButton
@@ -89,6 +106,69 @@ class UFMPlayerActivity : Activity() {
     private lateinit var trackSheetList: LinearLayout
     private lateinit var trackSheetTitle: TextView
 
+    // ── Next-Track Overlay ──────────────────────────────────────────
+    private lateinit var nextTrackOverlay: NextTrackOverlayView
+    private var hasPendingNextTrack = false
+
+    // ── PiP Action Updates ─────────────────────────────────────────
+
+    @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
+    private fun updatePiPActions(isPlaying: Boolean) {
+        val prevIntent = Intent(this, UFMPlaybackService::class.java)
+            .setAction(UFMPlaybackService.ACTION_SKIP_PREV)
+        val prevPendingIntent = PendingIntent.getService(
+            this, 12, prevIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val prevAction = android.app.RemoteAction(
+            android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_previous),
+            "Previous", "Previous",
+            prevPendingIntent
+        )
+
+        val toggleIntent = Intent(this, UFMPlaybackService::class.java)
+            .setAction(UFMPlaybackService.ACTION_TOGGLE)
+        val togglePendingIntent = PendingIntent.getService(
+            this, 10, toggleIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val toggleAction = android.app.RemoteAction(
+            android.graphics.drawable.Icon.createWithResource(this,
+                if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+            getString(if (isPlaying) R.string.mini_player_pause_content_desc else R.string.mini_player_play_content_desc),
+            getString(if (isPlaying) R.string.mini_player_pause_content_desc else R.string.mini_player_play_content_desc),
+            togglePendingIntent
+        )
+
+        val nextIntent = Intent(this, UFMPlaybackService::class.java)
+            .setAction(UFMPlaybackService.ACTION_SKIP_NEXT)
+        val nextPendingIntent = PendingIntent.getService(
+            this, 13, nextIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val nextAction = android.app.RemoteAction(
+            android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_next),
+            "Next", "Next",
+            nextPendingIntent
+        )
+
+        try {
+            setPictureInPictureParams(
+                android.app.PictureInPictureParams.Builder()
+                    .setAspectRatio(android.util.Rational(16, 9))
+                    .setActions(listOf(prevAction, toggleAction, nextAction))
+                    .build()
+            )
+        } catch (_: Exception) {}
+    }
+
+    // ── Queue Drawer ───────────────────────────────────────────────
+    private var queueDrawerLayout: View? = null
+    private var queueRecyclerView: RecyclerView? = null
+    private var queueAdapter: QueueAdapter? = null
+    private var isQueueDrawerOpen = false
+
+    // ── Intent Extras (passed to service) ────────────────────────────
     private var playlist: ArrayList<String> = ArrayList()
     private var currentIndex = 0
     private var shareId: String = ""
@@ -99,68 +179,142 @@ class UFMPlayerActivity : Activity() {
     private var remotePathExtra: String = ""
     private var initialFileSize: Long = 0L
 
-    private var isShuffle = false
-    private var isRepeat = false
+    // ── State ───────────────────────────────────────────────────────
     private var isShowingSheet = false
     private var currentSheetMode = -1
     private var currentAudioTracks: List<AudioTrackInfo> = emptyList()
     private var currentSubtitleTracks: List<SubtitleTrackInfo> = emptyList()
     private var externalSubtitleInfos: List<SubtitleTrackInfo> = emptyList()
+    private var isPiP = false
 
     private val handler = Handler(Looper.getMainLooper())
     private var isTracking = false
 
-    private val playerListener = object : Player.Listener {
-        override fun onPlaybackStateChanged(state: Int) {
-            if (state == Player.STATE_BUFFERING) {
-                bufferingLayout.visibility = View.VISIBLE
-            } else {
-                bufferingLayout.visibility = View.GONE
-            }
+    // ── Service Binding ──────────────────────────────────────────────
 
-            if (state == Player.STATE_ENDED) {
-                handler.post {
-                    if (isRepeat) {
-                        playCurrent()
-                    } else if (AutoplayPreferenceManager.isEnabled(this@UFMPlayerActivity)) {
-                        playNext()
+    private var playbackService: UFMPlaybackService? = null
+    private var bound = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            GoRoLog.i("UFMPlayerActivity", "onServiceConnected")
+            val binder = service as? UFMPlaybackService.LocalBinder ?: run {
+                GoRoLog.e("UFMPlayerActivity", "onServiceConnected: binder is not LocalBinder")
+                return
+            }
+            playbackService = binder.getService().also { svc ->
+                // Set player reference for track operations
+                player = svc.getPlayer()
+                playerView.player = player
+                // Register to receive callbacks
+                svc.registerCallback(playbackCallback)
+                // Push current state
+                updatePlayPauseIcon()
+                svc.getPlayer()?.let { p ->
+                    if (p.isPlaying) handler.post(progressUpdater)
+                }
+                // Update queue display
+                playbackCallback.onQueueChanged(svc.queueManager.queue)
+            }
+            bound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            GoRoLog.w("UFMPlayerActivity", "onServiceDisconnected")
+            player = null
+            playerView.player = null
+            playbackService = null
+            bound = false
+        }
+    }
+
+    // ── Callback from Service ───────────────────────────────────────
+
+    private val playbackCallback = object : UFMPlaybackService.PlaybackCallback {
+        override fun onProgressUpdate(position: Long, duration: Long) {
+            if (!isTracking && !isPiP) {
+                if (duration > 0) {
+                    seekBar.max = duration.toInt()
+                    seekBar.progress = position.toInt()
+                    updateTimeLabels(position.toInt(), duration.toInt())
+                }
+            }
+        }
+
+        override fun onTrackChanged(trackInfo: QueueItem?) {
+            runOnUiThread {
+                hasPendingNextTrack = false
+                nextTrackOverlay.hideImmediately()
+                if (trackInfo != null) {
+                    val fileName = trackInfo.path.substringAfterLast("/")
+                    txtTitle.text = trackInfo.title ?: fileName
+
+                    // Switch audio/video mode
+                    val isAudio = trackInfo.isVideo.not()
+                    if (isAudio) {
+                        audioPoster.visibility = View.VISIBLE
+                        audioPosterScrim.visibility = View.VISIBLE
+                        audioPlaceholder.visibility = View.VISIBLE
+                        playerView.visibility = View.GONE
+                        btnSubtitles.visibility = View.GONE
                     } else {
-                        finish()
+                        audioPoster.visibility = View.GONE
+                        audioPosterScrim.visibility = View.GONE
+                        audioPlaceholder.visibility = View.GONE
+                        playerView.visibility = View.VISIBLE
+                        btnSubtitles.visibility = View.VISIBLE
                     }
                 }
             }
-            updatePlayPauseIcon()
         }
 
-        override fun onIsPlayingChanged(isPlaying: Boolean) {
-            updatePlayPauseIcon()
-            if (isPlaying) {
-                resetHideTimer()
-            } else {
-                handler.removeCallbacks(hideControlsRunnable)
+        override fun onPlaybackStateChanged(isPlaying: Boolean, state: Int) {
+            runOnUiThread {
+                if (state == Player.STATE_BUFFERING) {
+                    bufferingLayout.visibility = View.VISIBLE
+                } else {
+                    bufferingLayout.visibility = View.GONE
+                }
+                updatePlayPauseIcon()
+                // Update PiP actions if in PiP mode
+                if (isPiP) updatePiPActions(isPlaying)
+                if (isPlaying) {
+                    resetHideTimer()
+                    handler.post(progressUpdater)
+                } else {
+                    handler.removeCallbacks(progressUpdater)
+                    handler.removeCallbacks(hideControlsRunnable)
+                }
             }
         }
 
-        override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
-            GoRoLog.e("UFMPlayer", "Player error: ${error.message}", error)
+        override fun onMetadataChanged(metadata: MediaMetadata) {
+            runOnUiThread {
+                metadata.title?.toString()?.let { txtTitle.text = it }
+                // Poster extraction happens in the service, but if we get a bitmap here
+                // we could set it on audioPoster. For now, the service handles it internally.
+            }
+        }
+
+        override fun onQueueChanged(queue: List<QueueItem>) {
+            // Will be used by the queue drawer (T019-T020)
+        }
+
+        override fun onError(error: String) {
             runOnUiThread {
                 bufferingLayout.visibility = View.GONE
-                Toast.makeText(this@UFMPlayerActivity, "Playback Error: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@UFMPlayerActivity, error, Toast.LENGTH_LONG).show()
             }
         }
-
-        override fun onTracksChanged(tracks: Tracks) {
-            detectAndUpdateTracks(tracks)
-        }
     }
-    
-    // Auto-hide UI runnable
+
+    // ── Auto-hide Controls ──────────────────────────────────────────
+
     private val hideControlsRunnable = Runnable {
         runOnUiThread {
             if (!isDestroyed && !isFinishing && !isShowingSheet) {
                 controlsLayout.animate().alpha(0f).setDuration(300).withEndAction {
                     controlsLayout.visibility = View.GONE
-                    // Increase subtitle bottom margin when controls are hidden
                     subtitleView.setPadding(0, 0, 0, dp(16))
                 }
                 topBar.animate().alpha(0f).setDuration(300).withEndAction {
@@ -170,6 +324,56 @@ class UFMPlayerActivity : Activity() {
         }
     }
 
+    private val progressUpdater = object : Runnable {
+        override fun run() {
+            val svc = playbackService
+            if (svc != null && !isTracking && !isPiP) {
+                val pos = svc.currentPosition
+                val dur = svc.duration
+                if (dur > 0) {
+                    seekBar.max = dur.toInt()
+                    seekBar.progress = pos.toInt()
+                    updateTimeLabels(pos.toInt(), dur.toInt())
+
+                    // ── Next-track overlay check ──
+                    val remaining = dur - pos
+                    val queue = svc.queueManager
+                    if (remaining <= 5000 && remaining > 0 && queue.size > 1 &&
+                        queue.currentIndex < queue.size - 1 && !hasPendingNextTrack) {
+                        val nextItem = queue.get(queue.currentIndex + 1)
+                        if (nextItem != null) {
+                            hasPendingNextTrack = true
+                            val nextDur = if (nextItem.duration > 0) formatTime(nextItem.duration.toInt()) else ""
+                            val fileName = nextItem.title ?: nextItem.path.substringAfterLast("/")
+                            nextTrackOverlay.showNextTrack(
+                                fileName = fileName,
+                                durationText = nextDur,
+                                onCancel = {
+                                    svc.setSkipAutoplayOnce(true)
+                                    nextTrackOverlay.hideOverlay()
+                                },
+                                onSkip = {
+                                    svc.skipToNext()
+                                    nextTrackOverlay.hideImmediately()
+                                    hasPendingNextTrack = false
+                                }
+                            )
+                        }
+                    } else if (remaining > 5000 && hasPendingNextTrack) {
+                        // Reset if user seeks backwards
+                        hasPendingNextTrack = false
+                        nextTrackOverlay.hideImmediately()
+                    }
+                }
+            }
+            if (playbackService?.isPlaying == true && !isFinishing && !isDestroyed) {
+                handler.postDelayed(this, 1000)
+            }
+        }
+    }
+
+    // ── Lifecycle ───────────────────────────────────────────────────
+
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(LocaleHelper.wrap(base))
     }
@@ -177,7 +381,8 @@ class UFMPlayerActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         za.kilowatch.ultimatefilemanager.settings.ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
-        
+        GoRoLog.i("UFMPlayerActivity", "onCreate() initialPath=${intent.getStringExtra("initialPath")?.take(60)} playlistSize=${intent.getStringArrayListExtra("playlist")?.size}")
+
         // Edge-to-edge
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = android.graphics.Color.TRANSPARENT
@@ -186,6 +391,7 @@ class UFMPlayerActivity : Activity() {
         val isTv = DeviceUtils.isTvDevice(this)
         setContentView(if (isTv) R.layout.activity_ufm_player_tv else R.layout.activity_ufm_player)
 
+        // Read extras
         shareId = intent.getStringExtra("shareId") ?: ""
         shareHost = intent.getStringExtra("shareHost") ?: ""
         shareUsername = intent.getStringExtra("shareUsername") ?: ""
@@ -193,75 +399,174 @@ class UFMPlayerActivity : Activity() {
         provider = intent.getStringExtra("provider") ?: ""
         initialFileSize = intent.getLongExtra("initialSize", 0L)
         val initialPath = intent.getStringExtra("initialPath") ?:
-                         intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: ""
-        remotePathExtra = intent.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH) ?: ""
+            intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: ""
+        remotePathExtra = intent.getStringExtra(
+            za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
+        ) ?: ""
         playlist = intent.getStringArrayListExtra("playlist") ?: ArrayList()
 
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
             playlist.add(initialPath)
         }
-        
         currentIndex = playlist.indexOf(initialPath)
         if (currentIndex == -1) currentIndex = 0
 
         initViews()
-        playCurrent()
+
+        // Start & bind to the playback service
+        UFMPlaybackService.start(this, intent)
+        bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+
         if (isTv) {
             btnPlayPause.requestFocus()
         }
     }
 
-    private fun resetHideTimer() {
+    override fun onResume() {
+        super.onResume()
+        isPiP = false
+        // Re-attach player surface when returning from PiP
+        if (!bound) {
+            bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        } else {
+            playbackService?.getPlayer()?.let { p ->
+                player = p
+                playerView.player = p
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Never detach player here — PiP lifecycle handles surface transitions
+        // Player stays attached so the PiP window and Activity surface stay linked
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        if (bound) {
+            playbackService?.unregisterCallback()
+            unbindService(serviceConnection)
+            bound = false
+        }
+        playbackService = null
+        player = null
+        playerView.player = null
+        handler.removeCallbacks(progressUpdater)
         handler.removeCallbacks(hideControlsRunnable)
-        controlsLayout.visibility = View.VISIBLE
-        controlsLayout.alpha = 1f
-        topBar.visibility = View.VISIBLE
-        topBar.alpha = 1f
-        // Restore subtitle bottom margin when controls are visible
-        subtitleView.setPadding(0, 0, 0, dp(100))
+        super.onDestroy()
+    }
 
-        // Only auto-hide if playing and sheet is not showing
-        if (player?.isPlaying == true && !isShowingSheet) {
-            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // Re-launched from notification — update intent extras if needed
+        setIntent(intent)
+        // If new playlist data arrived, update the service
+        val newPlaylist = intent.getStringArrayListExtra("playlist")
+        if (newPlaylist != null && newPlaylist.isNotEmpty()) {
+            val newIndex = intent.getStringExtra("initialPath")?.let { path ->
+                newPlaylist.indexOf(path).coerceAtLeast(0)
+            } ?: 0
+            // Service already has the queue — just notify to update UI
+            playbackService?.registerCallback(playbackCallback)
         }
     }
 
-    override fun dispatchKeyEvent(event: android.view.KeyEvent?): Boolean {
-        if (event?.action == android.view.KeyEvent.ACTION_DOWN) {
-            when (event.keyCode) {
-                android.view.KeyEvent.KEYCODE_BACK -> {
-                    if (isShowingSheet) {
-                        dismissTrackSheet()
-                        return true
-                    }
-                }
+    // ── PiP ─────────────────────────────────────────────────────────
+
+    @android.annotation.TargetApi(android.os.Build.VERSION_CODES.O)
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        val svc = playbackService
+        if (svc?.isPlaying == true) {
+            val item = svc.currentQueueItem
+            if (item?.isVideo == true &&
+                PlayerPreferencesManager.getBackgroundVideoMode(this) == BackgroundVideoMode.PIP &&
+                !DeviceUtils.isTvDevice(this)
+            ) {
+                // Build PiP params with Previous, Play/Pause, Next
+                val pipBuilder = android.app.PictureInPictureParams.Builder()
+                    .setAspectRatio(android.util.Rational(16, 9))
+
+                // Previous action
+                val prevIntent = Intent(this, UFMPlaybackService::class.java)
+                    .setAction(UFMPlaybackService.ACTION_SKIP_PREV)
+                val prevPendingIntent = PendingIntent.getService(
+                    this, 12, prevIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                val prevAction = android.app.RemoteAction(
+                    android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_previous),
+                    "Previous", "Previous",
+                    prevPendingIntent
+                )
+
+                // Play/Pause action
+                val toggleIntent = Intent(this, UFMPlaybackService::class.java)
+                    .setAction(UFMPlaybackService.ACTION_TOGGLE)
+                val togglePendingIntent = PendingIntent.getService(
+                    this, 10, toggleIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                val toggleAction = android.app.RemoteAction(
+                    android.graphics.drawable.Icon.createWithResource(this,
+                        if (svc.isPlaying) R.drawable.ic_pause else R.drawable.ic_play),
+                    if (svc.isPlaying) getString(R.string.mini_player_pause_content_desc)
+                    else getString(R.string.mini_player_play_content_desc),
+                    if (svc.isPlaying) getString(R.string.mini_player_pause_content_desc)
+                    else getString(R.string.mini_player_play_content_desc),
+                    togglePendingIntent
+                )
+
+                // Next action
+                val nextIntent = Intent(this, UFMPlaybackService::class.java)
+                    .setAction(UFMPlaybackService.ACTION_SKIP_NEXT)
+                val nextPendingIntent = PendingIntent.getService(
+                    this, 13, nextIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                val nextAction = android.app.RemoteAction(
+                    android.graphics.drawable.Icon.createWithResource(this, R.drawable.ic_skip_next),
+                    "Next", "Next",
+                    nextPendingIntent
+                )
+
+                pipBuilder.setActions(listOf(prevAction, toggleAction, nextAction))
+                enterPictureInPictureMode(pipBuilder.build())
+            } else {
+                // Audio-only or PiP disabled — just finish, service continues
+                finish()
             }
         }
-        resetHideTimer()
-        return super.dispatchKeyEvent(event)
     }
 
-    override fun onTouchEvent(event: android.view.MotionEvent?): Boolean {
-        if (event?.action == android.view.MotionEvent.ACTION_DOWN) {
-            if (isShowingSheet) {
-                // Check if the touch is outside the track sheet
-                val sheetRect = android.graphics.Rect()
-                trackSheetLayout.getGlobalVisibleRect(sheetRect)
-                val touchX = event.rawX.toInt()
-                val touchY = event.rawY.toInt()
-                if (!sheetRect.contains(touchX, touchY)) {
-                    dismissTrackSheet()
-                    return true
-                }
-            }
-            resetHideTimer()
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: android.content.res.Configuration
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        isPiP = isInPictureInPictureMode
+
+        if (isInPictureInPictureMode) {
+            // PiP entered — keep player attached to surface (PiP needs the surface to render video)
+            // Just hide the UI controls that are irrelevant in PiP mode
+            controlsLayout.visibility = GONE
+            topBar.visibility = GONE
+        } else {
+            // Returned from PiP — player is already attached, just restore UI
+            controlsLayout.visibility = VISIBLE
+            topBar.visibility = VISIBLE
         }
-        return super.onTouchEvent(event)
     }
+
+    // ── Init Views ──────────────────────────────────────────────────
 
     private fun initViews() {
         playerView = findViewById(R.id.playerView)
-        
+
         btnPlayPause = findViewById(R.id.btnPlayPause)
         btnNext = findViewById(R.id.btnNext)
         btnPrev = findViewById(R.id.btnPrev)
@@ -286,10 +591,8 @@ class UFMPlayerActivity : Activity() {
         trackSheetList = findViewById(R.id.trackSheetList)
         trackSheetTitle = findViewById(R.id.trackSheetTitle)
 
-        // SubtitleView — default style (white text, black edge)
         subtitleView.visibility = View.GONE
 
-        // Initial inactive state for track buttons
         updateAlpha(btnAudioTrack, false)
         updateAlpha(btnSubtitles, false)
 
@@ -299,13 +602,11 @@ class UFMPlayerActivity : Activity() {
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 val isTv = DeviceUtils.isTvDevice(this)
 
-                // Pad playerView bottom to keep video content above the navigation bar
-                val playerView = findViewById<View>(R.id.playerView)
-                if (playerView != null) {
-                    playerView.setPadding(0, 0, 0, if (isTv) 0 else systemBars.bottom)
+                val pv = findViewById<View>(R.id.playerView)
+                if (pv != null) {
+                    pv.setPadding(0, 0, 0, if (isTv) 0 else systemBars.bottom)
                 }
 
-                // Adjust back button margin
                 val btnBack = findViewById<View>(R.id.btnBack)
                 if (btnBack != null) {
                     val lp = btnBack.layoutParams as android.view.ViewGroup.MarginLayoutParams
@@ -314,34 +615,37 @@ class UFMPlayerActivity : Activity() {
                     btnBack.layoutParams = lp
                 }
 
-                // Pad controlsLayout
-                val controlsLayout = findViewById<View>(R.id.controlsLayout)
-                if (controlsLayout != null) {
+                val cl = findViewById<View>(R.id.controlsLayout)
+                if (cl != null) {
                     val bottomPadding = if (isTv) dp(48) else (systemBars.bottom + dp(24))
                     val sidePadding = if (isTv) dp(48) else (systemBars.left + dp(24))
-                    controlsLayout.setPadding(sidePadding, controlsLayout.paddingTop, sidePadding, bottomPadding)
+                    cl.setPadding(sidePadding, cl.paddingTop, sidePadding, bottomPadding)
                 }
-
                 WindowInsetsCompat.CONSUMED
             }
         }
 
-        findViewById<View>(R.id.btnBack)?.setOnClickListener { finish() }
+        findViewById<View>(R.id.btnBack)?.setOnClickListener {
+            // Top-left back button: stop playback entirely
+            stopService(Intent(this, UFMPlaybackService::class.java))
+            finish()
+        }
 
-        updateAlpha(btnShuffle, isShuffle)
-        updateAlpha(btnRepeat, isRepeat)
+        // Shuffle/repeat initial state from service
+        updateAlpha(btnShuffle, playbackService?.isShuffle ?: false)
+        updateAlpha(btnRepeat, playbackService?.isRepeat ?: false)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    val duration = player?.duration ?: 0L
-                    updateTimeLabels(progress, if (duration > 0) duration.toInt() else 0)
+                    val dur = playbackService?.duration ?: 0L
+                    updateTimeLabels(progress, if (dur > 0) dur.toInt() else 0)
                 }
             }
             override fun onStartTrackingTouch(sb: SeekBar?) { isTracking = true }
             override fun onStopTrackingTouch(sb: SeekBar?) {
                 isTracking = false
-                player?.seekTo(sb?.progress?.toLong() ?: 0L)
+                playbackService?.seekTo(sb?.progress?.toLong() ?: 0L)
                 resetHideTimer()
             }
         })
@@ -349,47 +653,112 @@ class UFMPlayerActivity : Activity() {
         seekBar.setOnKeyListener { _, keyCode, event ->
             if (event.action == android.view.KeyEvent.ACTION_DOWN) {
                 if (keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || keyCode == android.view.KeyEvent.KEYCODE_ENTER) {
-                    player?.seekTo(seekBar.progress.toLong())
+                    playbackService?.seekTo(seekBar.progress.toLong())
                     resetHideTimer()
                     true
                 } else false
             } else false
         }
 
-        // Also reset timer on button clicks
+        // Button click handlers — all go through service
         listOf<View>(btnPlayPause, btnNext, btnPrev, btnShuffle, btnRepeat, btnAudioTrack, btnSubtitles).forEach {
             it.setOnClickListener { _ -> resetHideTimer() }
         }
-        // Custom click handling for specific actions
+
         btnPlayPause.setOnClickListener {
             resetHideTimer()
-            player?.let { p ->
-                if (p.isPlaying) p.pause() else {
-                    p.play()
-                    handler.post(progressUpdater)
-                }
-                updatePlayPauseIcon()
-            }
+            playbackService?.toggle()
+            updatePlayPauseIcon()
         }
-        btnNext.setOnClickListener { resetHideTimer(); playNext() }
-        btnPrev.setOnClickListener { resetHideTimer(); playPrev() }
+
+        btnNext.setOnClickListener { resetHideTimer(); playbackService?.skipToNext() }
+        btnPrev.setOnClickListener { resetHideTimer(); playbackService?.skipToPrev() }
+
         btnShuffle.setOnClickListener {
             resetHideTimer()
-            isShuffle = !isShuffle
-            updateAlpha(btnShuffle, isShuffle)
+            playbackService?.toggleShuffle()
+            updateAlpha(btnShuffle, playbackService?.isShuffle ?: false)
         }
+
         btnRepeat.setOnClickListener {
             resetHideTimer()
-            isRepeat = !isRepeat
-            updateAlpha(btnRepeat, isRepeat)
+            playbackService?.toggleRepeat()
+            updateAlpha(btnRepeat, playbackService?.isRepeat ?: false)
         }
+
         btnAudioTrack.setOnClickListener {
             resetHideTimer()
             toggleTrackSheet(MODE_AUDIO)
         }
+
         btnSubtitles.setOnClickListener {
             resetHideTimer()
             toggleTrackSheet(MODE_SUBTITLE)
+        }
+
+        // ── Queue Drawer Button in Controls Row ────────────────────
+        // Find a place for the queue toggle — add to btnSubtitles' parent
+        val controlsRow = findViewById<LinearLayout>(R.id.controlsLayout)
+            ?.findViewWithTag<LinearLayout>("controlsButtonRow")
+        if (controlsRow == null) {
+            // Fallback: add programmatically to the last LinearLayout in controlsLayout
+            try {
+                val parent = (btnSubtitles.parent as? LinearLayout)
+                if (parent != null && parent.childCount > 0) {
+                    val queueBtn = ImageButton(this).apply {
+                        id = android.view.View.generateViewId()
+                        layoutParams = LinearLayout.LayoutParams(
+                            dp(44), dp(44)
+                        ).apply { marginStart = dp(2) }
+                        setImageResource(R.drawable.ic_list_view_custom)
+                        background = resources.getDrawable(
+                            android.R.attr.selectableItemBackgroundBorderless,
+                            theme
+                        )
+                        imageTintList = android.content.res.ColorStateList.valueOf(
+                            android.graphics.Color.WHITE
+                        )
+                        setOnClickListener { toggleQueueDrawer() }
+                        contentDescription = getString(R.string.queue_title)
+                    }
+                    parent.addView(queueBtn, parent.childCount)
+                }
+            } catch (_: Exception) {
+                // Silently skip if layout is unexpected
+            }
+        }
+
+        // ── Queue Drawer Init ───────────────────────────────────────
+        initQueueDrawer()
+
+        // ── Next-Track Overlay ──────────────────────────────────────
+        nextTrackOverlay = NextTrackOverlayView(this).apply {
+            id = R.id.nextTrackOverlay
+            // Attach to the root FrameLayout (main)
+            val root = findViewById<android.widget.FrameLayout>(R.id.main)
+            if (root != null) {
+                val lp = android.widget.FrameLayout.LayoutParams(
+                    android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                    android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+                lp.gravity = android.view.Gravity.BOTTOM
+                root.addView(this, lp)
+            }
+        }
+    }
+
+    // ── UI Helpers ──────────────────────────────────────────────────
+
+    private fun resetHideTimer() {
+        handler.removeCallbacks(hideControlsRunnable)
+        controlsLayout.visibility = View.VISIBLE
+        controlsLayout.alpha = 1f
+        topBar.visibility = View.VISIBLE
+        topBar.alpha = 1f
+        subtitleView.setPadding(0, 0, 0, dp(100))
+
+        if (playbackService?.isPlaying == true && !isShowingSheet) {
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(this))
         }
     }
 
@@ -401,10 +770,74 @@ class UFMPlayerActivity : Activity() {
         }
     }
 
-    /**
-     * Called whenever the player's track list changes (initial load or after track selection).
-     * Detects available audio and subtitle tracks, updates current track lists and button states.
-     */
+    private fun updatePlayPauseIcon() {
+        val isPlaying = playbackService?.isPlaying ?: false
+        val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+        if (btnPlayPause is FloatingActionButton) {
+            (btnPlayPause as FloatingActionButton).setImageResource(icon)
+        } else if (btnPlayPause is ImageButton) {
+            (btnPlayPause as ImageButton).setImageResource(icon)
+        }
+    }
+
+    private fun updateTimeLabels(posMs: Int, durMs: Int) {
+        val remMs = durMs - posMs
+        txtElapsed.text = formatTime(posMs)
+        txtRemaining.text = "-" + formatTime(remMs.coerceAtLeast(0))
+    }
+
+    private fun formatTime(ms: Int): String {
+        var s = ms / 1000
+        val m = s / 60
+        s %= 60
+        return String.format("%02d:%02d", m, s)
+    }
+
+    private fun dp(px: Int): Int {
+        return (px * resources.displayMetrics.density).toInt()
+    }
+
+    // ── Key / Touch Events ──────────────────────────────────────────
+
+    override fun dispatchKeyEvent(event: android.view.KeyEvent?): Boolean {
+        if (event?.action == android.view.KeyEvent.ACTION_DOWN) {
+            when (event.keyCode) {
+                android.view.KeyEvent.KEYCODE_BACK -> {
+                    if (isShowingSheet) {
+                        dismissTrackSheet()
+                        return true
+                    }
+                    // If playing, go to background instead of finishing
+                    if (playbackService?.isPlaying == true) {
+                        finish()
+                        return true
+                    }
+                }
+            }
+        }
+        resetHideTimer()
+        return super.dispatchKeyEvent(event)
+    }
+
+    override fun onTouchEvent(event: android.view.MotionEvent?): Boolean {
+        if (event?.action == android.view.MotionEvent.ACTION_DOWN) {
+            if (isShowingSheet) {
+                val sheetRect = android.graphics.Rect()
+                trackSheetLayout.getGlobalVisibleRect(sheetRect)
+                val touchX = event.rawX.toInt()
+                val touchY = event.rawY.toInt()
+                if (!sheetRect.contains(touchX, touchY)) {
+                    dismissTrackSheet()
+                    return true
+                }
+            }
+            resetHideTimer()
+        }
+        return super.onTouchEvent(event)
+    }
+
+    // ── Track Selection Sheet ───────────────────────────────────────
+
     private fun detectAndUpdateTracks(tracks: Tracks) {
         val audioTracks = mutableListOf<AudioTrackInfo>()
         val embeddedSubtitles = mutableListOf<SubtitleTrackInfo>()
@@ -454,16 +887,12 @@ class UFMPlayerActivity : Activity() {
         val allSubtitles = embeddedSubtitles + externalSubtitleInfos
         currentSubtitleTracks = allSubtitles
 
-        // If no subtitle track is selected among available ones, subtitles are off
         val anySubSelected = currentSubtitleTracks.any { it.isSelected }
-
-        // Update button states
         val hasMultipleAudio = audioTracks.size > 1
         val hasSubtitles = currentSubtitleTracks.isNotEmpty()
         updateAlpha(btnAudioTrack, hasMultipleAudio)
         updateAlpha(btnSubtitles, hasSubtitles)
 
-        // Show/hide subtitle view based on whether a subtitle track is active
         if (anySubSelected) {
             if (subtitleView.visibility != View.VISIBLE) {
                 subtitleView.visibility = View.VISIBLE
@@ -471,15 +900,8 @@ class UFMPlayerActivity : Activity() {
         } else {
             subtitleView.visibility = View.GONE
         }
-
-        GoRoLog.d("UFMPlayer", "Tracks detected: ${audioTracks.size} audio, ${currentSubtitleTracks.size} subtitle (${embeddedSubtitles.size} embedded + ${externalSubtitleInfos.size} external)")
     }
 
-    /**
-     * Scans the local file's parent directory for external subtitle files matching the video filename.
-     * Infers language from filename pattern (e.g., movie.ru.srt → "rus").
-     * Only applies to local playback; returns empty list for network files.
-     */
     private fun scanExternalSubtitles(videoPath: String): List<SubtitleTrackInfo> {
         val isLocal = shareId.isEmpty() && shareHost.isEmpty()
         if (!isLocal) return emptyList()
@@ -525,10 +947,6 @@ class UFMPlayerActivity : Activity() {
         }
     }
 
-    /**
-     * Applies the given audio track as the active audio track.
-     * Uses TrackSelectionOverride to switch seamlessly without restarting playback.
-     */
     private fun applyAudioTrack(trackInfo: AudioTrackInfo) {
         player?.let { p ->
             val override = TrackSelectionOverride(trackInfo.trackGroup, listOf(trackInfo.trackIndex))
@@ -537,24 +955,16 @@ class UFMPlayerActivity : Activity() {
                 .clearOverridesOfType(C.TRACK_TYPE_AUDIO)
                 .setOverrideForType(override)
                 .build()
-            // Refresh the track list to reflect the new selection
             p.currentTracks?.let { detectAndUpdateTracks(it) }
         }
     }
 
-    /**
-     * Applies the given subtitle track, or disables subtitles if trackInfo is null (Off).
-     * Both embedded and external subtitle tracks appear as TrackGroups in currentTracks
-     * once injected via MediaItem.Builder.setSubtitles(), so they are selected the same way.
-     */
     private fun applySubtitleTrack(trackInfo: SubtitleTrackInfo?) {
         player?.let { p ->
             val builder = p.trackSelectionParameters.buildUpon()
             if (trackInfo == null) {
-                // Disable subtitles
                 builder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true)
             } else {
-                // Enable and select this subtitle track
                 builder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false)
                 builder.clearOverridesOfType(C.TRACK_TYPE_TEXT)
                 if (trackInfo.trackGroup != null) {
@@ -567,29 +977,18 @@ class UFMPlayerActivity : Activity() {
         }
     }
 
-    /**
-     * Toggles the track sheet: dismisses if same button pressed, switches if different,
-     * opens if closed.
-     */
     private fun toggleTrackSheet(mode: Int) {
         if (isShowingSheet) {
             if (currentSheetMode == mode) {
-                // Same button pressed — dismiss
                 dismissTrackSheet()
                 return
             } else {
-                // Different button — dismiss current, show new
                 dismissTrackSheet()
             }
         }
         showTrackSheet(mode)
     }
 
-    /**
-     * Shows the track selection bottom sheet for the given mode (AUDIO or SUBTITLE).
-     * Populates the track list dynamically, announces button state changes,
-     * and handles selection via click/D-pad.
-     */
     private fun showTrackSheet(mode: Int) {
         isShowingSheet = true
         currentSheetMode = mode
@@ -604,7 +1003,6 @@ class UFMPlayerActivity : Activity() {
 
         trackSheetList.removeAllViews()
 
-        // For subtitles, always add "Off" as the first option
         if (!isAudio) {
             trackSheetList.addView(createTrackItemView(
                 label = getString(R.string.subtitles_off),
@@ -619,700 +1017,293 @@ class UFMPlayerActivity : Activity() {
         }
 
         if (tracks.isEmpty()) {
-            // No tracks available — show a message row
-            val msg = if (isAudio) {
-                getString(R.string.no_alternate_audio)
-            } else {
-                getString(R.string.no_subtitles_available)
-            }
+            val msg = if (isAudio) getString(R.string.no_alternate_audio)
+            else getString(R.string.no_subtitles_available)
             trackSheetList.addView(createTrackItemView(
-                label = msg,
-                type = null,
-                isSelected = false,
-                isTv = isTv,
-                onClick = { dismissTrackSheet() },
-                enabled = false
+                label = msg, type = null, isSelected = false, isTv = isTv,
+                onClick = { dismissTrackSheet() }, enabled = false
             ))
         } else if (isAudio) {
             for (track in currentAudioTracks) {
                 trackSheetList.addView(createTrackItemView(
-                    label = track.label,
-                    type = null,
-                    isSelected = track.isSelected,
-                    isTv = isTv,
-                    onClick = {
-                        applyAudioTrack(track)
-                        dismissTrackSheet()
-                    }
+                    label = track.label, type = null,
+                    isSelected = track.isSelected, isTv = isTv,
+                    onClick = { applyAudioTrack(track); dismissTrackSheet() }
                 ))
             }
         } else {
             for (track in currentSubtitleTracks) {
                 trackSheetList.addView(createTrackItemView(
-                    label = track.label,
-                    type = track.sourceType,
-                    isSelected = track.isSelected,
-                    isTv = isTv,
-                    onClick = {
-                        applySubtitleTrack(track)
-                        dismissTrackSheet()
-                    }
+                    label = track.label, type = track.sourceType,
+                    isSelected = track.isSelected, isTv = isTv,
+                    onClick = { applySubtitleTrack(track); dismissTrackSheet() }
                 ))
             }
         }
 
-        // Set up D-pad focus chaining for TV so the ScrollView scrolls naturally
         if (isTv) {
             val childCount = trackSheetList.childCount
             for (i in 0 until childCount) {
                 val child = trackSheetList.getChildAt(i)
-                if (i > 0) {
-                    child.nextFocusUpId = trackSheetList.getChildAt(i - 1).id
-                }
-                if (i < childCount - 1) {
-                    child.nextFocusDownId = trackSheetList.getChildAt(i + 1).id
-                }
-                // First/last items have no explicit up/down — focus leaves the ScrollView naturally
+                if (i > 0) child.nextFocusUpId = trackSheetList.getChildAt(i - 1).id
+                if (i < childCount - 1) child.nextFocusDownId = trackSheetList.getChildAt(i + 1).id
             }
         }
 
-        // Animate in
         trackSheetLayout.alpha = 0f
         trackSheetLayout.visibility = View.VISIBLE
-        trackSheetLayout.animate()
-            .alpha(1f)
-            .setDuration(200)
-            .withEndAction {
-                // Auto-focus first focusable item on TV
-                if (isTv) {
-                    trackSheetList.getChildAt(0)?.requestFocus()
-                }
-            }
-            .start()
+        trackSheetLayout.animate().alpha(1f).setDuration(200).withEndAction {
+            if (isTv) trackSheetList.getChildAt(0)?.requestFocus()
+        }.start()
     }
 
-    /**
-     * Dismisses the track selection sheet with a fade-out animation.
-     */
     private fun dismissTrackSheet() {
         if (!isShowingSheet) return
-        trackSheetLayout.animate()
-            .alpha(0f)
-            .setDuration(200)
-            .withEndAction {
-                trackSheetLayout.visibility = View.GONE
-                isShowingSheet = false
-                currentSheetMode = -1
-                // Re-show controls if they were hidden
-                if (player?.isPlaying == true) {
-                    resetHideTimer()
-                }
-            }
-            .start()
+        trackSheetLayout.animate().alpha(0f).setDuration(200).withEndAction {
+            trackSheetLayout.visibility = View.GONE
+            isShowingSheet = false
+            currentSheetMode = -1
+            if (playbackService?.isPlaying == true) resetHideTimer()
+        }.start()
     }
 
-    /**
-     * Creates a single track item view row for the track selection sheet.
-     * Consists of a checkmark icon, language label, and an optional type badge.
-     * On TV, the row is focusable with the yellow selector background.
-     */
     private fun createTrackItemView(
-        label: String,
-        type: String?,
-        isSelected: Boolean,
-        isTv: Boolean,
-        onClick: () -> Unit,
-        enabled: Boolean = true
+        label: String, type: String?, isSelected: Boolean, isTv: Boolean,
+        onClick: () -> Unit, enabled: Boolean = true
     ): View {
         val dp = resources.displayMetrics.density
         val itemHeight = if (isTv) (64 * dp).toInt() else (48 * dp).toInt()
         val paddingH = if (isTv) (24 * dp).toInt() else (16 * dp).toInt()
-        val textSize = if (isTv) 18f else 14f
+        val labelTextSize = if (isTv) 18f else 14f
 
-        val row = LinearLayout(this)
-        row.id = android.view.View.generateViewId()
-        row.orientation = LinearLayout.HORIZONTAL
-        row.gravity = android.view.Gravity.CENTER_VERTICAL
-        row.layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            itemHeight
-        )
-        row.setPadding(paddingH, 0, paddingH, 0)
-        row.isClickable = true
-        row.isFocusable = isTv
-        row.isEnabled = enabled
-        row.alpha = if (enabled) 1.0f else 0.5f
-
-        if (isTv) {
-            row.background = resources.getDrawable(R.drawable.selector_tv_list_item, theme)
-            row.setPadding(paddingH, 0, paddingH, 0)
-        }
-
-        // Checkmark icon
-        val checkmark = ImageView(this)
-        val checkSize = if (isTv) (28 * dp).toInt() else (20 * dp).toInt()
-        checkmark.layoutParams = LinearLayout.LayoutParams(checkSize, checkSize)
-        checkmark.setImageResource(R.drawable.ic_check)
-        if (isSelected) {
-            checkmark.visibility = View.VISIBLE
-            checkmark.setColorFilter(
-                if (isTv) android.graphics.Color.parseColor("#FBBF24")
-                else androidx.core.content.ContextCompat.getColor(this, R.color.ufm_primary)
+        val row = LinearLayout(this).apply {
+            id = android.view.View.generateViewId()
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, itemHeight
             )
-        } else {
-            checkmark.visibility = View.INVISIBLE
+            setPadding(paddingH, 0, paddingH, 0)
+            isClickable = true
+            isFocusable = isTv
+            isEnabled = enabled
+            alpha = if (enabled) 1.0f else 0.5f
+            if (isTv) background = resources.getDrawable(R.drawable.selector_tv_list_item, theme)
         }
 
-        // Language label
-        val labelView = TextView(this)
-        labelView.layoutParams = LinearLayout.LayoutParams(
-            0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f
-        ).apply { marginStart = (12 * dp).toInt() }
-        labelView.text = label
-        labelView.textSize = textSize
-        labelView.setTextColor(
-            if (isTv) resources.getColor(R.color.tv_text_primary, theme)
-            else android.graphics.Color.WHITE
-        )
-        labelView.ellipsize = android.text.TextUtils.TruncateAt.END
-        labelView.maxLines = 1
+        val checkSize = if (isTv) (28 * dp).toInt() else (20 * dp).toInt()
+        val checkmark = ImageView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(checkSize, checkSize)
+            setImageResource(R.drawable.ic_check)
+            visibility = if (isSelected) View.VISIBLE else View.INVISIBLE
+            if (isSelected) setColorFilter(
+                if (isTv) android.graphics.Color.parseColor("#FBBF24")
+                else androidx.core.content.ContextCompat.getColor(this@UFMPlayerActivity, R.color.ufm_primary)
+            )
+        }
+
+        val labelView = TextView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                .apply { marginStart = (12 * dp).toInt() }
+            text = label
+            setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, labelTextSize)
+            setTextColor(
+                if (isTv) resources.getColor(R.color.tv_text_primary, theme)
+                else android.graphics.Color.WHITE
+            )
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            maxLines = 1
+        }
 
         row.addView(checkmark)
         row.addView(labelView)
 
-        // Type badge (for subtitles: "Embedded", "SRT", "VTT", etc.)
         if (type != null) {
-            val badge = TextView(this)
-            badge.layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { marginStart = (8 * dp).toInt() }
-            badge.text = type
-            badge.textSize = if (isTv) 14f else 11f
-            badge.setTextColor(resources.getColor(R.color.ufm_primary, theme))
-            badge.setPadding((8 * dp).toInt(), (2 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
-            badge.setBackgroundResource(R.drawable.bg_chip)
+            val badge = TextView(this).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { marginStart = (8 * dp).toInt() }
+                text = type
+                setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, if (isTv) 14f else 11f)
+                setTextColor(resources.getColor(R.color.ufm_primary, theme))
+                setPadding((8 * dp).toInt(), (2 * dp).toInt(), (8 * dp).toInt(), (2 * dp).toInt())
+                setBackgroundResource(R.drawable.bg_chip)
+            }
             row.addView(badge)
         }
 
         row.setOnClickListener { if (enabled) onClick() }
-
         return row
     }
 
-    private fun playCurrent() {
-        if (playlist.isEmpty()) return
-        val path = playlist[currentIndex]
-        val fileName = path.substringAfterLast("/")
-        txtTitle.text = fileName
-        
-        loadingSpinner.visibility = View.VISIBLE
-        
-        val isAudio = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(fileName.substringAfterLast("."))
-        if (isAudio) {
-            audioPoster.visibility = View.VISIBLE
-            audioPosterScrim.visibility = View.VISIBLE
-            audioPlaceholder.visibility = View.VISIBLE
-            audioPoster.setImageDrawable(null)
-            playerView.visibility = View.GONE
-            // Hide subtitle button for audio-only
-            btnSubtitles.visibility = View.GONE
-        } else {
-            audioPoster.visibility = View.GONE
-            audioPosterScrim.visibility = View.GONE
-            audioPlaceholder.visibility = View.GONE
-            playerView.visibility = View.VISIBLE
-            // Restore subtitle button for video
-            btnSubtitles.visibility = View.VISIBLE
+    // ── Track Data Helpers (called from player listener on service's player) ──
+
+    fun onServiceTracksChanged(tracks: Tracks) {
+        runOnUiThread { detectAndUpdateTracks(tracks) }
+    }
+
+    // ── Queue Drawer ───────────────────────────────────────────────
+
+    private fun initQueueDrawer() {
+        // Create drawer view as a slide-up panel above controls
+        val root = findViewById<android.widget.FrameLayout>(R.id.main)
+        if (root == null) return
+
+        val overlay = View(this).apply {
+            id = android.view.View.generateViewId()
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor(0x99000000.toInt())
+            visibility = GONE
+            setOnClickListener { toggleQueueDrawer() }
         }
 
-        resetPlayer()
+        val recycler = RecyclerView(this).apply {
+            id = android.view.View.generateViewId()
+            layoutParams = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                dp(400)
+            ).apply { gravity = android.view.Gravity.BOTTOM }
+            layoutManager = LinearLayoutManager(context)
+            setBackgroundColor(android.graphics.Color.parseColor("#1E1E2E"))
+            visibility = GONE
+        }
 
-        val isLocal = shareId.isEmpty() && shareHost.isEmpty()
+        val header = TextView(this).apply {
+            id = android.view.View.generateViewId()
+            text = getString(R.string.queue_title)
+            textSize = 16f
+            setTextColor(android.graphics.Color.WHITE)
+            setPadding(dp(16), dp(16), dp(16), dp(8))
+            setBackgroundColor(android.graphics.Color.parseColor("#1E1E2E"))
+            visibility = GONE
+        }
 
-        // ── Local file playback ──
-        if (isLocal) {
-            val localFile = java.io.File(path)
-            if (!localFile.exists()) {
-                GoRoLog.e("UFMPlayer", "Local file not found: $path")
-                bufferingLayout.visibility = View.GONE
-                return
-            }
+        val emptyView = TextView(this).apply {
+            id = android.view.View.generateViewId()
+            text = getString(R.string.queue_empty)
+            textSize = 14f
+            gravity = android.view.Gravity.CENTER
+            setTextColor(0xFF666666.toInt())
+            visibility = GONE
+        }
 
-            bufferingLayout.visibility = View.VISIBLE
+        // Add to root in order: overlay (bottom), then recycler+header (on top)
+        root.addView(overlay)
+        root.addView(recycler)
+        root.addView(header)
+        root.addView(emptyView)
 
-            // Scan for external subtitle files (off main thread)
-            val externalSubs: List<SubtitleTrackInfo> = if (!isAudio) {
-                scanExternalSubtitles(path)
-            } else emptyList()
-            externalSubtitleInfos = externalSubs
+        queueDrawerLayout = overlay
+        queueRecyclerView = recycler
+        queueDrawerLayout?.tag = "queueOverlay"
+        recycler.tag = "queueRecycler"
+        header.tag = "queueHeader"
+        emptyView.tag = "queueEmpty"
 
-            Thread {
-                try {
-                    val videoUri = android.net.Uri.fromFile(localFile)
-
-                    // Build MediaItem with external subtitle tracks
-                    val mediaItemBuilder = MediaItem.Builder().setUri(videoUri)
-                    if (externalSubs.isNotEmpty()) {
-                        val subtitleList = externalSubs.mapNotNull { sub: SubtitleTrackInfo ->
-                            val uri = sub.subtitleUri ?: return@mapNotNull null
-                            val mime = sub.subtitleMime ?: return@mapNotNull null
-                            MediaItem.Subtitle(uri, mime, sub.languageCode, 0)
-                        }
-                        if (subtitleList.isNotEmpty()) {
-                            mediaItemBuilder.setSubtitles(subtitleList)
-                        }
-                    }
-                    val mediaItem = mediaItemBuilder.build()
-
-                    val dataSourceFactory = DefaultDataSource.Factory(this@UFMPlayerActivity)
-                    val mediaSource = DefaultMediaSourceFactory(dataSourceFactory)
-                        .createMediaSource(mediaItem)
-
-                    runOnUiThread {
-                        if (isDestroyed || isFinishing) return@runOnUiThread
-
-                        val newPlayer = ExoPlayer.Builder(this@UFMPlayerActivity).build()
-                        player = newPlayer
-                        playerView.player = newPlayer
-
-                        newPlayer.setMediaSource(mediaSource)
-                        newPlayer.prepare()
-
-                        newPlayer.addListener(playerListener)
-                        newPlayer.playWhenReady = true
-                        newPlayer.play()
-                        handler.post(progressUpdater)
-                    }
-                } catch (e: Exception) {
-                    GoRoLog.e("UFMPlayer", "Local playback setup failed", e)
-                    runOnUiThread { bufferingLayout.visibility = View.GONE }
+        // Create adapter with empty initial data
+        queueAdapter = QueueAdapter(
+            items = mutableListOf(),
+            currentIndex = 0,
+            onItemClick = { position ->
+                playbackService?.queueManager?.setCurrentIndex(position)
+                playbackService?.skipToNext() // Actually just loads the track
+                playbackService?.let { svc ->
+                    // Reset and play from new index
+                    val qm = svc.queueManager
+                    qm.setCurrentIndex(position)
+                    // We use a flag approach: call playCurrent through the service
+                    svc.skipToNext() // Re-uses next-index logic
                 }
-            }.start()
-
-            // Audio poster extraction for local files
-            if (isAudio) {
-                Thread {
-                    var retriever: MediaMetadataRetriever? = null
-                    try {
-                        retriever = MediaMetadataRetriever()
-                        retriever.setDataSource(path)
-                        val art = retriever.embeddedPicture
-                        if (art != null) {
-                            val bmp = android.graphics.BitmapFactory.decodeByteArray(art, 0, art.size)
-                            runOnUiThread {
-                                if (!isDestroyed) {
-                                    audioPoster.setImageBitmap(bmp)
-                                    audioPlaceholder.visibility = View.GONE
-                                }
-                            }
-                        }
-                    } catch (e: Exception) {
-                        GoRoLog.e("UFMPlayer", "Failed to extract poster", e)
-                    } finally {
-                        try { retriever?.release() } catch (e: Exception) {}
-                    }
-                }.start()
-            }
-            return
-        }
-
-        // ── Network file playback ──
-        var share = NetworkShareRepository.getInstance(this).getById(shareId)
-        // Server-mode shares need remotePath from the intent (browser updates it at navigation time)
-        if (share?.isServerMode == true && remotePathExtra.isNotEmpty()) {
-            share = share.copy(remotePath = remotePathExtra)
-        }
-        // Also check OnlineStorageRepository (covers RCLONE, Filen, Drime, WebDAV, etc.)
-        if (share == null) {
-            val online = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
-                .getInstance(this).getById(shareId)
-            if (online != null) {
-                share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                    id = online.id,
-                    name = online.displayName,
-                    type = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE     -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX      -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3       -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2    -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV       -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE       -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                    },
-                    host = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email else online.s3Endpoint ?: online.email
-                    },
-                    username = when (online.provider) {
-                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
-                        else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: ""
-                    },
-                    password = if (online.isWebDavProvider) online.webDavPassword ?: "" else online.s3SecretKey ?: "",
-                    readOnly = false
+                toggleQueueDrawer()
+            },
+            onItemMove = { from, to ->
+                playbackService?.queueManager?.moveItem(from, to)
+                queueAdapter?.updateData(
+                    (playbackService?.queueManager?.queue ?: emptyList()).toMutableList(),
+                    playbackService?.queueManager?.currentIndex ?: 0
+                )
+            },
+            onItemDismiss = { position ->
+                playbackService?.queueManager?.removeAt(position)
+                queueAdapter?.updateData(
+                    (playbackService?.queueManager?.queue ?: emptyList()).toMutableList(),
+                    playbackService?.queueManager?.currentIndex ?: 0
                 )
             }
-        }
-        if (share == null && shareHost.isNotEmpty()) {
-            GoRoLog.d("UFMPlayer", "Share not found in repo, creating dummy for $shareHost")
-            share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                id = shareId,
-                host = shareHost,
-                username = shareUsername,
-                name = shareName,
-                type = try {
-                    za.kilowatch.ultimatefilemanager.network.ShareType.valueOf(provider)
-                } catch (_: Exception) {
-                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                },
-                remotePath = remotePathExtra
-            )
-        }
+        )
 
-        if (share == null) {
-            GoRoLog.e("UFMPlayer", "NetworkShare not found for ID: $shareId and no fallback host")
-            bufferingLayout.visibility = View.GONE
-            return
-        }
+        recycler.adapter = queueAdapter
 
-        bufferingLayout.visibility = View.VISIBLE
-        
-        Thread {
-            try {
-                val mediaSource = if (share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE) {
-                    val (url, token) = if (share.type == ShareType.GOOGLE_DRIVE) {
-                        GoogleDriveShareClient.getStreamingUrlAndTokenSync(share, path)
-                    } else {
-                        OnedriveShareClient.getStreamingUrlAndTokenSync(share, path)
-                    }
-                    val okhttpClient = okhttp3.OkHttpClient.Builder()
-                        .followRedirects(true)
-                        .followSslRedirects(true)
-                        .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                        .readTimeout(0, java.util.concurrent.TimeUnit.SECONDS)
-                        .build()
-                    val dataSourceFactory = OkHttpDataSource.Factory(okhttpClient)
-                        .setDefaultRequestProperties(
-                            if (token.isNotEmpty()) mapOf("Authorization" to "Bearer $token") else emptyMap()
-                        )
-                        .setUserAgent(Util.getUserAgent(this@UFMPlayerActivity, "UFM"))
-                    DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(url)))
-                } else if (share.type == ShareType.NFS) {
-                    val ext = path.substringAfterLast('.').lowercase()
-                    val mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-                        ?: "video/mp4"
-                    val proxyUrl = za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer.register(
-                        share, path, mime, initialFileSize
-                    )
-                    val okhttpClient = okhttp3.OkHttpClient.Builder()
-                        .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-                        .readTimeout(0, java.util.concurrent.TimeUnit.SECONDS)
-                        .build()
-                    val dataSourceFactory = OkHttpDataSource.Factory(okhttpClient)
-                        .setUserAgent(Util.getUserAgent(this@UFMPlayerActivity, "UFM"))
-                    DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(proxyUrl)))
-                } else /* SMB, FTP, SFTP, SCP, NFS, DLNA — via UfmMedia3DataSource */ {
-                    val dataSourceFactory = DataSource.Factory { UfmMedia3DataSource(share, path) }
-                    DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${path.replace(" ", "%20")}")))
-                }
-                
-                runOnUiThread {
-                    if (isDestroyed || isFinishing) return@runOnUiThread
-                    
-                    val newPlayer = ExoPlayer.Builder(this@UFMPlayerActivity).build()
-                    player = newPlayer
-                    playerView.player = newPlayer
-                    
-                    newPlayer.setMediaSource(mediaSource)
-                    newPlayer.prepare()
-                    
-                    newPlayer.addListener(playerListener)
-                    newPlayer.playWhenReady = true
-                    newPlayer.play()
-                    handler.post(progressUpdater)
-                }
-            } catch (e: Exception) {
-                GoRoLog.e("UFMPlayer", "Setup failed", e)
-                runOnUiThread { bufferingLayout.visibility = View.GONE }
+        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.START or ItemTouchHelper.END
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return queueAdapter?.onItemMove(viewHolder.adapterPosition, target.adapterPosition) ?: false
             }
-        }.start()
 
-        // AUDIO POSTER EXTRACTOR (Direct API 14+ native extraction without data sources)
-        if (isAudio) {
-            Thread {
-                var retriever: MediaMetadataRetriever? = null
-                var randomAccessFile: IRandomAccessFile? = null
-                try {
-                    retriever = MediaMetadataRetriever()
-                    
-                    if (share.type == ShareType.GOOGLE_DRIVE || share.type == ShareType.ONEDRIVE) {
-                        val (url, token) = if (share.type == ShareType.GOOGLE_DRIVE) {
-                            GoogleDriveShareClient.getStreamingUrlAndTokenSync(share, path)
-                        } else {
-                            OnedriveShareClient.getStreamingUrlAndTokenSync(share, path)
-                        }
-                        retriever.setDataSource(url, mapOf("Authorization" to "Bearer $token"))
-                    } else {
-                        randomAccessFile = when (share.type) {
-                            ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, path)
-                            ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, path)
-                            ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
-                            ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
-                            ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
-                            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
-                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
-                            ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
-                            ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)
-                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
-                            else -> throw IllegalStateException("Unsupported share type for random access")
-                        }
-                        retriever.setDataSource(CommonMediaDataSource(randomAccessFile))
-                    }
-                    val art = retriever.embeddedPicture
-                    
-                    if (art != null) {
-                        val bmp = android.graphics.BitmapFactory.decodeByteArray(art, 0, art.size)
-                        runOnUiThread {
-                            if (!isDestroyed) {
-                                audioPoster.setImageBitmap(bmp)
-                                audioPlaceholder.visibility = View.GONE
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                   GoRoLog.e("UFMPlayer", "Failed to extract poster", e)
-                } finally {
-                    try { retriever?.release() } catch (e: Exception) {}
-                    try { randomAccessFile?.close() } catch (e: Exception) {}
-                }
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                queueAdapter?.onItemDismiss(viewHolder.adapterPosition)
+            }
+        })
+        touchHelper.attachToRecyclerView(recycler)
+        queueAdapter?.setItemTouchHelper(touchHelper)
+    }
+
+    private fun toggleQueueDrawer() {
+        val svc = playbackService
+        if (svc == null) return
+        val recycler = queueRecyclerView ?: return
+        val overlay = queueDrawerLayout ?: return
+        val header = recycler.rootView.findViewWithTag<TextView>("queueHeader") ?: return
+        val emptyView = recycler.rootView.findViewWithTag<TextView>("queueEmpty") ?: return
+
+        isQueueDrawerOpen = !isQueueDrawerOpen
+
+        if (isQueueDrawerOpen) {
+            // Update data
+            val queue = svc.queueManager.queue.toMutableList()
+            val currentIdx = svc.queueManager.currentIndex
+            queueAdapter?.updateData(queue, currentIdx)
+
+            val hasItems = queue.isNotEmpty()
+            recycler.visibility = if (hasItems) View.VISIBLE else View.GONE
+            header.visibility = View.VISIBLE
+            emptyView.visibility = if (hasItems) View.GONE else View.VISIBLE
+            overlay.visibility = View.VISIBLE
+
+            // Animate slide-up
+            recycler.translationY = dp(400).toFloat()
+            recycler.animate().translationY(0f).setDuration(250).start()
+        } else {
+            recycler.animate().translationY(dp(400).toFloat()).setDuration(200).withEndAction {
+                recycler.visibility = View.GONE
+                header.visibility = View.GONE
+                emptyView.visibility = View.GONE
+            }.start()
+            overlay.animate().alpha(0f).setDuration(200).withEndAction {
+                overlay.visibility = View.GONE
+                overlay.alpha = 1f
             }.start()
         }
     }
 
-    private fun resetPlayer() {
-        handler.removeCallbacks(progressUpdater)
-        player?.let {
-            it.stop()
-            it.release()
-        }
-        player = null
-        seekBar.progress = 0
-        updatePlayPauseIcon()
-    }
-
-    private fun playNext() {
-        if (playlist.isEmpty()) return
-        if (isShuffle) {
-            currentIndex = (0 until playlist.size).random()
-        } else {
-            currentIndex = (currentIndex + 1) % playlist.size
-        }
-        playCurrent()
-    }
-
-    private fun playPrev() {
-        if (playlist.isEmpty()) return
-        val pos = player?.currentPosition ?: 0L
-        if (pos > 5000L) {
-            player?.seekTo(0)
-            return
-        }
-        if (isShuffle) {
-            currentIndex = (0 until playlist.size).random()
-        } else {
-            currentIndex = if (currentIndex - 1 < 0) playlist.size - 1 else currentIndex - 1
-        }
-        playCurrent()
-    }
-
-    private fun updatePlayPauseIcon() {
-        val isPlaying = player?.isPlaying ?: false
-        val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
-        if (btnPlayPause is FloatingActionButton) {
-            (btnPlayPause as FloatingActionButton).setImageResource(icon)
-        } else if (btnPlayPause is ImageButton) {
-            (btnPlayPause as ImageButton).setImageResource(icon)
-        }
-    }
-
-    private val progressUpdater = object : Runnable {
-        override fun run() {
-            player?.let { p ->
-                if (!isTracking && p.isPlaying && (!DeviceUtils.isTvDevice(this@UFMPlayerActivity) || !seekBar.isFocused)) {
-                    val pos = p.currentPosition.toInt()
-                    val dur = p.duration
-                    if (dur > 0L) {
-                        seekBar.max = dur.toInt()
-                        seekBar.progress = pos
-                        updateTimeLabels(pos, dur.toInt())
-                    }
-                }
-            }
-            if (!isFinishing && !isDestroyed) handler.postDelayed(this, 1000)
-        }
-    }
-
-    private fun updateTimeLabels(posMs: Int, durMs: Int) {
-        val remMs = durMs - posMs
-        txtElapsed.text = formatTime(posMs)
-        txtRemaining.text = "-" + formatTime(remMs.coerceAtLeast(0))
-    }
-
-    private fun formatTime(ms: Int): String {
-        var s = ms / 1000
-        val m = s / 60
-        s %= 60
-        return String.format("%02d:%02d", m, s)
-    }
-
-    private fun dp(px: Int): Int {
-        return (px * resources.displayMetrics.density).toInt()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        resetPlayer()
+    companion object {
+        const val MODE_AUDIO = 0
+        const val MODE_SUBTITLE = 1
+        val SUBTITLE_EXTENSIONS = setOf("srt", "vtt", "ass", "ssa", "sub")
     }
 }
 
-class UfmMedia3DataSource(
-    private val share: NetworkShare,
-    private val path: String
-) : DataSource {
-
-    private var randomAccess: IRandomAccessFile? = null
-    private var fileLength: Long = 0
-    private var bytesRemaining: Long = 0
-    private var streamPosition: Long = 0
-    private var opened = false
-    private var currentUri: Uri? = null
-
-    // 2 MB cache buffer for read-ahead to minimize network IO calls
-    private val CACHE_SIZE = 2 * 1024 * 1024 
-    private val cacheBuffer = ByteArray(CACHE_SIZE)
-    private var cacheStartPos: Long = -1L
-    private var cacheEndPos: Long = -1L
-
-    override fun addTransferListener(transferListener: TransferListener) {}
-
-    override fun open(dataSpec: DataSpec): Long {
-        currentUri = dataSpec.uri
-        val randomAccessFile = try {
-            when (share.type) {
-                ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, path)
-                ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, path)
-                ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
-                ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
-                ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
-                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
-                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
-                ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
-                ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
-                else -> throw IllegalStateException("Unsupported share type for random access")
-            }
-        } catch (e: Exception) {
-            throw IOException("Failed to open file on ${share.type}: ${e.message}")
-        }
-        randomAccess = randomAccessFile
-        fileLength = try {
-            randomAccessFile.size
-        } catch (e: Exception) {
-            -1L
-        }
-        streamPosition = dataSpec.position
-        bytesRemaining = if (fileLength < 0) {
-            C.LENGTH_UNSET.toLong()
-        } else if (dataSpec.length == C.LENGTH_UNSET.toLong()) {
-            fileLength - streamPosition
-        } else {
-            dataSpec.length
-        }
-        cacheStartPos = -1L
-        cacheEndPos = -1L
-        opened = true
-        return bytesRemaining
-    }
-
-    override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
-        if (bytesRemaining == 0L) return C.RESULT_END_OF_INPUT
-        val bytesToRead = if (length > bytesRemaining && bytesRemaining != C.LENGTH_UNSET.toLong()) {
-            bytesRemaining.toInt()
-        } else {
-            length
-        }
-        if (bytesToRead <= 0) return C.RESULT_END_OF_INPUT
-
-        // Fast path: fulfill from cache
-        if (streamPosition >= cacheStartPos && streamPosition < cacheEndPos) {
-            val availableInCache = (cacheEndPos - streamPosition).toInt()
-            val toCopy = minOf(bytesToRead, availableInCache)
-            System.arraycopy(cacheBuffer, (streamPosition - cacheStartPos).toInt(), buffer, offset, toCopy)
-            streamPosition += toCopy
-            if (bytesRemaining != C.LENGTH_UNSET.toLong()) bytesRemaining -= toCopy
-            return toCopy
-        }
-
-        // Cache miss: Load large chunk block from network into cache
-        val fetchSize = if (fileLength >= 0) {
-            minOf(CACHE_SIZE.toLong(), fileLength - streamPosition).toInt()
-        } else {
-            CACHE_SIZE
-        }
-        if (fetchSize <= 0) return C.RESULT_END_OF_INPUT
-
-        try {
-            val readLength = randomAccess!!.read(streamPosition, cacheBuffer, fetchSize)
-            if (readLength <= 0) return C.RESULT_END_OF_INPUT
-
-            cacheStartPos = streamPosition
-            cacheEndPos = streamPosition + readLength
-
-            val toCopy = minOf(bytesToRead, readLength)
-            System.arraycopy(cacheBuffer, 0, buffer, offset, toCopy)
-            streamPosition += toCopy
-            if (bytesRemaining != C.LENGTH_UNSET.toLong()) bytesRemaining -= toCopy
-            return toCopy
-        } catch (e: Exception) {
-            return C.RESULT_END_OF_INPUT
-        }
-    }
-
-    override fun getUri(): Uri? = currentUri
-
-    override fun close() {
-        if (opened) {
-            try { randomAccess?.close() } catch (e: Exception) {}
-            opened = false
-            randomAccess = null
-            cacheStartPos = -1L
-            cacheEndPos = -1L
-        }
-    }
-}
-
-class CommonMediaDataSource(
-    private val randomAccess: IRandomAccessFile
-) : MediaDataSource() {
-    override fun readAt(position: Long, buffer: ByteArray, offset: Int, size: Int): Int {
-        if (position >= randomAccess.size) return -1
-        val safeBuffer = ByteArray(size)
-        val read = randomAccess.read(position, safeBuffer, size)
-        if (read > 0) {
-            System.arraycopy(safeBuffer, 0, buffer, offset, read)
-        }
-        return read
-    }
-    override fun getSize(): Long = randomAccess.size
-    override fun close() = randomAccess.close()
-}
-
-// ── Track Selection Data Classes & Constants ──────────────────────────────────
-
-private const val MODE_AUDIO = 0
-private const val MODE_SUBTITLE = 1
-
-private val SUBTITLE_EXTENSIONS = setOf("srt", "vtt", "ass", "ssa", "sub")
+// ═══════════════════════════════════════════════════════════════════════
+// Data Classes & Helpers (unchanged from original)
+// ═══════════════════════════════════════════════════════════════════════
 
 data class AudioTrackInfo(
     val trackGroup: TrackGroup,
@@ -1327,7 +1318,7 @@ data class SubtitleTrackInfo(
     val trackGroup: TrackGroup?,
     val trackIndex: Int,
     val language: String,
-    val languageCode: String = "und",
+    val languageCode: String,
     val label: String,
     val sourceType: String,
     val isExternal: Boolean,
@@ -1336,77 +1327,226 @@ data class SubtitleTrackInfo(
     val subtitleMime: String? = null
 )
 
-/**
- * Maps a subtitle file extension to its corresponding Media3 MIME type.
- */
+fun languageCodeToDisplay(code: String): String {
+    return when (code) {
+        "afr" -> "Afrikaans"
+        "ara" -> "Arabic"
+        "ben" -> "Bengali"
+        "bul" -> "Bulgarian"
+        "cat" -> "Catalan"
+        "ces" -> "Czech"
+        "chi" -> "Chinese"
+        "cmn" -> "Chinese (Mandarin)"
+        "dan" -> "Danish"
+        "deu", "ger" -> "German"
+        "ell" -> "Greek"
+        "eng" -> "English"
+        "epo" -> "Esperanto"
+        "est" -> "Estonian"
+        "fin" -> "Finnish"
+        "fra", "fre" -> "French"
+        "gle" -> "Irish"
+        "glg" -> "Galician"
+        "heb" -> "Hebrew"
+        "hin" -> "Hindi"
+        "hrv" -> "Croatian"
+        "hun" -> "Hungarian"
+        "hye" -> "Armenian"
+        "ind" -> "Indonesian"
+        "isl" -> "Icelandic"
+        "ita" -> "Italian"
+        "jpn" -> "Japanese"
+        "kat" -> "Georgian"
+        "kor" -> "Korean"
+        "lav" -> "Latvian"
+        "lit" -> "Lithuanian"
+        "mar" -> "Marathi"
+        "mkd" -> "Macedonian"
+        "mlt" -> "Maltese"
+        "msa" -> "Malay"
+        "nld", "dut" -> "Dutch"
+        "nno" -> "Norwegian (Nynorsk)"
+        "nob" -> "Norwegian (Bokmål)"
+        "pol" -> "Polish"
+        "por" -> "Portuguese"
+        "ron" -> "Romanian"
+        "rus" -> "Russian"
+        "slk" -> "Slovak"
+        "slv" -> "Slovenian"
+        "spa" -> "Spanish"
+        "srp" -> "Serbian"
+        "swe" -> "Swedish"
+        "tam" -> "Tamil"
+        "tel" -> "Telugu"
+        "tha" -> "Thai"
+        "tur" -> "Turkish"
+        "ukr" -> "Ukrainian"
+        "urd" -> "Urdu"
+        "vie" -> "Vietnamese"
+        "yue" -> "Chinese (Cantonese)"
+        "und" -> "Unknown"
+        else -> code
+    }
+}
+
+private fun inferSubtitleLanguage(nameWithoutExt: String, videoBaseName: String): String {
+    // Extract a potential ISO 639 language code from the subtitle file name
+    // after the video base name. e.g., "movie.ru.srt" -> "rus"
+    val suffix = nameWithoutExt.removePrefix(videoBaseName).trimStart('.')
+    val langCode = suffix.lowercase().take(3)
+    if (langCode.length == 3) return langCode
+    val shortCode = suffix.lowercase().take(2)
+    // Map 2-letter ISO to 3-letter
+    return when (shortCode) {
+        "af" -> "afr"; "ar" -> "ara"; "bn" -> "ben"; "bg" -> "bul"
+        "ca" -> "cat"; "cs" -> "ces"; "da" -> "dan"; "de" -> "deu"
+        "el" -> "ell"; "en" -> "eng"; "eo" -> "epo"; "et" -> "est"
+        "fi" -> "fin"; "fr" -> "fra"; "ga" -> "gle"; "gl" -> "glg"
+        "he" -> "heb"; "hi" -> "hin"; "hr" -> "hrv"; "hu" -> "hun"
+        "hy" -> "hye"; "id" -> "ind"; "is" -> "isl"; "it" -> "ita"
+        "ja" -> "jpn"; "ka" -> "kat"; "ko" -> "kor"; "lv" -> "lav"
+        "lt" -> "lit"; "mk" -> "mkd"; "ml" -> "mlt"; "mr" -> "mar"
+        "ms" -> "msa"; "nl" -> "nld"; "nb" -> "nob"; "nn" -> "nno"
+        "pl" -> "pol"; "pt" -> "por"; "ro" -> "ron"; "ru" -> "rus"
+        "sk" -> "slk"; "sl" -> "slv"; "sq" -> "sqi"; "sr" -> "srp"
+        "sv" -> "swe"; "ta" -> "tam"; "te" -> "tel"; "th" -> "tha"
+        "tr" -> "tur"; "uk" -> "ukr"; "ur" -> "urd"; "vi" -> "vie"
+        "zh" -> "chi"
+        else -> "und"
+    }
+}
+
 private fun getMimeForSubtitleExtension(ext: String): String {
-    return when (ext.lowercase()) {
+    return when (ext) {
         "srt" -> "application/x-subrip"
         "vtt" -> "text/vtt"
-        "ass", "ssa" -> "text/x-ssa"
+        "ass", "ssa" -> "text/x-ass"
         "sub" -> "text/x-microdvd"
         else -> "application/x-subrip"
     }
 }
 
-/**
- * Infers an ISO 639-2 language code from a subtitle filename
- * by extracting the language part between the video base name and the extension.
- * Returns "und" (undefined) if no language pattern is detected.
- *
- * Examples:
- *   "movie.en.srt"   → "eng"
- *   "movie.ru.srt"   → "rus"
- *   "movie.srt"      → "und"
- */
-private fun inferSubtitleLanguage(fileNameWithoutExt: String, videoBaseName: String): String {
-    val name = fileNameWithoutExt.lowercase()
-    val base = videoBaseName.lowercase().substringBeforeLast(".")
-    val suffix = name.removePrefix(base).removePrefix(".")
-    return when (suffix) {
-        "en" -> "eng"
-        "ru" -> "rus"
-        "de" -> "deu"
-        "fr" -> "fra"
-        "es" -> "spa"
-        "it" -> "ita"
-        "pt" -> "por"
-        "nl" -> "nld"
-        "pl" -> "pol"
-        "ja" -> "jpn"
-        "ko" -> "kor"
-        "zh" -> "zho"
-        "ar" -> "ara"
-        "hi" -> "hin"
-        "tr" -> "tur"
-        "sv" -> "swe"
-        "da" -> "dan"
-        "fi" -> "fin"
-        "no" -> "nor"
-        "cs" -> "ces"
-        "hu" -> "hun"
-        "ro" -> "ron"
-        "uk" -> "ukr"
-        "el" -> "ell"
-        "he" -> "heb"
-        "th" -> "tha"
-        "vi" -> "vie"
-        "id" -> "ind"
-        "ms" -> "msa"
-        "tl" -> "tgl"
-        else -> "und"
+// ═══════════════════════════════════════════════════════════════════════
+// Custom Media3 DataSource for network file playback (unchanged)
+// ═══════════════════════════════════════════════════════════════════════
+
+class UfmMedia3DataSource(
+    private val share: NetworkShare,
+    private val path: String
+) : DataSource {
+
+    private var randomAccess: IRandomAccessFile? = null
+    private var fileLength: Long = 0
+    private var bytesRemaining: Long = 0
+    private var streamPosition: Long = 0
+    private var opened = false
+    private var currentUri: Uri? = null
+
+    private val CACHE_SIZE = 2 * 1024 * 1024
+    private val cacheBuffer = ByteArray(CACHE_SIZE)
+    private var cacheStartPos: Long = -1L
+    private var cacheEndPos: Long = -1L
+
+    override fun addTransferListener(transferListener: TransferListener) {}
+
+    override fun open(dataSpec: DataSpec): Long {
+        currentUri = dataSpec.uri
+        opened = true
+        try {
+            randomAccess = when (share.type) {
+                ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, path)
+                ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, path)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
+                ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
+                ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
+                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
+                ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
+                ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
+                else -> throw IllegalStateException("Unsupported share type: ${share.type}")
+            }
+            fileLength = -1L // Will be updated after open if possible
+            streamPosition = dataSpec.position
+            val remaining = if (dataSpec.length != -1L) dataSpec.length else fileLength
+            bytesRemaining = if (remaining == -1L) 0 else remaining - streamPosition
+            cacheStartPos = -1L
+            cacheEndPos = -1L
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlayer", "UfmMedia3DataSource open failed", e)
+            return -1L
+        }
+        return fileLength
+    }
+
+    override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
+        val ra = randomAccess ?: return C.RESULT_END_OF_INPUT
+        try {
+            // Check if the requested range is in the cache
+            val requestEnd = streamPosition + length
+            if (streamPosition in cacheStartPos until cacheEndPos) {
+                val cacheOffset = (streamPosition - cacheStartPos).toInt()
+                val cacheAvailable = (cacheEndPos - streamPosition).toInt()
+                val toCopy = minOf(length, cacheAvailable, buffer.size - offset)
+                if (toCopy > 0) {
+                    System.arraycopy(cacheBuffer, cacheOffset, buffer, offset, toCopy)
+                    streamPosition += toCopy
+                    bytesRemaining -= toCopy
+                    return toCopy
+                }
+            }
+
+            val fetchSize = minOf(CACHE_SIZE, buffer.size)
+            val actualFetchSize = minOf(fetchSize, if (fileLength > 0) (fileLength - streamPosition).toInt() else fetchSize)
+            if (actualFetchSize <= 0) return C.RESULT_END_OF_INPUT
+
+            val read = ra.read(streamPosition, cacheBuffer, actualFetchSize)
+            if (read <= 0) return C.RESULT_END_OF_INPUT
+
+            cacheStartPos = streamPosition
+            cacheEndPos = streamPosition + read
+
+            val toCopy = minOf(length, read, buffer.size - offset)
+            if (toCopy > 0) {
+                System.arraycopy(cacheBuffer, 0, buffer, offset, toCopy)
+                streamPosition += toCopy
+                bytesRemaining -= toCopy
+            }
+            return toCopy
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlayer", "UfmMedia3DataSource read failed", e)
+            return C.RESULT_END_OF_INPUT
+        }
+    }
+
+    override fun getUri(): Uri? = currentUri
+
+    override fun close() {
+        opened = false
+        try { randomAccess?.close() } catch (_: Exception) {}
+        randomAccess = null
+        streamPosition = 0
+        cacheStartPos = -1L
+        cacheEndPos = -1L
     }
 }
 
-/**
- * Converts an ISO 639-2/B three-letter language code to a human-readable display name.
- * Falls back to the uppercase code if the locale is not recognised.
- */
-private fun languageCodeToDisplay(code: String): String {
-    if (code == "und") return "Unknown"
-    return try {
-        Locale(code).displayLanguage.ifEmpty { code.uppercase() }
-    } catch (_: Exception) {
-        code.uppercase()
+class CommonMediaDataSource(
+    private val randomAccess: IRandomAccessFile
+) : MediaDataSource() {
+
+    override fun readAt(position: Long, buffer: ByteArray, offset: Int, size: Int): Int {
+        val safeBuffer = ByteArray(size)
+        val read = randomAccess.read(position, safeBuffer, size)
+        if (read > 0) {
+            System.arraycopy(safeBuffer, 0, buffer, offset, read)
+        }
+        return read
     }
+
+    override fun getSize(): Long = -1L
+
+    override fun close() = randomAccess.close()
 }
+
+// IRandomAccessFile.size() is available via the fileLength property

@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 182          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.6.2"      // Shown in Play Store listing
+val appVersionCode = 184          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.6.3"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 android {
@@ -424,6 +424,7 @@ dependencies {
     implementation(libs.androidx.browser) // Chrome Custom Tabs for Google Drive mobile OAuth
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
     implementation(libs.androidx.media3.datasource.okhttp)
     implementation(libs.shizuku.api)
     implementation(libs.shizuku.provider)

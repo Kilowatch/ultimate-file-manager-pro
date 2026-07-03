@@ -5884,6 +5884,92 @@ API 액세스 토큰
     <string name="rclone_field_koofr_password_hint">
 로그인 비밀번호가 아닌 Koofr 계정 설정에서 생성된 앱 비밀번호를 사용하세요.
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+배경 비디오 모드
+</string>
+    <string name="settings_background_video_subtitle_pip">
+PIP(Picture-in-Picture)
+</string>
+    <string name="settings_background_video_subtitle_audio">
+오디오만
+</string>
+    <string name="settings_mini_player_title">
+미니플레이어 표시
+</string>
+    <string name="settings_mini_player_subtitle_on">
+플레이할 때 플레이어 바 표시
+</string>
+    <string name="settings_mini_player_subtitle_off">
+숨겨진
+</string>
+    <string name="settings_resume_playback_title">
+중단 후 재개
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+통화 후 자동 재개
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+중단 후에도 일시중지 상태 유지
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+놀다
+</string>
+    <string name="mini_player_pause_content_desc">
+정지시키다
+</string>
+    <string name="mini_player_close_content_desc">
+플레이어 닫기
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+다음
+</string>
+    <string name="next_track_cancel">
+취소
+</string>
+    <string name="next_track_skip">
+건너뛰다
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+재생 대기열
+</string>
+    <string name="queue_empty">
+대기열이 비어 있습니다.
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+알 수 없는 아티스트
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+미디어 재생
+</string>
+    <string name="notification_channel_description">
+현재 재생 중인 미디어 제어
+</string>
+    <string name="notification_playing">
+재생
+</string>
+    <string name="notification_paused">
+일시중지됨
+</string>
+    <string name="notification_error_network">
+다음 파일을 로드할 수 없습니다.
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+UFM 플레이어 설정
+</string>
 </resources>
 
 

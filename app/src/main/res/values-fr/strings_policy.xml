@@ -121,6 +121,9 @@ La connexion aux lecteurs cloud via RClone se fait directement depuis votre tél
         <item>Storage Indexer : créez un index local de métadonnées de fichiers pour une recherche instantanée et une navigation ultra-rapide.</item>
         <item>Storage Access Framework : d\'autres applications peuvent accéder à vos fichiers via le fournisseur de documents d\'UFM.</item>
         <item>Tip Jar – achats uniques facultatifs pour aider le développeur ; l\'application est toujours gratuite sans pourboire.</item>
+        <item>
+UFM Media Player : lit des fichiers audio et vidéo avec lecture en arrière-plan, commandes de notification, mode Picture-in-Picture et gestion des listes de lecture.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ Opérations sur les fichiers : téléchargement, renommage, copie, déplacement
         <item>Identifiants de stockage compatibles S3/S3 (AWS S3, MinIO, IDrive E2, etc.)</item>
         <item>Métadonnées de fichiers indexés (SQLite/Room)</item>
         <item>Sélection de la langue (Cookie)</item>
+        <item>
+État de lecture multimédia
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Accès sécurisé aux fichiers cryptés · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ Opérations sur les fichiers : téléchargement, renommage, copie, déplacement
         <item>ID de clé d\'accès et clé d\'accès secrète pour la connexion aux compartiments S3 · Stockage privé de l\'application</item>
         <item>Métadonnées de fichiers (noms, tailles, dates) pour une navigation et une recherche rapides stockées dans une base de données SQLite/Room locale — peuvent être gérées via Paramètres -&gt; Indexeur de stockage · Stockage privé de l\'application</item>
         <item>Un cookie (ufm_lang) mémorise votre choix de langue tout au long de la session et lors des redémarrages du navigateur · Stockage du navigateur Web</item>
+        <item>
+Un cookie (ufm_lang) mémorise votre choix de langue tout au long de la session et lors des redémarrages du navigateur · Stockage du navigateur Web
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

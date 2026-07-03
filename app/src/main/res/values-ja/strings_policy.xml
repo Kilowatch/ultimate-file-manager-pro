@@ -121,6 +121,9 @@ RClone を介したクラウド ドライブへの接続は、携帯電話また
         <item>Storage Indexer — ファイル メタデータのローカル インデックスを作成して、瞬時の検索と超高速のブラウジングを実現します。</item>
         <item>ストレージ アクセス フレームワーク — 他のアプリは、UFM のドキュメント プロバイダーを通じてファイルにアクセスできます。</item>
         <item>Tip Jar — 開発者をサポートするためのオプションの 1 回限りの購入。アプリはチップなしでいつでも無料です。</item>
+        <item>
+UFM Media Player — バックグラウンド再生、通知コントロール、ピクチャ イン ピクチャ モード、プレイリスト管理を使用してオーディオ ファイルとビデオ ファイルを再生します。
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ RClone ストレージ構成に入力されたパスワード、トークン、�
         <item>S3 / S3 互換ストレージ認証情報 (AWS S3、MinIO、IDrive E2 など)</item>
         <item>インデックス付きファイルのメタデータ (SQLite/Room)</item>
         <item>言語の選択 (Cookie)</item>
+        <item>
+メディアの再生状態
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>暗号化されたファイルへの安全なアクセス · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ RClone ストレージ構成に入力されたパスワード、トークン、�
         <item>S3 バケットに接続するためのアクセス キー ID とシークレット アクセス キー · アプリのプライベート ストレージ</item>
         <item>ローカルの SQLite/Room データベースに保存されたファイルのメタデータ (名前、サイズ、日付) を高速に参照および検索できます。設定 -&gt; ストレージ インデクサー · アプリのプライベート ストレージで管理できます。</item>
         <item>Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ</item>
+        <item>
+Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

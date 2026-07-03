@@ -5884,6 +5884,92 @@ Server URL
     <string name="rclone_field_koofr_password_hint">
 Use an app password generated in your Koofr account settings, not your login password
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+Background video mode
+</string>
+    <string name="settings_background_video_subtitle_pip">
+Picture-in-Picture
+</string>
+    <string name="settings_background_video_subtitle_audio">
+Audio only
+</string>
+    <string name="settings_mini_player_title">
+Show mini-player
+</string>
+    <string name="settings_mini_player_subtitle_on">
+Shows player bar when playing
+</string>
+    <string name="settings_mini_player_subtitle_off">
+Hidden
+</string>
+    <string name="settings_resume_playback_title">
+Resume after interruption
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+Auto-resumes after calls
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+Stays paused after interruption
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+Play
+</string>
+    <string name="mini_player_pause_content_desc">
+Pause
+</string>
+    <string name="mini_player_close_content_desc">
+Close player
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+Up Next
+</string>
+    <string name="next_track_cancel">
+Cancel
+</string>
+    <string name="next_track_skip">
+Skip
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+Playback Queue
+</string>
+    <string name="queue_empty">
+Queue is empty
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+Unknown Artist
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+Media Playback
+</string>
+    <string name="notification_channel_description">
+Controls for media currently playing
+</string>
+    <string name="notification_playing">
+Playing
+</string>
+    <string name="notification_paused">
+Paused
+</string>
+    <string name="notification_error_network">
+Could not load the next file
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+UFM Player Settings
+</string>
 </resources>
 
 

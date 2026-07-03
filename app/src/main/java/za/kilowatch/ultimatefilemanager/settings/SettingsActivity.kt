@@ -58,6 +58,14 @@ class SettingsActivity : AppCompatActivity() {
     private var switchAutoplayNext: SwitchMaterial? = null
     private var txtAutoplayNextSubtitle: TextView? = null
 
+    // Media Player settings
+    private var switchBackgroundVideoMode: SwitchMaterial? = null
+    private var txtBackgroundVideoSubtitle: TextView? = null
+    private var switchMiniPlayer: SwitchMaterial? = null
+    private var txtMiniPlayerSubtitle: TextView? = null
+    private var switchResumeAfterInterruption: SwitchMaterial? = null
+    private var txtResumeAfterInterruptionSubtitle: TextView? = null
+
     private var switchBreadcrumbs: SwitchMaterial? = null
     private var txtBreadcrumbsSubtitle: TextView? = null
 
@@ -272,6 +280,42 @@ class SettingsActivity : AppCompatActivity() {
             switchAutoplayNext?.setOnCheckedChangeListener(null)
         }
 
+        // Background Video Mode
+        val cardBackgroundVideoMode = findViewById<MaterialCardView?>(R.id.cardBackgroundVideoMode)
+        if (cardBackgroundVideoMode != null) {
+            switchBackgroundVideoMode = findViewById(R.id.switchBackgroundVideoMode)
+            txtBackgroundVideoSubtitle = findViewById(R.id.txtBackgroundVideoSubtitle)
+            val mode = PlayerPreferencesManager.getBackgroundVideoMode(this)
+            switchBackgroundVideoMode?.isChecked = mode == BackgroundVideoMode.PIP
+            updateBackgroundVideoSubtitle(mode)
+            cardBackgroundVideoMode.setOnClickListener { toggleBackgroundVideoMode() }
+            switchBackgroundVideoMode?.setOnCheckedChangeListener(null)
+        }
+
+        // Mini-Player toggle
+        val cardMiniPlayer = findViewById<MaterialCardView?>(R.id.cardMiniPlayer)
+        if (cardMiniPlayer != null) {
+            switchMiniPlayer = findViewById(R.id.switchMiniPlayer)
+            txtMiniPlayerSubtitle = findViewById(R.id.txtMiniPlayerSubtitle)
+            val mpEnabled = PlayerPreferencesManager.isMiniPlayerEnabled(this)
+            switchMiniPlayer?.isChecked = mpEnabled
+            updateMiniPlayerSubtitle(mpEnabled)
+            cardMiniPlayer.setOnClickListener { toggleMiniPlayer() }
+            switchMiniPlayer?.setOnCheckedChangeListener(null)
+        }
+
+        // Resume After Interruption toggle
+        val cardResumeAfterInterruption = findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)
+        if (cardResumeAfterInterruption != null) {
+            switchResumeAfterInterruption = findViewById(R.id.switchResumeAfterInterruption)
+            txtResumeAfterInterruptionSubtitle = findViewById(R.id.txtResumeAfterInterruptionSubtitle)
+            val resumeEnabled = PlayerPreferencesManager.isResumeAfterInterruption(this)
+            switchResumeAfterInterruption?.isChecked = resumeEnabled
+            updateResumeAfterInterruptionSubtitle(resumeEnabled)
+            cardResumeAfterInterruption.setOnClickListener { toggleResumeAfterInterruption() }
+            switchResumeAfterInterruption?.setOnCheckedChangeListener(null)
+        }
+
         // Breadcrumbs toggle (mobile only)
         val cardBreadcrumbs = findViewById<MaterialCardView?>(R.id.cardBreadcrumbs)
         if (cardBreadcrumbs != null) {
@@ -411,6 +455,9 @@ class SettingsActivity : AppCompatActivity() {
             cardTwinWindowStartup?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardBackgroundVideoMode)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
             setupTvCardFocus(cardDefaultApps)
@@ -587,6 +634,23 @@ class SettingsActivity : AppCompatActivity() {
             val enabled = AutoplayPreferenceManager.isEnabled(this)
             sw.isChecked = enabled
             updateAutoplayNextSubtitle(enabled)
+        }
+
+        // Refresh Media Player settings
+        txtBackgroundVideoSubtitle?.let {
+            val mode = PlayerPreferencesManager.getBackgroundVideoMode(this)
+            switchBackgroundVideoMode?.isChecked = mode == BackgroundVideoMode.PIP
+            updateBackgroundVideoSubtitle(mode)
+        }
+        switchMiniPlayer?.let { sw ->
+            val enabled = PlayerPreferencesManager.isMiniPlayerEnabled(this)
+            sw.isChecked = enabled
+            updateMiniPlayerSubtitle(enabled)
+        }
+        switchResumeAfterInterruption?.let { sw ->
+            val enabled = PlayerPreferencesManager.isResumeAfterInterruption(this)
+            sw.isChecked = enabled
+            updateResumeAfterInterruptionSubtitle(enabled)
         }
 
         // Refresh Breadcrumbs subtitle
@@ -874,6 +938,53 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // ── Media Player Settings ──────────────────────────────────────
+
+    private fun toggleBackgroundVideoMode() {
+        val newMode = PlayerPreferencesManager.cycleBackgroundVideoMode(this)
+        switchBackgroundVideoMode?.isChecked = newMode == BackgroundVideoMode.PIP
+        updateBackgroundVideoSubtitle(newMode)
+    }
+
+    private fun updateBackgroundVideoSubtitle(mode: BackgroundVideoMode) {
+        txtBackgroundVideoSubtitle?.text = when (mode) {
+            BackgroundVideoMode.PIP -> getString(R.string.settings_background_video_subtitle_pip)
+            BackgroundVideoMode.AUDIO_ONLY -> getString(R.string.settings_background_video_subtitle_audio)
+        }
+    }
+
+    private fun toggleMiniPlayer() {
+        val sw = switchMiniPlayer ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        PlayerPreferencesManager.setMiniPlayerEnabled(this, newValue)
+        updateMiniPlayerSubtitle(newValue)
+    }
+
+    private fun updateMiniPlayerSubtitle(enabled: Boolean) {
+        txtMiniPlayerSubtitle?.text = if (enabled) {
+            getString(R.string.settings_mini_player_subtitle_on)
+        } else {
+            getString(R.string.settings_mini_player_subtitle_off)
+        }
+    }
+
+    private fun toggleResumeAfterInterruption() {
+        val sw = switchResumeAfterInterruption ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        PlayerPreferencesManager.setResumeAfterInterruption(this, newValue)
+        updateResumeAfterInterruptionSubtitle(newValue)
+    }
+
+    private fun updateResumeAfterInterruptionSubtitle(enabled: Boolean) {
+        txtResumeAfterInterruptionSubtitle?.text = if (enabled) {
+            getString(R.string.settings_resume_playback_subtitle_on)
+        } else {
+            getString(R.string.settings_resume_playback_subtitle_off)
+        }
+    }
+
     private fun toggleBreadcrumbs() {
         val sw = switchBreadcrumbs ?: return
         val newValue = !sw.isChecked
@@ -1001,6 +1112,9 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
             CardIcon(R.id.cardAutoplayNext, "settings_autoplay_next", R.drawable.ic_play),
+            CardIcon(R.id.cardBackgroundVideoMode, "settings_background_video", R.drawable.ic_play),
+            CardIcon(R.id.cardMiniPlayer, "settings_mini_player", R.drawable.ic_list_view_custom),
+            CardIcon(R.id.cardResumeAfterInterruption, "settings_resume_interruption", R.drawable.ic_phone),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),

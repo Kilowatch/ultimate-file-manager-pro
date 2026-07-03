@@ -121,6 +121,9 @@ Connecting to cloud drives via RClone is done directly from your phone or TV. We
         <item>Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.</item>
         <item>Storage Access Framework — other apps can access your files through UFM\'s document provider.</item>
         <item>Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.</item>
+        <item>
+UFM Media Player — play audio and video files with background playback, notification controls, Picture-in-Picture mode, and playlist management.
+</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -396,6 +399,9 @@ File Operations: Uploading, downloading, renaming, copying, moving, or deleting 
         <item>S3 / S3-Compatible Storage Credentials (AWS S3, MinIO, IDrive E2, etc.)</item>
         <item>Indexed File Metadata (SQLite/Room)</item>
         <item>Language Selection (Cookie)</item>
+        <item>
+Media Playback State
+</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Secure access to encrypted files · Android SharedPreferences</item>
@@ -414,6 +420,9 @@ File Operations: Uploading, downloading, renaming, copying, moving, or deleting 
         <item>Access Key ID and Secret Access Key for connecting to S3 buckets · App private storage</item>
         <item>File metadata (names, sizes, dates) for fast browsing and search stored in a local SQLite/Room database — can be managed via Settings -&gt; Storage Indexer · App private storage</item>
         <item>A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage</item>
+        <item>
+A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage
+</item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->

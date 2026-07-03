@@ -5884,6 +5884,92 @@ Koofr
     <string name="rclone_field_koofr_password_hint">
 अपने Koofr अकाउंट सेटिंग में जेनरेट किए गए ऐप पासवर्ड का उपयोग करें, न कि अपने लॉगिन पासवर्ड का
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+पृष्ठभूमि वीडियो मोड
+</string>
+    <string name="settings_background_video_subtitle_pip">
+चित्र में चित्र
+</string>
+    <string name="settings_background_video_subtitle_audio">
+केवल ऑडियो
+</string>
+    <string name="settings_mini_player_title">
+मिनी प्लेयर दिखाएँ
+</string>
+    <string name="settings_mini_player_subtitle_on">
+खेलते समय प्लेयर बार दिखाता है
+</string>
+    <string name="settings_mini_player_subtitle_off">
+छिपा हुआ
+</string>
+    <string name="settings_resume_playback_title">
+रुकावट के बाद फिर से शुरू करें
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+कॉल के बाद ऑटो-रेज़्यूमे
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+रुकावट के बाद रुका रहता है
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+खेल
+</string>
+    <string name="mini_player_pause_content_desc">
+विराम
+</string>
+    <string name="mini_player_close_content_desc">
+प्लेयर बंद करें
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+अगला
+</string>
+    <string name="next_track_cancel">
+रद्द करना
+</string>
+    <string name="next_track_skip">
+छोडना
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+प्लेबैक कतार
+</string>
+    <string name="queue_empty">
+कतार खाली है
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+अज्ञात कलाकार
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+मीडिया प्लेबैक
+</string>
+    <string name="notification_channel_description">
+वर्तमान में चल रहे मीडिया के लिए नियंत्रण
+</string>
+    <string name="notification_playing">
+खेलना
+</string>
+    <string name="notification_paused">
+रुका हुआ
+</string>
+    <string name="notification_error_network">
+अगली फ़ाइल लोड नहीं हो सकी
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+यूएफएम प्लेयर सेटिंग्स
+</string>
 </resources>
 
 

@@ -5884,6 +5884,92 @@ URL server
     <string name="rclone_field_koofr_password_hint">
 Gunakan kata sandi aplikasi yang dibuat di pengaturan akun Koofr Anda, bukan kata sandi login Anda
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+Modus video latar belakang
+</string>
+    <string name="settings_background_video_subtitle_pip">
+Gambar-dalam-Gambar
+</string>
+    <string name="settings_background_video_subtitle_audio">
+Hanya audio
+</string>
+    <string name="settings_mini_player_title">
+Tampilkan pemutar mini
+</string>
+    <string name="settings_mini_player_subtitle_on">
+Menampilkan bilah pemain saat bermain
+</string>
+    <string name="settings_mini_player_subtitle_off">
+Tersembunyi
+</string>
+    <string name="settings_resume_playback_title">
+Lanjutkan setelah gangguan
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+Melanjutkan otomatis setelah panggilan
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+Tetap dijeda setelah gangguan
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+Bermain
+</string>
+    <string name="mini_player_pause_content_desc">
+Berhenti sebentar
+</string>
+    <string name="mini_player_close_content_desc">
+Tutup pemain
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+Berikutnya
+</string>
+    <string name="next_track_cancel">
+Membatalkan
+</string>
+    <string name="next_track_skip">
+Melewati
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+Antrean Pemutaran
+</string>
+    <string name="queue_empty">
+Antrian kosong
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+Artis Tidak Dikenal
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+Pemutaran Media
+</string>
+    <string name="notification_channel_description">
+Kontrol untuk media yang sedang diputar
+</string>
+    <string name="notification_playing">
+Bermain
+</string>
+    <string name="notification_paused">
+Dijeda
+</string>
+    <string name="notification_error_network">
+Tidak dapat memuat file berikutnya
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+Pengaturan Pemutar UFM
+</string>
 </resources>
 
 

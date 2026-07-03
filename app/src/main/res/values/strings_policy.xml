@@ -6,7 +6,7 @@
     ═══════════════════════════════════════════════════════════ -->
     <string name="policy_app_name">Ultimate File Manager Pro</string>
     <string name="policy_company">KiloWatch</string>
-    <string name="policy_last_updated">Last Updated: April 2026</string>
+    <string name="policy_last_updated">Last Updated: July 2026</string>
     <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
     <string name="policy_contact_email">support@kilowatch.co.za</string>
 
@@ -99,6 +99,7 @@
         <item>Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.</item>
         <item>Storage Access Framework — other apps can access your files through UFM\'s document provider.</item>
         <item>Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.</item>
+        <item>UFM Media Player — play audio and video files with background playback, notification controls, Picture-in-Picture mode, and playlist management.</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -354,6 +355,7 @@
         <item>S3 / S3-Compatible Storage Credentials (AWS S3, MinIO, IDrive E2, etc.)</item>
         <item>Indexed File Metadata (SQLite/Room)</item>
         <item>Language Selection (Cookie)</item>
+        <item>Media Playback State</item>
     </string-array>
     <string-array name="pp_local_data_details">
         <item>Secure access to encrypted files · Android SharedPreferences</item>
@@ -371,6 +373,7 @@
         <item>OAuth tokens for accessing Google Drive, OneDrive, and Dropbox · App private storage</item>
         <item>Access Key ID and Secret Access Key for connecting to S3 buckets · App private storage</item>
         <item>File metadata (names, sizes, dates) for fast browsing and search stored in a local SQLite/Room database — can be managed via Settings -> Storage Indexer · App private storage</item>
+        <item>Current queue, playback position, and player settings for resuming where you left off · Android SharedPreferences</item>
         <item>A cookie (ufm_lang) remembers your language choice throughout the session and across browser restarts · Web browser storage</item>
     </string-array>
 
@@ -457,8 +460,8 @@
         <item>Allows you to opt-in to keeping Shizuku active in the background for reliable performance</item>
         <item>Allows installation of APK files you choose</item>
         <item>Lists installed apps for the App Manager feature</item>
-        <item>Runs Folder Sync and file transfers as a foreground service so they complete reliably even when the screen is off</item>
-        <item>Keeps the CPU and Wi-Fi active during large file transfers so they complete reliably even when the screen turns off</item>
+        <item>Runs Folder Sync, file transfers, and media playback as a foreground service so they complete reliably and continue playing even when the screen is off or you\'re using other apps</item>
+        <item>Keeps the CPU and Wi-Fi active during large file transfers and media playback so they complete reliably even when the screen turns off</item>
     </string-array>
 
     <!-- Encryption spec (Section 5) -->

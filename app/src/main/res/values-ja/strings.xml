@@ -5884,6 +5884,92 @@ APIアクセストークン
     <string name="rclone_field_koofr_password_hint">
 ログイン パスワードではなく、Koofr アカウント設定で生成されたアプリ パスワードを使用してください
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+バックグラウンドビデオモード
+</string>
+    <string name="settings_background_video_subtitle_pip">
+ピクチャー・イン・ピクチャー
+</string>
+    <string name="settings_background_video_subtitle_audio">
+音声のみ
+</string>
+    <string name="settings_mini_player_title">
+ミニプレーヤーを表示する
+</string>
+    <string name="settings_mini_player_subtitle_on">
+再生時にプレーヤーバーを表示します
+</string>
+    <string name="settings_mini_player_subtitle_off">
+隠れた
+</string>
+    <string name="settings_resume_playback_title">
+中断後の再開
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+通話後の自動再開
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+中断後も一時停止したままになる
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+遊ぶ
+</string>
+    <string name="mini_player_pause_content_desc">
+一時停止
+</string>
+    <string name="mini_player_close_content_desc">
+プレーヤーを閉じる
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+次へ
+</string>
+    <string name="next_track_cancel">
+キャンセル
+</string>
+    <string name="next_track_skip">
+スキップ
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+再生キュー
+</string>
+    <string name="queue_empty">
+キューが空です
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+不明なアーティスト
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+メディアの再生
+</string>
+    <string name="notification_channel_description">
+現在再生中のメディアのコントロール
+</string>
+    <string name="notification_playing">
+遊ぶ
+</string>
+    <string name="notification_paused">
+一時停止中
+</string>
+    <string name="notification_error_network">
+次のファイルをロードできませんでした
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+UFM プレーヤーの設定
+</string>
 </resources>
 
 

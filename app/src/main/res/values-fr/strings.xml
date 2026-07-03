@@ -5884,6 +5884,92 @@ URL du serveur
     <string name="rclone_field_koofr_password_hint">
 Utilisez un mot de passe d\'application généré dans les paramètres de votre compte Koofr, pas votre mot de passe de connexion
 </string>
+
+    <!-- UFM Media Player — Settings -->
+    <string name="settings_background_video_title">
+Mode vidéo en arrière-plan
+</string>
+    <string name="settings_background_video_subtitle_pip">
+Image dans l\'image
+</string>
+    <string name="settings_background_video_subtitle_audio">
+Audio uniquement
+</string>
+    <string name="settings_mini_player_title">
+Afficher le mini-lecteur
+</string>
+    <string name="settings_mini_player_subtitle_on">
+Affiche la barre du joueur lors de la lecture
+</string>
+    <string name="settings_mini_player_subtitle_off">
+Caché
+</string>
+    <string name="settings_resume_playback_title">
+Reprise après interruption
+</string>
+    <string name="settings_resume_playback_subtitle_on">
+Reprise automatique après les appels
+</string>
+    <string name="settings_resume_playback_subtitle_off">
+Reste en pause après une interruption
+</string>
+
+    <!-- UFM Media Player — Mini-Player -->
+    <string name="mini_player_play_content_desc">
+Jouer
+</string>
+    <string name="mini_player_pause_content_desc">
+Pause
+</string>
+    <string name="mini_player_close_content_desc">
+Fermer le joueur
+</string>
+
+    <!-- UFM Media Player — Next Track Overlay -->
+    <string name="next_track_up_next">
+Suivant
+</string>
+    <string name="next_track_cancel">
+Annuler
+</string>
+    <string name="next_track_skip">
+Sauter
+</string>
+
+    <!-- UFM Media Player — Queue -->
+    <string name="queue_title">
+File d\'attente de lecture
+</string>
+    <string name="queue_empty">
+La file d\'attente est vide
+</string>
+
+    <!-- UFM Media Player — Audio -->
+    <string name="audio_no_metadata">
+Artiste inconnu
+</string>
+
+    <!-- UFM Media Player — Notification -->
+    <string name="notification_channel_name">
+Lecture multimédia
+</string>
+    <string name="notification_channel_description">
+Commandes pour les médias en cours de lecture
+</string>
+    <string name="notification_playing">
+Jouant
+</string>
+    <string name="notification_paused">
+En pause
+</string>
+    <string name="notification_error_network">
+Impossible de charger le fichier suivant
+</string>
+
+    <!-- UFM Media Player — Backup -->
+    <string name="backup_pref_ufm_player">
+Paramètres du lecteur UFM
+</string>
 </resources>
 
 

@@ -5,20 +5,39 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.6.3] — 2026-07-03
 
 ### Added
+- Full background media playback — audio and video continue playing when the app is minimised, with a media notification showing play/pause, next, previous controls, and live time display
+- Picture-in-Picture mode for video — double-tap the PiP window to return to full screen, with previous, play/pause, and next controls built into the PiP window
+- Auto-play next preview showing the upcoming file 5 seconds before the current one ends, with skip and cancel options
+- Mini-player bar at the bottom of the file browser when media is playing — shows the current track and lets you control playback without leaving the browser
+- Queue drawer in the player with drag-to-reorder, swipe-to-remove, and tap-to-jump to any track
+- Audio now-playing screen with album art, title, artist, and album metadata
+- Background video mode setting to choose between Picture-in-Picture and audio-only background playback
 - New "Include file names containing" filter option in Advanced Sync profile filtering — works as the inverse of the existing "Skip" filter, with Include running first then Skip. Supports comma-separated words, case-insensitive matching, and composes with Skip for fine-grained control.
 - Local destination support for Advanced Sync profiles — select internal storage, USB, or SD card as the sync destination alongside existing network shares. All direction modes (Upload, Download, Two-way) work with local destinations, including filtering, move files, and sync deletions.
 
+### Changed
+- All audio and video files now open in the UFM Media Player by default with playlist support, replacing the basic viewer
+- ExoPlayer upgraded from 1.4.1 to 1.10.1 with the new media3-session module
+- Audio focus handling now pauses for calls, ducks for alerts, and auto-resumes after interruptions
+- Notification and media playback policy disclosures updated in Privacy Policy and Terms and Conditions
+- Settings backup now includes UFM Player preferences
+
 ### Fixed
-- Fixed SFTP/SCP folder navigation in NetworkBrowserActivity using relative paths — now uses absolute paths, fixing `SSH_FX_NO_SUCH_FILE` errors on servers where the session working directory is not `/`
-- Fixed file-type filters in NetworkBrowserFragment checking `File.isDirectory` on the local filesystem instead of `NetworkFile.isDirectory`, fixing directory visibility on remote shares
-- Fixed swallowed `CancellationException` in NetworkBrowserFragment coroutines that could cause spurious error snackbars on cancelled loads
-- Fixed race condition in NetworkBrowserActivity where rapid folder taps could produce stale directory listings from orphaned coroutines
-- Fixed "Available Shares" button showing for non-SMB protocols in the Add Share screen (mobile and TV)
-- Fixed NFS Version selector remaining visible when switching to DLNA in the Add Share screen
-- Fixed SMB not being explicitly selected as the default protocol on opening Add Share
+- Threading crash when extracting audio metadata from background thread (player access violation)
+- Missing FOREGROUND_SERVICE_MEDIA_PLAYBACK permission causing crash on Android 15
+- Notification play/pause icon not updating when playback state changed
+- Notification progress bar not rendering on some Android versions (MediaStyle template incompatibility)
+- Top-left back button in the player now stops playback entirely; system back continues background playback
+- SFTP/SCP folder navigation in NetworkBrowserActivity using relative paths — now uses absolute paths, fixing SSH_FX_NO_SUCH_FILE errors on servers where the session working directory is not /
+- File-type filters in NetworkBrowserFragment checking File.isDirectory on the local filesystem instead of NetworkFile.isDirectory, fixing directory visibility on remote shares
+- Swallowed CancellationException in NetworkBrowserFragment coroutines that could cause spurious error snackbars on cancelled loads
+- Race condition in NetworkBrowserActivity where rapid folder taps could produce stale directory listings from orphaned coroutines
+- Available Shares button showing for non-SMB protocols in the Add Share screen (mobile and TV)
+- NFS Version selector remaining visible when switching to DLNA in the Add Share screen
+- SMB not being explicitly selected as the default protocol on opening Add Share
 
 ## [1.6.1] — 2026-06-29
 
