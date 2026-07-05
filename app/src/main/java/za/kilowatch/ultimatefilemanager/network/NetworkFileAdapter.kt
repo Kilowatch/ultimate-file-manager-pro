@@ -178,6 +178,9 @@ class NetworkFileAdapter(
     }
     
     fun getSelectedFiles(): List<NetworkFile> = selectedFiles.toList()
+
+    fun hasAnySelectedProtected(context: Context, shareId: String): Boolean = selectedFiles.any { za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
+    fun hasAnySelectedUnprotected(context: Context, shareId: String): Boolean = selectedFiles.any { !za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
     
     fun selectAll() {
         selectedFiles.addAll(files)
@@ -424,6 +427,11 @@ class NetworkFileAdapter(
             coilDisposable?.dispose()
             coilDisposable = null
             thumbnailJob?.cancel()
+
+            // Protected status indicator
+            val isItemProtected = za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, file.path, share.id)
+            itemView.findViewById<ImageView>(R.id.imgProtectedBadge)?.visibility = if (isItemProtected) View.VISIBLE else View.GONE
+
             val isEnabled = NetworkThumbnailPreferenceManager.isEnabled(context)
             za.kilowatch.ultimatefilemanager.util.GoRoLog.d("UFM_CACHE", "🚀 [GoRo] Binding ${file.name}, thumbnails enabled=$isEnabled")
             

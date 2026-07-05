@@ -616,6 +616,24 @@ Code de récupération copié – le presse-papiers s\'effacera automatiquemen
     <!-- Settings Hub -->
     <string name="settings_title">Paramètres</string>
     <string name="settings_subtitle">Préférences de l\'application</string>
+    <string name="search_settings_hint">
+Paramètres de recherche…
+</string>
+    <string name="settings_search_no_results">
+Aucun paramètre trouvé correspondant à votre recherche
+</string>
+    <string name="settings_search_bar_title">
+Barre de recherche des paramètres
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Activé : champ de recherche épinglé en haut
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Désactivé : champ de recherche masqué
+</string>
+    <string name="backup_pref_settings_search">
+Barre de recherche des paramètres
+</string>
     <string name="settings_auto_backup_title">
 Sauvegarde automatique
 </string>
@@ -5262,6 +5280,9 @@ En haut
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Barre de recherche des paramètres
+</string>
     <string name="icon_settings_default_start_screen">
 Écran de démarrage par défaut
 </string>
@@ -6030,6 +6051,32 @@ Gérer les hashtags et les options de marquage
 </string>
     <string name="action_tag">
 Étiqueter
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Article protégé
+</string>
+    <string name="protected_delete_message">
+Le fichier ou le dossier est protégé et ne peut pas être supprimé. Il doit d\'abord être non protégé avant de pouvoir être supprimé.
+</string>
+    <string name="protected_delete_ok">
+D\'ACCORD
+</string>
+    <string name="toast_protected_success">
+%1$d élément(s) protégé(s)
+</string>
+    <string name="toast_unprotected_success">
+%1$d élément(s) non protégé(s)
+</string>
+    <string name="protect">
+Protéger
+</string>
+    <string name="unprotect">
+Déprotéger
+</string>
+    <string name="backup_pref_protected_files">
+Fichiers et fichiers protégés Dossiers
 </string>
 </resources>
 

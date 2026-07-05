@@ -217,6 +217,8 @@ class NetworkBrowserFragment : Fragment() {
         v.findViewById<View>(R.id.btnFavorite)?.visibility = if (pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.btnHide)?.visibility = if (pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.btnUnhide)?.visibility = if (pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.btnProtect)?.visibility = if (pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.btnUnprotect)?.visibility = if (pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.btnCompress)?.visibility = if (pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.btnImageCompress)?.visibility = View.GONE
         v.findViewById<View>(R.id.btnSelectAll)?.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
@@ -343,6 +345,36 @@ class NetworkBrowserFragment : Fragment() {
         view.findViewById<View>(R.id.btnCloseSelection)?.setOnClickListener { fileAdapter.exitSelectionMode() }
         view.findViewById<View>(R.id.btnSelectAll)?.setOnClickListener { fileAdapter.selectAll() }
         view.findViewById<View>(R.id.btnDelete)?.setOnClickListener { showDeleteConfirmation() }
+        view.findViewById<View>(R.id.btnProtect)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.path, share.id, protected = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_protected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        view.findViewById<View>(R.id.btnUnprotect)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.path, share.id, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unprotected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         view.findViewById<View>(R.id.btnRename)?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.isEmpty()) return@setOnClickListener
@@ -624,6 +656,10 @@ class NetworkBrowserFragment : Fragment() {
                 }
                 view?.findViewById<View>(R.id.btnImageCompress)?.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
                 view?.findViewById<View>(R.id.btnFavorite)?.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+                val hasProtected = fileAdapter.hasAnySelectedProtected(context, share.id)
+                val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context, share.id)
+                view?.findViewById<View>(R.id.btnProtect)?.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.btnUnprotect)?.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
                 val selectedFiles = fileAdapter.getSelectedFiles()
                 val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
                 
@@ -1138,6 +1174,14 @@ class NetworkBrowserFragment : Fragment() {
         val selected = fileAdapter.getSelectedFiles()
         if (selected.isEmpty()) return
 
+        val hasProtected = selected.any {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isOrContainsProtected(requireContext(), it.path, share.id)
+        }
+        if (hasProtected) {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.showProtectedDeleteDialog(requireContext(), isTv)
+            return
+        }
+
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.delete_title)
             .setMessage(getString(R.string.delete_message_files, selected.size))
@@ -1208,7 +1252,7 @@ class NetworkBrowserFragment : Fragment() {
 
         listOf(
             R.id.btnCloseSelection, R.id.btnCopy, R.id.btnMove, R.id.btnRename, R.id.btnFavorite,
-            R.id.btnShare, R.id.btnCopyEncrypt, R.id.btnMoveEncrypt
+            R.id.btnShare, R.id.btnCopyEncrypt, R.id.btnMoveEncrypt, R.id.btnProtect, R.id.btnUnprotect
         ).forEach { id ->
             val btn = view.findViewById<ImageView>(id) ?: return@forEach
             btn.imageTintList = iconTintDefault

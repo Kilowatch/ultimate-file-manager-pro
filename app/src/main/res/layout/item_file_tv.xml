@@ -101,6 +101,18 @@
             android:layout_marginEnd="@dimen/margin_sm"
             tools:text="4.2 MB" />
 
+        <!-- Protected Badge -->
+        <ImageView
+            android:id="@+id/imgProtectedBadge"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_shield_protected"
+            android:alpha="0.8"
+            android:layout_marginEnd="@dimen/margin_sm"
+            android:visibility="gone"
+            app:tint="@color/tv_text_secondary"
+            tools:visibility="visible" />
+
         <!-- Hidden Badge -->
         <ImageView
             android:id="@+id/imgHiddenBadge"

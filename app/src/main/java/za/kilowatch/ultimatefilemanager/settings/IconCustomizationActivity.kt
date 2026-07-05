@@ -351,6 +351,7 @@ class IconCustomizationActivity : AppCompatActivity() {
         // Settings (all 28 settings icons)
         categories.add(IconCategoryData(
             "settings", getString(R.string.category_settings), listOf(
+                IconItemData("settings_search_bar", getString(R.string.icon_settings_search_bar), R.drawable.ic_search, emptyList()),
                 IconItemData("settings_default_start_screen", getString(R.string.icon_settings_default_start_screen), R.drawable.ic_storage_internal, emptyList()),
                 IconItemData("settings_language", getString(R.string.icon_settings_language), R.drawable.ic_language, emptyList()),
                 IconItemData("settings_appearance", getString(R.string.icon_settings_appearance), R.drawable.ic_theme, emptyList()),

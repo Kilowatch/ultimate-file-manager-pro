@@ -767,6 +767,25 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun showDeleteConfirm(files: List<Any>, source: Fragment) {
+        val srcShare = (source as? za.kilowatch.ultimatefilemanager.network.NetworkBrowserFragment)?.getShare()
+        val shareId = srcShare?.id
+        val hasProtected = files.any { item ->
+            when (item) {
+                is java.io.File -> {
+                    za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isOrContainsProtected(this, item.absolutePath)
+                }
+                is za.kilowatch.ultimatefilemanager.network.NetworkFile -> {
+                    za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isOrContainsProtected(this, item.path, shareId)
+                }
+                else -> false
+            }
+        }
+        if (hasProtected) {
+            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.showProtectedDeleteDialog(this, isTv)
+            return
+        }
+
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.action_delete)
             .setMessage(getString(R.string.delete_message_files, files.size))

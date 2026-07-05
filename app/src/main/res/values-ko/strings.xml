@@ -616,6 +616,24 @@ PKCS12 비밀번호
     <!-- Settings Hub -->
     <string name="settings_title">설정</string>
     <string name="settings_subtitle">앱 환경설정</string>
+    <string name="search_settings_hint">
+검색 설정…
+</string>
+    <string name="settings_search_no_results">
+검색과 일치하는 설정을 찾을 수 없습니다.
+</string>
+    <string name="settings_search_bar_title">
+설정 검색창
+</string>
+    <string name="settings_search_bar_subtitle_on">
+활성화됨 — 상단에 검색 필드가 고정되어 있습니다.
+</string>
+    <string name="settings_search_bar_subtitle_off">
+비활성화됨 — 검색 필드가 숨겨짐
+</string>
+    <string name="backup_pref_settings_search">
+설정 검색창
+</string>
     <string name="settings_auto_backup_title">
 자동 백업
 </string>
@@ -5262,6 +5280,9 @@ XML/마크업
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+설정 검색창
+</string>
     <string name="icon_settings_default_start_screen">
 기본 시작 화면
 </string>
@@ -6030,6 +6051,32 @@ UFM 플레이어 설정
 </string>
     <string name="action_tag">
 꼬리표
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+보호되는 항목
+</string>
+    <string name="protected_delete_message">
+파일이나 폴더가 보호되어 있어 삭제할 수 없습니다. 삭제하려면 먼저 보호 해제해야 합니다.
+</string>
+    <string name="protected_delete_ok">
+좋아요
+</string>
+    <string name="toast_protected_success">
+%1$d 항목이 보호됨
+</string>
+    <string name="toast_unprotected_success">
+%1$d 항목이 보호되지 않음
+</string>
+    <string name="protect">
+보호하다
+</string>
+    <string name="unprotect">
+보호 해제
+</string>
+    <string name="backup_pref_protected_files">
+보호된 파일 &amp; 폴더
 </string>
 </resources>
 

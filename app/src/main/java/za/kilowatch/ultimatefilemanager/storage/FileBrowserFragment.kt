@@ -67,6 +67,8 @@ class FileBrowserFragment : Fragment() {
     private lateinit var btnFavorite: ImageView
     private lateinit var btnHide: ImageView
     private lateinit var btnUnhide: ImageView
+    private lateinit var btnProtect: ImageView
+    private lateinit var btnUnprotect: ImageView
     private lateinit var btnCompress: View
     private lateinit var btnImageCompress: View
     private var btnViewToggle: ImageView? = null
@@ -225,6 +227,8 @@ class FileBrowserFragment : Fragment() {
         btnFavorite.visibility = if (pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
         btnHide.visibility = if (pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
         btnUnhide.visibility = if (pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+        btnProtect.visibility = if (pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+        btnUnprotect.visibility = if (pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
         btnCompress.visibility = if (pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
@@ -254,6 +258,8 @@ class FileBrowserFragment : Fragment() {
         btnMoveEncrypt = view.findViewById(R.id.btnMoveEncrypt)
         btnHide = view.findViewById(R.id.btnHide)
         btnUnhide = view.findViewById(R.id.btnUnhide)
+        btnProtect = view.findViewById(R.id.btnProtect)
+        btnUnprotect = view.findViewById(R.id.btnUnprotect)
         btnCompress = view.findViewById(R.id.btnCompress)
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
@@ -523,6 +529,38 @@ class FileBrowserFragment : Fragment() {
                 })
             }
         }
+
+        btnProtect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.absolutePath, protected = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_protected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        btnUnprotect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.absolutePath, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unprotected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         
         fabPaste.setOnClickListener {
             val act = activity
@@ -587,7 +625,7 @@ class FileBrowserFragment : Fragment() {
         btnSearch?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
         
         listOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
-               btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide).forEach { btn ->
+               btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide, btnProtect, btnUnprotect).forEach { btn ->
             btn.imageTintList = iconTintDefault
             btn.setOnFocusChangeListener { _, hasFocus ->
                 btn.imageTintList = if (hasFocus) iconTintFocused else iconTintDefault
@@ -693,6 +731,11 @@ class FileBrowserFragment : Fragment() {
             val hasVisible = fileAdapter.hasAnySelectedVisible()
             btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
             btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+            
+            val hasProtected = fileAdapter.hasAnySelectedProtected(context)
+            val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context)
+            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
             btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
             btnSelectAll.text = if (fileAdapter.isAllSelected()) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)

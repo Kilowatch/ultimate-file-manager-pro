@@ -80,6 +80,8 @@ class FileBrowserActivity : AppCompatActivity() {
     private lateinit var btnFavorite: ImageView
     private lateinit var btnHide: ImageView
     private lateinit var btnUnhide: ImageView
+    private lateinit var btnProtect: ImageView
+    private lateinit var btnUnprotect: ImageView
     private lateinit var btnCompress: android.view.View
     private lateinit var btnImageCompress: android.view.View
     private var btnViewToggle: ImageView? = null
@@ -924,6 +926,8 @@ class FileBrowserActivity : AppCompatActivity() {
         btnMoveEncrypt = findViewById(R.id.btnMoveEncrypt)
         btnHide = findViewById(R.id.btnHide)
         btnUnhide = findViewById(R.id.btnUnhide)
+        btnProtect = findViewById(R.id.btnProtect)
+        btnUnprotect = findViewById(R.id.btnUnprotect)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
@@ -1394,6 +1398,38 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnProtect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_protected_success, selected.size))
+                    }
+                }
+            }
+        }
+
+        btnUnprotect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                    }
+                }
+            }
+        }
+
         fabPaste.setOnClickListener {
             showClipboardSheet()
         }
@@ -1490,6 +1526,11 @@ class FileBrowserActivity : AppCompatActivity() {
             btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(this, pm.KEY_HIDE)) View.VISIBLE else View.GONE
             btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(this, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
             
+            val hasProtected = fileAdapter.hasAnySelectedProtected(this)
+            val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this)
+            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+            
             btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
             btnDelete.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
             btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
@@ -1543,6 +1584,14 @@ class FileBrowserActivity : AppCompatActivity() {
     private fun showDeleteConfirmation() {
         val selected = fileAdapter.getSelectedFiles()
         if (selected.isEmpty()) return
+
+        val hasProtected = selected.any {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isOrContainsProtected(this, it.absolutePath)
+        }
+        if (hasProtected) {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.showProtectedDeleteDialog(this, DeviceUtils.isTvDevice(this))
+            return
+        }
 
         val recycleEnabled = za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.isEnabled
 

@@ -257,6 +257,7 @@ object SettingsBackupManager {
         add("tile_colors_prefs",         context.getString(R.string.backup_pref_tile_colors))
         add("ufm_prefs",                 context.getString(R.string.backup_pref_theme_sort))
         add("ufm_hidden_files_prefs",    context.getString(R.string.backup_pref_hidden_files))
+        add("ufm_protected_files_prefs", context.getString(R.string.backup_pref_protected_files))
         add("ufm_main_menu_prefs",       context.getString(R.string.backup_pref_main_menu))
         add("ufm_long_press_prefs",      context.getString(R.string.backup_pref_long_press))
         add("ufm_controls_timeout_prefs",context.getString(R.string.backup_pref_controls_timeout))
@@ -281,6 +282,7 @@ object SettingsBackupManager {
         add("breadcrumbs_prefs",         context.getString(R.string.backup_pref_breadcrumbs))
         add("grid_indicators_prefs",     context.getString(R.string.backup_pref_grid_indicators))
         add("scrolling_text_prefs",      context.getString(R.string.backup_pref_scrolling_text))
+        add("settings_search_prefs",      context.getString(R.string.backup_pref_settings_search))
         add("file_server_prefs",         context.getString(R.string.backup_pref_file_server))
         add("tile_icons_prefs",          context.getString(R.string.backup_pref_tile_icons))
         add("icon_customization_prefs",  context.getString(R.string.backup_pref_icon_customization))
@@ -544,6 +546,7 @@ object SettingsBackupManager {
                 "tile_colors_prefs"         to R.string.backup_pref_tile_colors,
                 "ufm_prefs"                 to R.string.backup_pref_theme_sort,
                 "ufm_hidden_files_prefs"    to R.string.backup_pref_hidden_files,
+                "ufm_protected_files_prefs" to R.string.backup_pref_protected_files,
                 "ufm_main_menu_prefs"       to R.string.backup_pref_main_menu,
                 "ufm_long_press_prefs"      to R.string.backup_pref_long_press,
                 "ufm_controls_timeout_prefs" to R.string.backup_pref_controls_timeout,
@@ -568,6 +571,7 @@ object SettingsBackupManager {
                 "breadcrumbs_prefs"         to R.string.backup_pref_breadcrumbs,
                 "grid_indicators_prefs"     to R.string.backup_pref_grid_indicators,
                 "scrolling_text_prefs"      to R.string.backup_pref_scrolling_text,
+                "settings_search_prefs"     to R.string.backup_pref_settings_search,
                 "file_server_prefs"         to R.string.backup_pref_file_server,
                 "tile_icons_prefs"          to R.string.backup_pref_tile_icons,
                 "icon_customization_prefs"  to R.string.backup_pref_icon_customization,

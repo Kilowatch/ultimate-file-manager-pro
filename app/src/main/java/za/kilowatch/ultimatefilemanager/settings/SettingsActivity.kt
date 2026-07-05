@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -82,6 +83,13 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var cardNetworkThumbnails: MaterialCardView
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
+
+    private var cardSearchContainer: MaterialCardView? = null
+    private var edtSettingsSearch: EditText? = null
+    private var btnSearchClear: ImageView? = null
+    private var switchSettingsSearch: SwitchMaterial? = null
+    private var txtSettingsSearchSubtitle: TextView? = null
+    private val originalVisibilities = HashMap<View, Int>()
 
 
 
@@ -540,6 +548,81 @@ class SettingsActivity : AppCompatActivity() {
         cardAutoBackup?.setOnClickListener {
             startActivity(Intent(this, AutoBackupActivity::class.java))
         }
+
+        // Initialize settings search view bindings
+        cardSearchContainer = findViewById(R.id.cardSearchContainer)
+        edtSettingsSearch = findViewById(R.id.edtSettingsSearch)
+        btnSearchClear = findViewById(R.id.btnSearchClear)
+        switchSettingsSearch = findViewById(R.id.switchSettingsSearch)
+        txtSettingsSearchSubtitle = findViewById(R.id.txtSettingsSearchSubtitle)
+
+        // Capture original visibilities of settings list children
+        val layoutSettingsList = findViewById<android.widget.LinearLayout>(R.id.layoutSettingsList)
+        if (layoutSettingsList != null) {
+            for (i in 0 until layoutSettingsList.childCount) {
+                val child = layoutSettingsList.getChildAt(i)
+                originalVisibilities[child] = child.visibility
+            }
+        }
+
+        // Setup search toggle card listener
+        val cardSettingsSearch = findViewById<MaterialCardView>(R.id.cardSettingsSearch)
+        cardSettingsSearch?.setOnClickListener {
+            val sw = switchSettingsSearch ?: return@setOnClickListener
+            val newValue = !sw.isChecked
+            SettingsSearchPreferenceManager.setEnabled(this, newValue)
+            updateSearchContainerVisibility(newValue)
+        }
+
+        // Setup text listener for search edit text
+        edtSettingsSearch?.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s?.toString()?.trim() ?: ""
+                btnSearchClear?.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
+                filterSettings(query)
+            }
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
+
+        // Setup clear search button listener
+        btnSearchClear?.setOnClickListener {
+            edtSettingsSearch?.text = null
+        }
+
+        // Focus listeners for TV search card highlighting
+        if (isTv) {
+            val yellowFill  = getColor(R.color.tv_button_focused_yellow)
+            val glassColor  = getColor(R.color.tv_glass_white_10)
+            val primaryText = getColor(R.color.tv_text_primary)
+            val secondText  = getColor(R.color.tv_text_secondary)
+            val imgSearchIcon = findViewById<ImageView>(R.id.imgSearchIcon)
+
+            val updateSearchFocus = {
+                val hasFocus = edtSettingsSearch?.hasFocus() == true || btnSearchClear?.hasFocus() == true
+                if (hasFocus) {
+                    cardSearchContainer?.setCardBackgroundColor(yellowFill)
+                    edtSettingsSearch?.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    edtSettingsSearch?.setHintTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                    imgSearchIcon?.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                    btnSearchClear?.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                } else {
+                    cardSearchContainer?.setCardBackgroundColor(glassColor)
+                    edtSettingsSearch?.setTextColor(primaryText)
+                    edtSettingsSearch?.setHintTextColor(secondText)
+                    imgSearchIcon?.imageTintList = android.content.res.ColorStateList.valueOf(secondText)
+                    btnSearchClear?.imageTintList = android.content.res.ColorStateList.valueOf(secondText)
+                }
+            }
+            edtSettingsSearch?.setOnFocusChangeListener { _, _ -> updateSearchFocus() }
+            btnSearchClear?.setOnFocusChangeListener { _, _ -> updateSearchFocus() }
+            
+            cardSettingsSearch?.let { setupTvCardFocus(it) }
+        }
+
+        // Apply initial search container visibility from preference manager
+        val isSearchEnabled = SettingsSearchPreferenceManager.isEnabled(this)
+        updateSearchContainerVisibility(isSearchEnabled)
     }
 
     override fun onResume() {
@@ -748,6 +831,9 @@ class SettingsActivity : AppCompatActivity() {
                 getString(R.string.default_icon_color_uses_default)
             }
         }
+
+        // Refresh settings search toggle and visibility
+        updateSearchContainerVisibility(SettingsSearchPreferenceManager.isEnabled(this))
 
         // Apply custom icon overrides to settings cards
         applySettingsCardIcons()
@@ -1096,6 +1182,7 @@ class SettingsActivity : AppCompatActivity() {
         data class CardIcon(val cardId: Int, val iconId: String, val defaultRes: Int)
 
         val cards = listOf(
+            CardIcon(R.id.cardSettingsSearch, "settings_search_bar", R.drawable.ic_search),
             CardIcon(R.id.cardDefaultStartScreen, "settings_default_start_screen", R.drawable.ic_storage_internal),
             CardIcon(R.id.cardLanguage, "settings_language", R.drawable.ic_language),
             CardIcon(R.id.cardAppearance, "settings_appearance", R.drawable.ic_theme),
@@ -1149,5 +1236,69 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         return null
+    }
+
+    private fun updateSearchContainerVisibility(enabled: Boolean) {
+        cardSearchContainer?.visibility = if (enabled) View.VISIBLE else View.GONE
+        switchSettingsSearch?.isChecked = enabled
+        txtSettingsSearchSubtitle?.text = if (enabled) {
+            getString(R.string.settings_search_bar_subtitle_on)
+        } else {
+            getString(R.string.settings_search_bar_subtitle_off)
+        }
+
+        if (!enabled) {
+            edtSettingsSearch?.text = null
+            filterSettings("")
+        }
+    }
+
+    private fun filterSettings(query: String) {
+        val layoutSettingsList = findViewById<android.widget.LinearLayout>(R.id.layoutSettingsList) ?: return
+        val layoutNoResults = findViewById<View>(R.id.layoutNoResults)
+        var anyVisible = false
+
+        for (i in 0 until layoutSettingsList.childCount) {
+            val child = layoutSettingsList.getChildAt(i)
+            if (child.id == R.id.layoutNoResults) continue
+
+            val initialVisibility = originalVisibilities[child] ?: View.VISIBLE
+            if (initialVisibility == View.GONE) {
+                child.visibility = View.GONE
+                continue
+            }
+
+            if (isCardMatching(child, query)) {
+                child.visibility = View.VISIBLE
+                anyVisible = true
+            } else {
+                child.visibility = View.GONE
+            }
+        }
+
+        if (query.isNotEmpty() && !anyVisible) {
+            layoutNoResults?.visibility = View.VISIBLE
+        } else {
+            layoutNoResults?.visibility = View.GONE
+        }
+    }
+
+    private fun isCardMatching(card: View, query: String): Boolean {
+        if (query.isEmpty()) return true
+        val sb = StringBuilder()
+        getAllTextFromView(card, sb)
+        val text = sb.toString()
+        return text.contains(query, ignoreCase = true)
+    }
+
+    private fun getAllTextFromView(view: View, sb: StringBuilder) {
+        if (view is SwitchMaterial) return
+        if (view is TextView) {
+            sb.append(view.text).append(" ")
+        } else if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) {
+                getAllTextFromView(view.getChildAt(i), sb)
+            }
+        }
     }
 }

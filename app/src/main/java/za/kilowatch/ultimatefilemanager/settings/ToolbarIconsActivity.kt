@@ -80,6 +80,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_star, R.string.action_favorite, ToolbarIconsPreferenceManager.KEY_FAVORITE),
             IconItem(R.drawable.ic_eye_off, R.string.hide, ToolbarIconsPreferenceManager.KEY_HIDE),
             IconItem(R.drawable.ic_eye, R.string.unhide, ToolbarIconsPreferenceManager.KEY_UNHIDE),
+            IconItem(R.drawable.ic_shield_protected, R.string.protect, ToolbarIconsPreferenceManager.KEY_PROTECT),
+            IconItem(R.drawable.ic_shield_unprotected, R.string.unprotect, ToolbarIconsPreferenceManager.KEY_UNPROTECT),
             IconItem(R.drawable.ic_check, R.string.action_select_all, ToolbarIconsPreferenceManager.KEY_SELECT_ALL),
             IconItem(R.drawable.ic_compress, R.string.action_compress, ToolbarIconsPreferenceManager.KEY_COMPRESS),
             IconItem(R.drawable.ic_compress_image, R.string.action_compress_image, ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS),
@@ -110,6 +112,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 ToolbarIconsPreferenceManager.KEY_FAVORITE -> "toolbar_favorite"
                 ToolbarIconsPreferenceManager.KEY_HIDE -> "toolbar_hide"
                 ToolbarIconsPreferenceManager.KEY_UNHIDE -> "toolbar_unhide"
+                ToolbarIconsPreferenceManager.KEY_PROTECT -> "toolbar_protect"
+                ToolbarIconsPreferenceManager.KEY_UNPROTECT -> "toolbar_unprotect"
                 ToolbarIconsPreferenceManager.KEY_SELECT_ALL -> "toolbar_select_all"
                 ToolbarIconsPreferenceManager.KEY_COMPRESS -> "toolbar_compress"
                 ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS -> "toolbar_image_compress"

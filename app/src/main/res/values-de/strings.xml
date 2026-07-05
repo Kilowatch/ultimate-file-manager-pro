@@ -616,6 +616,24 @@ Wiederherstellungscode kopiert – Zwischenablage wird in 60 Sekunden automatisc
     <!-- Settings Hub -->
     <string name="settings_title">Einstellungen</string>
     <string name="settings_subtitle">App-Einstellungen</string>
+    <string name="search_settings_hint">
+Sucheinstellungen…
+</string>
+    <string name="settings_search_no_results">
+Es wurden keine Einstellungen gefunden, die Ihrer Suche entsprechen
+</string>
+    <string name="settings_search_bar_title">
+Suchleiste für Einstellungen
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Aktiviert – Suchfeld oben angeheftet
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Deaktiviert – Suchfeld ausgeblendet
+</string>
+    <string name="backup_pref_settings_search">
+Suchleiste für Einstellungen
+</string>
     <string name="settings_auto_backup_title">
 Automatische Sicherung
 </string>
@@ -5262,6 +5280,9 @@ Hoch
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Suchleiste für Einstellungen
+</string>
     <string name="icon_settings_default_start_screen">
 Standard-Startbildschirm
 </string>
@@ -6030,6 +6051,32 @@ Verwalten Sie Hashtags und Tagging-Optionen
 </string>
     <string name="action_tag">
 Etikett
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Artikel geschützt
+</string>
+    <string name="protected_delete_message">
+Die Datei oder der Ordner ist geschützt und kann nicht gelöscht werden. Der Schutz muss zunächst aufgehoben werden, bevor es gelöscht werden kann.
+</string>
+    <string name="protected_delete_ok">
+OK
+</string>
+    <string name="toast_protected_success">
+%1$d Artikel geschützt
+</string>
+    <string name="toast_unprotected_success">
+%1$d Element(e) ungeschützt
+</string>
+    <string name="protect">
+Schützen
+</string>
+    <string name="unprotect">
+Schutz aufheben
+</string>
+    <string name="backup_pref_protected_files">
+Geschützte Dateien &amp; Ordner
 </string>
 </resources>
 

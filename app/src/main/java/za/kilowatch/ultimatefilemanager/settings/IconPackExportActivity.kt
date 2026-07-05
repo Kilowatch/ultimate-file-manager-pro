@@ -136,7 +136,7 @@ class IconPackExportActivity : AppCompatActivity() {
         // Settings (28)
         categories.add(CategorySelection(
             "settings", getString(R.string.category_settings),
-            listOf("settings_default_start_screen", "settings_language", "settings_appearance",
+            listOf("settings_search_bar", "settings_default_start_screen", "settings_language", "settings_appearance",
                 "settings_icons", "settings_backup_restore", "settings_main_menu_layout",
                 "settings_twin_window_layout", "settings_twin_window_startup",
                 "settings_side_by_side_video", "settings_breadcrumbs", "settings_default_apps",

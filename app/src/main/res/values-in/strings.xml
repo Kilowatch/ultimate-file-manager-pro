@@ -616,6 +616,24 @@ Recovery code copied — clipboard will auto-clear in 60s
     <!-- Settings Hub -->
     <string name="settings_title">Pengaturan</string>
     <string name="settings_subtitle">Preferensi aplikasi</string>
+    <string name="search_settings_hint">
+Search settings…
+</string>
+    <string name="settings_search_no_results">
+No settings found matching your search
+</string>
+    <string name="settings_search_bar_title">
+Settings Search Bar
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Enabled — search field pinned at the top
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Disabled — search field hidden
+</string>
+    <string name="backup_pref_settings_search">
+Settings Search Bar
+</string>
     <string name="settings_auto_backup_title">
 Auto Backup
 </string>
@@ -5262,6 +5280,9 @@ Up
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Settings Search Bar
+</string>
     <string name="icon_settings_default_start_screen">
 Default Start Screen
 </string>
@@ -6030,6 +6051,32 @@ Manage hashtags and tagging options
 </string>
     <string name="action_tag">
 Tag
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Item Protected
+</string>
+    <string name="protected_delete_message">
+The file or folder is protected and cannot be deleted. It needs to be unprotected first before it can be deleted.
+</string>
+    <string name="protected_delete_ok">
+OK
+</string>
+    <string name="toast_protected_success">
+%1$d item(s) protected
+</string>
+    <string name="toast_unprotected_success">
+%1$d item(s) unprotected
+</string>
+    <string name="protect">
+Protect
+</string>
+    <string name="unprotect">
+Unprotect
+</string>
+    <string name="backup_pref_protected_files">
+Protected Files &amp; Folders
 </string>
 </resources>
 

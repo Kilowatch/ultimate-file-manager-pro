@@ -194,6 +194,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var btnFavorite: ImageView
     private lateinit var btnCopyEncrypt: ImageView
     private lateinit var btnMoveEncrypt: ImageView
+    private lateinit var btnProtect: ImageView
+    private lateinit var btnUnprotect: ImageView
     private lateinit var btnCompress: android.view.View
     private lateinit var btnImageCompress: android.view.View
     private var btnOptionsToggle: ImageView? = null
@@ -597,6 +599,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnCopyEncrypt.visibility = if (pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
         btnMoveEncrypt.visibility = if (pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
         btnFavorite.visibility = if (pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+        btnProtect.visibility = if (pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+        btnUnprotect.visibility = if (pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
         btnCompress.visibility = if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(this, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
@@ -629,6 +633,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnFavorite = findViewById(R.id.btnFavorite)
         btnCopyEncrypt = findViewById(R.id.btnCopyEncrypt)
         btnMoveEncrypt = findViewById(R.id.btnMoveEncrypt)
+        btnProtect = findViewById(R.id.btnProtect)
+        btnUnprotect = findViewById(R.id.btnUnprotect)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
@@ -982,6 +988,38 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             showNetworkVaultPicker(selected, isMove = true)
+        }
+
+        btnProtect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@NetworkBrowserActivity, file.path, share.id, protected = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_protected_success, selected.size))
+                    }
+                }
+            }
+        }
+
+        btnUnprotect.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@NetworkBrowserActivity, file.path, share.id, protected = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                    }
+                }
+            }
         }
 
         btnCompress.setOnClickListener {
@@ -1582,6 +1620,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             btnRename.visibility = if (count >= 1 && !share.readOnly && pm.isIconEnabled(this, pm.KEY_RENAME)) View.VISIBLE else View.GONE
             btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+            
+            val hasProtected = fileAdapter.hasAnySelectedProtected(this, share.id)
+            val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this, share.id)
+            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
             
             btnDelete.visibility = if (showActions && !share.readOnly && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
             btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
@@ -2716,6 +2759,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private fun showDeleteConfirmation() {
         val selected = fileAdapter.getSelectedFiles()
         if (selected.isEmpty()) return
+
+        val hasProtected = selected.any {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isOrContainsProtected(this, it.path, share.id)
+        }
+        if (hasProtected) {
+            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.showProtectedDeleteDialog(this, isTv)
+            return
+        }
 
         val recycleEnabled = za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.isEnabled
 

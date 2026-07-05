@@ -1223,6 +1223,24 @@ XXXXXXXXXXXXXXXX
     <string name="settings_subtitle">
 Налаштування програми
 </string>
+    <string name="search_settings_hint">
+Налаштування пошуку…
+</string>
+    <string name="settings_search_no_results">
+Немає налаштувань, що відповідають вашому пошуку
+</string>
+    <string name="settings_search_bar_title">
+Панель пошуку налаштувань
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Увімкнено — поле пошуку закріплено вгорі
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Вимкнено — поле пошуку приховано
+</string>
+    <string name="backup_pref_settings_search">
+Панель пошуку налаштувань
+</string>
     <string name="settings_auto_backup_title">
 Автоматичне резервне копіювання
 </string>
@@ -8925,6 +8943,9 @@ Grid Small
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Панель пошуку налаштувань
+</string>
     <string name="icon_settings_default_start_screen">
 Початковий екран за замовчуванням
 </string>
@@ -9693,6 +9714,32 @@ URL-адреса сервера
 </string>
     <string name="action_tag">
 Тег
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Товар захищений
+</string>
+    <string name="protected_delete_message">
+Файл або папка захищені та не можуть бути видалені. Перед видаленням з нього потрібно зняти захист.
+</string>
+    <string name="protected_delete_ok">
+добре
+</string>
+    <string name="toast_protected_success">
+%1$d елемент(и) захищено
+</string>
+    <string name="toast_unprotected_success">
+%1$d елемент(и) знято з захисту
+</string>
+    <string name="protect">
+Захищати
+</string>
+    <string name="unprotect">
+Зняти захист
+</string>
+    <string name="backup_pref_protected_files">
+Захищені файли &amp; Папки
 </string>
 </resources>
 

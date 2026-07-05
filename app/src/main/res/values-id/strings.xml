@@ -616,6 +616,24 @@ Kode pemulihan disalin — papan klip akan dihapus secara otomatis dalam 60 deti
     <!-- Settings Hub -->
     <string name="settings_title">Pengaturan</string>
     <string name="settings_subtitle">Preferensi aplikasi</string>
+    <string name="search_settings_hint">
+Setelan penelusuran…
+</string>
+    <string name="settings_search_no_results">
+Tidak ada setelan yang cocok dengan penelusuran Anda
+</string>
+    <string name="settings_search_bar_title">
+Bilah Pencarian Pengaturan
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Diaktifkan — bidang pencarian disematkan di bagian atas
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Dinonaktifkan — kolom pencarian disembunyikan
+</string>
+    <string name="backup_pref_settings_search">
+Bilah Pencarian Pengaturan
+</string>
     <string name="settings_auto_backup_title">
 Pencadangan Otomatis
 </string>
@@ -5262,6 +5280,9 @@ Ke atas
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Bilah Pencarian Pengaturan
+</string>
     <string name="icon_settings_default_start_screen">
 Layar Mulai Default
 </string>
@@ -6030,6 +6051,32 @@ Kelola hashtag dan opsi penandaan
 </string>
     <string name="action_tag">
 Menandai
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Barang Dilindungi
+</string>
+    <string name="protected_delete_message">
+File atau folder dilindungi dan tidak dapat dihapus. Itu harus dibuka proteksinya terlebih dahulu sebelum dapat dihapus.
+</string>
+    <string name="protected_delete_ok">
+OKE
+</string>
+    <string name="toast_protected_success">
+%1$d item dilindungi
+</string>
+    <string name="toast_unprotected_success">
+%1$d item tidak terlindungi
+</string>
+    <string name="protect">
+Melindungi
+</string>
+    <string name="unprotect">
+Buka proteksi
+</string>
+    <string name="backup_pref_protected_files">
+File yang Dilindungi &amp; Folder
 </string>
 </resources>
 

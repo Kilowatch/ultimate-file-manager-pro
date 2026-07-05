@@ -8,11 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added a Settings search and filter feature on both mobile and TV layouts.
+- Added a pinned settings search bar at the top of the Settings screen.
+- Added an enable/disable toggle for the Settings Search Bar (placed as the first option in settings).
+- Integrated Settings Search Bar preference with the backup/restore system.
 - Added Tags filtering support to Advanced Sync profiles (Mobile only). Include tags and Exclude tags can be configured depending on the sync extension filter type: "All types" displays both Include and Exclude tags, "Only these" displays Include tags, and "Skip these" displays Exclude tags.
 - Integrated tag filtering checks into the sync worker execution engine for both local and remote files.
 - Created file tags properties dialog, checkable pills selection, custom tag editing, and multiple file tagging support for mobile devices.
 - Created tag management settings dashboard with cascade tag deletion and multi-file tagging configuration toggle.
 - Added tag-based file list sorting and filtering in the mobile Sort & Filter sheet.
+- Added file and folder deletion protection for local, network, and online storages on both mobile and TV layouts.
+- Created custom "Protected" (locked shield) and "Unprotected" (slashed shield) icons with padlock details inside.
+- Integrated protection actions with the "Long Press Toolbar Icons" settings page allowing user customization.
 
 ### Changed
 - Changed default NFS protocol version from NFSv3 to auto-negotiate (0) for new network shares.

@@ -616,6 +616,24 @@
     <!-- Settings Hub -->
     <string name="settings_title">إعدادات</string>
     <string name="settings_subtitle">تفضيلات التطبيق</string>
+    <string name="search_settings_hint">
+إعدادات البحث...
+</string>
+    <string name="settings_search_no_results">
+لم يتم العثور على إعدادات مطابقة لبحثك
+</string>
+    <string name="settings_search_bar_title">
+شريط بحث الإعدادات
+</string>
+    <string name="settings_search_bar_subtitle_on">
+ممكّن - تم تثبيت حقل البحث في الأعلى
+</string>
+    <string name="settings_search_bar_subtitle_off">
+معطل - حقل البحث مخفي
+</string>
+    <string name="backup_pref_settings_search">
+شريط بحث الإعدادات
+</string>
     <string name="settings_auto_backup_title">
 النسخ الاحتياطي التلقائي
 </string>
@@ -5260,6 +5278,9 @@ XML / العلامات
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+شريط بحث الإعدادات
+</string>
     <string name="icon_settings_default_start_screen">
 شاشة البداية الافتراضية
 </string>
@@ -6028,6 +6049,32 @@ RClone
 </string>
     <string name="action_tag">
 علامة
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+العنصر محمي
+</string>
+    <string name="protected_delete_message">
+الملف أو المجلد محمي ولا يمكن حذفه. يجب أن يكون غير محمي أولاً قبل أن يتم حذفه.
+</string>
+    <string name="protected_delete_ok">
+نعم
+</string>
+    <string name="toast_protected_success">
+%1$d العناصر محمية
+</string>
+    <string name="toast_unprotected_success">
+%1$d العنصر (العناصر) غير محمية
+</string>
+    <string name="protect">
+يحمي
+</string>
+    <string name="unprotect">
+إلغاء الحماية
+</string>
+    <string name="backup_pref_protected_files">
+الملفات المحمية &amp; المجلدات
 </string>
 </resources>
 

@@ -616,6 +616,24 @@ Código de recuperación copiado: el portapapeles se borrará automáticamente e
     <!-- Settings Hub -->
     <string name="settings_title">Ajustes</string>
     <string name="settings_subtitle">Preferencias de la aplicación</string>
+    <string name="search_settings_hint">
+Configuración de búsqueda…
+</string>
+    <string name="settings_search_no_results">
+No se encontraron configuraciones que coincidan con su búsqueda
+</string>
+    <string name="settings_search_bar_title">
+Barra de búsqueda de configuración
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Habilitado: campo de búsqueda fijado en la parte superior
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Deshabilitado: campo de búsqueda oculto
+</string>
+    <string name="backup_pref_settings_search">
+Barra de búsqueda de configuración
+</string>
     <string name="settings_auto_backup_title">
 Copia de seguridad automática
 </string>
@@ -5262,6 +5280,9 @@ Arriba
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Barra de búsqueda de configuración
+</string>
     <string name="icon_settings_default_start_screen">
 Pantalla de inicio predeterminada
 </string>
@@ -6030,6 +6051,32 @@ Administrar hashtags y opciones de etiquetado
 </string>
     <string name="action_tag">
 Etiqueta
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Artículo protegido
+</string>
+    <string name="protected_delete_message">
+El archivo o carpeta está protegido y no se puede eliminar. Primero debe desprotegerse antes de poder eliminarlo.
+</string>
+    <string name="protected_delete_ok">
+DE ACUERDO
+</string>
+    <string name="toast_protected_success">
+%1$d artículo(s) protegido(s)
+</string>
+    <string name="toast_unprotected_success">
+%1$d elemento(s) desprotegido(s)
+</string>
+    <string name="protect">
+Proteger
+</string>
+    <string name="unprotect">
+Desproteger
+</string>
+    <string name="backup_pref_protected_files">
+Archivos protegidos y Carpetas
 </string>
 </resources>
 

@@ -71,6 +71,72 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Pinned Search Card on TV -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardSearchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="@dimen/tv_safe_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:focusable="false"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="@dimen/card_radius_lg"
+        app:cardElevation="0dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@color/tv_glass_border"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/margin_xl"
+            android:background="@drawable/bg_glass_card">
+
+            <ImageView
+                android:id="@+id/imgSearchIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/tv_text_secondary"
+                android:contentDescription="@null" />
+
+            <EditText
+                android:id="@+id/edtSettingsSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_md"
+                android:layout_marginEnd="@dimen/margin_md"
+                android:background="@null"
+                android:hint="@string/search_settings_hint"
+                android:textColor="@color/tv_text_primary"
+                android:textColorHint="@color/tv_text_secondary"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <ImageView
+                android:id="@+id/btnSearchClear"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_close"
+                app:tint="@color/tv_text_secondary"
+                android:visibility="gone"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/selector_tv_icon_btn"
+                android:contentDescription="@string/search_clear" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
     <!-- Settings rows — now scrollable -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
@@ -78,12 +144,13 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintTop_toBottomOf="@id/cardSearchContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/layoutSettingsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -92,7 +159,71 @@
             android:paddingBottom="48dp"
             android:clipToPadding="false">
 
-            
+            <!-- Settings Search Toggle Row -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSettingsSearch"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_search"
+                        android:layout_marginEnd="@dimen/margin_lg"
+                        app:tint="@color/tv_icon_tint"
+                        android:contentDescription="@string/settings_search_bar_title" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_search_bar_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtSettingsSearchSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_search_bar_subtitle_on"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchSettingsSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:clickable="false"
+                        android:focusable="false" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Default Start Screen Row -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardDefaultStartScreen"
@@ -2255,6 +2386,33 @@
                         android:focusable="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- No results view -->
+            <LinearLayout
+                android:id="@+id/layoutNoResults"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="48dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_search"
+                    app:tint="@color/tv_text_secondary"
+                    android:layout_marginBottom="16dp"
+                    android:contentDescription="@null" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_search_no_results"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="18sp"
+                    android:gravity="center" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

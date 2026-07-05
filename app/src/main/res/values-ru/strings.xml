@@ -616,6 +616,24 @@ sFTP-плитка
     <!-- Settings Hub -->
     <string name="settings_title">Настройки</string>
     <string name="settings_subtitle">Настройки приложения</string>
+    <string name="search_settings_hint">
+Настройки поиска…
+</string>
+    <string name="settings_search_no_results">
+Настройки, соответствующие вашему запросу, не найдены
+</string>
+    <string name="settings_search_bar_title">
+Панель поиска настроек
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Включено — поле поиска закреплено вверху.
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Отключено — поле поиска скрыто
+</string>
+    <string name="backup_pref_settings_search">
+Панель поиска настроек
+</string>
     <string name="settings_auto_backup_title">
 Автоматическое резервное копирование
 </string>
@@ -5262,6 +5280,9 @@ XML/Разметка
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Панель поиска настроек
+</string>
     <string name="icon_settings_default_start_screen">
 Стартовый экран по умолчанию
 </string>
@@ -6030,6 +6051,32 @@ URL-адрес сервера
 </string>
     <string name="action_tag">
 Ярлык
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Объект защищен
+</string>
+    <string name="protected_delete_message">
+Файл или папка защищены и не могут быть удалены. Прежде чем его можно будет удалить, его необходимо снять с защиты.
+</string>
+    <string name="protected_delete_ok">
+ХОРОШО
+</string>
+    <string name="toast_protected_success">
+%1$d элемент(ы) защищены
+</string>
+    <string name="toast_unprotected_success">
+%1$d объект(ы) не защищены
+</string>
+    <string name="protect">
+Защищать
+</string>
+    <string name="unprotect">
+Снять защиту
+</string>
+    <string name="backup_pref_protected_files">
+Защищенные файлы и amp; Папки
 </string>
 </resources>
 

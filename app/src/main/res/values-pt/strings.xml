@@ -616,6 +616,24 @@ Código de recuperação copiado – a área de transferência será limpa autom
     <!-- Settings Hub -->
     <string name="settings_title">Configurações</string>
     <string name="settings_subtitle">Preferências de aplicativos</string>
+    <string name="search_settings_hint">
+Configurações de pesquisa…
+</string>
+    <string name="settings_search_no_results">
+Nenhuma configuração encontrada que corresponda à sua pesquisa
+</string>
+    <string name="settings_search_bar_title">
+Barra de pesquisa de configurações
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Ativado – campo de pesquisa fixado na parte superior
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Desativado – campo de pesquisa oculto
+</string>
+    <string name="backup_pref_settings_search">
+Barra de pesquisa de configurações
+</string>
     <string name="settings_auto_backup_title">
 Backup automático
 </string>
@@ -5262,6 +5280,9 @@ Acima
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Barra de pesquisa de configurações
+</string>
     <string name="icon_settings_default_start_screen">
 Tela inicial padrão
 </string>
@@ -6030,6 +6051,32 @@ Gerencie hashtags e opções de marcação
 </string>
     <string name="action_tag">
 Marcação
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Item protegido
+</string>
+    <string name="protected_delete_message">
+O arquivo ou pasta está protegido e não pode ser excluído. Ele precisa ser desprotegido primeiro antes de poder ser excluído.
+</string>
+    <string name="protected_delete_ok">
+OK
+</string>
+    <string name="toast_protected_success">
+%1$d itens protegidos
+</string>
+    <string name="toast_unprotected_success">
+%1$d itens desprotegidos
+</string>
+    <string name="protect">
+Proteger
+</string>
+    <string name="unprotect">
+Desproteger
+</string>
+    <string name="backup_pref_protected_files">
+Arquivos e arquivos protegidos Pastas
 </string>
 </resources>
 

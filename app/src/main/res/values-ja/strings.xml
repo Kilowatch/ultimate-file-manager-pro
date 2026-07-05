@@ -616,6 +616,24 @@ PKCS12 パスワード
     <!-- Settings Hub -->
     <string name="settings_title">設定</string>
     <string name="settings_subtitle">アプリの設定</string>
+    <string name="search_settings_hint">
+検索設定…
+</string>
+    <string name="settings_search_no_results">
+検索に一致する設定が見つかりませんでした
+</string>
+    <string name="settings_search_bar_title">
+設定検索バー
+</string>
+    <string name="settings_search_bar_subtitle_on">
+有効 — 検索フィールドが上部に固定されています
+</string>
+    <string name="settings_search_bar_subtitle_off">
+無効 — 検索フィールドが非表示
+</string>
+    <string name="backup_pref_settings_search">
+設定検索バー
+</string>
     <string name="settings_auto_backup_title">
 自動バックアップ
 </string>
@@ -5262,6 +5280,9 @@ XML / マークアップ
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+設定検索バー
+</string>
     <string name="icon_settings_default_start_screen">
 デフォルトのスタート画面
 </string>
@@ -6030,6 +6051,32 @@ UFM プレーヤーの設定
 </string>
     <string name="action_tag">
 タグ
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+アイテムが保護されました
+</string>
+    <string name="protected_delete_message">
+ファイルまたはフォルダーは保護されているため、削除できません。削除する前に、まず保護を解除する必要があります。
+</string>
+    <string name="protected_delete_ok">
+わかりました
+</string>
+    <string name="toast_protected_success">
+%1$d 個のアイテムが保護されています
+</string>
+    <string name="toast_unprotected_success">
+%1$d 個のアイテムが保護されていません
+</string>
+    <string name="protect">
+守る
+</string>
+    <string name="unprotect">
+保護を解除する
+</string>
+    <string name="backup_pref_protected_files">
+保護されたファイルとフォルダー
 </string>
 </resources>
 

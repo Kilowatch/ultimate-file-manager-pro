@@ -616,6 +616,24 @@ PKCS12 पासवर्ड
     <!-- Settings Hub -->
     <string name="settings_title">सेटिंग्स</string>
     <string name="settings_subtitle">ऐप प्राथमिकताएँ</string>
+    <string name="search_settings_hint">
+सेटिंग खोजें…
+</string>
+    <string name="settings_search_no_results">
+आपकी खोज से मेल खाती कोई सेटिंग नहीं मिली
+</string>
+    <string name="settings_search_bar_title">
+सेटिंग्स खोज बार
+</string>
+    <string name="settings_search_bar_subtitle_on">
+सक्षम - खोज फ़ील्ड शीर्ष पर पिन किया गया
+</string>
+    <string name="settings_search_bar_subtitle_off">
+अक्षम - खोज फ़ील्ड छिपा हुआ
+</string>
+    <string name="backup_pref_settings_search">
+सेटिंग्स खोज बार
+</string>
     <string name="settings_auto_backup_title">
 ऑटो बैकअप
 </string>
@@ -5262,6 +5280,9 @@ AMOLED
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+सेटिंग्स खोज बार
+</string>
     <string name="icon_settings_default_start_screen">
 डिफ़ॉल्ट प्रारंभ स्क्रीन
 </string>
@@ -6030,6 +6051,32 @@ Koofr
 </string>
     <string name="action_tag">
 टैग
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+आइटम संरक्षित
+</string>
+    <string name="protected_delete_message">
+फ़ाइल या फ़ोल्डर सुरक्षित है और उसे हटाया नहीं जा सकता. इसे हटाने से पहले इसे असुरक्षित करने की आवश्यकता है।
+</string>
+    <string name="protected_delete_ok">
+ठीक है
+</string>
+    <string name="toast_protected_success">
+%1$d आइटम सुरक्षित
+</string>
+    <string name="toast_unprotected_success">
+%1$d आइटम असुरक्षित
+</string>
+    <string name="protect">
+रक्षा करना
+</string>
+    <string name="unprotect">
+असुरक्षित
+</string>
+    <string name="backup_pref_protected_files">
+संरक्षित फ़ाइलें और amp; फ़ोल्डर
 </string>
 </resources>
 

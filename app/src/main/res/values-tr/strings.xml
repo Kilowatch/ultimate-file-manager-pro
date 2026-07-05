@@ -616,6 +616,24 @@ Kurtarma kodu kopyalandı — pano 60\'lı yıllarda otomatik olarak temizlenece
     <!-- Settings Hub -->
     <string name="settings_title">Ayarlar</string>
     <string name="settings_subtitle">Uygulama tercihleri</string>
+    <string name="search_settings_hint">
+Arama ayarları…
+</string>
+    <string name="settings_search_no_results">
+Aramanızla eşleşen ayar bulunamadı
+</string>
+    <string name="settings_search_bar_title">
+Ayarlar Arama Çubuğu
+</string>
+    <string name="settings_search_bar_subtitle_on">
+Etkin — arama alanı üstte sabitlenmiştir
+</string>
+    <string name="settings_search_bar_subtitle_off">
+Devre Dışı — arama alanı gizlendi
+</string>
+    <string name="backup_pref_settings_search">
+Ayarlar Arama Çubuğu
+</string>
     <string name="settings_auto_backup_title">
 Otomatik Yedekleme
 </string>
@@ -5262,6 +5280,9 @@ Yukarı
 </string>
 
     <!-- Icon settings labels -->
+    <string name="icon_settings_search_bar">
+Ayarlar Arama Çubuğu
+</string>
     <string name="icon_settings_default_start_screen">
 Varsayılan Başlangıç ​​Ekranı
 </string>
@@ -6030,6 +6051,32 @@ Hashtag\'leri ve etiketleme seçeneklerini yönetin
 </string>
     <string name="action_tag">
 Etiket
+</string>
+
+    <!-- File Protection -->
+    <string name="protected_delete_title">
+Ürün Korumalı
+</string>
+    <string name="protected_delete_message">
+Dosya veya klasör korumalıdır ve silinemez. Silinebilmesi için öncelikle korumasının kaldırılması gerekir.
+</string>
+    <string name="protected_delete_ok">
+TAMAM
+</string>
+    <string name="toast_protected_success">
+%1$d öğe korunuyor
+</string>
+    <string name="toast_unprotected_success">
+%1$d öğe korumasız
+</string>
+    <string name="protect">
+Korumak
+</string>
+    <string name="unprotect">
+Korumayı kaldır
+</string>
+    <string name="backup_pref_protected_files">
+Korumalı Dosyalar ve Klasörler
 </string>
 </resources>
 
