@@ -1360,7 +1360,7 @@ Der angegebene Exportpfad wurde auf dem NFS-Server nicht gefunden. Überprüfen 
 Der NFS-Dienst (rpcbind/portmapper) ist auf dem Server nicht verfügbar.
 </string>
     <string name="nfs_error_version_mismatch">
-Der NFS-Server unterstützt die angeforderte Protokollversion nicht. Versuchen Sie es mit einer anderen NFS-Version.
+Der NFS-Server unterstützt die angeforderte Protokollversion nicht. Der versteckten Client-Bibliothek fehlt die Unterstützung für NFSv4.1/v4.2-Sitzungs-Handshake, weshalb NFSv3 oder NFSv4.0 erforderlich ist. Bitte stellen Sie sicher, dass NFSv3 oder NFSv4.0 auf Ihrem NFS-Server aktiviert ist (legen Sie z. B. „vers4.0 = y“ oder „vers3 = y“ in /etc/nfs.conf fest).
 </string>
 
     <!-- NFS Connection Diagnostics -->

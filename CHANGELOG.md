@@ -5,6 +5,20 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Changed default NFS protocol version from NFSv3 to auto-negotiate (0) for new network shares.
+
+### Fixed
+- Enabled SMB server-mode (isServer) shares for Smart Sort by implementing dynamic share prefix stripping during list, mkdir, rename, write, delete, exists, and download operations.
+- Fixed NFS connection and mount failures on servers with NFSv4.0 disabled (e.g., `-4.0 +4.1 +4.2`) by implementing an NFSv4 minor version cascade fallback mechanism (NFSv4.2 → NFSv4.1 → NFSv4.0 → NFSv3).
+- Fixed NFS direct export discovery to support minor version negotiation on servers that disable NFSv4.0.
+- Fixed a bug in the Add/Edit Share screen where editing an existing share would clear the reference handle, causing saved changes to write to a duplicate new share rather than updating the original configuration.
+- Fixed a bug in the Add/Edit Share screen where performing a connection test on a new SSH share would prematurely write the share configuration to disk (to persist the server fingerprint) before the user explicitly clicked save.
+
+---
+
 ## [1.6.3] — 2026-07-03
 
 ### Added

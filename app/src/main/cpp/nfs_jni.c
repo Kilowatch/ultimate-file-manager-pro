@@ -114,6 +114,17 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetVersion(
 }
 
 /*
+ * void nfsSetV4MinorVersion(long handle, int minorVersion)
+ * Set NFSv4 minor version: 0 = v4.0, 1 = v4.1, 2 = v4.2
+ */
+JNIEXPORT void JNICALL
+Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsSetV4MinorVersion(
+        JNIEnv *env, jclass clazz, jlong handle, jint minorVersion) {
+    nfs_set_nfsv4_minor_version(ctx_from_handle(handle), minorVersion);
+    LOGI("nfsSetV4MinorVersion: set to %d", minorVersion);
+}
+
+/*
  * void nfsSetAuthFlavor(long handle, int authFlavor, int uid, int gid)
  * Force the RPC authentication flavor to AUTH_SYS with explicit UNIX credentials.
  *   authFlavor: 1 = AUTH_SYS (AUTH_UNIX), 0 = AUTH_NONE
@@ -240,8 +251,9 @@ Java_za_kilowatch_ultimatefilemanager_network_LibNfsBridge_nfsMountUrl(
         return (*env)->NewStringUTF(env, safe_err);
     }
 
-    LOGI("nfs_mount via URL: server=%s path=%s (nfs version=%d)",
-         nfs_url->server, nfs_url->path, nfs_get_version(nfs));
+    LOGI("nfs_mount via URL: server=%s path=%s (nfs version=%d.%d)",
+         nfs_url->server, nfs_url->path, nfs_get_version(nfs),
+         nfs_get_nfsv4_minor_version(nfs));
     int ret = nfs_mount(nfs, nfs_url->server, nfs_url->path);
     nfs_destroy_url(nfs_url);
 

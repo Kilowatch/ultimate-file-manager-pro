@@ -74,6 +74,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
     /** Tracks the last selected share type ID to avoid re-clearing fields on re-tap. */
     private var previousTypeId: Int? = null
 
+    /** Host key fingerprint detected during the connection test (SSH only). */
+    private var testedHostKeyFingerprint: String? = null
+
     // Views
     private lateinit var etName:          TextInputEditText
     private lateinit var etHost:          TextInputEditText
@@ -329,7 +332,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         val onTypeChange: (Int) -> Unit = { checkedId ->
             // Clear all provider-specific fields when switching to a different type.
             // Re-tapping the same type chip does NOT clear fields.
-            if (previousTypeId == null || previousTypeId != checkedId) {
+            if (previousTypeId != null && previousTypeId != checkedId) {
                 clearShareFields()
             }
             previousTypeId = checkedId
@@ -436,6 +439,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         txtDlnaSelectedDevice.text = ""
         selectedDlnaServer = null
         rgSmbProtocol.check(R.id.rbSmbAuto)
+        rgNfsVersion?.check(R.id.rbNfsAuto)
         // Reset SMB connection type to Share
         chipSmbShare?.isChecked = true
         chipSmbServer?.isChecked = false
@@ -535,6 +539,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
         if (connectionTested) {
             connectionTested = false
             btnSave.isEnabled = false
+            testedHostKeyFingerprint = null
         }
     }
 
@@ -1496,7 +1501,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
             isServerMode = isServerMode,
             hostKeyFingerprint = if (existingShare != null &&
                 (host != existingShare!!.host || (etPort.text?.toString()?.trim()?.toIntOrNull() ?: 0) != existingShare!!.port)
-            ) null else existingShare?.hostKeyFingerprint,
+            ) null else existingShare?.hostKeyFingerprint ?: testedHostKeyFingerprint,
             nfsVersion = if (type == ShareType.NFS && rgNfsVersion != null) {
                 when (rgNfsVersion!!.checkedRadioButtonId) {
                     R.id.rbNfsAuto -> 0
@@ -1560,7 +1565,9 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     }
                 }
                 ShareType.FTP  -> FtpShareClient.testConnection(share)
-                ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(this, share)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(this, share) { fp ->
+                    testedHostKeyFingerprint = fp
+                }
                 ShareType.NFS  -> {
                     Log.i("NFS_TEST", "=== NFS Connection Test: ${share.host}:${share.effectivePort} path=${share.remotePath} version=${share.nfsVersion} uid=${share.username} ===")
                     // No port probes — the RPC handshake itself is the connectivity check.
@@ -1580,10 +1587,11 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     connectionTested = true
                     btnSave.isEnabled = true
                     txtResult.visibility = View.GONE
-                    // Reload share from repo to pick up fingerprint persisted by testConnection
-                    val updatedShare = if (share.type == ShareType.SFTP || share.type == ShareType.SCP) {
-                        repo.getById(share.id) ?: share
-                    } else share
+                    var updatedShare = share
+                    if (share.type == ShareType.SFTP || share.type == ShareType.SCP) {
+                        val persisted = repo.getById(share.id)
+                        updatedShare = persisted ?: share.copy(hostKeyFingerprint = testedHostKeyFingerprint)
+                    }
                     showSuccessDialog(updatedShare)
                 } else {
                     connectionTested = false

@@ -37,6 +37,9 @@ object LibNfsBridge {
     /** Set NFS protocol version: 3 (NFSv3) or 4 (NFSv4). Default is v3. */
     @JvmStatic external fun nfsSetVersion(handle: Long, version: Int)
 
+    /** Set NFSv4 minor version: 0 = NFSv4.0, 1 = NFSv4.1, 2 = NFSv4.2. */
+    @JvmStatic external fun nfsSetV4MinorVersion(handle: Long, minorVersion: Int)
+
     /** Force the RPC authentication flavor. 1 = AUTH_SYS, 0 = AUTH_NONE. uid/gid for AUTH_UNIX. */
     @JvmStatic external fun nfsSetAuthFlavor(handle: Long, authFlavor: Int, uid: Int, gid: Int)
 

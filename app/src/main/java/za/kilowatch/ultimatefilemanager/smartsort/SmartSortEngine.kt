@@ -306,43 +306,43 @@ class SmartSortEngine {
     private suspend fun downloadFromNetwork(storage: NetworkSmartSortStorage, path: String): ByteArray? = withContext(Dispatchers.IO) {
         try {
             val baos = java.io.ByteArrayOutputStream()
-            val share = storage.getShare()
+            val (effectiveShare, cleanPath) = storage.getEffectiveShareAndPath(path)
             when (storage.sharesType()) {
                 ShareType.SMB -> {
-                    SmbShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
+                    SmbShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.FTP -> {
-                    FtpShareClient.openInputStream(share, path)?.use { inp -> inp.copyTo(baos) }
+                    FtpShareClient.openInputStream(effectiveShare, cleanPath)?.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.SFTP, ShareType.SCP -> {
-                    SshShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
+                    SshShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.WEBDAV -> {
-                    WebDavShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    WebDavShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.WEBDAV -> {
-                    WebDavShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    WebDavShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.NFS -> {
-                    NfsShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
+                    NfsShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.GOOGLE_DRIVE -> {
-                    GoogleDriveShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    GoogleDriveShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.ONEDRIVE -> {
-                    OnedriveShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    OnedriveShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.DROPBOX -> {
-                    DropboxShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    DropboxShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> {
-                    S3ShareClient.openInputStream(share, path).first.use { inp -> inp.copyTo(baos) }
+                    S3ShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.TV -> {
-                    TvShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
+                    TvShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
                 }
                 ShareType.DLNA -> {
-                    DlnaShareClient.openInputStream(share, path).use { inp -> inp.copyTo(baos) }
+                    DlnaShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
                 }
             }
             baos.toByteArray()
@@ -500,9 +500,9 @@ class SmartSortEngine {
         return when (storage) {
             is LocalSmartSortStorage -> try { File(path).length() } catch (_: Exception) { -1L }
             is NetworkSmartSortStorage -> {
-                val share = storage.getShare()
+                val (effectiveShare, cleanPath) = storage.getEffectiveShareAndPath(path)
                 try {
-                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, path)
+                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(effectiveShare, cleanPath)
                 } catch (_: Exception) { -1L }
             }
             else -> -1L

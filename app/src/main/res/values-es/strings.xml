@@ -1360,7 +1360,7 @@ La ruta de exportación especificada no se encontró en el servidor NFS. Comprue
 El servicio NFS (rpcbind/portmapper) no está disponible en el servidor.
 </string>
     <string name="nfs_error_version_mismatch">
-El servidor NFS no admite la versión del protocolo solicitada. Pruebe con una versión de NFS diferente.
+El servidor NFS no admite la versión del protocolo solicitada. La biblioteca cliente interna carece de soporte para protocolo de enlace de sesión NFSv4.1/v4.2, por lo que requiere NFSv3 o NFSv4.0. Asegúrese de que NFSv3 o NFSv4.0 esté habilitado en su servidor NFS (por ejemplo, configure \"vers4.0 = y\" o \"vers3 = y\" en /etc/nfs.conf).
 </string>
 
     <!-- NFS Connection Diagnostics -->

@@ -1360,7 +1360,7 @@ Belirtilen dışa aktarma yolu NFS sunucusunda bulunamadı. Yolun doğru olduğu
 NFS hizmeti (rpcbind/portmapper) sunucuda mevcut değil.
 </string>
     <string name="nfs_error_version_mismatch">
-NFS sunucusu istenen protokol sürümünü desteklemiyor. Farklı bir NFS sürümünü deneyin.
+NFS sunucusu istenen protokol sürümünü desteklemiyor. Temel istemci kitaplığı, NFSv3 veya NFSv4.0 gerektiren NFSv4.1/v4.2 oturum anlaşması desteğinden yoksundur. Lütfen NFS sunucunuzda NFSv3 veya NFSv4.0\'ın etkinleştirildiğinden emin olun (örneğin, /etc/nfs.conf dosyasında \"vers4.0 = y\" veya \"vers3 = y\" olarak ayarlayın).
 </string>
 
     <!-- NFS Connection Diagnostics -->

@@ -33,6 +33,8 @@ data class NfsDebugEntry(
     val port: Int,
     /** NFS protocol version attempted (3 or 4). */
     val versionAttempted: Int,
+    /** NFSv4 minor version attempted (0=v4.0, 1=v4.1, 2=v4.2). */
+    val nfsV4MinorVersion: Int = 0,
     /** RPC auth flavor used (1 = AUTH_SYS). */
     val authFlavor: Int,
     /** Ordered list of RPC/connection stages. */
@@ -91,7 +93,9 @@ object NfsDebugLogger {
         val entry = ring.lastOrNull() ?: return "No NFS debug log available."
         val sb = StringBuilder()
         sb.appendLine("NFS Mount Attempt — ${formatTimestamp(entry.timestamp)}")
-        sb.appendLine("Server: ${entry.host} (port ${entry.port}, v${entry.versionAttempted})")
+        val versionStr = if (entry.versionAttempted == 4)
+            "v4.${entry.nfsV4MinorVersion}" else "v${entry.versionAttempted}"
+        sb.appendLine("Server: ${entry.host} (port ${entry.port}, $versionStr)")
         sb.appendLine("Path: ${entry.path}")
         sb.appendLine("Stages:")
         for (stage in entry.stages) {

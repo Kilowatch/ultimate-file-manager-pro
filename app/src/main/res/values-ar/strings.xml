@@ -1360,7 +1360,7 @@ JPG، بابوا نيو غينيا، MP4
 خدمة NFS (rpcbind/portmapper) غير متوفرة على الخادم.
 </string>
     <string name="nfs_error_version_mismatch">
-لا يدعم خادم NFS إصدار البروتوكول المطلوب. جرب إصدار NFS مختلف.
+لا يدعم خادم NFS إصدار البروتوكول المطلوب. تفتقر مكتبة العملاء الموجودة تحت الغطاء إلى دعم المصافحة لجلسة NFSv4.1/v4.2، مما يتطلب NFSv3 أو NFSv4.0. يرجى التأكد من تمكين NFSv3 أو NFSv4.0 على خادم NFS الخاص بك (على سبيل المثال، قم بتعيين \"vers4.0 = y\" أو \"vers3 = y\" في /etc/nfs.conf).
 </string>
 
     <!-- NFS Connection Diagnostics -->

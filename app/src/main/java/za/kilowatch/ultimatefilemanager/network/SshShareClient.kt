@@ -25,20 +25,30 @@ object SshShareClient {
      * Tests the connection. For SCP: tries SFTP first, falls back to exec channel.
      * Returns null on success, error message on failure.
      */
-    fun testConnection(context: Context, share: NetworkShare): String? {
+    fun testConnection(
+        context: Context,
+        share: NetworkShare,
+        onFingerprintDetected: ((String) -> Unit)? = null
+    ): String? {
         var newFingerprint: String? = null
         val client = SshClient.setUpDefaultClient()
-        setupClientAuth(client, share) { fp -> newFingerprint = fp }
+        setupClientAuth(client, share) { fp ->
+            newFingerprint = fp
+            onFingerprintDetected?.invoke(fp)
+        }
         client.start()
 
         return try {
             val session = client.connect(share.username, share.host, share.effectivePort)
                 .verify(TIMEOUT_SECONDS, TimeUnit.SECONDS).session
 
-            // Persist fingerprint on TOFU (also persisted directly in verifier, this is a fallback)
+            // Persist fingerprint on TOFU if the share is already saved in the repository
             if (newFingerprint != null) {
                 val updatedShare = share.copy(hostKeyFingerprint = newFingerprint)
-                NetworkShareRepository.getInstance(context).save(updatedShare)
+                val repo = NetworkShareRepository.getInstance(context)
+                if (repo.getById(share.id) != null) {
+                    repo.save(updatedShare)
+                }
             }
 
             if (!authenticate(session, share)) return "Authentication failed"
@@ -287,7 +297,10 @@ object SshShareClient {
                     onNewFingerprint(fingerprint)
                     try {
                         val updated = share.copy(hostKeyFingerprint = fingerprint)
-                        NetworkShareRepository.getInstance(UfmApplication.instance).save(updated)
+                        val repo = NetworkShareRepository.getInstance(UfmApplication.instance)
+                        if (repo.getById(share.id) != null) {
+                            repo.save(updated)
+                        }
                     } catch (e: Exception) {
                         Log.e(TAG, "Failed to persist host key fingerprint", e)
                     }

@@ -1360,7 +1360,7 @@ NFSサーバーに接続できません。サーバーが実行中であり、�
 NFS サービス (rpcbind/portmapper) はサーバーでは使用できません。
 </string>
     <string name="nfs_error_version_mismatch">
-NFS サーバーは、要求されたプロトコルのバージョンをサポートしていません。別の NFS バージョンを試してください。
+NFS サーバーは、要求されたプロトコルのバージョンをサポートしていません。内部的なクライアント ライブラリには NFSv4.1/v4.2 セッション ハンドシェイクのサポートがないため、NFSv3 または NFSv4.0 が必要です。 NFS サーバーで NFSv3 または NFSv4.0 が有効になっていることを確認してください (たとえば、/etc/nfs.conf で「vers4.0 = y」または「vers3 = y」を設定します)。
 </string>
 
     <!-- NFS Connection Diagnostics -->

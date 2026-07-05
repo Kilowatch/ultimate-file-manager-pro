@@ -1360,7 +1360,7 @@ Le chemin d\'exportation spécifié est introuvable sur le serveur NFS. Vérifie
 Le service NFS (rpcbind/portmapper) n\'est pas disponible sur le serveur.
 </string>
     <string name="nfs_error_version_mismatch">
-Le serveur NFS ne prend pas en charge la version de protocole demandée. Essayez une autre version de NFS.
+Le serveur NFS ne prend pas en charge la version de protocole demandée. La bibliothèque client sous le capot ne prend pas en charge la prise de contact de session NFSv4.1/v4.2, nécessitant NFSv3 ou NFSv4.0. Veuillez vous assurer que NFSv3 ou NFSv4.0 est activé sur votre serveur NFS (par exemple, définissez \"vers4.0 = y\" ou \"vers3 = y\" dans /etc/nfs.conf).
 </string>
 
     <!-- NFS Connection Diagnostics -->

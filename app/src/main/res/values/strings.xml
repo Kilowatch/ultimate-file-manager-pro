@@ -879,7 +879,7 @@
     <string name="nfs_error_connection_failed">Cannot connect to the NFS server. Check that the server is running and reachable on this network.</string>
     <string name="nfs_error_path_not_found">The specified export path was not found on the NFS server. Check that the path is correct and exported.</string>
     <string name="nfs_error_service_unavailable">The NFS service (rpcbind/portmapper) is not available on the server.</string>
-    <string name="nfs_error_version_mismatch">The NFS server does not support the requested protocol version. Try a different NFS version.</string>
+    <string name="nfs_error_version_mismatch">The NFS server does not support the requested protocol version. Under-the-hood client library lacks NFSv4.1/v4.2 session handshake support, requiring NFSv3 or NFSv4.0. Please ensure NFSv3 or NFSv4.0 is enabled on your NFS server (e.g., set \"vers4.0 = y\" or \"vers3 = y\" in /etc/nfs.conf).</string>
 
     <!-- NFS Connection Diagnostics -->
     <string name="nfs_diagnostics_title">Connection Diagnostics</string>

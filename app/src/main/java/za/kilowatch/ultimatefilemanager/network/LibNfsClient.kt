@@ -63,8 +63,12 @@ object LibNfsClient {
     /**
      * Build an NFS URL from the share config.
      * e.g. `nfs://192.168.1.10/export?nfsport=2049&version=3`
+     *
+     * @param nfsV4MinorVersion NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2).
+     *   Only added to the URL when [NetworkShare.nfsVersion] is 4 or when
+     *   explicitly overridden during the auto-detect cascade.
      */
-    private fun buildNfsUrl(share: NetworkShare): String {
+    private fun buildNfsUrl(share: NetworkShare, nfsV4MinorVersion: Int = 0): String {
         val host = share.host
         val export = normalizePath(share.remotePath)
         val params = mutableListOf<String>()
@@ -82,6 +86,12 @@ object LibNfsClient {
         // NFS version from share config (0 = auto, 3 = v3, 4 = v4)
         if (share.nfsVersion > 0) {
             params.add("version=${share.nfsVersion}")
+        }
+
+        // NFSv4 minor version — tells libnfs which COMPOUND minorversion to use.
+        // Only meaningful when version=4; ignored by NFSv3.
+        if (share.nfsVersion == 4 && nfsV4MinorVersion > 0) {
+            params.add("minor=$nfsV4MinorVersion")
         }
 
         // Encode the timeout in the URL so nfs_parse_url_full applies it to ALL
@@ -119,15 +129,23 @@ object LibNfsClient {
 
     /**
      * Mount using an explicit NFS version (must be 3 or 4).
-     * Returns (contextHandle, null) on success, (0, errorMessage) on failure.
-     * The caller is responsible for destroying the handle on success.
+     *
+     * @param version  Major NFS version (3 or 4).
+     * @param minorVersion  NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2). Ignored for NFSv3.
+     * @return (contextHandle, null) on success, (0, errorMessage) on failure.
+     *         The caller is responsible for destroying the handle on success.
      */
-    private fun mountContextForVersion(share: NetworkShare, version: Int): Pair<Long, String?> {
+    private fun mountContextForVersion(
+        share: NetworkShare,
+        version: Int,
+        minorVersion: Int = 0
+    ): Pair<Long, String?> {
         // Build a share copy with the explicit version so buildNfsUrl produces
         // the correct URL params (version=, mountport=, etc.).
         val vShare = if (share.nfsVersion == version) share else share.copy(nfsVersion = version)
+        val versionLabel = if (version == 4) "NFSv4.$minorVersion" else "NFSv$version"
 
-        Log.d(TAG, "mountContext: starting for ${vShare.host}:${vShare.effectivePort} path=${vShare.remotePath}")
+        Log.d(TAG, "mountContext: starting $versionLabel for ${vShare.host}:${vShare.effectivePort} path=${vShare.remotePath}")
 
         val t0 = System.currentTimeMillis()
         val handle = LibNfsBridge.nfsInit()
@@ -147,7 +165,10 @@ object LibNfsClient {
         Log.d(TAG, "mountContext: nfsSetTimeout(5000)")
 
         LibNfsBridge.nfsSetVersion(handle, version)
-        Log.d(TAG, "mountContext: nfsSetVersion($version)")
+        if (version == 4) {
+            LibNfsBridge.nfsSetV4MinorVersion(handle, minorVersion)
+        }
+        Log.d(TAG, "mountContext: nfsSetVersion($version) minor=$minorVersion")
 
         LibNfsBridge.nfsSetUid(handle, uid)
         LibNfsBridge.nfsSetGid(handle, 0)
@@ -155,14 +176,14 @@ object LibNfsClient {
 
         LibNfsBridge.nfsSetDebug(handle, 1)
 
-        val url = buildNfsUrl(vShare)
-        Log.i(TAG, "mountContext: calling nfsMountUrl(\"$url\") (uid=$uid, version=$version)")
+        val url = buildNfsUrl(vShare, nfsV4MinorVersion = minorVersion)
+        Log.i(TAG, "mountContext: calling nfsMountUrl(\"$url\") (uid=$uid, $versionLabel)")
 
         val t2 = System.currentTimeMillis()
         val err = LibNfsBridge.nfsMountUrl(handle, url)
         val mountDuration = System.currentTimeMillis() - t2
         if (err != null) {
-            Log.e(TAG, "mountContext: nfsMountUrl FAILED after ${mountDuration}ms: $err")
+            Log.e(TAG, "mountContext: $versionLabel nfsMountUrl FAILED after ${mountDuration}ms: $err")
             val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
             if (rpcErr.isNotEmpty() && rpcErr != err) {
                 Log.e(TAG, "mountContext: last RPC error: $rpcErr")
@@ -170,7 +191,7 @@ object LibNfsClient {
             LibNfsBridge.nfsDestroy(handle)
             return 0L to err
         }
-        Log.i(TAG, "mountContext: mount succeeded (${System.currentTimeMillis() - t0}ms total)")
+        Log.i(TAG, "mountContext: $versionLabel mount succeeded (${System.currentTimeMillis() - t0}ms total)")
         return handle to null
     }
 
@@ -179,26 +200,39 @@ object LibNfsClient {
      * Returns a pair of (contextHandle, null) on success,
      * or (0, errorMessage) on failure.
      *
-     * When [NetworkShare.nfsVersion] is 0 (auto), NFSv4 is tried first;
-     * if it fails, NFSv3 is attempted automatically as a fallback.
-     * This covers all callers — listFiles, readFile, writeFile, etc.
+     * When [NetworkShare.nfsVersion] is 0 (auto), a full version cascade is
+     * performed: NFSv4.2 → 4.1 → 4.0 → NFSv3. This handles servers that
+     * disable specific minor versions (e.g. `-4.0 +4.1 +4.2`).
+     *
+     * When [NetworkShare.nfsVersion] is 4 (explicit NFSv4), only the NFSv4
+     * minor version cascade is attempted (4.2 → 4.1 → 4.0), with no NFSv3
+     * fallback.
+     *
+     * Non-version errors (permission denied, auth rejected, etc.) cause an
+     * immediate exit from the cascade.
      */
     @WorkerThread
     private fun mountContext(share: NetworkShare): Pair<Long, String?> {
-        if (share.nfsVersion != 0) {
-            // Explicit version — mount once, no fallback.
-            return mountContextForVersion(share, share.nfsVersion)
+        if (share.nfsVersion == 3) {
+            // Explicit NFSv3 — single attempt, no fallback.
+            return mountContextForVersion(share, 3)
         }
 
-        // Auto-detect: try NFSv4 first (no portmapper required), then NFSv3.
-        Log.i(TAG, "mountContext: nfsVersion=auto — trying NFSv4 first")
-        val (v4Handle, v4Err) = mountContextForVersion(share, 4)
-        if (v4Handle != 0L) {
-            Log.i(TAG, "mountContext: auto-detected NFSv4 ✓")
-            return v4Handle to null
+        if (share.nfsVersion == 4) {
+            // Explicit NFSv4 — try minor version cascade (4.2 → 4.1 → 4.0).
+            return mountV4WithMinorVersionCascade(share)
         }
 
-        Log.w(TAG, "mountContext: NFSv4 failed ($v4Err) — falling back to NFSv3")
+        // Auto-detect (nfsVersion == 0):
+        //   1. NFSv4.2 → 4.1 → 4.0 (with early exit on non-version errors)
+        //   2. NFSv3 fallback
+        Log.i(TAG, "mountContext: nfsVersion=auto — starting version cascade")
+
+        val (v4Handle, v4Err) = mountV4WithMinorVersionCascade(share)
+        if (v4Handle != 0L) return v4Handle to null
+
+        // All v4 attempts failed — try NFSv3
+        Log.w(TAG, "mountContext: all NFSv4 attempts failed — trying NFSv3")
         val (v3Handle, v3Err) = mountContextForVersion(share, 3)
         if (v3Handle != 0L) {
             Log.i(TAG, "mountContext: auto-detected NFSv3 ✓")
@@ -206,9 +240,70 @@ object LibNfsClient {
         }
 
         Log.e(TAG, "mountContext: auto-detect exhausted — v4: $v4Err | v3: $v3Err")
-        // Surface the v4 error (tried first); append v3 error for diagnostics.
         val combined = "NFSv4: $v4Err | NFSv3: ${v3Err ?: "failed"}"
         return 0L to combined
+    }
+
+    /**
+     * Try NFSv4.2 → 4.1 → 4.0 with early exit on non-version errors.
+     * Returns (handle, null) on success, (0, lastError) on failure.
+     */
+    private fun mountV4WithMinorVersionCascade(
+        share: NetworkShare
+    ): Pair<Long, String?> {
+        var lastErr: String? = null
+        for (minor in intArrayOf(2, 1, 0)) {
+            Log.i(TAG, "mountV4Cascade: trying NFSv4.$minor")
+            val (handle, err) = mountContextForVersion(share, 4, minor)
+            if (handle != 0L) {
+                Log.i(TAG, "mountV4Cascade: NFSv4.$minor succeeded ✓")
+                return handle to null
+            }
+            lastErr = err
+            // Early exit: if the error is NOT a version mismatch, don't try
+            // lower minor versions — the problem is something else entirely
+            if (!isMinorVersionMismatchError(err)) {
+                Log.w(TAG, "mountV4Cascade: NFSv4.$minor failed with " +
+                      "non-version error, stopping cascade: $err")
+                break
+            }
+            Log.w(TAG, "mountV4Cascade: NFSv4.$minor version mismatch, " +
+                  "trying next minor version")
+        }
+        return 0L to lastErr
+    }
+
+    /**
+     * Returns true if the mount error looks like an NFS4 minor version
+     * mismatch (error 10021 / NFS4ERR_MINOR_VERS_MISMATCH).
+     *
+     * libnfs surfaces this in several ways depending on the server:
+     * - "nfs_mount failed: ret=-5 errno=11" (EAGAIN)
+     * - Error strings containing "10021" or "minor"
+     * - Generic mount failures with no specific error text
+     *
+     * We err on the side of continuing the cascade (returning true)
+     * for ambiguous errors, since the cost is just one more mount attempt.
+     */
+    private fun isMinorVersionMismatchError(error: String?): Boolean {
+        if (error == null) return false
+        val msg = error.lowercase()
+        // Definite non-version errors → stop cascade immediately
+        if (msg.contains("permission denied") ||
+            msg.contains("access denied") ||
+            msg.contains("auth") ||
+            msg.contains("no such file") ||
+            msg.contains("no such export") ||
+            msg.contains("not found") ||
+            msg.contains("connection refused") ||
+            msg.contains("econnrefused") ||
+            msg.contains("ehostunreach") ||
+            msg.contains("enetunreach") ||
+            msg.contains("stale")) {
+            return false
+        }
+        // Probable version mismatch or ambiguous error → continue cascade
+        return true
     }
 
     /**
@@ -249,8 +344,10 @@ object LibNfsClient {
             msg.contains("enetunreach") ->
                 ErrorSentinel.CONNECTION_FAILED
 
-            // NFS version mismatch
+            // NFS version mismatch (including NFSv4 minor version mismatch / error 10021)
             msg.contains("version") && (msg.contains("mismatch") || msg.contains("not supported")) ->
+                ErrorSentinel.VERSION_MISMATCH
+            msg.contains("10021") || msg.contains("minor_vers_mismatch") ->
                 ErrorSentinel.VERSION_MISMATCH
 
             // Service not available (RPC layer)
@@ -318,14 +415,21 @@ object LibNfsClient {
     /**
      * Record a debug entry for the last mount attempt.
      */
-    private fun recordDebugEntry(share: NetworkShare, stages: List<RpcStage>, finalError: String?, durationMs: Long) {
+    private fun recordDebugEntry(
+        share: NetworkShare,
+        stages: List<RpcStage>,
+        finalError: String?,
+        durationMs: Long,
+        nfsV4MinorVersion: Int = 0
+    ) {
         NfsDebugLogger.record(
             NfsDebugEntry(
                 timestamp = System.currentTimeMillis(),
                 host = share.host,
                 path = share.remotePath,
                 port = share.effectivePort,
-                versionAttempted = share.nfsVersion.takeIf { it > 0 } ?: 3,
+                versionAttempted = share.nfsVersion.takeIf { it > 0 } ?: 4,
+                nfsV4MinorVersion = nfsV4MinorVersion,
                 authFlavor = share.nfsAuthFlavor,
                 stages = stages,
                 finalError = finalError,

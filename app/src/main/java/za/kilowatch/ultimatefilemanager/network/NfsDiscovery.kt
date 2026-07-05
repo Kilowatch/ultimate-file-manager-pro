@@ -445,34 +445,51 @@ object NfsDiscovery {
      * - `Pair(emptyList, message)` — NFSv4 is unavailable or timed out.
      */
     private fun probeNfsV4Exports(host: String): Pair<List<String>, String?> {
-        Log.d(TAG, "probeNfsV4Exports($host): attempting NFSv4 direct mount on port 2049 (4s budget)...")
+        Log.d(TAG, "probeNfsV4Exports($host): attempting NFSv4 direct mount on port 2049 with minor version cascade...")
+        // Try NFSv4.2 → 4.1 → 4.0 to handle servers that disable specific minor versions
+        for (minor in intArrayOf(2, 1, 0)) {
+            val result = tryNfsV4Mount(host, minor)
+            if (result.first.isNotEmpty() || result.second == null) {
+                return result
+            }
+            Log.d(TAG, "probeNfsV4Exports($host): NFSv4.$minor failed, trying next minor version")
+        }
+        return Pair(emptyList(), "Portmapper (port 111) unreachable — enter share path manually")
+    }
+
+    /**
+     * Attempt a single NFSv4 mount with a specific minor version for export discovery.
+     */
+    private fun tryNfsV4Mount(host: String, minorVersion: Int): Pair<List<String>, String?> {
         val executor = Executors.newSingleThreadExecutor()
         val start = System.currentTimeMillis()
         return try {
             val future = executor.submit(Callable<Pair<List<String>, String?>> {
                 val handle = LibNfsBridge.nfsInit()
                 if (handle == 0L) {
-                    Log.w(TAG, "probeNfsV4Exports($host): nfsInit returned 0")
+                    Log.w(TAG, "tryNfsV4Mount($host, v4.$minorVersion): nfsInit returned 0")
                     return@Callable Pair(emptyList(), "NFSv4: failed to init context")
                 }
                 try {
                     // version=4  → NFSv4, no MOUNT protocol / portmapper needed
+                    // minor=X    → NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2)
                     // timeo=100  → libnfs minimum (10 s); Java Future is our real cutoff
                     // NOTE: do NOT add nfsport=2049 — testing confirmed the working URL
                     // is nfs://host/?version=4&timeo=100 without explicit nfsport.
                     // Adding nfsport changes libnfs internal routing and causes timeouts
                     // in portproxy/WSL2 environments.
-                    val url = "nfs://$host/?version=4&timeo=100"
-                    Log.d(TAG, "probeNfsV4Exports($host): nfsMountUrl($url)")
+                    val minorParam = if (minorVersion > 0) "&minor=$minorVersion" else ""
+                    val url = "nfs://$host/?version=4${minorParam}&timeo=100"
+                    Log.d(TAG, "tryNfsV4Mount($host, v4.$minorVersion): nfsMountUrl($url)")
                     val mountErr = LibNfsBridge.nfsMountUrl(handle, url)
                     if (mountErr != null) {
-                        Log.d(TAG, "probeNfsV4Exports($host): NFSv4 mount failed: $mountErr")
+                        Log.d(TAG, "tryNfsV4Mount($host, v4.$minorVersion): NFSv4 mount failed: $mountErr")
                         return@Callable Pair(
                             emptyList(),
-                            "Portmapper (port 111) unreachable — enter share path manually"
+                            mountErr
                         )
                     }
-                    Log.i(TAG, "probeNfsV4Exports($host): NFSv4 mount OK — listing root dirs...")
+                    Log.i(TAG, "tryNfsV4Mount($host, v4.$minorVersion): NFSv4 mount OK — listing root dirs...")
 
                     // nfsListDir returns "name\ttype\tsize\tmtime" tab-separated strings
                     val entries = LibNfsBridge.nfsListDir(handle, "/")
@@ -486,7 +503,7 @@ object NfsDiscovery {
                         ?.sorted()
                         ?: emptyList()
 
-                    Log.i(TAG, "probeNfsV4Exports($host): ${dirs.size} dir(s) found: ${dirs.joinToString(", ")}")
+                    Log.i(TAG, "tryNfsV4Mount($host, v4.$minorVersion): ${dirs.size} dir(s) found: ${dirs.joinToString(", ")}")
                     if (dirs.isEmpty()) Pair(listOf("/"), null) else Pair(dirs, null)
                 } finally {
                     LibNfsBridge.nfsDestroy(handle)
@@ -496,12 +513,12 @@ object NfsDiscovery {
             try {
                 val result = future.get(15, TimeUnit.SECONDS)
                 val elapsed = System.currentTimeMillis() - start
-                Log.d(TAG, "probeNfsV4Exports($host): completed in ${elapsed}ms")
+                Log.d(TAG, "tryNfsV4Mount($host, v4.$minorVersion): completed in ${elapsed}ms")
                 result
             } catch (e: TimeoutException) {
                 future.cancel(true)
                 val elapsed = System.currentTimeMillis() - start
-                Log.w(TAG, "probeNfsV4Exports($host): NFSv4 probe TIMEOUT after ${elapsed}ms")
+                Log.w(TAG, "tryNfsV4Mount($host, v4.$minorVersion): NFSv4 probe TIMEOUT after ${elapsed}ms")
                 Pair(emptyList(), "Portmapper (port 111) unreachable — enter share path manually")
             }
         } finally {

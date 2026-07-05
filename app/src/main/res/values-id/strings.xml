@@ -1360,7 +1360,7 @@ Jalur ekspor yang ditentukan tidak ditemukan di server NFS. Periksa apakah jalur
 Layanan NFS (rpcbind/portmapper) tidak tersedia di server.
 </string>
     <string name="nfs_error_version_mismatch">
-Server NFS tidak mendukung versi protokol yang diminta. Coba versi NFS lain.
+Server NFS tidak mendukung versi protokol yang diminta. Pustaka klien tersembunyi tidak memiliki dukungan jabat tangan sesi NFSv4.1/v4.2, sehingga memerlukan NFSv3 atau NFSv4.0. Harap pastikan NFSv3 atau NFSv4.0 diaktifkan di server NFS Anda (misalnya, setel \"vers4.0 = y\" atau \"vers3 = y\" di /etc/nfs.conf).
 </string>
 
     <!-- NFS Connection Diagnostics -->
