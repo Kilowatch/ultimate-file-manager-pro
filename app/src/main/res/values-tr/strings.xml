@@ -5993,6 +5993,35 @@ Sonraki dosya yüklenemedi
     <string name="backup_pref_ufm_player">
 UFM Oynatıcı Ayarları
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Özellikler
+</string>
+    <string name="properties_title">
+Özellikler
+</string>
+    <string name="edit_tags_title">
+Etiketleri Düzenle
+</string>
+    <string name="edit_tags_hint">
+Etiketleri girin (yalnızca alfasayısal)
+</string>
+    <string name="no_tags">
+Henüz etiket eklenmedi
+</string>
+    <string name="backup_pref_file_tags">
+Dosya Etiketleri
+</string>
+    <string name="settings_file_tags_title">
+Dosya Etiketleri
+</string>
+    <string name="settings_file_tags_subtitle">
+Hashtag\'leri ve etiketleme seçeneklerini yönetin
+</string>
+    <string name="action_tag">
+Etiket
+</string>
 </resources>
 
 

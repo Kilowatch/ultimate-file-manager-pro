@@ -97,6 +97,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isCertPickerMode = false
     private var selectedKeyFilePath: String? = null
     private lateinit var fabPaste: ExtendedFloatingActionButton
+    private lateinit var fabProperties: ExtendedFloatingActionButton
     private lateinit var fileAdapter: FileAdapter
     private var layoutBreadcrumbsScroll: android.widget.HorizontalScrollView? = null
     private var layoutBreadcrumbs: android.widget.LinearLayout? = null
@@ -118,6 +119,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var sortMode = SortFilterSheet.SortMode.NAME
     private var sortOrder = SortFilterSheet.SortOrder.ASC
     private var filterType = SortFilterSheet.FilterType.ALL
+    private var activeTagsFilter: Set<String> = emptySet()
     private var isTransferring = false
     private var transferJob: kotlinx.coroutines.Job? = null
     private var currentTransferDestFile: java.io.File? = null
@@ -1019,6 +1021,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
+        fabProperties = findViewById(R.id.fabProperties)
 
         // Apply custom toolbar action icons
         applyCustomToolbarIcons()
@@ -1489,6 +1492,27 @@ class FileBrowserActivity : AppCompatActivity() {
             showClipboardSheet()
         }
 
+        fabProperties.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                val sheet = FilePropertiesBottomSheet.newInstance(
+                    filePath = file.absolutePath,
+                    isDirectory = false,
+                    size = file.length(),
+                    lastModified = file.lastModified(),
+                    isNetwork = false
+                )
+                sheet.show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
+            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
+                val filePaths = selected.map { it.absolutePath }
+                FileTagsManager.showMultiFileTagDialog(this, filePaths) {
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory(currentDir)
+                }
+            }
+        }
+
         // TV: swap icon tint on focus for all selection bar icon buttons
         if (DeviceUtils.isTvDevice(this)) {
             val iconTintFocused = android.content.res.ColorStateList.valueOf(
@@ -1514,10 +1538,12 @@ class FileBrowserActivity : AppCompatActivity() {
         sheet.currentFilterType = filterType
         sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate ->
+        sheet.activeTags = activeTagsFilter
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            activeTagsFilter = tags
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             // Persist sort preferences
             getSharedPreferences("ufm_prefs", MODE_PRIVATE).edit()
@@ -1573,6 +1599,28 @@ class FileBrowserActivity : AppCompatActivity() {
             }
             btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
 
+            val selectedFiles = fileAdapter.getSelectedFiles()
+            val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
+            
+            val prefs = getSharedPreferences("ufm_prefs", MODE_PRIVATE)
+            val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
+            val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
+            
+            if (!DeviceUtils.isTvDevice(this) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
+                fabProperties.visibility = View.VISIBLE
+                fabPaste.visibility = View.GONE
+                if (selectedFiles.size > 1) {
+                    fabProperties.setText(R.string.action_tag)
+                    fabProperties.setIconResource(R.drawable.ic_edit)
+                } else {
+                    fabProperties.setText(R.string.action_properties)
+                    fabProperties.setIconResource(R.drawable.ic_about)
+                }
+            } else {
+                fabProperties.visibility = View.GONE
+                updatePasteFab()
+            }
+
             if (fileAdapter.isAllSelected()) {
                 btnSelectAll.text = getString(R.string.action_deselect_all)
             } else {
@@ -1581,6 +1629,8 @@ class FileBrowserActivity : AppCompatActivity() {
         } else {
             layoutSelectionBar.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+            fabProperties.visibility = View.GONE
+            updatePasteFab()
         }
     }
 
@@ -3275,6 +3325,12 @@ class FileBrowserActivity : AppCompatActivity() {
 
         val filtered = preFiltered.filter { SortFilterSheet.matchesFilter(it, filterType) }
 
+        val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
+            filtered.filter { it.isDirectory || FileTagsManager.getTags(this, it.absolutePath).any { t -> t in activeTagsFilter } }
+        } else {
+            filtered
+        }
+
         val secondaryComparator: Comparator<File> = when (sortMode) {
             SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { f: File -> if (f.isDirectory) 0L else f.length() }
@@ -3283,7 +3339,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         val orderedComparator = if (sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
         
-        return filtered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
+        return tagFiltered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
     }
 
     private fun openFile(file: File, transitionView: android.view.View? = null) {

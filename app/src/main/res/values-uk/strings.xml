@@ -9656,6 +9656,35 @@ URL-адреса сервера
     <string name="backup_pref_ufm_player">
 Налаштування плеєра UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Властивості
+</string>
+    <string name="properties_title">
+Властивості
+</string>
+    <string name="edit_tags_title">
+Редагувати теги
+</string>
+    <string name="edit_tags_hint">
+Введіть теги (лише буквено-цифрові)
+</string>
+    <string name="no_tags">
+Теги ще не додано
+</string>
+    <string name="backup_pref_file_tags">
+Теги файлів
+</string>
+    <string name="settings_file_tags_title">
+Теги файлів
+</string>
+    <string name="settings_file_tags_subtitle">
+Керуйте хеш-тегами та параметрами тегів
+</string>
+    <string name="action_tag">
+Тег
+</string>
 </resources>
 
 

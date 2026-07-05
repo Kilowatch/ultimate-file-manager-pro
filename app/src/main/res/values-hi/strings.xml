@@ -5993,6 +5993,35 @@ Koofr
     <string name="backup_pref_ufm_player">
 यूएफएम प्लेयर सेटिंग्स
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+गुण
+</string>
+    <string name="properties_title">
+गुण
+</string>
+    <string name="edit_tags_title">
+जोड़ संपादित करें
+</string>
+    <string name="edit_tags_hint">
+टैग दर्ज करें (केवल अक्षरांकीय)
+</string>
+    <string name="no_tags">
+अभी तक कोई टैग नहीं जोड़ा गया
+</string>
+    <string name="backup_pref_file_tags">
+फ़ाइल टैग
+</string>
+    <string name="settings_file_tags_title">
+फ़ाइल टैग
+</string>
+    <string name="settings_file_tags_subtitle">
+हैशटैग और टैगिंग विकल्प प्रबंधित करें
+</string>
+    <string name="action_tag">
+टैग
+</string>
 </resources>
 
 

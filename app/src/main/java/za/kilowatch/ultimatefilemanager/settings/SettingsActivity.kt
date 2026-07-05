@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.view.View
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -136,6 +137,16 @@ class SettingsActivity : AppCompatActivity() {
         val cardFontSize = findViewById<MaterialCardView>(R.id.cardFontSize)
         cardFontSize.setOnClickListener {
             startActivity(Intent(this, FontSizeActivity::class.java))
+        }
+
+        // File Tags row (Mobile Only)
+        val cardFileTags = findViewById<MaterialCardView?>(R.id.cardFileTags)
+        if (isTv) {
+            cardFileTags?.visibility = View.GONE
+        } else {
+            cardFileTags?.setOnClickListener {
+                startActivity(Intent(this, FileTagsSettingsActivity::class.java))
+            }
         }
 
         // Analytics toggle

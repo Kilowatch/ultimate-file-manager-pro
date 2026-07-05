@@ -5991,6 +5991,35 @@ RClone
     <string name="backup_pref_ufm_player">
 إعدادات مشغل UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+ملكيات
+</string>
+    <string name="properties_title">
+ملكيات
+</string>
+    <string name="edit_tags_title">
+تحرير العلامات
+</string>
+    <string name="edit_tags_hint">
+أدخل العلامات (الأبجدية الرقمية فقط)
+</string>
+    <string name="no_tags">
+لم تتم إضافة أي علامات حتى الآن
+</string>
+    <string name="backup_pref_file_tags">
+علامات الملف
+</string>
+    <string name="settings_file_tags_title">
+علامات الملف
+</string>
+    <string name="settings_file_tags_subtitle">
+إدارة علامات التصنيف وخيارات وضع العلامات
+</string>
+    <string name="action_tag">
+علامة
+</string>
 </resources>
 
 

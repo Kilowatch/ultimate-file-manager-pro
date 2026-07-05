@@ -5993,6 +5993,35 @@ Impossible de charger le fichier suivant
     <string name="backup_pref_ufm_player">
 Paramètres du lecteur UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Propriétés
+</string>
+    <string name="properties_title">
+Propriétés
+</string>
+    <string name="edit_tags_title">
+Modifier les balises
+</string>
+    <string name="edit_tags_hint">
+Saisir des balises (alphanumériques uniquement)
+</string>
+    <string name="no_tags">
+Aucune balise ajoutée pour l\'instant
+</string>
+    <string name="backup_pref_file_tags">
+Balises de fichier
+</string>
+    <string name="settings_file_tags_title">
+Balises de fichier
+</string>
+    <string name="settings_file_tags_subtitle">
+Gérer les hashtags et les options de marquage
+</string>
+    <string name="action_tag">
+Étiqueter
+</string>
 </resources>
 
 

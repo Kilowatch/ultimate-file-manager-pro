@@ -5993,6 +5993,35 @@ No se pudo cargar el siguiente archivo
     <string name="backup_pref_ufm_player">
 Configuración del reproductor UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Propiedades
+</string>
+    <string name="properties_title">
+Propiedades
+</string>
+    <string name="edit_tags_title">
+Editar etiquetas
+</string>
+    <string name="edit_tags_hint">
+Introducir etiquetas (solo alfanuméricas)
+</string>
+    <string name="no_tags">
+Aún no se han agregado etiquetas
+</string>
+    <string name="backup_pref_file_tags">
+Etiquetas de archivo
+</string>
+    <string name="settings_file_tags_title">
+Etiquetas de archivo
+</string>
+    <string name="settings_file_tags_subtitle">
+Administrar hashtags y opciones de etiquetado
+</string>
+    <string name="action_tag">
+Etiqueta
+</string>
 </resources>
 
 

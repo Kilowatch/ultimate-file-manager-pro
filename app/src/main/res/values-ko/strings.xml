@@ -5993,6 +5993,35 @@ PIP(Picture-in-Picture)
     <string name="backup_pref_ufm_player">
 UFM 플레이어 설정
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+속성
+</string>
+    <string name="properties_title">
+속성
+</string>
+    <string name="edit_tags_title">
+태그 편집
+</string>
+    <string name="edit_tags_hint">
+태그 입력(영숫자만)
+</string>
+    <string name="no_tags">
+아직 추가된 태그가 없습니다.
+</string>
+    <string name="backup_pref_file_tags">
+파일 태그
+</string>
+    <string name="settings_file_tags_title">
+파일 태그
+</string>
+    <string name="settings_file_tags_subtitle">
+해시태그 및 태그 지정 옵션 관리
+</string>
+    <string name="action_tag">
+꼬리표
+</string>
 </resources>
 
 

@@ -75,6 +75,7 @@ class FileBrowserFragment : Fragment() {
     private var layoutOptionsRow: View? = null
     private var isOptionsVisible = false
     private lateinit var fabPaste: ExtendedFloatingActionButton
+    private lateinit var fabProperties: ExtendedFloatingActionButton
     private lateinit var fileAdapter: FileAdapter
     
     private val batchRenameTvLauncher = registerForActivityResult(
@@ -106,6 +107,7 @@ class FileBrowserFragment : Fragment() {
     private var sortMode = SortFilterSheet.SortMode.NAME
     private var sortOrder = SortFilterSheet.SortOrder.ASC
     private var filterType = SortFilterSheet.FilterType.ALL
+    private var activeTagsFilter: Set<String> = emptySet()
 
     private var isPickerMode = false
     var onStoragePickerRequested: (() -> Unit)? = null
@@ -255,6 +257,7 @@ class FileBrowserFragment : Fragment() {
         btnCompress = view.findViewById(R.id.btnCompress)
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
+        fabProperties = view.findViewById(R.id.fabProperties)
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
         btnSearchToggle.setImageResource(R.drawable.ic_search) 
@@ -530,6 +533,28 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
+        fabProperties.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                val sheet = FilePropertiesBottomSheet.newInstance(
+                    filePath = file.absolutePath,
+                    isDirectory = false,
+                    size = file.length(),
+                    lastModified = file.lastModified(),
+                    isNetwork = false
+                )
+                sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
+            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
+                val filePaths = selected.map { it.absolutePath }
+                val context = context ?: return@setOnClickListener
+                FileTagsManager.showMultiFileTagDialog(context, filePaths) {
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory(currentDir)
+                }
+            }
+        }
+
         if (isTv) setupTvFocus(view)
     }
 
@@ -671,8 +696,32 @@ class FileBrowserFragment : Fragment() {
             btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
             btnSelectAll.text = if (fileAdapter.isAllSelected()) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+
+            val selectedFiles = fileAdapter.getSelectedFiles()
+            val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
+            
+            val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
+            val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
+            val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
+            
+            if (!DeviceUtils.isTvDevice(requireContext()) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
+                fabProperties.visibility = View.VISIBLE
+                fabPaste.visibility = View.GONE
+                if (selectedFiles.size > 1) {
+                    fabProperties.setText(R.string.action_tag)
+                    fabProperties.setIconResource(R.drawable.ic_edit)
+                } else {
+                    fabProperties.setText(R.string.action_properties)
+                    fabProperties.setIconResource(R.drawable.ic_about)
+                }
+            } else {
+                fabProperties.visibility = View.GONE
+                updatePasteFab()
+            }
         } else {
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+            fabProperties.visibility = View.GONE
+            updatePasteFab()
         }
     }
 
@@ -860,6 +909,12 @@ class FileBrowserFragment : Fragment() {
 
     private fun sortAndFilterFiles(files: List<File>): List<File> {
         val filtered = files.filter { SortFilterSheet.matchesFilter(it, filterType) }
+        val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
+            val ctx = context ?: return filtered
+            filtered.filter { it.isDirectory || FileTagsManager.getTags(ctx, it.absolutePath).any { t -> t in activeTagsFilter } }
+        } else {
+            filtered
+        }
         val secondaryComparator: Comparator<File> = when (sortMode) {
             SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { f: File -> if (f.isDirectory) 0L else f.length() }
@@ -867,7 +922,7 @@ class FileBrowserFragment : Fragment() {
             SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.extension }
         }
         val orderedComparator = if (sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
-        return filtered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
+        return tagFiltered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
     }
 
     private fun openFile(file: File, transitionView: View? = null) {
@@ -1409,10 +1464,12 @@ class FileBrowserFragment : Fragment() {
         sheet.currentFilterType = filterType
         sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate ->
+        sheet.activeTags = activeTagsFilter
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            activeTagsFilter = tags
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             
             if (groupByDate != za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())) {

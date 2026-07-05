@@ -5993,6 +5993,35 @@ APIアクセストークン
     <string name="backup_pref_ufm_player">
 UFM プレーヤーの設定
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+プロパティ
+</string>
+    <string name="properties_title">
+プロパティ
+</string>
+    <string name="edit_tags_title">
+タグの編集
+</string>
+    <string name="edit_tags_hint">
+タグを入力します（英数字のみ）
+</string>
+    <string name="no_tags">
+まだタグが追加されていません
+</string>
+    <string name="backup_pref_file_tags">
+ファイルタグ
+</string>
+    <string name="settings_file_tags_title">
+ファイルタグ
+</string>
+    <string name="settings_file_tags_subtitle">
+ハッシュタグとタグ付けオプションを管理する
+</string>
+    <string name="action_tag">
+タグ
+</string>
 </resources>
 
 

@@ -5993,6 +5993,35 @@ URL-адрес сервера
     <string name="backup_pref_ufm_player">
 Настройки проигрывателя UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Характеристики
+</string>
+    <string name="properties_title">
+Характеристики
+</string>
+    <string name="edit_tags_title">
+Редактировать теги
+</string>
+    <string name="edit_tags_hint">
+Введите теги (только буквенно-цифровые)
+</string>
+    <string name="no_tags">
+Теги еще не добавлены
+</string>
+    <string name="backup_pref_file_tags">
+Теги файлов
+</string>
+    <string name="settings_file_tags_title">
+Теги файлов
+</string>
+    <string name="settings_file_tags_subtitle">
+Управление хэштегами и опциями тегирования
+</string>
+    <string name="action_tag">
+Ярлык
+</string>
 </resources>
 
 

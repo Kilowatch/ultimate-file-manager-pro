@@ -169,6 +169,30 @@
                     android:text="@string/filter_apks" />
             </com.google.android.material.chip.ChipGroup>
 
+            <!-- Tags Filtering Section -->
+            <LinearLayout
+                android:id="@+id/layoutTagsFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_lg">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="false" />
+            </LinearLayout>
+
             <!-- Show Hidden Files -->
             <TextView
                 android:layout_width="wrap_content"

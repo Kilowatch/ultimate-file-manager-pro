@@ -5993,6 +5993,35 @@ Não foi possível carregar o próximo arquivo
     <string name="backup_pref_ufm_player">
 Configurações do player UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Propriedades
+</string>
+    <string name="properties_title">
+Propriedades
+</string>
+    <string name="edit_tags_title">
+Editar tags
+</string>
+    <string name="edit_tags_hint">
+Insira tags (somente alfanuméricas)
+</string>
+    <string name="no_tags">
+Nenhuma tag adicionada ainda
+</string>
+    <string name="backup_pref_file_tags">
+Tags de arquivo
+</string>
+    <string name="settings_file_tags_title">
+Tags de arquivo
+</string>
+    <string name="settings_file_tags_subtitle">
+Gerencie hashtags e opções de marcação
+</string>
+    <string name="action_tag">
+Marcação
+</string>
 </resources>
 
 

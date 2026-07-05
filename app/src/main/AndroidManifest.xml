@@ -261,6 +261,12 @@
             android:name=".settings.FontSizeActivity"
             android:exported="false" />
 
+        <!-- File Tags Settings (Mobile Only) -->
+        <activity
+            android:name=".settings.FileTagsSettingsActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
         <activity
             android:name=".settings.FileServerTilesActivity"
             android:exported="false" />

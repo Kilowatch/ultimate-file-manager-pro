@@ -35,6 +35,8 @@ import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
+import za.kilowatch.ultimatefilemanager.storage.FilePropertiesBottomSheet
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
@@ -91,11 +93,13 @@ class NetworkBrowserFragment : Fragment() {
     private var sortMode = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME
     private var sortOrder = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.ASC
     private var filterType = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL
+    private var activeTagsFilter: Set<String> = emptySet()
     private var currentFiles: List<NetworkFile> = emptyList()
     private lateinit var layoutSelectionBar: View
     private lateinit var txtSelectionCount: TextView
     private lateinit var layoutEmpty: View
     private lateinit var fabPaste: ExtendedFloatingActionButton
+    private lateinit var fabProperties: ExtendedFloatingActionButton
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
     private var isOptionsVisible = false
@@ -228,10 +232,33 @@ class NetworkBrowserFragment : Fragment() {
         txtSelectionCount = view.findViewById(R.id.txtSelectionCount)
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
         fabPaste = view.findViewById(R.id.fabPaste)
+        fabProperties = view.findViewById(R.id.fabProperties)
         fabPaste.setOnClickListener {
             val act = activity
             if (act is TwinWindowActivity) {
                 act.onPasteRequested(this)
+            }
+        }
+        
+        fabProperties.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                val sheet = FilePropertiesBottomSheet.newInstance(
+                    filePath = file.path,
+                    isDirectory = false,
+                    size = file.size,
+                    lastModified = file.lastModified,
+                    isNetwork = true
+                )
+                sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
+            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
+                val filePaths = selected.map { it.path }
+                val context = context ?: return@setOnClickListener
+                FileTagsManager.showMultiFileTagDialog(context, filePaths) {
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory()
+                }
             }
         }
         
@@ -597,6 +624,27 @@ class NetworkBrowserFragment : Fragment() {
                 }
                 view?.findViewById<View>(R.id.btnImageCompress)?.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
                 view?.findViewById<View>(R.id.btnFavorite)?.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+                val selectedFiles = fileAdapter.getSelectedFiles()
+                val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
+                
+                val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
+                val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
+                val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
+                
+                if (!DeviceUtils.isTvDevice(requireContext()) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
+                    fabProperties.visibility = View.VISIBLE
+                    fabPaste.visibility = View.GONE
+                    if (selectedFiles.size > 1) {
+                        fabProperties.setText(R.string.action_tag)
+                        fabProperties.setIconResource(R.drawable.ic_edit)
+                    } else {
+                        fabProperties.setText(R.string.action_properties)
+                        fabProperties.setIconResource(R.drawable.ic_about)
+                    }
+                } else {
+                    fabProperties.visibility = View.GONE
+                    updatePasteFab()
+                }
             }
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
         } else {
@@ -604,6 +652,8 @@ class NetworkBrowserFragment : Fragment() {
             view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
             view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar as ViewGroup)
+            fabProperties.visibility = View.GONE
+            updatePasteFab()
         }
     }
 
@@ -1285,6 +1335,12 @@ class NetworkBrowserFragment : Fragment() {
                 za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.matchesExtension(ext, filterType)
             }
         }
+        val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
+            val ctx = context ?: return filtered
+            filtered.filter { it.isDirectory || za.kilowatch.ultimatefilemanager.storage.FileTagsManager.getTags(ctx, it.path).any { t -> t in activeTagsFilter } }
+        } else {
+            filtered
+        }
         val secondaryComparator: Comparator<NetworkFile> = when (sortMode) {
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: NetworkFile -> f.name }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { f: NetworkFile -> if (f.isDirectory) 0L else f.size }
@@ -1292,7 +1348,7 @@ class NetworkBrowserFragment : Fragment() {
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: NetworkFile -> f.name.substringAfterLast('.', "") }
         }
         val orderedComparator = if (sortOrder == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
-        return filtered.sortedWith(compareBy<NetworkFile> { !it.isDirectory }.then(orderedComparator))
+        return tagFiltered.sortedWith(compareBy<NetworkFile> { !it.isDirectory }.then(orderedComparator))
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
@@ -1342,10 +1398,12 @@ class NetworkBrowserFragment : Fragment() {
         sheet.currentFilterType = filterType
         sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate ->
+        sheet.activeTags = activeTagsFilter
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            activeTagsFilter = tags
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             
             val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)

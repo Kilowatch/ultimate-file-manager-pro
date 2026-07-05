@@ -5993,6 +5993,35 @@ Tidak dapat memuat file berikutnya
     <string name="backup_pref_ufm_player">
 Pengaturan Pemutar UFM
 </string>
+
+    <!-- File Properties & Tagging -->
+    <string name="action_properties">
+Properti
+</string>
+    <string name="properties_title">
+Properti
+</string>
+    <string name="edit_tags_title">
+Sunting Tag
+</string>
+    <string name="edit_tags_hint">
+Masukkan tag (hanya alfanumerik)
+</string>
+    <string name="no_tags">
+Belum ada tag yang ditambahkan
+</string>
+    <string name="backup_pref_file_tags">
+Tag Berkas
+</string>
+    <string name="settings_file_tags_title">
+Tag Berkas
+</string>
+    <string name="settings_file_tags_subtitle">
+Kelola hashtag dan opsi penandaan
+</string>
+    <string name="action_tag">
+Menandai
+</string>
 </resources>
 
 

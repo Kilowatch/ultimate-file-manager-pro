@@ -33,7 +33,8 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     var currentFilterType = FilterType.ALL
     var currentShowHidden = false
     var currentGroupByDate = false
-    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean) -> Unit)? = null
+    var activeTags: Set<String> = emptySet()
+    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -123,6 +124,26 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             chipGroupDateDisabled.isChecked = true
         }
 
+        // Populate Tags filter section if tags exist (Mobile Only)
+        val layoutTags = view.findViewById<android.widget.LinearLayout>(R.id.layoutTagsFilter)
+        val cgTags = view.findViewById<ChipGroup>(R.id.chipGroupTags)
+        val allTags = FileTagsManager.getAllCreatedTags(requireContext()).sorted()
+
+        if (allTags.isNotEmpty() && !DeviceUtils.isTvDevice(requireContext())) {
+            layoutTags.visibility = View.VISIBLE
+            cgTags.removeAllViews()
+            for (tag in allTags) {
+                val chip = LayoutInflater.from(requireContext())
+                    .inflate(R.layout.item_tag_chip, cgTags, false) as Chip
+                chip.text = "#$tag"
+                chip.isChecked = activeTags.contains(tag)
+                chip.isCheckedIconVisible = true
+                cgTags.addView(chip)
+            }
+        } else {
+            layoutTags.visibility = View.GONE
+        }
+
         // Apply button
         view.findViewById<View>(R.id.btnApplySort).setOnClickListener {
             val sortMode = when (cgSort.checkedChipId) {
@@ -153,7 +174,17 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipGroupDateEnabled -> true
                 else -> false
             }
-            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate)
+            val selectedTags = mutableSetOf<String>()
+            if (layoutTags.visibility == View.VISIBLE) {
+                for (i in 0 until cgTags.childCount) {
+                    val chip = cgTags.getChildAt(i) as? Chip
+                    if (chip != null && chip.isChecked) {
+                        val cleanTag = chip.text.toString().removePrefix("#")
+                        selectedTags.add(cleanTag)
+                    }
+                }
+            }
+            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags)
             dismiss()
         }
         

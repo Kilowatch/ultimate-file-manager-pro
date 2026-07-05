@@ -42,6 +42,8 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.VaultActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
+import za.kilowatch.ultimatefilemanager.storage.FilePropertiesBottomSheet
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
@@ -204,6 +206,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var isSearchVisible = false
     private var searchJob: kotlinx.coroutines.Job? = null
     private lateinit var fabPaste: ExtendedFloatingActionButton
+    private lateinit var fabProperties: ExtendedFloatingActionButton
 
     // TV-only: inline clipboard panel (avoids BottomSheetDialog clipping on TV)
     private var tvClipboardPanel: View? = null
@@ -247,6 +250,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var sortMode = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME
     private var sortOrder = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.ASC
     private var filterType = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL
+    private var activeTagsFilter: Set<String> = emptySet()
     
     private lateinit var fileAdapter: NetworkFileAdapter
 
@@ -628,6 +632,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
+        fabProperties = findViewById(R.id.fabProperties)
         
         btnSearchToggle = findViewById(R.id.btnSearchToggle)
         btnSearchToggle.setImageResource(R.drawable.ic_search)
@@ -996,6 +1001,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
 
         fabPaste.setOnClickListener { showClipboardSheet() }
+
+        fabProperties.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                val sheet = FilePropertiesBottomSheet.newInstance(
+                    filePath = file.path,
+                    isDirectory = false,
+                    size = file.size,
+                    lastModified = file.lastModified,
+                    isNetwork = true
+                )
+                sheet.show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
+            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
+                val filePaths = selected.map { it.path }
+                FileTagsManager.showMultiFileTagDialog(this, filePaths) {
+                    fileAdapter.exitSelectionMode()
+                    loadDirectory()
+                }
+            }
+        }
 
         // Wire TV inline clipboard panel buttons
         if (isTv) {
@@ -1569,9 +1595,32 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             }
             btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
+            val selectedFiles = fileAdapter.getSelectedFiles()
+            val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
+            
+            val prefs = getSharedPreferences("ufm_prefs", MODE_PRIVATE)
+            val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
+            val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
+            
+            if (!DeviceUtils.isTvDevice(this) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
+                fabProperties.visibility = View.VISIBLE
+                fabPaste.visibility = View.GONE
+                if (selectedFiles.size > 1) {
+                    fabProperties.setText(R.string.action_tag)
+                    fabProperties.setIconResource(R.drawable.ic_edit)
+                } else {
+                    fabProperties.setText(R.string.action_properties)
+                    fabProperties.setIconResource(R.drawable.ic_about)
+                }
+            } else {
+                fabProperties.visibility = View.GONE
+                updatePasteFab()
+            }
         } else {
             layoutSelectionBar.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+            fabProperties.visibility = View.GONE
+            updatePasteFab()
         }
     }
 
@@ -1848,6 +1897,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
+        val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
+            filtered.filter { it.isDirectory || za.kilowatch.ultimatefilemanager.storage.FileTagsManager.getTags(this, it.path).any { t -> t in activeTagsFilter } }
+        } else {
+            filtered
+        }
+
         // Apply sort — folders first, then sort within groups
         val secondaryComparator: java.util.Comparator<NetworkFile> = when (sortMode) {
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
@@ -1863,7 +1918,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         // Always sort directories before files
         val finalSorter = compareByDescending<NetworkFile> { it.isDirectory }.then(orderedComparator)
-        val sortedFiles = filtered.sortedWith(finalSorter)
+        val sortedFiles = tagFiltered.sortedWith(finalSorter)
 
         // Append action items at TV root (mobile only)
         val displayFiles = if (share.type == ShareType.TV && currentPath.isEmpty() && !isTv) {
@@ -1955,10 +2010,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
         sheet.currentFilterType = filterType
         sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate ->
+        sheet.activeTags = activeTagsFilter
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags ->
             sortMode = mode
             sortOrder = order
             filterType = filter
+            activeTagsFilter = tags
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
             // Persist sort preferences
             getSharedPreferences("ufm_prefs", MODE_PRIVATE).edit()

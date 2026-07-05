@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Top row: Date/Time -->
+        <TextView
+            android:id="@+id/txtDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            tools:text="Saturday, 4 July 2026 • 12:34 pm" />
+
+        <!-- Filename -->
+        <TextView
+            android:id="@+id/txtFilename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            tools:text="Screenshot_20260704_123423_Ultimate File Manager Pro.jpg" />
+
+        <!-- Directory Path -->
+        <TextView
+            android:id="@+id/txtDirectory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:layout_marginBottom="20dp"
+            tools:text="/Internal storage/DCIM/Screenshots" />
+
+        <!-- Album/Folder title (Large) -->
+        <TextView
+            android:id="@+id/txtFolderTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"
+            tools:text="Screenshots" />
+
+        <!-- File details: Size | Resolution | Megapixels -->
+        <TextView
+            android:id="@+id/txtFileDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp"
+            tools:text="249 KB  |  1440x2992  |  4MP" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Tags Title + Edit Pen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/btnEditTags"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_edit"
+                android:contentDescription="Edit Tags"
+                app:tint="?android:attr/textColorPrimary"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Tag pills flow/container -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/cgTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:chipSpacingVertical="4dp" />
+
+        <!-- No tags placeholder -->
+        <TextView
+            android:id="@+id/txtNoTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No tags added yet"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:fontStyle="italic"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
