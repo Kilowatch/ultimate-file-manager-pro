@@ -837,6 +837,72 @@
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Tags Filter Section -->
+                <LinearLayout
+                    android:id="@+id/layoutTagsFilterSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_tags_label"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <!-- Include Tags Sub-section -->
+                    <LinearLayout
+                        android:id="@+id/layoutIncludeTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_include_tags_label"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupIncludeTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            app:chipSpacingHorizontal="8dp"
+                            app:chipSpacingVertical="4dp" />
+                    </LinearLayout>
+
+                    <!-- Exclude Tags Sub-section -->
+                    <LinearLayout
+                        android:id="@+id/layoutExcludeTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_exclude_tags_label"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupExcludeTags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            app:chipSpacingHorizontal="8dp"
+                            app:chipSpacingVertical="4dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <!-- Min file size with MB/GB toggle -->
                 <TextView
                     android:layout_width="wrap_content"

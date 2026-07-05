@@ -486,6 +486,7 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
 
         lifecycleScope.launch {
             val result = BatchRenameExecutor.execute(
+                context = context,
                 items = state.items,
                 resolvedNames = resolvedNames
             )

@@ -2245,6 +2245,15 @@ GB
     <string name="filter_exclude_hint">
 слова, розділені комами
 </string>
+    <string name="filter_tags_label">
+Теги
+</string>
+    <string name="filter_include_tags_label">
+Додайте теги
+</string>
+    <string name="filter_exclude_tags_label">
+Виключити теги
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

@@ -53,6 +53,8 @@ data class AdvancedSyncProfile(
     val extensionFilters: String = "",               // comma-separated extensions for "only" or "skip" mode
     val includePatterns: String = "",                // comma-separated name patterns to require (include filter)
     val excludePatterns: String = "",                // comma-separated name patterns to exclude
+    val includeTags: String = "",                    // comma-separated list of include tags
+    val excludeTags: String = "",                    // comma-separated list of exclude tags
     val minSizeBytes: Long = 0L,                     // minimum file size in bytes (0 = no limit)
     val maxSizeBytes: Long = 0L,                     // maximum file size in bytes (0 = no limit)
     val minSizeIsGB: Boolean = false,                // true = min size value is in GB, false = MB

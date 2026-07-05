@@ -1068,6 +1068,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                             }
                                             za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(actualItem.absolutePath)
                                         } catch (_: Exception) {} 
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, destBase.absolutePath)
+                                    } else if (!isCancelled && item !is AppItem) {
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, destBase.absolutePath)
                                     }
                                 } else {
                                     val hasConflict = destBase.exists()
@@ -1099,6 +1102,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 actualItem.delete()
                                             }
                                             za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(actualItem.absolutePath)
+                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, finalDest.absolutePath)
+                                        } else if (item !is AppItem) {
+                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, finalDest.absolutePath)
                                         }
                                         
                                         // Index immediately
@@ -1174,6 +1180,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 ShareType.NFS -> NfsShareClient.deleteFile(srcShare, actualItem.path)
                                                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                             }
+                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, finalDest.absolutePath)
+                                        } else {
+                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, finalDest.absolutePath)
                                         }
                                     } catch (e: Exception) {
                                         if (isCancelled) throw CancellationException()
@@ -1237,6 +1246,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 actualItem.delete()
                                             }
                                         } catch (_: Exception) {}
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, targetPath)
+                                    } else if (!isCancelled && item !is AppItem) {
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, targetPath)
                                     }
                                 } else {
                                     // Conflict check against currentFiles (memory-only where possible, but here we just re-list or use an empty list for simplicity in common cases)
@@ -1292,6 +1304,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                             } else {
                                                 actualItem.delete()
                                             }
+                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, finalPath)
+                                        } else if (item !is AppItem) {
+                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, finalPath)
                                         }
                                     } catch (e: Exception) {
                                         if (isCancelled) throw CancellationException()
@@ -1335,7 +1350,12 @@ class TwinWindowActivity : AppCompatActivity() {
                                         coroutineContext.ensureActive()
                                         processItemNet(child, targetPath) 
                                     }
-                                    if (isMove && !isCancelled) { try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {} }
+                                    if (isMove && !isCancelled) {
+                                        try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {}
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, targetPath)
+                                    } else if (!isCancelled) {
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, targetPath)
+                                    }
                                 } else {
                                     val conflictData = try {
                                         val list = when(dstShare.type) {
@@ -1434,6 +1454,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 ShareType.NFS -> NfsShareClient.deleteFile(srcShare, actualItem.path)
                                                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                             }
+                                            FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, finalPath)
+                                        } else {
+                                            FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, finalPath)
                                         }
                                     } catch (e: Exception) {
                                         if (isCancelled) throw CancellationException()

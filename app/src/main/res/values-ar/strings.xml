@@ -1195,6 +1195,15 @@ JPG، بابوا نيو غينيا، MP4
     <string name="filter_exclude_hint">
 كلمات مفصولة بفواصل
 </string>
+    <string name="filter_tags_label">
+العلامات
+</string>
+    <string name="filter_include_tags_label">
+تضمين العلامات
+</string>
+    <string name="filter_exclude_tags_label">
+استبعاد العلامات
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

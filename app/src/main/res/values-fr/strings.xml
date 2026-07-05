@@ -1195,6 +1195,15 @@ Ignorer les noms de fichiers contenant
     <string name="filter_exclude_hint">
 mots séparés par des virgules
 </string>
+    <string name="filter_tags_label">
+Balises
+</string>
+    <string name="filter_include_tags_label">
+Inclure des balises
+</string>
+    <string name="filter_exclude_tags_label">
+Exclure les balises
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

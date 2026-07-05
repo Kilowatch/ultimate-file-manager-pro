@@ -1195,6 +1195,15 @@ Nur Dateinamen, die diese Wörter enthalten, werden synchronisiert
     <string name="filter_exclude_hint">
 durch Kommas getrennte Wörter
 </string>
+    <string name="filter_tags_label">
+Schlagworte
+</string>
+    <string name="filter_include_tags_label">
+Fügen Sie Tags hinzu
+</string>
+    <string name="filter_exclude_tags_label">
+Tags ausschließen
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

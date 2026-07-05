@@ -1195,6 +1195,15 @@ GB
     <string name="filter_exclude_hint">
 쉼표로 구분된 단어
 </string>
+    <string name="filter_tags_label">
+태그
+</string>
+    <string name="filter_include_tags_label">
+태그 포함
+</string>
+    <string name="filter_exclude_tags_label">
+태그 제외
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

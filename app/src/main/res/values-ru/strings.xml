@@ -1195,6 +1195,15 @@ jpg, png, mp4
     <string name="filter_exclude_hint">
 слова, разделенные запятыми
 </string>
+    <string name="filter_tags_label">
+Теги
+</string>
+    <string name="filter_include_tags_label">
+Включить теги
+</string>
+    <string name="filter_exclude_tags_label">
+Исключить теги
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

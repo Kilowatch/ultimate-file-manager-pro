@@ -24,6 +24,10 @@ import za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
+import android.view.LayoutInflater
 
 class AdvancedSyncEditActivity : AppCompatActivity() {
 
@@ -90,6 +94,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     private lateinit var editMaxAge: TextInputEditText
     private lateinit var switchNotifications: MaterialSwitch
     private lateinit var btnDelete: MaterialButton
+    private var layoutTagsFilterSection: View? = null
+    private var layoutIncludeTags: View? = null
+    private var layoutExcludeTags: View? = null
+    private var chipGroupIncludeTags: ChipGroup? = null
+    private var chipGroupExcludeTags: ChipGroup? = null
 
     private lateinit var repo: AdvancedSyncProfileRepository
 
@@ -221,6 +230,11 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         editMaxAge = findViewById(R.id.editMaxAge)
         switchNotifications = findViewById(R.id.switchNotifications)
         btnDelete = findViewById(R.id.btnDelete)
+        layoutTagsFilterSection = findViewById(R.id.layoutTagsFilterSection)
+        layoutIncludeTags = findViewById(R.id.layoutIncludeTags)
+        layoutExcludeTags = findViewById(R.id.layoutExcludeTags)
+        chipGroupIncludeTags = findViewById(R.id.chipGroupIncludeTags)
+        chipGroupExcludeTags = findViewById(R.id.chipGroupExcludeTags)
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
@@ -296,6 +310,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             val visible = if (checkedId == R.id.chipFilterAll) View.GONE else View.VISIBLE
             txtFilterExtensionsLabel?.visibility = visible
             layoutFilterExtensions?.visibility = visible
+            updateTagsVisibility()
         }
 
         // Move files and Sync deletions are mutually exclusive
@@ -369,6 +384,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         profileId = intent.getStringExtra(EXTRA_PROFILE_ID)
         if (profileId != null) {
             loadProfile(profileId!!)
+        } else {
+            setupTagsFilterSection(null)
         }
     }
 
@@ -601,6 +618,7 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
         switchNotifications.isChecked = profile.notificationsEnabled
 
         btnDelete.visibility = View.VISIBLE
+        setupTagsFilterSection(profile)
     }
 
     private fun saveProfile() {
@@ -672,6 +690,30 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
     }
 
     private fun doSaveProfile(name: String, scheduleType: String) {
+        val incTagsList = mutableListOf<String>()
+        val cgInc = chipGroupIncludeTags
+        if (cgInc != null && layoutIncludeTags?.visibility == View.VISIBLE) {
+            for (i in 0 until cgInc.childCount) {
+                val chip = cgInc.getChildAt(i) as? Chip
+                if (chip != null && chip.isChecked) {
+                    incTagsList.add(chip.text.toString().removePrefix("#"))
+                }
+            }
+        }
+        val incTags = incTagsList.joinToString(",")
+
+        val excTagsList = mutableListOf<String>()
+        val cgExc = chipGroupExcludeTags
+        if (cgExc != null && layoutExcludeTags?.visibility == View.VISIBLE) {
+            for (i in 0 until cgExc.childCount) {
+                val chip = cgExc.getChildAt(i) as? Chip
+                if (chip != null && chip.isChecked) {
+                    excTagsList.add(chip.text.toString().removePrefix("#"))
+                }
+            }
+        }
+        val excTags = excTagsList.joinToString(",")
+
         val profile = AdvancedSyncProfile(
             id = profileId ?: java.util.UUID.randomUUID().toString(),
             name = name,
@@ -701,6 +743,8 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             extensionFilters = editFilterExtensions.text.toString().trim(),
             excludePatterns = editExcludePatterns.text.toString().trim(),
             includePatterns = editIncludePatterns.text.toString().trim(),
+            includeTags = incTags,
+            excludeTags = excTags,
             minSizeBytes = (editMinSize.text.toString().toDoubleOrNull() ?: 0.0).let {
                 (it * if (toggleMinSizeUnit.checkedButtonId == R.id.chipSizeMinGB) 1024*1024*1024 else 1024*1024).toLong()
             },
@@ -741,5 +785,76 @@ class AdvancedSyncEditActivity : AppCompatActivity() {
             InstantSyncWatcher.stopWatching(id)
         }
         finish()
+    }
+
+    private fun setupTagsFilterSection(profile: AdvancedSyncProfile?) {
+        val allTags = FileTagsManager.getAllCreatedTags(this).sorted()
+        val isMobile = !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val section = layoutTagsFilterSection ?: return
+
+        if (isMobile && allTags.isNotEmpty()) {
+            section.visibility = View.VISIBLE
+
+            val cgInc = chipGroupIncludeTags ?: return
+            val cgExc = chipGroupExcludeTags ?: return
+
+            cgInc.removeAllViews()
+            cgExc.removeAllViews()
+
+            val activeInc = profile?.includeTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet() ?: emptySet()
+            val activeExc = profile?.excludeTags?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() }?.toSet() ?: emptySet()
+
+            for (tag in allTags) {
+                // Include chip
+                val chipInc = LayoutInflater.from(this)
+                    .inflate(R.layout.item_tag_chip, cgInc, false) as Chip
+                chipInc.text = "#$tag"
+                chipInc.isChecked = activeInc.contains(tag)
+                chipInc.isCheckedIconVisible = true
+                cgInc.addView(chipInc)
+
+                // Exclude chip
+                val chipExc = LayoutInflater.from(this)
+                    .inflate(R.layout.item_tag_chip, cgExc, false) as Chip
+                chipExc.text = "#$tag"
+                chipExc.isChecked = activeExc.contains(tag)
+                chipExc.isCheckedIconVisible = true
+                cgExc.addView(chipExc)
+            }
+
+            updateTagsVisibility()
+        } else {
+            section.visibility = View.GONE
+        }
+    }
+
+    private fun updateTagsVisibility() {
+        val allTags = FileTagsManager.getAllCreatedTags(this).sorted()
+        val isMobile = !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val section = layoutTagsFilterSection ?: return
+
+        if (isMobile && allTags.isNotEmpty()) {
+            section.visibility = View.VISIBLE
+            val checkedId = toggleExtensionMode.checkedButtonId
+            val layInc = layoutIncludeTags
+            val layExc = layoutExcludeTags
+
+            when (checkedId) {
+                R.id.chipFilterOnly -> {
+                    layInc?.visibility = View.VISIBLE
+                    layExc?.visibility = View.GONE
+                }
+                R.id.chipFilterSkip -> {
+                    layInc?.visibility = View.GONE
+                    layExc?.visibility = View.VISIBLE
+                }
+                else -> { // R.id.chipFilterAll
+                    layInc?.visibility = View.VISIBLE
+                    layExc?.visibility = View.VISIBLE
+                }
+            }
+        } else {
+            section.visibility = View.GONE
+        }
     }
 }

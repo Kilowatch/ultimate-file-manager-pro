@@ -1195,6 +1195,15 @@ Aşağıdakileri içeren dosya adlarını atla:
     <string name="filter_exclude_hint">
 virgülle ayrılmış kelimeler
 </string>
+    <string name="filter_tags_label">
+Etiketler
+</string>
+    <string name="filter_include_tags_label">
+Etiketleri dahil et
+</string>
+    <string name="filter_exclude_tags_label">
+Etiketleri hariç tut
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added Tags filtering support to Advanced Sync profiles (Mobile only). Include tags and Exclude tags can be configured depending on the sync extension filter type: "All types" displays both Include and Exclude tags, "Only these" displays Include tags, and "Skip these" displays Exclude tags.
+- Integrated tag filtering checks into the sync worker execution engine for both local and remote files.
+- Created file tags properties dialog, checkable pills selection, custom tag editing, and multiple file tagging support for mobile devices.
+- Created tag management settings dashboard with cascade tag deletion and multi-file tagging configuration toggle.
+- Added tag-based file list sorting and filtering in the mobile Sort & Filter sheet.
+
 ### Changed
 - Changed default NFS protocol version from NFSv3 to auto-negotiate (0) for new network shares.
 
 ### Fixed
+- Fixed a bug where moving, copying, or renaming tagged files orphaned their tag mappings, causing globally deleted tags to reappear on moved local images. Implemented path migration hooks for single renames, batch renames, copy/move paste operations, and split-pane transfers.
+- Fixed a bug in `FileBrowserActivity` where picker mode FABs (such as "Use This Folder" for sync and advanced sync pickers) would temporarily render and then disappear due to `updatePasteFab()` overriding visibility when the directory list finished loading.
 - Enabled SMB server-mode (isServer) shares for Smart Sort by implementing dynamic share prefix stripping during list, mkdir, rename, write, delete, exists, and download operations.
 - Fixed NFS connection and mount failures on servers with NFSv4.0 disabled (e.g., `-4.0 +4.1 +4.2`) by implementing an NFSv4 minor version cascade fallback mechanism (NFSv4.2 → NFSv4.1 → NFSv4.0 → NFSv3).
 - Fixed NFS direct export discovery to support minor version negotiation on servers that disable NFSv4.0.

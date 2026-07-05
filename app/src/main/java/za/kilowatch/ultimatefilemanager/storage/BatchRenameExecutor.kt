@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
@@ -41,6 +42,7 @@ object BatchRenameExecutor {
      * @return [RenameResult] with per-item outcome counts
      */
     suspend fun execute(
+        context: Context,
         items: List<BatchRenameItem>,
         resolvedNames: List<String>,
         connectivityChecker: () -> Boolean = { true }
@@ -74,6 +76,7 @@ object BatchRenameExecutor {
                 val ok = localFile.renameTo(newFile)
                 if (ok) {
                     successCount++
+                    FileTagsManager.onPathMoved(context, localFile.absolutePath, newFile.absolutePath)
                 } else {
                     failures.add(item to "renameTo returned false")
                 }
@@ -132,11 +135,11 @@ object BatchRenameExecutor {
                         ShareType.DROPBOX -> DropboxShareClient.rename(share, nf.path, targetPath)
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, nf.path, targetPath)
                         ShareType.WEBDAV -> WebDavShareClient.rename(share, nf.path, targetPath)
-                        ShareType.WEBDAV -> WebDavShareClient.rename(share, nf.path, targetPath)
                         ShareType.NFS -> NfsShareClient.rename(share, nf.path, targetPath)
                         ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                     }
                     successCount++
+                    FileTagsManager.onPathMoved(context, nf.path, targetPath)
                 } catch (e: Exception) {
                     failures.add(item to (e.message ?: "Unknown error"))
                 }

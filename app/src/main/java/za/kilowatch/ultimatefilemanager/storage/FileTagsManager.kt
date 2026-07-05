@@ -154,6 +154,62 @@ object FileTagsManager {
     }
 
     /**
+     * Handles updating tag paths when a file or directory is moved or renamed.
+     */
+    fun onPathMoved(context: Context, oldPath: String, newPath: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val allEntries = prefs.all
+        val editor = prefs.edit()
+        var changed = false
+
+        for ((key, value) in allEntries) {
+            if (value is String) {
+                if (key == oldPath) {
+                    editor.remove(oldPath)
+                    editor.putString(newPath, value)
+                    changed = true
+                } else if (key.startsWith("$oldPath/")) {
+                    val subPath = key.substring(oldPath.length)
+                    val newKey = newPath + subPath
+                    editor.remove(key)
+                    editor.putString(newKey, value)
+                    changed = true
+                }
+            }
+        }
+        if (changed) {
+            editor.apply()
+        }
+    }
+
+    /**
+     * Handles duplicating tag paths when a file or directory is copied.
+     */
+    fun onPathCopied(context: Context, oldPath: String, newPath: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val allEntries = prefs.all
+        val editor = prefs.edit()
+        var changed = false
+
+        for ((key, value) in allEntries) {
+            if (value is String) {
+                if (key == oldPath) {
+                    editor.putString(newPath, value)
+                    changed = true
+                } else if (key.startsWith("$oldPath/")) {
+                    val subPath = key.substring(oldPath.length)
+                    val newKey = newPath + subPath
+                    editor.putString(newKey, value)
+                    changed = true
+                }
+            }
+        }
+        if (changed) {
+            editor.apply()
+        }
+    }
+
+    /**
      * Show a dialog to edit tags for multiple files.
      */
     fun showMultiFileTagDialog(

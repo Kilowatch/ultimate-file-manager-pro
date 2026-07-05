@@ -373,102 +373,8 @@ class FileBrowserActivity : AppCompatActivity() {
         if (::currentDir.isInitialized) {
             loadDirectory(currentDir)
         }
-        // Show/hide paste FAB based on clipboard state
-        // Skip in sync/compress folder picker mode — the FAB is "Use This Folder"
-        when {
-            isExtractDestPickerMode -> {
-                fabPaste.setText(R.string.extract_here_1)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmExtractLocalFolderDialog() }
-            }
-            isCompressDestPickerMode -> {
-                fabPaste.setText(R.string.use_this_folder)
-                fabPaste.setIconResource(R.drawable.ic_compress)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmCompressLocalFolderDialog() }
-            }
-            isImageCompressDestPickerMode -> {
-                fabPaste.setText(R.string.use_this_folder_image)
-                fabPaste.setIconResource(R.drawable.ic_compress_image)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmImageCompressLocalFolderDialog() }
-            }
-            isSyncFolderPickerMode -> {
-                // Re-apply sync FAB in case it was reset after orientation change
-                fabPaste.setOnClickListener { showConfirmSyncLocalFolderDialog() }
-            }
-            isAdvancedSyncFolderPickerMode -> {
-                // Re-apply advanced sync FAB in case it was reset after orientation change
-                fabPaste.setOnClickListener { showConfirmAdvancedSyncLocalFolderDialog() }
-            }
-            isAdvancedSyncDestPickerMode -> {
-                // Re-apply advanced sync dest FAB
-                fabPaste.setOnClickListener { showConfirmAdvancedSyncDestFolderDialog() }
-            }
-            isLocationPickerMode -> {
-                fabPaste.setText(R.string.use_this_folder)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmLocationPickerLocalFolderDialog() }
-            }
-            isNetworkCachePickerMode -> {
-                fabPaste.setText(R.string.nt_use_this_folder_for_caching)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmNetworkCacheFolderDialog() }
-            }
-            isQuickTransferPickerMode -> {
-                val isMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP) == "MOVE"
-                fabPaste.setText(if (isMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here)
-                fabPaste.setIconResource(if (isMove) R.drawable.ic_move else R.drawable.ic_copy)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmQuickTransferDialog(isMove) }
-            }
-            isShareDestPickerMode -> {
-                fabPaste.setText(R.string.use_this_folder)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmShareDestDialog() }
-            }
-            isNotepadFolderPicker -> {
-                fabPaste.setText(R.string.use_this_folder)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmNotepadFolderDialog() }
-            }
-            isScannerFolderPicker -> {
-                fabPaste.setText(R.string.scanner_use_this_folder)
-                fabPaste.setIconResource(R.drawable.ic_scanner)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmScannerFolderDialog() }
-            }
-            isAutoBackupFolderPicker -> {
-                fabPaste.setText(R.string.auto_backup_select_folder)
-                fabPaste.setIconResource(R.drawable.ic_cloud)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { showConfirmAutoBackupFolderDialog() }
-            }
-            isKeyfilePickerMode -> {
-                fabPaste.setText(R.string.use_this_key_file)
-                fabPaste.setIconResource(R.drawable.ic_folder)
-                fabPaste.visibility = if (selectedKeyFilePath != null) View.VISIBLE else View.GONE
-                fabPaste.setOnClickListener { showConfirmKeyfilePickedDialog() }
-            }
-            isCertPickerMode -> {
-                fabPaste.setText(R.string.remote_use_ca)
-                fabPaste.setIconResource(R.drawable.ic_lock)
-                fabPaste.visibility = if (selectedKeyFilePath != null) View.VISIBLE else View.GONE
-                fabPaste.setOnClickListener { showConfirmCertPickedDialog() }
-            }
-            isSmartSortPickerMode -> {
-                fabPaste.setText(R.string.smart_sort_here)
-                fabPaste.setIconResource(R.drawable.ic_sort)
-                fabPaste.visibility = View.VISIBLE
-                fabPaste.setOnClickListener { confirmSmartSortFolder() }
-            }
-            else -> updatePasteFab()
-        }
+        // Show/hide paste FAB based on clipboard state or picker modes
+        updatePasteFab()
     }
 
     private fun applyToolbarIconVisibility() {
@@ -1789,6 +1695,7 @@ class FileBrowserActivity : AppCompatActivity() {
                     val newFile = File(file.parent, newName)
                     lifecycleScope.launch(Dispatchers.IO) {
                         if (file.renameTo(newFile)) {
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, file.absolutePath, newFile.absolutePath)
                             // Sync the database index immediately after rename
                             syncFolderWithIndex(currentDir)
                             
@@ -2432,6 +2339,16 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun updatePasteFab() {
+        if (isExtractDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode ||
+            isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode ||
+            isLocationPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode ||
+            isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker ||
+            isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode ||
+            isSmartSortPickerMode) {
+            applyPickerFabState()
+            return
+        }
+
         val hasLocal = FileClipboard.hasItems()
         val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
         val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
@@ -2442,6 +2359,108 @@ class FileBrowserActivity : AppCompatActivity() {
             fabPaste.visibility = View.VISIBLE
         } else {
             fabPaste.visibility = View.GONE
+        }
+    }
+
+    private fun applyPickerFabState() {
+        when {
+            isExtractDestPickerMode -> {
+                fabPaste.setText(R.string.extract_here_1)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmExtractLocalFolderDialog() }
+            }
+            isCompressDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_compress)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmCompressLocalFolderDialog() }
+            }
+            isImageCompressDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder_image)
+                fabPaste.setIconResource(R.drawable.ic_compress_image)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmImageCompressLocalFolderDialog() }
+            }
+            isSyncFolderPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_sync)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmSyncLocalFolderDialog() }
+            }
+            isAdvancedSyncFolderPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_sync_advanced)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmAdvancedSyncLocalFolderDialog() }
+            }
+            isAdvancedSyncDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_sync_advanced)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmAdvancedSyncDestFolderDialog() }
+            }
+            isLocationPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmLocationPickerLocalFolderDialog() }
+            }
+            isNetworkCachePickerMode -> {
+                fabPaste.setText(R.string.nt_use_this_folder_for_caching)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmNetworkCacheFolderDialog() }
+            }
+            isQuickTransferPickerMode -> {
+                val isMove = intent.getStringExtra(EXTRA_QUICK_TRANSFER_OP) == "MOVE"
+                fabPaste.setText(if (isMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here)
+                fabPaste.setIconResource(if (isMove) R.drawable.ic_move else R.drawable.ic_copy)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmQuickTransferDialog(isMove) }
+            }
+            isShareDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmShareDestDialog() }
+            }
+            isNotepadFolderPicker -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmNotepadFolderDialog() }
+            }
+            isScannerFolderPicker -> {
+                fabPaste.setText(R.string.scanner_use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_scanner)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmScannerFolderDialog() }
+            }
+            isAutoBackupFolderPicker -> {
+                fabPaste.setText(R.string.auto_backup_select_folder)
+                fabPaste.setIconResource(R.drawable.ic_cloud)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmAutoBackupFolderDialog() }
+            }
+            isKeyfilePickerMode -> {
+                fabPaste.setText(R.string.use_this_key_file)
+                fabPaste.setIconResource(R.drawable.ic_folder)
+                fabPaste.visibility = if (selectedKeyFilePath != null) View.VISIBLE else View.GONE
+                fabPaste.setOnClickListener { showConfirmKeyfilePickedDialog() }
+            }
+            isCertPickerMode -> {
+                fabPaste.setText(R.string.remote_use_ca)
+                fabPaste.setIconResource(R.drawable.ic_lock)
+                fabPaste.visibility = if (selectedKeyFilePath != null) View.VISIBLE else View.GONE
+                fabPaste.setOnClickListener { showConfirmCertPickedDialog() }
+            }
+            isSmartSortPickerMode -> {
+                fabPaste.setText(R.string.smart_sort_here)
+                fabPaste.setIconResource(R.drawable.ic_sort)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { confirmSmartSortFolder() }
+            }
         }
     }
 
@@ -2772,6 +2791,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                 }
                                 UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
                             } catch (_: Exception) {}
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, destBase.absolutePath)
+                        } else {
+                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, destBase.absolutePath)
                         }
                     } else {
                         fileIndex++
@@ -2815,6 +2837,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                 }
                                 UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
                             }
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, writtenDest.absolutePath)
+                        } else {
+                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, writtenDest.absolutePath)
                         }
                         successCount++
                     }
@@ -2950,6 +2975,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                         za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                     }
                                 } catch (_: Exception) {}
+                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, destBase.absolutePath)
+                            } else {
+                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, destBase.absolutePath)
                             }
                         } else {
                             fileIndex++
@@ -3000,6 +3028,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                         za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                     }
                                 }
+                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
+                            } else {
+                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
                             }
                             successCount++
 

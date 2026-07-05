@@ -3036,6 +3036,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 ShareType.NFS                         -> NfsShareClient.rename(share, source.path, targetPath)
                                 ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                             }
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, targetPath)
                             return // Move is complete
                         }
 
@@ -3098,6 +3099,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         
                         if (op == NetworkClipboard.Operation.MOVE && !isCancelledByUser) {
                             try { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.deleteNetworkDirRecursively(srcShare, source.path) } catch(_: Exception) {}
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, targetPath)
+                        } else if (!isCancelledByUser) {
+                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.path, targetPath)
                         }
                     } else {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)
@@ -3138,6 +3142,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                     ShareType.NFS                         -> NfsShareClient.rename(share, source.path, finalPath)
                                     ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                                 }
+                                FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, finalPath)
                             } else {
                                 val useTmp = share.type != ShareType.AWS_S3 && share.type != ShareType.IDRIVE_E2 && share.type != ShareType.WEBDAV && share.type != ShareType.NFS
                                 val tmpPath = if (useTmp) "$finalPath.ufm_tmp" else finalPath
@@ -3204,6 +3209,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                             ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                                         }
                                     }
+                                    FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, finalPath)
+                                } else {
+                                    FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.path, finalPath)
                                 }
                             }
                             successCount++
@@ -3299,6 +3307,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
                         if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE && !isCancelledByUser) {
                             try { source.deleteRecursively() } catch(_: Exception) {}
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, targetPath)
+                        } else if (!isCancelledByUser) {
+                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.absolutePath, targetPath)
                         }
                     } else {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)
@@ -3336,6 +3347,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                         remoteSize, source.length(), source.name)) {
                                     try { source.delete() } catch(_: Exception) {}
                                 }
+                                FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, finalPath)
+                            } else {
+                                FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.absolutePath, finalPath)
                             }
                             successCount++
                         } catch (e: Exception) {

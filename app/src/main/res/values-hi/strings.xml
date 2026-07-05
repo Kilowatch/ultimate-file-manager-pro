@@ -1195,6 +1195,15 @@ PKCS12 पासवर्ड
     <string name="filter_exclude_hint">
 अल्पविराम से अलग किए गए शब्द
 </string>
+    <string name="filter_tags_label">
+टैग
+</string>
+    <string name="filter_include_tags_label">
+टैग शामिल करें
+</string>
+    <string name="filter_exclude_tags_label">
+टैग हटाएं
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

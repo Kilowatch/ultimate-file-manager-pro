@@ -25,6 +25,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
 import za.kilowatch.ultimatefilemanager.util.CopyHelper
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -243,7 +244,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val remoteTimestamps = remoteFiles.associate { it.name to it.lastModified }
 
         val localFiles = (localDir.list()?.map { File(localDir, it) } ?: emptyList())
-            .filter { passesFilters(it.name, profile) }
+            .filter { passesFilters(it.name, profile, it.absolutePath) }
             .filter { passesSizeAgeFilters(it, profile) }
         Log.d(TAG, "doUpload: ${localFiles.size} files after filter in '${localDir.path}'")
         val filesToUpload = mutableListOf<File>()
@@ -324,7 +325,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         } else {
             listRemoteFiles(share, profile.remotePath)
         }
-        val remoteFiles = allRemoteFiles.filter { passesFilters(it.name, profile) }
+        val remoteFiles = allRemoteFiles.filter { passesFilters(it.name, profile, it.path) }
             .filter { passesSizeAgeFilters(it, profile) }
         val localFileNames = localDir.list()?.toSet() ?: emptySet()
 
@@ -395,7 +396,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val remoteTimestamps = remoteFiles.associate { it.name to it.lastModified }
 
         val localFiles = (localDir.list()?.map { File(localDir, it) } ?: emptyList())
-            .filter { passesFilters(it.name, profile) }
+            .filter { passesFilters(it.name, profile, it.absolutePath) }
             .filter { passesSizeAgeFilters(it, profile) }
         val localMap = localFiles.associateBy { it.name }
 
@@ -475,7 +476,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val destTimestamps = destFiles.mapValues { it.value.lastModified() }
 
         val srcFiles = (srcDir.list()?.map { File(srcDir, it) } ?: emptyList())
-            .filter { passesFilters(it.name, profile) }
+            .filter { passesFilters(it.name, profile, it.absolutePath) }
             .filter { passesSizeAgeFilters(it, profile) }
         Log.d(TAG, "doLocalUpload: ${srcFiles.size} files after filter in '${srcDir.path}'")
 
@@ -580,7 +581,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val destTimestamps = destFiles.mapValues { it.value.lastModified() }
 
         val srcFiles = (srcDir.list()?.map { File(srcDir, it) } ?: emptyList())
-            .filter { passesFilters(it.name, profile) }
+            .filter { passesFilters(it.name, profile, it.absolutePath) }
             .filter { passesSizeAgeFilters(it, profile) }
         val srcMap = srcFiles.associateBy { it.name }
 
@@ -1155,7 +1156,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     /** Check if a file passes the extension and name filters for the given profile. */
-    private fun passesFilters(fileName: String, profile: AdvancedSyncProfile): Boolean {
+    private fun passesFilters(fileName: String, profile: AdvancedSyncProfile, filePath: String? = null): Boolean {
         val lower = fileName.lowercase()
         // Extension filter
         if (profile.extensionMode != "all" && profile.extensionFilters.isNotBlank()) {
@@ -1174,6 +1175,29 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         if (profile.excludePatterns.isNotBlank()) {
             val patterns = profile.excludePatterns.split(",").map { it.trim().lowercase() }.filter { it.isNotEmpty() }
             if (patterns.any { lower.contains(it) }) return false
+        }
+        // Tag filtering logic
+        val hasTagsAvailable = FileTagsManager.getAllCreatedTags(applicationContext).isNotEmpty()
+        if (hasTagsAvailable && filePath != null) {
+            val fileTags = FileTagsManager.getTags(applicationContext, filePath)
+
+            // Check include tags
+            val showInclude = profile.extensionMode == "all" || profile.extensionMode == "only"
+            if (showInclude && profile.includeTags.isNotBlank()) {
+                val incTags = profile.includeTags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                if (incTags.isNotEmpty() && !fileTags.any { it in incTags }) {
+                    return false
+                }
+            }
+
+            // Check exclude tags
+            val showExclude = profile.extensionMode == "all" || profile.extensionMode == "skip"
+            if (showExclude && profile.excludeTags.isNotBlank()) {
+                val excTags = profile.excludeTags.split(",").map { it.trim() }.filter { it.isNotEmpty() }
+                if (excTags.isNotEmpty() && fileTags.any { it in excTags }) {
+                    return false
+                }
+            }
         }
         return true
     }

@@ -811,6 +811,9 @@
     <string name="filter_include_summary">Only file names containing these words are synced</string>
     <string name="filter_exclude_label">Skip file names containing</string>
     <string name="filter_exclude_hint">comma separated words</string>
+    <string name="filter_tags_label">Tags</string>
+    <string name="filter_include_tags_label">Include tags</string>
+    <string name="filter_exclude_tags_label">Exclude tags</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">Local folder</string>

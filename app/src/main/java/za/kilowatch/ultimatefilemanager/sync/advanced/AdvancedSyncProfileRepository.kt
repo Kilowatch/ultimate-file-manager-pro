@@ -76,6 +76,8 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                         extensionFilters = o.optString("extensionFilters", ""),
                         excludePatterns = o.optString("excludePatterns", ""),
                         includePatterns = o.optString("includePatterns", ""),
+                        includeTags = o.optString("includeTags", ""),
+                        excludeTags = o.optString("excludeTags", ""),
                         minSizeBytes = o.optLong("minSizeBytes", 0L),
                         maxSizeBytes = o.optLong("maxSizeBytes", 0L),
                         minSizeIsGB = o.optBoolean("minSizeIsGB", false),
@@ -124,6 +126,8 @@ class AdvancedSyncProfileRepository private constructor(private val context: Con
                 put("extensionFilters", p.extensionFilters)
                 put("excludePatterns", p.excludePatterns)
                 put("includePatterns", p.includePatterns)
+                put("includeTags", p.includeTags)
+                put("excludeTags", p.excludeTags)
                 put("minSizeBytes", p.minSizeBytes)
                 put("maxSizeBytes", p.maxSizeBytes)
                 put("minSizeIsGB", p.minSizeIsGB)

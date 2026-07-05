@@ -1195,6 +1195,15 @@ Skip file names containing
     <string name="filter_exclude_hint">
 comma separated words
 </string>
+    <string name="filter_tags_label">
+Tags
+</string>
+    <string name="filter_include_tags_label">
+Include tags
+</string>
+    <string name="filter_exclude_tags_label">
+Exclude tags
+</string>
 
     <!-- Advanced Sync Destination -->
     <string name="advanced_sync_local_folder">

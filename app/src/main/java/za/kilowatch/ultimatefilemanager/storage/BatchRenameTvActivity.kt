@@ -393,6 +393,7 @@ class BatchRenameTvActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val result = BatchRenameExecutor.execute(
+                context = this@BatchRenameTvActivity,
                 items = state.items,
                 resolvedNames = resolvedNames
             )
