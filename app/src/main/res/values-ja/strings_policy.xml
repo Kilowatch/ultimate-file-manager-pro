@@ -4,682 +4,1526 @@
     <!-- ═══════════════════════════════════════════════════════════
          SHARED
     ═══════════════════════════════════════════════════════════ -->
-    <string name="policy_app_name">究極のファイルマネージャープロ</string>
-    <string name="policy_company">キロウォッチ</string>
-    <string name="policy_last_updated">最終更新日: 2026 年 4 月</string>
-    <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
-    <string name="policy_contact_email">support@kilowatch.co.za</string>
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+KiloWatch
+</string>
+    <string name="policy_last_updated">
+最終更新日: 2026年7月
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+support@kilowatch.co.za
+</string>
 
     <!-- ═══════════════════════════════════════════════════════════
          TERMS AND CONDITIONS
     ═══════════════════════════════════════════════════════════ -->
-    <string name="tc_screen_title">利用規約</string>
-    <string name="tc_summary">Ultimate File Manager Pro をダウンロードまたは使用すると、これらの規約に同意したことになります。できるだけ明確に、専門用語を使わないように書きました。</string>
+    <string name="tc_screen_title">
+利用規約
+</string>
+    <string name="tc_summary">
+Ultimate File Manager Proをダウンロードまたは使用することにより、本規約に同意したものとみなされます。本規約は、できるだけ明確で専門用語を使わないように作成されています。
+</string>
 
     <!-- Section titles -->
-    <string name="tc_s1_title">1. 同意する内容</string>
-    <string name="tc_s2_title">2. アプリの機能</string>
-    <string name="tc_s3_title">3. リスクと責任 — 正直な真実</string>
-    <string name="tc_s3a_title">3a.アプリ内購入と請求</string>
-    <string name="tc_s3b_title">
-3b. RClone クラウド統合
+    <string name="tc_s1_title">
+1. 同意すること
 </string>
-    <string name="tc_s4_title">4. あなたの責任</string>
-    <string name="tc_s5_title">5. 必要な権限とその理由</string>
-    <string name="tc_s6_title">6. 誰が何を所有するか</string>
-    <string name="tc_s7_title">7. 当社が使用するオープンソース コンポーネント</string>
-    <string name="tc_s8_title">8. 本規約の変更</string>
-    <string name="tc_s9_title">9. うまくいかない場合</string>
-    <string name="tc_s10_title">10. 準拠法</string>
-    <string name="tc_s11_title">11. 質問がありますか?連絡する</string>
+    <string name="tc_s2_title">
+2. アプリの機能
+</string>
+    <string name="tc_s3_title">
+3. リスクと責任 — 正直なところ
+</string>
+    <string name="tc_s3a_title">
+3a. アプリ内購入と請求
+</string>
+    <string name="tc_s3b_title">
+3b. RCloneクラウド連携
+</string>
+    <string name="tc_s4_title">
+4. ユーザーの責任
+</string>
+    <string name="tc_s5_title">
+5. 必要な権限とその理由
+</string>
+    <string name="tc_s6_title">
+6. 所有権について
+</string>
+    <string name="tc_s7_title">
+7. 使用しているオープンソースコンポーネント
+</string>
+    <string name="tc_s8_title">
+8. 本規約の変更
+</string>
+    <string name="tc_s9_title">
+9. 問題が発生した場合
+</string>
+    <string name="tc_s10_title">
+10. 準拠法
+</string>
+    <string name="tc_s11_title">
+11. お問い合わせ
+</string>
 
     <!-- Section body text -->
-    <string name="tc_s1_body">Google Play ストアから Ultimate File Manager Pro をダウンロードするか開くと、これらの規約に同意したことになります。それらを受け入れたくない場合は、アプリをインストールまたは使用しないでください。</string>
+    <string name="tc_s1_body">
+Google PlayストアからUltimate File Manager Proをダウンロードまたは開封することにより、本規約に同意したものとみなされます。同意しない場合は、アプリをインストールまたは使用しないでください。
+</string>
 
-    <string name="tc_s2_body">Ultimate File Manager Pro は、携帯電話と Android TV の両方で利用できる無料の Android アプリで、ファイルを整理して安全に保つためのツールが満載です。</string>
+    <string name="tc_s2_body">
+Ultimate File Manager Proは無料のAndroidアプリで、スマートフォンとAndroid TVの両方で利用可能です。ファイルを整理し安全に保つためのツールが満載です。
+</string>
 
-    <string name="tc_s3_body">このアプリは細心の注意を払って作成されていますが、使用する前に知っておくべき重要な点がいくつかあります。</string>
+    <string name="tc_s3_body">
+このアプリは注意深く構築されていますが、使用前に知っておくべき重要な現実があります。
+</string>
 
-    <string name="tc_s3a_body">このアプリでは、オプションの「Fuel the Developer」ヒント ジャー (開発をサポートする 3 つの 1 回限りの自主購入) が提供されています。ヒントには追加の機能はありません。アプリはいつでも完全に無料です。</string>
-    <string name="tc_s3a_payment">すべての取引は Google Play 請求を通じて行われます。私たちがあなたのカードや銀行口座の詳細を見ることは決してありません。</string>
-    <string name="tc_s3a_refunds">チップの購入は任意であり、Google Play によって処理されます。払い戻しリクエストは、Google Play の払い戻しポリシーおよび適用法 (南アフリカ消費者保護法など) に従って Google Play によって直接処理されます。 KiloWatch は独自に返金を処理しません。</string>
-    <string name="tc_s3a_recurring">購読はありません。すべてのチップは 1 回限りの消耗品です。自動的に請求されることはありません。</string>
-    <string name="tc_s3a_no_obligation">チップは完全に任意です。すべての機能は無料で永久に利用できます。</string>
+    <string name="tc_s3a_body">
+アプリでは、開発者を支援するための任意の「Fuel the Developer」チップJarを提供しています。これは1回限りの自発的な購入で、開発を支援します。チップは追加機能を提供するものではなく、アプリは常に完全無料です。
+</string>
+    <string name="tc_s3a_payment">
+すべての取引はGoogle Playの請求を通じて行われます。お客様のカードや銀行の詳細は一切確認しません。
+</string>
+    <string name="tc_s3a_refunds">
+チップの購入は任意であり、Google Playによって処理されます。返金リクエストは、Google Playの返金ポリシーおよび南アフリカ消費者保護法を含む適用法に従って、Google Playが直接処理します。KiloWatchは独自に返金を処理しません。
+</string>
+    <string name="tc_s3a_recurring">
+サブスクリプションはありません。すべてのチップは1回限りの消費型購入です。自動的に請求されることはありません。
+</string>
+    <string name="tc_s3a_no_obligation">
+チップは完全に任意です。すべての機能は永久に無料で利用可能です。
+</string>
 
     <string name="tc_s3b_body">
-このアプリは、統合された RClone バックエンドを使用して、幅広いサードパーティのクラウド ストレージ プロバイダーへの接続をサポートします。この機能を使用する場合、次の条件が適用されます。
+このアプリは、統合されたRCloneバックエンドを使用して、さまざまなサードパーティのクラウドストレージプロバイダーへの接続をサポートしています。この機能を使用する場合、以下の条件が適用されます。
 </string>
     <string-array name="tc_rclone_labels">
         <item>
 直接API通信
 </item>
         <item>
-資格情報のセキュリティ
+認証情報のセキュリティ
 </item>
         <item>
-サードパーティ規約
+サードパーティの利用規約
 </item>
         <item>
-接続保証なし
+接続の保証なし
 </item>
     </string-array>
     <string-array name="tc_rclone_details">
         <item>
-RClone ストレージ プロバイダー (Filen、Mega など) へのすべてのネットワーク リクエストは、デバイスから各プロバイダーのエンドポイントに対して直接実行されます。 KiloWatch サーバーを通過するデータはありません。
+RCloneストレージプロバイダー（Filen、Megaなど）へのすべてのネットワークリクエストは、デバイスから各プロバイダーのエンドポイントに直接行われます。データがKiloWatchサーバーを経由することはありません。
 </item>
         <item>
-RClone 構成プロファイルとパスワードは、RClone RC バックエンドを介してデバイス上で暗号化され、アプリのプライベート ストレージに rclone_encrypted.json としてローカルに保存されます。このファイルを保護するためにデバイスをセキュリティで保護するのは、お客様自身の責任です。
+RCloneの構成プロファイルとパスワードは、RClone RCバックエンドを介してデバイス上で暗号化され、アプリのプライベートストレージにrclone_encrypted.jsonとしてローカルに保存されます。このファイルを保護するためのデバイスのセキュリティは、お客様ご自身の責任です。
 </item>
         <item>
-RClone に統合されたクラウド ストレージの使用には、それぞれのクラウド プロバイダーのサービス利用規約とプライバシー ポリシーが適用されます。このアプリを通じてファイルにアクセスする場合は、その規約に従う必要があります。
+RCloneと統合されたクラウドストレージの使用は、各クラウドプロバイダーの利用規約とプライバシーポリシーに準拠します。このアプリを介してファイルにアクセスする際は、それらの規約に従う必要があります。
 </item>
         <item>
-クラウド プロバイダーの API とエンドポイントは予告なく変更される可能性があるため、特定の RClone プロバイダーが引き続きアクセス可能であること、または中断されずに機能することを保証することはできません。
+クラウドプロバイダーのAPIやエンドポイントは予告なく変更される可能性があるため、特定のRCloneプロバイダーが引き続きアクセス可能であることや、中断なく機能することを保証できません。
 </item>
     </string-array>
     <string name="tc_s3b_summary">
-RClone を介したクラウド ドライブへの接続は、携帯電話またはテレビから直接行われます。私たちがあなたのクラウド ファイルやパスワードを見ることはありません。パスワードは携帯電話上で暗号化されており、設定したクラウド プロバイダーの規約に従うことになります。
+RCloneを介したクラウドドライブへの接続は、お客様の電話またはテレビから直接行われます。当社はお客様のクラウドファイルやパスワードを一切確認しません。パスワードはお客様の電話で暗号化され、設定したクラウドプロバイダーの利用規約に従うものとします。
 </string>
 
-    <string name="tc_s4_body">このアプリを使用するには、ユーザー側にいくつかの簡単な責任が伴います。</string>
+    <string name="tc_s4_body">
+このアプリを使用するには、いくつかの簡単な責任が伴います。
+</string>
 
-    <string name="tc_s5_body">アプリは適切に動作するために特定の Android 権限を要求します。それぞれの目的は次のとおりです。</string>
+    <string name="tc_s5_body">
+アプリは正常に動作するために特定のAndroid権限を要求します。各権限の目的は以下の通りです。
+</string>
 
-    <string name="tc_s6_body">アプリは自由にご利用いただけます。コピー、再配布、販売することは許可されていません。</string>
+    <string name="tc_s6_body">
+アプリは自由に使用していただいて構いませんが、コピー、再配布、販売は許可されていません。
+</string>
 
-    <string name="tc_s7_body">私たちはいくつかの優れたオープンソース プロジェクトを基盤として構築しました。それぞれは独自のライセンスによって管理されます。アプリ内の各ライブラリの完全なライセンス テキストは、[設定] → [法的] → [オープンソース ライセンス] で確認できます。</string>
+    <string name="tc_s7_body">
+当社は優れたオープンソースプロジェクトの上に構築されています。各プロジェクトはそれぞれのライセンスに基づいており、各ライブラリの完全なライセンス文は、アプリ内の設定 → 法的情報 → オープンソースライセンスでご覧いただけます。
+</string>
 
-    <string name="tc_s8_body">当社は本規約を随時更新することがあります。その際には、このドキュメントの先頭にある日付を更新します。変更後もアプリを使用し続けることは、更新された規約に同意したことを意味します。</string>
+    <string name="tc_s8_body">
+本規約は随時更新される場合があります。更新時には、本ドキュメント上部の日付を更新します。変更後にアプリの使用を継続することは、更新された規約に同意したものとみなされます。
+</string>
 
-    <string name="tc_s9_body">これらの規約に違反した場合、たとえばアプリが違法行為に使用された場合、または同意なしに他人のデバイスにアクセスした場合など、当社はアプリへのアクセスを一時停止または終了する権利を留保します。</string>
+    <string name="tc_s9_body">
+本規約に違反した場合（例：違法行為への使用、同意なく他人のデバイスにアクセスする行為など）、アプリへのアクセスを停止または終了する権利を留保します。
+</string>
 
-    <string name="tc_s10_body">これらの規約は南アフリカの法律に準拠します。いかなる紛争も、抵触法の規定に関係なく、南アフリカの管轄権の下で解決されます。</string>
+    <string name="tc_s10_body">
+本規約は南アフリカ共和国の法律に準拠します。紛争は、法律の抵触に関する規定を考慮せず、南アフリカの管轄下で解決されます。
+</string>
 
-    <string name="tc_s11_body">ここで不明な点がある場合、またはお客様の権利についてご質問がある場合は、当社までご連絡ください。</string>
+    <string name="tc_s11_body">
+本規約で不明な点や権利についてご質問がある場合は、お問い合わせください。
+</string>
 
-    <string name="tc_footer">Ultimate File Manager Pro を使用すると、これらの利用規約を読んで理解したものとみなされます。</string>
+    <string name="tc_footer">
+Ultimate File Manager Proを使用することにより、本利用規約を読み、理解したことを確認したものとみなされます。
+</string>
 
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
-        <item>ファイル ブラウザ — デバイス上のどこにでもファイルを参照、コピー、移動、名前変更、削除できます。</item>
-        <item>暗号化された保管庫 — 独自の PIN を使用して、AES-256-GCM 暗号化の背後で機密ファイルをロックします。</item>
-        <item>ファイル サーバー — FTP サーバーまたは安全な SFTP サーバーをデバイス上で直接ホストし、ローカル ネットワーク全体でファイルを共有します。</item>
-        <item>リモート管理 — APK のリモートでのアップロード、ダウンロード、インストールをサポートする内蔵 HTTP サーバーを介して、ローカル Wi-Fi 経由でファイルを管理します。</item>
-        <item>ネットワーク共有 — ローカル ネットワーク上の SMB および FTP サーバーに接続して、リモート ファイルを参照、ダウンロード、管理します。</item>
-        <item>フォルダー同期 — 選択したスケジュール (間隔または特定の時間、毎日、毎週、または毎月) でローカルの電話フォルダーを SMB または FTP ネットワーク共有に自動的にバックアップします。</item>
-        <item>デバイスのペアリング — ローカル Wi-Fi 経由で携帯電話と Android TV をペアリングし、ファイルを転送してインストールします。</item>
-        <item>ADB ターミナル — ADB (Android Debug Bridge) を使用してローカル Wi-Fi 経由で開発者モードで Android デバイスに接続し、直接シェル アクセスと高度なトラブルシューティングを行います。</item>
-        <item>内蔵ビューア — テキスト ファイル、PDF、アニメーション画像 (APNG、GIF、アニメーション WebP、SVG など)、アーカイブ、その他の形式をアプリ内で直接表示します。</item>
-        <item>高度な ZIP サポート — パスワードで保護され、AES で暗号化された ZIP アーカイブを作成および抽出します。</item>
-        <item>リモート スクリーンショット — ADB 経由でローカル Wi-Fi 経由でペアリングされた Android TV の画面をキャプチャし、携帯電話のストレージに直接保存します。</item>
-        <item>7Z アーカイブのサポート — LZMA/LZMA2 圧縮を使用して 7Z アーカイブを抽出します。</item>
-        <item>ファイル検索 — デバイスのストレージ全体でファイルやフォルダーをすばやく検索します。</item>
-        <item>ストレージ アナライザー — ストレージ スペースを使用しているものの視覚的な内訳を確認します。</item>
-        <item>アプリマネージャー — デバイスにインストールされているすべてのアプリを表示および管理し、プレインストールされたアプリのデブロートに関する推奨事項を示します。</item>
-        <item>APK インストーラー — Android アプリをインストールし、ローカルに保存されたファイルから直接 APK (XAPK) を分割します。</item>
-        <item>昇格されたアクセス (Shizuku および ADB) — 実際にデバイスを root 化することなく、root のようなアクセス権を取得して、システム ファイルと制限されたディレクトリを管理します。</item>
-        <item>Storage Indexer — ファイル メタデータのローカル インデックスを作成して、瞬時の検索と超高速のブラウジングを実現します。</item>
-        <item>ストレージ アクセス フレームワーク — 他のアプリは、UFM のドキュメント プロバイダーを通じてファイルにアクセスできます。</item>
-        <item>Tip Jar — 開発者をサポートするためのオプションの 1 回限りの購入。アプリはチップなしでいつでも無料です。</item>
         <item>
-UFM Media Player — バックグラウンド再生、通知コントロール、ピクチャ イン ピクチャ モード、プレイリスト管理を使用してオーディオ ファイルとビデオ ファイルを再生します。
+ファイルブラウザ — デバイス上のどこでもファイルの閲覧、コピー、移動、名前変更、削除が可能。
+</item>
+        <item>
+暗号化ボールト — 機密ファイルをAES-256-GCM暗号化でロックし、自分だけのPINで保護。
+</item>
+        <item>
+ファイルサーバー — デバイス上で直接FTPまたはセキュアなSFTPサーバーをホストし、ローカルネットワークでファイルを共有。
+</item>
+        <item>
+リモート管理 — 内蔵HTTPサーバーを介してローカルWi-Fi経由でファイルを管理。アップロード、ダウンロード、APKのリモートインストールをサポート。
+</item>
+        <item>
+ネットワーク共有 — ローカルネットワーク上のSMB、FTP、NFSサーバーに接続し、リモートファイルの閲覧、ダウンロード、管理が可能。
+</item>
+        <item>
+フォルダ同期 — 選択したスケジュール（間隔または毎日、毎週、毎月の特定の時間）で、電話のローカルフォルダをSMBまたはFTPネットワーク共有に自動バックアップ。
+</item>
+        <item>
+デバイスペアリング — ローカルWi-Fi経由でスマートフォンとAndroid TVをペアリングし、ファイルの転送とインストールが可能。
+</item>
+        <item>
+ADBターミナル — ローカルWi-Fi経由で開発者モードのAndroidデバイスにADB（Android Debug Bridge）を使用して接続し、直接シェルアクセスと高度なトラブルシューティングが可能。
+</item>
+        <item>
+内蔵ビューア — テキストファイル、PDF、アニメーション画像（APNG、GIF、アニメーションWebP、SVGなど）、アーカイブ、その他の形式をアプリ内で直接表示。
+</item>
+        <item>
+高度なZIPサポート — パスワード保護およびAES暗号化されたZIPアーカイブの作成と展開。
+</item>
+        <item>
+リモートスクリーンショット — ペアリングしたAndroid TVの画面をローカルWi-Fi経由でADBを使用してキャプチャし、スマートフォンのストレージに直接保存。
+</item>
+        <item>
+7Zアーカイブサポート — LZMA/LZMA2圧縮の7Zアーカイブを展開。
+</item>
+        <item>
+ファイル検索 — デバイスストレージ全体からファイルやフォルダをすばやく検索。
+</item>
+        <item>
+ストレージ分析 — ストレージ容量の使用状況を視覚的に表示。
+</item>
+        <item>
+アプリマネージャー — デバイスにインストールされているすべてのアプリを表示・管理。プリインストールアプリのデブロート推奨を提供。
+</item>
+        <item>
+APKインストーラ — ローカルに保存されたファイルから直接Androidアプリや分割APK（XAPK）をインストール。
+</item>
+        <item>
+昇格アクセス（Shizuku &amp; ADB） — デバイスを実際にroot化せずに、システムファイルや制限されたディレクトリを管理するためのrootライクなアクセスを取得。
+</item>
+        <item>
+ストレージインデクサー — ファイルメタデータのローカルインデックスを作成し、瞬時の検索と高速なブラウジングを実現。
+</item>
+        <item>
+ストレージアクセスフレームワーク — 他のアプリがUFMのドキュメントプロバイダーを介してファイルにアクセス可能。
+</item>
+        <item>
+チップジャー — 開発者をサポートするためのオプションの一度きりの購入。アプリはチップなしでも常に無料。
+</item>
+        <item>
+UFMメディアプレーヤー — バックグラウンド再生、通知コントロール、ピクチャーインピクチャーモード、プレイリスト管理を備えたオーディオ・ビデオファイルの再生。
 </item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
-        <item>データ損失</item>
-        <item>ボールトPIN</item>
-        <item>APKファイル</item>
-        <item>ファイルサーバーのセキュリティ</item>
-        <item>ネットワーク共有認証情報</item>
-        <item>フォルダーの同期</item>
-        <item>システムアプリの削除</item>
-        <item>ADBペアリング</item>
-        <item>雫と高架アクセス</item>
-        <item>テレビのスクリーンショット</item>
-        <item>インデクサーの精度</item>
-        <item>バグとエラー</item>
-        <item>私たちの責任</item>
+        <item>
+データ損失
+</item>
+        <item>
+ボールトPIN
+</item>
+        <item>
+APKファイル
+</item>
+        <item>
+ファイルサーバーのセキュリティ
+</item>
+        <item>
+ネットワーク共有の認証情報
+</item>
+        <item>
+フォルダ同期
+</item>
+        <item>
+システムアプリの削除
+</item>
+        <item>
+ADBペアリング
+</item>
+        <item>
+Shizukuと昇格アクセス
+</item>
+        <item>
+TVスクリーンショット
+</item>
+        <item>
+インデクサーの精度
+</item>
+        <item>
+バグとエラー
+</item>
+        <item>
+当社の責任
+</item>
     </string-array>
     <string-array name="tc_risk_details">
-        <item>データ損失がゼロであることを保証することはできません。重要なファイルのバックアップを常に保管してください。</item>
-        <item>PIN と回復コードを忘れた場合、暗号化されたファイルは誰にも回復できなくなります。</item>
-        <item>不明なソースから APK をインストールすると、セキュリティ上のリスクが伴います。インストールする APK ファイルについては、お客様が全責任を負います。</item>
-        <item>ファイル サーバーをホストする場合、FTP 接続はデータと資格情報をプレーン テキストで送信します。安全な暗号化された転送が必要な場合は、常に SFTP を使用してください。</item>
-        <item>ネットワーク共有の認証情報 (ホスト、ユーザー名、パスワード) はデバイス上にローカルに保存されます。デバイスを安全に保つのはお客様の責任です。</item>
-        <item>同期操作はバックグラウンドで実行され、バッテリーとデータを消費する可能性があります。同期を有効にする前に必ずリモート パスを確認してください。間違ったフォルダーに同期すると、ネットワーク共有上のファイルが上書きされる可能性があります。</item>
-        <item>デブロートの推奨事項に基づいてシステム アプリを削除すると、デバイスの安定性に影響を与える可能性があります。慎重に作業を進めてください。</item>
-        <item>ADB ペアリングでは、ローカル Wi-Fi 経由でデバイスとターゲット デバイスの間で証明書を交換する必要があります。自分が所有しているデバイス、またはアクセス許可を持っているデバイスにのみ接続してください。ペアリング PIN を取得したネットワーク上の誰でもデバイスにアクセスできます。この PIN は非公開にしてください。</item>
-        <item>昇格アクセスに Shizuku または ADB を使用すると、アプリはシステムで保護されたファイルを変更できます。これらの機能を誤って使用すると、デバイスの安定性やセキュリティに影響を与える可能性があります。慎重に使用し、このアプリへのアクセスのみを許可してください。</item>
-        <item>ペアリングされたテレビのスクリーンショットは、ローカル ネットワーク経由で ADB 経由でキャプチャされ、携帯電話のストレージに直接保存されます。スクリーンショットを送信、閲覧、アップロードすることはありません。自分が所有しているデバイス、またはアクセス許可を持っているデバイスの画面のみをキャプチャするようにしてください。</item>
-        <item>インデックスは、スキャン時のストレージの状態を反映します。他のアプリによってファイルが変更された場合は、インデックスを更新する必要がある場合があります。</item>
-        <item>完璧なソフトウェアはありません。アプリが常にエラーや中断がないことを保証することはできません。</item>
-        <item>当社の責任総額は、請求前の 30 日間にお客様がアプリ内購入に対して支払った合計金額に制限されます。無料機能から生じるデータ損失、デバイスの損傷、または逸失利益については、当社は責任を負いません。</item>
+        <item>
+データ損失がゼロであることを保証できません。重要なファイルは常にバックアップを取ってください。
+</item>
+        <item>
+PINとリカバリーコードを忘れた場合、暗号化されたファイルは誰にも復元できません。
+</item>
+        <item>
+未知のソースからAPKをインストールするとセキュリティリスクが生じます。インストールするAPKファイルについては、お客様が全責任を負います。
+</item>
+        <item>
+ファイルサーバーをホストする場合、FTP接続はデータと認証情報を平文で送信します。安全で暗号化された転送が必要な場合は、常にSFTPを使用してください。
+</item>
+        <item>
+ネットワーク共有の認証情報（ホスト、ユーザー名、パスワード）はデバイスにローカル保存されます。デバイスのセキュリティを維持するのはお客様の責任です。
+</item>
+        <item>
+同期操作はバックグラウンドで実行され、バッテリーとデータを消費する可能性があります。同期を有効にする前に必ずリモートパスを確認してください。間違ったフォルダに同期すると、ネットワーク共有上のファイルが上書きされる可能性があります。
+</item>
+        <item>
+デブロート推奨に基づいてシステムアプリを削除すると、デバイスの安定性に影響を与える可能性があります。注意して進めてください。
+</item>
+        <item>
+ADBペアリングでは、ローカルWi-Fi経由でデバイスとターゲットデバイス間で証明書を交換する必要があります。自分が所有するかアクセス許可のあるデバイスにのみ接続してください。ネットワーク上の誰かがペアリングPINを取得すると、デバイスにアクセスされる可能性があります。このPINは秘密にしてください。
+</item>
+        <item>
+ShizukuまたはADBを使用した昇格アクセスにより、アプリはシステム保護ファイルを変更できます。これらの機能の誤用はデバイスの安定性やセキュリティに影響を与える可能性があります。注意して使用し、このアプリにのみアクセスを許可してください。
+</item>
+        <item>
+ペアリングしたTVのスクリーンショットは、ローカルネットワーク経由でADBを使用してキャプチャされ、スマートフォンのストレージに直接保存されます。当社はスクリーンショットを送信、表示、アップロードすることはありません。自分が所有するかアクセス許可のあるデバイスの画面のみをキャプチャしてください。
+</item>
+        <item>
+インデックスはスキャン時のストレージの状態を反映しています。他のアプリによってファイルが変更された場合は、インデックスを更新する必要がある場合があります。
+</item>
+        <item>
+完璧なソフトウェアはありません。アプリが常にエラーなく中断なく動作することを約束できません。
+</item>
+        <item>
+当社の総責任額は、請求前30日間にお客様がアプリ内購入で支払った総額に限定されます。無料機能に起因するデータ損失、デバイスの損傷、または逸失利益については、当社は責任を負いません。
+</item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
-        <item>一括操作を実行する前に、重要なファイルを定期的にバックアップしてください。</item>
-        <item>Vault PIN とリカバリ コードは安全な場所に保管してください。当社がそれらを取得することはできません。</item>
-        <item>PIN は秘密にしておいてください。それを知っている人は誰でもあなたの保管庫にアクセスできます。</item>
-        <item>ネットワーク共有認証情報は安全に保管してください。認証情報はデバイス上にローカルに保存されます。</item>
-        <item>フォルダー同期のリモート パスを注意深く確認してください。間違ったネットワーク フォルダーに同期すると、既存のファイルが上書きされる可能性があります。</item>
-        <item>デブロートの推奨事項に基づいてシステム アプリを削除する場合は注意が必要です。</item>
-        <item>ADB ターミナル経由で接続するのは、自分が所有するデバイスか、アクセス許可を明示的に持っているデバイスのみです。 ADB ターミナルを使用してデバイスに不正にアクセスしないでください。</item>
-        <item>ADB または Shizuku のペアリング PIN は非公開にしておきます。デバイスにアクセスできると信頼できる人とのみ共有してください。</item>
-        <item>Shizuku Manager を保護します。Shizuku 経由で UFM に昇格されたアクセスを許可すると、制限されたファイルに対する権限が与えられます。アプリを信頼する場合にのみ、このアクセスを許可してください。</item>
-        <item>アプリは合法的な目的でのみ使用してください。違法なコンテンツを保存、共有、配布しないでください。</item>
-        <item>リモート管理を使用して、許可なく他人のデバイスにアクセスしないでください。</item>
-        <item>アプリのリバース エンジニアリング、逆コンパイル、または改ざんを試みないでください。</item>
-        <item>インデックス付けされたレコードを責任を持って管理します。[設定] -&gt; [Storage Indexer] でいつでもレコードを削除したり、特定のドライブを無視したりできます。</item>
-        <item>APK ファイルをインストールする前に、そのファイルの信頼性と安全性を確認してください。</item>
+        <item>
+一括操作を実行する前に、重要なファイルの定期的なバックアップを取ってください。
+</item>
+        <item>
+ボールトのPINとリカバリーコードは安全な場所に保管してください。当社がそれらを取得することはできません。
+</item>
+        <item>
+PINは秘密にしてください。知っている人は誰でもボールトにアクセスできます。
+</item>
+        <item>
+ネットワーク共有の認証情報は安全に保管してください。デバイスにローカル保存されています。
+</item>
+        <item>
+フォルダ同期のリモートパスを注意深く確認してください。間違ったネットワークフォルダに同期すると、既存のファイルが上書きされる可能性があります。
+</item>
+        <item>
+デブロート推奨に基づいてシステムアプリを削除する際は注意してください。
+</item>
+        <item>
+ADBターミナルを介して接続するのは、自分が所有するか明示的なアクセス許可のあるデバイスのみにしてください。ADBターミナルを使用して、許可なくデバイスにアクセスしないでください。
+</item>
+        <item>
+ADBまたはShizukuのペアリングPINは秘密にしてください。デバイスへのアクセスを信頼できる人とのみ共有してください。
+</item>
+        <item>
+Shizukuマネージャーを安全に保ってください。Shizukuを介してUFMに昇格アクセスを許可すると、制限されたファイルに対する権限が与えられます。アプリを信頼する場合にのみこのアクセスを許可してください。
+</item>
+        <item>
+アプリは合法的な目的でのみ使用してください。違法なコンテンツを保存、共有、配布しないでください。
+</item>
+        <item>
+リモート管理を使用して、許可なく他人のデバイスにアクセスしないでください。
+</item>
+        <item>
+アプリのリバースエンジニアリング、逆コンパイル、改ざんを試みないでください。
+</item>
+        <item>
+インデックス化されたレコードは責任を持って管理してください。設定 → ストレージインデクサーからいつでもレコードを削除したり、特定のドライブを無視したりできます。
+</item>
+        <item>
+APKファイルをインストールする前に、その信頼性と安全性を確認してください。
+</item>
     </string-array>
 
     <!-- Permissions table (Section 5) — label|detail pairs -->
     <string-array name="tc_permission_labels">
-        <item>すべてのファイルへのアクセス</item>
-        <item>メディアアクセス</item>
-        <item>通知</item>
-        <item>ネットワーク/Wi-Fi</item>
-        <item>マルチキャスト</item>
-        <item>ネットワーク状態</item>
-        <item>パッケージクエリ</item>
-        <item>パッケージのインストール</item>
-        <item>請求する</item>
-        <item>ADBデバッグブリッジ</item>
-        <item>高架アクセス（雫）</item>
-        <item>ブートスタート</item>
-        <item>バッテリーの最適化</item>
-        <item>フォアグラウンドサービス</item>
-        <item>ウェイクロック</item>
-        <item>ストレージインデクサー</item>
-        <item>ブルートゥース</item>
-        <item>振動する</item>
+        <item>
+すべてのファイルへのアクセス
+</item>
+        <item>
+メディアアクセス
+</item>
+        <item>
+通知
+</item>
+        <item>
+ネットワーク / Wi-Fi
+</item>
+        <item>
+マルチキャスト
+</item>
+        <item>
+ネットワーク状態
+</item>
+        <item>
+パッケージクエリ
+</item>
+        <item>
+パッケージのインストール
+</item>
+        <item>
+課金
+</item>
+        <item>
+ADBデバッグブリッジ
+</item>
+        <item>
+昇格アクセス（Shizuku）
+</item>
+        <item>
+起動時起動
+</item>
+        <item>
+バッテリー最適化
+</item>
+        <item>
+フォアグラウンドサービス
+</item>
+        <item>
+ウェイクロック
+</item>
+        <item>
+ストレージインデクサー
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+バイブレーション
+</item>
     </string-array>
     <string-array name="tc_permission_details">
-        <item>すべてのストレージにわたるファイルの参照、コピー、移動、削除に不可欠です。</item>
-        <item>写真、ビデオ、オーディオ ファイルを整理および管理するために必要です。</item>
-        <item>ファイル操作が完了したとき、またはストレージが不足したときに警告するために使用されます。</item>
-        <item>ローカル ネットワーク上のリモート ファイル管理、ネットワーク共有アクセス (SMB/FTP/SFTP/SCP)、フォルダー同期、デバイス ペアリング、ADB ターミナル アクセスを強化します。ネットワーク探索は、ADB ポート 5555、5037、および 5038 上のローカル サブネット (最大 254 個の IP) 上のデバイスをスキャンして、ADB 対応デバイスを見つけます。</item>
-        <item>デバイスのペアリング時にローカル ネットワーク デバイスの検出 (NSD/mDNS) に使用されます。</item>
-        <item>リモート管理およびネットワーク共有アクセス中に VPN 接続を検出します。</item>
-        <item>アプリマネージャーでデバイスにインストールされているアプリを一覧表示できるようにします。</item>
-        <item>ローカル ストレージから実行することを選択した APK ファイルをインストールするために必要です。</item>
-        <item>Google Play 経由でオプションの Tip Jar の購入を処理します。</item>
-        <item>高度なシェル アクセスのために Android デバイスへの安全な接続を可能にします。ペアリング用にデバイス上に一意の RSA 証明書を生成します。証明書は外部サーバーに送信されません。</item>
-        <item>root 化せずに、アプリが制限されたシステム ディレクトリ内のファイルを管理するために、Shizuku API (安全な設定を含む) を使用できるようにします。</item>
-        <item>デバイスの起動時にShizukuサービスが自動的に開始され、すぐに利用できるようになります。</item>
-        <item>信頼性の高いパフォーマンスを実現するために、Shizuku サービスをバックグラウンドでアクティブにしておくようにオプトインできます。</item>
-        <item>フォルダー同期とファイル転送をフォアグラウンド サービスとして実行し、画面がオフの場合でも確実に完了するために必要です。</item>
-        <item>大きなファイルの転送中も CPU と Wi-Fi をアクティブな状態に保つため、画面がオフになっても確実に転送が完了します。</item>
-        <item>ストレージ権限を使用して、パフォーマンスのためにファイルのメタデータをスキャンし、インデックスを作成します。[設定] -&gt; [ストレージ インデクサー] で管理します。</item>
-        <item>ペアリングされた Android TV に接続して、リモコン用の Bluetooth キーボードおよびマウスとして機能します。</item>
-        <item>テレビのリモコンのボタンを押したときに触覚フィードバックを提供します。</item>
+        <item>
+すべてのストレージにわたるファイルの閲覧、コピー、移動、削除に必須です。
+</item>
+        <item>
+写真、動画、音声ファイルの整理と管理に必要です。
+</item>
+        <item>
+ファイル操作が完了したときやストレージが不足しているときに通知するために使用されます。
+</item>
+        <item>
+リモートファイル管理、ネットワーク共有アクセス（SMB/FTP/SFTP/SCP/NFS）、フォルダ同期、デバイスペアリング、ローカルネットワーク上のADBターミナルアクセスを実現します。ネットワーク検出では、ローカルサブネット上のデバイス（最大254 IP）をADBポート5555、5037、5038でスキャンして、ADB対応デバイスを検出します。
+</item>
+        <item>
+デバイスペアリング時のローカルネットワークデバイス検出（NSD/mDNS）に使用されます。
+</item>
+        <item>
+リモート管理およびネットワーク共有アクセス時にVPN接続を検出します。
+</item>
+        <item>
+アプリマネージャーがデバイスにインストールされているすべてのアプリを列挙できるようにします。アクセスされるデータには、アプリ名、パッケージID、バージョン、APKサイズ、インストールおよび更新のタイムスタンプ、各アプリがシステムアプリかユーザーインストールアプリかが含まれます。この情報は、アプリマネージャーの表示、アプリごとのストレージ計算、パッケージ名を公開されているデブロート参照リスト（ダウンロードしてローカルにキャッシュ）と照合するためにのみデバイス上で使用されます。インストールされているアプリのデータがKiloWatchサーバーや第三者に送信されることはありません。
+</item>
+        <item>
+ローカルストレージから実行するAPKファイルをインストールするために必要です。
+</item>
+        <item>
+Google Playを介したオプションのチップジャー購入を処理します。
+</item>
+        <item>
+高度なシェルアクセスのためにAndroidデバイスへの安全な接続を可能にします。ペアリング用にデバイス上で一意のRSA証明書を生成します。証明書が外部サーバーに送信されることはありません。
+</item>
+        <item>
+アプリがShizuku API（Secure Settingsを含む）を使用して、root化せずに制限されたシステムディレクトリ内のファイルを管理できるようにします。
+</item>
+        <item>
+デバイスの起動時にShizukuサービスが自動的に開始され、即座に利用できるようにします。
+</item>
+        <item>
+信頼性の高いパフォーマンスのために、Shizukuサービスをバックグラウンドでアクティブに保つことをオプトインできます。
+</item>
+        <item>
+画面がオフの場合でも確実に完了するように、フォルダ同期とファイル転送をフォアグラウンドサービスとして実行するために必要です。
+</item>
+        <item>
+大容量ファイル転送中にCPUとWi-Fiをアクティブに保ち、画面がオフになっても確実に完了します。
+</item>
+        <item>
+パフォーマンス向上のためにストレージ権限を使用してファイルメタデータをスキャンおよびインデックス化します。設定 → ストレージインデクサーで管理。
+</item>
+        <item>
+ペアリングしたAndroid TVに接続し、リモートコントロール用のBluetoothキーボードとマウスとして動作します。
+</item>
+        <item>
+TVリモコンのボタンを押したときに触覚フィードバックを提供します。
+</item>
     </string-array>
 
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
-        <item>NanoHTTPD — リモート管理を強化する軽量の HTTP サーバー。 (BSD-3 条項)</item>
-        <item>jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ネットワーク共有の参照およびフォルダー同期用の SMB2/SMB3 クライアント ライブラリ。 (LGPL-2.1)</item>
-        <item>smbj (hierynomus/smbj) — ネットワーク共有アクセスに使用される SMB2/SMB3 Java 実装。 (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスとホスティングのための包括的な SSHD コア、SFTP、および SCP クライアント ライブラリ。 (Apache-2.0)</item>
-        <item>Apache FtpServer (org.apache.ftpserver) — 100% 純粋な Java FTP サーバー。 (Apache-2.0)</item>
-        <item>Apache POI — Office ファイルを表示するためのドキュメント処理ライブラリ。 (Apache-2.0)</item>
-        <item>Firebase Analytics — アプリの使用状況を把握するのに役立つ Google の分析プラットフォーム。 (Apache-2.0)</item>
-        <item>AndroidX ライブラリ (Android TV 用 Leanback を含む) — 最新の Android 開発用の Google の Jetpack コンポーネント。 (Apache-2.0)</item>
-        <item>マテリアル デザイン コンポーネント — クリーンで一貫したインターフェイスのための Google の UI ライブラリ。 (Apache-2.0)</item>
-        <item>Room Persistence Library — ローカル メタデータ インデックス作成のための SQLite 抽象化レイヤー。 (Apache-2.0)</item>
-        <item>zip4j (net.lingala.zip4j) — パスワードで保護され、AES 暗号化されたアーカイブ用の高度な ZIP ライブラリ。 (Apache-2.0)</item>
-        <item>Apache Commons Compress — さまざまなアーカイブ形式 (7z、zip、tar など) を読み書きするためのライブラリ。 (Apache-2.0)</item>
-        <item>XZ for Java (org.tukaani.xz) — XZ および LZMA 圧縮の実装。 (パブリックドメイン)</item>
-        <item>libadb-android (com.github.MuntasirAkon) — リモート シェル アクセスと証明書ベースのペアリングのために ADB 対応デバイスへの安全な接続を可能にする Android デバッグ ブリッジ ライブラリ。 (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスのための包括的な SSHD コア、SFTP、および SCP クライアント ライブラリ。 (Apache-2.0)</item>
-        <item>EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH キー用の EdDSA (エドワーズ曲線デジタル署名アルゴリズム) の実装。 (CC0-1.0)</item>
-        <item>SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD ライブラリで使用される Android のロギング バインディング。 (マサチューセッツ工科大学)</item>
-        <item>BouncyCastle (org.bouncycastle) — RSA/EdDSA キーペア生成および X.509 証明書作成用の暗号化ライブラリ。バージョン1.83。 (MIT スタイルのライセンス)</item>
-        <item>Google Play Billing Library — オプションのアプリ内チップ購入を処理します。 Google Play のプライバシー ポリシーが適用されます。 (Apache-2.0)</item>
-        <item>Google Play レビュー ライブラリ — アプリのアプリ内評価とレビュー機能を強化します。 (Apache-2.0)</item>
-        <item>コイル (io.coil-kt.coil3) — 内蔵の画像ビューアでアニメーション画像のレンダリング (APNG、GIF、アニメーション WebP、SVG) を強化する画像読み込みライブラリ。 (Apache-2.0)</item>
-        <item>APNG4Android (com.github.penfeizhou.android.animation) — Android 上でアニメーション PNG ファイルをデコードおよびレンダリングするためのコア ライブラリ。 (Apache-2.0)</item>
-        <item>Shizuku API (dev.rikka.shizuku:api &amp; Provider) —Shizuku Manager アプリを介した昇格されたファイル システム アクセスを可能にするライブラリとプロバイダー。 (Apache-2.0)</item>
-        <item>ViewPager2 — フラグメントとレイアウトの間をスライドするための Android ライブラリ。 (Apache-2.0)</item>
-        <item>Lottie (com.airbnb.android:lottie) v6.3.0 — Android 上で Adob​​e After Effects アニメーションをネイティブにレンダリングするためのアニメーション ライブラリ。アプリ全体でスムーズな UI アニメーションに使用されます。 (Apache-2.0)</item>
-        <item>Ktor (io.ktor) — ローカル ファイル サーバーを強化するために使用される軽量の Web フレームワーク。 (Apache-2.0)</item>
-        <item>PDFBox-Android (com.tom-roush:pdfbox-android) — PDF ドキュメントをネイティブにレンダリングおよび表示するためのライブラリ。 (Apache-2.0)</item>
-        <item>ExoPlayer / Media3 (androidx.media3) — 堅牢なビデオとオーディオの再生のための高度なメディア プレーヤー。 (Apache-2.0)</item>
-        <item>Microsoft Authentication Library (MSAL) — OneDrive API 認証をネイティブに処理します。 (マサチューセッツ工科大学)</item>
-        <item>OkHttp (com.squareup.okhttp3) — クラウド ストレージ ネットワーク リクエスト用の堅牢な HTTP および HTTP/2 クライアント。 (Apache-2.0)</item>
-        <item>Gson (com.google.code.gson) — クラウド ストレージの統合に使用される JSON 処理ライブラリ。 (Apache-2.0)</item>
-        <item>AndroidX ブラウザ (androidx.browser) — Chrome カスタム タブは Google Drive API 認証をサポートします。 (Apache-2.0)</item>
-        <item>ZXing (com.google.zxing:core) — バーコード画像処理ライブラリ。 (Apache-2.0)</item>
-        <item>Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)</item>
         <item>
-Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)
+NanoHTTPD — リモート管理を実現する軽量HTTPサーバー。（BSD-3-Clause）
 </item>
         <item>
-Amazon Appstore SDK — Amazon デバイスでのオプションのアプリ内チップ購入を処理します。 (独自)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ネットワーク共有のブラウジングとフォルダ同期のためのSMB2/SMB3クライアントライブラリ。（LGPL-2.1）
+</item>
+        <item>
+smbj (hierynomus/smbj) — ネットワーク共有アクセスに使用されるSMB2/SMB3 Java実装。（Apache-2.0）
+</item>
+        <item>
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — ネットワーク共有アクセスのためのNFS v3クライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — NFSv2、NFSv3、NFSv4をサポートするネイティブNFSクライアントライブラリ。（LGPL-2.1 / BSD-2-Clause）
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスとホスティングのための包括的なSSHDコア、SFTP、SCPクライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% Pure JavaのFTPサーバー。（Apache-2.0）
+</item>
+        <item>
+Apache POI — オフィスファイルを表示するための文書処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+Firebase Analytics — アプリの使用方法を理解するためのGoogleの分析プラットフォーム。（Apache-2.0）
+</item>
+        <item>
+AndroidX Libraries（Android TV向けLeanbackを含む） — 最新のAndroid開発のためのGoogleのJetpackコンポーネント。（Apache-2.0）
+</item>
+        <item>
+Material Design Components — クリーンで一貫性のあるインターフェースのためのGoogleのUIライブラリ。（Apache-2.0）
+</item>
+        <item>
+Room Persistence Library — ローカルメタデータインデックス化のためのSQLite抽象化レイヤー。（Apache-2.0）
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — パスワード保護およびAES暗号化アーカイブのための高度なZIPライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache Commons Compress — さまざまなアーカイブ形式（7z、zip、tarなど）の読み書きのためのライブラリ。（Apache-2.0）
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — XZおよびLZMA圧縮の実装。（パブリックドメイン）
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — ADB対応デバイスへの安全な接続を可能にし、リモートシェルアクセスと証明書ベースのペアリングを実現するAndroid Debug Bridgeライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — 安全なネットワーク共有アクセスのための包括的なSSHDコア、SFTP、SCPクライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSHキーのためのEdDSA（Edwards曲線デジタル署名アルゴリズム）の実装。（CC0-1.0）
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHDライブラリで使用されるAndroid向けログバインディング。（MIT）
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — RSA/EdDSA鍵ペア生成とX.509証明書作成のための暗号化ライブラリ。バージョン1.83。（MITライセンス）
+</item>
+        <item>
+Google Play Billing Library — オプションのアプリ内チップ購入を処理します。Google Playのプライバシーポリシーに準拠。（Apache-2.0）
+</item>
+        <item>
+Google Play Review Library — アプリのアプリ内評価・レビュー機能を実現します。（Apache-2.0）
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — 内蔵画像ビューアでアニメーション画像（APNG、GIF、アニメーションWebP、SVG）のレンダリングを実現する画像読み込みライブラリ。（Apache-2.0）
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — AndroidでアニメーションPNGファイルをデコードおよびレンダリングするためのコアライブラリ。（Apache-2.0）
+</item>
+        <item>
+Shizuku API (dev.rikka.shizuku:api &amp; provider) — Shizuku Managerアプリを介して昇格ファイルシステムアクセスを可能にするライブラリとプロバイダー。（Apache-2.0）
+</item>
+        <item>
+ViewPager2 — フラグメントやレイアウト間をスライドするためのAndroidライブラリ。（Apache-2.0）
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — Android上でAdobe After Effectsアニメーションをネイティブにレンダリングするアニメーションライブラリ。アプリ全体でスムーズなUIアニメーションに使用されます。（Apache-2.0）
+</item>
+        <item>
+Ktor (io.ktor) — ローカルファイルサーバーを実現する軽量ウェブフレームワーク。（Apache-2.0）
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — PDFドキュメントをネイティブにレンダリングおよび表示するためのライブラリ。（Apache-2.0）
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — 堅牢なビデオおよびオーディオ再生のための高度なメディアプレーヤー。（Apache-2.0）
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — OneDrive API認証をネイティブに処理します。（MIT）
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — クラウドストレージのネットワークリクエストのための堅牢なHTTP &amp; HTTP/2クライアント。（Apache-2.0）
+</item>
+        <item>
+Gson (com.google.code.gson) — クラウドストレージ統合に使用されるJSON処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — Google Drive API認証のためのChrome Custom Tabsサポート。（Apache-2.0）
+</item>
+        <item>
+ZXing (com.google.zxing:core) — バーコード画像処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+Amazon Appstore SDK — Amazonデバイスでのオプションのアプリ内チップ購入を処理します。（プロプライエタリ）
 </item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">
-        <item>電子メール</item>
+        <item>
+メール
+</item>
     </string-array>
     <string-array name="tc_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 
     <!-- ═══════════════════════════════════════════════════════════
          PRIVACY POLICY
     ═══════════════════════════════════════════════════════════ -->
-    <string name="pp_screen_title">プライバシーポリシー</string>
-    <string name="pp_summary">ファイルはデバイス上に残ります。私たちがそれらを目にすることはありません。アプリを改善するために、Firebase 経由で匿名の使用状況分析のみを収集します。広告もデータ販売も面白いビジネスもありません。</string>
+    <string name="pp_screen_title">
+プライバシーポリシー
+</string>
+    <string name="pp_summary">
+お客様のファイルはデバイス上に留まり、当社が閲覧することはありません。当社はアプリ改善のためにFirebaseを介して匿名の使用状況分析のみを収集します。広告なし、データ販売なし、不正行為は一切ありません。
+</string>
 
     <!-- Section titles -->
-    <string name="pp_s1_title">1. はじめに</string>
-    <string name="pp_s2_title">2. 当社が収集する情報</string>
-    <string name="pp_s3_title">3. お客様の情報の使用方法</string>
-    <string name="pp_s4_title">4. 権限とそれらが必要な理由</string>
-    <string name="pp_s5_title">5. データセキュリティ</string>
-    <string name="pp_s6_title">6. Google API サービス — 限定的使用の開示</string>
-    <string name="pp_s6b_title">
-6b. RClone クラウド統合 — プライバシーとセキュリティコンプライアンス
+    <string name="pp_s1_title">
+1. はじめに
 </string>
-    <string name="pp_s7_title">7. データ共有とサードパーティ</string>
-    <string name="pp_s8_title">8. データの保存期間</string>
-    <string name="pp_s9_title">9. お客様の権利</string>
-    <string name="pp_s10_title">10. 子供のプライバシー</string>
-    <string name="pp_s11_title">11. 海外ユーザー</string>
-    <string name="pp_s12_title">12. このプライバシーポリシーの変更</string>
-    <string name="pp_s13_title">13. Google Play ポリシーの遵守</string>
-    <string name="pp_s14_title">14. お問い合わせ</string>
+    <string name="pp_s2_title">
+2. 収集する情報
+</string>
+    <string name="pp_s3_title">
+3. 情報の利用方法
+</string>
+    <string name="pp_s4_title">
+4. 権限とその必要性
+</string>
+    <string name="pp_s5_title">
+5. データセキュリティ
+</string>
+    <string name="pp_s6_title">
+6. Google APIサービス — 限定使用に関する開示
+</string>
+    <string name="pp_s6b_title">
+6b. RCloneクラウド連携 — プライバシーとコンプライアンス
+</string>
+    <string name="pp_s7_title">
+7. データ共有と第三者
+</string>
+    <string name="pp_s8_title">
+8. データの保存期間
+</string>
+    <string name="pp_s9_title">
+9. ユーザーの権利
+</string>
+    <string name="pp_s10_title">
+10. 子供のプライバシー
+</string>
+    <string name="pp_s11_title">
+11. 海外ユーザー
+</string>
+    <string name="pp_s12_title">
+12. 本プライバシーポリシーの変更
+</string>
+    <string name="pp_s13_title">
+13. Google Playポリシーへの準拠
+</string>
+    <string name="pp_s14_title">
+14. お問い合わせ
+</string>
 
     <!-- Section body text -->
-    <string name="pp_s1_body">Ultimate File Manager Pro は独立した Android アプリケーションであり、Windows 用 Ultimate File Manager プロジェクト (ultimatefilemanager.pl) または類似の名前を使用する他の製品と提携、承認、スポンサー、または承認されていません。その他すべての製品名および商標は、それぞれの所有者の財産です。\n\nこのプライバシー ポリシーでは、Ultimate File Manager Pro を使用するときに当社が収集する情報、その使用方法、および安全に保つ方法について説明します。アプリを使用すると、ここで説明する慣行に同意したことになります。</string>
+    <string name="pp_s1_body">
+Ultimate File Manager Proは独立したAndroidアプリケーションであり、Windows版Ultimate File Managerプロジェクト（ultimatefilemanager.pl）や類似の名称を使用する他の製品とは提携、承認、支援、推奨されていません。その他の製品名および商標は、それぞれの所有者の財産です。\n
+\n
+本プライバシーポリシーは、Ultimate File Manager Proの使用時に当社が収集する情報、その使用方法、および安全に保つ方法について説明します。アプリを使用することにより、ここに記載された慣行に同意したものとみなされます。
+</string>
 
-    <string name="pp_s2_local_heading">あなたのデバイスにのみローカルに保存されます</string>
-    <string name="pp_s2_local_body">次のデータはデバイスに保存され、そこから離れることはありません。私たちはこれらのいずれにもアクセスできません。</string>
-    <string name="pp_s2_local_alert">私たちはあなたの PIN、回復コード、暗号化キー、または保管庫に保存されているファイルには決してアクセスできません。</string>
+    <string name="pp_s2_local_heading">
+デバイスにのみローカル保存
+</string>
+    <string name="pp_s2_local_body">
+以下のデータはデバイスに保存され、外部に送信されることはありません。当社はこれらに一切アクセスできません。
+</string>
+    <string name="pp_s2_local_alert">
+当社は、お客様のPIN、復旧コード、暗号化キー、またはVaultに保存されたファイルに一切アクセスすることはありません。
+</string>
 
-    <string name="pp_s2_analytics_heading">Firebase Analytics 経由で収集 (匿名)</string>
-    <string name="pp_s2_analytics_body">当社は Google Firebase Analytics を使用して匿名データを収集し、アプリを改善します。分析データが個人情報にリンクされることはありません。アプリの設定の使用状況分析切り替えを使用するか、Android デバイスの設定を通じて、いつでもオプトアウトできます。</string>
+    <string name="pp_s2_analytics_heading">
+Firebase Analyticsによる収集（匿名）
+</string>
+    <string name="pp_s2_analytics_body">
+当社はGoogle Firebase Analyticsを使用して匿名データを収集し、アプリを改善しています。分析データは個人の身元と関連付けられることはありません。アプリの設定内の使用状況分析トグル、またはAndroidデバイスの設定からいつでもオプトアウトできます。
+</string>
 
-    <string name="pp_s2_billing_heading">Google Play 請求経由で処理されます (オプションのヒントのみ)</string>
-    <string name="pp_s2_billing_body">オプションの Tip Jar を購入すると、Google Play が取引を処理します。私たちがあなたのカードや銀行口座の詳細を見ることは決してありません。当社は購入トークンと製品 ID を一時的に受け取ります。どちらもデバイス上でのみ処理され、当社のサーバーには保存されません。</string>
-    <string name="pp_s2_billing_note">Google Play 請求からの匿名の購入トークンは、チップを確認するためにデバイス上で一時的に処理されます。トークンは当社によって保存されることはなく、あなたの身元に関連付けられることはありません。</string>
+    <string name="pp_s2_billing_heading">
+Google Play請求による処理（任意のチップのみ）
+</string>
+    <string name="pp_s2_billing_body">
+任意のチップJarの購入を行うと、Google Playが取引を処理します。当社はお客様のカードや銀行の詳細を一切確認しません。当社は一時的に購入トークンと製品IDを受け取りますが、これらはデバイス上でのみ処理され、当社のサーバーに保存されることはありません。
+</string>
+    <string name="pp_s2_billing_note">
+Google Play請求からの匿名購入トークンは、チップを確認するためにデバイス上で一時的に処理されます。当社が保存することはなく、個人の身元と関連付けられることもありません。
+</string>
 
-    <string name="pp_s2_nocollect_heading">私たちが決して収集しないもの</string>
+    <string name="pp_s2_nocollect_heading">
+収集しない情報
+</string>
 
-    <string name="pp_s3_local_heading">ローカルデータの使用目的</string>
-    <string name="pp_s3_analytics_heading">分析データの使用目的</string>
+    <string name="pp_s3_local_heading">
+ローカルデータの用途
+</string>
+    <string name="pp_s3_analytics_heading">
+分析データの用途
+</string>
 
-    <string name="pp_s4_storage_heading">ストレージのアクセス許可</string>
-    <string name="pp_s4_network_heading">ネットワーク権限</string>
-    <string name="pp_s4_network_alert">リモート管理サーバー、ファイル サーバー ホスティング、SMB/FTP/SFTP/SCP ネットワーク共有接続、フォルダー同期、デバイス ペアリング、および ADB ターミナル接続はすべて、ローカル Wi-Fi ネットワーク上でのみ動作します。リモート管理サーバーと FTP サーバーは暗号化されていないプロトコルを使用します。 SFTP および ADB ターミナル接続では、安全な暗号化されたプロトコルが使用されます。クラウド ストレージ API (Google Drive、OneDrive、Dropbox、S3 互換) は、暗号化された HTTPS 経由でそれぞれのサーバーと安全に通信します。他のデータは外部サーバーに送信されません。</string>
-    <string name="pp_s4_other_heading">その他の権限</string>
+    <string name="pp_s4_storage_heading">
+ストレージ権限
+</string>
+    <string name="pp_s4_network_heading">
+ネットワーク権限
+</string>
+    <string name="pp_s4_network_alert">
+リモート管理サーバー、ファイルサーバーのホスティング、SMB/FTP/SFTP/SCPネットワーク共有接続、フォルダ同期、デバイスペアリング、ADBターミナル接続はすべて、ローカルのWi-Fiネットワーク上でのみ動作します。リモート管理およびFTPサーバーは暗号化されていないプロトコルを使用します。SFTPおよびADBターミナル接続は、安全な暗号化プロトコルを使用します。クラウドストレージAPI（Google Drive、OneDrive、Dropbox、S3互換）は、暗号化されたHTTPSを介してそれぞれのサーバーと安全に通信します。他のデータが外部サーバーに送信されることはありません。
+</string>
+    <string name="pp_s4_other_heading">
+その他の権限
+</string>
 
-    <string name="pp_s5_vault_heading">ボールトの暗号化</string>
-    <string name="pp_s5_vault_body">暗号化保管庫は軍用レベルの暗号化を使用してファイルを保護します。</string>
-    <string name="pp_s5_vault_alert">PIN と回復コードの両方を忘れた場合、暗号化されたデータは永久にアクセスできなくなり、当社でも回復できなくなります。これらは安全な場所に保管してください。</string>
-    <string name="pp_s5_local_heading">ローカルデータ保護</string>
-    <string name="pp_s5_remote_heading">リモート管理のセキュリティ</string>
+    <string name="pp_s5_vault_heading">
+Vaultの暗号化
+</string>
+    <string name="pp_s5_vault_body">
+暗号化Vaultは、ファイルを保護するために軍事レベルの暗号化を使用します。
+</string>
+    <string name="pp_s5_vault_alert">
+PINと復旧コードの両方を忘れた場合、暗号化されたデータは永久にアクセスできなくなります。当社でも復元できません。これらは安全な場所に保管してください。
+</string>
+    <string name="pp_s5_local_heading">
+ローカルデータの保護
+</string>
+    <string name="pp_s5_remote_heading">
+リモート管理のセキュリティ
+</string>
 
     <!-- Section 6 — Google API Limited Use -->
-    <string name="pp_s6_compliance_banner">Ultimate File Manager Pro による Google API から受信した情報の使用は、限定使用要件を含む Google API サービスのユーザー データ ポリシーに準拠します。</string>
-    <string name="pp_s6_intro">Google ドライブ アカウントに接続すると、アプリはアプリ内で直接使用するファイル管理機能を提供するためにのみ、Google ユーザー データにアクセスします。</string>
-    <string name="pp_s6_google_data_heading">Google ユーザーデータ — Google ドライブ API</string>
-    <string name="pp_s6_google_never_heading">Google アカウントからアクセスできないもの</string>
-    <string name="pp_s6_google_never">当社は、お客様の Gmail、Google コンタクト、Google カレンダー、Google フォト (ドライブ外)、またはその他の Google サービス データにはアクセスしません。要求されたアクションに必要な最小限のドライブ ファイル データのみがアクセスされます。</string>
-    <string name="pp_s6_permitted_heading">Google ユーザーデータの許可された使用</string>
-    <string name="pp_s6_prohibited_heading">禁止されている用途 - Google では Google ユーザー データを次の目的で使用することはありません</string>
-    <string name="pp_s6_minimum_access">Ultimate File Manager Pro は、選択したファイル管理アクションを実行するために必要な最小限の Google ドライブ権限のみを要求します。当社は、お客様の Gmail、Google コンタクト、Google カレンダー、またはその他の Google サービス データへのアクセスを要求することはありません。</string>
+    <string name="pp_s6_compliance_banner">
+Ultimate File Manager ProがGoogle APIから受け取った情報の使用は、限定使用要件を含むGoogle APIサービスユーザーデータポリシーに準拠しています。
+</string>
+    <string name="pp_s6_intro">
+Google Driveアカウントを接続すると、アプリはお客様がアプリ内で直接使用するファイル管理機能を提供する目的でのみ、Googleユーザーデータにアクセスします。
+</string>
+    <string name="pp_s6_google_data_heading">
+Googleユーザーデータ — Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+Googleアカウントからアクセスしない情報
+</string>
+    <string name="pp_s6_google_never">
+当社は、お客様のGmail、Google連絡先、Googleカレンダー、Googleフォト（Drive以外）、その他のGoogleサービスデータにはアクセスしません。要求されたアクションに必要な最小限のDriveファイルデータのみがアクセスされます。
+</string>
+    <string name="pp_s6_permitted_heading">
+Googleユーザーデータの許可される使用
+</string>
+    <string name="pp_s6_prohibited_heading">
+禁止される使用 — Googleユーザーデータを以下の目的には決して使用しません
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Proは、お客様が選択したファイル管理操作を実行するために必要な最小限のGoogle Drive権限のみを要求します。Gmail、Google連絡先、Googleカレンダー、その他のGoogleサービスデータへのアクセスを要求することは決してありません。
+</string>
     <!-- Section 6b — RClone Integration -->
     <string name="pp_s6b_compliance_banner">
-Ultimate File Manager Pro は RClone バックエンドを統合し、100 を超えるクラウド ストレージ プロバイダーへの接続をサポートします。すべての構成と認証情報はデバイス上で直接管理されます。
+Ultimate File Manager ProはRCloneバックエンドを統合し、100以上のクラウドストレージプロバイダーへの接続をサポートしています。すべての設定と認証情報はお客様のデバイス上で直接管理されます。
 </string>
     <string name="pp_s6b_intro">
-Ultimate File Manager Pro で RClone ストレージ統合を使用すると、アプリはクラウド ストレージの認証情報とファイル メタデータをローカルで処理します。アプリは、選択したクラウド ストレージ プロバイダーの API エンドポイントと直接通信します。当社はこの接続を仲介せず、お客様のクラウド認証情報やファイルを収集、保存、または当社のサーバーに送信することはありません。
+Ultimate File Manager ProでRCloneストレージ統合を使用する場合、アプリはクラウドストレージの認証情報とファイルメタデータをローカルで処理します。アプリは選択したクラウドストレージプロバイダーのAPIエンドポイントと直接通信します。当社はこの接続を仲介せず、お客様のクラウド認証情報やファイルを収集、保存、または当社のサーバーに送信することは決してありません。
 </string>
     <string name="pp_s6b_local_heading">
 ローカル認証情報の暗号化
 </string>
     <string name="pp_s6b_local_body">
-RClone ストレージ構成に入力されたパスワード、トークン、または API キーはすべて、RClone RC バックエンド経由でデバイス上の暗号化を使用して隠蔽および暗号化され、アプリのプライベート ディレクトリに rclone_encrypted.json として安全に保存されます。このファイルは他のアプリケーションからアクセスできず、アプリをアンインストールすると完全に削除されます。
+RCloneストレージ設定に入力されたパスワード、トークン、APIキーはすべて、RClone RCバックエンドを介したデバイス上の暗号化によって難読化および暗号化され、アプリのプライベートディレクトリにrclone_encrypted.jsonとして安全に保存されます。このファイルは他のアプリケーションからアクセスできず、アプリをアンインストールすると完全に削除されます。
 </string>
     <string name="pp_s6b_permitted_heading">
-クラウドデータの許可された用途
+クラウドデータの許可される使用
 </string>
     <string-array name="pp_s6b_permitted">
         <item>
-リモート ブラウズ: フォルダー構造とファイル メタデータを取得して、リモート クラウド ストレージのコンテンツを表示します。
+リモートブラウジング: リモートクラウドストレージの内容を表示するために、フォルダ構造とファイルメタデータを取得します。
 </item>
         <item>
-ファイル操作: 明示的な要求に応じて、リモート ストレージ上のファイルをアップロード、ダウンロード、名前変更、コピー、移動、または削除します。
+ファイル操作: お客様の明示的な要求に応じて、リモートストレージ上のファイルのアップロード、ダウンロード、名前変更、コピー、移動、または削除を行います。
 </item>
     </string-array>
     <!-- Section 7 — Data Sharing -->
-    <string name="pp_s7_nosell_alert">当社は、Ultimate File Manager Pro のファイル管理機能の提供に直接関係しない目的で、お客様の個人情報または Google ユーザー データを第三者に販売、賃貸、取引、譲渡、開示することはありません。</string>
-    <string name="pp_s7_third_heading">当社が使用するサードパーティのサービス</string>
-    <string name="pp_s7_saf_note">ストレージ アクセス フレームワーク (SAF) ドキュメント プロバイダー経由を含む、別のアプリでファイルを開いたり共有したりすることを選択した場合、そのアプリがファイルをどのように扱うかは、そのアプリ独自のプライバシー ポリシーによって決まります。</string>
-    <string name="pp_s7_legal_note">また、法律、裁判所命令、または政府の要請により要求された場合、適用法で認められる範囲で情報を開示する場合があります。当社は、このプライバシー ポリシーに記載されている目的以外の目的で、お客様の個人情報または Google ユーザー データを第三者に転送または開示することはありません。</string>
+    <string name="pp_s7_nosell_alert">
+当社は、Ultimate File Manager Proのファイル管理機能の提供に直接関係しない目的で、お客様の個人情報やGoogleユーザーデータを第三者に販売、レンタル、交換、譲渡、開示することは一切ありません。
+</string>
+    <string name="pp_s7_third_heading">
+使用するサードパーティサービス
+</string>
+    <string name="pp_s7_saf_note">
+別のアプリでファイルを開いたり共有したりする場合（Storage Access Framework（SAF）ドキュメントプロバイダー経由を含む）、そのアプリのプライバシーポリシーがファイルの取り扱いを規定します。
+</string>
+    <string name="pp_s7_legal_note">
+当社は、適用法で許可される範囲内で、法律、裁判所命令、または政府の要請により情報を開示する場合があります。当社は、本プライバシーポリシーに記載された目的以外のために、お客様の個人情報やGoogleユーザーデータを第三者に転送または開示することはありません。
+</string>
 
-    <string name="pp_s9_body">データはあなたが管理します。いつでもできることは次のとおりです。</string>
-    <string name="pp_s9_delete_heading">すべてのアプリデータを削除する方法</string>
-    <string name="pp_s9_delete_alert">データをクリアまたはアンインストールすると、Vault PIN、リカバリ コード、および暗号化キーが削除され、Vault のコンテンツに永久にアクセスできなくなります。最初に保存したいものをすべて復号化します。</string>
+    <string name="pp_s9_body">
+お客様はご自身のデータを管理できます。以下はいつでも実行可能な操作です。
+</string>
+    <string name="pp_s9_delete_heading">
+すべてのアプリデータの削除方法
+</string>
+    <string name="pp_s9_delete_alert">
+データを消去またはアンインストールすると、VaultのPIN、復旧コード、暗号化キーが削除され、Vault内のコンテンツは永久にアクセスできなくなります。事前に保持したいものはすべて復号化してください。
+</string>
 
-    <string name="pp_s10_body">Ultimate File Manager Pro は、13 歳未満の子供を対象としていません。当社は、13 歳未満の子供から故意に個人情報を収集しません。あなたが親または保護者で、子供が個人情報を提供したと思われる場合は、当社までご連絡ください。</string>
+    <string name="pp_s10_body">
+Ultimate File Manager Proは13歳未満の子供を対象としていません。当社は13歳未満の子供から故意に個人情報を収集することはありません。保護者の方で、お子様が個人情報を提供したと思われる場合は、お問い合わせください。
+</string>
 
-    <string name="pp_s11_body">Ultimate File Manager Pro は南アフリカで開発されました。別の国からアプリを使用している場合は、情報は南アフリカ、または当社のサードパーティ サービス プロバイダー (Google など) が運営されている国で処理される可能性があることに注意してください。</string>
+    <string name="pp_s11_body">
+Ultimate File Manager Proは南アフリカで開発されています。他の国からアプリを使用する場合、情報が南アフリカまたは当社の第三者サービスプロバイダー（Googleなど）が事業を展開する国で処理される可能性があることにご注意ください。
+</string>
 
-    <string name="pp_s12_body">当社は、このプライバシー ポリシーを随時更新することがあります。その際には、上部の日付を更新します。重要な変更については、アプリ内でも通知されます。変更後もアプリを使用し続けることは、更新されたポリシーに同意することを意味します。</string>
+    <string name="pp_s12_body">
+本プライバシーポリシーは随時更新される場合があります。更新時には、上部の日付を更新します。重要な変更については、アプリ内でも通知します。変更後にアプリの使用を継続することは、更新されたポリシーに同意したものとみなされます。
+</string>
 
-    <string name="pp_s13_body">このアプリは、Google Play の基準を満たすように構築されています。要求されたすべての権限は、アプリのコア機能に必要です。機密性の高い許可を要求する前に、アプリはそれが必要な理由とそれがどのように使用されるかを明確に説明します。 2024 年 10 月の写真とビデオのポリシー更新について: これは、すべてのストレージ ボリュームにわたる一括操作 (移動、名前変更、同期) 向けに設計された包括的なファイル マネージャーであるため、広範なアクセスが必要ですが、標準のシステム ピッカーを使用して効率的に実行することはできません。</string>
+    <string name="pp_s13_body">
+このアプリはGoogle Playの基準を満たすように構築されています。要求されるすべての権限は、コアアプリ機能に必要です。機密性の高い権限を要求する前に、アプリはその必要性と使用方法を明確に説明します。2024年10月の写真および動画ポリシーの更新について：すべてのストレージボリュームにわたる一括操作（移動、名前変更、同期）向けに設計された包括的なファイルマネージャーであるため、広範なアクセスが必要であり、標準のシステムピッカーでは効率的に実行できません。\n
+\n
+インストール済みアプリケーション情報（QUERY_ALL_PACKAGES）について：アプリマネージャー機能は、デバイス上のインストール済みパッケージの完全なリストを読み取ります（アプリ名、パッケージID、バージョン、APKサイズ、インストールおよび更新タイムスタンプ、システムアプリとユーザーアプリの分類を含む）。Debloaterタブはさらに公開されているdebloat参照リストをダウンロードし、インストール済みのパッケージ名とローカルで相互参照します。インストール済みアプリケーションデータがKiloWatchサーバーまたは第三者に送信されることは決してありません。
+</string>
 
-    <string name="pp_s14_body">このプライバシー ポリシーに関してご質問やご不明な点がございましたら、お問い合わせください。</string>
+    <string name="pp_s14_body">
+本プライバシーポリシーについてご質問やご懸念がある場合は、お問い合わせください。
+</string>
 
-    <string name="pp_footer">Ultimate File Manager Pro を使用すると、このプライバシー ポリシーを読んで理解したことを確認したことになります。</string>
+    <string name="pp_footer">
+Ultimate File Manager Proを使用することにより、本プライバシーポリシーを読み、理解したことを確認したものとみなされます。
+</string>
 
     <!-- Local storage table (Section 2) -->
     <string-array name="pp_local_data_labels">
-        <item>ボールト PIN (ハッシュ化)</item>
-        <item>リカバリコード (ハッシュ化)</item>
-        <item>ボールトのメタデータ</item>
-        <item>暗号化キー</item>
-        <item>アプリの設定</item>
-        <item>ファイルサーバープロファイル</item>
-        <item>ネットワーク共有認証情報</item>
-        <item>ペアリングされたデバイス情報</item>
-        <item>ADB認証キー</item>
-        <item>雫の認可状態</item>
-        <item>テレビのスクリーンショット</item>
-        <item>プロファイルを同期する</item>
-        <item>クラウド ストレージ トークン (Google Drive、OneDrive、Dropbox)</item>
-        <item>S3 / S3 互換ストレージ認証情報 (AWS S3、MinIO、IDrive E2 など)</item>
-        <item>インデックス付きファイルのメタデータ (SQLite/Room)</item>
-        <item>言語の選択 (Cookie)</item>
         <item>
-メディアの再生状態
+ボールトPIN（ハッシュ化）
+</item>
+        <item>
+リカバリーコード（ハッシュ化）
+</item>
+        <item>
+ボールトメタデータ
+</item>
+        <item>
+暗号化キー
+</item>
+        <item>
+アプリの設定
+</item>
+        <item>
+ファイルサーバープロファイル
+</item>
+        <item>
+ネットワーク共有認証情報
+</item>
+        <item>
+ペアリング済みデバイス情報
+</item>
+        <item>
+ADB認証キー
+</item>
+        <item>
+Shizuku認可状態
+</item>
+        <item>
+TVスクリーンショット
+</item>
+        <item>
+同期プロファイル
+</item>
+        <item>
+クラウドストレージトークン（Google Drive、OneDrive、Dropbox）
+</item>
+        <item>
+S3 / S3互換ストレージ認証情報（AWS S3、MinIO、IDrive E2など）
+</item>
+        <item>
+インデックス化されたファイルメタデータ（SQLite/Room）
+</item>
+        <item>
+言語選択（Cookie）
+</item>
+        <item>
+メディア再生状態
 </item>
     </string-array>
     <string-array name="pp_local_data_details">
-        <item>暗号化されたファイルへの安全なアクセス · Android SharedPreferences</item>
-        <item>PIN を忘れた場合のアカウント回復 · Android SharedPreferences</item>
-        <item>暗号化されたフォルダーとファイルのリスト · アプリのプライベート ストレージ</item>
-        <item>Vault の AES-256-GCM 暗号化 · Android キーストア (ハードウェア支援)</item>
-        <item>テーマ、並べ替え設定、表示設定 · Android SharedPreferences</item>
-        <item>ホストされたファイル サーバーの構成 (ユーザー名、ディレクトリ、ハッシュ化されたパスワード) · アプリのプライベート ストレージ</item>
-        <item>SMB/FTP 共有への接続 (ホスト、ユーザー名、パスワード) · アプリのプライベート ストレージ</item>
-        <item>デバイスペアリング用のデバイス名、ID、IP · アプリのプライベートストレージ</item>
-        <item>安全な ADB 接続用に生成された RSA キーと証明書 · アプリのプライベート ストレージ</item>
-        <item>Shizuku Manager アプリ・アプリのプライベート ストレージからの昇格されたアクセス許可のステータス</item>
-        <item>ADB 経由でペアリングされたテレビからキャプチャされたスクリーンショット · 携帯電話のローカルの写真/スクリーンショット フォルダー</item>
-        <item>各同期プロファイルのローカル フォルダー URI とリモート パス · アプリのプライベート ストレージ</item>
-        <item>Google Drive、OneDrive、Dropbox にアクセスするための OAuth トークン · アプリのプライベート ストレージ</item>
-        <item>S3 バケットに接続するためのアクセス キー ID とシークレット アクセス キー · アプリのプライベート ストレージ</item>
-        <item>ローカルの SQLite/Room データベースに保存されたファイルのメタデータ (名前、サイズ、日付) を高速に参照および検索できます。設定 -&gt; ストレージ インデクサー · アプリのプライベート ストレージで管理できます。</item>
-        <item>Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ</item>
         <item>
-Cookie (ufm_lang) は、セッション中およびブラウザの再起動後も選択した言語を記憶します · Web ブラウザのストレージ
+暗号化ファイルへの安全なアクセス · Android SharedPreferences
+</item>
+        <item>
+PINを忘れた場合のアカウント復旧 · Android SharedPreferences
+</item>
+        <item>
+暗号化フォルダとファイルの一覧 · アプリプライベートストレージ
+</item>
+        <item>
+VaultのAES-256-GCM暗号化 · Android Keystore（ハードウェアバックアップ）
+</item>
+        <item>
+テーマ、並べ替え設定、表示設定 · Android SharedPreferences
+</item>
+        <item>
+ホスト型ファイルサーバーの設定（ユーザー名、ディレクトリ、ハッシュ化パスワード） · アプリプライベートストレージ
+</item>
+        <item>
+SMB/FTP共有への接続（ホスト、ユーザー名、パスワード） · アプリプライベートストレージ
+</item>
+        <item>
+デバイスペアリング用のデバイス名、ID、IP · アプリプライベートストレージ
+</item>
+        <item>
+安全なADB接続のために生成されたRSA鍵と証明書 · アプリプライベートストレージ
+</item>
+        <item>
+Shizuku Managerアプリからの昇格アクセス権限の状態 · アプリプライベートストレージ
+</item>
+        <item>
+ペアリングしたTVからADB経由でキャプチャしたスクリーンショット · 端末のローカルPictures/Screenshotsフォルダ
+</item>
+        <item>
+各同期プロファイルのローカルフォルダURIとリモートパス · アプリプライベートストレージ
+</item>
+        <item>
+Google Drive、OneDrive、DropboxにアクセスするためのOAuthトークン · アプリプライベートストレージ
+</item>
+        <item>
+S3バケットに接続するためのアクセスキーIDとシークレットアクセスキー · アプリプライベートストレージ
+</item>
+        <item>
+高速ブラウズと検索のためにローカルのSQLite/Roomデータベースに保存されたファイルメタデータ（名前、サイズ、日付） - 設定 → ストレージインデクサーで管理可能 · アプリプライベートストレージ
+</item>
+        <item>
+現在のキュー、再生位置、プレーヤー設定 - 中断したところから再開するため · Android SharedPreferences
+</item>
+        <item>
+Cookie（ufm_lang）は、セッション中およびブラウザ再起動後も言語設定を記憶します · Webブラウザストレージ
 </item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->
     <string-array name="pp_analytics_labels">
-        <item>デバイス情報</item>
-        <item>アプリの使用状況データ</item>
-        <item>一般的な場所</item>
+        <item>
+デバイス情報
+</item>
+        <item>
+アプリ使用データ
+</item>
+        <item>
+おおよその位置情報
+</item>
     </string-array>
     <string-array name="pp_analytics_details">
-        <item>機種、OSバージョン、画面サイズ</item>
-        <item>使用される機能、セッションの長さ、クラッシュ レポート</item>
-        <item>正確な所在地ではなく、IP に基づく国/地域</item>
+        <item>
+デバイスモデル、OSバージョン、画面サイズ
+</item>
+        <item>
+使用された機能、セッション時間、クラッシュレポート
+</item>
+        <item>
+IPに基づく国/地域 - 正確な位置情報ではありません
+</item>
     </string-array>
 
     <!-- What we never collect (Section 2) -->
     <string-array name="pp_never_collect">
-        <item>ファイル、ドキュメント、写真、ビデオ、その他のメディア</item>
-        <item>Vault のコンテンツまたは暗号化キー</item>
-        <item>PIN または回復コード</item>
-        <item>あなたの正確な位置情報</item>
-        <item>連絡先、メッセージ、通話記録</item>
-        <item>個人識別情報（氏名、メールアドレス、電話番号）</item>
-        <item>ファイル ブラウザで明示的にリクエストしたものを超える Google アカウント データ</item>
+        <item>
+ファイル、ドキュメント、写真、動画、またはメディア
+</item>
+        <item>
+Vaultの内容や暗号化キー
+</item>
+        <item>
+PINまたは復旧コード
+</item>
+        <item>
+正確な位置情報
+</item>
+        <item>
+連絡先、メッセージ、通話履歴
+</item>
+        <item>
+個人識別情報（氏名、メールアドレス、電話番号）
+</item>
+        <item>
+ファイルブラウザで明示的にリクエストした以外のGoogleアカウントデータ
+</item>
     </string-array>
 
     <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
-        <item>暗号化されたボールトへのアクセスを認証する</item>
-        <item>プライベートファイルの暗号化と復号化</item>
-        <item>設定と設定を記憶する</item>
-        <item>制限されたディレクトリ内のシステムで保護されたファイルを管理するために昇格アクセス (Shizuku/ADB) を使用する</item>
-        <item>高速なブラウジングと検索のためのファイル インデックスの作成と維持 ([設定] -&gt; [ストレージ インデクサー] で管理可能)</item>
-        <item>アプリのコア機能を提供する</item>
+        <item>
+暗号化Vaultへのアクセス認証
+</item>
+        <item>
+プライベートファイルの暗号化と復号
+</item>
+        <item>
+設定と環境設定を記憶する
+</item>
+        <item>
+制限されたディレクトリ内のシステム保護ファイルを管理するための昇格アクセス（Shizuku/ADB）を使用
+</item>
+        <item>
+高速ブラウズと検索のためのファイルインデックス作成と維持（設定→ストレージインデクサーで管理可能）
+</item>
+        <item>
+コアアプリ機能の提供
+</item>
     </string-array>
     <string-array name="pp_use_analytics">
-        <item>機能がどのように使用されるかを理解する</item>
-        <item>バグとクラッシュを特定して修正する</item>
-        <item>機能とユーザーエクスペリエンスの向上</item>
-        <item>情報に基づいた開発上の意思決定を行う</item>
+        <item>
+機能の利用状況を把握
+</item>
+        <item>
+バグとクラッシュの特定と修正
+</item>
+        <item>
+機能とユーザー体験の改善
+</item>
+        <item>
+開発上の意思決定のための情報収集
+</item>
     </string-array>
 
     <!-- Storage permissions (Section 4) -->
     <string-array name="pp_storage_perm_labels">
-        <item>外部ストレージの管理</item>
-        <item>外部ストレージの読み取り</item>
-        <item>外部ストレージへの書き込み</item>
+        <item>
+MANAGE_EXTERNAL_STORAGE
+</item>
+        <item>
+READ_EXTERNAL_STORAGE
+</item>
+        <item>
+WRITE_EXTERNAL_STORAGE
+</item>
     </string-array>
     <string-array name="pp_storage_perm_details">
-        <item>API 30+ · すべてのストレージにわたる完全なファイル管理</item>
-        <item>API 33 以下 · 古いデバイスでのレガシー ファイル アクセス</item>
-        <item>API 29 以下 · 古いデバイスでのレガシー ファイルの変更</item>
+        <item>
+API 30以上 · 全ストレージに対する完全なファイル管理
+</item>
+        <item>
+API 33未満 · 古いデバイスでの従来のファイルアクセス
+</item>
+        <item>
+API 29未満 · 古いデバイスでの従来のファイル変更
+</item>
     </string-array>
 
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
-        <item>インターネット</item>
-        <item>Wi-Fi 状態へのアクセス</item>
-        <item>ネットワーク状態にアクセスする</item>
-        <item>Wi-Fi マルチキャスト状態の変更</item>
+        <item>
+INTERNET
+</item>
+        <item>
+ACCESS_WIFI_STATE
+</item>
+        <item>
+ACCESS_NETWORK_STATE
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
     </string-array>
     <string-array name="pp_network_perm_details">
-        <item>リモート ファイル管理、ローカル ファイル サーバーのホスト、SMB/FTP/SFTP/SCP ネットワーク共有アクセス、デバイス ペアリングを有効にします。</item>
-        <item>リモートアクセス用のローカルIPアドレスを表示します</item>
-        <item>リモート管理およびネットワーク共有のアクティブなネットワークと VPN ステータスを検出します</item>
-        <item>デバイスのペアリングのためにローカル ネットワーク デバイスの検出 (NSD/mDNS) を有効にします</item>
+        <item>
+リモートファイル管理、ローカルファイルサーバーのホスト、SMB/FTP/SFTP/SCP/NFSネットワーク共有アクセス、デバイスペアリングを有効化
+</item>
+        <item>
+リモートアクセス用のローカルIPアドレスを表示
+</item>
+        <item>
+リモート管理とネットワーク共有のためにアクティブなネットワークとVPNの状態を検出
+</item>
+        <item>
+デバイスペアリングのためのローカルネットワークデバイス検出（NSD/mDNS）を有効化
+</item>
     </string-array>
 
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
-        <item>通知を投稿する</item>
-        <item>moe.shizuku.manager.permission.API_V23</item>
-        <item>受信ブート完了</item>
-        <item>バッテリーの最適化を無視するよう要求する</item>
-        <item>インストールパッケージのリクエスト</item>
-        <item>すべてのパッケージのクエリ</item>
-        <item>フォアグラウンド サービス / フォアグラウンド サービス データ同期</item>
-        <item>ウェイクロック</item>
+        <item>
+POST_NOTIFICATIONS
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23
+</item>
+        <item>
+RECEIVE_BOOT_COMPLETED
+</item>
+        <item>
+REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+</item>
+        <item>
+REQUEST_INSTALL_PACKAGES
+</item>
+        <item>
+QUERY_ALL_PACKAGES
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+WAKE_LOCK
+</item>
     </string-array>
     <string-array name="pp_other_perm_details">
-        <item>ファイル操作が終了したとき、またはストレージが不足したときに警告を発します</item>
-        <item>昇格されたファイル アクセスのためにShizuku Managerとの通信を許可します。</item>
-        <item>起動時にShizukuサービスが自動的に開始され、すぐに利用できるようになります。</item>
-        <item>信頼性の高いパフォーマンスを実現するために、Shizuku をバックグラウンドでアクティブにしておくようにオプトインできます。</item>
-        <item>選択した APK ファイルのインストールを許可します</item>
-        <item>アプリマネージャー機能用にインストールされているアプリをリストします。</item>
-        <item>フォルダー同期とファイル転送をフォアグラウンド サービスとして実行するため、画面がオフの場合でも確実に完了します。</item>
-        <item>大容量ファイルの転送中も CPU と Wi-Fi をアクティブに維持するため、画面がオフになっても確実に転送が完了します。</item>
+        <item>
+ファイル操作の完了やストレージ容量低下時に通知
+</item>
+        <item>
+Shizuku Managerとの通信を許可し、昇格ファイルアクセスを実現
+</item>
+        <item>
+Shizukuサービスを起動時に自動起動させ、即座に利用可能にする
+</item>
+        <item>
+Shizukuをバックグラウンドで維持し、安定したパフォーマンスを確保するオプトインを許可
+</item>
+        <item>
+選択したAPKファイルのインストールを許可
+</item>
+        <item>
+アプリマネージャーとDebloater機能に必要です。読み取るもの: アプリ名、パッケージID、バージョン、APKサイズ、インストール日時と更新日時、システムアプリかユーザーアプリかのフラグ — すべて端末上で処理されます。Debloaterタブは公開されているdebloat参照リストをダウンロードし、インストールされているパッケージ名とローカルで相互参照します。インストール済みアプリケーションデータが外部に送信されることはありません。
+</item>
+        <item>
+フォルダ同期、ファイル転送、メディア再生をフォアグラウンドサービスとして実行し、画面オフ時や他のアプリ使用中でも確実に完了・再生を継続
+</item>
+        <item>
+大規模ファイル転送やメディア再生中にCPUとWi-Fiをアクティブに保ち、画面オフ時でも確実に完了
+</item>
     </string-array>
 
     <!-- Encryption spec (Section 5) -->
     <string-array name="pp_encryption_labels">
-        <item>アルゴリズム</item>
-        <item>キーストレージ</item>
-        <item>キーのサイズ</item>
-        <item>認証</item>
+        <item>
+アルゴリズム
+</item>
+        <item>
+キーストレージ
+</item>
+        <item>
+キーサイズ
+</item>
+        <item>
+認証
+</item>
     </string-array>
     <string-array name="pp_encryption_details">
-        <item>AES-256-GCM (ガロア/カウンター モードを備えた高度な暗号化標準)</item>
-        <item>Android キーストア — ハードウェアでバックアップされた安全なストレージ</item>
-        <item>256ビット</item>
-        <item>ユーザー定義のPIN</item>
+        <item>
+AES-256-GCM（ガロア/カウンターモードを用いたAdvanced Encryption Standard）
+</item>
+        <item>
+Android Keystore — ハードウェアバックアップの安全なストレージ
+</item>
+        <item>
+256ビット
+</item>
+        <item>
+ユーザー定義PIN
+</item>
     </string-array>
 
     <!-- Local data protection (Section 5) -->
     <string-array name="pp_local_protection">
-        <item>すべてのローカル データはアプリのプライベート ストレージ領域に保存されます。他のアプリはアクセスできません。</item>
-        <item>PIN は保存前にハッシュ化されます。平文で表示されることはありません。</item>
-        <item>ネットワーク共有認証情報はアプリのプライベート ストレージに保存され、外部に送信されることはありません。</item>
-        <item>Google Drive、OneDrive、Dropbox の OAuth トークンはアプリのプライベート ストレージに保存され、当社のサーバーや第三者に送信されることはありません。</item>
-        <item>S3 / S3 互換のアクセス資格情報 (アクセス キー ID およびシークレット アクセス キー) はアプリのプライベート ストレージに保存され、構成されたエンドポイントへのリクエストを認証するためにのみ使用されます。これらは当社のサーバーに送信されることはありません。</item>
-        <item>ローカルに保存されているすべてのデータの機密性を保護するために、セキュリティ手順が導入されています。</item>
-        <item>アプリをアンインストールすると、すべてのデータが自動的に削除されます。</item>
+        <item>
+すべてのローカルデータはアプリのプライベートストレージ領域に保存されます — 他のアプリはアクセスできません。
+</item>
+        <item>
+PINは保存前にハッシュ化されます — 平文で見ることはありません。
+</item>
+        <item>
+ネットワーク共有の認証情報はアプリのプライベートストレージに保存され、外部に送信されることはありません。
+</item>
+        <item>
+Google Drive、OneDrive、DropboxのOAuthトークンはアプリのプライベートストレージに保存され、当社のサーバーや第三者に送信されることはありません。
+</item>
+        <item>
+S3 / S3互換のアクセス認証情報（アクセスキーIDとシークレットアクセスキー）はアプリのプライベートストレージに保存され、設定されたエンドポイントへのリクエスト認証にのみ使用されます — 当社のサーバーに送信されることはありません。
+</item>
+        <item>
+ローカルに保存されたすべてのデータの機密性を保護するためのセキュリティ手順が整っています。
+</item>
+        <item>
+アプリをアンインストールすると、すべてのデータは自動的に削除されます。
+</item>
     </string-array>
 
     <!-- Remote security (Section 5) -->
     <string-array name="pp_remote_security">
-        <item>PIN で保護されたアクセス — 許可したユーザーのみが接続できます。</item>
-        <item>すべての接続でのセッションベースの認証。</item>
-        <item>ローカル ネットワーク上でのみ動作し、外部インターネット アクセスはありません。</item>
-        <item>リモート管理画面を終了すると、サーバーは自動的にシャットダウンします。</item>
-        <item>重要: リモート管理では、暗号化されていない HTTP が使用されます。リモート管理による Vault アクセス (PIN 入力を含む) は、ローカル ネットワーク上で暗号化されずに送信されます。自宅の Wi-Fi など、信頼できるネットワークでのみ使用してください。</item>
+        <item>
+PINで保護されたアクセス — 許可されたユーザーのみ接続可能です。
+</item>
+        <item>
+接続ごとにセッションベースの認証。
+</item>
+        <item>
+ローカルネットワーク内でのみ動作 — 外部インターネットアクセスはありません。
+</item>
+        <item>
+リモート管理画面を終了すると、サーバーは自動的にシャットダウンします。
+</item>
+        <item>
+重要: リモート管理は暗号化されていないHTTPを使用します。リモート管理を介したVaultへのアクセス（PIN入力含む）は、ローカルネットワーク上で暗号化されずに送信されます。自宅のWi-Fiなど信頼できるネットワークでのみ使用してください。
+</item>
     </string-array>
 
     <!-- Google Drive user data table (Section 6) -->
     <string-array name="pp_google_data_labels">
-        <item>ファイルとフォルダーのメタデータ (名前、サイズ、MIME タイプ、変更日、ドライブ ID)</item>
-        <item>ファイルバイナリコンテンツ</item>
-        <item>OAuthアクセストークンとリフレッシュトークン</item>
+        <item>
+ファイル・フォルダメタデータ（名前、サイズ、MIMEタイプ、更新日、Drive ID）
+</item>
+        <item>
+ファイルバイナリコンテンツ
+</item>
+        <item>
+OAuthアクセストークンとリフレッシュトークン
+</item>
     </string-array>
     <string-array name="pp_google_data_when">
-        <item>アプリ内で Google ドライブを閲覧するとき</item>
-        <item>ファイルを明示的に開く、ダウンロード、アップロード、コピー、移動、または同期する場合のみ</item>
-        <item>Google ドライブにサインインした後、ローカルに保存されます</item>
+        <item>
+アプリ内でGoogle Driveを参照するとき
+</item>
+        <item>
+ファイルを明示的に開く、ダウンロード、アップロード、コピー、移動、同期するときのみ
+</item>
+        <item>
+Google Driveにサインイン後、ローカルに保存
+</item>
     </string-array>
     <string-array name="pp_google_data_purposes">
-        <item>ファイル ブラウザでドライブのコンテンツを表示する</item>
-        <item>要求した特定のファイル操作を実行する</item>
-        <item>繰り返しサインインを必要とせずに認証されたセッションを維持する</item>
+        <item>
+ファイルブラウザにDriveの内容を表示
+</item>
+        <item>
+リクエストされた特定のファイル操作を実行
+</item>
+        <item>
+再サインインを必要とせずに認証済みセッションを維持
+</item>
     </string-array>
     <!-- Permitted uses of Google data (Section 6) -->
     <string-array name="pp_google_permitted">
-        <item>ドライブの参照: ファイルとフォルダーのメタデータを取得して、ドライブのコンテンツを表示します。</item>
-        <item>ファイルのアップロード: 明示的にリクエストした場合に、ローカル ファイルをドライブに送信します。</item>
-        <item>ファイルのダウンロード: 明示的にリクエストした場合に、ドライブ ファイルをデバイスに取得します。</item>
-        <item>ファイルの移動とコピー: 明示的に開始したドライブ側のファイル操作の実行。</item>
-        <item>ファイルの削除: 削除対象として明示的に選択したドライブ ファイルを削除します。</item>
-        <item>フォルダーの同期: 構成した同期プロファイルに従って、ローカル フォルダーをドライブ フォルダーと同期します。</item>
+        <item>
+Driveの参照: ファイルとフォルダのメタデータを取得してDriveの内容を表示します。
+</item>
+        <item>
+ファイルのアップロード: 明示的にリクエストしたときにローカルファイルをDriveに送信します。
+</item>
+        <item>
+ファイルのダウンロード: 明示的にリクエストしたときにDriveファイルを端末に取得します。
+</item>
+        <item>
+ファイルの移動とコピー: 明示的に開始したDrive側のファイル操作を実行します。
+</item>
+        <item>
+ファイルの削除: 明示的に削除対象として選択したDriveファイルを削除します。
+</item>
+        <item>
+フォルダ同期: 設定した同期プロファイルに従って、ローカルフォルダとDriveフォルダを同期します。
+</item>
     </string-array>
     <!-- Prohibited uses of Google data (Section 6) -->
     <string-array name="pp_google_prohibited">
-        <item>ターゲットを絞った、パーソナライズされた、リターゲティングされた、または興味に基づいた広告</item>
-        <item>データブローカーへの販売または情報再販業者への提供</item>
-        <item>信用力の判断または融資目的</item>
-        <item>人工知能または機械学習モデルのトレーニング</item>
-        <item>ファイル管理に関係のないユーザーデータベースまたはプロファイルの作成</item>
-        <item>外部目的のデータマイニング、スクレイピング、または集計</item>
-        <item>アプリのファイル管理機能の提供や改善以外の理由、または法律で義務付けられている場合以外の理由で、Google ユーザー データを第三者に転送すること</item>
+        <item>
+ターゲティング広告、パーソナライズ広告、リターゲティング広告、興味に基づく広告
+</item>
+        <item>
+データブローカーへの販売や情報再販業者への提供
+</item>
+        <item>
+信用力の判断や融資目的での使用
+</item>
+        <item>
+人工知能や機械学習モデルのトレーニング
+</item>
+        <item>
+ファイル管理に関連しないユーザーデータベースやプロファイルの作成
+</item>
+        <item>
+外部目的のためのデータマイニング、スクレイピング、集約
+</item>
+        <item>
+アプリのファイル管理機能の提供または改善、または法律で義務付けられている場合を除き、Googleユーザーデータを第三者に転送
+</item>
     </string-array>
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
-        <item>Firebase アナリティクス</item>
-        <item>Google Play サービス</item>
-        <item>Google Play の請求</item>
-        <item>Microsoft OneDrive API</item>
-        <item>GoogleドライブAPI</item>
-        <item>Dropbox API</item>
-        <item>AWS S3 / S3 互換 API (例: AWS S3、MinIO、IDrive E2)</item>
+        <item>
+Firebase Analytics
+</item>
+        <item>
+Google Play Services
+</item>
+        <item>
+Google Play Billing
+</item>
+        <item>
+Microsoft OneDrive API
+</item>
+        <item>
+Google Drive API
+</item>
+        <item>
+Dropbox API
+</item>
+        <item>
+AWS S3 / S3互換API（例: AWS S3、MinIO、IDrive E2）
+</item>
     </string-array>
     <string-array name="pp_third_party_providers">
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>マイクロソフト株式会社</item>
-        <item>Google LLC</item>
-        <item>ドロップボックス株式会社</item>
-        <item>アマゾン ウェブ サービスと互換性のあるプロバイダー</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Microsoft Corporation
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Dropbox, Inc.
+</item>
+        <item>
+Amazon Web Servicesおよび互換プロバイダー
+</item>
     </string-array>
     <string-array name="pp_third_party_purposes">
-        <item>匿名の使用状況分析</item>
-        <item>アプリの配布、アップデート、アプリ内レビュー</item>
-        <item>オプションのアプリ内チップ購入を処理します (トークンの購入のみ、デバイス上で)</item>
-        <item>Microsoft OneDrive統合に対するユーザーリクエストを認証および処理します。</item>
-        <item>Google ドライブ統合のためにユーザーが開始したファイル管理リクエストを認証して処理します</item>
-        <item>Dropbox 統合に対するユーザー リクエストを認証して処理します。</item>
-        <item>構成したエンドポイントを介して、S3 互換クラウド ストレージに対するユーザーが開始したファイル管理リクエストを認証および処理します。</item>
+        <item>
+匿名の利用統計
+</item>
+        <item>
+アプリの配信、更新、アプリ内レビュー
+</item>
+        <item>
+オプションのアプリアイテム購入処理（購入トークンのみ、端末上）
+</item>
+        <item>
+Microsoft OneDrive統合のためのユーザーリクエストの認証と処理
+</item>
+        <item>
+Google Drive統合のためのユーザーが開始したファイル管理リクエストの認証と処理
+</item>
+        <item>
+Dropbox統合のためのユーザーリクエストの認証と処理
+</item>
+        <item>
+設定したエンドポイントを介したS3互換クラウドストレージのためのユーザーが開始したファイル管理リクエストの認証と処理
+</item>
     </string-array>
 
     <!-- Data retention (Section 8) -->
     <string-array name="pp_retention_labels">
-        <item>ローカルアプリデータ</item>
-        <item>ボールト暗号化キー</item>
-        <item>インデックス付きファイルのメタデータ</item>
-        <item>Google ドライブ / OneDrive / Dropbox OAuth トークン</item>
-        <item>S3 / S3 互換のアクセス認証情報</item>
-        <item>Firebase 分析データ</item>
+        <item>
+ローカルアプリデータ
+</item>
+        <item>
+Vault暗号化キー
+</item>
+        <item>
+インデックス化されたファイルメタデータ
+</item>
+        <item>
+Google Drive / OneDrive / Dropbox OAuthトークン
+</item>
+        <item>
+S3 / S3互換アクセス認証情報
+</item>
+        <item>
+Firebase Analytics データ
+</item>
     </string-array>
     <string-array name="pp_retention_details">
-        <item>アプリをアンインストールするまで</item>
-        <item>アプリをアンインストールするまで</item>
-        <item>[設定] -&gt; [Storage Indexer] で削除されるまで、またはアプリがアンインストールされるまで</item>
-        <item>設定でアカウントを切断するまで、またはアプリをアンインストールするまで</item>
-        <item>設定で S3 プロファイルを削除するまで、またはアプリをアンインストールするまで</item>
-        <item>14 か月 (Google のデフォルトの保存期間)</item>
+        <item>
+アプリをアンインストールするまで
+</item>
+        <item>
+アプリをアンインストールするまで
+</item>
+        <item>
+設定 → ストレージインデクサーで削除するまで、またはアプリをアンインストールするまで
+</item>
+        <item>
+設定でアカウントの接続を解除するまで、またはアプリをアンインストールするまで
+</item>
+        <item>
+設定でS3プロファイルを削除するまで、またはアプリをアンインストールするまで
+</item>
+        <item>
+14ヶ月（Googleのデフォルト保持期間）
+</item>
     </string-array>
 
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
-        <item>アプリを通じてローカルに保存されたデータに直接アクセスします。</item>
-        <item>Vault からアイテムを削除して、Vault データを削除します。</item>
-        <item>[設定] -&gt; [Storage Indexer] を使用して、インデックス付きファイルのメタデータを管理および削除します。</item>
-        <item>アクセスを取り消し、保存されている OAuth トークンを削除するには、いつでも Google Drive、OneDrive、または Dropbox アカウントを切断します。</item>
-        <item>保存されているアクセス資格情報を削除するには、[設定] からいつでも S3 / S3 互換ストレージ プロファイルを削除します。</item>
-        <item>共有またはコピー機能を使用してファイルをエクスポートします。</item>
-        <item>Firebase Analytics は、アプリ内の [設定] → [使用状況分析] からいつでもオプトアウトできます。代わりに、Android デバイスの設定を使用します。</item>
+        <item>
+アプリを通じてローカルに保存されたデータに直接アクセスします。
+</item>
+        <item>
+Vaultからアイテムを削除してVaultデータを削除します。
+</item>
+        <item>
+設定 → ストレージインデクサーからインデックス化されたファイルのメタデータを管理および削除します。
+</item>
+        <item>
+いつでもGoogle Drive、OneDrive、またはDropboxアカウントの接続を解除して、アクセスを取り消し、保存されたOAuthトークンを削除します。
+</item>
+        <item>
+設定からいつでもS3 / S3互換ストレージプロファイルを削除して、保存されたアクセス資格情報を削除します。
+</item>
+        <item>
+共有またはコピー機能を使用してファイルをエクスポートします。
+</item>
+        <item>
+アプリ内の設定 → 使用状況分析からいつでもFirebase Analyticsをオプトアウトできます。または、Androidデバイスの設定を使用してください。
+</item>
     </string-array>
 
     <!-- Delete steps (Section 8) -->
     <string-array name="pp_delete_steps">
-        <item>Androidの設定を開き、アプリに移動します。</item>
-        <item>「Ultimate File Manager Pro」を見つけてタップします。</item>
-        <item>「ストレージ」→「データを消去」をタップするか、単にアプリをアンインストールします。</item>
+        <item>
+Androidの設定を開き、アプリに移動します。
+</item>
+        <item>
+Ultimate File Manager Proを見つけてタップします。
+</item>
+        <item>
+ストレージ → データを消去をタップするか、アプリをアンインストールします。
+</item>
     </string-array>
 
     <!-- Play Store compliance table (Section 12) -->
     <string-array name="pp_compliance_labels">
-        <item>ストレージのアクセス許可</item>
-        <item>ネットワーク権限</item>
-        <item>ネットワーク状態</item>
-        <item>マルチキャスト</item>
-        <item>通知</item>
-        <item>パッケージのインストール</item>
-        <item>高架アクセス（雫）</item>
-        <item>ストレージインデクサー</item>
-        <item>クエリパッケージ</item>
-        <item>アプリ内レビュー</item>
-        <item>ロッティアニメーション</item>
+        <item>
+ストレージ権限
+</item>
+        <item>
+ネットワーク権限
+</item>
+        <item>
+ネットワーク状態
+</item>
+        <item>
+マルチキャスト
+</item>
+        <item>
+通知
+</item>
+        <item>
+パッケージのインストール
+</item>
+        <item>
+特権アクセス（Shizuku）
+</item>
+        <item>
+ストレージインデクサー
+</item>
+        <item>
+パッケージのクエリ
+</item>
+        <item>
+アプリ内レビュー
+</item>
+        <item>
+Lottieアニメーション
+</item>
     </string-array>
     <string-array name="pp_compliance_details">
-        <item>ファイルの閲覧と管理</item>
-        <item>リモート ファイル管理、SMB/FTP/SFTP/SCP ネットワーク共有、ローカル Wi-Fi 経由のデバイス ペアリング</item>
-        <item>リモート管理およびネットワーク共有接続のための VPN 検出</item>
-        <item>デバイスペアリングのためのローカルネットワークデバイス検出 (NSD/mDNS)</item>
-        <item>操作完了アラートとストレージ警告</item>
-        <item>ローカルストレージからのAPKインストール</item>
-        <item>Shizuku API を介した、制限されたシステム ディレクトリでの高度なファイル管理</item>
-        <item>高速検索のためにファイルのメタデータをローカルにインデックス付けします</item>
-        <item>アプリマネージャー機能</item>
-        <item>ユーザーのフィードバックを収集するための Google Play アプリ内レビュー API</item>
-        <item>Lottie ライブラリ v6.3.0 (com.airbnb.android:lottie) を介して、アプリ全体でスムーズな UI アニメーションをレンダリングします。</item>
+        <item>
+ファイルの閲覧と管理
+</item>
+        <item>
+リモートファイル管理、SMB/FTP/SFTP/SCP/NFSネットワーク共有、およびローカルWi-Fi経由のデバイスペアリング
+</item>
+        <item>
+リモート管理およびネットワーク共有接続のためのVPN検出
+</item>
+        <item>
+デバイスペアリングのためのローカルネットワークデバイス検出（NSD/mDNS）
+</item>
+        <item>
+操作完了アラートとストレージ警告
+</item>
+        <item>
+ローカルストレージからのAPKインストール
+</item>
+        <item>
+Shizuku APIを介した制限されたシステムディレクトリでの高度なファイル管理
+</item>
+        <item>
+高速検索のためにファイルのメタデータをローカルにインデックス化します
+</item>
+        <item>
+アプリマネージャーおよびDebloater機能 — インストールされたパッケージ名、バージョン、サイズ、システム/ユーザーフラグをデバイス上でのみ読み取ります。アップロードや共有はされません。Debloaterは、公開されているdebloat参照リストとパッケージ名をローカルで相互参照します。
+</item>
+        <item>
+ユーザーフィードバック収集のためのGoogle Playアプリ内レビューAPI
+</item>
+        <item>
+Lottieライブラリv6.3.0（com.airbnb.android:lottie）を介してアプリ全体でスムーズなUIアニメーションをレンダリングします
+</item>
     </string-array>
 
     <!-- Contact (Section 13) -->
     <string-array name="pp_contact_labels">
-        <item>電子メール</item>
+        <item>
+メール
+</item>
     </string-array>
     <string-array name="pp_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 </resources>

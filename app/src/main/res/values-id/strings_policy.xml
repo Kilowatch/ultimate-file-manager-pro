@@ -4,50 +4,104 @@
     <!-- ═══════════════════════════════════════════════════════════
          SHARED
     ═══════════════════════════════════════════════════════════ -->
-    <string name="policy_app_name">Manajer File Utama Pro</string>
-    <string name="policy_company">KiloWatch</string>
-    <string name="policy_last_updated">Terakhir Diperbarui: April 2026</string>
-    <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
-    <string name="policy_contact_email">support@kilowatch.co.za</string>
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+KiloWatch
+</string>
+    <string name="policy_last_updated">
+Terakhir Diperbarui: Juli 2026
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+support@kilowatch.co.za
+</string>
 
     <!-- ═══════════════════════════════════════════════════════════
          TERMS AND CONDITIONS
     ═══════════════════════════════════════════════════════════ -->
-    <string name="tc_screen_title">Syarat &amp; Ketentuan</string>
-    <string name="tc_summary">Dengan mengunduh atau menggunakan Ultimate File Manager Pro, Anda menerima Ketentuan ini. Kami telah menulisnya sejelas mungkin dan bebas jargon.</string>
+    <string name="tc_screen_title">
+Syarat &amp; Ketentuan
+</string>
+    <string name="tc_summary">
+Dengan mengunduh atau menggunakan Ultimate File Manager Pro, Anda menerima Ketentuan ini. Kami telah menulisnya dengan sejelas dan sebebas mungkin dari jargon.
+</string>
 
     <!-- Section titles -->
-    <string name="tc_s1_title">1. Apa yang Anda Setuju</string>
-    <string name="tc_s2_title">2. Apa yang Dilakukan Aplikasi</string>
-    <string name="tc_s3_title">3. Risiko &amp; Kewajiban — Kebenaran yang Jujur</string>
-    <string name="tc_s3a_title">3a. Pembelian &amp; Penagihan Dalam Aplikasi</string>
+    <string name="tc_s1_title">
+1. Apa yang Anda Setujui
+</string>
+    <string name="tc_s2_title">
+2. Apa yang Dilakukan Aplikasi
+</string>
+    <string name="tc_s3_title">
+3. Risiko &amp; Tanggung Jawab — Kebenaran yang Jujur
+</string>
+    <string name="tc_s3a_title">
+3a. Pembelian Dalam Aplikasi &amp; Penagihan
+</string>
     <string name="tc_s3b_title">
 3b. Integrasi Cloud RClone
 </string>
-    <string name="tc_s4_title">4. Tanggung Jawab Anda</string>
-    <string name="tc_s5_title">5. Izin yang Kami Butuhkan &amp; Alasannya</string>
-    <string name="tc_s6_title">6. Siapa yang Memiliki Apa</string>
-    <string name="tc_s7_title">7. Komponen Sumber Terbuka yang Kami Gunakan</string>
-    <string name="tc_s8_title">8. Perubahan Ketentuan Ini</string>
-    <string name="tc_s9_title">9. Jika Ada yang Salah</string>
-    <string name="tc_s10_title">10. Hukum yang Mengatur</string>
-    <string name="tc_s11_title">11. Pertanyaan? Hubungi kami</string>
+    <string name="tc_s4_title">
+4. Tanggung Jawab Anda
+</string>
+    <string name="tc_s5_title">
+5. Izin yang Kami Perlukan &amp; Alasannya
+</string>
+    <string name="tc_s6_title">
+6. Siapa Pemilik Apa
+</string>
+    <string name="tc_s7_title">
+7. Komponen Sumber Terbuka yang Kami Gunakan
+</string>
+    <string name="tc_s8_title">
+8. Perubahan pada Ketentuan Ini
+</string>
+    <string name="tc_s9_title">
+9. Jika Terjadi Masalah
+</string>
+    <string name="tc_s10_title">
+10. Hukum yang Berlaku
+</string>
+    <string name="tc_s11_title">
+11. Ada Pertanyaan? Hubungi Kami
+</string>
 
     <!-- Section body text -->
-    <string name="tc_s1_body">Dengan mengunduh atau membuka Ultimate File Manager Pro dari Google Play Store, Anda menerima Ketentuan ini. Jika Anda memilih untuk tidak menerimanya, jangan instal atau gunakan aplikasi tersebut.</string>
+    <string name="tc_s1_body">
+Dengan mengunduh atau membuka Ultimate File Manager Pro dari Google Play Store, Anda menerima Ketentuan ini. Jika Anda tidak ingin menerimanya, cukup jangan instal atau gunakan aplikasi ini.
+</string>
 
-    <string name="tc_s2_body">Ultimate File Manager Pro adalah aplikasi Android gratis — tersedia di ponsel dan Android TV — dilengkapi dengan alat untuk menjaga file Anda tetap teratur dan aman.</string>
+    <string name="tc_s2_body">
+Ultimate File Manager Pro adalah aplikasi Android gratis — tersedia di ponsel dan Android TV — dipenuhi dengan alat untuk menjaga file Anda tetap terorganisir dan aman.
+</string>
 
-    <string name="tc_s3_body">Kami telah membangun aplikasi ini dengan hati-hati, namun berikut adalah beberapa kenyataan penting yang harus Anda ketahui sebelum menggunakannya.</string>
+    <string name="tc_s3_body">
+Kami telah membuat aplikasi ini dengan hati-hati, tetapi berikut adalah beberapa realitas penting yang harus Anda ketahui sebelum menggunakannya.
+</string>
 
-    <string name="tc_s3a_body">Aplikasi ini menawarkan Tip Jar opsional \"Bahan Bakar Pengembang\" — tiga pembelian sukarela satu kali yang mendukung pengembangan. Tip tidak memberi Anda fitur tambahan; aplikasi ini selalu sepenuhnya gratis.</string>
-    <string name="tc_s3a_payment">Semua transaksi melalui Layanan Penagihan Google Play. Kami tidak pernah melihat detail kartu atau bank Anda.</string>
-    <string name="tc_s3a_refunds">Pembelian tip bersifat sukarela dan diproses oleh Google Play. Permintaan pengembalian dana ditangani langsung oleh Google Play sesuai dengan kebijakan pengembalian dana dan hukum yang berlaku, termasuk Undang-Undang Perlindungan Konsumen Afrika Selatan. KiloWatch tidak memproses pengembalian dana secara independen.</string>
-    <string name="tc_s3a_recurring">Tidak ada langganan. Setiap tip adalah pembelian sekali pakai. Anda tidak akan pernah ditagih secara otomatis.</string>
-    <string name="tc_s3a_no_obligation">Memberi tip sepenuhnya opsional. Semua fitur tetap tersedia tanpa biaya, selamanya.</string>
+    <string name="tc_s3a_body">
+Aplikasi ini menawarkan opsional \"Fuel the Developer\" Tip Jar — tiga pembelian sukarela satu kali yang mendukung pengembangan. Tips tidak memberi Anda fitur tambahan; aplikasi ini selalu gratis sepenuhnya.
+</string>
+    <string name="tc_s3a_payment">
+Semua transaksi melalui Google Play Billing. Kami tidak pernah melihat detail kartu atau bank Anda.
+</string>
+    <string name="tc_s3a_refunds">
+Pembelian tip bersifat sukarela dan diproses oleh Google Play. Permintaan refund ditangani langsung oleh Google Play sesuai dengan kebijakan refund mereka dan hukum yang berlaku, termasuk Undang-Undang Perlindungan Konsumen Afrika Selatan. KiloWatch tidak memproses refund secara independen.
+</string>
+    <string name="tc_s3a_recurring">
+Tidak ada langganan. Setiap tip adalah pembelian sekali pakai. Anda tidak akan pernah dikenakan biaya secara otomatis.
+</string>
+    <string name="tc_s3a_no_obligation">
+Memberi tip sepenuhnya opsional. Semua fitur tetap tersedia tanpa biaya, selamanya.
+</string>
 
     <string name="tc_s3b_body">
-Aplikasi ini mendukung koneksi ke berbagai penyedia penyimpanan cloud pihak ketiga menggunakan backend RClone terintegrasi. Saat Anda menggunakan fitur ini, ketentuan berikut ini berlaku:
+Aplikasi ini mendukung koneksi ke berbagai penyedia penyimpanan cloud pihak ketiga menggunakan backend RClone terintegrasi. Saat Anda menggunakan fitur ini, ketentuan berikut berlaku:
 </string>
     <string-array name="tc_rclone_labels">
         <item>
@@ -60,7 +114,7 @@ Keamanan Kredensial
 Ketentuan Pihak Ketiga
 </item>
         <item>
-Tidak Ada Jaminan Koneksi
+Tanpa Jaminan Koneksi
 </item>
     </string-array>
     <string-array name="tc_rclone_details">
@@ -68,618 +122,1408 @@ Tidak Ada Jaminan Koneksi
 Semua permintaan jaringan ke penyedia penyimpanan RClone (seperti Filen, Mega, dan lainnya) dilakukan langsung dari perangkat Anda ke titik akhir penyedia masing-masing. Tidak ada data yang melewati server KiloWatch.
 </item>
         <item>
-Profil konfigurasi RClone dan kata sandi Anda dienkripsi pada perangkat melalui backend RClone RC dan disimpan secara lokal sebagai rclone_encrypted.json di penyimpanan pribadi aplikasi. Anda sepenuhnya bertanggung jawab mengamankan perangkat Anda untuk melindungi file ini.
+Profil konfigurasi RClone dan kata sandi Anda dienkripsi di perangkat melalui backend RC RClone dan disimpan secara lokal sebagai rclone_encrypted.json di penyimpanan pribadi aplikasi. Anda sepenuhnya bertanggung jawab untuk mengamankan perangkat Anda untuk melindungi file ini.
 </item>
         <item>
-Penggunaan Anda atas penyimpanan cloud terintegrasi RClone diatur oleh persyaratan layanan dan kebijakan privasi dari masing-masing penyedia cloud. Anda harus mematuhi persyaratan mereka saat mengakses file melalui aplikasi ini.
+Penggunaan Anda terhadap penyimpanan cloud yang terintegrasi dengan RClone diatur oleh persyaratan layanan dan kebijakan privasi dari penyedia cloud tersebut. Anda harus mematuhi ketentuan mereka saat mengakses file melalui aplikasi ini.
 </item>
         <item>
 Karena API dan titik akhir penyedia cloud dapat berubah tanpa pemberitahuan, kami tidak dapat menjamin bahwa penyedia RClone tertentu akan tetap dapat diakses atau berfungsi tanpa gangguan.
 </item>
     </string-array>
     <string name="tc_s3b_summary">
-Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau TV Anda. Kami tidak pernah melihat file cloud atau kata sandi Anda. Kata sandi Anda dienkripsi di ponsel Anda, dan Anda tunduk pada ketentuan penyedia cloud apa pun yang Anda konfigurasikan.
+Menghubungkan ke drive cloud melalui RClone dilakukan langsung dari ponsel atau TV Anda. Kami tidak pernah melihat file atau kata sandi cloud Anda. Kata sandi Anda dienkripsi di ponsel Anda, dan Anda tunduk pada ketentuan penyedia cloud mana pun yang Anda konfigurasi.
 </string>
 
-    <string name="tc_s4_body">Menggunakan aplikasi ini disertai dengan beberapa tanggung jawab sederhana di pihak Anda.</string>
+    <string name="tc_s4_body">
+Menggunakan aplikasi ini memiliki beberapa tanggung jawab sederhana dari pihak Anda.
+</string>
 
-    <string name="tc_s5_body">Aplikasi ini meminta izin Android tertentu agar berfungsi dengan baik. Inilah kegunaan masing-masingnya.</string>
+    <string name="tc_s5_body">
+Aplikasi meminta izin Android tertentu agar berfungsi dengan baik. Berikut penjelasan untuk masing-masing izin.
+</string>
 
-    <string name="tc_s6_body">Anda dipersilakan untuk menggunakan aplikasi ini secara bebas; Anda hanya tidak diperbolehkan menyalin, mendistribusikan ulang, atau menjualnya.</string>
+    <string name="tc_s6_body">
+Anda dipersilakan menggunakan aplikasi ini secara bebas; Anda hanya tidak diizinkan untuk menyalin, mendistribusikan ulang, atau menjualnya.
+</string>
 
-    <string name="tc_s7_body">Kami membangun beberapa proyek sumber terbuka yang hebat. Masing-masing diatur oleh lisensinya sendiri — Anda dapat melihat teks lisensi lengkap untuk setiap perpustakaan di dalam aplikasi di Pengaturan → Hukum → Lisensi Sumber Terbuka.</string>
+    <string name="tc_s7_body">
+Kami membangun di atas bahu beberapa proyek sumber terbuka yang hebat. Masing-masing diatur oleh lisensinya sendiri — Anda dapat melihat teks lisensi lengkap untuk setiap perpustakaan di dalam aplikasi di Pengaturan → Legal → Lisensi Sumber Terbuka.
+</string>
 
-    <string name="tc_s8_body">Kami dapat memperbarui Ketentuan ini dari waktu ke waktu. Ketika kami melakukannya, kami akan memperbarui tanggal di bagian atas dokumen ini. Melanjutkan menggunakan aplikasi setelah perubahan apa pun berarti Anda menerima Ketentuan yang diperbarui.</string>
+    <string name="tc_s8_body">
+Kami dapat memperbarui Ketentuan ini dari waktu ke waktu. Saat melakukannya, kami akan memperbarui tanggal di bagian atas dokumen ini. Terus menggunakan aplikasi setelah perubahan berarti Anda menerima Ketentuan yang diperbarui.
+</string>
 
-    <string name="tc_s9_body">Kami berhak menangguhkan atau menghentikan akses ke aplikasi jika Ketentuan ini dilanggar — misalnya, jika aplikasi digunakan untuk aktivitas ilegal, atau untuk mengakses perangkat orang lain tanpa izin.</string>
+    <string name="tc_s9_body">
+Kami berhak menangguhkan atau menghentikan akses ke aplikasi jika Ketentuan ini dilanggar — misalnya, jika aplikasi digunakan untuk aktivitas ilegal, atau untuk mengakses perangkat orang lain tanpa izin.
+</string>
 
-    <string name="tc_s10_body">Ketentuan ini diatur oleh hukum Afrika Selatan. Setiap perselisihan akan diselesaikan di bawah yurisdiksi Afrika Selatan, tanpa memperhatikan pertentangan ketentuan hukum.</string>
+    <string name="tc_s10_body">
+Ketentuan ini diatur oleh hukum Afrika Selatan. Setiap perselisihan akan diselesaikan di bawah yurisdiksi Afrika Selatan, tanpa memperhatikan ketentuan konflik hukum.
+</string>
 
-    <string name="tc_s11_body">Jika ada yang tidak jelas di sini atau Anda memiliki pertanyaan tentang hak Anda, silakan hubungi kami.</string>
+    <string name="tc_s11_body">
+Jika ada yang kurang jelas atau Anda memiliki pertanyaan tentang hak Anda, silakan hubungi kami.
+</string>
 
-    <string name="tc_footer">Dengan menggunakan Ultimate File Manager Pro, Anda mengonfirmasi bahwa Anda telah membaca dan memahami Syarat &amp; Ketentuan ini.</string>
+    <string name="tc_footer">
+Dengan menggunakan Ultimate File Manager Pro, Anda mengonfirmasi bahwa Anda telah membaca dan memahami Syarat &amp; Ketentuan ini.
+</string>
 
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
-        <item>File Browser — menelusuri, menyalin, memindahkan, mengganti nama, dan menghapus file di mana saja di perangkat Anda.</item>
-        <item>Gudang Terenkripsi — mengunci file sensitif di balik enkripsi AES-256-GCM dengan PIN Anda sendiri.</item>
-        <item>File Server — host FTP atau server SFTP aman langsung di perangkat Anda untuk berbagi file melalui jaringan lokal Anda.</item>
-        <item>Manajemen Jarak Jauh — kelola file melalui Wi-Fi lokal Anda melalui server HTTP internal yang mendukung pengunggahan, pengunduhan, dan pemasangan APK dari jarak jauh.</item>
-        <item>Berbagi Jaringan — terhubung ke server SMB dan FTP di jaringan lokal Anda untuk menelusuri, mengunduh, dan mengelola file jarak jauh.</item>
-        <item>Sinkronisasi Folder — secara otomatis mencadangkan folder telepon lokal ke jaringan SMB atau FTP sesuai jadwal yang Anda pilih (interval atau waktu tertentu setiap hari, mingguan, atau bulanan).</item>
-        <item>Pemasangan Perangkat — pasangkan ponsel Anda dan Android TV melalui Wi-Fi lokal untuk mentransfer dan menginstal file.</item>
-        <item>Terminal ADB — sambungkan ke perangkat Android dalam Mode Pengembang melalui Wi-Fi lokal Anda menggunakan ADB (Android Debug Bridge) untuk akses shell langsung dan pemecahan masalah tingkat lanjut.</item>
-        <item>Penampil Bawaan — melihat file teks, PDF, gambar animasi (APNG, GIF, WebP animasi, SVG, dan lainnya), arsip, dan format lain langsung di dalam aplikasi.</item>
-        <item>Dukungan ZIP Tingkat Lanjut — membuat dan mengekstrak arsip ZIP yang dilindungi kata sandi dan dienkripsi AES.</item>
-        <item>Tangkapan Layar Jarak Jauh — ambil layar TV Android pasangan Anda melalui Wi-Fi lokal melalui ADB dan simpan langsung ke penyimpanan ponsel Anda.</item>
-        <item>Dukungan Arsip 7Z — mengekstrak arsip 7Z dengan kompresi LZMA/LZMA2.</item>
-        <item>Pencarian File — temukan file dan folder dengan cepat di seluruh penyimpanan perangkat Anda.</item>
-        <item>Storage Analyzer — lihat perincian visual tentang apa yang menggunakan ruang penyimpanan Anda.</item>
-        <item>Manajer Aplikasi — melihat dan mengelola semua aplikasi yang terinstal di perangkat Anda, dengan rekomendasi debloat untuk aplikasi pra-instal.</item>
-        <item>Penginstal APK — instal aplikasi Android dan pisahkan APK (XAPK) langsung dari file yang disimpan secara lokal.</item>
-        <item>Akses yang Ditinggikan (Shizuku &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar me-rooting perangkat Anda.</item>
-        <item>Pengindeks Penyimpanan — membuat indeks lokal metadata file untuk pencarian instan dan penelusuran cepat.</item>
-        <item>Kerangka Akses Penyimpanan — aplikasi lain dapat mengakses file Anda melalui penyedia dokumen UFM.</item>
-        <item>Tip Jar — pembelian satu kali opsional untuk mendukung pengembang; aplikasi ini selalu gratis tanpa memberi tip.</item>
         <item>
-UFM Media Player — memutar file audio dan video dengan pemutaran latar belakang, kontrol notifikasi, mode Gambar-dalam-Gambar, dan manajemen daftar putar.
+Penjelajah File — jelajahi, salin, pindahkan, ganti nama, dan hapus file di mana saja di perangkat Anda.
+</item>
+        <item>
+Brankas Terenkripsi — kunci file sensitif di balik enkripsi AES-256-GCM dengan PIN Anda sendiri.
+</item>
+        <item>
+Server File — host server FTP atau SFTP aman langsung di perangkat Anda untuk berbagi file di jaringan lokal Anda.
+</item>
+        <item>
+Manajemen Jarak Jauh — kelola file melalui Wi-Fi lokal Anda melalui server HTTP bawaan yang mendukung unggah, unduh, dan instal APK dari jarak jauh.
+</item>
+        <item>
+Berbagi Jaringan — terhubung ke server SMB, FTP, dan NFS di jaringan lokal Anda untuk menjelajah, mengunduh, dan mengelola file jarak jauh.
+</item>
+        <item>
+Sinkronisasi Folder — secara otomatis mencadangkan folder telepon lokal ke berbagi jaringan SMB atau FTP sesuai jadwal yang Anda pilih (interval atau waktu tertentu setiap hari, mingguan, atau bulanan).
+</item>
+        <item>
+Pemasangan Perangkat — pasangkan ponsel Anda dan Android TV melalui Wi-Fi lokal untuk mentransfer dan menginstal file.
+</item>
+        <item>
+Terminal ADB — terhubung ke perangkat Android dalam Mode Pengembang melalui Wi-Fi lokal menggunakan ADB (Android Debug Bridge) untuk akses shell langsung dan pemecahan masalah lanjutan.
+</item>
+        <item>
+Penampil Bawaan — lihat file teks, PDF, gambar animasi (APNG, GIF, WebP animasi, SVG dan lainnya), arsip, dan format lainnya langsung di dalam aplikasi.
+</item>
+        <item>
+Dukungan ZIP Lanjutan — buat dan ekstrak arsip ZIP yang dilindungi kata sandi dan dienkripsi AES.
+</item>
+        <item>
+Tangkapan Layar Jarak Jauh — ambil layar Android TV yang dipasangkan melalui Wi-Fi lokal via ADB dan simpan langsung ke penyimpanan ponsel Anda.
+</item>
+        <item>
+Dukungan Arsip 7Z — ekstrak arsip 7Z dengan kompresi LZMA/LZMA2.
+</item>
+        <item>
+Pencarian File — temukan file dan folder dengan cepat di seluruh penyimpanan perangkat Anda.
+</item>
+        <item>
+Penganalisis Penyimpanan — lihat rincian visual tentang apa yang menggunakan ruang penyimpanan Anda.
+</item>
+        <item>
+Manajer Aplikasi — lihat dan kelola semua aplikasi yang terinstal di perangkat Anda, dengan rekomendasi debloat untuk aplikasi pra-instal.
+</item>
+        <item>
+Penginstal APK — instal aplikasi Android dan APK split (XAPK) langsung dari file yang disimpan secara lokal.
+</item>
+        <item>
+Akses Tinggi (Shizuku &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar melakukan rooting pada perangkat Anda.
+</item>
+        <item>
+Pengindeks Penyimpanan — buat indeks lokal metadata file untuk pencarian instan dan penjelajahan yang sangat cepat.
+</item>
+        <item>
+Kerangka Akses Penyimpanan — aplikasi lain dapat mengakses file Anda melalui penyedia dokumen UFM.
+</item>
+        <item>
+Tip Jar — pembelian satu kali opsional untuk mendukung pengembang; aplikasi selalu gratis tanpa tip.
+</item>
+        <item>
+Pemutar Media UFM — putar file audio dan video dengan pemutaran latar belakang, kontrol notifikasi, mode Picture-in-Picture, dan manajemen daftar putar.
 </item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
-        <item>Kehilangan Data</item>
-        <item>PIN Gudang</item>
-        <item>File APK</item>
-        <item>Keamanan Server File</item>
-        <item>Kredensial Berbagi Jaringan</item>
-        <item>Sinkronisasi Folder</item>
-        <item>Penghapusan Aplikasi Sistem</item>
-        <item>Pemasangan ADB</item>
-        <item>Shizuku &amp; Akses Tinggi</item>
-        <item>Tangkapan Layar TV</item>
-        <item>Akurasi Pengindeks</item>
-        <item>Bug &amp; Kesalahan</item>
-        <item>Tanggung Jawab Kami</item>
+        <item>
+Kehilangan Data
+</item>
+        <item>
+PIN Brankas
+</item>
+        <item>
+File APK
+</item>
+        <item>
+Keamanan Server File
+</item>
+        <item>
+Kredensial Berbagi Jaringan
+</item>
+        <item>
+Sinkronisasi Folder
+</item>
+        <item>
+Penghapusan Aplikasi Sistem
+</item>
+        <item>
+Pemasangan ADB
+</item>
+        <item>
+Shizuku &amp; Akses Tinggi
+</item>
+        <item>
+Tangkapan Layar TV
+</item>
+        <item>
+Akurasi Pengindeks
+</item>
+        <item>
+Bug &amp; Kesalahan
+</item>
+        <item>
+Tanggung Jawab Kami
+</item>
     </string-array>
     <string-array name="tc_risk_details">
-        <item>Kami tidak dapat menjamin tidak ada kehilangan data. Selalu simpan cadangan file yang penting bagi Anda.</item>
-        <item>Jika Anda lupa PIN dan Kode Pemulihan, file terenkripsi Anda tidak dapat dipulihkan — oleh siapa pun.</item>
-        <item>Menginstal APK dari sumber yang tidak dikenal membawa risiko keamanan. Anda bertanggung jawab penuh atas setiap file APK yang Anda instal.</item>
-        <item>Saat menghosting File Server, koneksi FTP mengirimkan data dan kredensial dalam teks biasa. Selalu gunakan SFTP jika Anda memerlukan transfer yang aman dan terenkripsi.</item>
-        <item>Kredensial berbagi jaringan Anda (host, nama pengguna, kata sandi) disimpan secara lokal di perangkat Anda. Anda bertanggung jawab untuk menjaga keamanan perangkat Anda.</item>
-        <item>Operasi sinkronisasi berjalan di latar belakang dan dapat menghabiskan baterai dan data. Selalu verifikasi jalur jarak jauh Anda sebelum mengaktifkan sinkronisasi — menyinkronkan ke folder yang salah dapat menimpa file di jaringan berbagi Anda.</item>
-        <item>Menghapus aplikasi sistem berdasarkan rekomendasi debloat dapat memengaruhi stabilitas perangkat. Lanjutkan dengan hati-hati.</item>
-        <item>Pemasangan ADB memerlukan pertukaran sertifikat antara perangkat Anda dan perangkat target melalui Wi-Fi lokal Anda. Hanya sambungkan ke perangkat yang Anda miliki atau izin aksesnya Anda miliki. Siapa pun di jaringan Anda yang mengetahui PIN pasangan Anda dapat mengakses perangkat Anda — jaga kerahasiaan PIN ini.</item>
-        <item>Menggunakan Shizuku atau ADB untuk akses yang lebih tinggi memungkinkan aplikasi memodifikasi file yang dilindungi sistem. Penyalahgunaan fitur ini dapat memengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.</item>
-        <item>Tangkapan layar TV yang dipasangkan diambil melalui ADB melalui jaringan lokal Anda dan disimpan langsung ke penyimpanan ponsel Anda. Kami tidak mengirimkan, melihat, atau mengunggah tangkapan layar Anda. Pastikan Anda hanya menangkap layar pada perangkat yang Anda miliki atau izin aksesnya Anda miliki.</item>
-        <item>Indeks mencerminkan status penyimpanan Anda pada saat pemindaian. Anda mungkin perlu menyegarkan indeks jika file diubah oleh aplikasi lain.</item>
-        <item>Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjanjikan aplikasi akan selalu bebas dari kesalahan atau tidak terganggu.</item>
-        <item>Tanggung jawab total kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim apa pun. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau hilangnya keuntungan yang timbul dari fitur gratis.</item>
+        <item>
+Kami tidak dapat menjamin tidak ada kehilangan data. Selalu buat cadangan file yang penting bagi Anda.
+</item>
+        <item>
+Jika Anda lupa PIN dan Kode Pemulihan, file terenkripsi Anda tidak dapat dipulihkan — oleh siapa pun.
+</item>
+        <item>
+Menginstal APK dari sumber tidak dikenal membawa risiko keamanan. Anda bertanggung jawab penuh atas file APK yang Anda instal.
+</item>
+        <item>
+Saat menghosting Server File, koneksi FTP mentransmisikan data dan kredensial dalam teks biasa. Selalu gunakan SFTP jika Anda memerlukan transfer yang aman dan terenkripsi.
+</item>
+        <item>
+Kredensial berbagi jaringan Anda (host, nama pengguna, kata sandi) disimpan secara lokal di perangkat Anda. Anda bertanggung jawab untuk menjaga keamanan perangkat Anda.
+</item>
+        <item>
+Operasi sinkronisasi berjalan di latar belakang dan dapat menghabiskan baterai dan data. Selalu verifikasi jalur jarak jauh Anda sebelum mengaktifkan sinkronisasi — menyinkronkan ke folder yang salah dapat menimpa file di berbagi jaringan Anda.
+</item>
+        <item>
+Menghapus aplikasi sistem berdasarkan rekomendasi debloat dapat mempengaruhi stabilitas perangkat. Lanjutkan dengan hati-hati.
+</item>
+        <item>
+Pemasangan ADB memerlukan pertukaran sertifikat antara perangkat Anda dan perangkat target melalui Wi-Fi lokal. Hanya terhubung ke perangkat yang Anda miliki atau memiliki izin untuk mengakses. Siapa pun di jaringan Anda yang menangkap PIN pemasangan Anda dapat mengakses perangkat Anda — jaga kerahasiaan PIN ini.
+</item>
+        <item>
+Menggunakan Shizuku atau ADB untuk akses tinggi memungkinkan aplikasi untuk memodifikasi file yang dilindungi sistem. Penyalahgunaan fitur ini dapat mempengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.
+</item>
+        <item>
+Tangkapan layar TV yang dipasangkan diambil melalui ADB melalui jaringan lokal Anda dan disimpan langsung ke penyimpanan ponsel Anda. Kami tidak mentransmisikan, melihat, atau mengunggah tangkapan layar Anda. Pastikan Anda hanya mengambil layar pada perangkat yang Anda miliki atau memiliki izin untuk mengakses.
+</item>
+        <item>
+Indeks mencerminkan status penyimpanan Anda pada saat pemindaian. Anda mungkin perlu menyegarkan indeks jika file diubah oleh aplikasi lain.
+</item>
+        <item>
+Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjamin aplikasi akan selalu bebas dari kesalahan atau tanpa gangguan.
+</item>
+        <item>
+Total tanggung jawab kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim apa pun. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau kehilangan keuntungan yang timbul dari fitur gratis.
+</item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
-        <item>Simpan cadangan rutin file-file penting sebelum melakukan operasi massal.</item>
-        <item>Simpan PIN Vault dan Kode Pemulihan Anda di tempat yang aman — kami tidak dapat mengambilnya untuk Anda.</item>
-        <item>Jaga kerahasiaan PIN Anda. Siapa pun yang mengetahuinya dapat mengakses Vault Anda.</item>
-        <item>Jaga keamanan kredensial berbagi jaringan Anda — kredensial disimpan secara lokal di perangkat Anda.</item>
-        <item>Tinjau jalur jarak jauh Sinkronisasi Folder Anda dengan hati-hati — sinkronisasi ke folder jaringan yang salah dapat menimpa file yang ada.</item>
-        <item>Berhati-hatilah saat menghapus aplikasi sistem berdasarkan rekomendasi debloat.</item>
-        <item>Hanya terhubung melalui Terminal ADB ke perangkat yang Anda miliki atau memiliki izin eksplisit untuk mengakses. Jangan gunakan Terminal ADB untuk mendapatkan akses tidak sah ke perangkat apa pun.</item>
-        <item>Jaga kerahasiaan PIN penyandingan ADB atau Shizuku — bagikan PIN ini hanya dengan orang yang Anda percayai yang memiliki akses ke perangkat Anda.</item>
-        <item>Amankan Shizuku Manager Anda — memberikan UFM akses yang lebih tinggi melalui Shizuku memberinya kekuasaan atas file yang dibatasi. Berikan akses ini hanya jika Anda memercayai aplikasi tersebut.</item>
-        <item>Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, membagikan, atau mendistribusikan konten ilegal.</item>
-        <item>Jangan gunakan Manajemen Jarak Jauh untuk mengakses perangkat orang lain tanpa izinnya.</item>
-        <item>Jangan mencoba merekayasa balik, mendekompilasi, atau mengutak-atik aplikasi.</item>
-        <item>Kelola catatan yang diindeks secara bertanggung jawab — Anda dapat menghapus catatan atau mengabaikan drive tertentu kapan saja melalui Pengaturan -&gt; Pengindeks Penyimpanan.</item>
-        <item>Verifikasi keaslian dan keamanan file APK apa pun sebelum menginstalnya.</item>
+        <item>
+Buat cadangan rutin file penting sebelum melakukan operasi massal.
+</item>
+        <item>
+Simpan PIN Brankas dan Kode Pemulihan Anda di tempat yang aman — kami tidak dapat mengambilnya untuk Anda.
+</item>
+        <item>
+Jaga kerahasiaan PIN Anda. Siapa pun yang mengetahuinya dapat mengakses Brankas Anda.
+</item>
+        <item>
+Jaga keamanan kredensial berbagi jaringan Anda — disimpan secara lokal di perangkat Anda.
+</item>
+        <item>
+Tinjau jalur jarak jauh Sinkronisasi Folder Anda dengan hati-hati — menyinkronkan ke folder jaringan yang salah dapat menimpa file yang ada.
+</item>
+        <item>
+Berhati-hatilah saat menghapus aplikasi sistem berdasarkan rekomendasi debloat.
+</item>
+        <item>
+Hanya terhubung melalui Terminal ADB ke perangkat yang Anda miliki atau memiliki izin eksplisit untuk mengakses. Jangan gunakan Terminal ADB untuk mendapatkan akses tidak sah ke perangkat apa pun.
+</item>
+        <item>
+Jaga kerahasiaan PIN pemasangan ADB atau Shizuku — bagikan hanya dengan orang yang Anda percaya memiliki akses ke perangkat Anda.
+</item>
+        <item>
+Amankan Shizuku Manager Anda — memberikan akses tinggi UFM melalui Shizuku memberinya kekuasaan atas file terbatas. Hanya berikan akses ini jika Anda mempercayai aplikasi.
+</item>
+        <item>
+Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, membagikan, atau mendistribusikan konten ilegal.
+</item>
+        <item>
+Jangan gunakan Manajemen Jarak Jauh untuk mengakses perangkat orang lain tanpa izin mereka.
+</item>
+        <item>
+Jangan mencoba melakukan reverse-engineering, mendekompilasi, atau mengutak-atik aplikasi.
+</item>
+        <item>
+Kelola catatan yang diindeks Anda secara bertanggung jawab — Anda dapat menghapus catatan atau mengabaikan drive tertentu kapan saja melalui Pengaturan -> Pengindeks Penyimpanan.
+</item>
+        <item>
+Verifikasi keaslian dan keamanan file APK sebelum menginstalnya.
+</item>
     </string-array>
 
     <!-- Permissions table (Section 5) — label|detail pairs -->
     <string-array name="tc_permission_labels">
-        <item>Akses Semua File</item>
-        <item>Akses Media</item>
-        <item>Pemberitahuan</item>
-        <item>Jaringan / Wi-Fi</item>
-        <item>Multicast</item>
-        <item>Status Jaringan</item>
-        <item>Permintaan Paket</item>
-        <item>Instal Paket</item>
-        <item>Penagihan</item>
-        <item>Jembatan Debug ADB</item>
-        <item>Akses Tinggi (Shizuku)</item>
-        <item>Mulai Booting</item>
-        <item>Optimasi Baterai</item>
-        <item>Layanan Latar Depan</item>
-        <item>Kunci Bangun</item>
-        <item>Pengindeks Penyimpanan</item>
-        <item>Bluetooth</item>
-        <item>Bergetar</item>
+        <item>
+Akses Semua File
+</item>
+        <item>
+Akses Media
+</item>
+        <item>
+Notifikasi
+</item>
+        <item>
+Jaringan / Wi-Fi
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Status Jaringan
+</item>
+        <item>
+Kueri Paket
+</item>
+        <item>
+Instal Paket
+</item>
+        <item>
+Penagihan
+</item>
+        <item>
+ADB Debug Bridge
+</item>
+        <item>
+Akses Tinggi (Shizuku)
+</item>
+        <item>
+Mulai Boot
+</item>
+        <item>
+Optimasi Baterai
+</item>
+        <item>
+Layanan Latar Depan
+</item>
+        <item>
+Wake Lock
+</item>
+        <item>
+Pengindeks Penyimpanan
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+Getar
+</item>
     </string-array>
     <string-array name="tc_permission_details">
-        <item>Penting untuk menelusuri, menyalin, memindahkan, dan menghapus file di seluruh penyimpanan Anda.</item>
-        <item>Diperlukan untuk mengatur dan mengelola foto, video, dan file audio Anda.</item>
-        <item>Digunakan untuk memperingatkan Anda ketika operasi file selesai atau ketika penyimpanan hampir habis.</item>
-        <item>Mendukung manajemen file jarak jauh, akses berbagi jaringan (SMB/FTP/SFTP/SCP), sinkronisasi folder, pemasangan perangkat, dan akses terminal ADB di jaringan lokal Anda. Penemuan jaringan memindai perangkat di subnet lokal Anda (hingga 254 IP) pada port ADB 5555, 5037, dan 5038 untuk menemukan perangkat yang mendukung ADB.</item>
-        <item>Digunakan untuk penemuan perangkat jaringan lokal (NSD/mDNS) saat memasangkan perangkat.</item>
-        <item>Mendeteksi koneksi VPN selama Manajemen Jarak Jauh dan akses berbagi jaringan.</item>
-        <item>Memungkinkan Manajer Aplikasi mencantumkan aplikasi yang diinstal pada perangkat Anda.</item>
-        <item>Diperlukan untuk menginstal file APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.</item>
-        <item>Memproses pembelian Tip Jar opsional melalui Google Play.</item>
-        <item>Memungkinkan koneksi aman ke perangkat Android untuk akses shell tingkat lanjut. Menghasilkan sertifikat RSA unik pada perangkat Anda untuk dipasangkan; tidak ada sertifikat yang dikirimkan ke server eksternal.</item>
-        <item>Mengizinkan aplikasi menggunakan Shizuku API (termasuk Pengaturan Aman) untuk mengelola file di direktori sistem terbatas tanpa melakukan rooting.</item>
-        <item>Mengizinkan layanan Shizuku dimulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.</item>
-        <item>Memungkinkan Anda memilih untuk tetap mengaktifkan layanan Shizuku di latar belakang untuk kinerja yang andal.</item>
-        <item>Diperlukan untuk menjalankan Sinkronisasi Folder dan transfer file sebagai layanan latar depan sehingga dapat diselesaikan dengan andal bahkan saat layar mati.</item>
-        <item>Menjaga CPU dan Wi-Fi tetap aktif selama transfer file berukuran besar sehingga dapat diselesaikan dengan andal bahkan saat layar mati.</item>
-        <item>Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata file untuk kinerja — dikelola melalui Pengaturan -&gt; Pengindeks Penyimpanan.</item>
-        <item>Terhubung ke TV Android pasangan Anda untuk bertindak sebagai keyboard dan mouse Bluetooth untuk kendali jarak jauh.</item>
-        <item>Memberikan umpan balik haptik saat menekan tombol di Remote TV.</item>
+        <item>
+Penting untuk menjelajah, menyalin, memindahkan, dan menghapus file di seluruh penyimpanan Anda.
+</item>
+        <item>
+Diperlukan untuk mengatur dan mengelola foto, video, dan file audio Anda.
+</item>
+        <item>
+Digunakan untuk memberi tahu Anda saat operasi file selesai atau saat penyimpanan hampir habis.
+</item>
+        <item>
+Mendukung manajemen file jarak jauh, akses berbagi jaringan (SMB/FTP/SFTP/SCP/NFS), sinkronisasi folder, pemasangan perangkat, dan akses terminal ADB di jaringan lokal Anda. Penemuan jaringan memindai perangkat di subnet lokal Anda (hingga 254 IP) pada port ADB 5555, 5037, dan 5038 untuk menemukan perangkat yang mendukung ADB.
+</item>
+        <item>
+Digunakan untuk penemuan perangkat jaringan lokal (NSD/mDNS) saat memasangkan perangkat.
+</item>
+        <item>
+Mendeteksi koneksi VPN selama Manajemen Jarak Jauh dan akses berbagi jaringan.
+</item>
+        <item>
+Memungkinkan Manajer Aplikasi untuk mendaftar semua aplikasi yang terinstal di perangkat Anda. Data yang diakses meliputi: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, dan apakah setiap aplikasi adalah aplikasi sistem atau yang diinstal pengguna. Informasi ini digunakan secara eksklusif di perangkat untuk menampilkan Manajer Aplikasi, menghitung penyimpanan per aplikasi, dan mencocokkan nama paket dengan daftar referensi debloat yang tersedia untuk umum yang diunduh dan di-cache secara lokal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
+</item>
+        <item>
+Diperlukan untuk menginstal file APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.
+</item>
+        <item>
+Memproses pembelian Tip Jar opsional melalui Google Play.
+</item>
+        <item>
+Memungkinkan koneksi aman ke perangkat Android untuk akses shell lanjutan. Menghasilkan sertifikat RSA unik di perangkat Anda untuk pemasangan; tidak ada sertifikat yang dikirimkan ke server eksternal.
+</item>
+        <item>
+Memungkinkan aplikasi menggunakan API Shizuku (termasuk Pengaturan Aman) untuk mengelola file di direktori sistem terbatas tanpa rooting.
+</item>
+        <item>
+Memungkinkan layanan Shizuku untuk mulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.
+</item>
+        <item>
+Memungkinkan Anda memilih untuk menjaga layanan Shizuku tetap aktif di latar belakang untuk kinerja yang andal.
+</item>
+        <item>
+Diperlukan untuk menjalankan Sinkronisasi Folder dan transfer file sebagai layanan latar depan sehingga selesai dengan andal bahkan saat layar mati.
+</item>
+        <item>
+Menjaga CPU dan Wi-Fi tetap aktif selama transfer file besar sehingga selesai dengan andal bahkan saat layar mati.
+</item>
+        <item>
+Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata file untuk kinerja — dikelola melalui Pengaturan -> Pengindeks Penyimpanan.
+</item>
+        <item>
+Terhubung ke Android TV yang dipasangkan untuk bertindak sebagai keyboard dan mouse Bluetooth untuk kendali jarak jauh.
+</item>
+        <item>
+Memberikan umpan balik haptik saat menekan tombol pada Remote TV.
+</item>
     </string-array>
 
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
-        <item>NanoHTTPD — server HTTP ringan yang mendukung Manajemen Jarak Jauh. (Klausul BSD-3)</item>
-        <item>jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — Pustaka klien SMB2/SMB3 untuk penjelajahan berbagi jaringan dan Sinkronisasi Folder. (LGPL-2.1)</item>
-        <item>smbj (hierynomus/smbj) — Implementasi Java SMB2/SMB3 yang digunakan untuk akses berbagi jaringan. (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — pustaka klien inti SSHD, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan dan hosting yang aman. (Apache-2.0)</item>
-        <item>Apache FtpServer (org.apache.ftpserver) — 100% server Java FTP murni. (Apache-2.0)</item>
-        <item>Apache POI — perpustakaan pemrosesan dokumen untuk melihat file kantor. (Apache-2.0)</item>
-        <item>Firebase Analytics — Platform analisis Google yang membantu kami memahami penggunaan aplikasi. (Apache-2.0)</item>
-        <item>Perpustakaan AndroidX (termasuk Leanback untuk Android TV) — Komponen Jetpack Google untuk pengembangan Android modern. (Apache-2.0)</item>
-        <item>Komponen Desain Material — Pustaka UI Google untuk antarmuka yang bersih dan konsisten. (Apache-2.0)</item>
-        <item>Perpustakaan Persistensi Ruangan — Lapisan abstraksi SQLite untuk pengindeksan metadata lokal. (Apache-2.0)</item>
-        <item>zip4j (net.lingala.zip4j) — pustaka ZIP tingkat lanjut untuk arsip yang dilindungi kata sandi dan dienkripsi AES. (Apache-2.0)</item>
-        <item>Apache Commons Compress — perpustakaan untuk membaca dan menulis berbagai format arsip (7z, zip, tar, dll). (Apache-2.0)</item>
-        <item>XZ untuk Java (org.tukaani.xz) — implementasi kompresi XZ dan LZMA. (Domain Publik)</item>
-        <item>libadb-android (com.github.MuntashirAkon) — Pustaka Android Debug Bridge memungkinkan koneksi aman ke perangkat berkemampuan ADB untuk akses shell jarak jauh dan pemasangan berbasis sertifikat. (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — pustaka klien inti SSHD, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan yang aman. (Apache-2.0)</item>
-        <item>EdDSA untuk Java (net.i2p.crypto:eddsa) — implementasi EdDSA (Algoritma Tanda Tangan Digital kurva Edwards) untuk kunci SSH Ed25519. (CC0-1.0)</item>
-        <item>SLF4J Android (uk.uuid.slf4j:slf4j-android) — logging binding untuk Android yang digunakan oleh perpustakaan SSHD. (MIT)</item>
-        <item>BouncyCastle (org.bouncycastle) — perpustakaan kriptografi untuk pembuatan pasangan kunci RSA/EdDSA dan pembuatan sertifikat X.509; versi 1.83. (Lisensi gaya MIT)</item>
-        <item>Perpustakaan Penagihan Google Play — memproses pembelian tip opsional dalam aplikasi; diatur oleh Kebijakan Privasi Google Play. (Apache-2.0)</item>
-        <item>Pustaka Tinjauan Google Play — mendukung fungsi penilaian dan ulasan dalam aplikasi. (Apache-2.0)</item>
-        <item>Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, SVG) di penampil gambar bawaan. (Apache-2.0)</item>
-        <item>APNG4Android (com.github.penfeizhou.android.animation) — perpustakaan inti untuk mendekode dan merender file PNG animasi di Android. (Apache-2.0)</item>
-        <item>Shizuku API (dev.rikka.shizuku:api &amp; penyedia) — perpustakaan dan penyedia yang memungkinkan akses sistem file yang lebih tinggi melalui aplikasi Shizuku Manager. (Apache-2.0)</item>
-        <item>ViewPager2 — Pustaka Android untuk berpindah antar fragmen dan tata letak. (Apache-2.0)</item>
-        <item>Lottie (com.airbnb.android:lottie) v6.3.0 — pustaka animasi untuk merender animasi Adobe After Effects secara asli di Android, digunakan untuk animasi UI yang halus di seluruh aplikasi. (Apache-2.0)</item>
-        <item>Ktor (io.ktor) — kerangka web ringan yang digunakan untuk memberi daya pada Server File lokal. (Apache-2.0)</item>
-        <item>PDFBox-Android (com.tom-roush:pdfbox-android) — perpustakaan untuk merender dan melihat dokumen PDF secara asli. (Apache-2.0)</item>
-        <item>ExoPlayer / Media3 (androidx.media3) — pemutar media canggih untuk pemutaran video dan audio yang tangguh. (Apache-2.0)</item>
-        <item>Microsoft Authentication Library (MSAL) — menangani otentikasi OneDrive API secara asli. (MIT)</item>
-        <item>OkHttp (com.squareup.okhttp3) — klien HTTP &amp; HTTP/2 yang tangguh untuk permintaan jaringan penyimpanan cloud. (Apache-2.0)</item>
-        <item>Gson (com.google.code.gson) — Pustaka pemrosesan JSON yang digunakan untuk integrasi penyimpanan cloud. (Apache-2.0)</item>
-        <item>Browser AndroidX (androidx.browser) — Dukungan Tab Khusus Chrome untuk autentikasi API Google Drive. (Apache-2.0)</item>
-        <item>ZXing (com.google.zxing:core) — perpustakaan pemrosesan gambar kode batang. (Apache-2.0)</item>
-        <item>Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)</item>
         <item>
-Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)
+NanoHTTPD — server HTTP ringan yang mendukung Manajemen Jarak Jauh. (BSD-3-Clause)
 </item>
         <item>
-Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Hak milik)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — pustaka klien SMB2/SMB3 untuk penjelajahan berbagi jaringan dan Sinkronisasi Folder. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — implementasi Java SMB2/SMB3 yang digunakan untuk akses berbagi jaringan. (Apache-2.0)
+</item>
+        <item>
+Klien NFS EMC ECS (com.emc.ecs:nfs-client) — pustaka klien NFS v3 untuk akses berbagi jaringan. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — pustaka klien NFS asli yang mendukung NFSv2, NFSv3, dan NFSv4. (LGPL-2.1 / BSD-2-Clause)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses dan hosting berbagi jaringan yang aman. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — server FTP 100% Java murni. (Apache-2.0)
+</item>
+        <item>
+Apache POI — pustaka pemrosesan dokumen untuk melihat file kantor. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — platform analitik Google yang membantu kami memahami penggunaan aplikasi. (Apache-2.0)
+</item>
+        <item>
+Pustaka AndroidX (termasuk Leanback untuk Android TV) — komponen Jetpack Google untuk pengembangan Android modern. (Apache-2.0)
+</item>
+        <item>
+Komponen Material Design — pustaka UI Google untuk antarmuka yang bersih dan konsisten. (Apache-2.0)
+</item>
+        <item>
+Pustaka Room Persistence — lapisan abstraksi SQLite untuk pengindeksan metadata lokal. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — pustaka ZIP lanjutan untuk arsip yang dilindungi kata sandi dan dienkripsi AES. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — pustaka untuk membaca dan menulis berbagai format arsip (7z, zip, tar, dll). (Apache-2.0)
+</item>
+        <item>
+XZ untuk Java (org.tukaani.xz) — implementasi kompresi XZ dan LZMA. (Domain Publik)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — pustaka Android Debug Bridge yang memungkinkan koneksi aman ke perangkat yang mendukung ADB untuk akses shell jarak jauh dan pemasangan berbasis sertifikat. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan yang aman. (Apache-2.0)
+</item>
+        <item>
+EdDSA untuk Java (net.i2p.crypto:eddsa) — implementasi EdDSA (Algoritma Tanda Tangan Digital Kurva Edwards) untuk kunci SSH Ed25519. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — pengikatan logging untuk Android yang digunakan oleh pustaka SSHD. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — pustaka kriptografi untuk pembuatan pasangan kunci RSA/EdDSA dan pembuatan sertifikat X.509; versi 1.83. (Lisensi gaya MIT)
+</item>
+        <item>
+Pustaka Penagihan Google Play — memproses pembelian tip dalam aplikasi opsional; diatur oleh Kebijakan Privasi Google Play. (Apache-2.0)
+</item>
+        <item>
+Pustaka Ulasan Google Play — mendukung fungsionalitas peringkat dan ulasan dalam aplikasi. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, SVG) di penampil gambar bawaan. (Apache-2.0)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk mendekode dan merender file PNG animasi di Android. (Apache-2.0)
+</item>
+        <item>
+API Shizuku (dev.rikka.shizuku:api &amp; provider) — pustaka dan penyedia yang memungkinkan akses sistem file tinggi melalui aplikasi Shizuku Manager. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — pustaka Android untuk menggeser antar fragmen dan tata letak. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — pustaka animasi untuk merender animasi Adobe After Effects secara asli di Android, digunakan untuk animasi UI yang halus di seluruh aplikasi. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — kerangka web ringan yang digunakan untuk mendukung Server File lokal. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — pustaka untuk merender dan melihat dokumen PDF secara asli. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — pemutar media canggih untuk pemutaran video dan audio yang kuat. (Apache-2.0)
+</item>
+        <item>
+Pustaka Autentikasi Microsoft (MSAL) — menangani autentikasi API OneDrive secara asli. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — klien HTTP &amp; HTTP/2 yang kuat untuk permintaan jaringan penyimpanan cloud. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — pustaka pemrosesan JSON yang digunakan untuk integrasi penyimpanan cloud. (Apache-2.0)
+</item>
+        <item>
+Browser AndroidX (androidx.browser) — dukungan Tab Kustom Chrome untuk autentikasi API Google Drive. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — pustaka pemrosesan gambar barcode. (Apache-2.0)
+</item>
+        <item>
+SDK Amazon Appstore — memproses pembelian tip dalam aplikasi opsional pada perangkat Amazon. (Proprietary)
 </item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">
-        <item>E-mail</item>
+        <item>
+Email
+</item>
     </string-array>
     <string-array name="tc_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 
     <!-- ═══════════════════════════════════════════════════════════
          PRIVACY POLICY
     ═══════════════════════════════════════════════════════════ -->
-    <string name="pp_screen_title">Kebijakan Privasi</string>
-    <string name="pp_summary">File Anda tetap ada di perangkat Anda — kami tidak pernah melihatnya. Kami hanya mengumpulkan analisis penggunaan anonim melalui Firebase untuk menjadikan aplikasi lebih baik. Tidak ada iklan, tidak ada penjualan data, tidak ada bisnis lucu.</string>
+    <string name="pp_screen_title">
+Kebijakan Privasi
+</string>
+    <string name="pp_summary">
+File Anda tetap di perangkat Anda — kami tidak pernah melihatnya. Kami hanya mengumpulkan analitik penggunaan anonim melalui Firebase untuk meningkatkan aplikasi. Tidak ada iklan, tidak ada penjualan data, tidak ada urusan yang mencurigakan.
+</string>
 
     <!-- Section titles -->
-    <string name="pp_s1_title">1. Pendahuluan</string>
-    <string name="pp_s2_title">2. Informasi yang Kami Kumpulkan</string>
-    <string name="pp_s3_title">3. Bagaimana Kami Menggunakan Informasi Anda</string>
-    <string name="pp_s4_title">4. Izin &amp; Mengapa Kami Membutuhkannya</string>
-    <string name="pp_s5_title">5. Keamanan Data</string>
-    <string name="pp_s6_title">6. Layanan Google API — Pengungkapan Penggunaan Terbatas</string>
-    <string name="pp_s6b_title">
-6b. Integrasi RClone Cloud — Privasi &amp; Kepatuhan
+    <string name="pp_s1_title">
+1. Pendahuluan
 </string>
-    <string name="pp_s7_title">7. Berbagi Data &amp; Pihak Ketiga</string>
-    <string name="pp_s8_title">8. Berapa Lama Kami Menyimpan Data</string>
-    <string name="pp_s9_title">9. Hak Anda</string>
-    <string name="pp_s10_title">10. Privasi Anak</string>
-    <string name="pp_s11_title">11. Pengguna Internasional</string>
-    <string name="pp_s12_title">12. Perubahan Kebijakan Privasi Ini</string>
-    <string name="pp_s13_title">13. Kepatuhan Kebijakan Google Play</string>
-    <string name="pp_s14_title">14. Hubungi Kami</string>
+    <string name="pp_s2_title">
+2. Informasi yang Kami Kumpulkan
+</string>
+    <string name="pp_s3_title">
+3. Bagaimana Kami Menggunakan Informasi Anda
+</string>
+    <string name="pp_s4_title">
+4. Izin &amp; Mengapa Kami Membutuhkannya
+</string>
+    <string name="pp_s5_title">
+5. Keamanan Data
+</string>
+    <string name="pp_s6_title">
+6. Layanan API Google — Pengungkapan Penggunaan Terbatas
+</string>
+    <string name="pp_s6b_title">
+6b. Integrasi Cloud RClone — Privasi &amp; Kepatuhan
+</string>
+    <string name="pp_s7_title">
+7. Berbagi Data &amp; Pihak Ketiga
+</string>
+    <string name="pp_s8_title">
+8. Berapa Lama Kami Menyimpan Data
+</string>
+    <string name="pp_s9_title">
+9. Hak Anda
+</string>
+    <string name="pp_s10_title">
+10. Privasi Anak-Anak
+</string>
+    <string name="pp_s11_title">
+11. Pengguna Internasional
+</string>
+    <string name="pp_s12_title">
+12. Perubahan pada Kebijakan Privasi Ini
+</string>
+    <string name="pp_s13_title">
+13. Kepatuhan Kebijakan Google Play
+</string>
+    <string name="pp_s14_title">
+14. Hubungi Kami
+</string>
 
     <!-- Section body text -->
-    <string name="pp_s1_body">Ultimate File Manager Pro adalah aplikasi Android independen dan tidak berafiliasi dengan, disahkan, disponsori, atau didukung oleh proyek Ultimate File Manager untuk Windows (ultimatefilemanager.pl) atau produk lain yang menggunakan nama serupa. Semua nama produk dan merek dagang lainnya adalah milik dari pemiliknya masing-masing.\n\nKebijakan Privasi ini menjelaskan informasi apa yang kami kumpulkan saat Anda menggunakan Ultimate File Manager Pro, cara kami menggunakannya, dan cara kami menjaga keamanannya. Dengan menggunakan aplikasi ini, Anda menyetujui praktik yang dijelaskan di sini.</string>
+    <string name="pp_s1_body">
+Ultimate File Manager Pro adalah aplikasi Android independen dan tidak berafiliasi dengan, diizinkan oleh, disponsori oleh, atau didukung oleh proyek Ultimate File Manager untuk Windows (ultimatefilemanager.pl) atau produk lain dengan nama serupa. Semua nama produk dan merek dagang lainnya adalah milik pemiliknya masing-masing.\n
+\n
+Kebijakan Privasi ini menjelaskan informasi apa yang kami kumpulkan saat Anda menggunakan Ultimate File Manager Pro, bagaimana kami menggunakannya, dan bagaimana kami menjaganya tetap aman. Dengan menggunakan aplikasi ini, Anda menyetujui praktik yang dijelaskan di sini.
+</string>
 
-    <string name="pp_s2_local_heading">Disimpan Secara Lokal di Perangkat Anda Saja</string>
-    <string name="pp_s2_local_body">Data berikut disimpan di perangkat Anda dan tidak pernah keluar. Kami tidak punya akses terhadap semua ini.</string>
-    <string name="pp_s2_local_alert">Kami tidak memiliki akses ke PIN Anda, kode pemulihan, kunci enkripsi, atau file apa pun yang disimpan di Vault Anda — selamanya.</string>
+    <string name="pp_s2_local_heading">
+Disimpan Secara Lokal di Perangkat Anda Saja
+</string>
+    <string name="pp_s2_local_body">
+Data berikut disimpan di perangkat Anda dan tidak pernah meninggalkannya. Kami tidak memiliki akses sama sekali ke data ini.
+</string>
+    <string name="pp_s2_local_alert">
+Kami tidak pernah memiliki akses ke PIN, kode pemulihan, kunci enkripsi, atau file apa pun yang disimpan di Vault Anda — selamanya.
+</string>
 
-    <string name="pp_s2_analytics_heading">Dikumpulkan melalui Firebase Analytics (Anonim)</string>
-    <string name="pp_s2_analytics_body">Kami menggunakan Google Firebase Analytics untuk mengumpulkan data anonim guna meningkatkan aplikasi. Data Analytics tidak pernah ditautkan ke identitas pribadi Anda. Anda dapat memilih untuk tidak ikut serta kapan saja menggunakan tombol Analisis Penggunaan di Setelan aplikasi, atau melalui setelan perangkat Android Anda.</string>
+    <string name="pp_s2_analytics_heading">
+Dikumpulkan melalui Firebase Analytics (Anonim)
+</string>
+    <string name="pp_s2_analytics_body">
+Kami menggunakan Google Firebase Analytics untuk mengumpulkan data anonim guna meningkatkan aplikasi. Data analitik tidak pernah dikaitkan dengan identitas pribadi Anda. Anda dapat menyisih kapan saja menggunakan sakelar Usage Analytics di Pengaturan aplikasi, atau melalui pengaturan perangkat Android Anda.
+</string>
 
-    <string name="pp_s2_billing_heading">Diproses melalui Layanan Penagihan Google Play (Hanya Tips Opsional)</string>
-    <string name="pp_s2_billing_body">Saat Anda melakukan pembelian Tip Jar opsional, Google Play memproses transaksi tersebut. Kami tidak pernah melihat detail kartu atau bank Anda. Kami menerima token pembelian dan ID produk untuk sementara — keduanya hanya ditangani di perangkat dan tidak pernah disimpan di server kami.</string>
-    <string name="pp_s2_billing_note">Token pembelian anonim dari Layanan Penagihan Google Play diproses sementara di perangkat untuk mengonfirmasi tip Anda — token tersebut tidak pernah kami simpan dan tidak ditautkan ke identitas Anda.</string>
+    <string name="pp_s2_billing_heading">
+Diproses melalui Google Play Billing (Hanya Tips Opsional)
+</string>
+    <string name="pp_s2_billing_body">
+Saat Anda melakukan pembelian Tip Jar opsional, Google Play memproses transaksi. Kami tidak pernah melihat detail kartu atau bank Anda. Kami menerima sementara token pembelian dan ID produk — keduanya ditangani hanya di perangkat dan tidak pernah disimpan di server kami.
+</string>
+    <string name="pp_s2_billing_note">
+Token pembelian anonim dari Google Play Billing diproses sementara di perangkat untuk mengonfirmasi tip Anda — token tersebut tidak pernah disimpan oleh kami dan tidak dikaitkan dengan identitas Anda.
+</string>
 
-    <string name="pp_s2_nocollect_heading">Yang Tidak Pernah Kami Kumpulkan</string>
+    <string name="pp_s2_nocollect_heading">
+Apa yang Tidak Pernah Kami Kumpulkan
+</string>
 
-    <string name="pp_s3_local_heading">Data Lokal Digunakan Untuk</string>
-    <string name="pp_s3_analytics_heading">Data Analisis Digunakan Untuk</string>
+    <string name="pp_s3_local_heading">
+Data Lokal Digunakan Untuk
+</string>
+    <string name="pp_s3_analytics_heading">
+Data Analitik Digunakan Untuk
+</string>
 
-    <string name="pp_s4_storage_heading">Izin Penyimpanan</string>
-    <string name="pp_s4_network_heading">Izin Jaringan</string>
-    <string name="pp_s4_network_alert">Server Manajemen Jarak Jauh, hosting Server File, koneksi berbagi jaringan SMB/FTP/SFTP/SCP, sinkronisasi folder, pemasangan perangkat, dan koneksi Terminal ADB semuanya hanya beroperasi di jaringan Wi-Fi lokal Anda. Manajemen Jarak Jauh dan server FTP menggunakan protokol tidak terenkripsi; Koneksi Terminal SFTP dan ADB menggunakan protokol terenkripsi yang aman. API penyimpanan cloud (kompatibel dengan Google Drive, OneDrive, Dropbox, S3) berkomunikasi secara aman dengan servernya masing-masing melalui HTTPS terenkripsi. Tidak ada data lain yang dikirimkan ke server eksternal.</string>
-    <string name="pp_s4_other_heading">Izin Lainnya</string>
+    <string name="pp_s4_storage_heading">
+Izin Penyimpanan
+</string>
+    <string name="pp_s4_network_heading">
+Izin Jaringan
+</string>
+    <string name="pp_s4_network_alert">
+Server Remote Management, hosting File Server, koneksi berbagi jaringan SMB/FTP/SFTP/SCP, sinkronisasi folder, pemasangan perangkat, dan koneksi ADB Terminal semuanya beroperasi hanya di jaringan Wi-Fi lokal Anda. Server Remote Management dan FTP menggunakan protokol tidak terenkripsi; koneksi SFTP dan ADB Terminal menggunakan protokol aman dan terenkripsi. API penyimpanan cloud (Google Drive, OneDrive, Dropbox, kompatibel S3) berkomunikasi dengan aman dengan server masing-masing melalui HTTPS terenkripsi. Tidak ada data lain yang dikirimkan ke server eksternal.
+</string>
+    <string name="pp_s4_other_heading">
+Izin Lainnya
+</string>
 
-    <string name="pp_s5_vault_heading">Enkripsi Gudang</string>
-    <string name="pp_s5_vault_body">Gudang Terenkripsi menggunakan enkripsi tingkat militer untuk melindungi file Anda.</string>
-    <string name="pp_s5_vault_alert">Jika Anda lupa PIN dan kode pemulihan, data terenkripsi Anda tidak dapat diakses secara permanen — bahkan kami pun tidak dapat memulihkannya. Harap simpan ini di tempat yang aman.</string>
-    <string name="pp_s5_local_heading">Perlindungan Data Lokal</string>
-    <string name="pp_s5_remote_heading">Keamanan Manajemen Jarak Jauh</string>
+    <string name="pp_s5_vault_heading">
+Enkripsi Vault
+</string>
+    <string name="pp_s5_vault_body">
+Vault Terenkripsi menggunakan enkripsi tingkat militer untuk melindungi file Anda.
+</string>
+    <string name="pp_s5_vault_alert">
+Jika Anda lupa PIN dan kode pemulihan, data terenkripsi Anda tidak dapat diakses secara permanen — bahkan kami tidak dapat memulihkannya. Harap simpan ini di tempat yang aman.
+</string>
+    <string name="pp_s5_local_heading">
+Perlindungan Data Lokal
+</string>
+    <string name="pp_s5_remote_heading">
+Keamanan Remote Management
+</string>
 
     <!-- Section 6 — Google API Limited Use -->
-    <string name="pp_s6_compliance_banner">Penggunaan informasi yang diterima dari Google API oleh Ultimate File Manager Pro mematuhi Kebijakan Data Pengguna Layanan Google API, termasuk persyaratan Penggunaan Terbatas.</string>
-    <string name="pp_s6_intro">Saat Anda menghubungkan akun Google Drive Anda, aplikasi mengakses data pengguna Google Anda hanya untuk menyediakan fitur manajemen file yang Anda gunakan langsung di dalam aplikasi.</string>
-    <string name="pp_s6_google_data_heading">Data Pengguna Google — API Google Drive</string>
-    <string name="pp_s6_google_never_heading">Yang Tidak Pernah Kami Akses dari Akun Google Anda</string>
-    <string name="pp_s6_google_never">Kami tidak mengakses Gmail Anda, Google Kontak, Google Kalender, Google Foto (di luar Drive), atau data layanan Google lainnya. Hanya data file Drive minimum yang diperlukan untuk tindakan yang Anda minta yang dapat diakses.</string>
-    <string name="pp_s6_permitted_heading">Penggunaan Data Pengguna Google yang Diizinkan</string>
-    <string name="pp_s6_prohibited_heading">Penggunaan yang Dilarang — Kami Tidak Pernah Menggunakan Data Pengguna Google Untuk</string>
-    <string name="pp_s6_minimum_access">Ultimate File Manager Pro hanya meminta izin minimum Google Drive yang diperlukan untuk melakukan tindakan pengelolaan file yang Anda pilih. Kami tidak pernah meminta akses ke Gmail, Google Kontak, Google Kalender, atau data layanan Google lainnya.</string>
+    <string name="pp_s6_compliance_banner">
+Penggunaan Ultimate File Manager Pro atas informasi yang diterima dari Google API mematuhi Kebijakan Data Pengguna Layanan Google API, termasuk persyaratan Penggunaan Terbatas.
+</string>
+    <string name="pp_s6_intro">
+Saat Anda menghubungkan akun Google Drive, aplikasi mengakses data pengguna Google Anda hanya untuk menyediakan fitur manajemen file yang Anda gunakan langsung di dalam aplikasi.
+</string>
+    <string name="pp_s6_google_data_heading">
+Data Pengguna Google — Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+Apa yang Tidak Pernah Kami Akses dari Akun Google Anda
+</string>
+    <string name="pp_s6_google_never">
+Kami tidak mengakses Gmail, Kontak Google, Kalender Google, Google Foto (di luar Drive), atau data layanan Google lainnya. Hanya data file Drive minimum yang diperlukan untuk tindakan yang Anda minta yang pernah diakses.
+</string>
+    <string name="pp_s6_permitted_heading">
+Penggunaan yang Diizinkan dari Data Pengguna Google
+</string>
+    <string name="pp_s6_prohibited_heading">
+Penggunaan yang Dilarang — Kami Tidak Pernah Menggunakan Data Pengguna Google Untuk
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Pro hanya meminta izin Google Drive minimum yang diperlukan untuk melakukan tindakan manajemen file yang Anda pilih. Kami tidak pernah meminta akses ke Gmail, Kontak Google, Kalender Google, atau data layanan Google lainnya.
+</string>
     <!-- Section 6b — RClone Integration -->
     <string name="pp_s6b_compliance_banner">
 Ultimate File Manager Pro mengintegrasikan backend RClone untuk mendukung koneksi ke lebih dari 100 penyedia penyimpanan cloud. Semua konfigurasi dan kredensial dikelola langsung di perangkat Anda.
 </string>
     <string name="pp_s6b_intro">
-Saat Anda menggunakan integrasi penyimpanan RClone di Ultimate File Manager Pro, aplikasi memproses kredensial penyimpanan cloud dan metadata file Anda secara lokal. Aplikasi ini berkomunikasi langsung dengan titik akhir API penyedia penyimpanan cloud pilihan Anda. Kami tidak menjadi perantara koneksi ini, dan kami tidak pernah mengumpulkan, menyimpan, atau mengirimkan kredensial atau file cloud Anda ke server kami.
+Saat Anda menggunakan integrasi penyimpanan RClone di Ultimate File Manager Pro, aplikasi memproses kredensial penyimpanan cloud dan metadata file Anda secara lokal. Aplikasi berkomunikasi langsung dengan titik akhir API penyedia penyimpanan cloud pilihan Anda. Kami tidak memediasi koneksi ini, dan kami tidak pernah mengumpulkan, menyimpan, atau mengirimkan kredensial cloud atau file Anda ke server kami.
 </string>
     <string name="pp_s6b_local_heading">
 Enkripsi Kredensial Lokal
 </string>
     <string name="pp_s6b_local_body">
-Kata sandi, token, atau kunci API apa pun yang dimasukkan untuk konfigurasi penyimpanan RClone dikaburkan dan dienkripsi menggunakan kriptografi pada perangkat melalui backend RClone RC dan disimpan dengan aman sebagai rclone_encrypted.json di direktori pribadi aplikasi. File ini tidak dapat diakses oleh aplikasi lain dan dihapus secara permanen saat Anda menghapus instalasi aplikasi.
+Kata sandi, token, atau kunci API apa pun yang dimasukkan untuk konfigurasi penyimpanan RClone dienkripsi menggunakan kriptografi pada perangkat melalui backend RClone RC dan disimpan dengan aman sebagai rclone_encrypted.json di direktori pribadi aplikasi. File ini tidak dapat diakses oleh aplikasi lain dan akan dihapus secara permanen saat Anda menghapus instalasi aplikasi.
 </string>
     <string name="pp_s6b_permitted_heading">
-Penggunaan Data Cloud yang Diizinkan
+Penggunaan yang Diizinkan dari Data Cloud
 </string>
     <string-array name="pp_s6b_permitted">
         <item>
 Penjelajahan Jarak Jauh: Mengambil struktur folder dan metadata file untuk menampilkan konten penyimpanan cloud jarak jauh Anda.
 </item>
         <item>
-Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau menghapus file di penyimpanan jarak jauh atas permintaan eksplisit Anda.
+Operasi File: Mengunggah, mengunduh, mengganti nama, menyalin, memindahkan, atau menghapus file di penyimpanan jarak jauh Anda atas permintaan eksplisit Anda.
 </item>
     </string-array>
     <!-- Section 7 — Data Sharing -->
-    <string name="pp_s7_nosell_alert">Kami tidak menjual, menyewakan, memperdagangkan, mentransfer, atau mengungkapkan informasi pribadi Anda atau data pengguna Google kepada pihak ketiga mana pun untuk tujuan apa pun yang tidak terkait langsung dengan penyediaan fitur pengelolaan file Ultimate File Manager Pro — titik.</string>
-    <string name="pp_s7_third_heading">Layanan Pihak Ketiga yang Kami Gunakan</string>
-    <string name="pp_s7_saf_note">Saat Anda memilih untuk membuka atau berbagi file dengan aplikasi lain — termasuk melalui penyedia dokumen Storage Access Framework (SAF) — kebijakan privasi aplikasi tersebut mengatur tindakannya terhadap file tersebut.</string>
-    <string name="pp_s7_legal_note">Kami juga dapat mengungkapkan informasi jika diwajibkan oleh hukum, perintah pengadilan, atau permintaan pemerintah, sejauh diizinkan oleh hukum yang berlaku. Kami tidak mentransfer atau mengungkapkan informasi pribadi Anda atau data pengguna Google kepada pihak ketiga untuk tujuan selain yang dijelaskan dalam Kebijakan Privasi ini.</string>
+    <string name="pp_s7_nosell_alert">
+Kami tidak menjual, menyewakan, memperdagangkan, mentransfer, atau mengungkapkan informasi pribadi atau data pengguna Google Anda kepada pihak ketiga mana pun untuk tujuan apa pun yang tidak terkait langsung dengan penyediaan fitur manajemen file Ultimate File Manager Pro — titik.
+</string>
+    <string name="pp_s7_third_heading">
+Layanan Pihak Ketiga yang Kami Gunakan
+</string>
+    <string name="pp_s7_saf_note">
+Saat Anda memilih untuk membuka atau membagikan file dengan aplikasi lain — termasuk melalui penyedia dokumen Storage Access Framework (SAF) — kebijakan privasi aplikasi itu sendiri yang mengatur apa yang dilakukannya dengan file tersebut.
+</string>
+    <string name="pp_s7_legal_note">
+Kami juga dapat mengungkapkan informasi jika diwajibkan oleh hukum, perintah pengadilan, atau permintaan pemerintah, sejauh diizinkan oleh hukum yang berlaku. Kami tidak mentransfer atau mengungkapkan informasi pribadi atau data pengguna Google Anda kepada pihak ketiga untuk tujuan selain yang dijelaskan dalam Kebijakan Privasi ini.
+</string>
 
-    <string name="pp_s9_body">Anda mengendalikan data Anda. Inilah yang dapat Anda lakukan kapan saja.</string>
-    <string name="pp_s9_delete_heading">Cara Menghapus Semua Data Aplikasi</string>
-    <string name="pp_s9_delete_alert">Menghapus data atau mencopot pemasangan akan menghapus PIN Vault, kode pemulihan, dan kunci enkripsi Anda — sehingga konten Vault tidak dapat diakses secara permanen. Dekripsi semua yang ingin Anda simpan terlebih dahulu.</string>
+    <string name="pp_s9_body">
+Anda mengendalikan data Anda. Berikut adalah apa yang dapat Anda lakukan kapan saja.
+</string>
+    <string name="pp_s9_delete_heading">
+Cara Menghapus Semua Data Aplikasi
+</string>
+    <string name="pp_s9_delete_alert">
+Menghapus data atau menghapus instalasi akan menghapus PIN Vault, kode pemulihan, dan kunci enkripsi Anda — membuat konten Vault apa pun tidak dapat diakses secara permanen. Dekripsi semua yang ingin Anda simpan terlebih dahulu.
+</string>
 
-    <string name="pp_s10_body">Ultimate File Manager Pro tidak ditujukan untuk anak-anak di bawah usia 13 tahun. Kami tidak dengan sengaja mengumpulkan informasi pribadi dari anak-anak di bawah 13 tahun. Jika Anda adalah orang tua atau wali dan yakin anak Anda telah memberikan informasi pribadi, silakan hubungi kami.</string>
+    <string name="pp_s10_body">
+Ultimate File Manager Pro tidak ditujukan untuk anak-anak di bawah usia 13 tahun. Kami tidak dengan sengaja mengumpulkan informasi pribadi dari anak-anak di bawah 13 tahun. Jika Anda adalah orang tua atau wali dan yakin anak Anda telah memberikan informasi pribadi, silakan hubungi kami.
+</string>
 
-    <string name="pp_s11_body">Ultimate File Manager Pro dikembangkan di Afrika Selatan. Jika Anda menggunakan aplikasi dari negara lain, harap perhatikan bahwa informasi apa pun dapat diproses di Afrika Selatan atau di negara tempat penyedia layanan pihak ketiga kami (seperti Google) beroperasi.</string>
+    <string name="pp_s11_body">
+Ultimate File Manager Pro dikembangkan di Afrika Selatan. Jika Anda menggunakan aplikasi dari negara lain, harap diperhatikan bahwa informasi apa pun dapat diproses di Afrika Selatan atau di negara tempat penyedia layanan pihak ketiga kami (seperti Google) beroperasi.
+</string>
 
-    <string name="pp_s12_body">Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Ketika kami melakukannya, kami akan memperbarui tanggal di atas. Untuk perubahan signifikan, kami juga akan memberi tahu Anda melalui aplikasi. Melanjutkan menggunakan aplikasi setelah perubahan berarti Anda menerima Kebijakan yang diperbarui.</string>
+    <string name="pp_s12_body">
+Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Saat melakukannya, kami akan memperbarui tanggal di bagian atas. Untuk perubahan signifikan, kami juga akan memberi tahu Anda di dalam aplikasi. Terus menggunakan aplikasi setelah perubahan berarti Anda menerima Kebijakan yang diperbarui.
+</string>
 
-    <string name="pp_s13_body">Aplikasi ini dibuat untuk memenuhi standar Google Play. Semua izin yang diminta diperlukan untuk fungsionalitas aplikasi inti. Sebelum meminta izin sensitif apa pun, aplikasi menjelaskan dengan jelas mengapa izin tersebut diperlukan dan cara penggunaannya. Mengenai pembaruan Kebijakan Foto dan Video Oktober 2024: akses luas diperlukan karena ini adalah pengelola file komprehensif yang dirancang untuk operasi massal (pemindahan, penggantian nama, dan sinkronisasi) di semua volume penyimpanan, yang tidak dapat dilakukan secara efisien menggunakan pemilih sistem standar.</string>
+    <string name="pp_s13_body">
+Aplikasi ini dibuat untuk memenuhi standar Google Play. Semua izin yang diminta diperlukan untuk fungsionalitas inti aplikasi. Sebelum meminta izin sensitif apa pun, aplikasi dengan jelas menjelaskan mengapa izin tersebut diperlukan dan bagaimana akan digunakan. Mengenai pembaruan Kebijakan Foto dan Video Oktober 2024: akses luas diperlukan karena ini adalah manajer file komprehensif yang dirancang untuk operasi massal (memindahkan, mengganti nama, dan menyinkronkan) di semua volume penyimpanan, yang tidak dapat dilakukan secara efisien menggunakan pemilih sistem standar.\n
+\n
+Mengenai Informasi Aplikasi yang Terinstal (QUERY_ALL_PACKAGES): Fitur App Manager membaca daftar lengkap paket yang terinstal hanya di perangkat — termasuk nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, serta klasifikasi sistem vs. aplikasi pengguna. Tab Debloater tambahan mengunduh daftar referensi debloat yang tersedia untuk umum dan mencocokkannya secara lokal dengan nama paket yang terinstal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
+</string>
 
-    <string name="pp_s14_body">Jika Anda memiliki pertanyaan atau kekhawatiran tentang Kebijakan Privasi ini, silakan hubungi kami.</string>
+    <string name="pp_s14_body">
+Jika Anda memiliki pertanyaan atau kekhawatiran tentang Kebijakan Privasi ini, silakan hubungi kami.
+</string>
 
-    <string name="pp_footer">Dengan menggunakan Ultimate File Manager Pro, Anda mengonfirmasi bahwa Anda telah membaca dan memahami Kebijakan Privasi ini.</string>
+    <string name="pp_footer">
+Dengan menggunakan Ultimate File Manager Pro, Anda mengonfirmasi bahwa Anda telah membaca dan memahami Kebijakan Privasi ini.
+</string>
 
     <!-- Local storage table (Section 2) -->
     <string-array name="pp_local_data_labels">
-        <item>PIN Vault (di-hash)</item>
-        <item>Kode Pemulihan (di-hash)</item>
-        <item>Metadata Gudang</item>
-        <item>Kunci Enkripsi</item>
-        <item>Preferensi Aplikasi</item>
-        <item>Profil Server File</item>
-        <item>Kredensial Berbagi Jaringan</item>
-        <item>Info Perangkat yang Dipasangkan</item>
-        <item>Kunci Otentikasi ADB</item>
-        <item>Negara Otorisasi Shizuku</item>
-        <item>Tangkapan Layar TV</item>
-        <item>Sinkronkan Profil</item>
-        <item>Token Penyimpanan Cloud (Google Drive, OneDrive, Dropbox)</item>
-        <item>Kredensial Penyimpanan yang Kompatibel dengan S3 / S3 (AWS S3, MinIO, IDrive E2, dll.)</item>
-        <item>Metadata File Terindeks (SQLite/Ruangan)</item>
-        <item>Pemilihan Bahasa (Cookie)</item>
+        <item>
+PIN Brankas (hash)
+</item>
+        <item>
+Kode Pemulihan (hash)
+</item>
+        <item>
+Metadata Brankas
+</item>
+        <item>
+Kunci Enkripsi
+</item>
+        <item>
+Preferensi Aplikasi
+</item>
+        <item>
+Profil Server Berkas
+</item>
+        <item>
+Kredensial Berbagi Jaringan
+</item>
+        <item>
+Info Perangkat yang Dipasangkan
+</item>
+        <item>
+Kunci Autentikasi ADB
+</item>
+        <item>
+Status Otorisasi Shizuku
+</item>
+        <item>
+Tangkapan Layar TV
+</item>
+        <item>
+Profil Sinkronisasi
+</item>
+        <item>
+Token Penyimpanan Cloud (Google Drive, OneDrive, Dropbox)
+</item>
+        <item>
+Kredensial Penyimpanan S3 / Kompatibel S3 (AWS S3, MinIO, IDrive E2, dll.)
+</item>
+        <item>
+Metadata Berkas yang Diindeks (SQLite/Room)
+</item>
+        <item>
+Pilihan Bahasa (Cookie)
+</item>
         <item>
 Status Pemutaran Media
 </item>
     </string-array>
     <string-array name="pp_local_data_details">
-        <item>Akses aman ke file terenkripsi · Android SharedPreferences</item>
-        <item>Pemulihan akun jika PIN lupa · Android SharedPreferences</item>
-        <item>Daftar folder &amp; file terenkripsi Anda · Penyimpanan pribadi aplikasi</item>
-        <item>Enkripsi AES-256-GCM untuk Vault · Android Keystore (didukung perangkat keras)</item>
-        <item>Tema, pengaturan pengurutan, preferensi tampilan · Android SharedPreferences</item>
-        <item>Konfigurasi (nama pengguna, direktori, kata sandi hash) untuk Server File yang dihosting · Penyimpanan pribadi aplikasi</item>
-        <item>Menghubungkan ke share SMB/FTP Anda (host, nama pengguna, kata sandi) · Penyimpanan pribadi aplikasi</item>
-        <item>Nama perangkat, ID, dan IP untuk pemasangan perangkat · Penyimpanan pribadi aplikasi</item>
-        <item>Kunci dan sertifikat RSA yang dihasilkan untuk koneksi ADB yang aman · Penyimpanan pribadi aplikasi</item>
-        <item>Status pemberian akses yang ditingkatkan dari aplikasi Shizuku Manager · Penyimpanan pribadi aplikasi</item>
-        <item>Tangkapan layar diambil dari TV yang dipasangkan melalui ADB · Folder Gambar/Tangkapan Layar lokal di ponsel Anda</item>
-        <item>URI folder lokal dan jalur jarak jauh untuk setiap profil sinkronisasi · Penyimpanan pribadi aplikasi</item>
-        <item>Token OAuth untuk mengakses Google Drive, OneDrive, dan Dropbox · Penyimpanan pribadi aplikasi</item>
-        <item>Access Key ID dan Secret Access Key untuk menghubungkan ke bucket S3 · Penyimpanan pribadi aplikasi</item>
-        <item>Metadata file (nama, ukuran, tanggal) untuk penelusuran dan pencarian cepat yang disimpan dalam database SQLite/Ruangan lokal — dapat dikelola melalui Pengaturan -&gt; Pengindeks Penyimpanan · Penyimpanan pribadi aplikasi</item>
-        <item>Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web</item>
         <item>
-Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan saat browser dimulai ulang · Penyimpanan browser web
+Akses aman ke file terenkripsi · Android SharedPreferences
+</item>
+        <item>
+Pemulihan akun jika PIN lupa · Android SharedPreferences
+</item>
+        <item>
+Daftar folder &amp; file terenkripsi Anda · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Enkripsi AES-256-GCM untuk Vault · Android Keystore (didukung perangkat keras)
+</item>
+        <item>
+Pengaturan tema, urutan, tampilan · Android SharedPreferences
+</item>
+        <item>
+Konfigurasi (nama pengguna, direktori, kata sandi terenkripsi) untuk File Server yang dihosting · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Menghubungkan ke berbagi SMB/FTP Anda (host, nama pengguna, kata sandi) · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Nama perangkat, ID, dan IP untuk pemasangan perangkat · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Kunci RSA dan sertifikat yang dihasilkan untuk koneksi ADB aman · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Status izin akses yang ditinggikan dari aplikasi Shizuku Manager · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Tangkapan layar yang diambil dari TV yang dipasangkan melalui ADB · Folder lokal Pictures/Screenshots ponsel Anda
+</item>
+        <item>
+URI folder lokal dan jalur jarak jauh untuk setiap profil sinkronisasi · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Token OAuth untuk mengakses Google Drive, OneDrive, dan Dropbox · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Access Key ID dan Secret Access Key untuk terhubung ke bucket S3 · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Metadata file (nama, ukuran, tanggal) untuk penjelajahan dan pencarian cepat yang disimpan di database SQLite/Room lokal — dapat dikelola melalui Pengaturan -> Pengindeks Penyimpanan · Penyimpanan pribadi aplikasi
+</item>
+        <item>
+Antrean saat ini, posisi pemutaran, dan pengaturan pemutar untuk melanjutkan dari tempat Anda berhenti · Android SharedPreferences
+</item>
+        <item>
+Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan di seluruh restart browser · Penyimpanan browser web
 </item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->
     <string-array name="pp_analytics_labels">
-        <item>Informasi Perangkat</item>
-        <item>Data Penggunaan Aplikasi</item>
-        <item>Lokasi Umum</item>
+        <item>
+Informasi Perangkat
+</item>
+        <item>
+Data Penggunaan Aplikasi
+</item>
+        <item>
+Lokasi Umum
+</item>
     </string-array>
     <string-array name="pp_analytics_details">
-        <item>Model perangkat, versi OS, ukuran layar</item>
-        <item>Fitur yang digunakan, durasi sesi, laporan kerusakan</item>
-        <item>Negara/wilayah berdasarkan IP — bukan lokasi persis Anda</item>
+        <item>
+Model perangkat, versi OS, ukuran layar
+</item>
+        <item>
+Fitur yang digunakan, durasi sesi, laporan kerusakan
+</item>
+        <item>
+Negara/wilayah berdasarkan IP — bukan lokasi pasti Anda
+</item>
     </string-array>
 
     <!-- What we never collect (Section 2) -->
     <string-array name="pp_never_collect">
-        <item>File, dokumen, foto, video, atau media apa pun Anda</item>
-        <item>Konten Vault atau kunci enkripsi Anda</item>
-        <item>PIN atau kode pemulihan Anda</item>
-        <item>Lokasi tepatnya Anda</item>
-        <item>Kontak, pesan, atau log panggilan Anda</item>
-        <item>Informasi identifikasi pribadi (nama, email, nomor telepon)</item>
-        <item>Data akun Google apa pun selain yang Anda minta secara eksplisit di browser file</item>
+        <item>
+File, dokumen, foto, video, atau media Anda
+</item>
+        <item>
+Isi Vault atau kunci enkripsi Anda
+</item>
+        <item>
+PIN atau kode pemulihan Anda
+</item>
+        <item>
+Lokasi pasti Anda
+</item>
+        <item>
+Kontak, pesan, atau log panggilan Anda
+</item>
+        <item>
+Informasi identifikasi pribadi (nama, email, nomor telepon)
+</item>
+        <item>
+Data akun Google apa pun di luar yang Anda minta secara eksplisit di penjelajah file
+</item>
     </string-array>
 
     <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
-        <item>Otentikasi akses ke Gudang Terenkripsi</item>
-        <item>Enkripsi dan dekripsi file pribadi Anda</item>
-        <item>Ingat preferensi dan pengaturan Anda</item>
-        <item>Gunakan akses yang lebih tinggi (Shizuku/ADB) untuk mengelola file yang dilindungi sistem di direktori terbatas</item>
-        <item>Membuat dan memelihara pengindeksan file untuk penelusuran dan pencarian cepat (dapat dikelola melalui Pengaturan -&gt; Pengindeks Penyimpanan)</item>
-        <item>Menyediakan fungsionalitas aplikasi inti</item>
+        <item>
+Otentikasi akses ke Vault Terenkripsi
+</item>
+        <item>
+Enkripsi dan dekripsi file pribadi Anda
+</item>
+        <item>
+Mengingat preferensi dan pengaturan Anda
+</item>
+        <item>
+Menggunakan akses yang ditinggikan (Shizuku/ADB) untuk mengelola file yang dilindungi sistem di direktori terbatas
+</item>
+        <item>
+Membuat dan memelihara pengindeksan file untuk penjelajahan dan pencarian cepat (dapat dikelola melalui Pengaturan -> Pengindeks Penyimpanan)
+</item>
+        <item>
+Menyediakan fungsionalitas inti aplikasi
+</item>
     </string-array>
     <string-array name="pp_use_analytics">
-        <item>Pahami bagaimana fitur digunakan</item>
-        <item>Identifikasi dan perbaiki bug dan kerusakan</item>
-        <item>Tingkatkan fitur dan pengalaman pengguna</item>
-        <item>Membuat keputusan pembangunan yang terinformasi</item>
+        <item>
+Memahami bagaimana fitur digunakan
+</item>
+        <item>
+Mengidentifikasi dan memperbaiki bug dan kerusakan
+</item>
+        <item>
+Meningkatkan fitur dan pengalaman pengguna
+</item>
+        <item>
+Membuat keputusan pengembangan yang tepat
+</item>
     </string-array>
 
     <!-- Storage permissions (Section 4) -->
     <string-array name="pp_storage_perm_labels">
-        <item>Kelola Penyimpanan Eksternal</item>
-        <item>Baca Penyimpanan Eksternal</item>
-        <item>Tulis Penyimpanan Eksternal</item>
+        <item>
+MANAGE_EXTERNAL_STORAGE
+</item>
+        <item>
+READ_EXTERNAL_STORAGE
+</item>
+        <item>
+WRITE_EXTERNAL_STORAGE
+</item>
     </string-array>
     <string-array name="pp_storage_perm_details">
-        <item>API 30+ · Manajemen file lengkap di seluruh penyimpanan</item>
-        <item>Di bawah API 33 · Akses file lama pada perangkat lama</item>
-        <item>Di bawah API 29 · Modifikasi file lama pada perangkat lama</item>
+        <item>
+API 30+ · Manajemen file penuh di semua penyimpanan
+</item>
+        <item>
+Di bawah API 33 · Akses file warisan di perangkat lama
+</item>
+        <item>
+Di bawah API 29 · Modifikasi file warisan di perangkat lama
+</item>
     </string-array>
 
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
-        <item>INTERNET</item>
-        <item>Akses Status Wifi</item>
-        <item>Akses Status Jaringan</item>
-        <item>Ubah Status Multicast Wifi</item>
+        <item>
+INTERNET
+</item>
+        <item>
+ACCESS_WIFI_STATE
+</item>
+        <item>
+ACCESS_NETWORK_STATE
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
     </string-array>
     <string-array name="pp_network_perm_details">
-        <item>Memungkinkan manajemen file jarak jauh, menghosting Server File lokal, akses berbagi jaringan SMB/FTP/SFTP/SCP, dan pemasangan perangkat</item>
-        <item>Menampilkan alamat IP lokal Anda untuk akses jarak jauh</item>
-        <item>Mendeteksi jaringan aktif dan status VPN untuk Manajemen Jarak Jauh dan berbagi jaringan</item>
-        <item>Mengaktifkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat</item>
+        <item>
+Memungkinkan manajemen file jarak jauh, hosting File Server lokal, akses berbagi jaringan SMB/FTP/SFTP/SCP/NFS, dan pemasangan perangkat
+</item>
+        <item>
+Menampilkan alamat IP lokal Anda untuk akses jarak jauh
+</item>
+        <item>
+Mendeteksi jaringan aktif dan status VPN untuk Manajemen Jarak Jauh dan berbagi jaringan
+</item>
+        <item>
+Memungkinkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat
+</item>
     </string-array>
 
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
-        <item>Pemberitahuan Posting</item>
-        <item>moe.shizuku.manager.izin.API_V23</item>
-        <item>Terima Booting Selesai</item>
-        <item>Minta Abaikan Pengoptimalan Baterai</item>
-        <item>Minta Paket Instal</item>
-        <item>Kueri Semua Paket</item>
-        <item>Layanan Latar Depan / Sinkronisasi Data Layanan Latar Depan</item>
-        <item>Kunci Bangun</item>
+        <item>
+POST_NOTIFICATIONS
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23
+</item>
+        <item>
+RECEIVE_BOOT_COMPLETED
+</item>
+        <item>
+REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+</item>
+        <item>
+REQUEST_INSTALL_PACKAGES
+</item>
+        <item>
+QUERY_ALL_PACKAGES
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+WAKE_LOCK
+</item>
     </string-array>
     <string-array name="pp_other_perm_details">
-        <item>Memberi tahu Anda ketika operasi file selesai atau penyimpanan hampir habis</item>
-        <item>Memungkinkan komunikasi dengan Manajer Shizuku untuk akses file yang lebih tinggi</item>
-        <item>Memungkinkan layanan Shizuku untuk memulai secara otomatis saat boot untuk ketersediaan segera</item>
-        <item>Memungkinkan Anda memilih untuk tetap mengaktifkan Shizuku di latar belakang untuk kinerja yang andal</item>
-        <item>Memungkinkan instalasi file APK yang Anda pilih</item>
-        <item>Mencantumkan aplikasi yang diinstal untuk fitur Manajer Aplikasi</item>
-        <item>Menjalankan Sinkronisasi Folder dan transfer file sebagai layanan latar depan sehingga dapat diselesaikan dengan andal bahkan saat layar mati</item>
-        <item>Menjaga CPU dan Wi-Fi tetap aktif selama transfer file berukuran besar sehingga dapat diselesaikan dengan andal bahkan saat layar mati</item>
+        <item>
+Memberi tahu Anda saat operasi file selesai atau penyimpanan hampir penuh
+</item>
+        <item>
+Memungkinkan komunikasi dengan Shizuku Manager untuk akses file yang ditinggikan
+</item>
+        <item>
+Memungkinkan layanan Shizuku dimulai secara otomatis saat boot untuk ketersediaan segera
+</item>
+        <item>
+Memungkinkan Anda memilih untuk menjaga Shizuku tetap aktif di latar belakang untuk kinerja yang andal
+</item>
+        <item>
+Memungkinkan pemasangan file APK yang Anda pilih
+</item>
+        <item>
+Diperlukan oleh fitur App Manager dan Debloater. Membaca: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu pemasangan dan pembaruan, dan tanda aplikasi sistem vs. pengguna — diproses sepenuhnya di perangkat. Tab Debloater mengunduh daftar referensi debloat yang tersedia untuk umum dan mencocokkannya secara lokal dengan nama paket yang terpasang. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan secara eksternal.
+</item>
+        <item>
+Menjalankan Sinkronisasi Folder, transfer file, dan pemutaran media sebagai layanan latar depan sehingga selesai dengan andal dan terus diputar meskipun layar mati atau Anda menggunakan aplikasi lain
+</item>
+        <item>
+Menjaga CPU dan Wi-Fi tetap aktif selama transfer file besar dan pemutaran media sehingga selesai dengan andal meskipun layar mati
+</item>
     </string-array>
 
     <!-- Encryption spec (Section 5) -->
     <string-array name="pp_encryption_labels">
-        <item>Algoritma</item>
-        <item>Penyimpanan Kunci</item>
-        <item>Ukuran Kunci</item>
-        <item>Otentikasi</item>
+        <item>
+Algoritma
+</item>
+        <item>
+Penyimpanan Kunci
+</item>
+        <item>
+Ukuran Kunci
+</item>
+        <item>
+Otentikasi
+</item>
     </string-array>
     <string-array name="pp_encryption_details">
-        <item>AES-256-GCM (Standar Enkripsi Tingkat Lanjut dengan Mode Galois/Penghitung)</item>
-        <item>Android Keystore — penyimpanan aman yang didukung perangkat keras</item>
-        <item>256-bit</item>
-        <item>PIN yang ditentukan pengguna</item>
+        <item>
+AES-256-GCM (Advanced Encryption Standard with Galois/Counter Mode)
+</item>
+        <item>
+Android Keystore — penyimpanan aman yang didukung perangkat keras
+</item>
+        <item>
+256-bit
+</item>
+        <item>
+PIN yang ditentukan pengguna
+</item>
     </string-array>
 
     <!-- Local data protection (Section 5) -->
     <string-array name="pp_local_protection">
-        <item>Semua data lokal disimpan di area penyimpanan pribadi aplikasi — aplikasi lain tidak dapat mengaksesnya.</item>
-        <item>PIN Anda di-hash sebelum disimpan — kami tidak pernah melihatnya dalam teks biasa.</item>
-        <item>Kredensial berbagi jaringan disimpan di penyimpanan pribadi aplikasi dan tidak pernah dikirimkan secara eksternal.</item>
-        <item>Token OAuth untuk Google Drive, OneDrive, dan Dropbox disimpan di penyimpanan pribadi aplikasi dan tidak pernah dikirimkan ke server kami atau pihak ketiga mana pun.</item>
-        <item>Kredensial akses yang kompatibel dengan S3 / S3 (ID Kunci Akses dan Kunci Akses Rahasia) disimpan dalam penyimpanan pribadi aplikasi dan digunakan secara eksklusif untuk mengautentikasi permintaan ke titik akhir yang Anda konfigurasikan — permintaan tersebut tidak pernah dikirimkan ke server kami.</item>
-        <item>Prosedur keamanan diterapkan untuk melindungi kerahasiaan semua data yang disimpan secara lokal.</item>
-        <item>Semua data secara otomatis dihapus ketika Anda mencopot pemasangan aplikasi.</item>
+        <item>
+Semua data lokal disimpan di area penyimpanan pribadi aplikasi — aplikasi lain tidak dapat mengaksesnya.
+</item>
+        <item>
+PIN Anda di-hash sebelum disimpan — kami tidak pernah melihatnya dalam teks biasa.
+</item>
+        <item>
+Kredensial berbagi jaringan disimpan di penyimpanan pribadi aplikasi dan tidak pernah dikirimkan secara eksternal.
+</item>
+        <item>
+Token OAuth untuk Google Drive, OneDrive, dan Dropbox disimpan di penyimpanan pribadi aplikasi dan tidak pernah dikirimkan ke server kami atau pihak ketiga mana pun.
+</item>
+        <item>
+Kredensial akses S3 / Kompatibel S3 (Access Key ID dan Secret Access Key) disimpan di penyimpanan pribadi aplikasi dan digunakan secara eksklusif untuk mengautentikasi permintaan ke titik akhir yang Anda konfigurasi — kredensial tersebut tidak pernah dikirimkan ke server kami.
+</item>
+        <item>
+Prosedur keamanan diterapkan untuk melindungi kerahasiaan semua data yang disimpan secara lokal.
+</item>
+        <item>
+Semua data secara otomatis dihapus saat Anda mencopot pemasangan aplikasi.
+</item>
     </string-array>
 
     <!-- Remote security (Section 5) -->
     <string-array name="pp_remote_security">
-        <item>Akses yang dilindungi PIN — hanya orang yang Anda otorisasi yang dapat terhubung.</item>
-        <item>Otentikasi berbasis sesi pada setiap koneksi.</item>
-        <item>Beroperasi di jaringan lokal Anda saja — tidak ada akses internet eksternal.</item>
-        <item>Server mati secara otomatis ketika Anda keluar dari layar Manajemen Jarak Jauh.</item>
-        <item>Penting: Manajemen Jarak Jauh menggunakan HTTP yang tidak terenkripsi. Akses Vault melalui Manajemen Jarak Jauh (termasuk entri PIN) dikirimkan tanpa terenkripsi melalui jaringan lokal Anda. Gunakan hanya di jaringan yang Anda percayai, seperti Wi-Fi rumah Anda.</item>
+        <item>
+Akses yang dilindungi PIN — hanya orang yang Anda otorisasi yang dapat terhubung.
+</item>
+        <item>
+Otentikasi berbasis sesi pada setiap koneksi.
+</item>
+        <item>
+Beroperasi hanya di jaringan lokal Anda — tanpa akses internet eksternal.
+</item>
+        <item>
+Server mati secara otomatis saat Anda keluar dari layar Manajemen Jarak Jauh.
+</item>
+        <item>
+Penting: Manajemen Jarak Jauh menggunakan HTTP tidak terenkripsi. Akses Vault melalui Manajemen Jarak Jauh (termasuk entri PIN) dikirimkan tanpa enkripsi melalui jaringan lokal Anda. Gunakan hanya di jaringan yang Anda percayai, seperti Wi-Fi rumah Anda.
+</item>
     </string-array>
 
     <!-- Google Drive user data table (Section 6) -->
     <string-array name="pp_google_data_labels">
-        <item>Metadata File &amp; Folder (nama, ukuran, jenis MIME, tanggal modifikasi, ID Drive)</item>
-        <item>File Konten Biner</item>
-        <item>Token Akses OAuth &amp; Token Penyegaran</item>
+        <item>
+Metadata File &amp; Folder (nama, ukuran, tipe MIME, tanggal modifikasi, ID Drive)
+</item>
+        <item>
+Konten Biner File
+</item>
+        <item>
+Token Akses OAuth &amp; Token Penyegaran
+</item>
     </string-array>
     <string-array name="pp_google_data_when">
-        <item>Saat Anda menjelajahi Google Drive di dalam aplikasi</item>
-        <item>Hanya ketika Anda secara eksplisit membuka, mengunduh, mengunggah, menyalin, memindahkan, atau menyinkronkan file</item>
-        <item>Disimpan secara lokal setelah Anda masuk ke Google Drive</item>
+        <item>
+Saat Anda menjelajahi Google Drive dalam aplikasi
+</item>
+        <item>
+Hanya saat Anda secara eksplisit membuka, mengunduh, mengunggah, menyalin, memindahkan, atau menyinkronkan file
+</item>
+        <item>
+Disimpan secara lokal setelah Anda masuk ke Google Drive
+</item>
     </string-array>
     <string-array name="pp_google_data_purposes">
-        <item>Menampilkan konten Drive Anda di browser file</item>
-        <item>Melakukan operasi file spesifik yang Anda minta</item>
-        <item>Mempertahankan sesi terotentikasi Anda tanpa perlu login berulang kali</item>
+        <item>
+Menampilkan konten Drive Anda di penjelajah file
+</item>
+        <item>
+Melakukan operasi file spesifik yang Anda minta
+</item>
+        <item>
+Mempertahankan sesi terautentikasi Anda tanpa perlu masuk berulang kali
+</item>
     </string-array>
     <!-- Permitted uses of Google data (Section 6) -->
     <string-array name="pp_google_permitted">
-        <item>Menjelajahi Drive Anda: Mengambil metadata file dan folder untuk menampilkan konten Drive Anda.</item>
-        <item>Mengunggah file: Mengirim file lokal ke Drive Anda saat Anda memintanya secara eksplisit.</item>
-        <item>Mengunduh file: Mengambil file Drive ke perangkat Anda saat Anda memintanya secara eksplisit.</item>
-        <item>Memindahkan &amp; menyalin file: Melakukan operasi file sisi Drive yang Anda mulai secara eksplisit.</item>
-        <item>Menghapus file: Menghapus file Drive yang Anda pilih secara eksplisit untuk dihapus.</item>
-        <item>Sinkronisasi Folder: Menyinkronkan folder lokal dengan folder Drive sesuai dengan profil sinkronisasi yang Anda konfigurasikan.</item>
+        <item>
+Menelusuri Drive Anda: Mengambil metadata file dan folder untuk menampilkan konten Drive Anda.
+</item>
+        <item>
+Mengunggah file: Mengirim file lokal ke Drive Anda saat Anda secara eksplisit memintanya.
+</item>
+        <item>
+Mengunduh file: Mengambil file Drive ke perangkat Anda saat Anda secara eksplisit memintanya.
+</item>
+        <item>
+Memindahkan &amp; menyalin file: Melakukan operasi file di sisi Drive yang Anda mulai secara eksplisit.
+</item>
+        <item>
+Menghapus file: Menghapus file Drive yang Anda pilih secara eksplisit untuk dihapus.
+</item>
+        <item>
+Sinkronisasi Folder: Menyinkronkan folder lokal dengan folder Drive sesuai dengan profil sinkronisasi yang Anda konfigurasi.
+</item>
     </string-array>
     <!-- Prohibited uses of Google data (Section 6) -->
     <string-array name="pp_google_prohibited">
-        <item>Periklanan yang ditargetkan, dipersonalisasi, ditargetkan ulang, atau berdasarkan minat</item>
-        <item>Menjual ke pialang data atau memberikan kepada pengecer informasi</item>
-        <item>Menentukan kelayakan kredit atau untuk tujuan peminjaman apa pun</item>
-        <item>Melatih kecerdasan buatan atau model pembelajaran mesin</item>
-        <item>Membuat database atau profil pengguna yang tidak terkait dengan manajemen file</item>
-        <item>Segala penambangan, pengikisan, atau agregasi data untuk tujuan eksternal</item>
-        <item>Mentransfer data pengguna Google ke pihak ketiga mana pun untuk alasan apa pun selain menyediakan atau meningkatkan fitur pengelolaan file aplikasi, atau sebagaimana diwajibkan oleh hukum</item>
+        <item>
+Periklanan yang ditargetkan, dipersonalisasi, ditargetkan ulang, atau berbasis minat
+</item>
+        <item>
+Menjual ke pialang data atau memberikan kepada penjual kembali informasi
+</item>
+        <item>
+Menentukan kelayakan kredit atau untuk tujuan pinjaman apa pun
+</item>
+        <item>
+Melatih kecerdasan buatan atau model pembelajaran mesin
+</item>
+        <item>
+Membuat database atau profil pengguna yang tidak terkait dengan manajemen file
+</item>
+        <item>
+Penambangan data, pengikisan, atau agregasi apa pun untuk tujuan eksternal
+</item>
+        <item>
+Mentransfer data pengguna Google ke pihak ketiga mana pun dengan alasan apa pun selain menyediakan atau meningkatkan fitur manajemen file aplikasi, atau sebagaimana diwajibkan oleh hukum
+</item>
     </string-array>
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
-        <item>Analisis Firebase</item>
-        <item>Layanan Google Play</item>
-        <item>Penagihan Google Play</item>
-        <item>API Microsoft OneDrive</item>
-        <item>API Google Drive</item>
-        <item>API Dropbox</item>
-        <item>API yang Kompatibel dengan AWS S3 / S3 (misalnya AWS S3, MinIO, IDrive E2)</item>
+        <item>
+Firebase Analytics
+</item>
+        <item>
+Google Play Services
+</item>
+        <item>
+Google Play Billing
+</item>
+        <item>
+Microsoft OneDrive API
+</item>
+        <item>
+Google Drive API
+</item>
+        <item>
+Dropbox API
+</item>
+        <item>
+AWS S3 / API Kompatibel S3 (misal AWS S3, MinIO, IDrive E2)
+</item>
     </string-array>
     <string-array name="pp_third_party_providers">
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>Perusahaan Microsoft</item>
-        <item>Google LLC</item>
-        <item>Dropbox, Inc.</item>
-        <item>Amazon Web Services &amp; penyedia yang kompatibel</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Microsoft Corporation
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Dropbox, Inc.
+</item>
+        <item>
+Amazon Web Services &amp; penyedia kompatibel
+</item>
     </string-array>
     <string-array name="pp_third_party_purposes">
-        <item>Analisis penggunaan anonim</item>
-        <item>Distribusi aplikasi, pembaruan, dan ulasan dalam aplikasi</item>
-        <item>Memproses pembelian tip dalam aplikasi opsional (hanya pembelian token, di perangkat)</item>
-        <item>Mengautentikasi dan memproses permintaan pengguna untuk integrasi Microsoft OneDrive</item>
-        <item>Mengautentikasi dan memproses permintaan pengelolaan file yang dimulai pengguna untuk integrasi Google Drive</item>
-        <item>Mengautentikasi dan memproses permintaan pengguna untuk integrasi Dropbox</item>
-        <item>Mengautentikasi dan memproses permintaan manajemen file yang dimulai pengguna untuk penyimpanan cloud yang kompatibel dengan S3 melalui titik akhir yang Anda konfigurasi</item>
+        <item>
+Analitik penggunaan anonim
+</item>
+        <item>
+Distribusi aplikasi, pembaruan, dan ulasan dalam aplikasi
+</item>
+        <item>
+Memproses pembelian tip opsional dalam aplikasi (hanya token pembelian, di perangkat)
+</item>
+        <item>
+Mengautentikasi dan memproses permintaan pengguna untuk integrasi Microsoft OneDrive
+</item>
+        <item>
+Mengautentikasi dan memproses permintaan manajemen file yang dimulai pengguna untuk integrasi Google Drive
+</item>
+        <item>
+Mengautentikasi dan memproses permintaan pengguna untuk integrasi Dropbox
+</item>
+        <item>
+Mengautentikasi dan memproses permintaan manajemen file yang dimulai pengguna untuk penyimpanan cloud kompatibel S3 melalui titik akhir yang Anda konfigurasi
+</item>
     </string-array>
 
     <!-- Data retention (Section 8) -->
     <string-array name="pp_retention_labels">
-        <item>Data Aplikasi Lokal</item>
-        <item>Kunci Enkripsi Vault</item>
-        <item>Metadata File Terindeks</item>
-        <item>Token OAuth Google Drive / OneDrive / Dropbox</item>
-        <item>Kredensial Akses yang Kompatibel dengan S3 / S3</item>
-        <item>Data Firebase Analytics</item>
+        <item>
+Data Aplikasi Lokal
+</item>
+        <item>
+Kunci Enkripsi Vault
+</item>
+        <item>
+Metadata File yang Diindeks
+</item>
+        <item>
+Token OAuth Google Drive / OneDrive / Dropbox
+</item>
+        <item>
+Kredensial Akses S3 / Kompatibel S3
+</item>
+        <item>
+Data Analytics Firebase
+</item>
     </string-array>
     <string-array name="pp_retention_details">
-        <item>Sampai Anda mencopot pemasangan aplikasi</item>
-        <item>Sampai Anda mencopot pemasangan aplikasi</item>
-        <item>Hingga dihapus melalui Pengaturan -&gt; Pengindeks Penyimpanan, atau hingga aplikasi dicopot pemasangannya</item>
-        <item>Hingga Anda memutuskan sambungan akun di Pengaturan, atau hingga aplikasi dicopot pemasangannya</item>
-        <item>Hingga Anda menghapus profil S3 di Pengaturan, atau hingga aplikasi dicopot pemasangannya</item>
-        <item>14 bulan (periode retensi default Google)</item>
+        <item>
+Sampai Anda mencopot pemasangan aplikasi
+</item>
+        <item>
+Sampai Anda mencopot pemasangan aplikasi
+</item>
+        <item>
+Sampai dihapus melalui Pengaturan -> Indeks Penyimpanan, atau sampai pencopotan pemasangan aplikasi
+</item>
+        <item>
+Sampai Anda memutuskan akun di Pengaturan, atau sampai pencopotan pemasangan aplikasi
+</item>
+        <item>
+Sampai Anda menghapus profil S3 di Pengaturan, atau sampai pencopotan pemasangan aplikasi
+</item>
+        <item>
+14 bulan (periode penyimpanan bawaan Google)
+</item>
     </string-array>
 
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
-        <item>Akses data Anda yang disimpan secara lokal langsung melalui aplikasi.</item>
-        <item>Hapus data Vault dengan menghapus item dari Vault.</item>
-        <item>Kelola dan hapus metadata file yang diindeks melalui Pengaturan -&gt; Pengindeks Penyimpanan.</item>
-        <item>Putuskan sambungan akun Google Drive, OneDrive, atau Dropbox Anda kapan saja untuk mencabut akses dan menghapus token OAuth yang disimpan.</item>
-        <item>Hapus profil penyimpanan Anda yang Kompatibel dengan S3 / S3 kapan saja melalui Pengaturan untuk menghapus kredensial akses yang disimpan.</item>
-        <item>Ekspor file Anda menggunakan fitur bagikan atau salin.</item>
-        <item>Menyisih dari Firebase Analytics kapan saja melalui Pengaturan → Analisis Penggunaan dalam aplikasi; alternatifnya, gunakan pengaturan perangkat Android Anda.</item>
+        <item>
+Akses data yang disimpan secara lokal langsung melalui aplikasi.
+</item>
+        <item>
+Hapus data Vault dengan menghapus item dari Vault.
+</item>
+        <item>
+Kelola dan hapus metadata file yang terindeks melalui Pengaturan -> Indeks Penyimpanan.
+</item>
+        <item>
+Putuskan akun Google Drive, OneDrive, atau Dropbox Anda kapan saja untuk mencabut akses dan menghapus token OAuth yang tersimpan.
+</item>
+        <item>
+Hapus profil penyimpanan S3 / kompatibel dengan S3 Anda kapan saja melalui Pengaturan untuk menghapus kredensial akses yang tersimpan.
+</item>
+        <item>
+Ekspor file Anda menggunakan fitur bagikan atau salin.
+</item>
+        <item>
+Nonaktifkan Firebase Analytics kapan saja melalui Pengaturan → Analitik Penggunaan di dalam aplikasi; atau, gunakan pengaturan perangkat Android Anda.
+</item>
     </string-array>
 
     <!-- Delete steps (Section 8) -->
     <string-array name="pp_delete_steps">
-        <item>Buka Pengaturan Android dan buka Aplikasi.</item>
-        <item>Temukan dan ketuk Ultimate File Manager Pro.</item>
-        <item>Ketuk Penyimpanan → Hapus Data, atau cukup hapus instalan aplikasi.</item>
+        <item>
+Buka Pengaturan Android dan masuk ke Aplikasi.
+</item>
+        <item>
+Temukan dan ketuk Ultimate File Manager Pro.
+</item>
+        <item>
+Ketuk Penyimpanan → Hapus Data, atau cukup copot pemasangan aplikasi.
+</item>
     </string-array>
 
     <!-- Play Store compliance table (Section 12) -->
     <string-array name="pp_compliance_labels">
-        <item>Izin Penyimpanan</item>
-        <item>Izin Jaringan</item>
-        <item>Status Jaringan</item>
-        <item>Multicast</item>
-        <item>Pemberitahuan</item>
-        <item>Instal Paket</item>
-        <item>Akses Tinggi (Shizuku)</item>
-        <item>Pengindeks Penyimpanan</item>
-        <item>Paket Kueri</item>
-        <item>Ulasan Dalam Aplikasi</item>
-        <item>Animasi Lottie</item>
+        <item>
+Izin Penyimpanan
+</item>
+        <item>
+Izin Jaringan
+</item>
+        <item>
+Status Jaringan
+</item>
+        <item>
+Multicast
+</item>
+        <item>
+Notifikasi
+</item>
+        <item>
+Instal Paket
+</item>
+        <item>
+Akses Tinggi (Shizuku)
+</item>
+        <item>
+Indeks Penyimpanan
+</item>
+        <item>
+Kueri Paket
+</item>
+        <item>
+Ulasan Dalam Aplikasi
+</item>
+        <item>
+Animasi Lottie
+</item>
     </string-array>
     <string-array name="pp_compliance_details">
-        <item>Penjelajahan dan pengelolaan file</item>
-        <item>Manajemen file jarak jauh, berbagi jaringan SMB/FTP/SFTP/SCP, dan pemasangan perangkat melalui Wi-Fi lokal</item>
-        <item>Deteksi VPN untuk Manajemen Jarak Jauh dan konektivitas berbagi jaringan</item>
-        <item>Penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat</item>
-        <item>Peringatan penyelesaian operasi dan peringatan penyimpanan</item>
-        <item>Instalasi APK dari penyimpanan lokal</item>
-        <item>Manajemen file tingkat lanjut dalam direktori sistem terbatas melalui Shizuku API</item>
-        <item>Mengindeks metadata file secara lokal untuk pencarian cepat</item>
-        <item>Fitur Manajer Aplikasi</item>
-        <item>API Tinjauan Dalam Aplikasi Google Play untuk mengumpulkan masukan pengguna</item>
-        <item>Merender animasi UI yang halus di seluruh aplikasi melalui perpustakaan Lottie v6.3.0 (com.airbnb.android:lottie)</item>
+        <item>
+Penjelajahan dan pengelolaan file
+</item>
+        <item>
+Pengelolaan file jarak jauh, berbagi jaringan SMB/FTP/SFTP/SCP/NFS, dan pemasangan perangkat melalui Wi-Fi lokal
+</item>
+        <item>
+Deteksi VPN untuk Manajemen Jarak Jauh dan konektivitas berbagi jaringan
+</item>
+        <item>
+Penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan perangkat
+</item>
+        <item>
+Peringatan penyelesaian operasi dan peringatan penyimpanan
+</item>
+        <item>
+Instalasi APK dari penyimpanan lokal
+</item>
+        <item>
+Pengelolaan file tingkat lanjut di direktori sistem terbatas melalui API Shizuku
+</item>
+        <item>
+Mengindeks metadata file secara lokal untuk pencarian cepat
+</item>
+        <item>
+Fitur Manajer Aplikasi dan Debloater — membaca nama paket yang terinstal, versi, ukuran, dan flag sistem/pengguna hanya di perangkat. Tidak diunggah atau dibagikan. Debloater mencocokkan nama paket secara lokal dengan daftar referensi debloat yang tersedia untuk umum.
+</item>
+        <item>
+API Ulasan Dalam Aplikasi Google Play untuk mengumpulkan masukan pengguna
+</item>
+        <item>
+Menampilkan animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)
+</item>
     </string-array>
 
     <!-- Contact (Section 13) -->
     <string-array name="pp_contact_labels">
-        <item>E-mail</item>
+        <item>
+Email
+</item>
     </string-array>
     <string-array name="pp_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 </resources>

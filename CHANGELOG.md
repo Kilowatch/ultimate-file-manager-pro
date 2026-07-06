@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a bug in the Add/Edit Share screen where editing an existing share would clear the reference handle, causing saved changes to write to a duplicate new share rather than updating the original configuration.
 - Fixed a bug in the Add/Edit Share screen where performing a connection test on a new SSH share would prematurely write the share configuration to disk (to persist the server fingerprint) before the user explicitly clicked save.
 
+### Changed
+- Updated Privacy Policy and Terms &amp; Conditions disclosure for the `QUERY_ALL_PACKAGES` permission (installed application information) to comply with the Google Play User Data policy. The disclosure now explicitly states what data is read (app name, package ID, version, APK size, install/update timestamps, system vs. user-app flag), that it is processed entirely on-device, and that no installed application data is ever transmitted to KiloWatch servers or any third party. Updated in `strings_policy.xml`, `UFMPrivacyPolicy.html`, and `UFMTerms.html`.
+
 ---
 
 ## [1.6.3] — 2026-07-03

@@ -180,7 +180,7 @@
         <item>Powers remote file management, network share access (SMB/FTP/SFTP/SCP/NFS), folder sync, device pairing, and ADB terminal access on your local network. Network discovery scans devices on your local subnet (up to 254 IPs) on ADB ports 5555, 5037, and 5038 to find ADB-enabled devices.</item>
         <item>Used for local network device discovery (NSD/mDNS) when pairing devices.</item>
         <item>Detects VPN connections during Remote Management and network share access.</item>
-        <item>Lets the App Manager list apps installed on your device.</item>
+        <item>Lets the App Manager enumerate all apps installed on your device. Data accessed includes: app name, package ID, version, APK size, install and update timestamps, and whether each app is a system or user-installed app. This information is used exclusively on-device to display the App Manager, calculate per-app storage, and cross-reference package names against a publicly available debloat reference list that is downloaded and cached locally. No installed application data is ever transmitted to KiloWatch servers or any third party.</item>
         <item>Required to install APK files you choose to run from local storage.</item>
         <item>Processes optional Tip Jar purchases via Google Play.</item>
         <item>Allows secure connection to Android devices for advanced shell access. Generates a unique RSA certificate on your device for pairing; no certificates are transmitted to external servers.</item>
@@ -331,7 +331,7 @@
 
     <string name="pp_s12_body">We may update this Privacy Policy from time to time. When we do, we\'ll update the date at the top. For significant changes, we\'ll also notify you in-app. Continuing to use the app after changes means you accept the updated Policy.</string>
 
-    <string name="pp_s13_body">This app is built to meet Google Play\'s standards. All requested permissions are required for core app functionality. Before requesting any sensitive permission, the app clearly explains why it\'s needed and how it will be used. Regarding the October 2024 Photo and Video Policy updates: broad access is necessary because this is a comprehensive file manager designed for bulk operations (moving, renaming, and syncing) across all storage volumes, which cannot be efficiently performed using standard system pickers.</string>
+    <string name="pp_s13_body">This app is built to meet Google Play\'s standards. All requested permissions are required for core app functionality. Before requesting any sensitive permission, the app clearly explains why it\'s needed and how it will be used. Regarding the October 2024 Photo and Video Policy updates: broad access is necessary because this is a comprehensive file manager designed for bulk operations (moving, renaming, and syncing) across all storage volumes, which cannot be efficiently performed using standard system pickers.\n\nRegarding Installed Application Information (QUERY_ALL_PACKAGES): The App Manager feature reads the full list of installed packages on-device only — including app name, package ID, version, APK size, install and update timestamps, and system vs. user-app classification. The Debloater tab additionally downloads a publicly available debloat reference list and cross-references it locally against installed package names. No installed application data is ever transmitted to KiloWatch servers or any third party.</string>
 
     <string name="pp_s14_body">If you have any questions or concerns about this Privacy Policy, please reach out.</string>
 
@@ -459,7 +459,7 @@
         <item>Allows Shizuku services to start automatically on boot for immediate availability</item>
         <item>Allows you to opt-in to keeping Shizuku active in the background for reliable performance</item>
         <item>Allows installation of APK files you choose</item>
-        <item>Lists installed apps for the App Manager feature</item>
+        <item>Required by the App Manager and Debloater features. Reads: app name, package ID, version, APK size, install and update timestamps, and system vs. user-app flag — processed entirely on-device. The Debloater tab downloads a publicly available debloat reference list and cross-references it locally against installed package names. No installed application data is ever transmitted externally.</item>
         <item>Runs Folder Sync, file transfers, and media playback as a foreground service so they complete reliably and continue playing even when the screen is off or you\'re using other apps</item>
         <item>Keeps the CPU and Wi-Fi active during large file transfers and media playback so they complete reliably even when the screen turns off</item>
     </string-array>
@@ -621,7 +621,7 @@
         <item>APK installation from local storage</item>
         <item>Advanced file management in restricted system directories via the Shizuku API</item>
         <item>Indexes file metadata locally for fast search</item>
-        <item>App Manager feature</item>
+        <item>App Manager and Debloater features — reads installed package names, versions, sizes, and system/user flags on-device only. Not uploaded or shared. The Debloater cross-references package names locally against a publicly available debloat reference list.</item>
         <item>Google Play In-App Review API for collecting user feedback</item>
         <item>Renders smooth UI animations throughout the app via the Lottie library v6.3.0 (com.airbnb.android:lottie)</item>
     </string-array>

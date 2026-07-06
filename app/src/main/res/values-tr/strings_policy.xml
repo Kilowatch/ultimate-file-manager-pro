@@ -4,50 +4,104 @@
     <!-- ═══════════════════════════════════════════════════════════
          SHARED
     ═══════════════════════════════════════════════════════════ -->
-    <string name="policy_app_name">Nihai Dosya Yöneticisi Pro</string>
-    <string name="policy_company">Kiloİzle</string>
-    <string name="policy_last_updated">Son Güncelleme: Nisan 2026</string>
-    <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
-    <string name="policy_contact_email">support@kilowatch.co.za</string>
+    <string name="policy_app_name">
+Ultimate File Manager Pro
+</string>
+    <string name="policy_company">
+KiloWatch
+</string>
+    <string name="policy_last_updated">
+Son Güncelleme: Temmuz 2026
+</string>
+    <string name="policy_play_store_url">
+https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
+</string>
+    <string name="policy_contact_email">
+support@kilowatch.co.za
+</string>
 
     <!-- ═══════════════════════════════════════════════════════════
          TERMS AND CONDITIONS
     ═══════════════════════════════════════════════════════════ -->
-    <string name="tc_screen_title">Şartlar ve Koşullar</string>
-    <string name="tc_summary">Ultimate File Manager Pro\'yu indirerek veya kullanarak bu Koşulları kabul etmiş olursunuz. Bunları mümkün olduğunca açık ve jargondan uzak olacak şekilde yazdık.</string>
+    <string name="tc_screen_title">
+Şartlar ve Koşullar
+</string>
+    <string name="tc_summary">
+Ultimate File Manager Pro\'yu indirerek veya kullanarak bu Şartları kabul etmiş olursunuz. Bunları olabildiğince açık ve jargondan uzak yazdık.
+</string>
 
     <!-- Section titles -->
-    <string name="tc_s1_title">1. Neleri Kabul Ediyorsunuz?</string>
-    <string name="tc_s2_title">2. Uygulama Ne Yapar?</string>
-    <string name="tc_s3_title">3. Risk ve Sorumluluk - Dürüst Gerçek</string>
-    <string name="tc_s3a_title">3a. Uygulama İçi Satın Almalar ve Faturalandırma</string>
+    <string name="tc_s1_title">
+1. Ne Kadar Anlaşıyorsunuz
+</string>
+    <string name="tc_s2_title">
+2. Uygulama Ne Yapar?
+</string>
+    <string name="tc_s3_title">
+3. Risk ve Sorumluluk — Açık Gerçek
+</string>
+    <string name="tc_s3a_title">
+3a. Uygulama İçi Satın Almalar ve Fatura
+</string>
     <string name="tc_s3b_title">
 3b. RClone Bulut Entegrasyonu
 </string>
-    <string name="tc_s4_title">4. Sorumluluklarınız</string>
-    <string name="tc_s5_title">5. İhtiyacımız Olan İzinler ve Nedeni</string>
-    <string name="tc_s6_title">6. Kim Neye Sahip?</string>
-    <string name="tc_s7_title">7. Kullandığımız Açık Kaynak Bileşenler</string>
-    <string name="tc_s8_title">8. Bu Koşullarda Yapılan Değişiklikler</string>
-    <string name="tc_s9_title">9. İşler Ters Giderse</string>
-    <string name="tc_s10_title">10. Geçerli Kanun</string>
-    <string name="tc_s11_title">11. Sorularınız mı var? İletişime Geçin</string>
+    <string name="tc_s4_title">
+4. Sorumluluklarınız
+</string>
+    <string name="tc_s5_title">
+5. İhtiyacımız Olan İzinler ve Nedenleri
+</string>
+    <string name="tc_s6_title">
+6. Kim Neye Sahip?
+</string>
+    <string name="tc_s7_title">
+7. Kullandığımız Açık Kaynak Bileşenler
+</string>
+    <string name="tc_s8_title">
+8. Bu Şartlarda Değişiklikler
+</string>
+    <string name="tc_s9_title">
+9. Bir Şey Ters Giderse
+</string>
+    <string name="tc_s10_title">
+10. Geçerli Kanun
+</string>
+    <string name="tc_s11_title">
+11. Sorularınız mı Var? Bize Ulaşın
+</string>
 
     <!-- Section body text -->
-    <string name="tc_s1_body">Ultimate File Manager Pro\'yu Google Play Store\'dan indirerek veya açarak bu Şartları kabul etmiş olursunuz. Bunları kabul etmemeyi tercih ediyorsanız uygulamayı yüklemeyin veya kullanmayın.</string>
+    <string name="tc_s1_body">
+Ultimate File Manager Pro\'yu Google Play Store\'dan indirerek veya açarak bu Şartları kabul etmiş olursunuz. Kabul etmek istemiyorsanız uygulamayı yüklemeyin veya kullanmayın.
+</string>
 
-    <string name="tc_s2_body">Ultimate File Manager Pro, dosyalarınızı düzenli ve güvende tutacak araçlarla dolu, hem telefonlarda hem de Android TV\'de bulunan ücretsiz bir Android uygulamasıdır.</string>
+    <string name="tc_s2_body">
+Ultimate File Manager Pro, telefonlar ve Android TV\'de kullanılabilen, dosyalarınızı düzenli ve güvende tutmak için araçlarla dolu ücretsiz bir Android uygulamasıdır.
+</string>
 
-    <string name="tc_s3_body">Bu uygulamayı özenle geliştirdik ancak kullanmadan önce bilmeniz gereken bazı önemli gerçekleri burada bulabilirsiniz.</string>
+    <string name="tc_s3_body">
+Bu uygulamayı özenle geliştirdik, ancak kullanmadan önce bilmeniz gereken bazı önemli gerçekler var.
+</string>
 
-    <string name="tc_s3a_body">Uygulama, isteğe bağlı bir \"Geliştiriciyi Yakıtlandırın\" İpucu Kavanozunu sunar; geliştirmeyi destekleyen üç adet tek seferlik gönüllü satın alma. İpuçları size hiçbir ekstra özellik sağlamaz; uygulama her zaman tamamen ücretsizdir.</string>
-    <string name="tc_s3a_payment">Tüm işlemler Google Play Faturalandırma üzerinden gerçekleştirilir. Kartınızı veya banka bilgilerinizi asla görmeyiz.</string>
-    <string name="tc_s3a_refunds">Bahşiş satın alımları isteğe bağlıdır ve Google Play tarafından işlenir. Geri ödeme talepleri, geri ödeme politikalarına ve Güney Afrika Tüketiciyi Koruma Yasası da dahil olmak üzere geçerli yasalara uygun olarak doğrudan Google Play tarafından gerçekleştirilir. KiloWatch geri ödemeleri bağımsız olarak işlemez.</string>
-    <string name="tc_s3a_recurring">Abonelik yok. Her ipucu tek seferlik bir sarf malzemesi satın alımıdır. Hiçbir zaman otomatik olarak ücretlendirilmeyeceksiniz.</string>
-    <string name="tc_s3a_no_obligation">Bahşiş tamamen isteğe bağlıdır. Tüm özellikler sonsuza kadar ücretsiz olarak kullanılabilir durumda kalır.</string>
+    <string name="tc_s3a_body">
+Uygulama, isteğe bağlı bir \"Geliştiriciyi Destekle\" Bahşiş Kutusu sunar — geliştirmeyi destekleyen üç tek seferlik gönüllü satın alma. Bahşişler size ek özellik kazandırmaz; uygulama her zaman tamamen ücretsizdir.
+</string>
+    <string name="tc_s3a_payment">
+Tüm işlemler Google Play Faturalama üzerinden gerçekleşir. Kart veya banka bilgilerinizi asla görmeyiz.
+</string>
+    <string name="tc_s3a_refunds">
+Bahşiş satın alımları gönüllüdür ve Google Play tarafından işlenir. Geri ödeme talepleri, Google Play\'in geri ödeme politikası ve geçerli yasalar (Güney Afrika Tüketiciyi Koruma Yasası dahil) uyarınca doğrudan Google Play tarafından ele alınır. KiloWatch geri ödemeleri bağımsız olarak işlemez.
+</string>
+    <string name="tc_s3a_recurring">
+Abonelik yoktur. Her bahşiş, tek seferlik tüketilebilir bir satın almadır. Asla otomatik olarak ücretlendirilmezsiniz.
+</string>
+    <string name="tc_s3a_no_obligation">
+Bahşiş vermek tamamen isteğe bağlıdır. Tüm özellikler her zaman ücretsiz olarak kullanılabilir.
+</string>
 
     <string name="tc_s3b_body">
-Uygulama, entegre RClone arka ucunu kullanarak çok çeşitli üçüncü taraf bulut depolama sağlayıcılarına bağlanmayı destekler. Bu özelliği kullandığınızda aşağıdaki koşullar geçerli olur:
+Uygulama, entegre RClone arka ucu kullanarak çok çeşitli üçüncü taraf bulut depolama sağlayıcılarına bağlanmayı destekler. Bu özelliği kullandığınızda aşağıdaki koşullar geçerlidir:
 </string>
     <string-array name="tc_rclone_labels">
         <item>
@@ -57,7 +111,7 @@ Doğrudan API İletişimi
 Kimlik Bilgisi Güvenliği
 </item>
         <item>
-Üçüncü Taraf Şartları
+Üçüncü Taraf Koşulları
 </item>
         <item>
 Bağlantı Garantisi Yok
@@ -65,621 +119,1411 @@ Bağlantı Garantisi Yok
     </string-array>
     <string-array name="tc_rclone_details">
         <item>
-RClone depolama sağlayıcılarına (Filen, Mega ve diğerleri gibi) yönelik tüm ağ istekleri doğrudan cihazınızdan ilgili sağlayıcının uç noktalarına gerçekleştirilir. KiloWatch sunucularından hiçbir veri geçmez.
+RClone depolama sağlayıcılarına (Filen, Mega ve diğerleri gibi) yapılan tüm ağ istekleri, cihazınızdan doğrudan ilgili sağlayıcının uç noktalarına gerçekleştirilir. Hiçbir veri KiloWatch sunucularından geçmez.
 </item>
         <item>
-RClone yapılandırma profilleriniz ve şifreleriniz, RClone RC arka ucu aracılığıyla cihazda şifrelenir ve uygulamanın özel deposunda rclone_encrypted.json olarak yerel olarak depolanır. Bu dosyayı korumak için cihazınızın güvenliğinin sağlanmasından yalnızca siz sorumlusunuz.
+RClone yapılandırma profilleriniz ve şifreleriniz, RClone RC arka ucu aracılığıyla cihazda şifrelenir ve uygulamanın özel deposunda rclone_encrypted.json olarak yerel olarak saklanır. Bu dosyayı korumak için cihazınızın güvenliğini sağlamak tamamen sizin sorumluluğunuzdadır.
 </item>
         <item>
-Herhangi bir RClone entegre bulut depolama alanı kullanımınız, ilgili bulut sağlayıcının hizmet şartlarına ve gizlilik politikasına tabidir. Bu uygulama aracılığıyla dosyalara erişirken şartlarına uymalısınız.
+Herhangi bir RClone entegreli bulut depolama kullanımınız, ilgili bulut sağlayıcısının hizmet şartlarına ve gizlilik politikasına tabidir. Bu uygulama aracılığıyla dosyalara erişirken onların şartlarına uymalısınız.
 </item>
         <item>
-Bulut sağlayıcı API\'leri ve uç noktaları bildirimde bulunmaksızın değişebileceğinden, belirli bir RClone sağlayıcısının erişilebilir kalacağını veya kesintisiz çalışacağını garanti edemeyiz.
+Bulut sağlayıcı API\'leri ve uç noktaları bildirim yapılmadan değişebileceğinden, belirli bir RClone sağlayıcısının erişilebilir kalacağını veya kesintisiz çalışacağını garanti edemeyiz.
 </item>
     </string-array>
     <string name="tc_s3b_summary">
-Bulut sürücülere RClone aracılığıyla bağlanma doğrudan telefonunuzdan veya TV\'nizden yapılır. Bulut dosyalarınızı veya şifrelerinizi asla görmeyiz. Şifreleriniz telefonunuzda şifrelenir ve yapılandırdığınız bulut sağlayıcının şartlarına tabi olursunuz.
+RClone üzerinden bulut sürücülerine bağlanma işlemi doğrudan telefonunuzdan veya TV\'nizden yapılır. Bulut dosyalarınızı veya şifrelerinizi asla görmeyiz. Şifreleriniz telefonunuzda şifrelenir ve yapılandırdığınız bulut sağlayıcısının şartlarına tabisiniz.
 </string>
 
-    <string name="tc_s4_body">Bu uygulamayı kullanmak, yanınızda birkaç basit sorumluluğu da beraberinde getirir.</string>
+    <string name="tc_s4_body">
+Bu uygulamayı kullanmak, sizin tarafınızdan birkaç basit sorumluluk gerektirir.
+</string>
 
-    <string name="tc_s5_body">Uygulama düzgün çalışması için belirli Android izinlerini ister. İşte her birinin tam olarak ne işe yaradığı.</string>
+    <string name="tc_s5_body">
+Uygulama, düzgün çalışmak için belirli Android izinleri ister. İşte her birinin tam olarak ne için olduğu.
+</string>
 
-    <string name="tc_s6_body">Uygulamayı özgürce kullanabilirsiniz; kopyalamanıza, yeniden dağıtmanıza veya satmanıza izin verilmez.</string>
+    <string name="tc_s6_body">
+Uygulamayı özgürce kullanabilirsiniz; ancak kopyalamaya, yeniden dağıtmaya veya satmaya izniniz yoktur.
+</string>
 
-    <string name="tc_s7_body">Bazı harika açık kaynaklı projelerin omuzlarına inşa ettik. Her biri kendi lisansına tabidir; her kitaplığın tam lisans metnini uygulamanın içinde Ayarlar → Yasal → Açık Kaynak Lisansları bölümünde görüntüleyebilirsiniz.</string>
+    <string name="tc_s7_body">
+Büyük açık kaynak projelerin omuzlarında yükseldik. Her biri kendi lisansına tabidir — her kitaplık için tam lisans metnini uygulama içinde Ayarlar → Yasal → Açık Kaynak Lisansları altında görüntüleyebilirsiniz.
+</string>
 
-    <string name="tc_s8_body">Bu Koşulları zaman zaman güncelleyebiliriz. Bunu yaptığımızda, bu belgenin üst kısmındaki tarihi güncelleyeceğiz. Herhangi bir değişiklikten sonra uygulamayı kullanmaya devam etmeniz, güncellenen Şartları kabul ettiğiniz anlamına gelir.</string>
+    <string name="tc_s8_body">
+Bu Şartları zaman zaman güncelleyebiliriz. Güncellediğimizde, bu belgenin başındaki tarihi güncelleriz. Herhangi bir değişiklikten sonra uygulamayı kullanmaya devam etmeniz, güncellenmiş Şartları kabul ettiğiniz anlamına gelir.
+</string>
 
-    <string name="tc_s9_body">Bu Koşulların ihlal edilmesi durumunda (örneğin, uygulamanın yasa dışı faaliyetler için kullanılması veya başka bir kişinin cihazına izinsiz olarak erişilmesi) uygulamaya erişimi askıya alma veya sonlandırma hakkını saklı tutarız.</string>
+    <string name="tc_s9_body">
+Bu Şartlar ihlal edilirse — örneğin uygulama yasadışı faaliyetler için veya bir başkasının cihazına izinsiz erişmek için kullanılırsa — uygulamaya erişimi askıya alma veya sonlandırma hakkını saklı tutarız.
+</string>
 
-    <string name="tc_s10_body">Bu Şartlar Güney Afrika yasalarına tabidir. Her türlü anlaşmazlık, kanunlar ihtilafı hükümlerine bakılmaksızın Güney Afrika yargı yetkisi altında çözülecektir.</string>
+    <string name="tc_s10_body">
+Bu Şartlar, Güney Afrika Cumhuriyeti yasalarına tabidir. Herhangi bir anlaşmazlık, kanun ihtilafı hükümlerine bakılmaksızın Güney Afrika yargı yetkisi altında çözülecektir.
+</string>
 
-    <string name="tc_s11_body">Burada net olmayan bir şey varsa veya haklarınızla ilgili sorularınız varsa lütfen bizimle iletişime geçin.</string>
+    <string name="tc_s11_body">
+Burada net olmayan bir şey varsa veya haklarınızla ilgili sorularınız varsa lütfen bizimle iletişime geçin.
+</string>
 
-    <string name="tc_footer">Ultimate File Manager Pro\'yu kullanarak bu Hüküm ve Koşulları okuyup anladığınızı onaylamış olursunuz.</string>
+    <string name="tc_footer">
+Ultimate File Manager Pro\'yu kullanarak bu Şartlar ve Koşulları okuduğunuzu ve anladığınızı onaylamış olursunuz.
+</string>
 
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
-        <item>Dosya Tarayıcı — Cihazınızın herhangi bir yerindeki dosyalara göz atın, kopyalayın, taşıyın, yeniden adlandırın ve silin.</item>
-        <item>Şifreli Kasa — hassas dosyaları kendi PIN\'inizle AES-256-GCM şifrelemesinin arkasına kilitleyin.</item>
-        <item>Dosya Sunucusu — Dosyaları yerel ağınız üzerinden paylaşmak için doğrudan cihazınızda bir FTP veya güvenli SFTP sunucusu barındırın.</item>
-        <item>Uzaktan Yönetim — APK\'ların uzaktan yüklenmesini, indirilmesini ve kurulmasını destekleyen yerleşik bir HTTP sunucusu aracılığıyla dosyaları yerel Wi-Fi\'niz üzerinden yönetin.</item>
-        <item>Ağ Paylaşımları — uzak dosyalara göz atmak, indirmek ve yönetmek için yerel ağınızdaki SMB ve FTP sunucularına bağlanın.</item>
-        <item>Klasör Senkronizasyonu — yerel telefon klasörlerini seçtiğiniz bir programa göre (aralık veya günlük, haftalık veya aylık belirli bir zaman) bir SMB veya FTP ağ paylaşımına otomatik olarak yedekleyin.</item>
-        <item>Cihaz Eşleştirme — Dosyaları aktarmak ve yüklemek için cep telefonunuzu ve Android TV\'nizi yerel Wi-Fi üzerinden eşleştirin.</item>
-        <item>ADB Terminali — Doğrudan kabuk erişimi ve gelişmiş sorun giderme için ADB\'yi (Android Hata Ayıklama Köprüsü) kullanarak yerel Wi-Fi\'niz üzerinden Geliştirici Modunda Android cihazlara bağlanın.</item>
-        <item>Yerleşik Görüntüleyiciler — metin dosyalarını, PDF\'leri, animasyonlu görüntüleri (APNG, GIF, animasyonlu WebP, SVG ve daha fazlası), arşivleri ve diğer formatları doğrudan uygulamanın içinden görüntüleyin.</item>
-        <item>Gelişmiş ZIP ​​Desteği — parola korumalı ve AES şifreli ZIP arşivleri oluşturun ve çıkarın.</item>
-        <item>Uzak Ekran Görüntüleri — eşleştirilmiş Android TV\'nizin ekranını ADB aracılığıyla yerel Wi-Fi üzerinden yakalayın ve doğrudan telefonunuzun depolama alanına kaydedin.</item>
-        <item>7Z Arşiv Desteği — LZMA/LZMA2 sıkıştırmasıyla 7Z arşivlerini çıkarın.</item>
-        <item>Dosya Arama — cihazınızın depolama alanındaki dosyaları ve klasörleri hızlı bir şekilde bulun.</item>
-        <item>Depolama Analizörü — depolama alanınızı nelerin kullandığının görsel bir dökümünü görün.</item>
-        <item>Uygulama Yöneticisi — önceden yüklenmiş uygulamalar için blokaj kaldırma önerileriyle birlikte cihazınızda yüklü tüm uygulamaları görüntüleyin ve yönetin.</item>
-        <item>APK Yükleyici — Android uygulamalarını yükleyin ve APK\'ları (XAPK) doğrudan yerel olarak kaydedilen dosyalardan bölün.</item>
-        <item>Yükseltilmiş Erişim (Shizuku ve ADB) — Cihazınızı gerçekten rootlamanıza gerek kalmadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.</item>
-        <item>Depolama Dizini Oluşturucu — anında arama ve olağanüstü hızlı tarama için yerel bir dosya meta veri dizini oluşturun.</item>
-        <item>Depolama Erişim Çerçevesi — diğer uygulamalar dosyalarınıza UFM\'nin belge sağlayıcısı aracılığıyla erişebilir.</item>
-        <item>İpucu Kavanozu — geliştiriciyi desteklemek için isteğe bağlı tek seferlik satın alımlar; Uygulama bahşiş vermeden her zaman ücretsizdir.</item>
         <item>
-UFM Medya Oynatıcı — arka planda oynatma, bildirim kontrolleri, Resim İçinde Resim modu ve çalma listesi yönetimi ile ses ve video dosyalarını oynatın.
+Dosya Tarayıcı — cihazınızın herhangi bir yerinde dosyaları görüntüleyin, kopyalayın, taşıyın, yeniden adlandırın ve silin.
+</item>
+        <item>
+Şifreli Kasa — hassas dosyaları kendi PIN\'inizle AES-256-GCM şifrelemesiyle kilitleyin.
+</item>
+        <item>
+Dosya Sunucusu — yerel ağınızda dosya paylaşmak için cihazınızda doğrudan bir FTP veya güvenli SFTP sunucusu barındırın.
+</item>
+        <item>
+Uzaktan Yönetim — yerel Wi-Fi üzerinden, uzaktan APK yükleme, indirme ve kurulumu destekleyen yerleşik bir HTTP sunucusu aracılığıyla dosyaları yönetin.
+</item>
+        <item>
+Ağ Paylaşımları — yerel ağınızdaki SMB, FTP ve NFS sunucularına bağlanarak uzak dosyaları görüntüleyin, indirin ve yönetin.
+</item>
+        <item>
+Klasör Senkronizasyonu — seçtiğiniz bir programa (günlük, haftalık veya aylık aralık veya belirli saat) göre yerel telefon klasörlerini otomatik olarak bir SMB veya FTP ağ paylaşımına yedekleyin.
+</item>
+        <item>
+Cihaz Eşleme — dosya aktarmak ve yüklemek için mobil telefonunuzu ve Android TV\'nizi yerel Wi-Fi üzerinden eşleştirin.
+</item>
+        <item>
+ADB Terminali — doğrudan kabuk erişimi ve gelişmiş sorun giderme için ADB (Android Debug Bridge) kullanarak yerel Wi-Fi üzerinden Geliştirici Modundaki Android cihazlara bağlanın.
+</item>
+        <item>
+Yerleşik Görüntüleyiciler — metin dosyalarını, PDF\'leri, animasyonlu görüntüleri (APNG, GIF, animasyonlu WebP, SVG ve daha fazlası), arşivleri ve diğer formatları doğrudan uygulama içinde görüntüleyin.
+</item>
+        <item>
+Gelişmiş ZIP Desteği — parola korumalı ve AES şifreli ZIP arşivleri oluşturun ve çıkarın.
+</item>
+        <item>
+Uzaktan Ekran Görüntüleri — ADB aracılığıyla yerel Wi-Fi üzerinden eşleştirilmiş Android TV\'nizin ekranını yakalayın ve doğrudan telefonunuzun deposuna kaydedin.
+</item>
+        <item>
+7Z Arşiv Desteği — LZMA/LZMA2 sıkıştırmalı 7Z arşivlerini çıkarın.
+</item>
+        <item>
+Dosya Arama — cihaz depolama alanınızda dosya ve klasörleri hızla bulun.
+</item>
+        <item>
+Depolama Analizörü — depolama alanınızı neyin kullandığının görsel bir dökümünü görün.
+</item>
+        <item>
+Uygulama Yöneticisi — cihazınıza yüklenmiş tüm uygulamaları görüntüleyin ve yönetin, ön yüklü uygulamalar için debloat önerileriyle.
+</item>
+        <item>
+APK Yükleyici — Android uygulamalarını ve bölünmüş APK\'ları (XAPK) doğrudan yerel olarak kaydedilmiş dosyalardan yükleyin.
+</item>
+        <item>
+Yükseltilmiş Erişim (Shizuku ve ADB) — cihazınızı rootlamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.
+</item>
+        <item>
+Depolama Dizinleyici — anında arama ve çok hızlı gezinme için dosya meta verilerinin yerel bir dizinini oluşturun.
+</item>
+        <item>
+Depolama Erişim Çerçevesi — diğer uygulamalar UFM\'nin belge sağlayıcısı aracılığıyla dosyalarınıza erişebilir.
+</item>
+        <item>
+Bahşiş Kavanozu — geliştiriciyi desteklemek için isteğe bağlı tek seferlik satın almalar; uygulama bahşişsiz her zaman ücretsizdir.
+</item>
+        <item>
+UFM Medya Oynatıcı — arka planda oynatma, bildirim kontrolleri, Resim İçinde Resim modu ve oynatma listesi yönetimi ile ses ve video dosyalarını oynatın.
 </item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
-        <item>Veri Kaybı</item>
-        <item>Kasa PIN\'i</item>
-        <item>APK Dosyaları</item>
-        <item>Dosya Sunucusu Güvenliği</item>
-        <item>Ağ Paylaşımı Kimlik Bilgileri</item>
-        <item>Klasör Senkronizasyonu</item>
-        <item>Sistem Uygulamasının Kaldırılması</item>
-        <item>ADB Eşleştirme</item>
-        <item>Shizuku ve Yüksek Erişim</item>
-        <item>TV Ekran Görüntüleri</item>
-        <item>Dizin Oluşturucu Doğruluğu</item>
-        <item>Hatalar ve Hatalar</item>
-        <item>Sorumluluğumuz</item>
+        <item>
+Veri Kaybı
+</item>
+        <item>
+Kasa PIN\'i
+</item>
+        <item>
+APK Dosyaları
+</item>
+        <item>
+Dosya Sunucusu Güvenliği
+</item>
+        <item>
+Ağ Paylaşımı Kimlik Bilgileri
+</item>
+        <item>
+Klasör Senkronizasyonu
+</item>
+        <item>
+Sistem Uygulaması Kaldırma
+</item>
+        <item>
+ADB Eşleme
+</item>
+        <item>
+Shizuku ve Yükseltilmiş Erişim
+</item>
+        <item>
+TV Ekran Görüntüleri
+</item>
+        <item>
+Dizinleyici Doğruluğu
+</item>
+        <item>
+Hatalar ve Sorunlar
+</item>
+        <item>
+Sorumluluğumuz
+</item>
     </string-array>
     <string-array name="tc_risk_details">
-        <item>Sıfır veri kaybını garanti edemeyiz. Sizin için önemli olan dosyaların yedeklerini her zaman saklayın.</item>
-        <item>PIN\'inizi ve Kurtarma Kodunuzu unutursanız, şifrelenmiş dosyalarınız hiç kimse tarafından kurtarılamaz.</item>
-        <item>Bilinmeyen kaynaklardan APK yüklemek güvenlik riskleri taşır. Yüklediğiniz APK dosyalarının tüm sorumluluğu size aittir.</item>
-        <item>Bir Dosya Sunucusunu barındırırken, FTP bağlantıları verileri ve kimlik bilgilerini düz metin olarak iletir. Güvenli, şifreli aktarımlara ihtiyacınız varsa her zaman SFTP\'yi kullanın.</item>
-        <item>Ağ paylaşımı kimlik bilgileriniz (ana bilgisayar, kullanıcı adı, şifre) cihazınızda yerel olarak saklanır. Cihazınızın güvenliğini sağlamak sizin sorumluluğunuzdadır.</item>
-        <item>Senkronizasyon işlemleri arka planda çalışır ve pil ve veri tüketebilir. Senkronizasyonu etkinleştirmeden önce daima uzak yolunuzu doğrulayın; yanlış bir klasöre senkronizasyon ağ paylaşımınızdaki dosyaların üzerine yazılabilir.</item>
-        <item>Sistem uygulamalarının blokaj giderme önerilerine göre kaldırılması cihazın kararlılığını etkileyebilir. Dikkatli ilerleyin.</item>
-        <item>ADB eşleştirmesi, yerel Wi-Fi\'niz üzerinden cihazınızla hedef cihaz arasında sertifika alışverişini gerektirir. Yalnızca sahip olduğunuz veya erişim izniniz olan cihazlara bağlanın. Ağınızda eşleştirme PIN\'inizi alan herkes cihazınıza erişebilir; bu PIN\'i gizli tutun.</item>
-        <item>Yükseltilmiş erişim için Shizuku veya ADB\'nin kullanılması, uygulamanın sistem tarafından korunan dosyaları değiştirmesine olanak tanır. Bu özelliklerin yanlış kullanılması cihazın kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve yalnızca bu uygulamaya erişim izni verin.</item>
-        <item>Eşleştirilen TV\'lerin ekran görüntüleri, yerel ağınız üzerinden ADB aracılığıyla alınır ve doğrudan telefonunuzun depolama alanına kaydedilir. Ekran görüntülerinizi iletmiyoruz, görüntülemiyoruz veya yüklemiyoruz. Yalnızca sahip olduğunuz veya erişim izniniz olan cihazlardaki ekranları yakaladığınızdan emin olun.</item>
-        <item>Dizin, tarama sırasında depolama alanınızın durumunu yansıtır. Dosyalar başka uygulamalar tarafından değiştirilirse dizini yenilemeniz gerekebilir.</item>
-        <item>Hiçbir yazılım mükemmel değildir. Uygulamanın her zaman hatasız veya kesintisiz olacağına söz veremeyiz.</item>
-        <item>Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın alımlar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.</item>
+        <item>
+Sıfır veri kaybını garanti edemeyiz. Sizin için önemli olan dosyaların her zaman yedeklerini alın.
+</item>
+        <item>
+PIN\'inizi ve Kurtarma Kodunuzu unutursanız, şifrelenmiş dosyalarınız hiç kimse tarafından kurtarılamaz.
+</item>
+        <item>
+Bilinmeyen kaynaklardan APK yüklemek güvenlik riskleri taşır. Yüklediğiniz tüm APK dosyalarının tam sorumluluğunu üstlenirsiniz.
+</item>
+        <item>
+Bir Dosya Sunucusu barındırırken, FTP bağlantıları verileri ve kimlik bilgilerini düz metin olarak iletir. Güvenli, şifreli aktarımlar gerekiyorsa her zaman SFTP kullanın.
+</item>
+        <item>
+Ağ paylaşımı kimlik bilgileriniz (sunucu, kullanıcı adı, parola) cihazınızda yerel olarak saklanır. Cihazınızı güvende tutmak sizin sorumluluğunuzdadır.
+</item>
+        <item>
+Senkronizasyon işlemleri arka planda çalışır ve pil ve veri tüketebilir. Senkronizasyonu etkinleştirmeden önce uzak yolunuzu her zaman doğrulayın — yanlış bir klasöre senkronizasyon, ağ paylaşımınızdaki dosyaların üzerine yazabilir.
+</item>
+        <item>
+Debloat önerilerine göre sistem uygulamalarını kaldırmak cihaz kararlılığını etkileyebilir. Dikkatli ilerleyin.
+</item>
+        <item>
+ADB eşleme, cihazınız ile hedef cihaz arasında yerel Wi-Fi üzerinden sertifika alışverişi gerektirir. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlara bağlanın. Ağınızdaki eşleme PIN\'inizi ele geçiren herkes cihazınıza erişebilir — bu PIN\'i gizli tutun.
+</item>
+        <item>
+Yükseltilmiş erişim için Shizuku veya ADB kullanmak, uygulamanın sistem tarafından korunan dosyaları değiştirmesine olanak tanır. Bu özelliklerin yanlış kullanımı cihaz kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve erişimi yalnızca bu uygulamaya verin.
+</item>
+        <item>
+Eşleştirilmiş TV\'lerin ekran görüntüleri, yerel ağınız üzerinden ADB ile yakalanır ve doğrudan telefonunuzun deposuna kaydedilir. Ekran görüntülerinizi iletmez, görüntülemez veya yüklemez. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlarda ekran görüntüsü aldığınızdan emin olun.
+</item>
+        <item>
+Dizin, tarama anındaki depolama durumunuzu yansıtır. Dosyalar diğer uygulamalar tarafından değiştirilirse dizini yenilemeniz gerekebilir.
+</item>
+        <item>
+Hiçbir yazılım mükemmel değildir. Uygulamanın her zaman hatasız veya kesintisiz olacağını vaat edemeyiz.
+</item>
+        <item>
+Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın alımlar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.
+</item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
-        <item>Toplu işlemleri gerçekleştirmeden önce önemli dosyaların düzenli yedeklerini alın.</item>
-        <item>Kasa PIN\'inizi ve Kurtarma Kodunuzu güvenli bir yerde saklayın; bunları sizin için alamayız.</item>
-        <item>PIN\'inizi gizli tutun. Bunu bilen herkes Kasanıza erişebilir.</item>
-        <item>Ağ paylaşımı kimlik bilgilerinizi güvende tutun; bunlar cihazınızda yerel olarak depolanır.</item>
-        <item>Klasör Senkronizasyonu uzak yollarınızı dikkatlice inceleyin; yanlış bir ağ klasörüne senkronizasyon mevcut dosyaların üzerine yazılabilir.</item>
-        <item>Debloat önerilerine göre sistem uygulamalarını kaldırırken dikkatli olun.</item>
-        <item>Yalnızca sahip olduğunuz veya erişim için açık izne sahip olduğunuz cihazlara ADB Terminali aracılığıyla bağlanın. ADB Terminalini herhangi bir cihaza yetkisiz erişim sağlamak için kullanmayın.</item>
-        <item>Tüm ADB veya Shizuku eşleştirme PIN\'lerini gizli tutun; bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.</item>
-        <item>Shizuku Yöneticinizi güvence altına alın — Shizuku aracılığıyla UFM\'ye yükseltilmiş erişim vermek, ona kısıtlı dosyalar üzerinde güç sağlar. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.</item>
-        <item>Uygulamayı yalnızca yasal amaçlarla kullanın. Yasa dışı içeriği saklamayın, paylaşmayın veya dağıtmayın.</item>
-        <item>Başka bir kişinin cihazına onun izni olmadan erişmek için Uzaktan Yönetim\'i kullanmayın.</item>
-        <item>Uygulamada tersine mühendislik yapmaya, kaynak koda dönüştürmeye veya uygulamaya müdahale etmeye çalışmayın.</item>
-        <item>Dizine alınmış kayıtlarınızı sorumlu bir şekilde yönetin; Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla istediğiniz zaman kayıtları silebilir veya belirli sürücüleri yok sayabilirsiniz.</item>
-        <item>Herhangi bir APK dosyasını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.</item>
+        <item>
+Toplu işlemler yapmadan önce önemli dosyaların düzenli yedeklerini alın.
+</item>
+        <item>
+Kasa PIN\'inizi ve Kurtarma Kodunuzu güvenli bir yerde saklayın — bunları sizin için alamayız.
+</item>
+        <item>
+PIN\'inizi gizli tutun. Bilen herkes Kasanıza erişebilir.
+</item>
+        <item>
+Ağ paylaşımı kimlik bilgilerinizi güvende tutun — cihazınızda yerel olarak saklanırlar.
+</item>
+        <item>
+Klasör Senkronizasyonu uzak yollarınızı dikkatlice gözden geçirin — yanlış bir ağ klasörüne senkronizasyon mevcut dosyaların üzerine yazabilir.
+</item>
+        <item>
+Debloat önerilerine göre sistem uygulamalarını kaldırırken dikkatli olun.
+</item>
+        <item>
+ADB Terminali aracılığıyla yalnızca sahibi olduğunuz veya açık erişim izniniz olan cihazlara bağlanın. Herhangi bir cihaza yetkisiz erişim sağlamak için ADB Terminali\'ni kullanmayın.
+</item>
+        <item>
+Herhangi bir ADB veya Shizuku eşleme PIN\'ini gizli tutun — bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.
+</item>
+        <item>
+Shizuku Yöneticinizi güvende tutun — UFM\'ye Shizuku aracılığıyla yükseltilmiş erişim vermek, kısıtlı dosyalar üzerinde yetki verir. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
+</item>
+        <item>
+Uygulamayı yalnızca yasal amaçlar için kullanın. Yasa dışı içerik depolamayın, paylaşmayın veya dağıtmayın.
+</item>
+        <item>
+Uzaktan Yönetimi, izinleri olmadan başka bir kişinin cihazına erişmek için kullanmayın.
+</item>
+        <item>
+Uygulamayı tersine mühendislik, derleme veya kurcalama girişiminde bulunmayın.
+</item>
+        <item>
+Dizinlenmiş kayıtlarınızı sorumlu bir şekilde yönetin — kayıtları silebilir veya Ayarlar -> Depolama Dizinleyici aracılığıyla istediğiniz zaman belirli sürücüleri yok sayabilirsiniz.
+</item>
+        <item>
+Herhangi bir APK dosyasını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
+</item>
     </string-array>
 
     <!-- Permissions table (Section 5) — label|detail pairs -->
     <string-array name="tc_permission_labels">
-        <item>Tüm Dosyalara Erişim</item>
-        <item>Medya Erişimi</item>
-        <item>Bildirimler</item>
-        <item>Ağ / Wi-Fi</item>
-        <item>Çok noktaya yayın</item>
-        <item>Ağ Durumu</item>
-        <item>Paket Sorgulama</item>
-        <item>Paketleri Yükle</item>
-        <item>Faturalandırma</item>
-        <item>ADB Hata Ayıklama Köprüsü</item>
-        <item>Yükseltilmiş Erişim (Shizuku)</item>
-        <item>Önyükleme Başlatma</item>
-        <item>Pil Optimizasyonu</item>
-        <item>Ön Plan Hizmeti</item>
-        <item>Uyandırma Kilidi</item>
-        <item>Depolama Dizini Oluşturucu</item>
-        <item>Bluetooth</item>
-        <item>Titreşim</item>
+        <item>
+Tüm Dosyalara Erişim
+</item>
+        <item>
+Medya Erişimi
+</item>
+        <item>
+Bildirimler
+</item>
+        <item>
+Ağ / Wi-Fi
+</item>
+        <item>
+Çoklu Yayın
+</item>
+        <item>
+Ağ Durumu
+</item>
+        <item>
+Paket Sorgulama
+</item>
+        <item>
+Paket Yükleme
+</item>
+        <item>
+Faturalama
+</item>
+        <item>
+ADB Hata Ayıklama Köprüsü
+</item>
+        <item>
+Yükseltilmiş Erişim (Shizuku)
+</item>
+        <item>
+Başlangıçta Başlat
+</item>
+        <item>
+Pil Optimizasyonu
+</item>
+        <item>
+Ön Planda Hizmet
+</item>
+        <item>
+Uyanık Tutma Kilidi
+</item>
+        <item>
+Depolama Dizinleyici
+</item>
+        <item>
+Bluetooth
+</item>
+        <item>
+Titreşim
+</item>
     </string-array>
     <string-array name="tc_permission_details">
-        <item>Tüm depolama alanınızdaki dosyalara göz atmak, kopyalamak, taşımak ve silmek için gereklidir.</item>
-        <item>Fotoğraflarınızı, videolarınızı ve ses dosyalarınızı düzenlemek ve yönetmek için gereklidir.</item>
-        <item>Dosya işlemleri tamamlandığında veya depolama alanı azaldığında sizi uyarmak için kullanılır.</item>
-        <item>Yerel ağınızda uzaktan dosya yönetimini, ağ paylaşım erişimini (SMB/FTP/SFTP/SCP), klasör senkronizasyonunu, cihaz eşleştirmeyi ve ADB terminal erişimini destekler. Ağ bulma, ADB özellikli cihazları bulmak için yerel alt ağınızdaki (254 IP\'ye kadar) ADB bağlantı noktaları 5555, 5037 ve 5038\'deki cihazları tarar.</item>
-        <item>Cihazları eşleştirirken yerel ağ cihazı keşfi (NSD/mDNS) için kullanılır.</item>
-        <item>Uzaktan Yönetim ve ağ paylaşım erişimi sırasında VPN bağlantılarını algılar.</item>
-        <item>Uygulama Yöneticisinin cihazınızda yüklü uygulamaları listelemesine izin verir.</item>
-        <item>Yerel depolamadan çalıştırmayı seçtiğiniz APK dosyalarını yüklemek için gereklidir.</item>
-        <item>İsteğe bağlı İpucu Kavanozu satın alımlarını Google Play aracılığıyla işler.</item>
-        <item>Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleştirme için cihazınızda benzersiz bir RSA sertifikası oluşturur; harici sunuculara hiçbir sertifika aktarılmaz.</item>
-        <item>Uygulamaya, kısıtlı sistem dizinlerindeki dosyaları köklendirme yapmadan yönetmek için Shizuku API\'sini (Güvenli Ayarlar dahil) kullanma izni verir.</item>
-        <item>Anında kullanılabilirliği sağlamak için cihazınız başlatıldığında Shizuku hizmetlerinin otomatik olarak başlatılmasına izin verir.</item>
-        <item>Güvenilir performans için Shizuku hizmetlerini arka planda aktif tutmayı tercih etmenize olanak tanır.</item>
-        <item>Klasör Senkronizasyonunu ve dosya aktarımlarını ön plan hizmeti olarak çalıştırmak için gereklidir, böylece ekran kapalıyken bile güvenilir bir şekilde tamamlanırlar.</item>
-        <item>Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapansa bile aktarımlar güvenilir bir şekilde tamamlanır.</item>
-        <item>Performans için dosya meta verilerini taramak ve indekslemek amacıyla depolama izinlerini kullanır; Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla yönetilir.</item>
-        <item>Uzaktan kumanda için Bluetooth klavye ve fare görevi görmek üzere eşleştirilmiş Android TV\'nize bağlanır.</item>
-        <item>TV Uzaktan Kumandasındaki düğmelere basıldığında dokunsal geri bildirim sağlar.</item>
+        <item>
+Tüm depolama alanınızda dosyaları görüntülemek, kopyalamak, taşımak ve silmek için gereklidir.
+</item>
+        <item>
+Fotoğraflarınızı, videolarınızı ve ses dosyalarınızı düzenlemek ve yönetmek için gereklidir.
+</item>
+        <item>
+Dosya işlemleri tamamlandığında veya depolama alanı azaldığında sizi uyarmak için kullanılır.
+</item>
+        <item>
+Uzaktan dosya yönetimi, ağ paylaşımı erişimi (SMB/FTP/SFTP/SCP/NFS), klasör senkronizasyonu, cihaz eşleme ve yerel ağınızda ADB terminal erişimini sağlar. Ağ keşfi, ADB özellikli cihazları bulmak için yerel alt ağınızdaki (254 IP\'ye kadar) cihazları ADB portları 5555, 5037 ve 5038\'de tarar.
+</item>
+        <item>
+Cihazları eşleştirirken yerel ağ cihaz keşfi (NSD/mDNS) için kullanılır.
+</item>
+        <item>
+Uzaktan Yönetim ve ağ paylaşımı erişimi sırasında VPN bağlantılarını algılar.
+</item>
+        <item>
+Uygulama Yöneticisi\'nin cihazınıza yüklenmiş tüm uygulamaları listelemesini sağlar. Erişilen veriler şunları içerir: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve her uygulamanın sistem mi yoksa kullanıcı tarafından mı yüklendiği. Bu bilgiler yalnızca cihaz üzerinde Uygulama Yöneticisi\'ni görüntülemek, uygulama başına depolama alanını hesaplamak ve paket adlarını yerel olarak indirilip önbelleğe alınan halka açık bir debloat referans listesiyle karşılaştırmak için kullanılır. Hiçbir yüklü uygulama verisi KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
+</item>
+        <item>
+Yerel depolamadan çalıştırmayı seçtiğiniz APK dosyalarını yüklemek için gereklidir.
+</item>
+        <item>
+Google Play aracılığıyla isteğe bağlı Bahşiş Kavanozu satın alımlarını işler.
+</item>
+        <item>
+Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleme için cihazınızda benzersiz bir RSA sertifikası oluşturur; hiçbir sertifika harici sunuculara iletilmez.
+</item>
+        <item>
+Uygulamanın, rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Shizuku API\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
+</item>
+        <item>
+Shizuku hizmetlerinin, anında kullanılabilirliği sağlamak için cihazınız başladığında otomatik olarak başlamasına izin verir.
+</item>
+        <item>
+Güvenilir performans için Shizuku hizmetlerini arka planda aktif tutmayı tercih etmenize izin verir.
+</item>
+        <item>
+Klasör Senkronizasyonu ve dosya aktarımlarını ön planda bir hizmet olarak çalıştırmak için gereklidir, böylece ekran kapalıyken bile güvenilir bir şekilde tamamlanırlar.
+</item>
+        <item>
+Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapandığında bile güvenilir bir şekilde tamamlanırlar.
+</item>
+        <item>
+Performans için dosya meta verilerini taramak ve dizinlemek üzere depolama izinlerini kullanır — Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilir.
+</item>
+        <item>
+Uzaktan kontrol için Bluetooth klavye ve fare olarak hareket etmek üzere eşleştirilmiş Android TV\'nize bağlanır.
+</item>
+        <item>
+TV Kumandasındaki düğmelere basıldığında dokunsal geri bildirim sağlar.
+</item>
     </string-array>
 
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
-        <item>NanoHTTPD — Uzaktan Yönetime güç veren hafif HTTP sunucusu. (BSD-3-Madde)</item>
-        <item>jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — Ağ paylaşımında gezinme ve Klasör Senkronizasyonu için SMB2/SMB3 istemci kitaplığı. (LGPL-2.1)</item>
-        <item>smbj (hierynomus/smbj) — Ağ paylaşımı erişimi için kullanılan SMB2/SMB3 Java uygulaması. (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi ve barındırma için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kitaplığı. (Apache-2.0)</item>
-        <item>Apache FtpServer (org.apache.ftpserver) — %100 saf Java FTP sunucusu. (Apache-2.0)</item>
-        <item>Apache POI — ofis dosyalarını görüntülemek için belge işleme kitaplığı. (Apache-2.0)</item>
-        <item>Firebase Analytics — Uygulama kullanımını anlamamıza yardımcı olan Google\'ın analiz platformu. (Apache-2.0)</item>
-        <item>AndroidX Kitaplıkları (Android TV için Leanback dahil) — Google\'ın modern Android geliştirmeye yönelik Jetpack bileşenleri. (Apache-2.0)</item>
-        <item>Materyal Tasarımı Bileşenleri — Temiz, tutarlı bir arayüz için Google\'ın kullanıcı arayüzü kitaplığı. (Apache-2.0)</item>
-        <item>Room Persistence Library — Yerel meta veri indeksleme için SQLite soyutlama katmanı. (Apache-2.0)</item>
-        <item>zip4j (net.lingala.zip4j) — parola korumalı ve AES şifreli arşivler için gelişmiş ZIP ​​kitaplığı. (Apache-2.0)</item>
-        <item>Apache Commons Compress — çeşitli arşiv formatlarını (7z, zip, tar vb.) okumak ve yazmak için kütüphane. (Apache-2.0)</item>
-        <item>Java için XZ (org.tukaani.xz) — XZ ve LZMA sıkıştırmasının uygulanması. (Kamu malı)</item>
-        <item>libadb-android (com.github.MuntashirAkon) — Uzak kabuk erişimi ve sertifika tabanlı eşleştirme için ADB özellikli cihazlara güvenli bağlantılar sağlayan Android Hata Ayıklama Köprüsü kitaplığı. (Apache-2.0)</item>
-        <item>Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kitaplığı. (Apache-2.0)</item>
-        <item>Java için EdDSA (net.i2p.crypto:eddsa) — Ed25519 SSH anahtarları için EdDSA\'nın (Edwards eğrisi Dijital İmza Algoritması) uygulanması. (CC0-1.0)</item>
-        <item>SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD kitaplığı tarafından kullanılan Android için günlük bağlama. (MİT)</item>
-        <item>BouncyCastle (org.bouncycastle) — RSA/EdDSA anahtar çifti üretimi ve X.509 sertifikası oluşturmaya yönelik şifreleme kitaplığı; sürüm 1.83. (MIT tarzı Lisans)</item>
-        <item>Google Play Faturalandırma Kitaplığı — isteğe bağlı uygulama içi ipucu satın alımlarını işler; Google Play\'in Gizlilik Politikası\'na tabidir. (Apache-2.0)</item>
-        <item>Google Play İnceleme Kitaplığı — uygulamanın uygulama içi derecelendirme ve inceleme işlevselliğini destekler. (Apache-2.0)</item>
-        <item>Bobin (io.coil-kt.coil3) — yerleşik resim görüntüleyicide animasyonlu resim oluşturmaya (APNG, GIF, animasyonlu WebP, SVG) güç veren resim yükleme kitaplığı. (Apache-2.0)</item>
-        <item>APNG4Android (com.github.penfeizhou.android.animation) — Android\'de animasyonlu PNG dosyalarının kodunu çözmek ve oluşturmak için temel kitaplık. (Apache-2.0)</item>
-        <item>Shizuku API (dev.rikka.shizuku:api &amp; sağlayıcı) — Shizuku Manager uygulaması aracılığıyla yükseltilmiş dosya sistemi erişimine olanak tanıyan kitaplık ve sağlayıcı. (Apache-2.0)</item>
-        <item>ViewPager2 — Parçalar ve düzenler arasında geçiş yapmak için Android kitaplığı. (Apache-2.0)</item>
-        <item>Lottie (com.airbnb.android:lottie) v6.3.0 — Adobe After Effects animasyonlarını Android\'de yerel olarak oluşturmaya yönelik animasyon kitaplığı, uygulama genelinde sorunsuz kullanıcı arayüzü animasyonları için kullanılır. (Apache-2.0)</item>
-        <item>Ktor (io.ktor) — yerel Dosya Sunucusuna güç sağlamak için kullanılan hafif web çerçevesi. (Apache-2.0)</item>
-        <item>PDFBox-Android (com.tom-roush:pdfbox-android) — PDF belgelerini yerel olarak oluşturmak ve görüntülemek için kitaplık. (Apache-2.0)</item>
-        <item>ExoPlayer / Media3 (androidx.media3) — güçlü video ve ses oynatımı için gelişmiş medya oynatıcı. (Apache-2.0)</item>
-        <item>Microsoft Kimlik Doğrulama Kitaplığı (MSAL) — OneDrive API kimlik doğrulamasını yerel olarak yönetir. (MİT)</item>
-        <item>OkHttp (com.squareup.okhttp3) — bulut depolama ağı istekleri için güçlü HTTP ve HTTP/2 istemcisi. (Apache-2.0)</item>
-        <item>Gson (com.google.code.gson) — Bulut depolama entegrasyonu için kullanılan JSON işleme kitaplığı. (Apache-2.0)</item>
-        <item>AndroidX Tarayıcı (androidx.browser) — Google Drive API kimlik doğrulaması için Chrome Özel Sekmeler desteği. (Apache-2.0)</item>
-        <item>ZXing (com.google.zxing:core) — barkod görüntü işleme kitaplığı. (Apache-2.0)</item>
-        <item>Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)</item>
         <item>
-Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)
+NanoHTTPD — Uzaktan Yönetimi güçlendiren hafif HTTP sunucusu. (BSD-3-Clause)
 </item>
         <item>
-Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi ipucu satın alımlarını işler. (Tescilli)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ağ paylaşımı gezinme ve Klasör Senkronizasyonu için SMB2/SMB3 istemci kütüphanesi. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — ağ paylaşımı erişimi için kullanılan SMB2/SMB3 Java uygulaması. (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS İstemcisi (com.emc.ecs:nfs-client) — ağ paylaşımı erişimi için NFS v3 istemci kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — NFSv2, NFSv3 ve NFSv4\'ü destekleyen yerel NFS istemci kütüphanesi. (LGPL-2.1 / BSD-2-Clause)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi ve barındırma için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — %100 saf Java FTP sunucusu. (Apache-2.0)
+</item>
+        <item>
+Apache POI — ofis dosyalarını görüntülemek için belge işleme kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — uygulama kullanımını anlamamıza yardımcı olan Google\'ın analitik platformu. (Apache-2.0)
+</item>
+        <item>
+AndroidX Kütüphaneleri (Android TV için Leanback dahil) — modern Android geliştirme için Google\'ın Jetpack bileşenleri. (Apache-2.0)
+</item>
+        <item>
+Material Design Bileşenleri — temiz ve tutarlı bir arayüz için Google\'ın UI kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Room Kalıcılık Kütüphanesi — yerel meta veri indeksleme için SQLite soyutlama katmanı. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — parola korumalı ve AES şifreli arşivler için gelişmiş ZIP kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — çeşitli arşiv formatlarını (7z, zip, tar, vb.) okumak ve yazmak için kütüphane. (Apache-2.0)
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — XZ ve LZMA sıkıştırma uygulaması. (Kamu Malı)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — uzaktan kabuk erişimi ve sertifika tabanlı eşleme için ADB özellikli cihazlara güvenli bağlantılar sağlayan Android Debug Bridge kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH anahtarları için EdDSA (Edwards eğrisi Dijital İmza Algoritması) uygulaması. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD kütüphanesi tarafından kullanılan Android için günlük bağlantısı. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — RSA/EdDSA anahtar çifti oluşturma ve X.509 sertifikası oluşturma için kriptografi kütüphanesi; sürüm 1.83. (MIT tarzı Lisans)
+</item>
+        <item>
+Google Play Faturalama Kütüphanesi — isteğe bağlı uygulama içi bahşiş satın alımlarını işler; Google Play Gizlilik Politikası\'na tabidir. (Apache-2.0)
+</item>
+        <item>
+Google Play İnceleme Kütüphanesi — uygulamanın uygulama içi derecelendirme ve inceleme işlevselliğini sağlar. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — yerleşik resim görüntüleyicide animasyonlu resim oluşturmayı (APNG, GIF, animasyonlu WebP, SVG) güçlendiren resim yükleme kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — Android\'de animasyonlu PNG dosyalarını kod çözme ve oluşturma için temel kütüphane. (Apache-2.0)
+</item>
+        <item>
+Shizuku API (dev.rikka.shizuku:api ve sağlayıcı) — Shizuku Yöneticisi uygulaması aracılığıyla yükseltilmiş dosya sistemi erişimi sağlayan kütüphane ve sağlayıcı. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — parçalar ve düzenler arasında kaydırmak için Android kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — Adobe After Effects animasyonlarını Android\'de yerel olarak oluşturmak için animasyon kütüphanesi, uygulama genelinde yumuşak UI animasyonları için kullanılır. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — yerel Dosya Sunucusunu güçlendirmek için kullanılan hafif web çerçevesi. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — PDF belgelerini yerel olarak oluşturmak ve görüntülemek için kütüphane. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — sağlam video ve ses oynatma için gelişmiş medya oynatıcı. (Apache-2.0)
+</item>
+        <item>
+Microsoft Kimlik Doğrulama Kütüphanesi (MSAL) — OneDrive API kimlik doğrulamasını yerel olarak işler. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — bulut depolama ağ istekleri için sağlam HTTP ve HTTP/2 istemcisi. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — bulut depolama entegrasyonu için kullanılan JSON işleme kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — Google Drive API kimlik doğrulaması için Chrome Özel Sekmeler desteği. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — barkod görüntü işleme kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Özel Mülk)
 </item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">
-        <item>E-posta</item>
+        <item>
+E-posta
+</item>
     </string-array>
     <string-array name="tc_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 
     <!-- ═══════════════════════════════════════════════════════════
          PRIVACY POLICY
     ═══════════════════════════════════════════════════════════ -->
-    <string name="pp_screen_title">Gizlilik Politikası</string>
-    <string name="pp_summary">Dosyalarınız cihazınızda kalır; onları asla görmeyiz. Uygulamayı daha iyi hale getirmek için yalnızca Firebase aracılığıyla anonim kullanım analizleri topluyoruz. Reklam yok, veri satışı yok, komik iş yok.</string>
+    <string name="pp_screen_title">
+Gizlilik Politikası
+</string>
+    <string name="pp_summary">
+Dosyalarınız cihazınızda kalır — onları asla görmeyiz. Uygulamayı iyileştirmek için yalnızca Firebase aracılığıyla anonim kullanım analizleri toplarız. Reklam yok, veri satışı yok, gizli iş yok.
+</string>
 
     <!-- Section titles -->
-    <string name="pp_s1_title">1. Giriş</string>
-    <string name="pp_s2_title">2. Topladığımız Bilgiler</string>
-    <string name="pp_s3_title">3. Bilgilerinizi Nasıl Kullanıyoruz</string>
-    <string name="pp_s4_title">4. İzinler ve Neden Onlara İhtiyacımız Var</string>
-    <string name="pp_s5_title">5. Veri Güvenliği</string>
-    <string name="pp_s6_title">6. Google API Hizmetleri - Sınırlı Kullanım Açıklaması</string>
-    <string name="pp_s6b_title">
-6b. RClone Bulut Entegrasyonu — Gizlilik ve amp; Uyumluluk
+    <string name="pp_s1_title">
+1. Giriş
 </string>
-    <string name="pp_s7_title">7. Veri Paylaşımı ve Üçüncü Taraflar</string>
-    <string name="pp_s8_title">8. Verileri Ne Kadar Süre Saklıyoruz</string>
-    <string name="pp_s9_title">9. Haklarınız</string>
-    <string name="pp_s10_title">10. Çocukların Gizliliği</string>
-    <string name="pp_s11_title">11. Uluslararası Kullanıcılar</string>
-    <string name="pp_s12_title">12. Bu Gizlilik Politikasındaki Değişiklikler</string>
-    <string name="pp_s13_title">13. Google Play Politikasına Uygunluk</string>
-    <string name="pp_s14_title">14. Bize Ulaşın</string>
+    <string name="pp_s2_title">
+2. Topladığımız Bilgiler
+</string>
+    <string name="pp_s3_title">
+3. Bilgilerinizi Nasıl Kullanıyoruz
+</string>
+    <string name="pp_s4_title">
+4. İzinler ve Neden İhtiyacımız Var
+</string>
+    <string name="pp_s5_title">
+5. Veri Güvenliği
+</string>
+    <string name="pp_s6_title">
+6. Google API Hizmetleri — Sınırlı Kullanım Bildirimi
+</string>
+    <string name="pp_s6b_title">
+6b. RClone Bulut Entegrasyonu — Gizlilik ve Uyumluluk
+</string>
+    <string name="pp_s7_title">
+7. Veri Paylaşımı ve Üçüncü Taraflar
+</string>
+    <string name="pp_s8_title">
+8. Verileri Ne Kadar Süre Saklıyoruz
+</string>
+    <string name="pp_s9_title">
+9. Haklarınız
+</string>
+    <string name="pp_s10_title">
+10. Çocukların Gizliliği
+</string>
+    <string name="pp_s11_title">
+11. Uluslararası Kullanıcılar
+</string>
+    <string name="pp_s12_title">
+12. Bu Gizlilik Politikasında Değişiklikler
+</string>
+    <string name="pp_s13_title">
+13. Google Play Politikasına Uygunluk
+</string>
+    <string name="pp_s14_title">
+14. Bize Ulaşın
+</string>
 
     <!-- Section body text -->
-    <string name="pp_s1_body">Ultimate File Manager Pro bağımsız bir Android uygulamasıdır ve Windows için Ultimate File Manager projesi (ultimatefilemanager.pl) veya benzer adı kullanan başka bir ürünle bağlantısı yoktur, yetkilendirilmez, desteklenmez veya desteklenmez. Diğer tüm ürün adları ve ticari markalar ilgili sahiplerinin mülkiyetindedir.\n\nBu Gizlilik Politikası, Ultimate File Manager Pro\'yu kullandığınızda hangi bilgileri topladığımızı, onu nasıl kullandığımızı ve nasıl güvende tuttuğumuzu açıklamaktadır. Uygulamayı kullanarak burada açıklanan uygulamaları kabul etmiş olursunuz.</string>
+    <string name="pp_s1_body">
+Ultimate File Manager Pro, bağımsız bir Android uygulamasıdır ve Windows için Ultimate File Manager projesi (ultimatefilemanager.pl) veya benzer ad kullanan başka bir ürünle bağlantılı, yetkili, sponsor veya onaylı değildir. Diğer tüm ürün adları ve ticari markalar ilgili sahiplerinin mülkiyetindedir.\n
+\n
+Bu Gizlilik Politikası, Ultimate File Manager Pro\'yu kullandığınızda hangi bilgileri topladığımızı, bunları nasıl kullandığımızı ve nasıl güvende tuttuğumuzu açıklar. Uygulamayı kullanarak burada açıklanan uygulamaları kabul etmiş olursunuz.
+</string>
 
-    <string name="pp_s2_local_heading">Yalnızca Cihazınızda Yerel Olarak Depolanır</string>
-    <string name="pp_s2_local_body">Aşağıdaki veriler cihazınıza kaydedilir ve asla ayrılmaz. Bunların hiçbirine erişimimiz sıfır.</string>
-    <string name="pp_s2_local_alert">PIN\'inize, kurtarma kodunuza, şifreleme anahtarlarınıza veya Kasanızda saklanan dosyalara hiçbir zaman erişimimiz yoktur.</string>
+    <string name="pp_s2_local_heading">
+Yalnızca Cihazınızda Yerel Olarak Saklanır
+</string>
+    <string name="pp_s2_local_body">
+Aşağıdaki veriler cihazınıza kaydedilir ve asla cihazı terk etmez. Bunların hiçbirine erişimimiz yoktur.
+</string>
+    <string name="pp_s2_local_alert">
+PIN\'inize, kurtarma kodunuza, şifreleme anahtarlarınıza veya Kasanızda saklanan herhangi bir dosyaya asla erişimimiz yoktur.
+</string>
 
-    <string name="pp_s2_analytics_heading">Firebase Analytics aracılığıyla toplandı (Anonim)</string>
-    <string name="pp_s2_analytics_body">Uygulamayı geliştirmek amacıyla anonim veriler toplamak için Google Firebase Analytics\'i kullanıyoruz. Analytics verileri hiçbir zaman kişisel kimliğinize bağlanmaz. Uygulamanın Ayarlar bölümündeki Kullanım Analizi düğmesini veya Android cihazınızın ayarlarını kullanarak istediğiniz zaman bu seçeneğin kapsamı dışında kalmayı seçebilirsiniz.</string>
+    <string name="pp_s2_analytics_heading">
+Firebase Analytics (Anonim) ile Toplanır
+</string>
+    <string name="pp_s2_analytics_body">
+Uygulamayı iyileştirmek için anonim veri toplamak amacıyla Google Firebase Analytics kullanıyoruz. Analiz verileri asla kişisel kimliğinizle ilişkilendirilmez. İstediğiniz zaman uygulamanın Ayarlar bölümündeki Kullanım Analizi anahtarı veya Android cihaz ayarlarınız aracılığıyla bu özelliği devre dışı bırakabilirsiniz.
+</string>
 
-    <string name="pp_s2_billing_heading">Google Play Faturalandırma yoluyla işlendi (Yalnızca İsteğe Bağlı İpuçları)</string>
-    <string name="pp_s2_billing_body">İsteğe bağlı bir İpucu Kavanozu satın aldığınızda Google Play işlemi gerçekleştirir. Kartınızı veya banka bilgilerinizi asla görmeyiz. Geçici olarak bir satın alma jetonu ve ürün kimliğini alırız; her ikisi de yalnızca cihazda işlenir ve hiçbir zaman sunucularımızda saklanmaz.</string>
-    <string name="pp_s2_billing_note">Google Play Faturalandırma\'daki anonim satın alma jetonları, ipucunuzu onaylamak için geçici olarak cihazda işlenir; bunlar hiçbir zaman tarafımızdan saklanmaz ve kimliğinizle bağlantılı değildir.</string>
+    <string name="pp_s2_billing_heading">
+Google Play Faturalama (Yalnızca İsteğe Bağlı Bahşişler) ile İşlenir
+</string>
+    <string name="pp_s2_billing_body">
+İsteğe bağlı bir Bahşiş Kutusu satın alımı yaptığınızda işlem Google Play tarafından işlenir. Kart veya banka bilgilerinizi asla görmeyiz. Geçici olarak bir satın alma belirteci ve ürün kimliği alırız — her ikisi de yalnızca cihazda işlenir ve sunucularımızda asla saklanmaz.
+</string>
+    <string name="pp_s2_billing_note">
+Google Play Faturalama\'dan gelen anonim satın alma belirteçleri, bahşişinizi onaylamak için geçici olarak cihazda işlenir — bunlar tarafımızdan asla saklanmaz ve kimliğinizle ilişkilendirilmez.
+</string>
 
-    <string name="pp_s2_nocollect_heading">Asla Toplamadıklarımız</string>
+    <string name="pp_s2_nocollect_heading">
+Asla Toplamadığımız Bilgiler
+</string>
 
-    <string name="pp_s3_local_heading">Yerel Veriler Şu Amaçla Kullanılıyor</string>
-    <string name="pp_s3_analytics_heading">Analytics Verileri Şunun İçin Kullanılır:</string>
+    <string name="pp_s3_local_heading">
+Yerel Verilerin Kullanım Amaçları
+</string>
+    <string name="pp_s3_analytics_heading">
+Analiz Verilerinin Kullanım Amaçları
+</string>
 
-    <string name="pp_s4_storage_heading">Depolama İzinleri</string>
-    <string name="pp_s4_network_heading">Ağ İzinleri</string>
-    <string name="pp_s4_network_alert">Uzaktan Yönetim sunucusu, Dosya Sunucusu barındırma, SMB/FTP/SFTP/SCP ağ paylaşımı bağlantıları, klasör senkronizasyonu, cihaz eşleştirme ve ADB Terminal bağlantılarının tümü yalnızca yerel Wi-Fi ağınızda çalışır. Uzaktan Yönetim ve FTP sunucuları şifrelenmemiş protokoller kullanır; SFTP ve ADB Terminal bağlantıları güvenli, şifrelenmiş protokoller kullanır. Bulut depolama API\'leri (Google Drive, OneDrive, Dropbox, S3 uyumlu), şifrelenmiş HTTPS üzerinden ilgili sunucularıyla güvenli bir şekilde iletişim kurar. Harici sunuculara başka hiçbir veri iletilmez.</string>
-    <string name="pp_s4_other_heading">Diğer İzinler</string>
+    <string name="pp_s4_storage_heading">
+Depolama İzinleri
+</string>
+    <string name="pp_s4_network_heading">
+Ağ İzinleri
+</string>
+    <string name="pp_s4_network_alert">
+Uzaktan Yönetim sunucusu, Dosya Sunucusu barındırma, SMB/FTP/SFTP/SCP ağ paylaşım bağlantıları, klasör senkronizasyonu, cihaz eşleştirme ve ADB Terminal bağlantılarının tümü yalnızca yerel Wi-Fi ağınızda çalışır. Uzaktan Yönetim ve FTP sunucuları şifrelenmemiş protokoller kullanır; SFTP ve ADB Terminal bağlantıları güvenli, şifrelenmiş protokoller kullanır. Bulut depolama API\'leri (Google Drive, OneDrive, Dropbox, S3 uyumlu), şifrelenmiş HTTPS üzerinden ilgili sunucularıyla güvenli bir şekilde iletişim kurar. Harici sunuculara başka hiçbir veri iletilmez.
+</string>
+    <string name="pp_s4_other_heading">
+Diğer İzinler
+</string>
 
-    <string name="pp_s5_vault_heading">Kasa Şifreleme</string>
-    <string name="pp_s5_vault_body">Şifreli Kasa, dosyalarınızı korumak için askeri düzeyde şifreleme kullanır.</string>
-    <string name="pp_s5_vault_alert">Hem PIN\'inizi hem de kurtarma kodunuzu unutursanız, şifrelenmiş verilerinize kalıcı olarak erişilemez; bunları biz bile kurtaramayız. Lütfen bunları güvenli bir yerde saklayın.</string>
-    <string name="pp_s5_local_heading">Yerel Veri Koruması</string>
-    <string name="pp_s5_remote_heading">Uzaktan Yönetim Güvenliği</string>
+    <string name="pp_s5_vault_heading">
+Kasa Şifrelemesi
+</string>
+    <string name="pp_s5_vault_body">
+Şifrelenmiş Kasa, dosyalarınızı korumak için askeri düzeyde şifreleme kullanır.
+</string>
+    <string name="pp_s5_vault_alert">
+PIN\'inizi ve kurtarma kodunuzu unutursanız, şifrelenmiş verilerinize kalıcı olarak erişilemez — biz bile kurtaramayız. Lütfen bunları güvenli bir yerde saklayın.
+</string>
+    <string name="pp_s5_local_heading">
+Yerel Veri Koruması
+</string>
+    <string name="pp_s5_remote_heading">
+Uzaktan Yönetim Güvenliği
+</string>
 
     <!-- Section 6 — Google API Limited Use -->
-    <string name="pp_s6_compliance_banner">Ultimate File Manager Pro\'nun Google API\'lerinden aldığı bilgileri kullanımı, Sınırlı Kullanım gereksinimleri de dahil olmak üzere Google API Hizmetleri Kullanıcı Verileri Politikasına uygundur.</string>
-    <string name="pp_s6_intro">Google Drive hesabınızı bağladığınızda uygulama, yalnızca doğrudan uygulama içinde kullandığınız dosya yönetimi özelliklerini sağlamak için Google kullanıcı verilerinize erişir.</string>
-    <string name="pp_s6_google_data_heading">Google Kullanıcı Verileri — Google Drive API\'sı</string>
-    <string name="pp_s6_google_never_heading">Google Hesabınızdan Asla Erişemediğimiz Şeyler</string>
-    <string name="pp_s6_google_never">Gmail\'inize, Google Kişilerinize, Google Takviminize, Google Fotoğraflarınıza (Drive dışında) veya diğer Google hizmeti verilerinize erişmiyoruz. Yalnızca talep ettiğiniz işlem için gereken minimum Drive dosyası verilerine erişilir.</string>
-    <string name="pp_s6_permitted_heading">Google Kullanıcı Verilerinin İzin Verilen Kullanımları</string>
-    <string name="pp_s6_prohibited_heading">Yasaklanmış Kullanımlar — Google Kullanıcı Verilerini Asla Kullanmayız</string>
-    <string name="pp_s6_minimum_access">Ultimate File Manager Pro, yalnızca seçtiğiniz dosya yönetimi işlemlerini gerçekleştirmek için gereken minimum Google Drive izinlerini ister. Hiçbir zaman Gmail\'inize, Google Kişilerinize, Google Takviminize veya diğer Google hizmeti verilerinize erişim talebinde bulunmayız.</string>
+    <string name="pp_s6_compliance_banner">
+Ultimate File Manager Pro\'nun Google API\'lerinden alınan bilgileri kullanımı, Sınırlı Kullanım gereksinimleri de dahil olmak üzere Google API Hizmetleri Kullanıcı Verileri Politikasına uygundur.
+</string>
+    <string name="pp_s6_intro">
+Google Drive hesabınızı bağladığınızda uygulama, Google kullanıcı verilerinize yalnızca uygulama içinde doğrudan kullandığınız dosya yönetimi özelliklerini sağlamak için erişir.
+</string>
+    <string name="pp_s6_google_data_heading">
+Google Kullanıcı Verileri — Google Drive API
+</string>
+    <string name="pp_s6_google_never_heading">
+Google Hesabınızdan Asla Erişmediğimiz Bilgiler
+</string>
+    <string name="pp_s6_google_never">
+Gmail\'inize, Google Kişilerinize, Google Takviminize, Google Fotoğraflarınıza (Drive dışındaki) veya diğer Google hizmet verilerine erişmeyiz. Yalnızca istediğiniz eylem için gerekli olan minimum Drive dosya verisine erişilir.
+</string>
+    <string name="pp_s6_permitted_heading">
+Google Kullanıcı Verilerinin İzin Verilen Kullanımları
+</string>
+    <string name="pp_s6_prohibited_heading">
+Yasaklı Kullanımlar — Google Kullanıcı Verilerini Asla Kullanmadığımız Amaçlar
+</string>
+    <string name="pp_s6_minimum_access">
+Ultimate File Manager Pro, yalnızca seçtiğiniz dosya yönetimi işlemlerini gerçekleştirmek için gerekli olan minimum Google Drive izinlerini ister. Gmail\'inize, Google Kişilerinize, Google Takviminize veya diğer Google hizmet verilerine asla erişim talep etmeyiz.
+</string>
     <!-- Section 6b — RClone Integration -->
     <string name="pp_s6b_compliance_banner">
 Ultimate File Manager Pro, 100\'den fazla bulut depolama sağlayıcısına bağlanmayı desteklemek için RClone arka ucunu entegre eder. Tüm yapılandırmalar ve kimlik bilgileri doğrudan cihazınızda yönetilir.
 </string>
     <string name="pp_s6b_intro">
-Ultimate File Manager Pro\'da RClone depolama entegrasyonunu kullandığınızda uygulama, bulut depolama kimlik bilgilerinizi ve dosya meta verilerinizi yerel olarak işler. Uygulama, seçtiğiniz bulut depolama sağlayıcısının API uç noktasıyla doğrudan iletişim kurar. Bu bağlantıya aracılık etmiyoruz ve bulut kimlik bilgilerinizi veya dosyalarınızı asla toplamıyor, saklamıyor veya sunucularımıza aktarmıyoruz.
+Ultimate File Manager Pro\'da RClone depolama entegrasyonunu kullandığınızda, uygulama bulut depolama kimlik bilgilerinizi ve dosya meta verilerini yerel olarak işler. Uygulama, seçtiğiniz bulut depolama sağlayıcısının API uç noktasıyla doğrudan iletişim kurar. Bu bağlantıya aracılık etmeyiz ve bulut kimlik bilgilerinizi veya dosyalarınızı asla toplamaz, saklamaz veya sunucularımıza iletmeyiz.
 </string>
     <string name="pp_s6b_local_heading">
 Yerel Kimlik Bilgisi Şifrelemesi
 </string>
     <string name="pp_s6b_local_body">
-RClone depolama yapılandırmaları için girilen tüm parolalar, belirteçler veya API anahtarları, RClone RC arka ucu aracılığıyla cihaz içi şifreleme kullanılarak gizlenir ve şifrelenir ve uygulamanın özel dizininde rclone_encrypted.json olarak güvenli bir şekilde depolanır. Bu dosyaya diğer uygulamalar tarafından erişilemez ve uygulamayı kaldırdığınızda kalıcı olarak silinir.
+RClone depolama yapılandırmaları için girilen tüm şifreler, belirteçler veya API anahtarları, RClone RC arka ucu aracılığıyla cihaz üzerinde kriptografi kullanılarak gizlenir ve şifrelenir ve uygulamanın özel dizininde rclone_encrypted.json olarak güvenli bir şekilde saklanır. Bu dosyaya diğer uygulamalar erişemez ve uygulamayı kaldırdığınızda kalıcı olarak silinir.
 </string>
     <string name="pp_s6b_permitted_heading">
 Bulut Verilerinin İzin Verilen Kullanımları
 </string>
     <string-array name="pp_s6b_permitted">
         <item>
-Uzaktan Tarama: Uzak bulut depolama içeriklerinizi görüntülemek için klasör yapılarını ve dosya meta verilerini alma.
+Uzaktan Gezinme: Uzak bulut depolama içeriğinizi görüntülemek için klasör yapılarını ve dosya meta verilerini alma.
 </item>
         <item>
-Dosya İşlemleri: Açık isteğiniz üzerine uzak depolama alanınızdaki dosyaların yüklenmesi, indirilmesi, yeniden adlandırılması, kopyalanması, taşınması veya silinmesi.
+Dosya İşlemleri: Açık talebiniz üzerine uzak depolama alanınızda dosyaları yükleme, indirme, yeniden adlandırma, kopyalama, taşıma veya silme.
 </item>
     </string-array>
     <!-- Section 7 — Data Sharing -->
-    <string name="pp_s7_nosell_alert">Kişisel bilgilerinizi veya Google kullanıcı verilerinizi, Ultimate File Manager Pro\'nun dosya yönetimi özelliklerinin sağlanmasıyla doğrudan ilgili olmayan herhangi bir amaç için herhangi bir üçüncü tarafa satmıyoruz, kiralamıyoruz, takas etmiyoruz, aktarmıyoruz veya ifşa etmiyoruz (tam nokta).</string>
-    <string name="pp_s7_third_heading">Kullandığımız Üçüncü Taraf Hizmetleri</string>
-    <string name="pp_s7_saf_note">Bir dosyayı Depolama Erişim Çerçevesi (SAF) belge sağlayıcısı aracılığıyla da dahil olmak üzere başka bir uygulamayla açmayı veya paylaşmayı seçtiğinizde, dosyayla ne yapacağı o uygulamanın kendi gizlilik politikasına göre belirlenir.</string>
-    <string name="pp_s7_legal_note">Ayrıca yasaların, mahkeme emrinin veya hükümetin talebinin gerektirmesi halinde, yürürlükteki yasaların izin verdiği ölçüde bilgileri açıklayabiliriz. Kişisel bilgilerinizi veya Google kullanıcı verilerinizi bu Gizlilik Politikasında açıklanan amaçlar dışında üçüncü taraflara aktarmıyor veya ifşa etmiyoruz.</string>
+    <string name="pp_s7_nosell_alert">
+Kişisel bilgilerinizi veya Google kullanıcı verilerinizi, Ultimate File Manager Pro\'nun dosya yönetimi özelliklerini sağlamakla doğrudan ilgili olmayan herhangi bir amaçla hiçbir üçüncü tarafa satmaz, kiralamaz, takas etmez, aktarmaz veya ifşa etmeyiz — nokta.
+</string>
+    <string name="pp_s7_third_heading">
+Kullandığımız Üçüncü Taraf Hizmetler
+</string>
+    <string name="pp_s7_saf_note">
+Bir dosyayı başka bir uygulamayla açmayı veya paylaşmayı seçtiğinizde — Depolama Erişim Çerçevesi (SAF) belge sağlayıcısı aracılığıyla dahil — bu uygulamanın kendi gizlilik politikası dosyayla ne yaptığını belirler.
+</string>
+    <string name="pp_s7_legal_note">
+Ayrıca, yürürlükteki yasaların izin verdiği ölçüde yasa, mahkeme kararı veya hükümet talebi gereğince bilgi ifşa edebiliriz. Kişisel bilgilerinizi veya Google kullanıcı verilerinizi bu Gizlilik Politikasında belirtilenler dışındaki amaçlarla üçüncü taraflara aktarmaz veya ifşa etmeyiz.
+</string>
 
-    <string name="pp_s9_body">Verilerinizin kontrolü sizdedir. İşte istediğiniz zaman yapabilecekleriniz.</string>
-    <string name="pp_s9_delete_heading">Tüm Uygulama Verileri Nasıl Silinir?</string>
-    <string name="pp_s9_delete_alert">Verileri temizlemek veya yüklemeyi kaldırmak, Vault PIN\'inizi, kurtarma kodunuzu ve şifreleme anahtarlarınızı silerek, Vault içeriklerinin kalıcı olarak erişilemez hale gelmesine neden olur. Önce saklamak istediğiniz her şeyin şifresini çözün.</string>
+    <string name="pp_s9_body">
+Verileriniz üzerinde kontrol sizdedir. İşte istediğiniz zaman yapabilecekleriniz.
+</string>
+    <string name="pp_s9_delete_heading">
+Tüm Uygulama Verilerini Silme
+</string>
+    <string name="pp_s9_delete_alert">
+Verileri temizlemek veya kaldırmak, Kasa PIN\'inizi, kurtarma kodunuzu ve şifreleme anahtarlarınızı silecek — bu da Kasa içeriğini kalıcı olarak erişilemez hale getirecektir. Önce saklamak istediğiniz her şeyin şifresini çözün.
+</string>
 
-    <string name="pp_s10_body">Ultimate File Manager Pro, 13 yaşın altındaki çocuklara yönelik değildir. 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamıyoruz. Ebeveyn veya veli iseniz ve çocuğunuzun kişisel bilgi sağladığına inanıyorsanız, lütfen bizimle iletişime geçin.</string>
+    <string name="pp_s10_body">
+Ultimate File Manager Pro, 13 yaşın altındaki çocuklar için tasarlanmamıştır. 13 yaşın altındaki çocuklardan bilerek kişisel bilgi toplamıyoruz. Bir ebeveyn veya vasiyseniz ve çocuğunuzun kişisel bilgi sağladığını düşünüyorsanız lütfen bizimle iletişime geçin.
+</string>
 
-    <string name="pp_s11_body">Ultimate File Manager Pro Güney Afrika\'da geliştirilmiştir. Uygulamayı başka bir ülkeden kullanıyorsanız, lütfen her türlü bilginin Güney Afrika\'da veya üçüncü taraf hizmet sağlayıcılarımızın (Google gibi) faaliyet gösterdiği ülkelerde işlenebileceğini unutmayın.</string>
+    <string name="pp_s11_body">
+Ultimate File Manager Pro, Güney Afrika\'da geliştirilmiştir. Uygulamayı başka bir ülkeden kullanıyorsanız, herhangi bir bilginin Güney Afrika\'da veya üçüncü taraf hizmet sağlayıcılarımızın (Google gibi) faaliyet gösterdiği ülkelerde işlenebileceğini unutmayın.
+</string>
 
-    <string name="pp_s12_body">Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Bunu yaptığımızda üstteki tarihi güncelleyeceğiz. Önemli değişiklikler olması durumunda sizi uygulama içinden de bilgilendireceğiz. Değişikliklerden sonra uygulamayı kullanmaya devam etmeniz, güncellenen Politikayı kabul ettiğiniz anlamına gelir.</string>
+    <string name="pp_s12_body">
+Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Güncellediğimizde, başındaki tarihi güncelleriz. Önemli değişiklikler için sizi uygulama içinde de bilgilendireceğiz. Değişikliklerden sonra uygulamayı kullanmaya devam etmeniz, güncellenmiş Politikayı kabul ettiğiniz anlamına gelir.
+</string>
 
-    <string name="pp_s13_body">Bu uygulama Google Play\'in standartlarını karşılayacak şekilde oluşturulmuştur. Temel uygulama işlevleri için istenen tüm izinler gereklidir. Herhangi bir hassas izin talep edilmeden önce uygulama, buna neden ihtiyaç duyulduğunu ve nasıl kullanılacağını açıkça açıklıyor. Ekim 2024 Fotoğraf ve Video Politikası güncellemeleriyle ilgili olarak: Bu, tüm depolama birimlerinde toplu işlemler (taşıma, yeniden adlandırma ve senkronizasyon) için tasarlanmış ve standart sistem toplayıcılar kullanılarak verimli bir şekilde gerçekleştirilemeyen kapsamlı bir dosya yöneticisi olduğundan geniş erişim gereklidir.</string>
+    <string name="pp_s13_body">
+Bu uygulama Google Play standartlarını karşılayacak şekilde oluşturulmuştur. İstenen tüm izinler temel uygulama işlevselliği için gereklidir. Herhangi bir hassas izin talep etmeden önce, uygulama neden gerekli olduğunu ve nasıl kullanılacağını açıkça açıklar. Ekim 2024 Fotoğraf ve Video Politikası güncellemeleriyle ilgili olarak: geniş erişim gereklidir çünkü bu, tüm depolama birimlerinde toplu işlemler (taşıma, yeniden adlandırma ve senkronizasyon) için tasarlanmış kapsamlı bir dosya yöneticisidir ve bu işlemler standart sistem seçiciler kullanılarak verimli bir şekilde gerçekleştirilemez.\n
+\n
+Yüklenmiş Uygulama Bilgileri (QUERY_ALL_PACKAGES) ile ilgili: Uygulama Yöneticisi özelliği, yüklenmiş paketlerin tam listesini yalnızca cihazda okur — uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve sistem ile kullanıcı uygulaması sınıflandırması dahil. Debloater sekmesi ayrıca herkese açık bir debloat referans listesi indirir ve bunu yerel olarak yüklenmiş paket adlarıyla karşılaştırır. Yüklenmiş uygulama verilerinin hiçbiri asla KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
+</string>
 
-    <string name="pp_s14_body">Bu Gizlilik Politikasıyla ilgili herhangi bir sorunuz veya endişeniz varsa lütfen bizimle iletişime geçin.</string>
+    <string name="pp_s14_body">
+Bu Gizlilik Politikası hakkında herhangi bir sorunuz veya endişeniz varsa lütfen bize ulaşın.
+</string>
 
-    <string name="pp_footer">Ultimate File Manager Pro\'yu kullanarak bu Gizlilik Politikasını okuyup anladığınızı onaylamış olursunuz.</string>
+    <string name="pp_footer">
+Ultimate File Manager Pro\'yu kullanarak bu Gizlilik Politikasını okuduğunuzu ve anladığınızı onaylamış olursunuz.
+</string>
 
     <!-- Local storage table (Section 2) -->
     <string-array name="pp_local_data_labels">
-        <item>Kasa PIN\'i (karma oluşturma)</item>
-        <item>Kurtarma Kodu (karma)</item>
-        <item>Kasa Meta Verileri</item>
-        <item>Şifreleme Anahtarları</item>
-        <item>Uygulama Tercihleri</item>
-        <item>Dosya Sunucusu Profilleri</item>
-        <item>Ağ Paylaşımı Kimlik Bilgileri</item>
-        <item>Eşleştirilmiş Cihaz Bilgisi</item>
-        <item>ADB Kimlik Doğrulama Anahtarları</item>
-        <item>Shizuku Yetkilendirme Durumu</item>
-        <item>TV Ekran Görüntüleri</item>
-        <item>Profilleri Senkronize Et</item>
-        <item>Bulut Depolama Belirteçleri (Google Drive, OneDrive, Dropbox)</item>
-        <item>S3/S3 Uyumlu Depolama Kimlik Bilgileri (AWS S3, MinIO, IDrive E2 vb.)</item>
-        <item>Dizinlenmiş Dosya Meta Verileri (SQLite/Room)</item>
-        <item>Dil Seçimi (Çerez)</item>
+        <item>
+Kasa PIN\'i (karma)
+</item>
+        <item>
+Kurtarma Kodu (karma)
+</item>
+        <item>
+Kasa Meta Verileri
+</item>
+        <item>
+Şifreleme Anahtarları
+</item>
+        <item>
+Uygulama Tercihleri
+</item>
+        <item>
+Dosya Sunucusu Profilleri
+</item>
+        <item>
+Ağ Paylaşımı Kimlik Bilgileri
+</item>
+        <item>
+Eşleştirilmiş Cihaz Bilgisi
+</item>
+        <item>
+ADB Kimlik Doğrulama Anahtarları
+</item>
+        <item>
+Shizuku Yetkilendirme Durumu
+</item>
+        <item>
+TV Ekran Görüntüleri
+</item>
+        <item>
+Senkronizasyon Profilleri
+</item>
+        <item>
+Bulut Depolama Tokenleri (Google Drive, OneDrive, Dropbox)
+</item>
+        <item>
+S3 / S3 Uyumlu Depolama Kimlik Bilgileri (AWS S3, MinIO, IDrive E2, vb.)
+</item>
+        <item>
+Dizinlenmiş Dosya Metaverisi (SQLite/Room)
+</item>
+        <item>
+Dil Seçimi (Çerez)
+</item>
         <item>
 Medya Oynatma Durumu
 </item>
     </string-array>
     <string-array name="pp_local_data_details">
-        <item>Şifrelenmiş dosyalara güvenli erişim · Android SharedPreferences</item>
-        <item>PIN unutulursa hesap kurtarma · Android SharedPreferences</item>
-        <item>Şifrelenmiş klasörlerinizin ve dosyalarınızın listesi · Uygulamaya özel depolama</item>
-        <item>Vault için AES-256-GCM şifreleme · Android Anahtar Deposu (donanım destekli)</item>
-        <item>Tema, sıralama ayarları, görünüm tercihleri ​​· Android SharedPreferences</item>
-        <item>Barındırılan Dosya Sunucusu için yapılandırmalar (kullanıcı adı, dizin, karma şifre) · Uygulamaya özel depolama</item>
-        <item>KOBİ/FTP paylaşımlarınıza bağlanma (ana bilgisayar, kullanıcı adı, şifre) · Uygulamaya özel depolama</item>
-        <item>Cihaz eşleştirme için cihaz adı, kimliği ve IP\'si · Uygulamaya özel depolama</item>
-        <item>Güvenli ADB bağlantıları için oluşturulan RSA anahtarları ve sertifikaları · Uygulamaya özel depolama</item>
-        <item>Shizuku Manager uygulamasından yükseltilmiş erişim izninin durumu · Uygulamaya özel depolama</item>
-        <item>ADB aracılığıyla eşleştirilmiş bir TV\'den çekilen ekran görüntüleri · Telefonunuzun yerel Resimler/Ekran Görüntüleri klasörü</item>
-        <item>Her senkronizasyon profili için yerel klasör URI\'si ve uzak yol · Uygulamaya özel depolama</item>
-        <item>Google Drive, OneDrive ve Dropbox\'a erişim için OAuth belirteçleri · Uygulamaya özel depolama alanı</item>
-        <item>S3 klasörlerine bağlanmak için Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı · Uygulamaya özel depolama</item>
-        <item>Hızlı göz atma ve arama için yerel bir SQLite/Room veritabanında depolanan dosya meta verileri (adlar, boyutlar, tarihler) — Ayarlar -&gt; Depolama Dizini Oluşturucu · Uygulamaya özel depolama yoluyla yönetilebilir</item>
-        <item>Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı</item>
         <item>
-Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatıldığında dil seçiminizi hatırlar · Web tarayıcısı depolama alanı
+Şifrelenmiş dosyalara güvenli erişim · Android SharedPreferences
+</item>
+        <item>
+PIN unutulursa hesap kurtarma · Android SharedPreferences
+</item>
+        <item>
+Şifrelenmiş klasör ve dosyalarınızın listesi · Uygulama özel depolaması
+</item>
+        <item>
+Kasa için AES-256-GCM şifrelemesi · Android Keystore (donanım destekli)
+</item>
+        <item>
+Tema, sıralama ayarları, görünüm tercihleri · Android SharedPreferences
+</item>
+        <item>
+Barındırılan Dosya Sunucusu için yapılandırmalar (kullanıcı adı, dizin, hashlenmiş şifre) · Uygulama özel depolaması
+</item>
+        <item>
+SMB/FTP paylaşımlarınıza bağlanma (sunucu, kullanıcı adı, şifre) · Uygulama özel depolaması
+</item>
+        <item>
+Cihaz eşleştirme için cihaz adı, kimlik ve IP · Uygulama özel depolaması
+</item>
+        <item>
+Güvenli ADB bağlantıları için oluşturulan RSA anahtarları ve sertifikalar · Uygulama özel depolaması
+</item>
+        <item>
+Shizuku Manager uygulamasından yükseltilmiş erişim izninin durumu · Uygulama özel depolaması
+</item>
+        <item>
+ADB aracılığıyla eşleştirilmiş bir TV\'den yakalanan ekran görüntüleri · Telefonunuzun yerel Resimler/Ekran Görüntüleri klasörü
+</item>
+        <item>
+Her senkronizasyon profili için yerel klasör URI\'si ve uzak yol · Uygulama özel depolaması
+</item>
+        <item>
+Google Drive, OneDrive ve Dropbox\'a erişmek için OAuth tokenları · Uygulama özel depolaması
+</item>
+        <item>
+S3 bucket\'larına bağlanmak için Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı · Uygulama özel depolaması
+</item>
+        <item>
+Hızlı gezinme ve arama için yerel bir SQLite/Room veritabanında depolanan dosya metaverileri (adlar, boyutlar, tarihler) — Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilebilir · Uygulama özel depolaması
+</item>
+        <item>
+Kaldığınız yerden devam etmek için geçerli sıra, oynatma konumu ve oynatıcı ayarları · Android SharedPreferences
+</item>
+        <item>
+Bir çerez (ufm_lang), dil seçiminizi oturum boyunca ve tarayıcı yeniden başlatmaları arasında hatırlar · Web tarayıcı depolaması
 </item>
     </string-array>
 
     <!-- Analytics table (Section 2) -->
     <string-array name="pp_analytics_labels">
-        <item>Cihaz Bilgileri</item>
-        <item>Uygulama Kullanım Verileri</item>
-        <item>Genel Konum</item>
+        <item>
+Cihaz Bilgisi
+</item>
+        <item>
+Uygulama Kullanım Verileri
+</item>
+        <item>
+Genel Konum
+</item>
     </string-array>
     <string-array name="pp_analytics_details">
-        <item>Cihaz modeli, işletim sistemi sürümü, ekran boyutu</item>
-        <item>Kullanılan özellikler, oturum uzunluğu, kilitlenme raporları</item>
-        <item>Ülke/bölge IP\'ye dayalıdır; tam konumunuza değil</item>
+        <item>
+Cihaz modeli, işletim sistemi sürümü, ekran boyutu
+</item>
+        <item>
+Kullanılan özellikler, oturum süresi, çökme raporları
+</item>
+        <item>
+IP\'ye dayalı ülke/bölge — kesin konumunuz değil
+</item>
     </string-array>
 
     <!-- What we never collect (Section 2) -->
     <string-array name="pp_never_collect">
-        <item>Dosyalarınız, belgeleriniz, fotoğraflarınız, videolarınız veya herhangi bir medyanız</item>
-        <item>Apps Kasası içerikleriniz veya şifreleme anahtarlarınız</item>
-        <item>PIN\'iniz veya kurtarma kodunuz</item>
-        <item>Kesin konumunuz</item>
-        <item>Kişileriniz, mesajlarınız veya çağrı günlükleriniz</item>
-        <item>Kişisel kimlik bilgileri (isim, e-posta, telefon numarası)</item>
-        <item>Dosya tarayıcısında açıkça talep ettiğinizin ötesindeki tüm Google hesabı verileri</item>
+        <item>
+Dosyalarınız, belgeleriniz, fotoğraflarınız, videolarınız veya herhangi bir medyanız
+</item>
+        <item>
+Kasanızın içeriği veya şifreleme anahtarlarınız
+</item>
+        <item>
+PIN\'iniz veya kurtarma kodunuz
+</item>
+        <item>
+Kesin konumunuz
+</item>
+        <item>
+Kişileriniz, mesajlarınız veya arama kayıtlarınız
+</item>
+        <item>
+Kişisel kimlik bilgileri (ad, e-posta, telefon numarası)
+</item>
+        <item>
+Dosya tarayıcısında açıkça talep ettiğinizin ötesinde herhangi bir Google hesap verisi
+</item>
     </string-array>
 
     <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
-        <item>Şifreli Kasaya erişimi doğrulayın</item>
-        <item>Özel dosyalarınızı şifreleyin ve şifresini çözün</item>
-        <item>Tercihlerinizi ve ayarlarınızı hatırlayın</item>
-        <item>Kısıtlı dizinlerdeki sistem korumalı dosyaları yönetmek için yükseltilmiş erişimi (Shizuku/ADB) kullanın</item>
-        <item>Hızlı tarama ve arama için dosya indekslemeyi oluşturun ve sürdürün (Ayarlar -&gt; Depolama İndeksleyici aracılığıyla yönetilebilir)</item>
-        <item>Temel uygulama işlevselliğini sağlayın</item>
+        <item>
+Şifrelenmiş Kasaya erişimi doğrula
+</item>
+        <item>
+Özel dosyalarınızı şifrele ve şifresini çöz
+</item>
+        <item>
+Tercihlerinizi ve ayarlarınızı hatırla
+</item>
+        <item>
+Kısıtlı dizinlerde sistem tarafından korunan dosyaları yönetmek için yükseltilmiş erişim (Shizuku/ADB) kullan
+</item>
+        <item>
+Hızlı gezinme ve arama için dosya dizinlemesi oluştur ve sürdür (Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilebilir)
+</item>
+        <item>
+Temel uygulama işlevselliğini sağla
+</item>
     </string-array>
     <string-array name="pp_use_analytics">
-        <item>Özelliklerin nasıl kullanıldığını anlayın</item>
-        <item>Hataları ve çökmeleri tanımlayın ve düzeltin</item>
-        <item>Özellikleri ve kullanıcı deneyimini geliştirin</item>
-        <item>Bilinçli geliştirme kararları alın</item>
+        <item>
+Özelliklerin nasıl kullanıldığını anla
+</item>
+        <item>
+Hataları ve çökmeleri tanımla ve düzelt
+</item>
+        <item>
+Özellikleri ve kullanıcı deneyimini iyileştir
+</item>
+        <item>
+Bilinçli geliştirme kararları al
+</item>
     </string-array>
 
     <!-- Storage permissions (Section 4) -->
     <string-array name="pp_storage_perm_labels">
-        <item>Harici Depolamayı Yönet</item>
-        <item>Harici Depolamayı Oku</item>
-        <item>Harici Depolama Yaz</item>
+        <item>
+MANAGE_EXTERNAL_STORAGE
+</item>
+        <item>
+READ_EXTERNAL_STORAGE
+</item>
+        <item>
+WRITE_EXTERNAL_STORAGE
+</item>
     </string-array>
     <string-array name="pp_storage_perm_details">
-        <item>API 30+ · Tüm depolama alanında tam dosya yönetimi</item>
-        <item>API 33\'ün altında · Eski cihazlarda eski dosya erişimi</item>
-        <item>API 29\'un altında · Eski cihazlarda eski dosya değişikliği</item>
+        <item>
+API 30+ · Tüm depolamalarda tam dosya yönetimi
+</item>
+        <item>
+API 33 altı · Eski cihazlarda eski dosya erişimi
+</item>
+        <item>
+API 29 altı · Eski cihazlarda eski dosya değişikliği
+</item>
     </string-array>
 
     <!-- Network permissions (Section 4) -->
     <string-array name="pp_network_perm_labels">
-        <item>İNTERNET</item>
-        <item>Wifi Durumuna Erişim</item>
-        <item>Ağ Durumuna Erişim</item>
-        <item>Wifi Çoklu Yayın Durumunu Değiştir</item>
+        <item>
+INTERNET
+</item>
+        <item>
+ACCESS_WIFI_STATE
+</item>
+        <item>
+ACCESS_NETWORK_STATE
+</item>
+        <item>
+CHANGE_WIFI_MULTICAST_STATE
+</item>
     </string-array>
     <string-array name="pp_network_perm_details">
-        <item>Uzaktan dosya yönetimine, yerel Dosya Sunucularını barındırmaya, SMB/FTP/SFTP/SCP ağ paylaşım erişimine ve cihaz eşleştirmeye olanak tanır</item>
-        <item>Uzaktan erişim için yerel IP adresinizi görüntüler</item>
-        <item>Uzaktan Yönetim ve ağ paylaşımları için etkin ağ ve VPN durumunu algılar</item>
-        <item>Cihaz eşleştirme için yerel ağ cihazı keşfini (NSD/mDNS) etkinleştirir</item>
+        <item>
+Uzaktan dosya yönetimi, yerel Dosya Sunucuları barındırma, SMB/FTP/SFTP/SCP/NFS ağ paylaşım erişimi ve cihaz eşleştirmeyi etkinleştirir
+</item>
+        <item>
+Uzaktan erişim için yerel IP adresinizi görüntüler
+</item>
+        <item>
+Uzaktan Yönetim ve ağ paylaşımları için etkin ağ ve VPN durumunu algılar
+</item>
+        <item>
+Cihaz eşleştirme için yerel ağ cihaz keşfini (NSD/mDNS) etkinleştirir
+</item>
     </string-array>
 
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
-        <item>Bildirim Gönder</item>
-        <item>moe.shizuku.manager.permission.API_V23</item>
-        <item>Önyükleme Tamamlandı Alma</item>
-        <item>Pil Optimizasyonlarını Yoksayma İsteği</item>
-        <item>Kurulum Paketlerini İste</item>
-        <item>Tüm Paketleri Sorgula</item>
-        <item>Ön Plan Hizmeti / Ön Plan Hizmeti Veri Senkronizasyonu</item>
-        <item>Uyandırma Kilidi</item>
+        <item>
+POST_NOTIFICATIONS
+</item>
+        <item>
+moe.shizuku.manager.permission.API_V23
+</item>
+        <item>
+RECEIVE_BOOT_COMPLETED
+</item>
+        <item>
+REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+</item>
+        <item>
+REQUEST_INSTALL_PACKAGES
+</item>
+        <item>
+QUERY_ALL_PACKAGES
+</item>
+        <item>
+FOREGROUND_SERVICE / FOREGROUND_SERVICE_DATA_SYNC
+</item>
+        <item>
+WAKE_LOCK
+</item>
     </string-array>
     <string-array name="pp_other_perm_details">
-        <item>Dosya işlemleri tamamlandığında veya depolama alanı azaldığında sizi uyarır</item>
-        <item>Yükseltilmiş dosya erişimi için Shizuku Yöneticisi ile iletişime izin verir</item>
-        <item>Anında kullanılabilirlik için Shizuku hizmetlerinin önyükleme sırasında otomatik olarak başlatılmasına izin verir</item>
-        <item>Güvenilir performans için Shizuku\'yu arka planda aktif tutmayı seçmenizi sağlar</item>
-        <item>Seçtiğiniz APK dosyalarının yüklenmesine izin verir</item>
-        <item>Uygulama Yöneticisi özelliği için yüklü uygulamaları listeler</item>
-        <item>Klasör Senkronizasyonunu ve dosya aktarımlarını ön plan hizmeti olarak çalıştırır, böylece ekran kapalıyken bile güvenilir bir şekilde tamamlanırlar</item>
-        <item>Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapansa bile aktarımlar güvenilir bir şekilde tamamlanır</item>
+        <item>
+Dosya işlemleri tamamlandığında veya depolama alanı düşük olduğunda sizi uyarır
+</item>
+        <item>
+Yükseltilmiş dosya erişimi için Shizuku Manager ile iletişime izin verir
+</item>
+        <item>
+Shizuku hizmetlerinin anında kullanılabilirlik için önyüklemede otomatik olarak başlamasına izin verir
+</item>
+        <item>
+Güvenilir performans için Shizuku\'yu arka planda tutmayı kabul etmenize izin verir
+</item>
+        <item>
+Seçtiğiniz APK dosyalarının yüklenmesine izin verir
+</item>
+        <item>
+Uygulama Yöneticisi ve Debloat özellikleri tarafından gereklidir. Okur: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ile sistem vs. kullanıcı uygulama bayrağı — tamamen cihazda işlenir. Debloat sekmesi, herkese açık bir debloat referans listesini indirir ve yüklü paket adlarıyla yerel olarak karşılaştırır. Hiçbir yüklü uygulama verisi harici olarak iletilmez.
+</item>
+        <item>
+Klasör Senkronizasyonu, dosya aktarımları ve medya oynatmayı ön planda hizmet olarak çalıştırır, böylece ekran kapalıyken veya başka uygulamalar kullanırken bile güvenilir bir şekilde tamamlanır ve oynatmaya devam eder
+</item>
+        <item>
+Büyük dosya aktarımları ve medya oynatma sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapandığında bile güvenilir bir şekilde tamamlanır
+</item>
     </string-array>
 
     <!-- Encryption spec (Section 5) -->
     <string-array name="pp_encryption_labels">
-        <item>Algoritma</item>
-        <item>Anahtar Depolama</item>
-        <item>Anahtar Boyutu</item>
-        <item>Kimlik doğrulama</item>
+        <item>
+Algoritma
+</item>
+        <item>
+Anahtar Depolama
+</item>
+        <item>
+Anahtar Boyutu
+</item>
+        <item>
+Kimlik Doğrulama
+</item>
     </string-array>
     <string-array name="pp_encryption_details">
-        <item>AES-256-GCM (Galois/Sayaç Moduyla Gelişmiş Şifreleme Standardı)</item>
-        <item>Android Anahtar Deposu — donanım destekli güvenli depolama</item>
-        <item>256 bit</item>
-        <item>Kullanıcı tanımlı PIN</item>
+        <item>
+AES-256-GCM (Galois/Sayaç Modlu Gelişmiş Şifreleme Standardı)
+</item>
+        <item>
+Android Keystore — donanım destekli güvenli depolama
+</item>
+        <item>
+256-bit
+</item>
+        <item>
+Kullanıcı tanımlı PIN
+</item>
     </string-array>
 
     <!-- Local data protection (Section 5) -->
     <string-array name="pp_local_protection">
-        <item>Tüm yerel veriler uygulamanın özel depolama alanında saklanır; diğer uygulamalar bu verilere erişemez.</item>
-        <item>PIN\'iniz saklanmadan önce karma haline getirilir; onu hiçbir zaman düz metin olarak görmeyiz.</item>
-        <item>Ağ paylaşımı kimlik bilgileri uygulamanın özel deposunda saklanır ve hiçbir zaman dışarıya iletilmez.</item>
-        <item>Google Drive, OneDrive ve Dropbox için OAuth belirteçleri uygulamanın özel deposunda saklanır ve hiçbir zaman sunucularımıza veya herhangi bir üçüncü tarafa iletilmez.</item>
-        <item>S3 / S3 Uyumlu erişim kimlik bilgileri (Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı) uygulamanın özel deposunda saklanır ve yalnızca yapılandırılmış uç noktanıza gelen isteklerin kimliğini doğrulamak için kullanılır; bunlar hiçbir zaman sunucularımıza iletilmez.</item>
-        <item>Yerel olarak depolanan tüm verilerin gizliliğini korumak için güvenlik prosedürleri mevcuttur.</item>
-        <item>Uygulamayı kaldırdığınızda tüm veriler otomatik olarak silinir.</item>
+        <item>
+Tüm yerel veriler uygulamanın özel depolama alanında saklanır — diğer uygulamalar buna erişemez.
+</item>
+        <item>
+PIN\'iniz saklanmadan önce hashlenir — asla düz metin olarak görmeyiz.
+</item>
+        <item>
+Ağ paylaşım kimlik bilgileri uygulamanın özel depolamasında saklanır ve asla harici olarak iletilmez.
+</item>
+        <item>
+Google Drive, OneDrive ve Dropbox için OAuth tokenları uygulamanın özel depolamasında saklanır ve sunucularımıza veya herhangi bir üçüncü tarafa asla iletilmez.
+</item>
+        <item>
+S3 / S3 uyumlu erişim kimlik bilgileri (Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı) uygulamanın özel depolamasında saklanır ve yalnızca yapılandırdığınız uç noktaya yapılan istekleri doğrulamak için kullanılır — sunucularımıza asla iletilmez.
+</item>
+        <item>
+Yerel olarak depolanan tüm verilerin gizliliğini korumak için güvenlik prosedürleri uygulanmaktadır.
+</item>
+        <item>
+Uygulamayı kaldırdığınızda tüm veriler otomatik olarak silinir.
+</item>
     </string-array>
 
     <!-- Remote security (Section 5) -->
     <string-array name="pp_remote_security">
-        <item>PIN korumalı erişim — yalnızca yetkilendirdiğiniz kişiler bağlanabilir.</item>
-        <item>Her bağlantıda oturum tabanlı kimlik doğrulama.</item>
-        <item>Yalnızca yerel ağınızda çalışır; harici internet erişimi yoktur.</item>
-        <item>Uzaktan Yönetim ekranından çıktığınızda sunucu otomatik olarak kapanır.</item>
-        <item>Önemli: Uzaktan Yönetim şifrelenmemiş HTTP kullanır. Uzaktan Yönetim yoluyla kasa erişimi (PIN girişi dahil) yerel ağınız üzerinden şifrelenmeden iletilir. Yalnızca ev Wi-Fi\'niz gibi güvendiğiniz ağlarda kullanın.</item>
+        <item>
+PIN korumalı erişim — yalnızca yetki verdiğiniz kişiler bağlanabilir.
+</item>
+        <item>
+Her bağlantıda oturum tabanlı kimlik doğrulama.
+</item>
+        <item>
+Yalnızca yerel ağınızda çalışır — harici internet erişimi yoktur.
+</item>
+        <item>
+Uzaktan Yönetim ekranından çıktığınızda sunucu otomatik olarak kapanır.
+</item>
+        <item>
+Önemli: Uzaktan Yönetim şifrelenmemiş HTTP kullanır. Uzaktan Yönetim aracılığıyla Kasa erişimi (PIN girişi dahil) yerel ağınızda şifrelenmemiş olarak iletilir. Yalnızca ev Wi-Fi\'niz gibi güvendiğiniz ağlarda kullanın.
+</item>
     </string-array>
 
     <!-- Google Drive user data table (Section 6) -->
     <string-array name="pp_google_data_labels">
-        <item>Dosya ve Klasör Meta Verileri (ad, boyut, MIME türü, değiştirilme tarihi, Sürücü Kimliği)</item>
-        <item>Dosya İkili İçeriği</item>
-        <item>OAuth Erişim Jetonu ve Jetonu Yenile</item>
+        <item>
+Dosya ve Klasör Metaverisi (ad, boyut, MIME türü, değişiklik tarihi, Drive Kimliği)
+</item>
+        <item>
+Dosya İkili İçeriği
+</item>
+        <item>
+OAuth Erişim Tokenı ve Yenileme Tokenı
+</item>
     </string-array>
     <string-array name="pp_google_data_when">
-        <item>Uygulama içinde Google Drive\'ınıza göz attığınızda</item>
-        <item>Yalnızca bir dosyayı açıkça açtığınızda, indirdiğinizde, yüklediğinizde, kopyaladığınızda, taşıdığınızda veya senkronize ettiğinizde</item>
-        <item>Google Drive\'da oturum açtıktan sonra yerel olarak depolanır</item>
+        <item>
+Uygulama içinde Google Drive\'ınıza göz attığınızda
+</item>
+        <item>
+Yalnızca bir dosyayı açtığınızda, indirdiğinizde, yüklediğinizde, kopyaladığınızda, taşıdığınızda veya senkronize ettiğinizde
+</item>
+        <item>
+Google Drive\'da oturum açtıktan sonra yerel olarak depolanır
+</item>
     </string-array>
     <string-array name="pp_google_data_purposes">
-        <item>Drive içeriklerinizi dosya tarayıcısında görüntüleme</item>
-        <item>İstediğiniz belirli dosya işleminin gerçekleştirilmesi</item>
-        <item>Kimlik doğrulamalı oturumunuzu tekrar tekrar oturum açmanıza gerek kalmadan sürdürme</item>
+        <item>
+Drive içeriğinizi dosya tarayıcısında gösterme
+</item>
+        <item>
+Talep ettiğiniz belirli dosya işlemini gerçekleştirme
+</item>
+        <item>
+Tekrarlanan oturum açmalar gerektirmeden kimlik doğrulama oturumunuzu sürdürme
+</item>
     </string-array>
     <!-- Permitted uses of Google data (Section 6) -->
     <string-array name="pp_google_permitted">
-        <item>Drive\'ınıza Göz Atma: Drive içeriklerinizi görüntülemek için dosya ve klasör meta verileri getiriliyor.</item>
-        <item>Dosya yükleme: Yerel bir dosyayı açıkça talep ettiğinizde Drive\'ınıza göndermek.</item>
-        <item>Dosyaları indirme: Açıkça talep ettiğinizde bir Drive dosyasını cihazınıza almak.</item>
-        <item>Dosyaları taşıma ve kopyalama: Açıkça başlattığınız Sürücü tarafı dosya işlemlerini gerçekleştirme.</item>
-        <item>Dosyaları silme: Silmek üzere açıkça seçtiğiniz Drive dosyalarını kaldırmak.</item>
-        <item>Klasör Senkronizasyonu: Yapılandırdığınız senkronizasyon profiline göre yerel bir klasörü bir Drive klasörüyle senkronize etme.</item>
+        <item>
+Drive\'ınıza göz atma: Drive içeriğinizi göstermek için dosya ve klasör metaverilerini alma.
+</item>
+        <item>
+Dosya yükleme: Açıkça talep ettiğinizde yerel bir dosyayı Drive\'ınıza gönderme.
+</item>
+        <item>
+Dosya indirme: Açıkça talep ettiğinizde bir Drive dosyasını cihazınıza alma.
+</item>
+        <item>
+Dosya taşıma ve kopyalama: Açıkça başlattığınız Drive tarafı dosya işlemlerini gerçekleştirme.
+</item>
+        <item>
+Dosya silme: Silmek için açıkça seçtiğiniz Drive dosyalarını kaldırma.
+</item>
+        <item>
+Klasör Senkronizasyonu: Yapılandırdığınız senkronizasyon profiline göre yerel bir klasörü Drive klasörüyle senkronize etme.
+</item>
     </string-array>
     <!-- Prohibited uses of Google data (Section 6) -->
     <string-array name="pp_google_prohibited">
-        <item>Hedefli, kişiselleştirilmiş, yeniden hedeflenmiş veya ilgi alanına dayalı reklamcılık</item>
-        <item>Veri komisyoncularına satış yapmak veya bilgi satıcılarına sağlamak</item>
-        <item>Kredi itibarının belirlenmesi veya herhangi bir borç verme amacıyla</item>
-        <item>Yapay zeka veya makine öğrenimi modellerinin eğitimi</item>
-        <item>Dosya yönetimiyle ilgisi olmayan kullanıcı veritabanları veya profilleri oluşturma</item>
-        <item>Harici amaçlarla herhangi bir veri madenciliği, kazıma veya toplama</item>
-        <item>Google kullanıcı verilerinin, uygulamanın dosya yönetimi özelliklerini sağlamak veya geliştirmek dışında ya da yasaların gerektirdiği durumlar dışında herhangi bir nedenle herhangi bir üçüncü tarafa aktarılması</item>
+        <item>
+Hedefli, kişiselleştirilmiş, yeniden hedefli veya ilgi alanına dayalı reklamcılık
+</item>
+        <item>
+Veri komisyoncularına satma veya bilgi yeniden satıcılarına sağlama
+</item>
+        <item>
+Kredi değerliliğini belirleme veya herhangi bir borç verme amacıyla
+</item>
+        <item>
+Yapay zeka veya makine öğrenimi modellerini eğitme
+</item>
+        <item>
+Dosya yönetimiyle ilgisi olmayan kullanıcı veritabanları veya profilleri oluşturma
+</item>
+        <item>
+Harici amaçlar için herhangi bir veri madenciliği, kazıma veya toplama
+</item>
+        <item>
+Google kullanıcı verilerini, uygulamanın dosya yönetimi özelliklerini sağlama veya iyileştirme dışında herhangi bir nedenle veya yasal olarak gerekli olmadıkça herhangi bir üçüncü tarafa aktarma
+</item>
     </string-array>
     <!-- Third parties (Section 7) -->
     <string-array name="pp_third_party_names">
-        <item>Firebase Analizi</item>
-        <item>Google Play Hizmetleri</item>
-        <item>Google Play Faturalandırma</item>
-        <item>Microsoft OneDrive API\'si</item>
-        <item>Google Drive API\'sı</item>
-        <item>Dropbox API\'si</item>
-        <item>AWS S3 / S3 Uyumlu API\'ler (ör. AWS S3, MinIO, IDrive E2)</item>
+        <item>
+Firebase Analytics
+</item>
+        <item>
+Google Play Services
+</item>
+        <item>
+Google Play Billing
+</item>
+        <item>
+Microsoft OneDrive API
+</item>
+        <item>
+Google Drive API
+</item>
+        <item>
+Dropbox API
+</item>
+        <item>
+AWS S3 / S3 Uyumlu API\'lar (örn. AWS S3, MinIO, IDrive E2)
+</item>
     </string-array>
     <string-array name="pp_third_party_providers">
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>Google LLC</item>
-        <item>Microsoft Şirketi</item>
-        <item>Google LLC</item>
-        <item>Dropbox, Inc.</item>
-        <item>Amazon Web Hizmetleri ve uyumlu sağlayıcılar</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Microsoft Corporation
+</item>
+        <item>
+Google LLC
+</item>
+        <item>
+Dropbox, Inc.
+</item>
+        <item>
+Amazon Web Services ve uyumlu sağlayıcılar
+</item>
     </string-array>
     <string-array name="pp_third_party_purposes">
-        <item>Anonim kullanım analitiği</item>
-        <item>Uygulama dağıtımı, güncellemeler ve uygulama içi incelemeler</item>
-        <item>İsteğe bağlı uygulama içi bahşiş satın alımlarını işler (yalnızca satın alma jetonları, cihazda)</item>
-        <item>Microsoft OneDrive entegrasyonu için kullanıcı isteklerini doğrular ve işler</item>
-        <item>Google Drive entegrasyonu için kullanıcı tarafından başlatılan dosya yönetimi isteklerini doğrular ve işler</item>
-        <item>Dropbox entegrasyonu için kullanıcı isteklerini doğrular ve işler</item>
-        <item>Yapılandırdığınız uç nokta aracılığıyla S3 uyumlu bulut depolama için kullanıcı tarafından başlatılan dosya yönetimi isteklerini doğrular ve işler</item>
+        <item>
+Anonim kullanım analitiği
+</item>
+        <item>
+Uygulama dağıtımı, güncellemeler ve uygulama içi incelemeler
+</item>
+        <item>
+İsteğe bağlı uygulama içi bahşiş satın alımlarını işler (yalnızca satın alma tokenları, cihazda)
+</item>
+        <item>
+Microsoft OneDrive entegrasyonu için kullanıcı isteklerini kimlik doğrulama ve işleme
+</item>
+        <item>
+Google Drive entegrasyonu için kullanıcı tarafından başlatılan dosya yönetimi isteklerini kimlik doğrulama ve işleme
+</item>
+        <item>
+Dropbox entegrasyonu için kullanıcı isteklerini kimlik doğrulama ve işleme
+</item>
+        <item>
+Yapılandırdığınız uç nokta aracılığıyla S3 uyumlu bulut depolama için kullanıcı tarafından başlatılan dosya yönetimi isteklerini kimlik doğrulama ve işleme
+</item>
     </string-array>
 
     <!-- Data retention (Section 8) -->
     <string-array name="pp_retention_labels">
-        <item>Yerel Uygulama Verileri</item>
-        <item>Kasa Şifreleme Anahtarları</item>
-        <item>Dizine Alınmış Dosya Meta Verileri</item>
-        <item>Google Drive / OneDrive / Dropbox OAuth Jetonları</item>
-        <item>S3/S3 Uyumlu Erişim Kimlik Bilgileri</item>
-        <item>Firebase Analitik Verileri</item>
+        <item>
+Yerel Uygulama Verileri
+</item>
+        <item>
+Kasa Şifreleme Anahtarları
+</item>
+        <item>
+Dizinlenmiş Dosya Metaverisi
+</item>
+        <item>
+Google Drive / OneDrive / Dropbox OAuth Tokenları
+</item>
+        <item>
+S3 / S3 Uyumlu Erişim Kimlik Bilgileri
+</item>
+        <item>
+Firebase Analytics Verileri
+</item>
     </string-array>
     <string-array name="pp_retention_details">
-        <item>Uygulamayı kaldırana kadar</item>
-        <item>Uygulamayı kaldırana kadar</item>
-        <item>Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla silinene veya uygulama kaldırılana kadar</item>
-        <item>Ayarlar\'da hesabın bağlantısını kesene veya uygulamanın yüklemesi kaldırılıncaya kadar</item>
-        <item>Ayarlar\'da S3 profilini kaldırıncaya kadar veya uygulamanın yüklemesi kaldırılıncaya kadar</item>
-        <item>14 ay (Google\'ın varsayılan saklama süresi)</item>
+        <item>
+Uygulamayı kaldırana kadar
+</item>
+        <item>
+Uygulamayı kaldırana kadar
+</item>
+        <item>
+Ayarlar -> Depolama Dizinleyicisi\\\'nden silinene kadar veya uygulama kaldırılana kadar
+</item>
+        <item>
+Ayarlar\\\'da hesabın bağlantısını kesene kadar veya uygulama kaldırılana kadar
+</item>
+        <item>
+Ayarlar\\\'da S3 profilini kaldırana kadar veya uygulama kaldırılana kadar
+</item>
+        <item>
+14 ay (Google\\\'ın varsayılan saklama süresi)
+</item>
     </string-array>
 
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
-        <item>Yerel olarak depolanan verilerinize doğrudan uygulama aracılığıyla erişin.</item>
-        <item>Öğeleri Apps Kasası\'ndan kaldırarak Apps Kasası verilerini silin.</item>
-        <item>Dizine alınmış dosya meta verilerini Ayarlar -&gt; Depolama Dizini Oluşturucu aracılığıyla yönetin ve silin.</item>
-        <item>Erişimi iptal etmek ve depolanan OAuth jetonlarını silmek için istediğiniz zaman Google Drive, OneDrive veya Dropbox hesabınızın bağlantısını kesin.</item>
-        <item>Saklanan erişim kimlik bilgilerini silmek için istediğiniz zaman Ayarlar aracılığıyla S3 / S3 Uyumlu depolama profillerinizi kaldırın.</item>
-        <item>Paylaşma veya kopyalama özelliklerini kullanarak dosyalarınızı dışa aktarın.</item>
-        <item>Uygulama içindeki Ayarlar → Kullanım Analizi yoluyla Firebase Analytics\'ten istediğiniz zaman vazgeçebilirsiniz; alternatif olarak Android cihazınızın ayarlarını kullanın.</item>
+        <item>
+Yerel olarak depolanan verilerinize doğrudan uygulama üzerinden erişin.
+</item>
+        <item>
+Kasa verilerini, Kasada\\\'ki öğeleri kaldırarak silin.
+</item>
+        <item>
+Dizinlenmiş dosya meta verilerini Ayarlar -> Depolama Dizinleyicisi aracılığıyla yönetin ve silin.
+</item>
+        <item>
+Google Drive, OneDrive veya Dropbox hesabınızın bağlantısını istediğiniz zaman keserek erişimi iptal edin ve depolanan OAuth belirteçlerini silin.
+</item>
+        <item>
+S3 / S3 uyumlu depolama profillerinizi istediğiniz zaman Ayarlar üzerinden kaldırarak depolanan erişim kimlik bilgilerini silin.
+</item>
+        <item>
+Dosyalarınızı paylaşma veya kopyalama özelliklerini kullanarak dışa aktarın.
+</item>
+        <item>
+Firebase Analytics\\\'i istediğiniz zaman uygulama içindeki Ayarlar → Kullanım Analizi üzerinden devre dışı bırakın; alternatif olarak Android cihaz ayarlarınızı kullanın.
+</item>
     </string-array>
 
     <!-- Delete steps (Section 8) -->
     <string-array name="pp_delete_steps">
-        <item>Android Ayarlarını açın ve Uygulamalar\'a gidin.</item>
-        <item>Ultimate File Manager Pro\'yu bulup dokunun.</item>
-        <item>Depolama → Verileri Temizle\'ye dokunun veya uygulamayı kaldırın.</item>
+        <item>
+Android Ayarları\\\'nı açın ve Uygulamalar\\\'a gidin.
+</item>
+        <item>
+Ultimate File Manager Pro\\\'yu bulun ve dokunun.
+</item>
+        <item>
+Depolama → Verileri Temizle\\\'ye dokunun veya uygulamayı kaldırın.
+</item>
     </string-array>
 
     <!-- Play Store compliance table (Section 12) -->
     <string-array name="pp_compliance_labels">
-        <item>Depolama İzinleri</item>
-        <item>Ağ İzinleri</item>
-        <item>Ağ Durumu</item>
-        <item>Çok noktaya yayın</item>
-        <item>Bildirimler</item>
-        <item>Paketleri Yükle</item>
-        <item>Yükseltilmiş Erişim (Shizuku)</item>
-        <item>Depolama Dizini Oluşturucu</item>
-        <item>Sorgu Paketleri</item>
-        <item>Uygulama İçi İncelemeler</item>
-        <item>Lottie Animasyonları</item>
+        <item>
+Depolama İzinleri
+</item>
+        <item>
+Ağ İzinleri
+</item>
+        <item>
+Ağ Durumu
+</item>
+        <item>
+Çoklu Yayın
+</item>
+        <item>
+Bildirimler
+</item>
+        <item>
+Paket Yükleme
+</item>
+        <item>
+Yükseltilmiş Erişim (Shizuku)
+</item>
+        <item>
+Depolama Dizinleyicisi
+</item>
+        <item>
+Paketleri Sorgula
+</item>
+        <item>
+Uygulama İçi Değerlendirmeler
+</item>
+        <item>
+Lottie Animasyonları
+</item>
     </string-array>
     <string-array name="pp_compliance_details">
-        <item>Dosya tarama ve yönetimi</item>
-        <item>Uzaktan dosya yönetimi, SMB/FTP/SFTP/SCP ağ paylaşımları ve yerel Wi-Fi üzerinden cihaz eşleştirme</item>
-        <item>Uzaktan Yönetim ve ağ paylaşımı bağlantısı için VPN algılama</item>
-        <item>Cihaz eşleştirme için yerel ağ cihazı keşfi (NSD/mDNS)</item>
-        <item>İşlem tamamlama uyarıları ve depolama uyarıları</item>
-        <item>Yerel depolamadan APK kurulumu</item>
-        <item>Shizuku API aracılığıyla kısıtlı sistem dizinlerinde gelişmiş dosya yönetimi</item>
-        <item>Hızlı arama için dosya meta verilerini yerel olarak indeksler</item>
-        <item>Uygulama Yöneticisi özelliği</item>
-        <item>Kullanıcı geri bildirimlerini toplamak için Google Play Uygulama İçi İnceleme API\'si</item>
-        <item>Lottie kitaplığı v6.3.0 (com.airbnb.android:lottie) aracılığıyla uygulama genelinde akıcı kullanıcı arayüzü animasyonları oluşturur</item>
+        <item>
+Dosya gezinme ve yönetimi
+</item>
+        <item>
+Uzak dosya yönetimi, SMB/FTP/SFTP/SCP/NFS ağ paylaşımları ve yerel Wi-Fi üzerinden cihaz eşleştirme
+</item>
+        <item>
+Uzak Yönetim ve ağ paylaşım bağlantısı için VPN algılama
+</item>
+        <item>
+Cihaz eşleştirme için yerel ağ cihaz keşfi (NSD/mDNS)
+</item>
+        <item>
+İşlem tamamlanma uyarıları ve depolama uyarıları
+</item>
+        <item>
+Yerel depolamadan APK yükleme
+</item>
+        <item>
+Shizuku API aracılığıyla kısıtlı sistem dizinlerinde gelişmiş dosya yönetimi
+</item>
+        <item>
+Hızlı arama için dosya meta verilerini yerel olarak dizinler
+</item>
+        <item>
+Uygulama Yöneticisi ve Debloater özellikleri — yalnızca cihaz üzerinde yüklü paket adlarını, sürümlerini, boyutlarını ve sistem/kullanıcı bayraklarını okur. Yüklenmez veya paylaşılmaz. Debloater, paket adlarını yerel olarak herkese açık bir debloat referans listesiyle karşılaştırır.
+</item>
+        <item>
+Kullanıcı geri bildirimi toplamak için Google Play Uygulama İçi İnceleme API\\\'si
+</item>
+        <item>
+Uygulama genelinde Lottie kitaplığı v6.3.0 (com.airbnb.android:lottie) aracılığıyla akıcı UI animasyonları oluşturur
+</item>
     </string-array>
 
     <!-- Contact (Section 13) -->
     <string-array name="pp_contact_labels">
-        <item>E-posta</item>
+        <item>
+E-posta
+</item>
     </string-array>
     <string-array name="pp_contact_values">
-        <item>support@kilowatch.co.za</item>
+        <item>
+support@kilowatch.co.za
+</item>
     </string-array>
 
 </resources>
