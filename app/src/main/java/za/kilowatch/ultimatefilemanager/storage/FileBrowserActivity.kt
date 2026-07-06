@@ -99,7 +99,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isCertPickerMode = false
     private var selectedKeyFilePath: String? = null
     private lateinit var fabPaste: ExtendedFloatingActionButton
-    private lateinit var fabProperties: ExtendedFloatingActionButton
+    private var fabProperties: ExtendedFloatingActionButton? = null
     private lateinit var fileAdapter: FileAdapter
     private var layoutBreadcrumbsScroll: android.widget.HorizontalScrollView? = null
     private var layoutBreadcrumbs: android.widget.LinearLayout? = null
@@ -931,7 +931,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
-        fabProperties = findViewById(R.id.fabProperties)
+        fabProperties = findViewById(R.id.fabProperties) // nullable — absent in TV layout
 
         // Apply custom toolbar action icons
         applyCustomToolbarIcons()
@@ -1434,7 +1434,7 @@ class FileBrowserActivity : AppCompatActivity() {
             showClipboardSheet()
         }
 
-        fabProperties.setOnClickListener {
+        fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -1554,17 +1554,17 @@ class FileBrowserActivity : AppCompatActivity() {
             val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
             
             if (!DeviceUtils.isTvDevice(this) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                fabProperties.visibility = View.VISIBLE
+                fabProperties?.visibility = View.VISIBLE
                 fabPaste.visibility = View.GONE
                 if (selectedFiles.size > 1) {
-                    fabProperties.setText(R.string.action_tag)
-                    fabProperties.setIconResource(R.drawable.ic_edit)
+                    fabProperties?.setText(R.string.action_tag)
+                    fabProperties?.setIconResource(R.drawable.ic_edit)
                 } else {
-                    fabProperties.setText(R.string.action_properties)
-                    fabProperties.setIconResource(R.drawable.ic_about)
+                    fabProperties?.setText(R.string.action_properties)
+                    fabProperties?.setIconResource(R.drawable.ic_about)
                 }
             } else {
-                fabProperties.visibility = View.GONE
+                fabProperties?.visibility = View.GONE
                 updatePasteFab()
             }
 
@@ -1576,7 +1576,7 @@ class FileBrowserActivity : AppCompatActivity() {
         } else {
             layoutSelectionBar.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-            fabProperties.visibility = View.GONE
+            fabProperties?.visibility = View.GONE
             updatePasteFab()
         }
     }

@@ -99,7 +99,7 @@ class NetworkBrowserFragment : Fragment() {
     private lateinit var txtSelectionCount: TextView
     private lateinit var layoutEmpty: View
     private lateinit var fabPaste: ExtendedFloatingActionButton
-    private lateinit var fabProperties: ExtendedFloatingActionButton
+    private var fabProperties: ExtendedFloatingActionButton? = null
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
     private var isOptionsVisible = false
@@ -242,7 +242,7 @@ class NetworkBrowserFragment : Fragment() {
             }
         }
         
-        fabProperties.setOnClickListener {
+        fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -668,17 +668,17 @@ class NetworkBrowserFragment : Fragment() {
                 val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
                 
                 if (!DeviceUtils.isTvDevice(requireContext()) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                    fabProperties.visibility = View.VISIBLE
+                    fabProperties?.visibility = View.VISIBLE
                     fabPaste.visibility = View.GONE
                     if (selectedFiles.size > 1) {
-                        fabProperties.setText(R.string.action_tag)
-                        fabProperties.setIconResource(R.drawable.ic_edit)
+                        fabProperties?.setText(R.string.action_tag)
+                        fabProperties?.setIconResource(R.drawable.ic_edit)
                     } else {
-                        fabProperties.setText(R.string.action_properties)
-                        fabProperties.setIconResource(R.drawable.ic_about)
+                        fabProperties?.setText(R.string.action_properties)
+                        fabProperties?.setIconResource(R.drawable.ic_about)
                     }
                 } else {
-                    fabProperties.visibility = View.GONE
+                    fabProperties?.visibility = View.GONE
                     updatePasteFab()
                 }
             }
@@ -688,7 +688,7 @@ class NetworkBrowserFragment : Fragment() {
             view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
             view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar as ViewGroup)
-            fabProperties.visibility = View.GONE
+            fabProperties?.visibility = View.GONE
             updatePasteFab()
         }
     }

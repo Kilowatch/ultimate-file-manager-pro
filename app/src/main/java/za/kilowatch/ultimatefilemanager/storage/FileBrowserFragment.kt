@@ -77,7 +77,7 @@ class FileBrowserFragment : Fragment() {
     private var layoutOptionsRow: View? = null
     private var isOptionsVisible = false
     private lateinit var fabPaste: ExtendedFloatingActionButton
-    private lateinit var fabProperties: ExtendedFloatingActionButton
+    private var fabProperties: ExtendedFloatingActionButton? = null
     private lateinit var fileAdapter: FileAdapter
     
     private val batchRenameTvLauncher = registerForActivityResult(
@@ -571,7 +571,7 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
-        fabProperties.setOnClickListener {
+        fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -748,22 +748,22 @@ class FileBrowserFragment : Fragment() {
             val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
             
             if (!DeviceUtils.isTvDevice(requireContext()) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                fabProperties.visibility = View.VISIBLE
+                fabProperties?.visibility = View.VISIBLE
                 fabPaste.visibility = View.GONE
                 if (selectedFiles.size > 1) {
-                    fabProperties.setText(R.string.action_tag)
-                    fabProperties.setIconResource(R.drawable.ic_edit)
+                    fabProperties?.setText(R.string.action_tag)
+                    fabProperties?.setIconResource(R.drawable.ic_edit)
                 } else {
-                    fabProperties.setText(R.string.action_properties)
-                    fabProperties.setIconResource(R.drawable.ic_about)
+                    fabProperties?.setText(R.string.action_properties)
+                    fabProperties?.setIconResource(R.drawable.ic_about)
                 }
             } else {
-                fabProperties.visibility = View.GONE
+                fabProperties?.visibility = View.GONE
                 updatePasteFab()
             }
         } else {
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-            fabProperties.visibility = View.GONE
+            fabProperties?.visibility = View.GONE
             updatePasteFab()
         }
     }

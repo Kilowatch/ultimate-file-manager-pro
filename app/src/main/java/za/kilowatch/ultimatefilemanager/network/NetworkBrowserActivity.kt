@@ -208,7 +208,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var isSearchVisible = false
     private var searchJob: kotlinx.coroutines.Job? = null
     private lateinit var fabPaste: ExtendedFloatingActionButton
-    private lateinit var fabProperties: ExtendedFloatingActionButton
+    private var fabProperties: ExtendedFloatingActionButton? = null
 
     // TV-only: inline clipboard panel (avoids BottomSheetDialog clipping on TV)
     private var tvClipboardPanel: View? = null
@@ -1040,7 +1040,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         fabPaste.setOnClickListener { showClipboardSheet() }
 
-        fabProperties.setOnClickListener {
+        fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -1646,23 +1646,23 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
             
             if (!DeviceUtils.isTvDevice(this) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                fabProperties.visibility = View.VISIBLE
+                fabProperties?.visibility = View.VISIBLE
                 fabPaste.visibility = View.GONE
                 if (selectedFiles.size > 1) {
-                    fabProperties.setText(R.string.action_tag)
-                    fabProperties.setIconResource(R.drawable.ic_edit)
+                    fabProperties?.setText(R.string.action_tag)
+                    fabProperties?.setIconResource(R.drawable.ic_edit)
                 } else {
-                    fabProperties.setText(R.string.action_properties)
-                    fabProperties.setIconResource(R.drawable.ic_about)
+                    fabProperties?.setText(R.string.action_properties)
+                    fabProperties?.setIconResource(R.drawable.ic_about)
                 }
             } else {
-                fabProperties.visibility = View.GONE
+                fabProperties?.visibility = View.GONE
                 updatePasteFab()
             }
         } else {
             layoutSelectionBar.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-            fabProperties.visibility = View.GONE
+            fabProperties?.visibility = View.GONE
             updatePasteFab()
         }
     }
