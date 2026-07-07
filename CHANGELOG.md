@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Robolectric and AndroidX test dependencies to the unit test suite.
 
 ### Changed
-- Scoped to Mobile/Tablet layouts, moved selection toolbar actions (Copy, Cut/Move, Rename, Share, Favorite, Hide, Unhide, Protect, Unprotect, Copy Encrypt, Move Encrypt, Compress, Compress Image, and Delete) into a modern, scrolling "Tools" bottom sheet dialog triggered by a new "Tools" FAB positioned above the "Properties" FAB. Only "Select All" remains visible on the screen selection row on mobile (centered as a pill in twin-window mode). TV layouts remain completely unaffected.
+- Scoped to Mobile/Tablet layouts, moved selection toolbar actions (Copy, Cut/Move, Rename, Share, Favorite, Hide, Unhide, Protect, Unprotect, Copy Encrypt, Move Encrypt, Compress, Compress Image, Delete, Properties, and Tags) into a modern, scrolling "Tools" bottom sheet dialog triggered by a new "Tools" FAB. The standalone "Properties" and "Tag" FAB has been removed from the screen on mobile. Only "Select All" remains visible on the screen selection row (centered as a pill in twin-window mode). TV layouts remain completely unaffected.
 
 ## [1.6.4] — 2026-07-05
 

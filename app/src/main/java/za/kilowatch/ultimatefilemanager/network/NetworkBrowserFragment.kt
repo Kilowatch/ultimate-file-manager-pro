@@ -237,7 +237,6 @@ class NetworkBrowserFragment : Fragment() {
         txtSelectionCount = view.findViewById(R.id.txtSelectionCount)
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
         fabPaste = view.findViewById(R.id.fabPaste)
-        fabProperties = view.findViewById(R.id.fabProperties)
         fabTools = view.findViewById(R.id.fabTools)
         fabPaste.setOnClickListener {
             val act = activity
@@ -359,6 +358,35 @@ class NetworkBrowserFragment : Fragment() {
                             loadDirectory()
                             android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unprotected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
                         }
+                    }
+                })
+            }
+
+            // 14. Properties
+            if (count == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                list.add(FileToolsBottomSheet.ActionItem("properties", getString(R.string.action_properties), R.drawable.ic_about, "toolbar_properties") {
+                    val sheet = FilePropertiesBottomSheet.newInstance(
+                        filePath = file.path,
+                        isDirectory = false,
+                        size = file.size,
+                        lastModified = file.lastModified,
+                        isNetwork = true
+                    )
+                    sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
+                })
+            }
+
+            // 15. Tag
+            val isMultiFileOnly = selected.size > 1 && selected.all { !it.isDirectory }
+            val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
+            val isMultiTaggingEnabledPref = prefs.getBoolean("pref_multi_file_tagging", false)
+            if (isMultiTaggingEnabledPref && isMultiFileOnly) {
+                list.add(FileToolsBottomSheet.ActionItem("tag", getString(R.string.action_tag), R.drawable.ic_edit, "toolbar_tag") {
+                    val filePaths = selected.map { it.path }
+                    FileTagsManager.showMultiFileTagDialog(requireContext(), filePaths) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
                     }
                 })
             }
@@ -811,20 +839,8 @@ class NetworkBrowserFragment : Fragment() {
                 val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
                 val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
                 
-                if (!DeviceUtils.isTvDevice(requireContext()) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                    fabProperties?.visibility = View.VISIBLE
-                    fabPaste.visibility = View.GONE
-                    if (selectedFiles.size > 1) {
-                        fabProperties?.setText(R.string.action_tag)
-                        fabProperties?.setIconResource(R.drawable.ic_edit)
-                    } else {
-                        fabProperties?.setText(R.string.action_properties)
-                        fabProperties?.setIconResource(R.drawable.ic_about)
-                    }
-                } else {
-                    fabProperties?.visibility = View.GONE
-                    updatePasteFab()
-                }
+                fabProperties?.visibility = View.GONE
+                updatePasteFab()
             }
             if (!isTv) {
                 fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE

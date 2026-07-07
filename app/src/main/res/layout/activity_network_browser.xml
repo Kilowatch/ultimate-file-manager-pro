@@ -606,27 +606,10 @@
         android:id="@+id/fabTools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_md"
+        android:layout_margin="@dimen/margin_md"
         android:text="@string/action_tools"
         android:textColor="?attr/colorOnPrimary"
         app:icon="@drawable/ic_settings"
-        app:iconTint="?attr/colorOnPrimary"
-        app:backgroundTint="?attr/colorPrimary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/fabProperties"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/margin_md"
-        app:layout_goneMarginBottom="@dimen/margin_md" />
-
-    <!-- Properties FAB -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabProperties"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_md"
-        android:text="@string/action_properties"
-        android:textColor="?attr/colorOnPrimary"
-        app:icon="@drawable/ic_about"
         app:iconTint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"

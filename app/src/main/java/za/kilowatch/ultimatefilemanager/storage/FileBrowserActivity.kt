@@ -933,7 +933,6 @@ class FileBrowserActivity : AppCompatActivity() {
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
-        fabProperties = findViewById(R.id.fabProperties) // nullable — absent in TV layout
         fabTools = findViewById(R.id.fabTools)
 
         // Apply custom toolbar action icons
@@ -1647,6 +1646,35 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // 14. Properties
+            if (count == 1 && !selected.first().isDirectory) {
+                val file = selected.first()
+                list.add(FileToolsBottomSheet.ActionItem("properties", getString(R.string.action_properties), R.drawable.ic_about, "toolbar_properties") {
+                    val sheet = FilePropertiesBottomSheet.newInstance(
+                        filePath = file.absolutePath,
+                        isDirectory = false,
+                        size = file.length(),
+                        lastModified = file.lastModified(),
+                        isNetwork = false
+                    )
+                    sheet.show(supportFragmentManager, FilePropertiesBottomSheet.TAG)
+                })
+            }
+
+            // 15. Tag
+            val isMultiFileOnly = selected.size > 1 && selected.all { !it.isDirectory }
+            val prefs = getSharedPreferences("ufm_prefs", MODE_PRIVATE)
+            val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
+            if (isMultiTaggingEnabled && isMultiFileOnly) {
+                list.add(FileToolsBottomSheet.ActionItem("tag", getString(R.string.action_tag), R.drawable.ic_edit, "toolbar_tag") {
+                    val filePaths = selected.map { it.absolutePath }
+                    FileTagsManager.showMultiFileTagDialog(this@FileBrowserActivity, filePaths) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                    }
+                })
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -1762,20 +1790,8 @@ class FileBrowserActivity : AppCompatActivity() {
             val isMultiTaggingEnabled = prefs.getBoolean("pref_multi_file_tagging", false)
             val isMultiFileOnly = selectedFiles.size > 1 && selectedFiles.all { !it.isDirectory }
             
-            if (!DeviceUtils.isTvDevice(this) && (isSingleFile || (isMultiTaggingEnabled && isMultiFileOnly))) {
-                fabProperties?.visibility = View.VISIBLE
-                fabPaste.visibility = View.GONE
-                if (selectedFiles.size > 1) {
-                    fabProperties?.setText(R.string.action_tag)
-                    fabProperties?.setIconResource(R.drawable.ic_edit)
-                } else {
-                    fabProperties?.setText(R.string.action_properties)
-                    fabProperties?.setIconResource(R.drawable.ic_about)
-                }
-            } else {
-                fabProperties?.visibility = View.GONE
-                updatePasteFab()
-            }
+            fabProperties?.visibility = View.GONE
+            updatePasteFab()
 
             if (fileAdapter.isAllSelected()) {
                 btnSelectAll.text = getString(R.string.action_deselect_all)
