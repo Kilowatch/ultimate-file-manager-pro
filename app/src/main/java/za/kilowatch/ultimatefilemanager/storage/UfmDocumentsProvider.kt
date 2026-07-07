@@ -37,6 +37,8 @@ import android.system.OsConstants
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.Dispatchers
 
+private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+
 /**
  * Exposes UFM's storage volumes AND configured network shares (SMB/FTP) through the
  * Android Storage Access Framework.
@@ -593,7 +595,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         if (!file.exists() || !file.isFile) return null
         val ext = file.extension.lowercase()
         val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-        val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+        val isVideo = ext in VIDEO_EXTENSIONS
         if (!isImage && !isVideo) return null
 
         return try {
@@ -609,18 +611,27 @@ class UfmDocumentsProvider : DocumentsProvider() {
                 android.graphics.BitmapFactory.decodeFile(absPath, opts)
             } else {
                 // Video thumbnail
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    try {
-                        android.media.ThumbnailUtils.createVideoThumbnail(
-                            file, android.util.Size(hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64)), signal
-                        )
-                    } catch (_: Exception) { null }
-                } else {
-                    @Suppress("DEPRECATION")
-                    android.media.ThumbnailUtils.createVideoThumbnail(
-                        absPath, android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                    )
+                val pct = context?.let { za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(it) } ?: 5
+                var vidBmp: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                    absPath, pct, hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64)
+                )
+                if (vidBmp == null) {
+                    vidBmp = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        try {
+                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                file, android.util.Size(hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64)), signal
+                            )
+                        } catch (_: Exception) { null }
+                    } else {
+                        try {
+                            @Suppress("DEPRECATION")
+                            android.media.ThumbnailUtils.createVideoThumbnail(
+                                absPath, android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                            )
+                        } catch (_: Exception) { null }
+                    }
                 }
+                vidBmp
             }
             if (bitmap == null) return null
 
@@ -994,10 +1005,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
             // Advertise thumbnail support for images and videos so picker apps
             // (e.g. Projectivity) know they can call openDocumentThumbnail()
             val ext = file.extension.lowercase()
-            val hasThumbnail = ext in listOf(
-                "jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif",
-                "mp4", "mkv", "avi", "mov", "3gp", "webm"
-            )
+            val hasThumbnail = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif") || ext in VIDEO_EXTENSIONS
             if (hasThumbnail) flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
         }
         return flags

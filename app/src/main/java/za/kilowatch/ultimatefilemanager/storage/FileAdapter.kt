@@ -37,6 +37,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+
 sealed class ListItem {
     data class Header(val year: Int, val month: Int, val count: Int, val isCollapsed: Boolean = false) : ListItem()
     data class FileEntry(val javaFile: java.io.File) : ListItem()
@@ -445,7 +447,7 @@ class FileAdapter(
 
             val ext = file.extension.lowercase()
             val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-            val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+            val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
             val isThumbnail = !file.isDirectory && showThumbnails && (isImage || isVideo || isApk)
@@ -577,7 +579,7 @@ class FileAdapter(
             } else {
                 val ext = file.extension.lowercase()
                 val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-                val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+                val isVideo = ext in VIDEO_EXTENSIONS
                 val isApk = ext in listOf("apk", "xapk", "apks")
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
 
@@ -835,34 +837,40 @@ class FileAdapter(
 
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        val bitmap: android.graphics.Bitmap? = try {
-                            val retriever = android.media.MediaMetadataRetriever()
-                            try {
-                                retriever.setDataSource(file.absolutePath)
-                                val durationMs = retriever.extractMetadata(
-                                    android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
-                                )?.toLongOrNull() ?: 0L
-                                val durationUs = durationMs * 1000L
-                                val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
-                                val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
-                                val raw = retriever.getFrameAtTime(
-                                    timeUs,
-                                    android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-                                )
-                                if (raw != null) {
-                                    val maxPx = 512
-                                    val w = raw.width; val h = raw.height
-                                    if (w <= maxPx && h <= maxPx) raw else {
-                                        val scale = maxPx.toFloat() / maxOf(w, h)
-                                        android.graphics.Bitmap.createScaledBitmap(raw,
-                                            (w * scale).toInt().coerceAtLeast(1),
-                                            (h * scale).toInt().coerceAtLeast(1), true)
-                                    }
-                                } else null
-                            } finally {
-                                try { retriever.release() } catch (_: Exception) {}
-                            }
-                        } catch (_: Throwable) { null }
+                        val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                        var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                            file.absolutePath, pct, 512, 512
+                        )
+
+                        if (bitmap == null) {
+                            bitmap = try {
+                                val retriever = android.media.MediaMetadataRetriever()
+                                try {
+                                    retriever.setDataSource(file.absolutePath)
+                                    val durationMs = retriever.extractMetadata(
+                                        android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                                    )?.toLongOrNull() ?: 0L
+                                    val durationUs = durationMs * 1000L
+                                    val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
+                                    val raw = retriever.getFrameAtTime(
+                                        timeUs,
+                                        android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                                    )
+                                    if (raw != null) {
+                                        val maxPx = 512
+                                        val w = raw.width; val h = raw.height
+                                        if (w <= maxPx && h <= maxPx) raw else {
+                                            val scale = maxPx.toFloat() / maxOf(w, h)
+                                            android.graphics.Bitmap.createScaledBitmap(raw,
+                                                (w * scale).toInt().coerceAtLeast(1),
+                                                (h * scale).toInt().coerceAtLeast(1), true)
+                                        }
+                                    } else null
+                                } finally {
+                                    try { retriever.release() } catch (_: Exception) {}
+                                }
+                            } catch (_: Throwable) { null }
+                        }
 
                         withContext(Dispatchers.Main) {
                             if (imgIcon.tag == file.absolutePath) {
@@ -964,7 +972,7 @@ class FileAdapter(
         private fun loadThumbnail(file: File) {
             val ext = file.extension.lowercase()
             val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-            val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+            val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
 
             if (!isImage && !isVideo && !isApk) {
@@ -1044,19 +1052,26 @@ class FileAdapter(
                     
                     @OptIn(DelicateCoroutinesApi::class)
                     videoJob = GlobalScope.launch(Dispatchers.IO) {
-                        val bitmap: android.graphics.Bitmap? = try {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                android.media.ThumbnailUtils.createVideoThumbnail(
-                                    file, android.util.Size(480, 480), null
-                                )
-                            } else {
-                                @Suppress("DEPRECATION")
-                                android.media.ThumbnailUtils.createVideoThumbnail(
-                                    file.absolutePath,
-                                    android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                )
-                            }
-                        } catch (_: Throwable) { null }
+                        val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                        var bitmap: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                            file.absolutePath, pct, 480, 480
+                        )
+
+                        if (bitmap == null) {
+                            bitmap = try {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                    android.media.ThumbnailUtils.createVideoThumbnail(
+                                        file, android.util.Size(480, 480), null
+                                    )
+                                } else {
+                                    @Suppress("DEPRECATION")
+                                    android.media.ThumbnailUtils.createVideoThumbnail(
+                                        file.absolutePath,
+                                        android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                    )
+                                }
+                            } catch (_: Throwable) { null }
+                        }
 
                         withContext(Dispatchers.Main) {
                             if (imgIcon.tag == file.absolutePath) {
@@ -1158,7 +1173,7 @@ class FileAdapter(
         private fun applyGridTextColor(file: File) {
             val ext = file.extension.lowercase()
             val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-            val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+            val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
             val hasThumbnail = !file.isDirectory && showThumbnails && (isImage || isVideo || isApk)

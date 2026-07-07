@@ -60,6 +60,8 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 
+private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+
 /**
  * A custom document picker for UFM.
  * Used on devices that lack a system-level document browser (common on Android TV).
@@ -573,7 +575,7 @@ class SafPickerActivity : AppCompatActivity() {
                 val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty()) File(item.path) else null
                 val ext = file?.extension?.lowercase() ?: ""
                 val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
-                val isVideo = ext in listOf("mp4", "mkv", "avi", "mov", "3gp", "webm")
+                val isVideo = ext in VIDEO_EXTENSIONS
                 val canShowThumb = showThumbnails && file != null && (isImage || isVideo)
 
                 icon.imageTintList = null
@@ -602,19 +604,28 @@ class SafPickerActivity : AppCompatActivity() {
                         icon.setImageResource(item.iconRes)
                         @OptIn(DelicateCoroutinesApi::class)
                         videoJob = GlobalScope.launch(Dispatchers.IO) {
-                            val bitmap: android.graphics.Bitmap? = try {
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                                    android.media.ThumbnailUtils.createVideoThumbnail(
-                                        file!!, android.util.Size(256, 256), null
-                                    )
-                                } else {
-                                    @Suppress("DEPRECATION")
-                                    android.media.ThumbnailUtils.createVideoThumbnail(
-                                        file!!.absolutePath,
-                                        android.provider.MediaStore.Video.Thumbnails.MINI_KIND
-                                    )
-                                }
-                            } catch (_: Throwable) { null }
+                            val pct = za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(itemView.context)
+                            var bitmap: android.graphics.Bitmap? = if (file != null) {
+                                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                    file!!.absolutePath, pct, 256, 256
+                                )
+                            } else null
+
+                            if (bitmap == null) {
+                                bitmap = try {
+                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                                        android.media.ThumbnailUtils.createVideoThumbnail(
+                                            file!!, android.util.Size(256, 256), null
+                                        )
+                                    } else {
+                                        @Suppress("DEPRECATION")
+                                        android.media.ThumbnailUtils.createVideoThumbnail(
+                                            file!!.absolutePath,
+                                            android.provider.MediaStore.Video.Thumbnails.MINI_KIND
+                                        )
+                                    }
+                                } catch (_: Throwable) { null }
+                            }
 
                             withContext(Dispatchers.Main) {
                                 if (bitmap != null) {

@@ -38,3 +38,39 @@ target_link_libraries(nfs_jni
     nfs       # libnfs static lib
     log       # Android __android_log_print
 )
+
+
+# ── FFmpeg JNI wrapper shared library ──────────────────────────────────────
+if (ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "armeabi-v7a")
+    # Define the paths based on target ABI
+    set(FFMPEG_LIBS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}")
+
+    # Helper function to import FFmpeg shared libraries
+    function(import_ffmpeg_lib name)
+        add_library(${name} SHARED IMPORTED)
+        set_target_properties(${name} PROPERTIES
+            IMPORTED_LOCATION "${FFMPEG_LIBS_DIR}/lib${name}.so"
+        )
+    endfunction()
+
+    import_ffmpeg_lib(avutil)
+    import_ffmpeg_lib(avcodec)
+    import_ffmpeg_lib(avformat)
+    import_ffmpeg_lib(swscale)
+
+    add_library(ffmpeg_jni SHARED ffmpeg_jni.c)
+
+    target_include_directories(ffmpeg_jni PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg_include
+    )
+
+    target_link_libraries(ffmpeg_jni
+        avformat
+        avcodec
+        avutil
+        swscale
+        jnigraphics
+        log
+    )
+endif()
+

@@ -5,6 +5,14 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.5] — 2026-07-07
+
+### Added
+- Integrated LGPL-only FFmpeg dynamic compilation fallback for ARM architectures (arm64-v8a, armeabi-v7a) to generate video thumbnails.
+- Added JNI fallback frame extraction covering all video formats for local, network (SMB, FTP, SFTP, NFS, WebDAV, DLNA), and cloud (Google Drive, OneDrive, Dropbox, S3) views.
+- Added detailed debug diagnostics and GoRoLog logging tracing FFmpeg initialization and thumbnail extraction.
+- Configured ProGuard keep rules to prevent obfuscation or stripping of JNI class helpers and C entry symbols.
+
 ## [1.6.4] — 2026-07-05
 
 ### Added

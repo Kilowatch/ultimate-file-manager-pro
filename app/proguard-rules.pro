@@ -324,3 +324,10 @@
 -keepclassmembers class go.** { *; }
 -keep class go.Seq { *; }
 -keep class org.rclone.** { *; }
+
+# ── FFmpeg JNI Fallback ──────────────────────────────────
+# Keep the native helper class and its native methods to prevent UnsatisfiedLinkError
+-keep class za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper {
+    native <methods>;
+    *;
+}

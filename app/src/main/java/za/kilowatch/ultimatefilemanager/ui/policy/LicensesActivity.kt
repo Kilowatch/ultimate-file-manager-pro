@@ -185,6 +185,9 @@ class LicensesActivity : AppCompatActivity() {
             if (list.none { it.name.contains("rclone", ignoreCase = true) }) {
                 list.add(LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"))
             }
+            if (list.none { it.name.contains("ffmpeg", ignoreCase = true) }) {
+                list.add(LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"))
+            }
 
             list.sortedBy { it.name.lowercase() }
         } catch (e: Exception) {
@@ -214,6 +217,7 @@ class LicensesActivity : AppCompatActivity() {
         LibInfo(getString(R.string.coil_iocoilkt), "3.4.0", "Apache-2.0", "https://github.com/coil-kt/coil"),
         LibInfo(getString(R.string.apng4android_comgithubpenfeizhou), "3.0.0", "Apache-2.0", "https://github.com/penfeizhou/APNG4Android"),
         LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"),
+        LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"),
     )
 
     // ── View builders ─────────────────────────────────────────────────────────

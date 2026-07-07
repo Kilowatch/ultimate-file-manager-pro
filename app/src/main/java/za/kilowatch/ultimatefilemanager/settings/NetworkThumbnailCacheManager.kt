@@ -39,10 +39,9 @@ class NetworkThumbnailCacheManager(private val context: Context) {
          */
         private val extractionSemaphore = Semaphore(3)
 
-        // Extensions treated as "video" — also used in NetworkFileAdapter's media check.
         val VIDEO_EXTENSIONS = setOf(
             "mp4", "mkv", "avi", "mov", "m4v", "3gp", "webm", "wmv", "vob", "ogv",
-            "ts", "m2ts", "mts", "flv"
+            "ts", "m2ts", "mts", "flv", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid"
         )
 
         /**
@@ -211,8 +210,9 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                         try { (retriever as? android.media.MediaDataSource)?.close() } catch (_: Exception) {}
                         randomAccess?.close()
                     }
+                }
 
-                } else {
+                if (finalBitmap == null) {
                     // ── Stream / download path ─────────────────────────────────────────────
                     try {
                         val inputStream: InputStream = when (share.type) {
@@ -291,33 +291,34 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                         }
                                     }
                                 } else if (isVideo) {
-                                    val rawFrame: Bitmap? = try {
-                                        val localRetriever = android.media.MediaMetadataRetriever()
-                                        try {
-                                            localRetriever.setDataSource(tempFile.absolutePath)
-                                            val durationMs = localRetriever.extractMetadata(
-                                                android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
-                                            )?.toLongOrNull() ?: 0L
-                                            val durationUs = durationMs * 1000L
-                                            val pct = VideoThumbnailTimePreferenceManager.getPercent(context)
-                                            val timeUs = if (durationUs > 0) durationUs * pct / 100L else 0L
-                                            localRetriever.getFrameAtTime(
-                                                timeUs,
-                                                android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-                                            )
-                                        } finally {
-                                            try { localRetriever.release() } catch (_: Exception) {}
+                                    val pct = VideoThumbnailTimePreferenceManager.getPercent(context)
+                                    var extractedFrame: Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
+                                        tempFile.absolutePath,
+                                        pct,
+                                        THUMB_MAX_PX,
+                                        THUMB_MAX_PX
+                                    )
+
+                                    if (extractedFrame == null) {
+                                        extractedFrame = try {
+                                            val localRetriever = android.media.MediaMetadataRetriever()
+                                            try {
+                                                localRetriever.setDataSource(tempFile.absolutePath)
+                                                val durationMs = localRetriever.extractMetadata(
+                                                    android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                                                )?.toLongOrNull() ?: 0L
+                                                val timeUs = if (durationMs > 0) durationMs * 1000L * pct / 100L else 0L
+                                                localRetriever.getFrameAtTime(timeUs, android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
+                                            } finally {
+                                                localRetriever.release()
+                                            }
+                                        } catch (_: Exception) {
+                                            null
                                         }
-                                    } catch (oom: OutOfMemoryError) {
-                                        GoRoLog.e("UFM_CACHE", "OOM in MediaMetadataRetriever for ${networkFile.path} — nudging GC", oom)
-                                        System.gc()
-                                        null
-                                    } catch (e: Exception) {
-                                        GoRoLog.e("UFM_CACHE", "Video thumb gen failed for ${networkFile.path}: ${e.message}")
-                                        null
                                     }
-                                    finalBitmap = rawFrame?.let { scaleBitmap(it) }
-                                    rawFrame?.takeIf { it !== finalBitmap }?.recycle()
+
+                                    finalBitmap = extractedFrame?.let { scaleBitmap(it) }
+                                    extractedFrame?.takeIf { it !== finalBitmap }?.recycle()
                                 }
                             }
                         }

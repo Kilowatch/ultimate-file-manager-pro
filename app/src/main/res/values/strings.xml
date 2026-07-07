@@ -2299,6 +2299,7 @@
     <string name="used">used</string>
     <string name="android_tv">Android TV</string>
     <string name="jcifsng_euagno3">jcifs-ng (eu.agno3)</string>
+    <string name="ffmpeg_lgpl_build">FFmpeg (LGPL Build)</string>
     <string name="smbj_hierynomus">smbj (hierynomus)</string>
     <string name="apache_commons_net">Apache Commons Net</string>
     <string name="apache_commons_compress">Apache Commons Compress</string>

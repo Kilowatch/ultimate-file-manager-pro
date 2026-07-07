@@ -6594,6 +6594,9 @@ Android TV
     <string name="jcifsng_euagno3">
 jcifs-ng (eu.agno3)
 </string>
+    <string name="ffmpeg_lgpl_build">
+FFmpeg (LGPL Derlemesi)
+</string>
     <string name="smbj_hierynomus">
 smbj (hierynomus)
 </string>
