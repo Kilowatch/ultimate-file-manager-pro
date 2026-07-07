@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added JNI fallback frame extraction covering all video formats for local, network (SMB, FTP, SFTP, NFS, WebDAV, DLNA), and cloud (Google Drive, OneDrive, Dropbox, S3) views.
 - Added detailed debug diagnostics and GoRoLog logging tracing FFmpeg initialization and thumbnail extraction.
 - Configured ProGuard keep rules to prevent obfuscation or stripping of JNI class helpers and C entry symbols.
+- Added case-insensitive name-based and path-based filtering rules to hide OS-specific and system-generated metadata and junk files/folders (such as `Thumbs.db`, `desktop.ini`, `$RECYCLE.BIN`, `@eaDir`, and `#recycle`) when "Show hidden files" is disabled. Applied across local and network browser lists, search results, and system file picker interactions (SAF).
+- Added Robolectric and AndroidX test dependencies to the unit test suite.
 
 ## [1.6.4] — 2026-07-05
 

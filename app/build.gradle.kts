@@ -440,6 +440,8 @@ dependencies {
     implementation(files("libs/rclone.aar"))
 
     testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.12.1")
+    testImplementation("androidx.test:core:1.6.1")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

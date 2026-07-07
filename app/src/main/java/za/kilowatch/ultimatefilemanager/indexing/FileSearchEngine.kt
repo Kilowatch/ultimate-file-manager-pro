@@ -5,6 +5,7 @@ import android.util.LruCache
 import kotlinx.coroutines.flow.Flow
 import za.kilowatch.ultimatefilemanager.indexing.SearchQueryParser.hasFilters
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 
 /**
  * File Search Engine - Provides fast searching across indexed files.
@@ -154,7 +155,7 @@ class FileSearchEngine(
             } else {
                 val hiddenDao = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(context).hiddenFileDao()
                 val hiddenPaths = hiddenDao.getAllPaths().toSet()
-                rawResults.filter { it.path !in hiddenPaths }
+                rawResults.filter { it.path !in hiddenPaths && !HiddenFilesManager.isPathJunkOrHidden(it.path) }
             }
         } catch (e: Exception) {
             GoRoLog.e(TAG, "searchSmart FTS/filter failed, falling back to LIKE: ${e.message}")
@@ -168,7 +169,7 @@ class FileSearchEngine(
             } else {
                 val hiddenDao = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(context).hiddenFileDao()
                 val hiddenPaths = hiddenDao.getAllPaths().toSet()
-                rawResults.filter { it.path !in hiddenPaths }
+                rawResults.filter { it.path !in hiddenPaths && !HiddenFilesManager.isPathJunkOrHidden(it.path) }
             }
         }
 

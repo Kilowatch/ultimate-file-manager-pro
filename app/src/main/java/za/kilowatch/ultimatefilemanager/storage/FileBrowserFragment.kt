@@ -42,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import java.io.File
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 
 /**
  * Reusable Fragment for browsing files.
@@ -1550,7 +1551,7 @@ class FileBrowserFragment : Fragment() {
      * - Files whose absolute path is in the explicit hidden-paths database
      */
     private fun isFileVisible(file: File, showHidden: Boolean, hiddenPaths: Set<String>): Boolean {
-        return showHidden || (!file.name.startsWith(".") && file.absolutePath !in hiddenPaths)
+        return showHidden || (!HiddenFilesManager.isJunkOrHidden(file.name) && file.absolutePath !in hiddenPaths)
     }
 
     private fun showDrivePicker() {

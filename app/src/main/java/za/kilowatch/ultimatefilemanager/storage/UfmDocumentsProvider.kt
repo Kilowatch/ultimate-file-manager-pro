@@ -36,6 +36,8 @@ import android.system.ErrnoException
 import android.system.OsConstants
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.Dispatchers
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
 
 private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
 
@@ -236,9 +238,14 @@ class UfmDocumentsProvider : DocumentsProvider() {
     ): Cursor {
         GoRoLog.d("queryChildDocuments: parentId=$parentDocumentId")
         val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
+        val showHidden = HiddenFilesManager.isShowHiddenFilesEnabled
         if (isNetworkDoc(parentDocumentId)) {
             val (share, path) = resolveNetwork(parentDocumentId) ?: return result
-            listNetworkFiles(share, path).sortedWith(
+            val rawFiles = listNetworkFiles(share, path)
+            val visibleFiles = if (showHidden) rawFiles else {
+                rawFiles.filter { !HiddenFilesManager.isJunkOrHidden(it.name) }
+            }
+            visibleFiles.sortedWith(
                 compareBy({ !it.isDirectory }, { it.name.lowercase() })
             ).forEach { includeNetworkFile(result, share, it) }
         } else {
@@ -246,8 +253,19 @@ class UfmDocumentsProvider : DocumentsProvider() {
                 val absPath = fromSafDocId(parentDocumentId)
                 val parent = File(absPath)
                 if (parent.exists() && parent.isDirectory) {
-                    val files = parent.listFiles() ?: emptyArray()
-                    files.sortedWith(
+                    val rawFiles = parent.listFiles() ?: emptyArray()
+                    val hiddenPaths = if (showHidden) emptySet() else {
+                        try {
+                            val db = HiddenFilesDatabase.getInstance(context ?: za.kilowatch.ultimatefilemanager.UfmApplication.instance)
+                            db.hiddenFileDao().getAllPaths().toSet()
+                        } catch (e: Exception) {
+                            emptySet()
+                        }
+                    }
+                    val visibleFiles = if (showHidden) rawFiles.toList() else {
+                        rawFiles.filter { !HiddenFilesManager.isJunkOrHidden(it.name) && it.absolutePath !in hiddenPaths }
+                    }
+                    visibleFiles.sortedWith(
                         compareBy({ !it.isDirectory }, { it.name.lowercase() })
                     ).forEach { includeFile(result, it) }
                 }
@@ -1018,9 +1036,13 @@ class UfmDocumentsProvider : DocumentsProvider() {
 
     private fun searchFiles(dir: File, query: String, cursor: MatrixCursor, depth: Int) {
         if (depth > 5) return
+        val showHidden = HiddenFilesManager.isShowHiddenFilesEnabled
         dir.listFiles()?.forEach { file ->
-            if (file.name.lowercase().contains(query)) includeFile(cursor, file)
-            if (file.isDirectory) searchFiles(file, query, cursor, depth + 1)
+            val isHidden = !showHidden && HiddenFilesManager.isJunkOrHidden(file.name)
+            if (!isHidden) {
+                if (file.name.lowercase().contains(query)) includeFile(cursor, file)
+                if (file.isDirectory) searchFiles(file, query, cursor, depth + 1)
+            }
         }
     }
 

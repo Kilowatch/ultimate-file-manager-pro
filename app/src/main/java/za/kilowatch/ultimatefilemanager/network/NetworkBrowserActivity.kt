@@ -56,6 +56,7 @@ import java.io.File
 import java.io.FileOutputStream
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.archive.ArchiveOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.remote.RemoteTransportPrefs
@@ -2081,7 +2082,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
      * When [showHidden] is false, filters out files/folders whose name starts with "." (Unix dotfile convention).
      */
     private fun isNetworkFileVisible(nf: NetworkFile, showHidden: Boolean): Boolean {
-        return showHidden || !nf.name.startsWith(".")
+        return showHidden || !HiddenFilesManager.isJunkOrHidden(nf.name)
     }
 
 

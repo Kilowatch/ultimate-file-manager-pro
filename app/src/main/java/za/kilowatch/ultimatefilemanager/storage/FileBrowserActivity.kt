@@ -49,6 +49,7 @@ import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter
 import za.kilowatch.ultimatefilemanager.archive.ArchiveOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
@@ -3392,7 +3393,7 @@ class FileBrowserActivity : AppCompatActivity() {
      * - Files whose absolute path is in the explicit hidden-paths database
      */
     private fun isFileVisible(file: File, showHidden: Boolean, hiddenPaths: Set<String>): Boolean {
-        return showHidden || (!file.name.startsWith(".") && file.absolutePath !in hiddenPaths)
+        return showHidden || (!HiddenFilesManager.isJunkOrHidden(file.name) && file.absolutePath !in hiddenPaths)
     }
 
     /**

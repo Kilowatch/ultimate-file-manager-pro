@@ -42,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import java.io.File
 import java.io.FileOutputStream
+import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 
 class NetworkBrowserFragment : Fragment() {
 
@@ -1432,7 +1433,7 @@ class NetworkBrowserFragment : Fragment() {
      * When [showHidden] is false, filters out files/folders whose name starts with "." (Unix dotfile convention).
      */
     private fun isNetworkFileVisible(nf: za.kilowatch.ultimatefilemanager.network.NetworkFile, showHidden: Boolean): Boolean {
-        return showHidden || !nf.name.startsWith(".")
+        return showHidden || !HiddenFilesManager.isJunkOrHidden(nf.name)
     }
 
     private fun showSortFilterSheet() {
