@@ -9730,6 +9730,9 @@ Administrar hashtags y opciones de etiquetado
     <string name="action_tag">
 Etiqueta
 </string>
+    <string name="action_tools">
+Herramientas
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

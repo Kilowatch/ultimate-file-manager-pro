@@ -9718,6 +9718,9 @@ Kelola tagar dan opsi penandaan
     <string name="action_tag">
 Tag
 </string>
+    <string name="action_tools">
+Alat
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

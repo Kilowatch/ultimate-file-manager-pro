@@ -9718,6 +9718,9 @@ UFM प्लेयर सेटिंग्स
     <string name="action_tag">
 टैग
 </string>
+    <string name="action_tools">
+उपकरण
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

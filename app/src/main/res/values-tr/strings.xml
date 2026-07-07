@@ -9718,6 +9718,9 @@ Hashtag\\\'leri ve etiketleme seçeneklerini yönetin
     <string name="action_tag">
 Etiket
 </string>
+    <string name="action_tools">
+Araçlar
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

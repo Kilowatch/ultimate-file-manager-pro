@@ -101,6 +101,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var selectedKeyFilePath: String? = null
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
+    private var fabTools: ExtendedFloatingActionButton? = null
     private lateinit var fileAdapter: FileAdapter
     private var layoutBreadcrumbsScroll: android.widget.HorizontalScrollView? = null
     private var layoutBreadcrumbs: android.widget.LinearLayout? = null
@@ -933,6 +934,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnImageCompress = findViewById(R.id.btnImageCompress)
         fabPaste = findViewById(R.id.fabPaste)
         fabProperties = findViewById(R.id.fabProperties) // nullable — absent in TV layout
+        fabTools = findViewById(R.id.fabTools)
 
         // Apply custom toolbar action icons
         applyCustomToolbarIcons()
@@ -1456,6 +1458,203 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        fabTools?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            val count = selected.size
+            val showActions = count > 0
+            if (!showActions) return@setOnClickListener
+
+            val list = mutableListOf<FileToolsBottomSheet.ActionItem>()
+            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+
+            // 1. Copy
+            if (pm.isIconEnabled(this, pm.KEY_COPY)) {
+                list.add(FileToolsBottomSheet.ActionItem("copy", getString(R.string.action_copy), R.drawable.ic_copy, "toolbar_copy") {
+                    if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
+                        launchQuickTransferPicker(selected, isMove = false)
+                    } else {
+                        FileClipboard.set(selected, FileClipboard.Operation.COPY)
+                        fileAdapter.exitSelectionMode()
+                        showPremiumSnackbar(getString(R.string.clipboard_copied, selected.size))
+                        updatePasteFab()
+                    }
+                })
+            }
+
+            // 2. Move (Cut)
+            if (pm.isIconEnabled(this, pm.KEY_MOVE)) {
+                list.add(FileToolsBottomSheet.ActionItem("move", getString(R.string.action_move), R.drawable.ic_move, "toolbar_move") {
+                    if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
+                        launchQuickTransferPicker(selected, isMove = true)
+                    } else {
+                        FileClipboard.set(selected, FileClipboard.Operation.MOVE)
+                        fileAdapter.exitSelectionMode()
+                        showPremiumSnackbar(getString(R.string.clipboard_cut, selected.size))
+                        updatePasteFab()
+                    }
+                })
+            }
+
+            // Delete
+            if (pm.isIconEnabled(this, pm.KEY_DELETE)) {
+                list.add(FileToolsBottomSheet.ActionItem("delete", getString(R.string.action_delete), R.drawable.ic_delete, "toolbar_delete") {
+                    showDeleteConfirmation()
+                })
+            }
+
+            // 3. Rename
+            if (pm.isIconEnabled(this, pm.KEY_RENAME)) {
+                list.add(FileToolsBottomSheet.ActionItem("rename", getString(R.string.action_rename), R.drawable.ic_edit, "toolbar_rename") {
+                    if (selected.size == 1) {
+                        showRenameDialog(selected.first())
+                    } else {
+                        val items = selected.map { BatchRenameItem.fromLocalFile(it) }
+                        if (DeviceUtils.isTvDevice(this)) {
+                            val intent = Intent(this, BatchRenameTvActivity::class.java).apply {
+                                putParcelableArrayListExtra("items", ArrayList(items))
+                            }
+                            batchRenameTvLauncher.launch(intent)
+                        } else {
+                            val dialog = BatchRenameDialogFragment.newInstance(items)
+                            dialog.setOnCompleteListener { _, _ ->
+                                fileAdapter.exitSelectionMode()
+                                loadDirectory(currentDir)
+                            }
+                            dialog.show(supportFragmentManager, BatchRenameDialogFragment.TAG)
+                        }
+                    }
+                })
+            }
+
+            // 4. Share
+            if (pm.isIconEnabled(this, pm.KEY_SHARE)) {
+                val shareable = selected.filter { it.isFile }
+                if (shareable.isNotEmpty()) {
+                    list.add(FileToolsBottomSheet.ActionItem("share", getString(R.string.action_share), R.drawable.ic_share, "toolbar_share") {
+                        shareFiles(shareable)
+                    })
+                }
+            }
+
+            // 5. Favorite
+            if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) {
+                list.add(FileToolsBottomSheet.ActionItem("favorite", getString(R.string.action_favorite), R.drawable.ic_star, "toolbar_favorite") {
+                    showFavoriteDialog(selected.first())
+                })
+            }
+
+            // 6. Compress
+            if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) {
+                list.add(FileToolsBottomSheet.ActionItem("compress", getString(R.string.action_compress), R.drawable.ic_compress, "toolbar_compress") {
+                    showArchiveOptions(selected)
+                })
+            }
+
+            // 7. Compress Image
+            val allImages = selected.isNotEmpty() && selected.all {
+                it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            }
+            if (allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) {
+                list.add(FileToolsBottomSheet.ActionItem("image_compress", getString(R.string.action_compress_image), R.drawable.ic_compress_image, "toolbar_image_compress") {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_FILE_PATHS,
+                            ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
+            // 8. Copy Encrypted
+            if (pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) {
+                list.add(FileToolsBottomSheet.ActionItem("copy_encrypt", getString(R.string.action_copy_encrypt), R.drawable.ic_copy, "toolbar_copy_encrypt") {
+                    showVaultPickerForEncrypt(selected, isMove = false)
+                })
+            }
+
+            // 9. Move Encrypted
+            if (pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) {
+                list.add(FileToolsBottomSheet.ActionItem("move_encrypt", getString(R.string.action_move_encrypt), R.drawable.ic_move, "toolbar_move_encrypt") {
+                    showVaultPickerForEncrypt(selected, isMove = true)
+                })
+            }
+
+            // 10. Hide
+            val hasVisible = fileAdapter.hasAnySelectedVisible()
+            if (hasVisible && pm.isIconEnabled(this, pm.KEY_HIDE)) {
+                list.add(FileToolsBottomSheet.ActionItem("hide", getString(R.string.hide), R.drawable.ic_eye_off, "toolbar_hide") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.hide(file.absolutePath)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_hidden_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // 11. Unhide
+            val hasHidden = fileAdapter.hasAnySelectedHidden()
+            if (hasHidden && pm.isIconEnabled(this, pm.KEY_UNHIDE)) {
+                list.add(FileToolsBottomSheet.ActionItem("unhide", getString(R.string.unhide), R.drawable.ic_eye, "toolbar_unhide") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.unhide(file.absolutePath)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_unhidden_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // 12. Protect
+            val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this)
+            if (hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) {
+                list.add(FileToolsBottomSheet.ActionItem("protect", getString(R.string.protect), R.drawable.ic_shield_protected, "toolbar_protect") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = true)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_protected_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // 13. Unprotect
+            val hasProtectedItem = fileAdapter.hasAnySelectedProtected(this)
+            if (hasProtectedItem && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) {
+                list.add(FileToolsBottomSheet.ActionItem("unprotect", getString(R.string.unprotect), R.drawable.ic_shield_unprotected, "toolbar_unprotect") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(this@FileBrowserActivity, file.absolutePath, protected = false)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            if (list.isNotEmpty()) {
+                val title = getString(R.string.action_tools)
+                val subtitle = getString(R.string.selection_count, selected.size)
+                val sheet = FileToolsBottomSheet.newInstance(list, title, subtitle)
+                sheet.show(supportFragmentManager, FileToolsBottomSheet.TAG)
+            }
+        }
+
         // TV: swap icon tint on focus for all selection bar icon buttons
         if (DeviceUtils.isTvDevice(this)) {
             val iconTintFocused = android.content.res.ColorStateList.valueOf(
@@ -1511,41 +1710,50 @@ class FileBrowserActivity : AppCompatActivity() {
             layoutSelectionBar.visibility = View.VISIBLE
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
             
+            val isTv = DeviceUtils.isTvDevice(this)
             val row2 = btnCopy.parent.parent as? View
-            if (showActions) {
-                za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-                row2?.visibility = View.VISIBLE
-            } else {
-                row2?.visibility = View.GONE
-                za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
-            }
-            
-            // UI Refinement: hide/unhide visibility based on selection
+            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             val hasHidden = fileAdapter.hasAnySelectedHidden()
             val hasVisible = fileAdapter.hasAnySelectedVisible()
-            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
-            btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(this, pm.KEY_HIDE)) View.VISIBLE else View.GONE
-            btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(this, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
-            
             val hasProtected = fileAdapter.hasAnySelectedProtected(this)
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this)
-            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
-            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
-            
-            btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
-            btnDelete.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
-            btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
-            btnMove.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE)) View.VISIBLE else View.GONE
-            btnRename.visibility = if (count >= 1 && pm.isIconEnabled(this, pm.KEY_RENAME)) View.VISIBLE else View.GONE
-            btnShare.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_SHARE)) View.VISIBLE else View.GONE
-            btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
-            btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
-            btnCompress.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
-            val imgFiles = fileAdapter.getSelectedFiles()
-            val allImages = imgFiles.isNotEmpty() && imgFiles.all {
-                it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+
+            if (!isTv) {
+                row2?.visibility = View.GONE
+                btnSelectAll.visibility = if (pm.isIconEnabled(this, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
+                btnDelete.visibility = View.GONE
+                btnCompress.visibility = View.GONE
+                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+            } else {
+                fabTools?.visibility = View.GONE
+                if (showActions) {
+                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+                    row2?.visibility = View.VISIBLE
+                } else {
+                    row2?.visibility = View.GONE
+                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
+                }
+                
+                // TV-only icon/row visibility
+                btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(this, pm.KEY_HIDE)) View.VISIBLE else View.GONE
+                btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(this, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+                btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+                btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+                btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+                btnDelete.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+                btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
+                btnMove.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE)) View.VISIBLE else View.GONE
+                btnRename.visibility = if (count >= 1 && pm.isIconEnabled(this, pm.KEY_RENAME)) View.VISIBLE else View.GONE
+                btnShare.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_SHARE)) View.VISIBLE else View.GONE
+                btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
+                btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
+                btnCompress.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
+                val imgFiles = fileAdapter.getSelectedFiles()
+                val allImages = imgFiles.isNotEmpty() && imgFiles.all {
+                    it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                }
+                btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
             }
-            btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
 
             val selectedFiles = fileAdapter.getSelectedFiles()
             val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
@@ -1578,6 +1786,7 @@ class FileBrowserActivity : AppCompatActivity() {
             layoutSelectionBar.visibility = View.GONE
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
             fabProperties?.visibility = View.GONE
+            fabTools?.visibility = View.GONE
             updatePasteFab()
         }
     }

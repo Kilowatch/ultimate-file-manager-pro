@@ -597,7 +597,7 @@
     <!-- Twin Window Action Pills -->
     <HorizontalScrollView
         android:id="@+id/layoutActionPillsScroll"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="none"
         android:overScrollMode="never"
@@ -618,6 +618,16 @@
             android:orientation="horizontal"
             android:padding="8dp"
             android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPillSelectAll"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/action_select_all"
+                app:icon="@drawable/ic_check"
+                app:iconSize="18dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillCopy"
@@ -678,8 +688,25 @@
         app:iconTint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutActionPillsScroll"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Tools FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabTools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_md"
+        android:text="@string/action_tools"
+        android:textColor="?attr/colorOnPrimary"
+        app:icon="@drawable/ic_settings"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/fabProperties"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/margin_md"
+        app:layout_goneMarginBottom="@dimen/margin_md" />
 
     <!-- Properties FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -693,7 +720,7 @@
         app:iconTint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutActionPillsScroll"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Empty State — Lottie animation + label -->

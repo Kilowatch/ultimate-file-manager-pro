@@ -9718,6 +9718,9 @@ UFMプレーヤー設定
     <string name="action_tag">
 タグ
 </string>
+    <string name="action_tools">
+ツール
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

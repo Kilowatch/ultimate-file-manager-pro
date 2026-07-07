@@ -79,6 +79,7 @@ class FileBrowserFragment : Fragment() {
     private var isOptionsVisible = false
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
+    private var fabTools: ExtendedFloatingActionButton? = null
     private lateinit var fileAdapter: FileAdapter
     
     private val batchRenameTvLauncher = registerForActivityResult(
@@ -265,6 +266,7 @@ class FileBrowserFragment : Fragment() {
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
         fabProperties = view.findViewById(R.id.fabProperties)
+        fabTools = view.findViewById(R.id.fabTools)
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
         btnSearchToggle.setImageResource(R.drawable.ic_search) 
@@ -316,6 +318,9 @@ class FileBrowserFragment : Fragment() {
         }
 
         // Action Pills
+        view.findViewById<View>(R.id.btnPillSelectAll)?.setOnClickListener {
+            if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+        }
         view.findViewById<View>(R.id.btnPillCopy)?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.isNotEmpty()) {
@@ -594,6 +599,177 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
+        fabTools?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            val count = selected.size
+            val showActions = count > 0
+            if (!showActions) return@setOnClickListener
+
+            val list = mutableListOf<FileToolsBottomSheet.ActionItem>()
+            val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+            val context = context ?: return@setOnClickListener
+
+            // 1. Copy
+            if (pm.isIconEnabled(context, pm.KEY_COPY)) {
+                list.add(FileToolsBottomSheet.ActionItem("copy", getString(R.string.action_copy), R.drawable.ic_copy, "toolbar_copy") {
+                    if (isTwinWindow) {
+                        onActionRequested?.invoke("copy")
+                    } else {
+                        (activity as? FileOperationsListener)?.onCopyRequested(this@FileBrowserFragment, selected)
+                    }
+                    fileAdapter.exitSelectionMode()
+                })
+            }
+
+            // 2. Move (Cut)
+            if (pm.isIconEnabled(context, pm.KEY_MOVE)) {
+                list.add(FileToolsBottomSheet.ActionItem("move", getString(R.string.action_move), R.drawable.ic_move, "toolbar_move") {
+                    if (isTwinWindow) {
+                        onActionRequested?.invoke("move")
+                    } else {
+                        (activity as? FileOperationsListener)?.onMoveRequested(this@FileBrowserFragment, selected)
+                    }
+                    fileAdapter.exitSelectionMode()
+                })
+            }
+
+            // Delete
+            if (pm.isIconEnabled(context, pm.KEY_DELETE)) {
+                list.add(FileToolsBottomSheet.ActionItem("delete", getString(R.string.action_delete), R.drawable.ic_delete, "toolbar_delete") {
+                    if (isTwinWindow) {
+                        onActionRequested?.invoke("delete")
+                    } else {
+                        (activity as? FileOperationsListener)?.onDeleteRequested(this@FileBrowserFragment, selected)
+                    }
+                    fileAdapter.exitSelectionMode()
+                })
+            }
+
+            // 3. Rename
+            if (pm.isIconEnabled(context, pm.KEY_RENAME)) {
+                list.add(FileToolsBottomSheet.ActionItem("rename", getString(R.string.action_rename), R.drawable.ic_edit, "toolbar_rename") {
+                    if (selected.size == 1) {
+                        (activity as? FileOperationsListener)?.onRenameRequested(this@FileBrowserFragment, selected.first())
+                    } else {
+                        val items = selected.map { BatchRenameItem.fromLocalFile(it) }
+                        if (DeviceUtils.isTvDevice(requireContext())) {
+                            val intent = android.content.Intent(requireContext(), BatchRenameTvActivity::class.java).apply {
+                                putParcelableArrayListExtra("items", java.util.ArrayList(items))
+                            }
+                            batchRenameTvLauncher.launch(intent)
+                        } else {
+                            val dialog = BatchRenameDialogFragment.newInstance(items)
+                            dialog.setOnCompleteListener { _, _ ->
+                                fileAdapter.exitSelectionMode()
+                                refresh()
+                            }
+                            dialog.show(parentFragmentManager, BatchRenameDialogFragment.TAG)
+                        }
+                    }
+                })
+            }
+
+            // 4. Share
+            if (pm.isIconEnabled(context, pm.KEY_SHARE)) {
+                val shareable = selected.filter { it.isFile }
+                if (shareable.isNotEmpty()) {
+                    list.add(FileToolsBottomSheet.ActionItem("share", getString(R.string.action_share), R.drawable.ic_share, "toolbar_share") {
+                        shareFiles(shareable)
+                    })
+                }
+            }
+
+            // 5. Compress Image
+            val allImages = selected.isNotEmpty() && selected.all {
+                it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            }
+            if (allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) {
+                list.add(FileToolsBottomSheet.ActionItem("image_compress", getString(R.string.action_compress_image), R.drawable.ic_compress_image, "toolbar_image_compress") {
+                    startActivity(android.content.Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_FILE_PATHS,
+                            java.util.ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
+            // 6. Hide
+            val hasVisible = fileAdapter.hasAnySelectedVisible()
+            if (hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) {
+                list.add(FileToolsBottomSheet.ActionItem("hide", getString(R.string.hide), R.drawable.ic_eye_off, "toolbar_hide") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.hide(file.absolutePath)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            refresh()
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_hidden_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+            // 7. Unhide
+            val hasHidden = fileAdapter.hasAnySelectedHidden()
+            if (hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) {
+                list.add(FileToolsBottomSheet.ActionItem("unhide", getString(R.string.unhide), R.drawable.ic_eye, "toolbar_unhide") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.unhide(file.absolutePath)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            refresh()
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unhidden_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+            // 8. Protect
+            val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context)
+            if (hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) {
+                list.add(FileToolsBottomSheet.ActionItem("protect", getString(R.string.protect), R.drawable.ic_shield_protected, "toolbar_protect") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.absolutePath, protected = true)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            refresh()
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_protected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+            // 9. Unprotect
+            val hasProtectedItem = fileAdapter.hasAnySelectedProtected(context)
+            if (hasProtectedItem && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) {
+                list.add(FileToolsBottomSheet.ActionItem("unprotect", getString(R.string.unprotect), R.drawable.ic_shield_unprotected, "toolbar_unprotect") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.setProtected(requireContext(), file.absolutePath, protected = false)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            refresh()
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unprotected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+            if (list.isNotEmpty()) {
+                val title = getString(R.string.action_tools)
+                val subtitle = getString(R.string.selection_count, selected.size)
+                val sheet = FileToolsBottomSheet.newInstance(list, title, subtitle)
+                sheet.show(parentFragmentManager, FileToolsBottomSheet.TAG)
+            }
+        }
+
         if (isTv) setupTvFocus(view)
     }
 
@@ -688,10 +864,10 @@ class FileBrowserFragment : Fragment() {
         if (isPickerMode) return
         
         val showSelection = fileAdapter.isSelectionMode
-        
+        val isTv = DeviceUtils.isTvDevice(requireContext())
         if (isTwinWindow) {
             layoutSelectionBar.visibility = View.GONE
-            layoutActionPills.visibility = if (count > 0) View.VISIBLE else View.GONE
+            layoutActionPills.visibility = if (showSelection) View.VISIBLE else View.GONE
         } else {
             layoutActionPills.visibility = View.GONE
             layoutSelectionBar.visibility = if (showSelection) View.VISIBLE else View.GONE
@@ -699,45 +875,75 @@ class FileBrowserFragment : Fragment() {
 
         if (showSelection) {
             val showActions = count > 0
-            
-            if (!isTwinWindow) {
-                val row2 = btnCopy.parent.parent as? View
-                if (showActions) {
-                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-                    row2?.visibility = View.VISIBLE
-                } else {
-                    row2?.visibility = View.GONE
-                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
-                }
-            }
-
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             val context = context ?: return
-            
-            btnDelete.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
-            btnCopy.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY)) View.VISIBLE else View.GONE
-            btnMove.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE)) View.VISIBLE else View.GONE
-            btnRename.visibility = if (count >= 1 && pm.isIconEnabled(context, pm.KEY_RENAME)) View.VISIBLE else View.GONE
-            btnShare.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_SHARE)) View.VISIBLE else View.GONE
-            btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
-            btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
-            btnCompress.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
-            val imgFiles = fileAdapter.getSelectedFiles()
-            val allImages = imgFiles.isNotEmpty() && imgFiles.all {
-                it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-            }
-            btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
-
             val hasHidden = fileAdapter.hasAnySelectedHidden()
             val hasVisible = fileAdapter.hasAnySelectedVisible()
-            btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
-            btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
-            
             val hasProtected = fileAdapter.hasAnySelectedProtected(context)
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context)
-            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
-            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
-            btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+
+            if (!isTv) {
+                if (!isTwinWindow) {
+                    val row2 = btnCopy.parent.parent as? View
+                    row2?.visibility = View.GONE
+                    btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
+                    btnDelete.visibility = View.GONE
+                    btnCompress.visibility = View.GONE
+                } else {
+                    view?.findViewById<View>(R.id.btnPillCopy)?.visibility = View.GONE
+                    view?.findViewById<View>(R.id.btnPillMove)?.visibility = View.GONE
+                    val btnPillSelectAll = view?.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPillSelectAll)
+                    if (btnPillSelectAll != null) {
+                        btnPillSelectAll.visibility = View.VISIBLE
+                        val isAllSel = fileAdapter.isAllSelected()
+                        btnPillSelectAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+                        btnPillSelectAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
+                    }
+                    view?.findViewById<View>(R.id.btnPillDelete)?.visibility = View.GONE
+                }
+                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+            } else {
+                fabTools?.visibility = View.GONE
+                if (!isTwinWindow) {
+                    val row2 = btnCopy.parent.parent as? View
+                    if (showActions) {
+                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+                        row2?.visibility = View.VISIBLE
+                    } else {
+                        row2?.visibility = View.GONE
+                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
+                    }
+                } else {
+                    view?.findViewById<View>(R.id.btnPillCopy)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                    view?.findViewById<View>(R.id.btnPillMove)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                    view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
+                    view?.findViewById<View>(R.id.btnPillDelete)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                    // On TV twin window, hide the pills container entirely if no actions are showable
+                    layoutActionPills.visibility = if (showActions) View.VISIBLE else View.GONE
+                }
+                
+                // TV-only icon/row visibility
+                btnDelete.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+                btnCopy.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY)) View.VISIBLE else View.GONE
+                btnMove.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE)) View.VISIBLE else View.GONE
+                btnRename.visibility = if (count >= 1 && pm.isIconEnabled(context, pm.KEY_RENAME)) View.VISIBLE else View.GONE
+                btnShare.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_SHARE)) View.VISIBLE else View.GONE
+                btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
+                btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
+                btnCompress.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
+                val imgFiles = fileAdapter.getSelectedFiles()
+                val allImages = imgFiles.isNotEmpty() && imgFiles.all {
+                    it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                }
+                btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
+                
+                btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
+                btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+                btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+                btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+                btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+            }
+
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
             btnSelectAll.text = if (fileAdapter.isAllSelected()) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
 
@@ -765,6 +971,7 @@ class FileBrowserFragment : Fragment() {
         } else {
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
             fabProperties?.visibility = View.GONE
+            fabTools?.visibility = View.GONE
             updatePasteFab()
         }
     }

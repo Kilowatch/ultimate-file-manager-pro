@@ -9718,6 +9718,9 @@ Gerenciar hashtags e opções de marcação
     <string name="action_tag">
 Marcar
 </string>
+    <string name="action_tools">
+Ferramentas
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

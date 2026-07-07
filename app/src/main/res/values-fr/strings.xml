@@ -9718,6 +9718,9 @@ Gérer les hashtags et les options de taggage
     <string name="action_tag">
 Tag
 </string>
+    <string name="action_tools">
+Outils
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

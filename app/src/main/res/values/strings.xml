@@ -3425,6 +3425,7 @@
     <string name="settings_file_tags_title">File Tags</string>
     <string name="settings_file_tags_subtitle">Manage hashtags and tagging options</string>
     <string name="action_tag">Tag</string>
+    <string name="action_tools">Tools</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">Item Protected</string>

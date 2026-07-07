@@ -9718,6 +9718,9 @@ Box
     <string name="action_tag">
 العلامة
 </string>
+    <string name="action_tools">
+أدوات
+</string>
 
     <!-- File Protection -->
     <string name="protected_delete_title">

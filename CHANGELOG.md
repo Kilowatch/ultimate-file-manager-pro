@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added case-insensitive name-based and path-based filtering rules to hide OS-specific and system-generated metadata and junk files/folders (such as `Thumbs.db`, `desktop.ini`, `$RECYCLE.BIN`, `@eaDir`, and `#recycle`) when "Show hidden files" is disabled. Applied across local and network browser lists, search results, and system file picker interactions (SAF).
 - Added Robolectric and AndroidX test dependencies to the unit test suite.
 
+### Changed
+- Scoped to Mobile/Tablet layouts, moved selection toolbar actions (Copy, Cut/Move, Rename, Share, Favorite, Hide, Unhide, Protect, Unprotect, Copy Encrypt, Move Encrypt, Compress, Compress Image, and Delete) into a modern, scrolling "Tools" bottom sheet dialog triggered by a new "Tools" FAB positioned above the "Properties" FAB. Only "Select All" remains visible on the screen selection row on mobile (centered as a pill in twin-window mode). TV layouts remain completely unaffected.
+
 ## [1.6.4] — 2026-07-05
 
 ### Added
