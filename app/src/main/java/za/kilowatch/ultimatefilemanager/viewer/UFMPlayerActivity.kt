@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.viewer
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.OnBackPressedCallback
 import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
@@ -77,7 +78,7 @@ import java.util.ArrayList
  * The service handles background playback, notification, and audio focus.
  * This Activity handles the full-screen player UI, controls, PiP, and now-playing views.
  */
-class UFMPlayerActivity : Activity() {
+class UFMPlayerActivity : AppCompatActivity() {
 
     // ── Views ───────────────────────────────────────────────────────
     private lateinit var playerView: PlayerView
@@ -407,6 +408,16 @@ class UFMPlayerActivity : Activity() {
 
         initViews()
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isShowingSheet) {
+                    dismissTrackSheet()
+                } else {
+                    stopPlaybackAndFinish()
+                }
+            }
+        })
+
         // Start & bind to the playback service
         UFMPlaybackService.start(this, intent)
         bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
@@ -621,8 +632,7 @@ class UFMPlayerActivity : Activity() {
 
         findViewById<View>(R.id.btnBack)?.setOnClickListener {
             // Top-left back button: stop playback entirely
-            stopService(Intent(this, UFMPlaybackService::class.java))
-            finish()
+            stopPlaybackAndFinish()
         }
 
         // Shuffle/repeat initial state from service
@@ -791,24 +801,19 @@ class UFMPlayerActivity : Activity() {
         return (px * resources.displayMetrics.density).toInt()
     }
 
-    // ── Key / Touch Events ──────────────────────────────────────────
+    private fun stopPlaybackAndFinish() {
+        if (bound) {
+            playbackService?.unregisterCallback()
+            try {
+                unbindService(serviceConnection)
+            } catch (_: Exception) {}
+            bound = false
+        }
+        stopService(Intent(this, UFMPlaybackService::class.java))
+        finish()
+    }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent?): Boolean {
-        if (event?.action == android.view.KeyEvent.ACTION_DOWN) {
-            when (event.keyCode) {
-                android.view.KeyEvent.KEYCODE_BACK -> {
-                    if (isShowingSheet) {
-                        dismissTrackSheet()
-                        return true
-                    }
-                    // If playing, go to background instead of finishing
-                    if (playbackService?.isPlaying == true) {
-                        finish()
-                        return true
-                    }
-                }
-            }
-        }
         resetHideTimer()
         return super.dispatchKeyEvent(event)
     }

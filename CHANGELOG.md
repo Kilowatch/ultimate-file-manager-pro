@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed folder item totals incorrectly including hidden/junk files in local, network, and online storage lists for both mobile and TV layouts.
+- Fixed UFM Media Player continuing to play in the background when exiting via the system back button or TV D-pad back button; it now stops playback entirely.
 
 ## [1.6.4] — 2026-07-05
 
