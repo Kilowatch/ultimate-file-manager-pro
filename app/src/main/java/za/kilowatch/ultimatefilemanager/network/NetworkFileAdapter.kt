@@ -53,6 +53,20 @@ class NetworkFileAdapter(
 
     companion object {
         private val thumbnailPathCache = mutableMapOf<String, String>()
+
+        fun clearCacheForPath(path: String) {
+            thumbnailPathCache.remove(path)
+        }
+
+        fun clearCacheForFolder(folderPath: String) {
+            val prefix = if (folderPath.endsWith("/")) folderPath else "$folderPath/"
+            val keys = thumbnailPathCache.keys.toSet()
+            for (key in keys) {
+                if (key == folderPath || key.startsWith(prefix)) {
+                    thumbnailPathCache.remove(key)
+                }
+            }
+        }
     }
 
     var viewMode: ViewModeManager.ViewMode = ViewModeManager.ViewMode.LIST_MEDIUM

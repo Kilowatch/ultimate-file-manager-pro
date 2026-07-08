@@ -16,8 +16,14 @@ interface NetworkThumbnailDao {
     @Query("SELECT * FROM network_thumbnails WHERE shareId = :shareId AND parentFolder = :folder")
     fun getByParentFolder(shareId: String, folder: String): List<NetworkThumbnailEntity>
 
+    @Query("SELECT * FROM network_thumbnails WHERE shareId = :shareId AND (networkPath = :folderPath OR networkPath LIKE :folderPathPrefix)")
+    fun getUnderFolder(shareId: String, folderPath: String, folderPathPrefix: String): List<NetworkThumbnailEntity>
+
     @Query("DELETE FROM network_thumbnails WHERE shareId = :shareId AND networkPath = :path")
     fun delete(shareId: String, path: String)
+
+    @Query("DELETE FROM network_thumbnails WHERE shareId = :shareId AND (networkPath = :folderPath OR networkPath LIKE :folderPathPrefix)")
+    fun deleteUnderFolder(shareId: String, folderPath: String, folderPathPrefix: String)
 
     @Query("DELETE FROM network_thumbnails")
     fun deleteAll()

@@ -2970,6 +2970,14 @@ Arşiv oluşturuldu: %1$s
 Sıkıştırma başarısız: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Küçük Resimleri Yeniden Oluştur
+</string>
+    <string name="retrigger_thumbnails_success">
+Küçük resimler başarıyla yeniden oluşturuldu.
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Görsel Sıkıştır

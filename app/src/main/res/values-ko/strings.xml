@@ -2970,6 +2970,14 @@ UFM 색상 코드
 압축 실패: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+썸네일 재트리거
+</string>
+    <string name="retrigger_thumbnails_success">
+썸네일이 성공적으로 재트리거되었습니다.
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 이미지 압축

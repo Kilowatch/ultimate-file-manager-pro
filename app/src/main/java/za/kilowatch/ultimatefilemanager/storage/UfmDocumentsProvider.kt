@@ -629,7 +629,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                 android.graphics.BitmapFactory.decodeFile(absPath, opts)
             } else {
                 // Video thumbnail
-                val pct = context?.let { za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(it) } ?: 5
+                val pct = context?.let { za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(it) } ?: 10
                 var vidBmp: android.graphics.Bitmap? = za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(
                     absPath, pct, hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64)
                 )

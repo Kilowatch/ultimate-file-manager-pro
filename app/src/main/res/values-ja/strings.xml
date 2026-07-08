@@ -2970,6 +2970,14 @@ OK
 圧縮失敗: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+サムネイルを再生成
+</string>
+    <string name="retrigger_thumbnails_success">
+サムネイルの再生成に成功しました
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 画像を圧縮

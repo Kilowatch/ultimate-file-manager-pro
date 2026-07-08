@@ -85,6 +85,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_check, R.string.action_select_all, ToolbarIconsPreferenceManager.KEY_SELECT_ALL),
             IconItem(R.drawable.ic_compress, R.string.action_compress, ToolbarIconsPreferenceManager.KEY_COMPRESS),
             IconItem(R.drawable.ic_compress_image, R.string.action_compress_image, ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS),
+            IconItem(R.drawable.ic_photo_video, R.string.action_retrigger_thumbnails, ToolbarIconsPreferenceManager.KEY_RETRIGGER_THUMBNAILS),
             IconItem(R.drawable.ic_delete, R.string.action_delete, ToolbarIconsPreferenceManager.KEY_DELETE)
         )
 
@@ -117,6 +118,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 ToolbarIconsPreferenceManager.KEY_SELECT_ALL -> "toolbar_select_all"
                 ToolbarIconsPreferenceManager.KEY_COMPRESS -> "toolbar_compress"
                 ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS -> "toolbar_image_compress"
+                ToolbarIconsPreferenceManager.KEY_RETRIGGER_THUMBNAILS -> "toolbar_retrigger_thumbnails"
                 ToolbarIconsPreferenceManager.KEY_DELETE -> "toolbar_delete"
                 else -> null
             }

@@ -103,6 +103,7 @@ class NetworkBrowserFragment : Fragment() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private lateinit var cacheManager: za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
     private var isOptionsVisible = false
@@ -196,6 +197,7 @@ class NetworkBrowserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(requireContext())
         setupViews(view)
         loadDirectory()
     }
@@ -226,6 +228,7 @@ class NetworkBrowserFragment : Fragment() {
         v.findViewById<View>(R.id.btnImageCompress)?.visibility = View.GONE
         v.findViewById<View>(R.id.btnSelectAll)?.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
         v.findViewById<View>(R.id.btnDelete)?.visibility = if (pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+        v.findViewById<View>(R.id.btnRetriggerThumbnails)?.visibility = if (pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
     }
 
     private fun setupViews(view: View) {
@@ -391,6 +394,32 @@ class NetworkBrowserFragment : Fragment() {
                 })
             }
 
+            // Retrigger Thumbnails
+            val hasVideoOrFolder = selected.isNotEmpty() && selected.any {
+                it.isDirectory || it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+            }
+            if (hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) {
+                list.add(FileToolsBottomSheet.ActionItem("retrigger_thumbnails", getString(R.string.action_retrigger_thumbnails), R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        cacheManager.clearCacheForSelection(share.id, selected)
+                        for (file in selected) {
+                            if (file.isDirectory) {
+                                NetworkFileAdapter.clearCacheForFolder(file.path)
+                            } else {
+                                NetworkFileAdapter.clearCacheForPath(file.path)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory()
+                            context?.let { ctx ->
+                                android.widget.Toast.makeText(ctx, getString(R.string.retrigger_thumbnails_success), android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                })
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -506,6 +535,28 @@ class NetworkBrowserFragment : Fragment() {
                         fileAdapter.deselectAll()
                         loadDirectory()
                         android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unprotected_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        view.findViewById<View>(R.id.btnRetriggerThumbnails)?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    cacheManager.clearCacheForSelection(share.id, selected)
+                    for (file in selected) {
+                        if (file.isDirectory) {
+                            NetworkFileAdapter.clearCacheForFolder(file.path)
+                        } else {
+                            NetworkFileAdapter.clearCacheForPath(file.path)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        context?.let { ctx ->
+                            android.widget.Toast.makeText(ctx, getString(R.string.retrigger_thumbnails_success), android.widget.Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
@@ -1416,7 +1467,8 @@ class NetworkBrowserFragment : Fragment() {
 
         listOf(
             R.id.btnCloseSelection, R.id.btnCopy, R.id.btnMove, R.id.btnRename, R.id.btnFavorite,
-            R.id.btnShare, R.id.btnCopyEncrypt, R.id.btnMoveEncrypt, R.id.btnProtect, R.id.btnUnprotect
+            R.id.btnShare, R.id.btnCopyEncrypt, R.id.btnMoveEncrypt, R.id.btnProtect, R.id.btnUnprotect,
+            R.id.btnRetriggerThumbnails
         ).forEach { id ->
             val btn = view.findViewById<ImageView>(id) ?: return@forEach
             btn.imageTintList = iconTintDefault

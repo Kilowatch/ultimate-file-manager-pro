@@ -7,7 +7,7 @@ object VideoThumbnailTimePreferenceManager {
     private const val PREFS_NAME = "video_thumbnail_time_prefs"
     private const val KEY_PERCENT = "thumbnail_time_percent"
 
-    private const val DEFAULT_PERCENT = 0
+    private const val DEFAULT_PERCENT = 10
 
     fun getPercent(context: Context): Int {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

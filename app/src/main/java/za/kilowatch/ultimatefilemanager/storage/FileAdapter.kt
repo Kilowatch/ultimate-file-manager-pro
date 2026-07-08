@@ -59,6 +59,20 @@ class FileAdapter(
 
     companion object {
         private val videoCache = android.util.LruCache<String, android.graphics.Bitmap>(64)
+
+        fun clearCacheForPath(path: String) {
+            videoCache.remove(path)
+        }
+
+        fun clearCacheForFolder(folderPath: String) {
+            val prefix = if (folderPath.endsWith(java.io.File.separator)) folderPath else folderPath + java.io.File.separator
+            val keys = videoCache.snapshot().keys
+            for (key in keys) {
+                if (key == folderPath || key.startsWith(prefix)) {
+                    videoCache.remove(key)
+                }
+            }
+        }
     }
 
     var viewMode: ViewModeManager.ViewMode = ViewModeManager.ViewMode.LIST_MEDIUM

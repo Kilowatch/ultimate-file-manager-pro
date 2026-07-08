@@ -22,6 +22,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_CREATE_NEW = "pref_icon_create_new"
     const val KEY_PROTECT = "pref_icon_protect"
     const val KEY_UNPROTECT = "pref_icon_unprotect"
+    const val KEY_RETRIGGER_THUMBNAILS = "pref_icon_retrigger_thumbnails"
 
     fun isIconEnabled(context: Context, key: String): Boolean {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).getBoolean(key, true)

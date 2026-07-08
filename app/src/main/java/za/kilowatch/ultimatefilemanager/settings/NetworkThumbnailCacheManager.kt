@@ -465,6 +465,50 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         }
         GoRoLog.i("UFM_CACHE", "Cache cleared completely.")
     }
+
+    /**
+     * Deletes cached thumbnail for a single path from disk and database.
+     */
+    suspend fun clearCacheForPath(shareId: String, path: String) = withContext(Dispatchers.IO) {
+        val entity = db.dao().get(shareId, path)
+        if (entity != null) {
+            val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+            val file = File(cacheFolderPath, entity.localFileName)
+            if (file.exists()) {
+                file.delete()
+            }
+            db.dao().delete(shareId, path)
+        }
+    }
+
+    /**
+     * Deletes all cached remote thumbnails under a folder path from disk and database.
+     */
+    suspend fun clearCacheForFolder(shareId: String, folderPath: String) = withContext(Dispatchers.IO) {
+        val prefix = if (folderPath.endsWith("/")) "$folderPath%" else "$folderPath/%"
+        val entities = db.dao().getUnderFolder(shareId, folderPath, prefix)
+        val cacheFolderPath = NetworkThumbnailPreferenceManager.getCachePath(context)
+        for (entity in entities) {
+            val file = File(cacheFolderPath, entity.localFileName)
+            if (file.exists()) {
+                file.delete()
+            }
+        }
+        db.dao().deleteUnderFolder(shareId, folderPath, prefix)
+    }
+
+    /**
+     * Deletes all cached remote thumbnails for selection from disk and database.
+     */
+    suspend fun clearCacheForSelection(shareId: String, selectedItems: List<za.kilowatch.ultimatefilemanager.network.NetworkFile>) = withContext(Dispatchers.IO) {
+        for (item in selectedItems) {
+            if (item.isDirectory) {
+                clearCacheForFolder(shareId, item.path)
+            } else {
+                clearCacheForPath(shareId, item.path)
+            }
+        }
+    }
 }
 
 @androidx.annotation.RequiresApi(Build.VERSION_CODES.M)

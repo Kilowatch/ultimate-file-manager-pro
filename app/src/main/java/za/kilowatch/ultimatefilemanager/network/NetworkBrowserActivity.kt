@@ -178,6 +178,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var btnRefresh: ImageView
     private lateinit var btnCreateNew: ImageView
     private var btnViewToggle: ImageView? = null
+    private var btnRetriggerThumbnails: ImageView? = null
     private var btnSort: ImageView? = null
     private lateinit var recyclerFiles: RecyclerView
     private lateinit var layoutEmpty: View
@@ -241,6 +242,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var currentTransferStreams: Pair<java.io.InputStream?, java.io.OutputStream?>? = null  // close on cancel to force copy exit
     private var currentTransferConnection: AutoCloseable? = null  // raw TCP connection — close() kills socket instantly
     private var standardShareTempDir: File? = null
+    private lateinit var cacheManager: za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
     
     private val batchRenameTvLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -401,6 +403,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
         isSmartSortCategoryPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_CATEGORY_PICKER, false)
+        cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(this)
         
         val layoutRes = if (isTv) R.layout.activity_network_browser_tv else R.layout.activity_network_browser
         setContentView(layoutRes)
@@ -597,6 +600,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
         btnCopy.visibility = if (pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
         btnMove.visibility = if (pm.isIconEnabled(this, pm.KEY_MOVE)) View.VISIBLE else View.GONE
+        btnRetriggerThumbnails?.visibility = if (pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
         btnRename.visibility = if (pm.isIconEnabled(this, pm.KEY_RENAME)) View.VISIBLE else View.GONE
         btnShare.visibility = if (pm.isIconEnabled(this, pm.KEY_SHARE)) View.VISIBLE else View.GONE
         btnCopyEncrypt.visibility = if (pm.isIconEnabled(this, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
@@ -640,6 +644,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnUnprotect = findViewById(R.id.btnUnprotect)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
+        btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
         fabPaste = findViewById(R.id.fabPaste)
         fabTools = findViewById(R.id.fabTools)
         
@@ -1041,6 +1046,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnRetriggerThumbnails?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    cacheManager.clearCacheForSelection(share.id, selected)
+                    for (file in selected) {
+                        if (file.isDirectory) {
+                            NetworkFileAdapter.clearCacheForFolder(file.path)
+                        } else {
+                            NetworkFileAdapter.clearCacheForPath(file.path)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.retrigger_thumbnails_success))
+                    }
+                }
+            }
+        }
+
         fabPaste.setOnClickListener { showClipboardSheet() }
 
         fabProperties?.setOnClickListener {
@@ -1243,6 +1269,30 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Retrigger Thumbnails
+            val hasVideoOrFolder = selected.isNotEmpty() && selected.any {
+                it.isDirectory || it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+            }
+            if (hasVideoOrFolder && pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) {
+                list.add(FileToolsBottomSheet.ActionItem("retrigger_thumbnails", getString(R.string.action_retrigger_thumbnails), R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        cacheManager.clearCacheForSelection(share.id, selected)
+                        for (file in selected) {
+                            if (file.isDirectory) {
+                                NetworkFileAdapter.clearCacheForFolder(file.path)
+                            } else {
+                                NetworkFileAdapter.clearCacheForPath(file.path)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory()
+                            showPremiumSnackbar(getString(R.string.retrigger_thumbnails_success))
+                        }
+                    }
+                })
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -1298,6 +1348,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                    btnCopyEncrypt, btnMoveEncrypt)
             btnSort?.let { tvButtons.add(it) }
             btnViewToggle?.let { tvButtons.add(it) }
+            btnRetriggerThumbnails?.let { tvButtons.add(it) }
             
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault
@@ -1833,6 +1884,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
                 btnCompress.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
                 val netFiles = fileAdapter.getSelectedFiles()
+                val hasVideoOrFolder = netFiles.isNotEmpty() && netFiles.any {
+                    it.isDirectory || it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+                }
+                btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
                 val allImages = netFiles.isNotEmpty() && netFiles.all {
                     it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 }

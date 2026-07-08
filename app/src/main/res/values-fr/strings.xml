@@ -2970,6 +2970,14 @@ Archive créée : %1$s
 Échec de la compression : %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Relancer les miniatures
+</string>
+    <string name="retrigger_thumbnails_success">
+Miniatures relancées avec succès
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Compresser l\\\'image

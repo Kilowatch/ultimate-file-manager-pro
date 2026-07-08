@@ -2970,6 +2970,14 @@ NFSv4
 فشل الضغط: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+إعادة تشغيل الصور المصغرة
+</string>
+    <string name="retrigger_thumbnails_success">
+تم إعادة تشغيل الصور المصغرة بنجاح
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 ضغط الصورة

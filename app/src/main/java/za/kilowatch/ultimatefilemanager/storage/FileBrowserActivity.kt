@@ -86,6 +86,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private lateinit var btnCompress: android.view.View
     private lateinit var btnImageCompress: android.view.View
     private var btnViewToggle: ImageView? = null
+    private var btnRetriggerThumbnails: ImageView? = null
     private var btnSort: ImageView? = null
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
@@ -397,6 +398,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(this, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
         btnDelete.visibility = if (pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+        btnRetriggerThumbnails?.visibility = if (pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
         findViewById<View>(R.id.btnCreateNew)?.visibility = if (pm.isIconEnabled(this, pm.KEY_CREATE_NEW)) View.VISIBLE else View.GONE
 
         val isIndexed = UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
@@ -932,6 +934,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnUnprotect = findViewById(R.id.btnUnprotect)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
+        btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
         fabPaste = findViewById(R.id.fabPaste)
         fabTools = findViewById(R.id.fabTools)
 
@@ -1436,6 +1439,26 @@ class FileBrowserActivity : AppCompatActivity() {
             showClipboardSheet()
         }
 
+        btnRetriggerThumbnails?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        if (file.isDirectory) {
+                            FileAdapter.clearCacheForFolder(file.absolutePath)
+                        } else {
+                            FileAdapter.clearCacheForPath(file.absolutePath)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.retrigger_thumbnails_success))
+                    }
+                }
+            }
+        }
+
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
@@ -1675,6 +1698,29 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Retrigger Thumbnails
+            val hasVideoOrFolder = selected.isNotEmpty() && selected.any {
+                it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+            }
+            if (hasVideoOrFolder && pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) {
+                list.add(FileToolsBottomSheet.ActionItem("retrigger_thumbnails", getString(R.string.action_retrigger_thumbnails), R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            if (file.isDirectory) {
+                                FileAdapter.clearCacheForFolder(file.absolutePath)
+                            } else {
+                                FileAdapter.clearCacheForPath(file.absolutePath)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.retrigger_thumbnails_success))
+                        }
+                    }
+                })
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -1691,8 +1737,10 @@ class FileBrowserActivity : AppCompatActivity() {
             val iconTintDefault = android.content.res.ColorStateList.valueOf(
                 getColor(R.color.tv_text_primary)
             )
-            listOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
-                   btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide).forEach { btn ->
+            val tvButtons = mutableListOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
+                   btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide)
+            btnRetriggerThumbnails?.let { tvButtons.add(it) }
+            tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault  // set initial white tint
                 btn.setOnFocusChangeListener { _, hasFocus ->
                     btn.imageTintList = if (hasFocus) iconTintFocused else iconTintDefault
@@ -1781,6 +1829,10 @@ class FileBrowserActivity : AppCompatActivity() {
                     it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 }
                 btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(this, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
+                val hasVideoOrFolder = imgFiles.isNotEmpty() && imgFiles.any {
+                    it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+                }
+                btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
             }
 
             val selectedFiles = fileAdapter.getSelectedFiles()

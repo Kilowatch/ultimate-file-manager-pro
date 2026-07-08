@@ -2970,6 +2970,14 @@ Arquivo criado: %1$s
 Falha na compressão: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Reativar Miniaturas
+</string>
+    <string name="retrigger_thumbnails_success">
+Miniaturas reativadas com sucesso
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Comprimir Imagem

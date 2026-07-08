@@ -1074,6 +1074,10 @@
     <string name="compress_success">Archive created: %1$s</string>
     <string name="compress_error">Compression failed: %1$s</string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">Retrigger Thumbnails</string>
+    <string name="retrigger_thumbnails_success">Thumbnails retriggered successfully</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">Compress Image</string>
     <string name="compress_image_title">Compress Images</string>

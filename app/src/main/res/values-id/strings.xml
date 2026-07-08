@@ -2970,6 +2970,14 @@ Arsip dibuat: %1$s
 Kompresi gagal: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Picu Ulang Gambar Mini
+</string>
+    <string name="retrigger_thumbnails_success">
+Gambar mini berhasil dipicu ulang
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Kompres Gambar

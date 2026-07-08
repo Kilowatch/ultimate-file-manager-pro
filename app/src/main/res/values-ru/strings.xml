@@ -2970,6 +2970,14 @@ NFSv4
 Сжатие не удалось: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Перезапуск миниатюр
+</string>
+    <string name="retrigger_thumbnails_success">
+Миниатюры успешно перезапущены
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Сжать изображение

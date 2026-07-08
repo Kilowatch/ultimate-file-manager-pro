@@ -2970,6 +2970,14 @@ Archiv erstellt: %1$s
 Komprimierung fehlgeschlagen: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Thumbnails erneut auslösen
+</string>
+    <string name="retrigger_thumbnails_success">
+Thumbnails erfolgreich erneut ausgelöst
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Bild komprimieren

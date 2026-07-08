@@ -80,6 +80,7 @@ class FileBrowserFragment : Fragment() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private var btnRetriggerThumbnails: ImageView? = null
     private lateinit var fileAdapter: FileAdapter
     
     private val batchRenameTvLauncher = registerForActivityResult(
@@ -235,6 +236,7 @@ class FileBrowserFragment : Fragment() {
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
         btnDelete.visibility = if (pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+        btnRetriggerThumbnails?.visibility = if (pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
 
         val isIndexed = UfmApplication.indexingRepository.isStorageFullyIndexed(storageId)
         view?.findViewById<View>(R.id.btnRefreshIndex)?.visibility = if (isIndexed) View.VISIBLE else View.GONE
@@ -258,6 +260,7 @@ class FileBrowserFragment : Fragment() {
         btnFavorite = view.findViewById(R.id.btnFavorite)
         btnCopyEncrypt = view.findViewById(R.id.btnCopyEncrypt)
         btnMoveEncrypt = view.findViewById(R.id.btnMoveEncrypt)
+        btnRetriggerThumbnails = view.findViewById(R.id.btnRetriggerThumbnails)
         btnHide = view.findViewById(R.id.btnHide)
         btnUnhide = view.findViewById(R.id.btnUnhide)
         btnProtect = view.findViewById(R.id.btnProtect)
@@ -522,6 +525,28 @@ class FileBrowserFragment : Fragment() {
             }
         }
         btnShare.setOnClickListener { shareFiles(fileAdapter.getSelectedFiles()) }
+
+        btnRetriggerThumbnails?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        if (file.isDirectory) {
+                            FileAdapter.clearCacheForFolder(file.absolutePath)
+                        } else {
+                            FileAdapter.clearCacheForPath(file.absolutePath)
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        refresh()
+                        context?.let { ctx ->
+                            android.widget.Toast.makeText(ctx, getString(R.string.retrigger_thumbnails_success), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
 
         btnImageCompress.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
@@ -790,6 +815,31 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Retrigger Thumbnails
+            val hasVideoOrFolder = selected.isNotEmpty() && selected.any {
+                it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+            }
+            if (hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) {
+                list.add(FileToolsBottomSheet.ActionItem("retrigger_thumbnails", getString(R.string.action_retrigger_thumbnails), R.drawable.ic_photo_video, "toolbar_retrigger_thumbnails") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            if (file.isDirectory) {
+                                FileAdapter.clearCacheForFolder(file.absolutePath)
+                            } else {
+                                FileAdapter.clearCacheForPath(file.absolutePath)
+                            }
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            context?.let { ctx ->
+                                android.widget.Toast.makeText(ctx, getString(R.string.retrigger_thumbnails_success), android.widget.Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                })
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -829,8 +879,10 @@ class FileBrowserFragment : Fragment() {
         val btnSearch = view.findViewById<ImageView>(R.id.btnSearchToggle)
         btnSearch?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
         
-        listOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
-               btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide, btnProtect, btnUnprotect).forEach { btn ->
+        val tvButtons = mutableListOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
+               btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide, btnProtect, btnUnprotect)
+        btnRetriggerThumbnails?.let { tvButtons.add(it) }
+        tvButtons.forEach { btn ->
             btn.imageTintList = iconTintDefault
             btn.setOnFocusChangeListener { _, hasFocus ->
                 btn.imageTintList = if (hasFocus) iconTintFocused else iconTintDefault
@@ -964,6 +1016,10 @@ class FileBrowserFragment : Fragment() {
                     it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 }
                 btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
+                val hasVideoOrFolder = imgFiles.isNotEmpty() && imgFiles.any {
+                    it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+                }
+                btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
                 
                 btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
                 btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE

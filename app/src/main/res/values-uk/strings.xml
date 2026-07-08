@@ -2970,6 +2970,14 @@ OK
 Помилка стиснення: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Перезапустити мініатюри
+</string>
+    <string name="retrigger_thumbnails_success">
+Мініатюри успішно перезапущено
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Стиснути зображення

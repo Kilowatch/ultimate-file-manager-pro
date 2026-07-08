@@ -2970,6 +2970,14 @@ Archivo creado: %1$s
 Error de compresión: %1$s
 </string>
 
+    <!-- Retrigger Thumbnails -->
+    <string name="action_retrigger_thumbnails">
+Volver a generar miniaturas
+</string>
+    <string name="retrigger_thumbnails_success">
+Miniaturas reactivadas con éxito
+</string>
+
     <!-- Image Compression -->
     <string name="action_compress_image">
 Comprimir imagen

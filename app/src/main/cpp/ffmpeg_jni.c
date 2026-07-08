@@ -5,14 +5,104 @@
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 #include <libavutil/imgutils.h>
+#include <libavutil/log.h>
 
 #define LOG_TAG "FFmpegThumbnail"
-#define LOGE(...) ((void)0)
-#define LOGD(...) ((void)0)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+
+static void ffmpeg_log_callback(void *ptr, int level, const char *fmt, va_list vl) {
+    if (level > AV_LOG_WARNING) return; // Only log warnings and errors to prevent log flooding
+    int android_level = ANDROID_LOG_DEFAULT;
+    if (level <= AV_LOG_ERROR) android_level = ANDROID_LOG_ERROR;
+    else if (level <= AV_LOG_WARNING) android_level = ANDROID_LOG_WARN;
+    else if (level <= AV_LOG_INFO) android_level = ANDROID_LOG_INFO;
+    else android_level = ANDROID_LOG_DEBUG;
+    __android_log_vprint(android_level, "FFmpegNative", fmt, vl);
+}
+
+static void process_bitmap_pixels(AndroidBitmapInfo *bmp_info, void *bmp_pixels, jboolean *is_black) {
+    uint32_t *pixels = (uint32_t *)bmp_pixels;
+    int w = bmp_info->width;
+    int h = bmp_info->height;
+    int sample_indices[] = {
+        (h / 2) * w + (w / 2),
+        (h / 4) * w + (w / 4),
+        (3 * h / 4) * w + (3 * w / 4),
+        (h / 4) * w + (3 * w / 4),
+        (3 * h / 4) * w + (w / 4)
+    };
+    int sum_val = 0;
+    *is_black = JNI_TRUE;
+
+    for (int i = 0; i < 5; i++) {
+        uint32_t pixel = pixels[sample_indices[i]];
+        if (bmp_info->format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
+            uint8_t r = pixel & 0xFF;
+            uint8_t g = (pixel >> 8) & 0xFF;
+            uint8_t b = (pixel >> 16) & 0xFF;
+            sum_val += r + g + b;
+            if (r > 90 || g > 90 || b > 90) {
+                *is_black = JNI_FALSE;
+            }
+        } else {
+            uint16_t pix16 = ((uint16_t *)bmp_pixels)[sample_indices[i]];
+            uint8_t r = (pix16 >> 11) & 0x1F;
+            uint8_t g = (pix16 >> 5) & 0x3F;
+            uint8_t b = pix16 & 0x1F;
+            // Normalize to 255
+            sum_val += (r * 255 / 31) + (g * 255 / 63) + (b * 255 / 31);
+            if (r > 11 || g > 22 || b > 11) {
+                *is_black = JNI_FALSE;
+            }
+        }
+    }
+
+    // Calculate average channel value (out of 255)
+    float avg_brightness = sum_val / 15.0f;
+    if (avg_brightness < 100.0f) {
+        float gain = 1.0f + (100.0f - avg_brightness) / 100.0f * 1.0f; // Max 2.0x gain
+        __android_log_print(ANDROID_LOG_INFO, "FFmpegThumbnail", "Low average brightness (%.1f). Applying exposure gain: %.2fx", avg_brightness, gain);
+        if (bmp_info->format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
+            for (int i = 0; i < w * h; i++) {
+                uint32_t pixel = pixels[i];
+                int r = (int)((pixel & 0xFF) * gain);
+                int g = (int)(((pixel >> 8) & 0xFF) * gain);
+                int b = (int)(((pixel >> 16) & 0xFF) * gain);
+                if (r > 255) r = 255;
+                if (g > 255) g = 255;
+                if (b > 255) b = 255;
+                pixels[i] = (pixel & 0xFF000000) | r | (g << 8) | (b << 16);
+            }
+        } else {
+            uint16_t *pixels16 = (uint16_t *)bmp_pixels;
+            for (int i = 0; i < w * h; i++) {
+                uint16_t pix16 = pixels16[i];
+                int r = (int)(((pix16 >> 11) & 0x1F) * gain);
+                int g = (int)(((pix16 >> 5) & 0x3F) * gain);
+                int b = (int)((pix16 & 0x1F) * gain);
+                if (r > 31) r = 31;
+                if (g > 63) g = 63;
+                if (b > 31) b = 31;
+                pixels16[i] = (r << 11) | (g << 5) | b;
+            }
+        }
+    }
+
+    // Force alpha channel to 255 for RGBA if it's 0 (transparent)
+    if (bmp_info->format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        for (int i = 0; i < w * h; i++) {
+            pixels[i] |= 0xFF000000;
+        }
+    }
+}
 
 JNIEXPORT jboolean JNICALL
 Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
         JNIEnv *env, jobject thiz, jstring video_path, jint time_percent, jobject bitmap) {
+
+    av_log_set_callback(ffmpeg_log_callback);
+    av_log_set_level(AV_LOG_WARNING);
 
     const char *path = (*env)->GetStringUTFChars(env, video_path, NULL);
     if (!path) {
@@ -95,6 +185,23 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
         } else {
             avcodec_flush_buffers(codec_ctx);
         }
+    } else if (time_percent > 0 && format_ctx->pb) {
+        // Skip byte seeking for Matroska/WebM because it causes EBML parser alignment and decoding errors
+        if (strstr(format_ctx->iformat->name, "matroska") == NULL && 
+            strstr(format_ctx->iformat->name, "webm") == NULL) {
+            int64_t file_size = avio_size(format_ctx->pb);
+            if (file_size > 0) {
+                int64_t target_byte = file_size * time_percent / 100;
+                LOGD("Duration unknown. Attempting byte-based seek to %lld (file size: %lld)", (long long)target_byte, (long long)file_size);
+                if (av_seek_frame(format_ctx, -1, target_byte, AVSEEK_FLAG_BYTE) < 0) {
+                    LOGD("Byte-based seek failed, decoding from the beginning");
+                } else {
+                    avcodec_flush_buffers(codec_ctx);
+                }
+            }
+        } else {
+            LOGD("Matroska/WebM format with unknown duration. Decoding sequentially from the beginning to avoid EBML parser errors.");
+        }
     }
 
     AVPacket *packet = av_packet_alloc();
@@ -116,6 +223,8 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
 
             response = avcodec_receive_frame(codec_ctx, frame);
             if (response == 0) {
+                LOGD("avcodec_receive_frame success: frame width=%d, height=%d, format=%d", frame->width, frame->height, frame->format);
+                jboolean is_black = JNI_TRUE;
                 // Got a decoded frame! Let's lock the bitmap pixels and scale/convert it.
                 if (AndroidBitmap_lockPixels(env, bitmap, &bmp_pixels) >= 0 && bmp_pixels) {
                     enum AVPixelFormat dst_pix_fmt;
@@ -126,24 +235,38 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
                     }
 
                     struct SwsContext *sws_ctx = sws_getContext(
-                            frame->width, frame->height, codec_ctx->pix_fmt,
+                            frame->width, frame->height, frame->format,
                             bmp_info.width, bmp_info.height, dst_pix_fmt,
                             SWS_BILINEAR, NULL, NULL, NULL);
+
+                    LOGD("sws_getContext result: %p (dst_pix_fmt=%d)", sws_ctx, dst_pix_fmt);
 
                     if (sws_ctx) {
                         uint8_t *dst_data[4] = { (uint8_t *)bmp_pixels, NULL, NULL, NULL };
                         int dst_linesize[4] = { bmp_info.stride, 0, 0, 0 };
 
-                        sws_scale(sws_ctx, (const uint8_t *const *)frame->data, frame->linesize,
+                        int scale_res = sws_scale(sws_ctx, (const uint8_t *const *)frame->data, frame->linesize,
                                   0, frame->height, dst_data, dst_linesize);
+                        LOGD("sws_scale slice height: %d", scale_res);
 
+                        process_bitmap_pixels(&bmp_info, bmp_pixels, &is_black);
                         sws_freeContext(sws_ctx);
                         success = JNI_TRUE;
+                    } else {
+                        LOGE("sws_getContext failed");
                     }
                     AndroidBitmap_unlockPixels(env, bitmap);
+                } else {
+                    LOGE("AndroidBitmap_lockPixels failed");
                 }
                 av_packet_unref(packet);
-                break; // We only need the first decoded frame around the target seek time.
+
+                if (!is_black) {
+                    LOGD("Found non-black frame at frame_count=%d. Exiting loop.", frame_count);
+                    break;
+                } else {
+                    LOGD("Frame %d was black, continuing search...", frame_count);
+                }
             } else if (response == AVERROR(EAGAIN)) {
                 // Try reading more packets
             } else {
@@ -172,6 +295,8 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
 
                 response = avcodec_receive_frame(codec_ctx, frame);
                 if (response == 0) {
+                    LOGD("avcodec_receive_frame fallback success: frame width=%d, height=%d, format=%d", frame->width, frame->height, frame->format);
+                    jboolean is_black = JNI_TRUE;
                     if (AndroidBitmap_lockPixels(env, bitmap, &bmp_pixels) >= 0 && bmp_pixels) {
                         enum AVPixelFormat dst_pix_fmt;
                         if (bmp_info.format == ANDROID_BITMAP_FORMAT_RGBA_8888) {
@@ -181,24 +306,38 @@ Java_za_kilowatch_ultimatefilemanager_media_FFmpegThumbnailHelper_extractFrame(
                         }
 
                         struct SwsContext *sws_ctx = sws_getContext(
-                                frame->width, frame->height, codec_ctx->pix_fmt,
+                                frame->width, frame->height, frame->format,
                                 bmp_info.width, bmp_info.height, dst_pix_fmt,
                                 SWS_BILINEAR, NULL, NULL, NULL);
+
+                        LOGD("sws_getContext fallback result: %p (dst_pix_fmt=%d)", sws_ctx, dst_pix_fmt);
 
                         if (sws_ctx) {
                             uint8_t *dst_data[4] = { (uint8_t *)bmp_pixels, NULL, NULL, NULL };
                             int dst_linesize[4] = { bmp_info.stride, 0, 0, 0 };
 
-                            sws_scale(sws_ctx, (const uint8_t *const *)frame->data, frame->linesize,
+                            int scale_res = sws_scale(sws_ctx, (const uint8_t *const *)frame->data, frame->linesize,
                                       0, frame->height, dst_data, dst_linesize);
+                            LOGD("sws_scale fallback slice height: %d", scale_res);
 
+                            process_bitmap_pixels(&bmp_info, bmp_pixels, &is_black);
                             sws_freeContext(sws_ctx);
                             success = JNI_TRUE;
+                        } else {
+                            LOGE("sws_getContext fallback failed");
                         }
                         AndroidBitmap_unlockPixels(env, bitmap);
+                    } else {
+                        LOGE("AndroidBitmap_lockPixels fallback failed");
                     }
                     av_packet_unref(packet);
-                    break;
+
+                    if (!is_black) {
+                        LOGD("Found fallback non-black frame at frame_count=%d. Exiting loop.", frame_count);
+                        break;
+                    } else {
+                        LOGD("Fallback frame %d was black, continuing search...", frame_count);
+                    }
                 } else if (response == AVERROR(EAGAIN)) {
                     // Try reading more packets
                 } else {
