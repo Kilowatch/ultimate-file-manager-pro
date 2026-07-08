@@ -660,6 +660,15 @@ Dosyalarınız cihazınızda kalır — onları asla görmeyiz. Uygulamayı iyil
     <string name="pp_s13_title">
 13. Google Play Politikasına Uygunluk
 </string>
+    <string name="pp_s13b_title">
+13b. Önemli Açıklama — Yüklü Uygulama Bilgileri
+</string>
+    <string name="pd_dialog_title">
+Önemli Açıklama — Yüklü Uygulama Bilgileri
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro, QUERY_ALL_PACKAGES izni aracılığıyla cihazınızdaki yüklü uygulamaların listesine erişerek Uygulama Yöneticisi ve Debloat Aracı özelliklerini sağlar. Bu bilgiler yalnızca cihazınızda yerel olarak işlenir ve saklanır, asla yüklenmez veya paylaşılmaz. Tam ayrıntılar için lütfen Gizlilik Politikamızın Bölüm 13b\'ye bakın.
+</string>
     <string name="pp_s14_title">
 14. Bize Ulaşın
 </string>
@@ -824,9 +833,55 @@ Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Güncellediğimizde, 
 </string>
 
     <string name="pp_s13_body">
-Bu uygulama Google Play standartlarını karşılayacak şekilde oluşturulmuştur. İstenen tüm izinler temel uygulama işlevselliği için gereklidir. Herhangi bir hassas izin talep etmeden önce, uygulama neden gerekli olduğunu ve nasıl kullanılacağını açıkça açıklar. Ekim 2024 Fotoğraf ve Video Politikası güncellemeleriyle ilgili olarak: geniş erişim gereklidir çünkü bu, tüm depolama birimlerinde toplu işlemler (taşıma, yeniden adlandırma ve senkronizasyon) için tasarlanmış kapsamlı bir dosya yöneticisidir ve bu işlemler standart sistem seçiciler kullanılarak verimli bir şekilde gerçekleştirilemez.\n
-\n
-Yüklenmiş Uygulama Bilgileri (QUERY_ALL_PACKAGES) ile ilgili: Uygulama Yöneticisi özelliği, yüklenmiş paketlerin tam listesini yalnızca cihazda okur — uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve sistem ile kullanıcı uygulaması sınıflandırması dahil. Debloater sekmesi ayrıca herkese açık bir debloat referans listesi indirir ve bunu yerel olarak yüklenmiş paket adlarıyla karşılaştırır. Yüklenmiş uygulama verilerinin hiçbiri asla KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
+Bu uygulama Google Play standartlarını karşılamak için oluşturulmuştur. Talep edilen tüm izinler temel uygulama işlevselliği için gereklidir. Herhangi bir hassas izin talep etmeden önce uygulama, neden gerekli olduğunu ve nasıl kullanılacağını açıkça açıklar. Ekim 2024 Fotoğraf ve Video Politikası güncellemeleri ile ilgili olarak: geniş erişim gereklidir çünkü bu, standart sistem seçicileri kullanılarak verimli bir şekilde gerçekleştirilemeyen tüm depolama birimlerinde toplu işlemler (taşıma, yeniden adlandırma ve senkronizasyon) için tasarlanmış kapsamlı bir dosya yöneticisidir.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro, Uygulama Yöneticisi ve Debloater özelliklerini sağlamak için QUERY_ALL_PACKAGES izni aracılığıyla cihazınızdaki yüklü uygulamaların tam listesine erişir. Bu açıklama, hangi verilere erişildiğini, nedenini ve bunların nerede kaldığını tam olarak açıklar.
+</string>
+    <string name="pp_s13b_data_heading">
+Hangi Verilere Erişilir
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+Uygulama adı ve paket tanımlayıcısı (paket kimliği)
+</item>
+        <item>
+Sürüm adı ve sürüm kodu
+</item>
+        <item>
+APK dosya boyutu
+</item>
+        <item>
+İlk yükleme zamanı ve son güncelleme zamanı
+</item>
+        <item>
+Sistem uygulaması ve kullanıcı tarafından yüklenen uygulama sınıflandırması
+</item>
+        <item>
+OBB genişletme dosyalarının varlığı
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Bu Verilere Neden Erişilir
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+Uygulama Yöneticisi: Yüklü uygulamaların tam listesini ayrıntılarıyla (ad, sürüm, boyut, yükleme tarihi) görüntüleyerek uygulamalarınıza tek bir yerden göz atabilir, arayabilir ve yönetebilirsiniz.
+</item>
+        <item>
+Uygulama Bazında Depolama Hesaplaması: Her uygulamanın ne kadar depolama kullandığını göstermek için APK dosya boyutunu ve veri dizini boyutunu (en iyi çaba) okur.
+</item>
+        <item>
+Debloat Aracı: Yüklü paket adlarını, cihazınıza yerel olarak indirilen ve önbelleğe alınan herkese açık bir debloat referans listesiyle karşılaştırarak güvenle kaldırılabilecek veya devre dışı bırakılabilecek önceden yüklenmiş sistem uygulamalarını tanımlar.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Bu Veriler Nerede Kalır
+</string>
+    <string name="pp_s13b_location_body">
+<b>Yalnızca cihazınızda.</b> Tüm yüklü uygulama verileri, uygulamanın özel depolama alanında yerel olarak işlenir ve saklanır. Bu veriler asla KiloWatch sunucularına yüklenmez, herhangi bir üçüncü tarafla paylaşılmaz ve yukarıda açıklanan Uygulama Yöneticisi ve Debloater özellikleri dışında reklam, profilleme, analitik, AI eğitimi veya herhangi bir amaç için kullanılmaz.
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Uygulama genelinde Lottie kitaplığı v6.3.0 (com.airbnb.android:lottie) aracı
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 E-posta

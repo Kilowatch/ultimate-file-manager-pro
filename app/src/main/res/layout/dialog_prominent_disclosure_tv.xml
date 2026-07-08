@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Prominent Disclosure dialog.
+     Glass background, fixed width, yellow focus on interactive elements. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp">
+
+    <!-- Header Icon -->
+    <ImageView
+        android:id="@+id/imgPdIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_lock"
+        android:tint="@color/tv_button_focused_yellow"
+        android:contentDescription="@null"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/txtPdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/pd_dialog_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center" />
+
+    <!-- Scrollable Body -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:scrollbars="vertical">
+
+        <!-- Body Text -->
+        <TextView
+            android:id="@+id/txtPdBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pd_dialog_body"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="16sp"
+            android:lineSpacingExtra="4dp" />
+    </ScrollView>
+
+    <!-- Buttons row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Cancel button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPdCancel"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:text="@string/cancel"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            app:backgroundTint="@color/tv_glass_white_10"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/btnPdCancel"
+            android:nextFocusDown="@id/btnPdCancel"
+            android:nextFocusLeft="@id/btnPdCancel"
+            android:nextFocusRight="@id/btnPdAccept" />
+
+        <!-- I Understand button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPdAccept"
+            android:layout_width="200dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/pd_accept"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            app:backgroundTint="@color/tv_glass_white_10"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            android:focusable="true"
+            android:nextFocusUp="@id/btnPdAccept"
+            android:nextFocusDown="@id/btnPdAccept"
+            android:nextFocusLeft="@id/btnPdCancel"
+            android:nextFocusRight="@id/btnPdAccept" />
+
+    </LinearLayout>
+
+</LinearLayout>

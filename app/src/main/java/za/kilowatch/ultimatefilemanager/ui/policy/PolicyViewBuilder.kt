@@ -411,6 +411,28 @@ object PolicyViewBuilder {
             }
         })
 
+        // Section 13b — Prominent Disclosure — Installed Application Information
+        add(sectionCard(context) {
+            addView(sectionTitle(context, context.getString(R.string.pp_s13b_title), "📱"))
+            addView(bodyText(context, context.getString(R.string.pp_s13b_intro)))
+            
+            addView(spacer(context, 12))
+            addView(subHeading(context, context.getString(R.string.pp_s13b_data_heading)))
+            context.resources.getStringArray(R.array.pp_s13b_data_items).forEach { item ->
+                addView(checkRow(context, item, CheckStyle.BULLET))
+            }
+            
+            addView(spacer(context, 12))
+            addView(subHeading(context, context.getString(R.string.pp_s13b_purpose_heading)))
+            context.resources.getStringArray(R.array.pp_s13b_purpose_items).forEach { item ->
+                addView(checkRow(context, item, CheckStyle.BULLET))
+            }
+            
+            addView(spacer(context, 12))
+            addView(subHeading(context, context.getString(R.string.pp_s13b_location_heading)))
+            addView(bodyText(context, context.getString(R.string.pp_s13b_location_body)))
+        })
+
         // Section 14 — Contact
         add(sectionCard(context) {
             addView(sectionTitle(context, context.getString(R.string.pp_s14_title), "📬"))

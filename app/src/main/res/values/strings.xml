@@ -67,7 +67,8 @@
     <string name="perm_media_desc">Browse, copy, move, and organize your music, photos, and video files across all storage devices.</string>
     <string name="perm_all_files_desc">Full file management: create, rename, copy, move, and delete any file or folder on your device.</string>
     <string name="perm_install_apps_desc">Optionally install APK files found on your storage — you will always be prompted to confirm each install.</string>
-    <string name="perm_query_apps_desc">View installed apps for remote management and ADB Terminal — allows listing and inspecting applications on your device.</string>
+    <string name="perm_query_apps_desc">Required by App Manager and Debloater. Reads the full list of installed packages (app names, package IDs, versions, APK sizes, install/update timestamps, system/user classification) — processed entirely on-device. No data is ever transmitted to us or any third party.</string>
+    <string name="pd_accept">I Understand</string>
 
     <!-- Permission Status -->
     <string name="status_granted">Granted</string>

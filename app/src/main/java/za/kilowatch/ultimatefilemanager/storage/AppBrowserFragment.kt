@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
+import android.util.Log
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -61,6 +63,7 @@ class AppBrowserFragment : Fragment() {
     var onNavigateBack: (() -> Unit)? = null
 
     companion object {
+        private const val TAG = "AppBrowserFragment"
         fun newInstance(isTwinWindow: Boolean = false): AppBrowserFragment {
             return AppBrowserFragment().apply {
                 arguments = Bundle().apply {
@@ -85,9 +88,16 @@ class AppBrowserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         debloatRepository = DebloatRepository(requireContext())
         setupViews(view)
-        // Skip debloat network call in twin window — user only sees user apps
-        if (!isTwinWindow) loadDebloatData()
-        loadApps()
+        ProminentDisclosureHelper.showIfNeeded(
+            activity = requireActivity(),
+            onContinue = {
+                if (!isTwinWindow) loadDebloatData()
+                loadApps()
+            },
+            onCancel = {
+                Log.d(TAG, "User cancelled prominent disclosure — apps will not load")
+            }
+        )
     }
 
     private fun setupViews(view: View) {

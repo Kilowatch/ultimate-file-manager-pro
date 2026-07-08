@@ -38,6 +38,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
 
 /**
  * Displays installed applications with the ability to view details
@@ -84,8 +85,16 @@ class AppManagerActivity : AppCompatActivity() {
 
         setupViews()
         debloatRepository = DebloatRepository(this)
-        loadDebloatData()
-        loadApps()
+        ProminentDisclosureHelper.showIfNeeded(
+            activity = this,
+            onContinue = {
+                loadDebloatData()
+                loadApps()
+            },
+            onCancel = {
+                finish()
+            }
+        )
     }
 
     private fun loadDebloatData() {

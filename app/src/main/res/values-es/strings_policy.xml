@@ -660,6 +660,15 @@ Tus archivos permanecen en tu dispositivo: nunca los vemos. Solo recopilamos an�
     <string name="pp_s13_title">
 13. Cumplimiento de las políticas de Google Play
 </string>
+    <string name="pp_s13b_title">
+13b. Divulgación destacada — Información de aplicaciones instaladas
+</string>
+    <string name="pd_dialog_title">
+Divulgación destacada — Información de aplicaciones instaladas
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro accede a la lista de aplicaciones instaladas en su dispositivo mediante el permiso QUERY_ALL_PACKAGES para proporcionar las funciones de App Manager y Debloater. Esta información se procesa y almacena localmente en su dispositivo únicamente y nunca se carga ni se comparte. Para obtener todos los detalles, consulte la Sección 13b de nuestra Política de privacidad.
+</string>
     <string name="pp_s14_title">
 14. Contáctanos
 </string>
@@ -824,9 +833,55 @@ Podemos actualizar esta Política de privacidad de vez en cuando. Cuando lo haga
 </string>
 
     <string name="pp_s13_body">
-Esta aplicación está diseñada para cumplir con los estándares de Google Play. Todos los permisos solicitados son necesarios para la funcionalidad principal de la aplicación. Antes de solicitar cualquier permiso sensible, la aplicación explica claramente por qué es necesario y cómo se usará. Con respecto a las actualizaciones de la política de fotos y videos de octubre de 2024: el acceso amplio es necesario porque este es un administrador de archivos integral diseñado para operaciones masivas (mover, renombrar y sincronizar) en todos los volúmenes de almacenamiento, que no se pueden realizar de manera eficiente usando los selectores de sistema estándar.\n
-\n
-Con respecto a la información de aplicaciones instaladas (QUERY_ALL_PACKAGES): la función Administrador de aplicaciones lee la lista completa de paquetes instalados solo en el dispositivo, incluidos el nombre de la aplicación, ID del paquete, versión, tamaño del APK, marcas de tiempo de instalación y actualización, y clasificación de sistema frente a aplicación de usuario. La pestaña Desbloqueador además descarga una lista de referencia de desbloqueo disponible públicamente y la compara localmente con los nombres de los paquetes instalados. Ningún dato de aplicaciones instaladas se transmite nunca a los servidores de KiloWatch ni a ningún tercero.
+Esta aplicación está diseñada para cumplir con los estándares de Google Play. Todos los permisos solicitados son necesarios para la funcionalidad principal de la aplicación. Antes de solicitar cualquier permiso sensible, la aplicación explica claramente por qué es necesario y cómo se utilizará. Con respecto a las actualizaciones de la política de fotos y videos de octubre de 2024: el acceso amplio es necesario porque este es un administrador de archivos integral diseñado para operaciones masivas (mover, renombrar y sincronizar) en todos los volúmenes de almacenamiento, lo que no se puede realizar de manera eficiente utilizando los selectores estándar del sistema.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro accede a la lista completa de aplicaciones instaladas en su dispositivo mediante el permiso QUERY_ALL_PACKAGES para proporcionar las funciones de Administrador de aplicaciones y Desbloat. Esta divulgación explica exactamente qué datos se accede, por qué y dónde permanecen.
+</string>
+    <string name="pp_s13b_data_heading">
+A qué datos se accede
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+Nombre de la aplicación e identificador del paquete (ID del paquete)
+</item>
+        <item>
+Nombre de versión y código de versión
+</item>
+        <item>
+Tamaño del archivo APK
+</item>
+        <item>
+Hora de primera instalación y hora de última actualización
+</item>
+        <item>
+Clasificación de aplicación del sistema frente a aplicación instalada por el usuario
+</item>
+        <item>
+Presencia de archivos de expansión OBB
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Por qué se accede a estos datos
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+Administrador de aplicaciones: Muestra la lista completa de aplicaciones instaladas con sus detalles (nombre, versión, tamaño, fecha de instalación) para que puedas explorar, buscar y gestionar tus aplicaciones desde un solo lugar.
+</item>
+        <item>
+Cálculo de almacenamiento por aplicación: Lee el tamaño del archivo APK y el tamaño del directorio de datos (mejor esfuerzo) para mostrar cuánto almacenamiento utiliza cada aplicación.
+</item>
+        <item>
+Desbloatador: Compara los nombres de los paquetes instalados con una lista de referencia de desbloqueo disponible públicamente (descargada y almacenada en caché localmente en tu dispositivo) para identificar aplicaciones del sistema preinstaladas que se pueden eliminar o deshabilitar de forma segura.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Dónde permanecen estos datos
+</string>
+    <string name="pp_s13b_location_body">
+<b>Solo en su dispositivo.</b> Todos los datos de las aplicaciones instaladas se procesan y almacenan localmente dentro del almacenamiento privado de la aplicación. Nunca se cargan en los servidores de KiloWatch, nunca se comparten con terceros y nunca se utilizan para publicidad, elaboración de perfiles, análisis, entrenamiento de IA o cualquier otro propósito que no sean las funciones de Administrador de aplicaciones y Desbloat descritas anteriormente.
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Renderiza animaciones de IU fluidas en toda la aplicación mediante la bibliotec
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 Correo electrónico

@@ -188,7 +188,10 @@ Manajemen berkas lengkap: buat, ganti nama, salin, pindahkan, dan hapus file ata
 Instal file APK yang ditemukan di penyimpanan Anda secara opsional — Anda akan selalu diminta untuk mengonfirmasi setiap instalasi.
 </string>
     <string name="perm_query_apps_desc">
-Lihat aplikasi yang terinstal untuk manajemen jarak jauh dan Terminal ADB — memungkinkan daftar dan memeriksa aplikasi di perangkat Anda.
+Diperlukan oleh Pengelola Aplikasi dan Pembersih Bloatware. Membaca daftar lengkap paket yang terinstal (nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi/pembaruan, klasifikasi sistem/pengguna) — diproses sepenuhnya di perangkat. Tidak ada data yang pernah dikirimkan kepada kami atau pihak ketiga mana pun.
+</string>
+    <string name="pd_accept">
+Saya Mengerti
 </string>
 
     <!-- Permission Status -->

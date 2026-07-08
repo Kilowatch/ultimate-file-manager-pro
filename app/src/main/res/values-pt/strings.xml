@@ -188,7 +188,10 @@ Gerenciamento completo de arquivos: crie, renomeie, copie, mova e exclua qualque
 Opcionalmente, instale arquivos APK encontrados no armazenamento — você sempre será solicitado a confirmar cada instalação.
 </string>
     <string name="perm_query_apps_desc">
-Visualize aplicativos instalados para gerenciamento remoto e Terminal ADB — permite listar e inspecionar aplicativos no dispositivo.
+Exigido pelo App Manager e pelo Debloater. Lê a lista completa de pacotes instalados (nomes de aplicativos, IDs de pacotes, versões, tamanhos de APK, carimbos de data/hora de instalação/atualização, classificação sistema/usuário) — processado inteiramente no dispositivo. Nenhum dado é transmitido para nós ou para terceiros.
+</string>
+    <string name="pd_accept">
+Compreendo
 </string>
 
     <!-- Permission Status -->

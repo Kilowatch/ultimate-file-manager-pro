@@ -188,7 +188,10 @@ Tam dosya yönetimi: cihazınızdaki herhangi bir dosya veya klasörü oluşturu
 İsteğe bağlı olarak depolama alanınızda bulunan APK dosyalarını yükleyin — her yükleme için onay istenecektir.
 </string>
     <string name="perm_query_apps_desc">
-Uzaktan yönetim ve ADB Terminali için yüklü uygulamaları görüntüleyin — cihazınızdaki uygulamaları listelemenize ve incelemenize olanak tanır.
+App Manager ve Debloater tarafından gereklidir. Yüklü paketlerin tam listesini okur (uygulama adları, paket kimlikleri, sürümler, APK boyutları, yükleme/güncelleme zaman damgaları, sistem/kullanıcı sınıflandırması) — tamamen cihaz üzerinde işlenir. Hiçbir veri bize veya herhangi bir üçüncü tarafa iletilmez.
+</string>
+    <string name="pd_accept">
+Anlıyorum
 </string>
 
     <!-- Permission Status -->

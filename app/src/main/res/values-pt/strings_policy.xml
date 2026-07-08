@@ -660,6 +660,15 @@ Seus arquivos permanecem no seu dispositivo — nunca os vemos. Coletamos apenas
     <string name="pp_s13_title">
 13. Conformidade com a Política do Google Play
 </string>
+    <string name="pp_s13b_title">
+13b. Divulgação Importante — Informações de Aplicativos Instalados
+</string>
+    <string name="pd_dialog_title">
+Divulgação Proeminente — Informações de Aplicativos Instalados
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro acessa a lista de aplicativos instalados no seu dispositivo através da permissão QUERY_ALL_PACKAGES para fornecer os recursos de Gerenciador de Aplicativos e Debloater. Essas informações são processadas e armazenadas localmente no seu dispositivo e nunca são enviadas ou compartilhadas. Para detalhes completos, consulte a Seção 13b da nossa Política de Privacidade.
+</string>
     <string name="pp_s14_title">
 14. Fale conosco
 </string>
@@ -824,9 +833,55 @@ Podemos atualizar esta Política de Privacidade de tempos em tempos. Quando o fi
 </string>
 
     <string name="pp_s13_body">
-Este aplicativo foi construído para atender aos padrões do Google Play. Todas as permissões solicitadas são necessárias para a funcionalidade principal do aplicativo. Antes de solicitar qualquer permissão sensível, o aplicativo explica claramente por que ela é necessária e como será usada. Em relação às atualizações da política de fotos e vídeos de outubro de 2024: o acesso amplo é necessário porque este é um gerenciador de arquivos abrangente projetado para operações em massa (mover, renomear e sincronizar) em todos os volumes de armazenamento, que não podem ser realizadas eficientemente usando seletores de sistema padrão.\n
-\n
-Em relação às Informações de Aplicativos Instalados (QUERY_ALL_PACKAGES): O recurso Gerenciador de Aplicativos lê a lista completa de pacotes instalados no dispositivo — incluindo nome do aplicativo, ID do pacote, versão, tamanho do APK, carimbos de data/hora de instalação e atualização, e classificação como sistema vs. aplicativo do usuário. A guia Desbloqueador adicionalmente baixa uma lista de referência de desbloqueio publicamente disponível e a cruza localmente com os nomes dos pacotes instalados. Nenhum dado de aplicativo instalado é enviado para os servidores da KiloWatch ou para terceiros.
+Este aplicativo foi desenvolvido para atender aos padrões do Google Play. Todas as permissões solicitadas são necessárias para as funcionalidades principais do aplicativo. Antes de solicitar qualquer permissão sensível, o aplicativo explica claramente por que ela é necessária e como será usada. Em relação às atualizações da Política de Fotos e Vídeos de outubro de 2024: o acesso amplo é necessário porque este é um gerenciador de arquivos abrangente, projetado para operações em lote (mover, renomear e sincronizar) em todos os volumes de armazenamento, o que não pode ser feito de forma eficiente usando os seletores de sistema padrão.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+O Ultimate File Manager Pro acessa a lista completa de aplicativos instalados no seu dispositivo por meio da permissão QUERY_ALL_PACKAGES para fornecer os recursos de Gerenciador de Aplicativos e Debloater. Esta divulgação explica exatamente quais dados são acessados, por que e onde eles permanecem.
+</string>
+    <string name="pp_s13b_data_heading">
+Quais Dados São Acessados
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+Nome do aplicativo e identificador do pacote (ID do pacote)
+</item>
+        <item>
+Nome da versão e código da versão
+</item>
+        <item>
+Tamanho do arquivo APK
+</item>
+        <item>
+Data da primeira instalação e data da última atualização
+</item>
+        <item>
+Classificação de aplicativo do sistema versus aplicativo instalado pelo usuário
+</item>
+        <item>
+Presença de arquivos de expansão OBB
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Por Que Esses Dados São Acessados
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+Gerenciador de Aplicativos: Exibindo a lista completa de aplicativos instalados com seus detalhes (nome, versão, tamanho, data de instalação) para que você possa navegar, pesquisar e gerenciar seus aplicativos em um só lugar.
+</item>
+        <item>
+Cálculo de Armazenamento por Aplicativo: Lê o tamanho do arquivo APK e o tamanho do diretório de dados (melhor esforço) para mostrar quanto armazenamento cada aplicativo usa.
+</item>
+        <item>
+Debloater: Cruzando referências dos nomes dos pacotes instalados com uma lista de referência de desobstrução publicamente disponível (baixada e armazenada em cache localmente no seu dispositivo) para identificar aplicativos de sistema pré-instalados que podem ser removidos ou desativados com segurança.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Onde Esses Dados Permanecem
+</string>
+    <string name="pp_s13b_location_body">
+<b>Apenas no seu dispositivo.</b> Todos os dados de aplicativos instalados são processados e armazenados localmente no armazenamento privado do aplicativo. Eles nunca são enviados para os servidores da KiloWatch, nunca compartilhados com terceiros e nunca usados para publicidade, criação de perfis, análises, treinamento de IA ou qualquer outra finalidade que não sejam os recursos de Gerenciador de Aplicativos e Debloater descritos acima.
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Renderiza animações suaves da interface do usuário em todo o aplicativo via a
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 E-mail

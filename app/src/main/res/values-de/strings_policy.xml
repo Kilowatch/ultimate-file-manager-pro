@@ -660,6 +660,15 @@ Ihre Dateien bleiben auf Ihrem Gerät – wir sehen sie nie. Wir sammeln nur ano
     <string name="pp_s13_title">
 13. Einhaltung der Google Play-Richtlinien
 </string>
+    <string name="pp_s13b_title">
+13b. Prominente Offenlegung — Informationen zu installierten Apps
+</string>
+    <string name="pd_dialog_title">
+Deutlicher Hinweis — Informationen zu installierten Anwendungen
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro greift über die QUERY_ALL_PACKAGES-Berechtigung auf die Liste der installierten Anwendungen auf Ihrem Gerät zu, um die Funktionen App-Manager und Debloater bereitzustellen. Diese Informationen werden ausschließlich lokal auf Ihrem Gerät verarbeitet und gespeichert und niemals hochgeladen oder geteilt. Ausführliche Informationen finden Sie in Abschnitt 13b unserer Datenschutzrichtlinie.
+</string>
     <string name="pp_s14_title">
 14. Kontaktieren Sie uns
 </string>
@@ -824,9 +833,55 @@ Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Wenn wir
 </string>
 
     <string name="pp_s13_body">
-Diese App wurde entwickelt, um den Google Play-Standards zu entsprechen. Alle angeforderten Berechtigungen sind für die Kernfunktionalität der App erforderlich. Bevor eine sensible Berechtigung angefordert wird, erklärt die App klar, warum sie benötigt wird und wie sie verwendet wird. Hinsichtlich der Updates der Foto- und Video-Richtlinien vom Oktober 2024: Ein breiter Zugriff ist erforderlich, da es sich um einen umfassenden Dateimanager handelt, der für Massenvorgänge (Verschieben, Umbenennen und Synchronisieren) über alle Speichervolumes hinweg ausgelegt ist, die mit standardmäßigen Systemauswahlwerkzeugen nicht effizient durchgeführt werden können.\n
-\n
-Bezüglich der Informationen zu installierten Anwendungen (QUERY_ALL_PACKAGES): Die App-Manager-Funktion liest die vollständige Liste der installierten Pakete nur auf dem Gerät – einschließlich App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel sowie System- vs. Benutzer-App-Klassifizierung. Die Debloater-Registerkarte lädt zusätzlich eine öffentlich verfügbare Debloat-Referenzliste herunter und gleicht sie lokal mit den installierten Paketnamen ab. Es werden niemals Daten installierter Anwendungen an KiloWatch-Server oder Dritte übertragen.
+Diese App wurde entwickelt, um den Google Play-Standards zu entsprechen. Alle angeforderten Berechtigungen sind für die Kernfunktionen der App erforderlich. Bevor eine sensible Berechtigung angefordert wird, erklärt die App klar, warum sie benötigt wird und wie sie verwendet wird. Bezüglich der Aktualisierung der Foto- und Videorichtlinien vom Oktober 2024: Ein umfassender Zugriff ist notwendig, da dies ein umfassender Dateimanager ist, der für Massenvorgänge (Verschieben, Umbenennen und Synchronisieren) über alle Speichervolumes hinweg konzipiert ist, was mit den standardmäßigen Systemauswahldialogen nicht effizient durchgeführt werden kann.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro greift über die QUERY_ALL_PACKAGES-Berechtigung auf die vollständige Liste der auf Ihrem Gerät installierten Apps zu, um die Funktionen App-Manager und Debloater bereitzustellen. Diese Offenlegung erklärt genau, auf welche Daten zugegriffen wird, warum und wo sie verbleiben.
+</string>
+    <string name="pp_s13b_data_heading">
+Welche Daten abgerufen werden
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+App-Name und Paketkennung (Paket-ID)
+</item>
+        <item>
+Versionsname und Versionscode
+</item>
+        <item>
+APK-Dateigröße
+</item>
+        <item>
+Erste Installation und letzte Aktualisierung
+</item>
+        <item>
+System-App vs. benutzerinstallierte App-Klassifizierung
+</item>
+        <item>
+Vorhandensein von OBB-Erweiterungsdateien
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Warum diese Daten abgerufen werden
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+App-Manager: Zeigt die vollständige Liste der installierten Apps mit ihren Details (Name, Version, Größe, Installationsdatum) an, damit Sie Ihre Anwendungen von einem Ort aus durchsuchen, suchen und verwalten können.
+</item>
+        <item>
+Speicherberechnung pro App: Liest APK-Dateigröße und Datenverzeichnisgröße (bestmöglich), um anzuzeigen, wie viel Speicher jede App belegt.
+</item>
+        <item>
+Debloater: Vergleicht installierte Paketnamen mit einer öffentlich verfügbaren Debloat-Referenzliste (auf Ihrem Gerät heruntergeladen und zwischengespeichert), um vorinstallierte System-Apps zu identifizieren, die sicher entfernt oder deaktiviert werden können.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Wo diese Daten verbleiben
+</string>
+    <string name="pp_s13b_location_body">
+<b>Ausschließlich auf Ihrem Gerät.</b> Alle Daten der installierten Apps werden lokal im privaten Speicher der App verarbeitet und gespeichert. Sie werden niemals auf KiloWatch-Server hochgeladen, niemals an Dritte weitergegeben und niemals für Werbung, Profiling, Analysen, KI-Training oder einen anderen Zweck als die oben beschriebenen Funktionen App-Manager und Debloater verwendet.
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Rendert flüssige UI-Animationen in der gesamten App über die Lottie-Bibliothek
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 E-Mail

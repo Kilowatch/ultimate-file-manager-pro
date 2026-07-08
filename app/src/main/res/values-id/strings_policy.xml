@@ -660,6 +660,15 @@ File Anda tetap di perangkat Anda — kami tidak pernah melihatnya. Kami hanya m
     <string name="pp_s13_title">
 13. Kepatuhan Kebijakan Google Play
 </string>
+    <string name="pp_s13b_title">
+13b. Pengungkapan Menonjol — Informasi Aplikasi yang Terinstal
+</string>
+    <string name="pd_dialog_title">
+Pengungkapan Penting — Informasi Aplikasi Terinstal
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Pro mengakses daftar aplikasi yang terinstal di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan fitur App Manager dan Debloater. Informasi ini diproses dan disimpan secara lokal di perangkat Anda saja dan tidak pernah diunggah atau dibagikan. Untuk detail lengkap, silakan merujuk ke Bagian 13b dari Kebijakan Privasi kami.
+</string>
     <string name="pp_s14_title">
 14. Hubungi Kami
 </string>
@@ -824,9 +833,55 @@ Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Saat melakukan
 </string>
 
     <string name="pp_s13_body">
-Aplikasi ini dibuat untuk memenuhi standar Google Play. Semua izin yang diminta diperlukan untuk fungsionalitas inti aplikasi. Sebelum meminta izin sensitif apa pun, aplikasi dengan jelas menjelaskan mengapa izin tersebut diperlukan dan bagaimana akan digunakan. Mengenai pembaruan Kebijakan Foto dan Video Oktober 2024: akses luas diperlukan karena ini adalah manajer file komprehensif yang dirancang untuk operasi massal (memindahkan, mengganti nama, dan menyinkronkan) di semua volume penyimpanan, yang tidak dapat dilakukan secara efisien menggunakan pemilih sistem standar.\n
-\n
-Mengenai Informasi Aplikasi yang Terinstal (QUERY_ALL_PACKAGES): Fitur App Manager membaca daftar lengkap paket yang terinstal hanya di perangkat — termasuk nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, serta klasifikasi sistem vs. aplikasi pengguna. Tab Debloater tambahan mengunduh daftar referensi debloat yang tersedia untuk umum dan mencocokkannya secara lokal dengan nama paket yang terinstal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
+Aplikasi ini dibuat untuk memenuhi standar Google Play. Semua izin yang diminta diperlukan untuk fungsi aplikasi inti. Sebelum meminta izin sensitif apa pun, aplikasi dengan jelas menjelaskan mengapa izin tersebut diperlukan dan bagaimana akan digunakan. Terkait pembaruan Kebijakan Foto dan Video Oktober 2024: akses luas diperlukan karena ini adalah pengelola file komprehensif yang dirancang untuk operasi massal (memindahkan, mengganti nama, dan menyinkronkan) di semua volume penyimpanan, yang tidak dapat dilakukan secara efisien menggunakan pemilih sistem standar.
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Pro mengakses daftar lengkap aplikasi yang terinstal di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan fitur App Manager dan Debloater. Pengungkapan ini menjelaskan secara tepat data apa yang diakses, mengapa, dan di mana data tersebut disimpan.
+</string>
+    <string name="pp_s13b_data_heading">
+Data Apa yang Diakses
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+Nama aplikasi dan pengidentifikasi paket (ID paket)
+</item>
+        <item>
+Nama versi dan kode versi
+</item>
+        <item>
+Ukuran file APK
+</item>
+        <item>
+Waktu instalasi pertama dan waktu pembaruan terakhir
+</item>
+        <item>
+Klasifikasi aplikasi sistem vs. aplikasi yang diinstal pengguna
+</item>
+        <item>
+Keberadaan file ekspansi OBB
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+Mengapa Data Ini Diakses
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+Pengelola Aplikasi: Menampilkan daftar lengkap aplikasi yang terinstal beserta detailnya (nama, versi, ukuran, tanggal instalasi) sehingga Anda dapat menjelajah, mencari, dan mengelola aplikasi dari satu tempat.
+</item>
+        <item>
+Perhitungan Penyimpanan Per-Aplikasi: Membaca ukuran file APK dan ukuran direktori data (upaya terbaik) untuk menunjukkan berapa banyak penyimpanan yang digunakan setiap aplikasi.
+</item>
+        <item>
+Debloater: Mencocokkan silang nama paket yang terinstal dengan daftar referensi debloat yang tersedia untuk umum (diunduh dan disimpan dalam cache secara lokal di perangkat Anda) untuk mengidentifikasi aplikasi sistem yang sudah terinstal sebelumnya yang dapat dihapus atau dinonaktifkan dengan aman.
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+Di Mana Data Ini Disimpan
+</string>
+    <string name="pp_s13b_location_body">
+<b>Hanya di perangkat Anda.</b> Semua data aplikasi yang terinstal diproses dan disimpan secara lokal dalam penyimpanan pribadi aplikasi. Data tersebut tidak pernah diunggah ke server KiloWatch, tidak pernah dibagikan kepada pihak ketiga mana pun, dan tidak pernah digunakan untuk iklan, pembuatan profil, analitik, pelatihan AI, atau tujuan apa pun selain fitur App Manager dan Debloater yang dijelaskan di atas.
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Menampilkan animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 Email

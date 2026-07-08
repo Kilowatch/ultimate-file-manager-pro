@@ -188,7 +188,10 @@ Gestion complète des fichiers : créez, renommez, copiez, déplacez et supprime
 Installez éventuellement les fichiers APK trouvés sur votre stockage — vous serez toujours invité à confirmer chaque installation.
 </string>
     <string name="perm_query_apps_desc">
-Affichez les applications installées pour la gestion à distance et le terminal ADB — permet de lister et d\'inspecter les applications sur votre appareil.
+Requis par App Manager et Debloater. Lit la liste complète des paquets installés (noms d\'applications, identifiants de paquets, versions, tailles des APK, horodatages d\'installation/mise à jour, classification système/utilisateur) — traité entièrement sur l\'appareil. Aucune donnée n\'est jamais transmise à nous ou à un tiers.
+</string>
+    <string name="pd_accept">
+Je comprends
 </string>
 
     <!-- Permission Status -->

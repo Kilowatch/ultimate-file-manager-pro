@@ -188,7 +188,10 @@ Ultimate File Manager Pro에 오신 것을 환영합니다
 선택적으로 저장소에서 발견된 APK 파일을 설치합니다 — 각 설치 시 항상 확인 메시지가 표시됩니다.
 </string>
     <string name="perm_query_apps_desc">
-원격 관리 및 ADB 터미널을 위해 설치된 앱을 봅니다 — 기기의 애플리케이션을 나열하고 검사할 수 있습니다.
+앱 관리자 및 디블로터에 필요합니다. 설치된 패키지의 전체 목록(앱 이름, 패키지 ID, 버전, APK 크기, 설치/업데이트 타임스탬프, 시스템/사용자 분류)을 읽습니다. 모든 처리는 기기 내에서만 이루어집니다. 당사나 제3자에게 데이터가 전송되지 않습니다.
+</string>
+    <string name="pd_accept">
+이해합니다
 </string>
 
     <!-- Permission Status -->

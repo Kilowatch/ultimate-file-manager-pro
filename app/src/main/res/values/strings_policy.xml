@@ -264,6 +264,9 @@
     <string name="pp_s11_title">11. International Users</string>
     <string name="pp_s12_title">12. Changes to This Privacy Policy</string>
     <string name="pp_s13_title">13. Google Play Policy Compliance</string>
+    <string name="pp_s13b_title">13b. Prominent Disclosure — Installed Application Information</string>
+    <string name="pd_dialog_title">Prominent Disclosure — Installed Application Information</string>
+    <string name="pd_dialog_body">Ultimate File Manager Pro accesses the list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager and Debloater features. This information is processed and stored locally on your device only and is never uploaded or shared. For full details, please refer to Section 13b of our Privacy Policy.</string>
     <string name="pp_s14_title">14. Contact Us</string>
 
     <!-- Section body text -->
@@ -331,7 +334,27 @@
 
     <string name="pp_s12_body">We may update this Privacy Policy from time to time. When we do, we\'ll update the date at the top. For significant changes, we\'ll also notify you in-app. Continuing to use the app after changes means you accept the updated Policy.</string>
 
-    <string name="pp_s13_body">This app is built to meet Google Play\'s standards. All requested permissions are required for core app functionality. Before requesting any sensitive permission, the app clearly explains why it\'s needed and how it will be used. Regarding the October 2024 Photo and Video Policy updates: broad access is necessary because this is a comprehensive file manager designed for bulk operations (moving, renaming, and syncing) across all storage volumes, which cannot be efficiently performed using standard system pickers.\n\nRegarding Installed Application Information (QUERY_ALL_PACKAGES): The App Manager feature reads the full list of installed packages on-device only — including app name, package ID, version, APK size, install and update timestamps, and system vs. user-app classification. The Debloater tab additionally downloads a publicly available debloat reference list and cross-references it locally against installed package names. No installed application data is ever transmitted to KiloWatch servers or any third party.</string>
+    <string name="pp_s13_body">This app is built to meet Google Play\'s standards. All requested permissions are required for core app functionality. Before requesting any sensitive permission, the app clearly explains why it\'s needed and how it will be used. Regarding the October 2024 Photo and Video Policy updates: broad access is necessary because this is a comprehensive file manager designed for bulk operations (moving, renaming, and syncing) across all storage volumes, which cannot be efficiently performed using standard system pickers.</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">Ultimate File Manager Pro accesses the full list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager and Debloater features. This disclosure explains exactly what data is accessed, why, and where it stays.</string>
+    <string name="pp_s13b_data_heading">What Data Is Accessed</string>
+    <string-array name="pp_s13b_data_items">
+        <item>App name and package identifier (package ID)</item>
+        <item>Version name and version code</item>
+        <item>APK file size</item>
+        <item>First install time and last update time</item>
+        <item>System app vs. user-installed app classification</item>
+        <item>Presence of OBB expansion files</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">Why This Data Is Accessed</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>App Manager: Displaying the full list of installed apps with their details (name, version, size, install date) so you can browse, search, and manage your applications from one place.</item>
+        <item>Per-App Storage Calculation: Reading APK file size and data directory size (best-effort) to show how much storage each app uses.</item>
+        <item>Debloater: Cross-referencing installed package names against a publicly available debloat reference list (downloaded and cached locally on your device) to identify pre-installed system apps that can safely be removed or disabled.</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">Where This Data Stays</string>
+    <string name="pp_s13b_location_body"><b>On your device only.</b> All installed application data is processed and stored locally within the app\'s private storage. It is never uploaded to KiloWatch servers, never shared with any third party, and never used for advertising, profiling, analytics, AI training, or any purpose other than the App Manager and Debloater features described above.</string>
 
     <string name="pp_s14_body">If you have any questions or concerns about this Privacy Policy, please reach out.</string>
 
@@ -626,7 +649,8 @@
         <item>Renders smooth UI animations throughout the app via the Lottie library v6.3.0 (com.airbnb.android:lottie)</item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>Email</item>
     </string-array>

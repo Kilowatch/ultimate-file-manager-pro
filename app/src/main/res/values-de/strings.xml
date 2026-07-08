@@ -188,7 +188,10 @@ Vollständige Dateiverwaltung: Erstellen, umbenennen, kopieren, verschieben und 
 Optional können Sie APK-Dateien auf Ihrem Speicher installieren – Sie werden stets aufgefordert, jede Installation zu bestätigen.
 </string>
     <string name="perm_query_apps_desc">
-Installierte Apps für die Fernverwaltung und das ADB-Terminal anzeigen – ermöglicht das Auflisten und Überprüfen von Anwendungen auf Ihrem Gerät.
+Erforderlich durch App Manager und Debloater. Liest die vollständige Liste der installierten Pakete (App-Namen, Paket-IDs, Versionen, APK-Größen, Installations-/Aktualisierungszeitstempel, System-/Benutzerklassifizierung) — vollständig auf dem Gerät verarbeitet. Keinerlei Daten werden an uns oder Dritte übertragen.
+</string>
+    <string name="pd_accept">
+Verstanden
 </string>
 
     <!-- Permission Status -->

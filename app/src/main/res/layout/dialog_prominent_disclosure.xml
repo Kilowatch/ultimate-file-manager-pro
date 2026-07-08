@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile Prominent Disclosure dialog.
+     Uses bottom-sheet glassmorphism to match the mobile design language. -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet"
+    android:padding="24dp">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/imgPdIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_lock"
+        android:tint="@color/ufm_primary"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/txtPdTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/pd_dialog_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center" />
+
+    <!-- Scrollable Body -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:fillViewport="false"
+        android:scrollbars="vertical">
+
+        <!-- Body Text -->
+        <TextView
+            android:id="@+id/txtPdBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pd_dialog_body"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="3dp" />
+    </ScrollView>
+
+    <!-- I Understand button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPdAccept"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/pd_accept"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:backgroundTint="@color/ufm_primary"
+        app:cornerRadius="14dp"
+        app:elevation="0dp" />
+
+    <!-- Cancel button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPdCancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp" />
+
+</LinearLayout>

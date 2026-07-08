@@ -660,6 +660,15 @@ support@kilowatch.co.za
     <string name="pp_s13_title">
 13. Google Playポリシーへの準拠
 </string>
+    <string name="pp_s13b_title">
+13b. プロミネント開示 — インストール済みアプリケーション情報
+</string>
+    <string name="pd_dialog_title">
+重要な開示 — インストール済みアプリケーション情報
+</string>
+    <string name="pd_dialog_body">
+Ultimate File Manager Proは、QUERY_ALL_PACKAGES権限を介してデバイスにインストールされているアプリケーションのリストにアクセスし、アプリマネージャーとデブローター機能を提供します。この情報はお使いのデバイス上でのみ処理・保存され、アップロードや共有は一切行われません。詳細については、プライバシーポリシーの13b項をご参照ください。
+</string>
     <string name="pp_s14_title">
 14. お問い合わせ
 </string>
@@ -824,9 +833,55 @@ Ultimate File Manager Proは南アフリカで開発されています。他の�
 </string>
 
     <string name="pp_s13_body">
-このアプリはGoogle Playの基準を満たすように構築されています。要求されるすべての権限は、コアアプリ機能に必要です。機密性の高い権限を要求する前に、アプリはその必要性と使用方法を明確に説明します。2024年10月の写真および動画ポリシーの更新について：すべてのストレージボリュームにわたる一括操作（移動、名前変更、同期）向けに設計された包括的なファイルマネージャーであるため、広範なアクセスが必要であり、標準のシステムピッカーでは効率的に実行できません。\n
-\n
-インストール済みアプリケーション情報（QUERY_ALL_PACKAGES）について：アプリマネージャー機能は、デバイス上のインストール済みパッケージの完全なリストを読み取ります（アプリ名、パッケージID、バージョン、APKサイズ、インストールおよび更新タイムスタンプ、システムアプリとユーザーアプリの分類を含む）。Debloaterタブはさらに公開されているdebloat参照リストをダウンロードし、インストール済みのパッケージ名とローカルで相互参照します。インストール済みアプリケーションデータがKiloWatchサーバーまたは第三者に送信されることは決してありません。
+このアプリはGoogle Playの基準を満たすように構築されています。要求されるすべての許可は、コアアプリ機能に必要です。機密性の高い許可を要求する前に、アプリはなぜそれが必要なのか、どのように使用されるのかを明確に説明します。2024年10月の写真と動画ポリシーの更新に関して：広範なアクセスが必要な理由は、これが包括的なファイルマネージャーであり、標準のシステムピッカーでは効率的に実行できない、すべてのストレージボリュームにわたる一括操作（移動、名前変更、同期）向けに設計されているためです。
+</string>
+
+    <!-- Section 13b — Installed Application Information Prominent Disclosure -->
+    <string name="pp_s13b_intro">
+Ultimate File Manager Proは、QUERY_ALL_PACKAGES権限を介してデバイスにインストールされているすべてのアプリケーションのリストにアクセスし、アプリマネージャーおよびデブローター機能を提供します。この開示は、アクセスされるデータの内容、その理由、およびデータがどこに留まるかを正確に説明します。
+</string>
+    <string name="pp_s13b_data_heading">
+アクセスされるデータ
+</string>
+    <string-array name="pp_s13b_data_items">
+        <item>
+アプリ名とパッケージ識別子（パッケージID）
+</item>
+        <item>
+バージョン名とバージョンコード
+</item>
+        <item>
+APKファイルサイズ
+</item>
+        <item>
+初回インストール日時と最終更新日時
+</item>
+        <item>
+システムアプリとユーザーインストールアプリの分類
+</item>
+        <item>
+OBB拡張ファイルの有無
+</item>
+    </string-array>
+    <string name="pp_s13b_purpose_heading">
+このデータがアクセスされる理由
+</string>
+    <string-array name="pp_s13b_purpose_items">
+        <item>
+アプリマネージャー：インストール済みアプリの一覧（名前、バージョン、サイズ、インストール日時）を表示し、一箇所でアプリの閲覧、検索、管理ができます。
+</item>
+        <item>
+アプリごとのストレージ計算：APKファイルサイズとデータディレクトリサイズ（ベストエフォート）を読み取り、各アプリの使用容量を表示します。
+</item>
+        <item>
+デブローター：インストール済みパッケージ名を、公開されているデブロート参照リスト（デバイスにダウンロード・キャッシュ済み）と照合して、安全に削除または無効化できるプリインストールシステムアプリを特定します。
+</item>
+    </string-array>
+    <string name="pp_s13b_location_heading">
+データの保存場所
+</string>
+    <string name="pp_s13b_location_body">
+<b>デバイス上のみ。</b>すべてのインストール済みアプリケーションデータは、アプリのプライベートストレージ内でローカルに処理および保存されます。KiloWatchサーバーにアップロードされることは決してなく、第三者と共有されることもなく、広告、プロファイリング、分析、AIトレーニング、または上記のアプリマネージャーおよびデブローター機能以外の目的で使用されることは決してありません。
 </string>
 
     <string name="pp_s14_body">
@@ -1514,7 +1569,8 @@ Lottieライブラリv6.3.0（com.airbnb.android:lottie）を介してアプリ�
 </item>
     </string-array>
 
-    <!-- Contact (Section 13) -->
+
+    <!-- Contact (Section 14) -->
     <string-array name="pp_contact_labels">
         <item>
 メール

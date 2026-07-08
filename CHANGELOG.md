@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Scoped to Mobile/Tablet layouts, moved selection toolbar actions (Copy, Cut/Move, Rename, Share, Favorite, Hide, Unhide, Protect, Unprotect, Copy Encrypt, Move Encrypt, Compress, Compress Image, Delete, Properties, and Tags) into a modern, scrolling "Tools" bottom sheet dialog triggered by a new "Tools" FAB. The standalone "Properties" and "Tag" FAB has been removed from the screen on mobile. Only "Select All" remains visible on the screen selection row (centered as a pill in twin-window mode). TV layouts remain completely unaffected.
+- Integrated and formatted the "Prominent Disclosure — Installed Application Information" as a dedicated Section 13b in the Privacy Policy screen.
+- Simplified the QUERY_ALL_PACKAGES Prominent Disclosure popup dialog (Mobile/TV) into a concise, policy-compliant description that references Section 13b.
+- Removed duplicate QUERY_ALL_PACKAGES paragraph from Section 13 (Google Play Policy Compliance) of the Privacy Policy.
+- Synced the new Section 13b, Section 13, and dialog strings across all 13 supported languages.
 
 ## [1.6.4] — 2026-07-05
 
