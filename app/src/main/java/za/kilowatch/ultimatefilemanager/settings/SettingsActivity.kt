@@ -57,6 +57,9 @@ class SettingsActivity : AppCompatActivity() {
     private var switchSideBySideVideo: SwitchMaterial? = null
     private var txtSideBySideVideoSubtitle: TextView? = null
 
+    private var switchSideBySideVideoShowControlsOnRepeat: SwitchMaterial? = null
+    private var txtSideBySideVideoShowControlsOnRepeatSubtitle: TextView? = null
+
     private var switchAutoplayNext: SwitchMaterial? = null
     private var txtAutoplayNextSubtitle: TextView? = null
 
@@ -283,6 +286,20 @@ class SettingsActivity : AppCompatActivity() {
 
             cardSideBySideVideo.setOnClickListener { toggleSideBySideVideo() }
             switchSideBySideVideo?.setOnCheckedChangeListener(null)
+        }
+
+        // Side-by-Side Video Show Controls On Repeat toggle
+        val cardSideBySideVideoShowControlsOnRepeat = findViewById<MaterialCardView?>(R.id.cardSideBySideVideoShowControlsOnRepeat)
+        if (cardSideBySideVideoShowControlsOnRepeat != null) {
+            switchSideBySideVideoShowControlsOnRepeat = findViewById(R.id.switchSideBySideVideoShowControlsOnRepeat)
+            txtSideBySideVideoShowControlsOnRepeatSubtitle = findViewById(R.id.txtSideBySideVideoShowControlsOnRepeatSubtitle)
+
+            val showControlsOnRepeatEnabled = SideBySideVideoPreferenceManager.isShowControlsOnRepeat(this)
+            switchSideBySideVideoShowControlsOnRepeat?.isChecked = showControlsOnRepeatEnabled
+            updateSideBySideVideoShowControlsOnRepeatSubtitle(showControlsOnRepeatEnabled)
+
+            cardSideBySideVideoShowControlsOnRepeat.setOnClickListener { toggleSideBySideVideoShowControlsOnRepeat() }
+            switchSideBySideVideoShowControlsOnRepeat?.setOnCheckedChangeListener(null)
         }
 
         // Auto-play Next File toggle
@@ -723,6 +740,13 @@ class SettingsActivity : AppCompatActivity() {
             updateSideBySideVideoSubtitle(enabled)
         }
 
+        // Refresh Side-by-Side Video Show Controls On Repeat subtitle
+        switchSideBySideVideoShowControlsOnRepeat?.let { sw ->
+            val enabled = SideBySideVideoPreferenceManager.isShowControlsOnRepeat(this)
+            sw.isChecked = enabled
+            updateSideBySideVideoShowControlsOnRepeatSubtitle(enabled)
+        }
+
         // Refresh Auto-play Next subtitle
         switchAutoplayNext?.let { sw ->
             val enabled = AutoplayPreferenceManager.isEnabled(this)
@@ -1019,6 +1043,22 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun toggleSideBySideVideoShowControlsOnRepeat() {
+        val sw = switchSideBySideVideoShowControlsOnRepeat ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        SideBySideVideoPreferenceManager.setShowControlsOnRepeat(this, newValue)
+        updateSideBySideVideoShowControlsOnRepeatSubtitle(newValue)
+    }
+
+    private fun updateSideBySideVideoShowControlsOnRepeatSubtitle(enabled: Boolean) {
+        txtSideBySideVideoShowControlsOnRepeatSubtitle?.text = if (enabled) {
+            getString(R.string.settings_side_by_side_video_show_controls_on_repeat_subtitle_on)
+        } else {
+            getString(R.string.settings_side_by_side_video_show_controls_on_repeat_subtitle_off)
+        }
+    }
+
     private fun toggleAutoplayNext() {
         val sw = switchAutoplayNext ?: return
         val newValue = !sw.isChecked
@@ -1209,6 +1249,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardQuickTransfer, "settings_quick_transfer", R.drawable.ic_copy),
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
+            CardIcon(R.id.cardSideBySideVideoShowControlsOnRepeat, "settings_side_by_side_video_show_controls_on_repeat", R.drawable.ic_repeat),
             CardIcon(R.id.cardAutoplayNext, "settings_autoplay_next", R.drawable.ic_play),
             CardIcon(R.id.cardBackgroundVideoMode, "settings_background_video", R.drawable.ic_play),
             CardIcon(R.id.cardMiniPlayer, "settings_mini_player", R.drawable.ic_list_view_custom),

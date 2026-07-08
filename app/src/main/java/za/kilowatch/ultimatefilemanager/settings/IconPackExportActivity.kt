@@ -139,7 +139,7 @@ class IconPackExportActivity : AppCompatActivity() {
             listOf("settings_search_bar", "settings_default_start_screen", "settings_language", "settings_appearance",
                 "settings_icons", "settings_backup_restore", "settings_main_menu_layout",
                 "settings_twin_window_layout", "settings_twin_window_startup",
-                "settings_side_by_side_video", "settings_breadcrumbs", "settings_default_apps",
+                "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat", "settings_breadcrumbs", "settings_default_apps",
                 "settings_font_size", "settings_apk_extract", "settings_long_press",
                 "settings_controls_timeout",
                 "settings_toolbar_icons", "settings_favorites", "settings_custom_drive_names",

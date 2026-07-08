@@ -28,6 +28,7 @@ import androidx.media3.ui.PlayerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
+import za.kilowatch.ultimatefilemanager.settings.SideBySideVideoPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
 
@@ -66,6 +67,7 @@ class TwinWindowPlayerFragment : Fragment() {
 
     private var isMuted: Boolean = false
     private var isRepeat: Boolean = false
+    private var isRepeatingPlayback: Boolean = false
     private var isTracking: Boolean = false
     private val handler = Handler(Looper.getMainLooper())
     private var isTv: Boolean = false
@@ -393,6 +395,7 @@ class TwinWindowPlayerFragment : Fragment() {
                 if (state == Player.STATE_ENDED) {
                     handler.post {
                         if (isRepeat) {
+                            isRepeatingPlayback = true
                             newPlayer.seekTo(0)
                             newPlayer.play()
                         } else {
@@ -408,7 +411,16 @@ class TwinWindowPlayerFragment : Fragment() {
             override fun onIsPlayingChanged(playing: Boolean) {
                 updatePlayPauseIcon()
                 if (playing) {
-                    resetHideTimer()
+                    val showOnRepeat = SideBySideVideoPreferenceManager.isShowControlsOnRepeat(requireContext())
+                    if (isRepeatingPlayback && !showOnRepeat) {
+                        isRepeatingPlayback = false
+                        controlsLayout.visibility = View.GONE
+                        topBar.visibility = View.GONE
+                        handler.removeCallbacks(hideControlsRunnable)
+                    } else {
+                        isRepeatingPlayback = false
+                        resetHideTimer()
+                    }
                 } else {
                     handler.removeCallbacks(hideControlsRunnable)
                 }
@@ -536,6 +548,7 @@ class TwinWindowPlayerFragment : Fragment() {
     }
 
     private fun resetHideTimer() {
+        isRepeatingPlayback = false
         handler.removeCallbacks(hideControlsRunnable)
         controlsLayout.visibility = View.VISIBLE
         controlsLayout.alpha = 1f

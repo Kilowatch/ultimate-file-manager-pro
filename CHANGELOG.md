@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configured ProGuard keep rules to prevent obfuscation or stripping of JNI class helpers and C entry symbols.
 - Added case-insensitive name-based and path-based filtering rules to hide OS-specific and system-generated metadata and junk files/folders (such as `Thumbs.db`, `desktop.ini`, `$RECYCLE.BIN`, `@eaDir`, and `#recycle`) when "Show hidden files" is disabled. Applied across local and network browser lists, search results, and system file picker interactions (SAF).
 - Added Robolectric and AndroidX test dependencies to the unit test suite.
+- Added "Show controls on video repeat" option in Settings (on mobile and TV) to enable or disable displaying video player controls when a looping video restarts in Twin Window mode (disabled by default).
 
 ### Changed
 - Scoped to Mobile/Tablet layouts, moved selection toolbar actions (Copy, Cut/Move, Rename, Share, Favorite, Hide, Unhide, Protect, Unprotect, Copy Encrypt, Move Encrypt, Compress, Compress Image, Delete, Properties, and Tags) into a modern, scrolling "Tools" bottom sheet dialog triggered by a new "Tools" FAB. The standalone "Properties" and "Tag" FAB has been removed from the screen on mobile. Only "Select All" remains visible on the screen selection row (centered as a pill in twin-window mode). TV layouts remain completely unaffected.
@@ -21,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified the QUERY_ALL_PACKAGES Prominent Disclosure popup dialog (Mobile/TV) into a concise, policy-compliant description that references Section 13b.
 - Removed duplicate QUERY_ALL_PACKAGES paragraph from Section 13 (Google Play Policy Compliance) of the Privacy Policy.
 - Synced the new Section 13b, Section 13, and dialog strings across all 13 supported languages.
+
+### Fixed
+- Fixed folder item totals incorrectly including hidden/junk files in local, network, and online storage lists for both mobile and TV layouts.
 
 ## [1.6.4] — 2026-07-05
 

@@ -293,6 +293,15 @@ Aktiviert – im Bereich abspielen
     <string name="settings_side_by_side_video_subtitle_off">
 Deaktiviert – Vollbild
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Steuerelemente bei Videowiederholung anzeigen
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Steuerelemente anzeigen, wenn die wiederholte Videowiedergabe neu startet
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Steuerelemente ausblenden, wenn die wiederholte Videowiedergabe neu startet
+</string>
     <string name="settings_autoplay_next_title">
 Nächstes automatisch im UFM Player abspielen
 </string>
@@ -8981,6 +8990,9 @@ Standard-Zwei-Fenster
 </string>
     <string name="icon_settings_side_by_side_video">
 Video nebeneinander
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Steuerelemente bei Videowiederholung anzeigen
 </string>
     <string name="icon_settings_breadcrumbs">
 Breadcrumbs

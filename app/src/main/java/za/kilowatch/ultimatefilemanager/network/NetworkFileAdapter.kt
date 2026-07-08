@@ -79,6 +79,9 @@ class NetworkFileAdapter(
 
     private var searchBasePath: String? = null
 
+    private val childCountCache = mutableMapOf<String, Int>()
+    private var childCountJob: Job? = null
+
     private val dateFormat = SimpleDateFormat("MMM dd, yyyy • HH:mm", Locale.getDefault())
     
     private val thumbnailReceiver = object : BroadcastReceiver() {
@@ -125,6 +128,7 @@ class NetworkFileAdapter(
         files.clear()
         files.addAll(filesCopy)
         this.searchBasePath = searchBasePath
+        childCountCache.clear()
         // Clean up selection if files were removed by a directory reload.
         // If retainAll drops any items (e.g. the server returned different metadata
         // for the same file), fire onSelectionChanged so the toolbar reflects the
@@ -168,6 +172,44 @@ class NetworkFileAdapter(
         }
         
         notifyDataSetChanged()
+
+        // Pre-compute directory child counts off the main thread
+        childCountJob?.cancel()
+        val dirs = newFiles.filter { it.isDirectory && it.freeSpace < 0 && it.iconRes == 0 }
+        if (dirs.isNotEmpty()) {
+            childCountJob = adapterScope.launch(Dispatchers.IO) {
+                val counts = mutableMapOf<String, Int>()
+                for (dir in dirs) {
+                    if (!isActive) return@launch
+                    try {
+                        val rawFiles = when (share.type) {
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, dir.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> za.kilowatch.ultimatefilemanager.network.DlnaShareClient.listFiles(share, dir.path)
+                        }
+                        val visibleCount = rawFiles.count {
+                            !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(it.name)
+                        }
+                        counts[dir.path] = visibleCount
+                    } catch (e: Exception) {
+                        za.kilowatch.ultimatefilemanager.util.GoRoLog.w("NetworkFileAdapter", "Failed to count files for directory ${dir.path}: ${e.message}")
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    if (!isActive) return@withContext
+                    childCountCache.putAll(counts)
+                    notifyDataSetChanged()
+                }
+            }
+        }
 
         // Prune stale cache entries for this folder asynchronously
         if (NetworkThumbnailPreferenceManager.isEnabled(context)) {
@@ -579,8 +621,14 @@ class NetworkFileAdapter(
                         progressDisk?.visibility = View.GONE
                         txtDisk?.visibility = View.GONE
                         circularDisk?.visibility = View.GONE
+                        val childCount = childCountCache[file.path]
                         val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
-                        txtDetails.text = dateStr
+                        if (childCount != null) {
+                            val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
+                            txtDetails.text = if (dateStr.isNotEmpty()) "$itemsText · $dateStr" else itemsText
+                        } else {
+                            txtDetails.text = dateStr
+                        }
                     }
                 } else {
                     // Hide overlays in grid

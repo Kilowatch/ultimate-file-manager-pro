@@ -293,6 +293,15 @@ USB-накопитель
     <string name="settings_side_by_side_video_subtitle_off">
 Отключено — полный экран
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Показывать элементы управления при повторе видео
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Показывать элементы управления при перезапуске циклического видео
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Скрыть элементы управления при перезапуске циклического видео
+</string>
     <string name="settings_autoplay_next_title">
 Автовоспроизведение следующего в UFM Player
 </string>
@@ -8981,6 +8990,9 @@ XML / Разметка
 </string>
     <string name="icon_settings_side_by_side_video">
 Видео рядом
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Показывать элементы управления при повторе видео
 </string>
     <string name="icon_settings_breadcrumbs">
 Хлебные крошки

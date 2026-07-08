@@ -293,6 +293,15 @@ Habilitado: reproducir en el panel
     <string name="settings_side_by_side_video_subtitle_off">
 Deshabilitado: pantalla completa
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Mostrar controles al repetir el video
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Mostrar controles cuando se reinicia el video en bucle
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Ocultar controles cuando se reinicia el video en bucle
+</string>
     <string name="settings_autoplay_next_title">
 Reproducción automática del siguiente en el reproductor UFM
 </string>
@@ -8993,6 +9002,9 @@ Ventana dividida predeterminada
 </string>
     <string name="icon_settings_side_by_side_video">
 Video lado a lado
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Mostrar controles al repetir el video
 </string>
     <string name="icon_settings_breadcrumbs">
 Migas de pan

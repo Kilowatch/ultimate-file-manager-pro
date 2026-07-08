@@ -939,6 +939,71 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Side-by-Side Video Show Controls On Repeat Toggle -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSideBySideVideoShowControlsOnRepeat"
+                android:layout_width="match_parent"
+                android:layout_height="88dp"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/ic_repeat"
+                        android:layout_marginEnd="@dimen/margin_lg"
+                        app:tint="@color/tv_icon_tint"
+                        android:contentDescription="@string/settings_side_by_side_video_show_controls_on_repeat_title" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_side_by_side_video_show_controls_on_repeat_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtSideBySideVideoShowControlsOnRepeatSubtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_side_by_side_video_show_controls_on_repeat_subtitle_off"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchSideBySideVideoShowControlsOnRepeat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:clickable="false"
+                        android:focusable="false" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Auto-play Next File Toggle -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoplayNext"

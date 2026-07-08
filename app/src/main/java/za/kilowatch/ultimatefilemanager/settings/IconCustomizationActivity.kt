@@ -361,6 +361,7 @@ class IconCustomizationActivity : AppCompatActivity() {
                 IconItemData("settings_twin_window_layout", getString(R.string.icon_settings_twin_window_layout), R.drawable.ic_view_list, emptyList()),
                 IconItemData("settings_twin_window_startup", getString(R.string.icon_settings_twin_window_startup), R.drawable.ic_view_list, emptyList()),
                 IconItemData("settings_side_by_side_video", getString(R.string.icon_settings_side_by_side_video), R.drawable.ic_play, emptyList()),
+                IconItemData("settings_side_by_side_video_show_controls_on_repeat", getString(R.string.icon_settings_side_by_side_video_show_controls_on_repeat), R.drawable.ic_repeat, emptyList()),
                 IconItemData("settings_breadcrumbs", getString(R.string.icon_settings_breadcrumbs), R.drawable.ic_home, emptyList()),
                 IconItemData("settings_default_apps", getString(R.string.icon_settings_default_apps), R.drawable.ic_apps, emptyList()),
                 IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),

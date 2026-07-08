@@ -293,6 +293,15 @@ Etkin — panelde oynat
     <string name="settings_side_by_side_video_subtitle_off">
 Devre Dışı — tam ekran
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Video tekrarında kontrolleri göster
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Video döngüde yeniden başladığında kontrolleri göster
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Video döngüde yeniden başladığında kontrolleri gizle
+</string>
     <string name="settings_autoplay_next_title">
 UFM Oynatıcıda sonrakini otomatik oynat
 </string>
@@ -8981,6 +8990,9 @@ Varsayılan Çift Pencere
 </string>
     <string name="icon_settings_side_by_side_video">
 Yan Yana Video
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Video tekrarında kontrolleri göster
 </string>
     <string name="icon_settings_breadcrumbs">
 İçerik Haritası

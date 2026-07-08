@@ -177,7 +177,12 @@ class FileAdapter(
                 val counts = mutableMapOf<String, Int>()
                 for (dir in dirs) {
                     if (!isActive) return@launch
-                    counts[dir.absolutePath] = dir.list()?.size ?: 0
+                    val children = dir.list()
+                    val visibleCount = children?.count { subName ->
+                        !za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isJunkOrHidden(subName) &&
+                        File(dir, subName).absolutePath !in hiddenPaths
+                    } ?: 0
+                    counts[dir.absolutePath] = visibleCount
                 }
                 withContext(Dispatchers.Main) {
                     if (!isActive) return@withContext

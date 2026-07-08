@@ -105,6 +105,9 @@
     <string name="settings_side_by_side_video_title">Side-by-Side Video</string>
     <string name="settings_side_by_side_video_subtitle_on">Enabled — play in pane</string>
     <string name="settings_side_by_side_video_subtitle_off">Disabled — full screen</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">Show controls on video repeat</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">Show controls when looping video restarts</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">Hide controls when looping video restarts</string>
     <string name="settings_autoplay_next_title">Auto-play next in UFM Player</string>
     <string name="settings_autoplay_next_subtitle_on">Enabled — automatically plays next file</string>
     <string name="settings_autoplay_next_subtitle_off">Disabled — stops at end of file</string>
@@ -3153,6 +3156,7 @@
     <string name="icon_settings_twin_window_layout">Twin Window Layout</string>
     <string name="icon_settings_twin_window_startup">Default Twin Window</string>
     <string name="icon_settings_side_by_side_video">Side-by-Side Video</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">Show controls on video repeat</string>
     <string name="icon_settings_breadcrumbs">Breadcrumbs</string>
     <string name="icon_settings_default_apps">Default Apps</string>
     <string name="icon_settings_font_size">Font Size</string>

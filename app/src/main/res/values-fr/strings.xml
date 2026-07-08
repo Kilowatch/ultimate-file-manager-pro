@@ -293,6 +293,15 @@ Activé — lecture dans le volet
     <string name="settings_side_by_side_video_subtitle_off">
 Désactivé — plein écran
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Afficher les contrôles lors de la répétition de la vidéo
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Afficher les contrôles lorsque la vidéo en boucle redémarre
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Masquer les contrôles lorsque la vidéo en boucle redémarre
+</string>
     <string name="settings_autoplay_next_title">
 Lecture automatique suivante dans le lecteur UFM
 </string>
@@ -8981,6 +8990,9 @@ Fenêtre jumelle par défaut
 </string>
     <string name="icon_settings_side_by_side_video">
 Vidéo côte à côte
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Afficher les contrôles lors de la répétition de la vidéo
 </string>
     <string name="icon_settings_breadcrumbs">
 Fil d\'Ariane

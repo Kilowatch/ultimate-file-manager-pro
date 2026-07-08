@@ -293,6 +293,15 @@
     <string name="settings_side_by_side_video_subtitle_off">
 معطل — ملء الشاشة
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+إظهار عناصر التحكم عند تكرار الفيديو
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+إظهار عناصر التحكم عند إعادة تشغيل الفيديو المتكرر
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+إخفاء عناصر التحكم عند إعادة تشغيل الفيديو المتكرر
+</string>
     <string name="settings_autoplay_next_title">
 تشغيل تلقائي التالي في مشغل UFM
 </string>
@@ -8981,6 +8990,9 @@ XML / ترميز
 </string>
     <string name="icon_settings_side_by_side_video">
 فيديو جنبًا إلى جنب
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+إظهار عناصر التحكم عند تكرار الفيديو
 </string>
     <string name="icon_settings_breadcrumbs">
 مسار التنقل

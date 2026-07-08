@@ -293,6 +293,15 @@ Ativado — reproduzir no painel
     <string name="settings_side_by_side_video_subtitle_off">
 Desativado — tela cheia
 </string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_title">
+Mostrar controles ao repetir o vídeo
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_on">
+Mostrar controles quando o vídeo em loop reinicia
+</string>
+    <string name="settings_side_by_side_video_show_controls_on_repeat_subtitle_off">
+Ocultar controles quando o vídeo em loop reinicia
+</string>
     <string name="settings_autoplay_next_title">
 Reprodução automática do próximo no UFM Player
 </string>
@@ -8981,6 +8990,9 @@ Janela Dupla Padrão
 </string>
     <string name="icon_settings_side_by_side_video">
 Vídeo Lado a Lado
+</string>
+    <string name="icon_settings_side_by_side_video_show_controls_on_repeat">
+Mostrar controles ao repetir o vídeo
 </string>
     <string name="icon_settings_breadcrumbs">
 Migalhas de pão
