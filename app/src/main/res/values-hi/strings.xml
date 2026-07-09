@@ -9779,6 +9779,29 @@ UFM प्लेयर सेटिंग्स
     <string name="backup_pref_protected_files">
 सुरक्षित फ़ाइलें और फ़ोल्डर
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+पिन करें
+</string>
+    <string name="unpin">
+अनपिन करें
+</string>
+    <string name="toast_pinned_success">
+%1$d आइटम पिन किए गए
+</string>
+    <string name="toast_unpinned_success">
+%1$d आइटम अनपिन किए गए
+</string>
+    <string name="backup_pref_pinned_files">
+पिन की गई फ़ाइलें और फ़ोल्डर
+</string>
+    <string name="icon_toolbar_pin">
+पिन करें
+</string>
+    <string name="icon_toolbar_unpin">
+अनपिन करें
+</string>
 </resources>
 
 

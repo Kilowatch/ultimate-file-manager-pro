@@ -70,6 +70,8 @@ class FileBrowserFragment : Fragment() {
     private lateinit var btnUnhide: ImageView
     private lateinit var btnProtect: ImageView
     private lateinit var btnUnprotect: ImageView
+    private var btnPin: ImageView? = null
+    private var btnUnpin: ImageView? = null
     private lateinit var btnCompress: View
     private lateinit var btnImageCompress: View
     private var btnViewToggle: ImageView? = null
@@ -255,6 +257,8 @@ class FileBrowserFragment : Fragment() {
         btnUnhide.visibility = if (pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
         btnProtect.visibility = if (pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
         btnUnprotect.visibility = if (pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+        btnPin?.visibility = if (pm.isIconEnabled(context, pm.KEY_PIN)) View.VISIBLE else View.GONE
+        btnUnpin?.visibility = if (pm.isIconEnabled(context, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
         btnCompress.visibility = if (pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
@@ -288,6 +292,8 @@ class FileBrowserFragment : Fragment() {
         btnUnhide = view.findViewById(R.id.btnUnhide)
         btnProtect = view.findViewById(R.id.btnProtect)
         btnUnprotect = view.findViewById(R.id.btnUnprotect)
+        btnPin = view.findViewById(R.id.btnPin)
+        btnUnpin = view.findViewById(R.id.btnUnpin)
         btnCompress = view.findViewById(R.id.btnCompress)
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
@@ -614,6 +620,38 @@ class FileBrowserFragment : Fragment() {
                 }
             }
         }
+
+        btnPin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(requireContext(), file.absolutePath, pinned = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_pinned_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        btnUnpin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(requireContext(), file.absolutePath, pinned = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unpinned_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
         
         fabPaste.setOnClickListener {
             val act = activity
@@ -809,6 +847,40 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Pin
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(context)
+            if (hasUnpinned && pm.isIconEnabled(context, pm.KEY_PIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("pin", getString(R.string.pin), R.drawable.ic_paperclip, "toolbar_pin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(requireContext(), file.absolutePath, pinned = true)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_pinned_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+            // Unpin
+            val hasPinned = fileAdapter.hasAnySelectedPinned(context)
+            if (hasPinned && pm.isIconEnabled(context, pm.KEY_UNPIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("unpin", getString(R.string.unpin), R.drawable.ic_paperclip_off, "toolbar_unpin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(requireContext(), file.absolutePath, pinned = false)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            android.widget.Toast.makeText(requireContext(), getString(R.string.toast_unpinned_success, selected.size), android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
             // 14. Properties
             if (count == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -904,6 +976,8 @@ class FileBrowserFragment : Fragment() {
         
         val tvButtons = mutableListOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
                btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide, btnProtect, btnUnprotect)
+        btnPin?.let { tvButtons.add(it) }
+        btnUnpin?.let { tvButtons.add(it) }
         btnRetriggerThumbnails?.let { tvButtons.add(it) }
         tvButtons.forEach { btn ->
             btn.imageTintList = iconTintDefault
@@ -984,6 +1058,8 @@ class FileBrowserFragment : Fragment() {
             val hasVisible = fileAdapter.hasAnySelectedVisible()
             val hasProtected = fileAdapter.hasAnySelectedProtected(context)
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context)
+            val hasPinned = fileAdapter.hasAnySelectedPinned(context)
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(context)
 
             if (!isTv) {
                 if (!isTwinWindow) {
@@ -1048,6 +1124,8 @@ class FileBrowserFragment : Fragment() {
                 btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
                 btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
                 btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+                btnPin?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(context, pm.KEY_PIN)) View.VISIBLE else View.GONE
+                btnUnpin?.visibility = if (showActions && hasPinned && pm.isIconEnabled(context, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
                 btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
             }
 
@@ -1268,7 +1346,28 @@ class FileBrowserFragment : Fragment() {
             SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.extension }
         }
         val orderedComparator = if (sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
-        return tagFiltered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
+        
+        val customComparator = Comparator<File> { f1, f2 ->
+            val ctx = context ?: return@Comparator f1.name.compareTo(f2.name, ignoreCase = true)
+            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f1.absolutePath)
+            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f2.absolutePath)
+            if (p1 && p2) {
+                f1.name.compareTo(f2.name, ignoreCase = true)
+            } else if (p1) {
+                -1
+            } else if (p2) {
+                1
+            } else {
+                val dir1 = f1.isDirectory
+                val dir2 = f2.isDirectory
+                if (dir1 != dir2) {
+                    if (dir1) -1 else 1
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            }
+        }
+        return tagFiltered.sortedWith(customComparator)
     }
 
     private fun openFile(file: File, transitionView: View? = null) {

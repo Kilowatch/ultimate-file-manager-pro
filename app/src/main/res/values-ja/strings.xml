@@ -9779,6 +9779,29 @@ OK
     <string name="backup_pref_protected_files">
 保護されたファイルとフォルダ
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+固定
+</string>
+    <string name="unpin">
+固定解除
+</string>
+    <string name="toast_pinned_success">
+%1$d 個のアイテムを固定しました
+</string>
+    <string name="toast_unpinned_success">
+%1$d 個のアイテムの固定を解除しました
+</string>
+    <string name="backup_pref_pinned_files">
+固定したファイルとフォルダ
+</string>
+    <string name="icon_toolbar_pin">
+固定
+</string>
+    <string name="icon_toolbar_unpin">
+固定解除
+</string>
 </resources>
 
 

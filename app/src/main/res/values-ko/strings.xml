@@ -9779,6 +9779,29 @@ UFM 플레이어 설정
     <string name="backup_pref_protected_files">
 보호된 파일 및 폴더
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+고정
+</string>
+    <string name="unpin">
+고정 해제
+</string>
+    <string name="toast_pinned_success">
+%1$d개 항목 고정됨
+</string>
+    <string name="toast_unpinned_success">
+%1$d개 항목 고정 해제됨
+</string>
+    <string name="backup_pref_pinned_files">
+고정된 파일 및 폴더
+</string>
+    <string name="icon_toolbar_pin">
+고정
+</string>
+    <string name="icon_toolbar_unpin">
+고정 해제
+</string>
 </resources>
 
 

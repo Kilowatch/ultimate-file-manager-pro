@@ -48,6 +48,43 @@
                 android:background="#440284C7"
                 android:visibility="gone" />
 
+            <!-- Badge overlay in top-right corner of grid card -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="4dp"
+                android:orientation="vertical"
+                android:background="#66000000"
+                android:padding="2dp">
+
+                <ImageView
+                    android:id="@+id/imgPinnedBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_paperclip"
+                    android:visibility="gone"
+                    app:tint="@android:color/white" />
+
+                <ImageView
+                    android:id="@+id/imgProtectedBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_shield_protected"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone"
+                    app:tint="@android:color/white" />
+
+                <ImageView
+                    android:id="@+id/imgHiddenBadge"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_eye_off"
+                    android:layout_marginTop="2dp"
+                    android:visibility="gone"
+                    app:tint="@android:color/white" />
+            </LinearLayout>
+
             <!-- Indexed Badge (Lightning Bolt) -->
             <ImageView
                 android:id="@+id/imgIndexedBadge"

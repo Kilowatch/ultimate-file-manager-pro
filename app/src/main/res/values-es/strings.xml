@@ -9791,6 +9791,29 @@ Desproteger
     <string name="backup_pref_protected_files">
 Archivos y carpetas protegidos
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+Anclar
+</string>
+    <string name="unpin">
+Desanclar
+</string>
+    <string name="toast_pinned_success">
+%1$d elemento(s) anclado(s)
+</string>
+    <string name="toast_unpinned_success">
+%1$d elemento(s) desanclado(s)
+</string>
+    <string name="backup_pref_pinned_files">
+Archivos y carpetas anclados
+</string>
+    <string name="icon_toolbar_pin">
+Anclar
+</string>
+    <string name="icon_toolbar_unpin">
+Desanclar
+</string>
 </resources>
 
 

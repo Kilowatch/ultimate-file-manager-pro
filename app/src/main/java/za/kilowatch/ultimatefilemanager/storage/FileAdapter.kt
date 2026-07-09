@@ -255,6 +255,9 @@ class FileAdapter(
     fun hasAnySelectedProtected(context: android.content.Context): Boolean = selectedPaths.any { za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it) }
     fun hasAnySelectedUnprotected(context: android.content.Context): Boolean = selectedPaths.any { !za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it) }
 
+    fun hasAnySelectedPinned(context: android.content.Context): Boolean = selectedPaths.any { za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, it) }
+    fun hasAnySelectedUnpinned(context: android.content.Context): Boolean = selectedPaths.any { !za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, it) }
+
     /** Select all items in the current list. */
     fun selectAll() {
         isSelectionMode = true
@@ -663,6 +666,10 @@ class FileAdapter(
             // Hidden status indicator
             val isItemHidden = file.absolutePath in hiddenPaths
             itemView.findViewById<ImageView>(R.id.imgHiddenBadge)?.visibility = if (isItemHidden) View.VISIBLE else View.GONE
+
+            // Pinned status indicator
+            val isItemPinned = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, file.absolutePath)
+            itemView.findViewById<ImageView>(R.id.imgPinnedBadge)?.visibility = if (isItemPinned) View.VISIBLE else View.GONE
 
             // Protected status indicator
             val isItemProtected = za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, file.absolutePath)

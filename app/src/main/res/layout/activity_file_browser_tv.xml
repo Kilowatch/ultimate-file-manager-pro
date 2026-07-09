@@ -438,6 +438,36 @@
                         android:background="@drawable/selector_tv_icon_btn"
                         app:tint="@color/tv_text_primary" />
 
+                    <!-- Pin -->
+                    <ImageView
+                        android:id="@+id/btnPin"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_paperclip"
+                        android:contentDescription="@string/pin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
+                    <!-- Unpin -->
+                    <ImageView
+                        android:id="@+id/btnUnpin"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_paperclip_off"
+                        android:contentDescription="@string/unpin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:background="@drawable/selector_tv_icon_btn"
+                        app:tint="@color/tv_text_primary" />
+
                     <ImageView
                         android:id="@+id/btnRetriggerThumbnails"
                         android:layout_width="48dp"

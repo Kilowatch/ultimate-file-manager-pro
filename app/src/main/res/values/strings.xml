@@ -3448,6 +3448,15 @@
     <string name="protect">Protect</string>
     <string name="unprotect">Unprotect</string>
     <string name="backup_pref_protected_files">Protected Files &amp; Folders</string>
+
+    <!-- File Pinning -->
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="toast_pinned_success">%1$d item(s) pinned</string>
+    <string name="toast_unpinned_success">%1$d item(s) unpinned</string>
+    <string name="backup_pref_pinned_files">Pinned Files &amp; Folders</string>
+    <string name="icon_toolbar_pin">Pin</string>
+    <string name="icon_toolbar_unpin">Unpin</string>
 </resources>
 
 

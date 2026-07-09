@@ -9779,6 +9779,29 @@ Entschützen
     <string name="backup_pref_protected_files">
 Geschützte Dateien und Ordner
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+Anheften
+</string>
+    <string name="unpin">
+Lösen
+</string>
+    <string name="toast_pinned_success">
+%1$d Element(e) angeheftet
+</string>
+    <string name="toast_unpinned_success">
+%1$d Element(e) gelöst
+</string>
+    <string name="backup_pref_pinned_files">
+Angeheftete Dateien &amp; Ordner
+</string>
+    <string name="icon_toolbar_pin">
+Anheften
+</string>
+    <string name="icon_toolbar_unpin">
+Lösen
+</string>
 </resources>
 
 

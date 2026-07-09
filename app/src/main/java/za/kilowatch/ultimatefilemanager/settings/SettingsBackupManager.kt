@@ -258,6 +258,7 @@ object SettingsBackupManager {
         add("ufm_prefs",                 context.getString(R.string.backup_pref_theme_sort))
         add("ufm_hidden_files_prefs",    context.getString(R.string.backup_pref_hidden_files))
         add("ufm_protected_files_prefs", context.getString(R.string.backup_pref_protected_files))
+        add("ufm_pinned_files_prefs",    context.getString(R.string.backup_pref_pinned_files))
         add("ufm_main_menu_prefs",       context.getString(R.string.backup_pref_main_menu))
         add("ufm_long_press_prefs",      context.getString(R.string.backup_pref_long_press))
         add("ufm_controls_timeout_prefs",context.getString(R.string.backup_pref_controls_timeout))
@@ -547,6 +548,7 @@ object SettingsBackupManager {
                 "ufm_prefs"                 to R.string.backup_pref_theme_sort,
                 "ufm_hidden_files_prefs"    to R.string.backup_pref_hidden_files,
                 "ufm_protected_files_prefs" to R.string.backup_pref_protected_files,
+                "ufm_pinned_files_prefs"    to R.string.backup_pref_pinned_files,
                 "ufm_main_menu_prefs"       to R.string.backup_pref_main_menu,
                 "ufm_long_press_prefs"      to R.string.backup_pref_long_press,
                 "ufm_controls_timeout_prefs" to R.string.backup_pref_controls_timeout,

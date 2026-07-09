@@ -506,7 +506,9 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_select_all", getString(R.string.icon_toolbar_select_all), R.drawable.ic_check, emptyList()),
             IconItemData("toolbar_compress", getString(R.string.icon_toolbar_compress), R.drawable.ic_compress, emptyList()),
             IconItemData("toolbar_image_compress", getString(R.string.icon_toolbar_image_compress), R.drawable.ic_compress_image, emptyList()),
-            IconItemData("toolbar_delete", getString(R.string.icon_toolbar_delete), R.drawable.ic_delete, emptyList())
+            IconItemData("toolbar_delete", getString(R.string.icon_toolbar_delete), R.drawable.ic_delete, emptyList()),
+            IconItemData("toolbar_pin", getString(R.string.icon_toolbar_pin), R.drawable.ic_paperclip, emptyList()),
+            IconItemData("toolbar_unpin", getString(R.string.icon_toolbar_unpin), R.drawable.ic_paperclip_off, emptyList())
         )
     }
 

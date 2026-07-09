@@ -9779,6 +9779,29 @@ URL-адреса сервера
     <string name="backup_pref_protected_files">
 Захищені файли та теки
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+Закріпити
+</string>
+    <string name="unpin">
+Відкріпити
+</string>
+    <string name="toast_pinned_success">
+Закріплено %1$d елемент(и)
+</string>
+    <string name="toast_unpinned_success">
+Відкріплено %1$d елемент(и)
+</string>
+    <string name="backup_pref_pinned_files">
+Закріплені файли та папки
+</string>
+    <string name="icon_toolbar_pin">
+Закріпити
+</string>
+    <string name="icon_toolbar_unpin">
+Відкріпити
+</string>
 </resources>
 
 

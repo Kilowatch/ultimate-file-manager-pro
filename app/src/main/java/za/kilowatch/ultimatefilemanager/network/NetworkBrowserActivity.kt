@@ -199,6 +199,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var btnMoveEncrypt: ImageView
     private lateinit var btnProtect: ImageView
     private lateinit var btnUnprotect: ImageView
+    private var btnPin: ImageView? = null
+    private var btnUnpin: ImageView? = null
     private lateinit var btnCompress: android.view.View
     private lateinit var btnImageCompress: android.view.View
     private var btnOptionsToggle: ImageView? = null
@@ -630,6 +632,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnFavorite.visibility = if (pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
         btnProtect.visibility = if (pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
         btnUnprotect.visibility = if (pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+        btnPin?.visibility = if (pm.isIconEnabled(this, pm.KEY_PIN)) View.VISIBLE else View.GONE
+        btnUnpin?.visibility = if (pm.isIconEnabled(this, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
         btnCompress.visibility = if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
         btnImageCompress.visibility = View.GONE
         btnSelectAll.visibility = if (pm.isIconEnabled(this, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
@@ -664,6 +668,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnMoveEncrypt = findViewById(R.id.btnMoveEncrypt)
         btnProtect = findViewById(R.id.btnProtect)
         btnUnprotect = findViewById(R.id.btnUnprotect)
+        btnPin = findViewById(R.id.btnPin)
+        btnUnpin = findViewById(R.id.btnUnpin)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
@@ -1052,6 +1058,38 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnPin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_pinned_success, selected.size))
+                    }
+                }
+            }
+        }
+
+        btnUnpin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.deselectAll()
+                        loadDirectory()
+                        showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
+                    }
+                }
+            }
+        }
+
         btnCompress.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.isNotEmpty()) {
@@ -1257,6 +1295,40 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             fileAdapter.deselectAll()
                             loadDirectory()
                             showPremiumSnackbar(getString(R.string.toast_unprotected_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // Pin
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this, share.id)
+            if (hasUnpinned && pm.isIconEnabled(this, pm.KEY_PIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("pin", getString(R.string.pin), R.drawable.ic_paperclip, "toolbar_pin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = true)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.deselectAll()
+                            loadDirectory()
+                            showPremiumSnackbar(getString(R.string.toast_pinned_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // Unpin
+            val hasPinned = fileAdapter.hasAnySelectedPinned(this, share.id)
+            if (hasPinned && pm.isIconEnabled(this, pm.KEY_UNPIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("unpin", getString(R.string.unpin), R.drawable.ic_paperclip_off, "toolbar_unpin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@NetworkBrowserActivity, file.path, share.id, pinned = false)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.deselectAll()
+                            loadDirectory()
+                            showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
                         }
                     }
                 })
@@ -1876,6 +1948,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             val hasProtected = fileAdapter.hasAnySelectedProtected(this, share.id)
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this, share.id)
+            val hasPinned = fileAdapter.hasAnySelectedPinned(this, share.id)
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this, share.id)
 
             if (!isTv) {
                 row2?.visibility = View.GONE
@@ -1898,6 +1972,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
                 btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
                 btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+                btnPin?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(this, pm.KEY_PIN)) View.VISIBLE else View.GONE
+                btnUnpin?.visibility = if (showActions && hasPinned && pm.isIconEnabled(this, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
                 btnDelete.visibility = if (showActions && !share.readOnly && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
                 btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
                 btnMove.visibility = if (showActions && !share.readOnly && pm.isIconEnabled(this, pm.KEY_MOVE)) View.VISIBLE else View.GONE
@@ -2226,9 +2302,26 @@ class NetworkBrowserActivity : AppCompatActivity() {
             secondaryComparator
         }
 
-        // Always sort directories before files
-        val finalSorter = compareByDescending<NetworkFile> { it.isDirectory }.then(orderedComparator)
-        val sortedFiles = tagFiltered.sortedWith(finalSorter)
+        val customComparator = Comparator<NetworkFile> { f1, f2 ->
+            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f1.path, share.id)
+            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f2.path, share.id)
+            if (p1 && p2) {
+                f1.name.compareTo(f2.name, ignoreCase = true)
+            } else if (p1) {
+                -1
+            } else if (p2) {
+                1
+            } else {
+                val dir1 = f1.isDirectory
+                val dir2 = f2.isDirectory
+                if (dir1 != dir2) {
+                    if (dir1) -1 else 1
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            }
+        }
+        val sortedFiles = tagFiltered.sortedWith(customComparator)
 
         // Append action items at TV root (mobile only)
         val displayFiles = if (share.type == ShareType.TV && currentPath.isEmpty() && !isTv) {

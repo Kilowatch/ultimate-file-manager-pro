@@ -9779,6 +9779,29 @@ Box
     <string name="backup_pref_protected_files">
 الملفات والمجلدات المحمية
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+تثبيت
+</string>
+    <string name="unpin">
+إلغاء التثبيت
+</string>
+    <string name="toast_pinned_success">
+تم تثبيت %1$d عنصر(عناصر)
+</string>
+    <string name="toast_unpinned_success">
+تم إلغاء تثبيت %1$d عنصر(عناصر)
+</string>
+    <string name="backup_pref_pinned_files">
+الملفات والمجلدات المثبتة
+</string>
+    <string name="icon_toolbar_pin">
+تثبيت
+</string>
+    <string name="icon_toolbar_unpin">
+إلغاء التثبيت
+</string>
 </resources>
 
 

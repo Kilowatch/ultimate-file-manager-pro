@@ -9779,6 +9779,29 @@ Tidak Lindungi
     <string name="backup_pref_protected_files">
 File &amp; Folder yang Dilindungi
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+Sematkan
+</string>
+    <string name="unpin">
+Lepas sematan
+</string>
+    <string name="toast_pinned_success">
+%1$d item disematkan
+</string>
+    <string name="toast_unpinned_success">
+%1$d item dilepas sematan
+</string>
+    <string name="backup_pref_pinned_files">
+File &amp; Folder yang Disematkan
+</string>
+    <string name="icon_toolbar_pin">
+Sematkan
+</string>
+    <string name="icon_toolbar_unpin">
+Lepas sematan
+</string>
 </resources>
 
 

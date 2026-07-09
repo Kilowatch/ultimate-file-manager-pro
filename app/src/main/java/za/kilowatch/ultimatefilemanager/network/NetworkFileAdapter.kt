@@ -238,6 +238,9 @@ class NetworkFileAdapter(
     fun hasAnySelectedProtected(context: Context, shareId: String): Boolean = selectedFiles.any { za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
     fun hasAnySelectedUnprotected(context: Context, shareId: String): Boolean = selectedFiles.any { !za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
     
+    fun hasAnySelectedPinned(context: Context, shareId: String): Boolean = selectedFiles.any { za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, it.path, shareId) }
+    fun hasAnySelectedUnpinned(context: Context, shareId: String): Boolean = selectedFiles.any { !za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, it.path, shareId) }
+    
     fun selectAll() {
         selectedFiles.addAll(files)
         longPressAnchorIndex = RecyclerView.NO_POSITION
@@ -483,6 +486,10 @@ class NetworkFileAdapter(
             coilDisposable?.dispose()
             coilDisposable = null
             thumbnailJob?.cancel()
+
+            // Pinned status indicator
+            val isItemPinned = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context, file.path, share.id)
+            itemView.findViewById<ImageView>(R.id.imgPinnedBadge)?.visibility = if (isItemPinned) View.VISIBLE else View.GONE
 
             // Protected status indicator
             val isItemProtected = za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, file.path, share.id)

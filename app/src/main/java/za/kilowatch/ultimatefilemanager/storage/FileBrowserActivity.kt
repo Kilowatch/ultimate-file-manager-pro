@@ -83,6 +83,8 @@ class FileBrowserActivity : AppCompatActivity() {
     private lateinit var btnUnhide: ImageView
     private lateinit var btnProtect: ImageView
     private lateinit var btnUnprotect: ImageView
+    private var btnPin: ImageView? = null
+    private var btnUnpin: ImageView? = null
     private lateinit var btnCompress: android.view.View
     private lateinit var btnImageCompress: android.view.View
     private var btnViewToggle: ImageView? = null
@@ -954,6 +956,8 @@ class FileBrowserActivity : AppCompatActivity() {
         btnUnhide = findViewById(R.id.btnUnhide)
         btnProtect = findViewById(R.id.btnProtect)
         btnUnprotect = findViewById(R.id.btnUnprotect)
+        btnPin = findViewById(R.id.btnPin)
+        btnUnpin = findViewById(R.id.btnUnpin)
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
@@ -1457,6 +1461,38 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnPin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = true)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_pinned_success, selected.size))
+                    }
+                }
+            }
+        }
+
+        btnUnpin?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    for (file in selected) {
+                        za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = false)
+                    }
+                    withContext(Dispatchers.Main) {
+                        fileAdapter.exitSelectionMode()
+                        loadDirectory(currentDir)
+                        showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
+                    }
+                }
+            }
+        }
+
         fabPaste.setOnClickListener {
             showClipboardSheet()
         }
@@ -1691,6 +1727,40 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Pin
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this)
+            if (hasUnpinned && pm.isIconEnabled(this, pm.KEY_PIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("pin", getString(R.string.pin), R.drawable.ic_paperclip, "toolbar_pin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = true)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_pinned_success, selected.size))
+                        }
+                    }
+                })
+            }
+
+            // Unpin
+            val hasPinned = fileAdapter.hasAnySelectedPinned(this)
+            if (hasPinned && pm.isIconEnabled(this, pm.KEY_UNPIN)) {
+                list.add(FileToolsBottomSheet.ActionItem("unpin", getString(R.string.unpin), R.drawable.ic_paperclip_off, "toolbar_unpin") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        for (file in selected) {
+                            za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.setPinned(this@FileBrowserActivity, file.absolutePath, pinned = false)
+                        }
+                        withContext(Dispatchers.Main) {
+                            fileAdapter.exitSelectionMode()
+                            loadDirectory(currentDir)
+                            showPremiumSnackbar(getString(R.string.toast_unpinned_success, selected.size))
+                        }
+                    }
+                })
+            }
+
             // 14. Properties
             if (count == 1 && !selected.first().isDirectory) {
                 val file = selected.first()
@@ -1815,6 +1885,8 @@ class FileBrowserActivity : AppCompatActivity() {
             val hasVisible = fileAdapter.hasAnySelectedVisible()
             val hasProtected = fileAdapter.hasAnySelectedProtected(this)
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(this)
+            val hasPinned = fileAdapter.hasAnySelectedPinned(this)
+            val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(this)
 
             if (!isTv) {
                 row2?.visibility = View.GONE
@@ -1837,6 +1909,8 @@ class FileBrowserActivity : AppCompatActivity() {
                 btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(this, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
                 btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(this, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
                 btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(this, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+                btnPin?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(this, pm.KEY_PIN)) View.VISIBLE else View.GONE
+                btnUnpin?.visibility = if (showActions && hasPinned && pm.isIconEnabled(this, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
                 btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(this, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
                 btnDelete.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_DELETE)) View.VISIBLE else View.GONE
                 btnCopy.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COPY)) View.VISIBLE else View.GONE
@@ -3719,7 +3793,26 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         val orderedComparator = if (sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
         
-        return tagFiltered.sortedWith(compareBy<File> { !it.isDirectory }.then(orderedComparator))
+        val customComparator = Comparator<File> { f1, f2 ->
+            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(applicationContext, f1.absolutePath)
+            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(applicationContext, f2.absolutePath)
+            if (p1 && p2) {
+                f1.name.compareTo(f2.name, ignoreCase = true)
+            } else if (p1) {
+                -1
+            } else if (p2) {
+                1
+            } else {
+                val dir1 = f1.isDirectory
+                val dir2 = f2.isDirectory
+                if (dir1 != dir2) {
+                    if (dir1) -1 else 1
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            }
+        }
+        return tagFiltered.sortedWith(customComparator)
     }
 
     private fun openFile(file: File, transitionView: android.view.View? = null) {
@@ -4741,6 +4834,12 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         if (::btnUnhide.isInitialized) {
             IconCustomizationManager.applyToView(this, btnUnhide, "toolbar_unhide", R.drawable.ic_eye)
+        }
+        if (btnPin != null) {
+            IconCustomizationManager.applyToView(this, btnPin!!, "toolbar_pin", R.drawable.ic_paperclip)
+        }
+        if (btnUnpin != null) {
+            IconCustomizationManager.applyToView(this, btnUnpin!!, "toolbar_unpin", R.drawable.ic_paperclip_off)
         }
         // btnCompress, btnImageCompress, and btnDelete are MaterialButton/View, not ImageView.
         // Custom icons are applied via the ImageView children inside them.

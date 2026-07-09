@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.7] — 2026-07-09
 
+### Added
+- Added ability to Pin/Unpin files and folders on both Mobile and TV layouts across Local, Network, and Online storage (pinned items float to the top alphabetically case-insensitive).
+- Added paperclip status badges to list, compact, and grid layout item views.
+- Integrated Pin/Unpin icons in Toolbar Customization settings, Backup/Restore preferences, and Icon Pack Export categories.
+
 ### Security
 - Fixed unsafe WebView SSL error handler in Box OAuth flow to comply with Google Play Device and Network Abuse policy
 

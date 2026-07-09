@@ -133,6 +133,18 @@
             android:visibility="gone"
             tools:text="4.2 MB" />
 
+        <!-- Pinned Badge -->
+        <ImageView
+            android:id="@+id/imgPinnedBadge"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/ic_paperclip"
+            android:alpha="0.8"
+            android:layout_marginEnd="4dp"
+            android:visibility="gone"
+            app:tint="@color/mobile_text_secondary"
+            tools:visibility="visible" />
+
         <!-- Protected Badge -->
         <ImageView
             android:id="@+id/imgProtectedBadge"

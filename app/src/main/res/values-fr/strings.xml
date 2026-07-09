@@ -9779,6 +9779,29 @@ Déprotéger
     <string name="backup_pref_protected_files">
 Fichiers et dossiers protégés
 </string>
+
+    <!-- File Pinning -->
+    <string name="pin">
+Épingler
+</string>
+    <string name="unpin">
+Désépingler
+</string>
+    <string name="toast_pinned_success">
+%1$d élément(s) épinglé(s)
+</string>
+    <string name="toast_unpinned_success">
+%1$d élément(s) désépinglé(s)
+</string>
+    <string name="backup_pref_pinned_files">
+Fichiers et dossiers épinglés
+</string>
+    <string name="icon_toolbar_pin">
+Épingler
+</string>
+    <string name="icon_toolbar_unpin">
+Désépingler
+</string>
 </resources>
 
 
