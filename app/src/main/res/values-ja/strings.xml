@@ -338,6 +338,15 @@ UFMプレーヤーで次のファイルを自動再生
     <string name="settings_grid_indicators_subtitle_off">
 行番号と列ヘッダーが表示
 </string>
+    <string name="settings_left_handed_fab_title">
+左利き用FABモード
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+ツール &amp; 貼り付けのFABが左下に表示されます
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+ツール &amp; 貼り付けのFABが右下に表示されます（デフォルト）
+</string>
     <string name="audio_conflict_title">
 オーディオ警告
 </string>

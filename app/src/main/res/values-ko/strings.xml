@@ -338,6 +338,15 @@ UFM 플레이어에서 자동 다음 재생
     <string name="settings_grid_indicators_subtitle_off">
 줄 번호 및 열 머리글이 표시됨
 </string>
+    <string name="settings_left_handed_fab_title">
+왼손잡이 FAB 모드
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+도구 및 붙여넣기 FAB가 왼쪽 하단에 있습니다
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+도구 및 붙여넣기 FAB가 오른쪽 하단에 있습니다 (기본값)
+</string>
     <string name="audio_conflict_title">
 오디오 경고
 </string>

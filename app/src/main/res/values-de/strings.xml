@@ -338,6 +338,15 @@ Zeilennummern und Spaltenüberschriften sind ausgeblendet
     <string name="settings_grid_indicators_subtitle_off">
 Zeilennummern und Spaltenüberschriften sind sichtbar
 </string>
+    <string name="settings_left_handed_fab_title">
+Linkshändiger FAB-Modus
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+FABs für Tools &amp; Einfügen befinden sich unten links
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+FABs für Tools &amp; Einfügen befinden sich unten rechts (Standard)
+</string>
     <string name="audio_conflict_title">
 Audio-Warnung
 </string>

@@ -338,6 +338,15 @@ UFM प्लेयर में अगला स्वतः चलाएँ
     <string name="settings_grid_indicators_subtitle_off">
 लाइन नंबर और कॉलम हेडर दृश्यमान हैं
 </string>
+    <string name="settings_left_handed_fab_title">
+बाएं हाथ के लिए FAB मोड
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+टूल्स और पेस्ट FAB नीचे-बाएं ओर हैं
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+टूल्स और पेस्ट FAB नीचे-दाएं ओर हैं (डिफ़ॉल्ट)
+</string>
     <string name="audio_conflict_title">
 ऑडियो चेतावनी
 </string>

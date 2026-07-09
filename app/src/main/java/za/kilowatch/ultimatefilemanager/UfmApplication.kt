@@ -59,6 +59,18 @@ class UfmApplication : Application() {
         instance = this
         Log.d(TAG, "Starting global UfmApplication...")
 
+        // Initialize managers that are required immediately on startup (avoid race conditions)
+        try {
+            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.init(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize hidden files manager", e)
+        }
+        try {
+            za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.init(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize recycle bin manager", e)
+        }
+
         // Apply Material You Dynamic Colors — adapts the app's color scheme to the
         // user's wallpaper on Android 12+ (API 31+). Safe no-op on older versions.
         DynamicColors.applyToActivitiesIfAvailable(this)
@@ -173,19 +185,7 @@ class UfmApplication : Application() {
                 Log.e(TAG, "Failed to initialize DLNA discovery", e)
             }
             
-            // 2. Initialize Hidden Files Tracker
-            try {
-                za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.init(this)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize hidden files manager", e)
-            }
-
-            // 3. Initialize Recycle Bin Manager
-            try {
-                za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager.init(this)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to initialize recycle bin manager", e)
-            }
+            // HiddenFilesManager and RecycleBinManager are initialized synchronously in onCreate to prevent race conditions
 
             // 4. Purge old temporary files from cache
             purgeOldCacheFiles()

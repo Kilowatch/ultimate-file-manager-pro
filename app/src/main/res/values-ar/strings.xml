@@ -338,6 +338,15 @@
     <string name="settings_grid_indicators_subtitle_off">
 أرقام الأسطر ورؤوس الأعمدة مرئية
 </string>
+    <string name="settings_left_handed_fab_title">
+وضع زر الإجراء العائم لليد اليسرى
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+أزرار الأدوات واللصق في الأسفل يسارًا
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+أزرار الأدوات واللصق في الأسفل يمينًا (الافتراضي)
+</string>
     <string name="audio_conflict_title">
 تحذير الصوت
 </string>

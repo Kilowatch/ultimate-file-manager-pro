@@ -208,11 +208,34 @@ class FileBrowserFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         updatePasteFab()
         // Refresh file list on return from child activities (e.g. Settings toggle)
         if (::currentDir.isInitialized) {
             loadDirectory(currentDir)
+        }
+    }
+
+    private fun applyLeftHandedFabSettings() {
+        val ctx = context ?: return
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
+        val viewsToUpdate = mutableListOf<android.view.View>()
+        if (::fabPaste.isInitialized) {
+            viewsToUpdate.add(fabPaste)
+        }
+        fabTools?.let { viewsToUpdate.add(it) }
+
+        for (fab in viewsToUpdate) {
+            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            fab.layoutParams = lp
         }
     }
 

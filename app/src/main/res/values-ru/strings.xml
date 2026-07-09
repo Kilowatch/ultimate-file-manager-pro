@@ -338,6 +338,15 @@ USB-накопитель
     <string name="settings_grid_indicators_subtitle_off">
 Номера строк и заголовки столбцов видны
 </string>
+    <string name="settings_left_handed_fab_title">
+Режим FAB для левой руки
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Кнопки инструментов и вставки находятся внизу слева
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Кнопки инструментов и вставки находятся внизу справа (по умолчанию)
+</string>
     <string name="audio_conflict_title">
 Предупреждение об аудио
 </string>

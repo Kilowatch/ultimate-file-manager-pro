@@ -79,13 +79,16 @@ class UfmDlnaServer(private val context: Context) {
                 "uuid:$udn"       to "uuid:$udn",
                 nt                to "uuid:$udn::$nt"
             )
-            for ((ntVal, usnVal) in ntTypes) {
-                DlnaSsdpEngine.sendNotifyAlive(
-                    nt = ntVal,
-                    usn = usnVal,
-                    location = serverLocation
-                )
-            }
+            Thread {
+                if (!isRunning) return@Thread
+                for ((ntVal, usnVal) in ntTypes) {
+                    DlnaSsdpEngine.sendNotifyAlive(
+                        nt = ntVal,
+                        usn = usnVal,
+                        location = serverLocation
+                    )
+                }
+            }.start()
             notifyHandler.postDelayed(this, NOTIFY_INTERVAL_MS)
         }
     }

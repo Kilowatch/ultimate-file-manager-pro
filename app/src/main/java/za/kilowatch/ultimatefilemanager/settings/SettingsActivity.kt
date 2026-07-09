@@ -83,6 +83,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchTipJarPopup: SwitchMaterial
     private lateinit var txtTipJarPopupSubtitle: TextView
 
+    private var switchLeftHandedFab: SwitchMaterial? = null
+    private var txtLeftHandedFabSubtitle: TextView? = null
+
     private lateinit var cardNetworkThumbnails: MaterialCardView
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
@@ -377,6 +380,20 @@ class SettingsActivity : AppCompatActivity() {
 
         cardScrollingText.setOnClickListener { toggleScrollingText() }
         switchScrollingText.setOnCheckedChangeListener(null)
+
+        // Left-handed FAB toggle (Mobile Only)
+        val cardLeftHandedFab = findViewById<MaterialCardView?>(R.id.cardLeftHandedFab)
+        if (cardLeftHandedFab != null) {
+            switchLeftHandedFab = findViewById(R.id.switchLeftHandedFab)
+            txtLeftHandedFabSubtitle = findViewById(R.id.txtLeftHandedFabSubtitle)
+
+            val leftHanded = LeftHandedFabPreferenceManager.isLeftHanded(this)
+            switchLeftHandedFab?.isChecked = leftHanded
+            updateLeftHandedFabSubtitle(leftHanded)
+
+            cardLeftHandedFab.setOnClickListener { toggleLeftHandedFab() }
+            switchLeftHandedFab?.setOnCheckedChangeListener(null)
+        }
 
         // Grid Indicators toggle — ON = hide, OFF = show (default)
         val cardGridIndicators = findViewById<MaterialCardView>(R.id.cardGridIndicators)
@@ -785,6 +802,13 @@ class SettingsActivity : AppCompatActivity() {
             updateScrollingTextSubtitle(enabled)
         }
 
+        // Refresh Left-handed FAB subtitle
+        switchLeftHandedFab?.let { sw ->
+            val leftHanded = LeftHandedFabPreferenceManager.isLeftHanded(this)
+            sw.isChecked = leftHanded
+            updateLeftHandedFabSubtitle(leftHanded)
+        }
+
         // Refresh Grid Indicators subtitle
         if (::switchGridIndicators.isInitialized) {
             val hidden = GridIndicatorsPreferenceManager.isHidden(this)
@@ -1150,6 +1174,22 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_scrolling_text_subtitle_on)
         } else {
             getString(R.string.settings_scrolling_text_subtitle_off)
+        }
+    }
+
+    private fun toggleLeftHandedFab() {
+        val sw = switchLeftHandedFab ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        LeftHandedFabPreferenceManager.setLeftHanded(this, newValue)
+        updateLeftHandedFabSubtitle(newValue)
+    }
+
+    private fun updateLeftHandedFabSubtitle(leftHanded: Boolean) {
+        txtLeftHandedFabSubtitle?.text = if (leftHanded) {
+            getString(R.string.settings_left_handed_fab_subtitle_on)
+        } else {
+            getString(R.string.settings_left_handed_fab_subtitle_off)
         }
     }
 

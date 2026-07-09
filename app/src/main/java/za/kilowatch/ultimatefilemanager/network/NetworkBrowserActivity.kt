@@ -551,6 +551,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        applyLeftHandedFabSettings()
         android.util.Log.w("UFM_COPY", ">>> onResume called, isTransferring=$isTransferring")
         if (isTransferring) return  // Don't interfere with active transfers
         updatePasteFab()
@@ -575,6 +576,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 Snackbar.make(findViewById(R.id.main), getString(R.string.device_disconnected), Snackbar.LENGTH_SHORT).show()
                 finish()
             }
+        }
+    }
+
+    private fun applyLeftHandedFabSettings() {
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(this)
+        val viewsToUpdate = mutableListOf<android.view.View>()
+        if (::fabPaste.isInitialized) {
+            viewsToUpdate.add(fabPaste)
+        }
+        fabTools?.let { viewsToUpdate.add(it) }
+
+        for (fab in viewsToUpdate) {
+            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            fab.layoutParams = lp
         }
     }
 

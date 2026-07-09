@@ -338,6 +338,15 @@ Les numéros de ligne et les en-têtes de colonne sont masqués
     <string name="settings_grid_indicators_subtitle_off">
 Les numéros de ligne et les en-têtes de colonne sont visibles
 </string>
+    <string name="settings_left_handed_fab_title">
+Mode FAB pour gaucher
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Les FAB Outils et Coller sont en bas à gauche
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Les FAB Outils et Coller sont en bas à droite (par défaut)
+</string>
     <string name="audio_conflict_title">
 Avertissement audio
 </string>

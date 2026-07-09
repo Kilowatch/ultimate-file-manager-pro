@@ -5,6 +5,17 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.6.6] — 2026-07-09
+
+### Added
+- Added "Left-handed FAB mode" setting in Mobile Settings to position the Tools and Paste floating action buttons on the bottom-left instead of the default bottom-right.
+
+### Fixed
+- Fixed a NullPointerException crash in SortFilterSheet on Android TV due to missing tag views
+- Fixed a NetworkOnMainThreadException crash in UfmDlnaServer's periodic SSDP keep-alive loop by running network calls on a background thread
+- Fixed a lateinit property prefs has not been initialized crash in HiddenFilesManager by moving HiddenFilesManager and RecycleBinManager initialization from the background startup thread to the main thread in UfmApplication
+
 ## [1.6.5] — 2026-07-07
 
 ### Added

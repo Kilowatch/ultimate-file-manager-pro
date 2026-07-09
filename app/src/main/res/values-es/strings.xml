@@ -338,6 +338,15 @@ Los números de línea y encabezados de columna están ocultos
     <string name="settings_grid_indicators_subtitle_off">
 Los números de línea y encabezados de columna son visibles
 </string>
+    <string name="settings_left_handed_fab_title">
+Modo FAB para zurdos
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Los FAB de herramientas y pegado están en la parte inferior izquierda
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Los FAB de herramientas y pegado están en la parte inferior derecha (predeterminado)
+</string>
     <string name="audio_conflict_title">
 Advertencia de audio
 </string>

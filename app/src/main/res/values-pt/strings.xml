@@ -338,6 +338,15 @@ Números de linha e cabeçalhos de coluna estão ocultos
     <string name="settings_grid_indicators_subtitle_off">
 Números de linha e cabeçalhos de coluna estão visíveis
 </string>
+    <string name="settings_left_handed_fab_title">
+Modo FAB para canhotos
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Os FABs de ferramentas e colar estão no canto inferior esquerdo
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Os FABs de ferramentas e colar estão no canto inferior direito (padrão)
+</string>
     <string name="audio_conflict_title">
 Aviso de Áudio
 </string>

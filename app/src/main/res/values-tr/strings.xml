@@ -338,6 +338,15 @@ Satır numaraları ve sütun başlıkları gizli
     <string name="settings_grid_indicators_subtitle_off">
 Satır numaraları ve sütun başlıkları görünür
 </string>
+    <string name="settings_left_handed_fab_title">
+Sol el FAB modu
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Araçlar ve Yapıştır FAB\'ları sol altta
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Araçlar ve Yapıştır FAB\'ları sağ altta (varsayılan)
+</string>
     <string name="audio_conflict_title">
 Ses Uyarısı
 </string>

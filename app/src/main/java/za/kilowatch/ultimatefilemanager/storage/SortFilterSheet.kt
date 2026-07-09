@@ -130,18 +130,18 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val allTags = FileTagsManager.getAllCreatedTags(requireContext()).sorted()
 
         if (allTags.isNotEmpty() && !DeviceUtils.isTvDevice(requireContext())) {
-            layoutTags.visibility = View.VISIBLE
-            cgTags.removeAllViews()
+            layoutTags?.visibility = View.VISIBLE
+            cgTags?.removeAllViews()
             for (tag in allTags) {
                 val chip = LayoutInflater.from(requireContext())
                     .inflate(R.layout.item_tag_chip, cgTags, false) as Chip
                 chip.text = "#$tag"
                 chip.isChecked = activeTags.contains(tag)
                 chip.isCheckedIconVisible = true
-                cgTags.addView(chip)
+                cgTags?.addView(chip)
             }
         } else {
-            layoutTags.visibility = View.GONE
+            layoutTags?.visibility = View.GONE
         }
 
         // Apply button
@@ -175,12 +175,15 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 else -> false
             }
             val selectedTags = mutableSetOf<String>()
-            if (layoutTags.visibility == View.VISIBLE) {
-                for (i in 0 until cgTags.childCount) {
-                    val chip = cgTags.getChildAt(i) as? Chip
-                    if (chip != null && chip.isChecked) {
-                        val cleanTag = chip.text.toString().removePrefix("#")
-                        selectedTags.add(cleanTag)
+            if (layoutTags?.visibility == View.VISIBLE) {
+                val tagsGroup = cgTags
+                if (tagsGroup != null) {
+                    for (i in 0 until tagsGroup.childCount) {
+                        val chip = tagsGroup.getChildAt(i) as? Chip
+                        if (chip != null && chip.isChecked) {
+                            val cleanTag = chip.text.toString().removePrefix("#")
+                            selectedTags.add(cleanTag)
+                        }
                     }
                 }
             }

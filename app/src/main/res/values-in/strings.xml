@@ -338,6 +338,15 @@ Nomor baris dan header kolom disembunyikan
     <string name="settings_grid_indicators_subtitle_off">
 Nomor baris dan header kolom terlihat
 </string>
+    <string name="settings_left_handed_fab_title">
+Mode FAB kidal
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+FAB Alat &amp; Tempel berada di kiri bawah
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+FAB Alat &amp; Tempel berada di kanan bawah (default)
+</string>
     <string name="audio_conflict_title">
 Peringatan Audio
 </string>

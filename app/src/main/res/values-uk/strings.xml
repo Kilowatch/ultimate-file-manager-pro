@@ -338,6 +338,15 @@ USB-накопичувач
     <string name="settings_grid_indicators_subtitle_off">
 Номери рядків та заголовки стовпців видимі
 </string>
+    <string name="settings_left_handed_fab_title">
+Режим FAB для ліворуких
+</string>
+    <string name="settings_left_handed_fab_subtitle_on">
+Кнопки FAB інструментів та вставки знаходяться внизу зліва
+</string>
+    <string name="settings_left_handed_fab_subtitle_off">
+Кнопки FAB інструментів та вставки знаходяться внизу справа (за замовчуванням)
+</string>
     <string name="audio_conflict_title">
 Попередження про аудіо
 </string>

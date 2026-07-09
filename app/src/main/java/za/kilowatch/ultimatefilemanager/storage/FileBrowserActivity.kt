@@ -372,6 +372,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        applyLeftHandedFabSettings()
         applyToolbarIconVisibility()
         // Refresh file list so files created/modified in child activities
         // (image viewer, text viewer, etc.) appear immediately on return
@@ -380,6 +381,27 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         // Show/hide paste FAB based on clipboard state or picker modes
         updatePasteFab()
+    }
+
+    private fun applyLeftHandedFabSettings() {
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(this)
+        val viewsToUpdate = mutableListOf<android.view.View>()
+        if (::fabPaste.isInitialized) {
+            viewsToUpdate.add(fabPaste)
+        }
+        fabTools?.let { viewsToUpdate.add(it) }
+
+        for (fab in viewsToUpdate) {
+            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            fab.layoutParams = lp
+        }
     }
 
     private fun applyToolbarIconVisibility() {
