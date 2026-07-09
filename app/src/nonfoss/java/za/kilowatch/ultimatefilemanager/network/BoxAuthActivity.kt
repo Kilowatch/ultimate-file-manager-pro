@@ -169,8 +169,10 @@ class BoxAuthActivity : AppCompatActivity() {
                 error: SslError?
             ) {
                 GoRoLog.e("BoxAuth", "WebView SSL error: ${error?.toString()}")
-                // Allow SSL errors for localhost redirect (safe — it never loads)
-                handler?.proceed()
+                // Cancel the load — never bypass SSL validation (Google Play policy).
+                // The localhost redirect is intercepted by shouldOverrideUrlLoading
+                // before any page load, so this path is only hit for real SSL issues.
+                handler?.cancel()
             }
         }
 
