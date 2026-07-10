@@ -9802,6 +9802,59 @@ Fixar
     <string name="icon_toolbar_unpin">
 Desafixar
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Aplicar a
+</string>
+    <string name="sort_scope_global">
+Global
+</string>
+    <string name="sort_scope_folder">
+Esta Pasta
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Substituições de Ordenação da Pasta
+</string>
+    <string name="folder_sort_manager_empty">
+Nenhuma configuração de ordenação específica da pasta salva.\n
+\n
+Abra uma pasta, toque em Ordenar &amp; Filtrar e escolha \"Esta Pasta\" para criar uma substituição.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Limpar Tudo
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Remover todas as substituições de ordenação específicas da pasta? As pastas reverterão para a configuração de ordenação global.
+</string>
+    <string name="folder_sort_manager_deleted">
+Substituição removida
+</string>
+    <string name="folder_sort_network_badge">
+Rede / Online
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+Crescente
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+Decrescente
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Remover substituição de ordenação para esta pasta
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Substituições de Ordenação da Pasta
+</string>
+    <string name="settings_folder_sort_subtitle">
+Gerenciar configurações de ordenação e filtro por pasta
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Ordenação e Filtro por Pasta
+</string>
 </resources>
-
-

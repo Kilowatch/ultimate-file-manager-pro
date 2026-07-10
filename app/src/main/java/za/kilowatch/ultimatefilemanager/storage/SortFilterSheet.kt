@@ -27,6 +27,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     enum class SortMode { NAME, SIZE, DATE, TYPE }
     enum class SortOrder { ASC, DESC }
     enum class FilterType { ALL, IMAGES, VIDEOS, AUDIO, DOCUMENTS, APKS, OTHER }
+    enum class Scope { GLOBAL, FOLDER }
 
     var currentSortMode = SortMode.NAME
     var currentSortOrder = SortOrder.ASC
@@ -34,7 +35,13 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     var currentShowHidden = false
     var currentGroupByDate = false
     var activeTags: Set<String> = emptySet()
-    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>) -> Unit)? = null
+
+    var currentFolderKey: String? = null
+    var currentFolderDisplayPath: String = ""
+    var currentScope: Scope = Scope.GLOBAL
+    var currentViewMode: ViewModeManager.ViewMode? = null
+
+    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>, Scope, ViewModeManager.ViewMode) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -58,6 +65,56 @@ class SortFilterSheet : BottomSheetDialogFragment() {
 
         val txtTitle = view.findViewById<TextView>(R.id.txtSortTitle)
         txtTitle.text = getString(R.string.sort_title)
+
+        // ── Scope selector ───────────────────────────────────────────────────
+        val layoutScopeRow = view.findViewById<android.widget.LinearLayout?>(R.id.layoutScopeRow)
+        val cgScope = view.findViewById<com.google.android.material.chip.ChipGroup?>(R.id.cgScope)
+        val chipScopeGlobal = view.findViewById<com.google.android.material.chip.Chip?>(R.id.chipScopeGlobal)
+        val chipScopeFolder = view.findViewById<com.google.android.material.chip.Chip?>(R.id.chipScopeFolder)
+
+        if (currentFolderKey != null && layoutScopeRow != null) {
+            layoutScopeRow.visibility = android.view.View.VISIBLE
+            when (currentScope) {
+                Scope.FOLDER -> chipScopeFolder?.isChecked = true
+                Scope.GLOBAL -> chipScopeGlobal?.isChecked = true
+            }
+        } else {
+            layoutScopeRow?.visibility = android.view.View.GONE
+        }
+
+        // View mode section and chips
+        val layoutViewModeSection = view.findViewById<android.widget.LinearLayout?>(R.id.layoutViewModeSection)
+        val cgViewMode = view.findViewById<ChipGroup?>(R.id.cgViewMode)
+        val chipViewListSmall = view.findViewById<Chip?>(R.id.chipViewListSmall)
+        val chipViewListMedium = view.findViewById<Chip?>(R.id.chipViewListMedium)
+        val chipViewListLarge = view.findViewById<Chip?>(R.id.chipViewListLarge)
+        val chipViewListXLarge = view.findViewById<Chip?>(R.id.chipViewListXLarge)
+        val chipViewGridSmall = view.findViewById<Chip?>(R.id.chipViewGridSmall)
+        val chipViewGridMedium = view.findViewById<Chip?>(R.id.chipViewGridMedium)
+        val chipViewGridLarge = view.findViewById<Chip?>(R.id.chipViewGridLarge)
+
+        val initialViewMode = currentViewMode ?: ViewModeManager.load(requireContext())
+        when (initialViewMode) {
+            ViewModeManager.ViewMode.LIST_SMALL -> chipViewListSmall?.isChecked = true
+            ViewModeManager.ViewMode.LIST_MEDIUM -> chipViewListMedium?.isChecked = true
+            ViewModeManager.ViewMode.LIST_LARGE -> chipViewListLarge?.isChecked = true
+            ViewModeManager.ViewMode.LIST_XLARGE -> chipViewListXLarge?.isChecked = true
+            ViewModeManager.ViewMode.GRID_SMALL -> chipViewGridSmall?.isChecked = true
+            ViewModeManager.ViewMode.GRID_MEDIUM -> chipViewGridMedium?.isChecked = true
+            ViewModeManager.ViewMode.GRID_LARGE -> chipViewGridLarge?.isChecked = true
+        }
+
+        fun updateViewModeSectionVisibility(scope: Scope) {
+            layoutViewModeSection?.visibility = if (scope == Scope.FOLDER) android.view.View.VISIBLE else android.view.View.GONE
+        }
+
+        if (currentFolderKey != null) {
+            updateViewModeSectionVisibility(currentScope)
+            cgScope?.setOnCheckedStateChangeListener { _, checkedIds ->
+                val scope = if (checkedIds.contains(R.id.chipScopeFolder)) Scope.FOLDER else Scope.GLOBAL
+                updateViewModeSectionVisibility(scope)
+            }
+        }
 
         // Sort mode chips
         val cgSort = view.findViewById<ChipGroup>(R.id.cgSortMode)
@@ -187,7 +244,21 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                     }
                 }
             }
-            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags)
+            val scope = when (cgScope?.checkedChipId) {
+                R.id.chipScopeFolder -> Scope.FOLDER
+                else -> Scope.GLOBAL
+            }
+            val selectedViewMode = when (cgViewMode?.checkedChipId) {
+                R.id.chipViewListSmall -> ViewModeManager.ViewMode.LIST_SMALL
+                R.id.chipViewListMedium -> ViewModeManager.ViewMode.LIST_MEDIUM
+                R.id.chipViewListLarge -> ViewModeManager.ViewMode.LIST_LARGE
+                R.id.chipViewListXLarge -> ViewModeManager.ViewMode.LIST_XLARGE
+                R.id.chipViewGridSmall -> ViewModeManager.ViewMode.GRID_SMALL
+                R.id.chipViewGridMedium -> ViewModeManager.ViewMode.GRID_MEDIUM
+                R.id.chipViewGridLarge -> ViewModeManager.ViewMode.GRID_LARGE
+                else -> ViewModeManager.load(requireContext())
+            }
+            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags, scope, selectedViewMode)
             dismiss()
         }
         
@@ -240,14 +311,17 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             }
         }
 
-        // Apply to Chips
+        // Apply to Chips (including scope chips when visible)
+        val scopeChips = if (currentFolderKey != null) listOf(R.id.chipScopeGlobal, R.id.chipScopeFolder) else emptyList()
         val chips = listOf(
             R.id.chipSortName, R.id.chipSortSize, R.id.chipSortDate, R.id.chipSortType,
             R.id.chipAscending, R.id.chipDescending,
             R.id.chipAll, R.id.chipImages, R.id.chipVideos, R.id.chipAudio, R.id.chipDocuments, R.id.chipApks,
             R.id.chipHiddenEnabled, R.id.chipHiddenDisabled,
-            R.id.chipGroupDateEnabled, R.id.chipGroupDateDisabled
-        )
+            R.id.chipGroupDateEnabled, R.id.chipGroupDateDisabled,
+            R.id.chipViewListSmall, R.id.chipViewListMedium, R.id.chipViewListLarge, R.id.chipViewListXLarge,
+            R.id.chipViewGridSmall, R.id.chipViewGridMedium, R.id.chipViewGridLarge
+        ) + scopeChips
         for (id in chips) {
             val chip = view.findViewById<Chip>(id)
             applyFocusListener(chip, defaultTextColor = whiteText)

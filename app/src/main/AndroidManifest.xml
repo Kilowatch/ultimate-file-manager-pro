@@ -318,6 +318,12 @@
             android:name=".settings.ManageFavoritesActivity"
             android:exported="false" />
 
+        <!-- Folder Sort Overrides Manager -->
+        <activity
+            android:name=".settings.FolderSortManagerActivity"
+            android:exported="false"
+            android:label="@string/folder_sort_manager_title" />
+
         <!-- Network Thumbnails Settings -->
         <activity
             android:name=".settings.NetworkThumbnailSettingsActivity"

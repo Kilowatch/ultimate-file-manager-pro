@@ -9802,6 +9802,59 @@ URL сервера
     <string name="icon_toolbar_unpin">
 Открепить
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Применить к
+</string>
+    <string name="sort_scope_global">
+Глобальные
+</string>
+    <string name="sort_scope_folder">
+Эта папка
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Переопределения сортировки папок
+</string>
+    <string name="folder_sort_manager_empty">
+Нет сохранённых настроек сортировки для конкретной папки.\n
+\n
+Откройте папку, нажмите «Сортировка и фильтр» и выберите \\\"Эта папка\\\", чтобы создать переопределение.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Очистить всё
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Удалить все переопределения сортировки для папок? Папки вернутся к глобальной настройке сортировки.
+</string>
+    <string name="folder_sort_manager_deleted">
+Переопределение удалено
+</string>
+    <string name="folder_sort_network_badge">
+Сеть / Онлайн
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+По возрастанию
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+По убыванию
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Удалить переопределение сортировки для этой папки
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Переопределения сортировки папок
+</string>
+    <string name="settings_folder_sort_subtitle">
+Управление настройками сортировки и фильтрации для каждой папки
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Сортировка и фильтр по папкам
+</string>
 </resources>
-
-

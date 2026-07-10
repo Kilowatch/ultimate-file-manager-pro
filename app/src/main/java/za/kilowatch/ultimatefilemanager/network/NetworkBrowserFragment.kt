@@ -41,6 +41,8 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameItem
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.storage.FileToolsBottomSheet
+import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
+import za.kilowatch.ultimatefilemanager.storage.SortFilterSheet
 import java.io.File
 import java.io.FileOutputStream
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
@@ -558,7 +560,20 @@ class NetworkBrowserFragment : Fragment() {
         if (!isTv) {
             view.findViewById<View>(R.id.btnViewToggle)?.setOnClickListener {
                 ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
-                    ViewModeManager.save(requireContext(), selectedMode)
+                    val folderKey = SortFilterPreferenceManager.folderKey(share.id, currentPath)
+                    if (SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)) {
+                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                            val state = SortFilterPreferenceManager.loadForFolder(requireContext(), folderKey)
+                            if (state != null) {
+                                SortFilterPreferenceManager.saveFolderSpecific(
+                                    requireContext(), folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath",
+                                    state.copy(viewMode = selectedMode), isNetwork = true
+                                )
+                            }
+                        }
+                    } else {
+                        ViewModeManager.save(requireContext(), selectedMode)
+                    }
                     applyViewMode(selectedMode)
                 }
             }
@@ -762,6 +777,27 @@ class NetworkBrowserFragment : Fragment() {
 
     fun loadDirectory() {
         val isTv = context?.packageManager?.hasSystemFeature("android.software.leanback") == true
+        val ctx = context ?: return
+
+        // Load folder-specific sort settings (or fall back to global) on IO thread
+        val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
+        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForFolder(ctx, folderKey)
+                ?: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadGlobal(ctx)
+            val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+            val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
+            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                sortMode  = state.sortMode
+                sortOrder = state.sortOrder
+                filterType = state.filterType
+                activeTagsFilter = state.activeTags
+                updateSortBadge(hasFolderOverride)
+                if (fileAdapter.viewMode != viewModeToApply) {
+                    applyViewMode(viewModeToApply)
+                }
+            }
+        }
+
         if (isTv && ::recyclerFiles.isInitialized) {
             val hadFocus = view?.hasFocus() == true || recyclerFiles.hasFocus()
             if (hadFocus) {
@@ -1544,13 +1580,42 @@ class NetworkBrowserFragment : Fragment() {
 
         wireTvIconBtn(view.findViewById(R.id.btnBack)) { navigateUp() }
         wireTvIconBtn(view.findViewById(R.id.btnCreateNew)) { showCreateNewMenu() }
-        wireTvIconBtn(view.findViewById(R.id.btnSort)) { showSortFilterSheet() }
+        
+        val btnSortTv = view.findViewById<ImageView?>(R.id.btnSort)
+        btnSortTv?.setOnClickListener { showSortFilterSheet() }
+        btnSortTv?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                btnSortTv.imageTintList = iconTintFocused
+            } else {
+                val folderKey = SortFilterPreferenceManager.folderKey(share.id, currentPath)
+                val hasOverride = SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)
+                btnSortTv.imageTintList = android.content.res.ColorStateList.valueOf(
+                    requireContext().getColor(
+                        if (hasOverride) R.color.tv_button_focused_yellow else R.color.tv_text_primary
+                    )
+                )
+            }
+        }
+
         wireTvIconBtn(view.findViewById(R.id.btnRefresh)) { loadDirectory() }
         wireTvIconBtn(view.findViewById(R.id.btnDrivePicker)) { onStoragePickerRequested?.invoke() }
         wireTvIconBtn(view.findViewById(R.id.btnSearchToggle)) { toggleSearch() }
         wireTvIconBtn(view.findViewById(R.id.btnViewToggle)) {
             ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
-                ViewModeManager.save(requireContext(), selectedMode)
+                val folderKey = SortFilterPreferenceManager.folderKey(share.id, currentPath)
+                if (SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)) {
+                    lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                        val state = SortFilterPreferenceManager.loadForFolder(requireContext(), folderKey)
+                        if (state != null) {
+                            SortFilterPreferenceManager.saveFolderSpecific(
+                                requireContext(), folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath",
+                                state.copy(viewMode = selectedMode), isNetwork = true
+                            )
+                        }
+                    }
+                } else {
+                    ViewModeManager.save(requireContext(), selectedMode)
+                }
                 applyViewMode(selectedMode)
             }
         }
@@ -1767,31 +1832,79 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun showSortFilterSheet() {
+        val ctx = context ?: return
         val sheet = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet()
         sheet.currentSortMode = sortMode
         sheet.currentSortOrder = sortOrder
         sheet.currentFilterType = filterType
         sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
-        sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())
+        sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(ctx)
         sheet.activeTags = activeTagsFilter
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags ->
+
+        val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
+        sheet.currentFolderKey = folderKey
+        sheet.currentFolderDisplayPath = "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath"
+        val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+        sheet.currentScope = if (hasFolderOverride)
+            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER
+            else za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.GLOBAL
+
+        sheet.currentViewMode = if (hasFolderOverride) {
+            za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForFolder(ctx, folderKey)?.viewMode
+        } else {
+            null
+        }
+
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode ->
             sortMode = mode
             sortOrder = order
             filterType = filter
             activeTagsFilter = tags
             za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
-            
-            val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
-            prefs.edit().putInt("sort_mode", mode.ordinal).putInt("sort_order", order.ordinal).apply()
-            
-            if (groupByDate != za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(requireContext())) {
-                za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.setEnabled(requireContext(), groupByDate)
-                fileAdapter.isGroupedByDate = groupByDate
-                applyViewMode(fileAdapter.viewMode)
+
+            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
+                mode, order, filter, showHidden, groupByDate, tags,
+                viewMode = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) selectedViewMode else null
+            )
+            lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) {
+                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveFolderSpecific(
+                        ctx, folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath", state, isNetwork = true)
+                } else {
+                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveGlobal(ctx, state)
+                    ViewModeManager.save(ctx, selectedViewMode)
+                    za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.clearFolderSpecific(ctx, folderKey)
+                }
+                val hasFolderOverrideNow = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+                kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                    updateSortBadge(hasFolderOverrideNow)
+                }
             }
-            
+
+            if (groupByDate != za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(ctx)) {
+                za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.setEnabled(ctx, groupByDate)
+                fileAdapter.isGroupedByDate = groupByDate
+            }
+
+            applyViewMode(selectedViewMode)
             performSearch(edtSearch.text.toString().trim())
         }
         sheet.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.TAG)
+    }
+
+    /**
+     * Tints the sort icon when a folder-specific sort override is active.
+     */
+    private fun updateSortBadge(hasFolderOverride: Boolean) {
+        val ctx = context ?: return
+        val btn = view?.findViewById<android.widget.ImageView>(R.id.btnSort) ?: return
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(ctx)
+        if (hasFolderOverride) {
+            btn.imageTintList = android.content.res.ColorStateList.valueOf(
+                ctx.getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_button_focused_yellow else za.kilowatch.ultimatefilemanager.R.color.ufm_primary))
+        } else {
+            btn.imageTintList = android.content.res.ColorStateList.valueOf(
+                ctx.getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_text_primary else za.kilowatch.ultimatefilemanager.R.color.mobile_icon_tint))
+        }
     }
 }

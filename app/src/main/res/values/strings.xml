@@ -3457,6 +3457,27 @@
     <string name="backup_pref_pinned_files">Pinned Files &amp; Folders</string>
     <string name="icon_toolbar_pin">Pin</string>
     <string name="icon_toolbar_unpin">Unpin</string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">Apply to</string>
+    <string name="sort_scope_global">Global</string>
+    <string name="sort_scope_folder">This Folder</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">Folder Sort Overrides</string>
+    <string name="folder_sort_manager_empty">No folder-specific sort settings saved.\n\nOpen a folder, tap Sort &amp; Filter and choose \"This Folder\" to create an override.</string>
+    <string name="folder_sort_manager_clear_all">Clear All</string>
+    <string name="folder_sort_manager_clear_confirm">Remove all folder-specific sort overrides? Folders will revert to the global sort setting.</string>
+    <string name="folder_sort_manager_deleted">Override removed</string>
+    <string name="folder_sort_network_badge">Network / Online</string>
+    <string name="folder_sort_manager_settings_summary_asc">Ascending</string>
+    <string name="folder_sort_manager_settings_summary_desc">Descending</string>
+    <string name="folder_sort_manager_delete_cd">Remove sort override for this folder</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">Folder Sort Overrides</string>
+    <string name="settings_folder_sort_subtitle">Manage per-folder sort and filter settings</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">Per-folder Sort &amp; Filter</string>
 </resources>
-
-

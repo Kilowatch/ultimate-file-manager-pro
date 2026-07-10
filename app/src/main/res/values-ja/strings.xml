@@ -9802,6 +9802,59 @@ OK
     <string name="icon_toolbar_unpin">
 固定解除
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+適用先
+</string>
+    <string name="sort_scope_global">
+全体
+</string>
+    <string name="sort_scope_folder">
+このフォルダ
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+フォルダの並べ替えオーバーライド
+</string>
+    <string name="folder_sort_manager_empty">
+フォルダごとの並べ替え設定は保存されていません。\n
+\n
+フォルダを開き、並べ替えとフィルターをタップして「このフォルダ」を選択すると、オーバーライドを作成できます。
+</string>
+    <string name="folder_sort_manager_clear_all">
+すべてクリア
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+フォルダごとの並べ替えオーバーライドをすべて削除しますか？フォルダは全体の並べ替え設定に戻ります。
+</string>
+    <string name="folder_sort_manager_deleted">
+オーバーライドを削除しました
+</string>
+    <string name="folder_sort_network_badge">
+ネットワーク/オンライン
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+昇順
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+降順
+</string>
+    <string name="folder_sort_manager_delete_cd">
+このフォルダの並べ替えオーバーライドを削除
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+フォルダの並べ替えオーバーライド
+</string>
+    <string name="settings_folder_sort_subtitle">
+フォルダごとの並べ替えとフィルター設定を管理
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+フォルダごとの並べ替えとフィルター
+</string>
 </resources>
-
-

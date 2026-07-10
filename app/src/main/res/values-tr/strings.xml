@@ -9802,6 +9802,59 @@ Sabitle
     <string name="icon_toolbar_unpin">
 Sabitliği Kaldır
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Uygula
+</string>
+    <string name="sort_scope_global">
+Genel
+</string>
+    <string name="sort_scope_folder">
+Bu Klasör
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Klasör Sıralama Geçersiz Kılmaları
+</string>
+    <string name="folder_sort_manager_empty">
+Klasöre özel sıralama ayarı kaydedilmedi.\n
+\n
+Bir klasör açın, Sırala ve Filtrele\'ye dokunun ve geçersiz kılma oluşturmak için \\\"Bu Klasör\\\"ü seçin.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Tümünü Temizle
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Tüm klasöre özel sıralama geçersiz kılmaları kaldırılsın mı? Klasörler genel sıralama ayarına dönecek.
+</string>
+    <string name="folder_sort_manager_deleted">
+Geçersiz kılma kaldırıldı
+</string>
+    <string name="folder_sort_network_badge">
+Ağ / Çevrimiçi
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+Artan
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+Azalan
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Bu klasör için sıralama geçersiz kılmayı kaldır
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Klasör Sıralama Geçersiz Kılmaları
+</string>
+    <string name="settings_folder_sort_subtitle">
+Klasör bazında sıralama ve filtre ayarlarını yönet
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Klasöre Özel Sıralama ve Filtre
+</string>
 </resources>
-
-

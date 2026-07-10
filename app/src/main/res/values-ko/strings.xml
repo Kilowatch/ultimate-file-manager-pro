@@ -9802,6 +9802,59 @@ UFM 플레이어 설정
     <string name="icon_toolbar_unpin">
 고정 해제
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+적용 대상
+</string>
+    <string name="sort_scope_global">
+전역
+</string>
+    <string name="sort_scope_folder">
+이 폴더
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+폴더 정렬 재정의
+</string>
+    <string name="folder_sort_manager_empty">
+저장된 폴더별 정렬 설정이 없습니다.\n
+\n
+폴더를 열고 정렬 및 필터를 탭한 다음 \"이 폴더\"를 선택하여 재정의를 만드세요.
+</string>
+    <string name="folder_sort_manager_clear_all">
+모두 지우기
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+모든 폴더별 정렬 재정의를 제거하시겠습니까? 폴더는 전역 정렬 설정으로 되돌아갑니다.
+</string>
+    <string name="folder_sort_manager_deleted">
+재정의가 제거됨
+</string>
+    <string name="folder_sort_network_badge">
+네트워크 / 온라인
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+오름차순
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+내림차순
+</string>
+    <string name="folder_sort_manager_delete_cd">
+이 폴더의 정렬 재정의 제거
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+폴더 정렬 재정의
+</string>
+    <string name="settings_folder_sort_subtitle">
+폴더별 정렬 및 필터 설정 관리
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+폴더별 정렬 및 필터
+</string>
 </resources>
-
-

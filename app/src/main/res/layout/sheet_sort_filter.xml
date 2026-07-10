@@ -19,7 +19,6 @@
             android:orientation="vertical"
             android:padding="@dimen/margin_lg">
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/txtSortTitle"
                 android:layout_width="wrap_content"
@@ -30,7 +29,124 @@
                 android:fontFamily="sans-serif-medium"
                 android:layout_marginBottom="@dimen/margin_md" />
 
+            <!-- Scope selector: Global / This Folder (hidden when no folder context) -->
+            <LinearLayout
+                android:id="@+id/layoutScopeRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_scope_section_label"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgScope"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipScopeGlobal"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sort_scope_global"
+                        android:checked="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipScopeFolder"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sort_scope_folder" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
+            <!-- View Mode (shown only for folder scope) -->
+            <LinearLayout
+                android:id="@+id/layoutViewModeSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/margin_md">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dialog_view_mode_title"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="@dimen/text_sm"
+                    android:layout_marginBottom="@dimen/margin_sm" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgViewMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewListSmall"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_list_small" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewListMedium"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_list_medium" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewListLarge"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_list_large" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewListXLarge"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_list_xlarge" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewGridSmall"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_grid_small" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewGridMedium"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_grid_medium" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipViewGridLarge"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_mode_grid_large" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
             <!-- Sort By -->
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

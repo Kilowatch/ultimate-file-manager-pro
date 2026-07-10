@@ -256,6 +256,7 @@ object SettingsBackupManager {
         // ── Core Settings & Customizations ─────────────────────────────────────
         add("tile_colors_prefs",         context.getString(R.string.backup_pref_tile_colors))
         add("ufm_prefs",                 context.getString(R.string.backup_pref_theme_sort))
+        add("ufm_folder_sort_prefs",     context.getString(R.string.backup_pref_folder_sort))
         add("ufm_hidden_files_prefs",    context.getString(R.string.backup_pref_hidden_files))
         add("ufm_protected_files_prefs", context.getString(R.string.backup_pref_protected_files))
         add("ufm_pinned_files_prefs",    context.getString(R.string.backup_pref_pinned_files))
@@ -546,6 +547,9 @@ object SettingsBackupManager {
             val prefsMapping = mapOf(
                 "tile_colors_prefs"         to R.string.backup_pref_tile_colors,
                 "ufm_prefs"                 to R.string.backup_pref_theme_sort,
+                // Note: ufm_folder_sort_prefs uses EncryptedSharedPreferences — plain XML
+                // backup/restore is not supported. The entry is listed for UI completeness.
+                "ufm_folder_sort_prefs"     to R.string.backup_pref_folder_sort,
                 "ufm_hidden_files_prefs"    to R.string.backup_pref_hidden_files,
                 "ufm_protected_files_prefs" to R.string.backup_pref_protected_files,
                 "ufm_pinned_files_prefs"    to R.string.backup_pref_pinned_files,

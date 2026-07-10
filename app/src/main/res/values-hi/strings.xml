@@ -9802,6 +9802,59 @@ UFM प्लेयर सेटिंग्स
     <string name="icon_toolbar_unpin">
 अनपिन करें
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+लागू करें
+</string>
+    <string name="sort_scope_global">
+वैश्विक
+</string>
+    <string name="sort_scope_folder">
+यह फ़ोल्डर
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+फ़ोल्डर सॉर्ट ओवरराइड
+</string>
+    <string name="folder_sort_manager_empty">
+कोई फ़ोल्डर-विशिष्ट सॉर्ट सेटिंग सहेजी नहीं गई।\n
+\n
+एक फ़ोल्डर खोलें, सॉर्ट और फ़िल्टर पर टैप करें और ओवरराइड बनाने के लिए \"यह फ़ोल्डर\" चुनें।
+</string>
+    <string name="folder_sort_manager_clear_all">
+सभी साफ़ करें
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+सभी फ़ोल्डर-विशिष्ट सॉर्ट ओवरराइड हटाएं? फ़ोल्डर वैश्विक सॉर्ट सेटिंग पर वापस आ जाएंगे।
+</string>
+    <string name="folder_sort_manager_deleted">
+ओवरराइड हटा दिया गया
+</string>
+    <string name="folder_sort_network_badge">
+नेटवर्क / ऑनलाइन
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+आरोही
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+अवरोही
+</string>
+    <string name="folder_sort_manager_delete_cd">
+इस फ़ोल्डर के लिए सॉर्ट ओवरराइड हटाएं
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+फ़ोल्डर सॉर्ट ओवरराइड
+</string>
+    <string name="settings_folder_sort_subtitle">
+प्रति-फ़ोल्डर सॉर्ट और फ़िल्टर सेटिंग प्रबंधित करें
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+प्रति-फ़ोल्डर सॉर्ट और फ़िल्टर
+</string>
 </resources>
-
-

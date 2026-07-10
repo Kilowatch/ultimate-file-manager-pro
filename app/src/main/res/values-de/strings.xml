@@ -9802,6 +9802,59 @@ Anheften
     <string name="icon_toolbar_unpin">
 Lösen
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Anwenden auf
+</string>
+    <string name="sort_scope_global">
+Global
+</string>
+    <string name="sort_scope_folder">
+Dieser Ordner
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Ordner-Sortierüberschreibungen
+</string>
+    <string name="folder_sort_manager_empty">
+Keine ordnerspezifischen Sortiereinstellungen gespeichert.\n
+\n
+Öffnen Sie einen Ordner, tippen Sie auf Sortieren &amp; Filtern und wählen Sie \"Dieser Ordner\", um eine Überschreibung zu erstellen.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Alle löschen
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Alle ordnerspezifischen Sortierüberschreibungen entfernen? Ordner werden auf die globale Sortiereinstellung zurückgesetzt.
+</string>
+    <string name="folder_sort_manager_deleted">
+Überschreibung entfernt
+</string>
+    <string name="folder_sort_network_badge">
+Netzwerk / Online
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+Aufsteigend
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+Absteigend
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Sortierüberschreibung für diesen Ordner entfernen
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Ordner-Sortierüberschreibungen
+</string>
+    <string name="settings_folder_sort_subtitle">
+Ordnerweise Sortier- und Filtereinstellungen verwalten
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Ordnerweise sortieren &amp; filtern
+</string>
 </resources>
-
-

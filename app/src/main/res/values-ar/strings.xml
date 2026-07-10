@@ -9802,6 +9802,59 @@ Box
     <string name="icon_toolbar_unpin">
 إلغاء التثبيت
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+تطبيق على
+</string>
+    <string name="sort_scope_global">
+عام
+</string>
+    <string name="sort_scope_folder">
+هذا المجلد
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+تجاوزات فرز المجلد
+</string>
+    <string name="folder_sort_manager_empty">
+لا توجد إعدادات فرز خاصة بمجلد محفوظة.\n
+\n
+افتح مجلدًا، وانقر على \"فرز وتصفية\" واختر \"هذا المجلد\" لإنشاء تجاوز.
+</string>
+    <string name="folder_sort_manager_clear_all">
+مسح الكل
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+إزالة جميع تجاوزات فرز المجلدات؟ ستعود المجلدات إلى إعداد الفرز العام.
+</string>
+    <string name="folder_sort_manager_deleted">
+تمت إزالة التجاوز
+</string>
+    <string name="folder_sort_network_badge">
+الشبكة / الإنترنت
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+تصاعدي
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+تنازلي
+</string>
+    <string name="folder_sort_manager_delete_cd">
+إزالة تجاوز الفرز لهذا المجلد
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+تجاوزات فرز المجلد
+</string>
+    <string name="settings_folder_sort_subtitle">
+إدارة إعدادات الفرز والتصفية لكل مجلد
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+الفرز والتصفية لكل مجلد
+</string>
 </resources>
-
-

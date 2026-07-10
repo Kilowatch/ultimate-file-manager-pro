@@ -9802,6 +9802,59 @@ Semat
     <string name="icon_toolbar_unpin">
 Lepas sematan
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Terapkan ke
+</string>
+    <string name="sort_scope_global">
+Global
+</string>
+    <string name="sort_scope_folder">
+Folder Ini
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Pengaturan Urutan Folder
+</string>
+    <string name="folder_sort_manager_empty">
+Tidak ada pengaturan urutan khusus folder yang disimpan.\n
+\n
+Buka folder, ketuk Urutkan &amp; Filter dan pilih \"Folder Ini\" untuk membuat pengaturan penimpaan.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Hapus Semua
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Hapus semua pengaturan urutan khusus folder? Folder akan kembali ke pengaturan urutan global.
+</string>
+    <string name="folder_sort_manager_deleted">
+Penimpaan dihapus
+</string>
+    <string name="folder_sort_network_badge">
+Jaringan / Online
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+Menaik
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+Menurun
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Hapus penimpaan urutan untuk folder ini
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Pengaturan Urutan Folder
+</string>
+    <string name="settings_folder_sort_subtitle">
+Kelola pengaturan urutan dan filter per folder
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Urutan &amp; Filter Per Folder
+</string>
 </resources>
-
-

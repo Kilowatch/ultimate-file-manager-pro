@@ -9802,6 +9802,59 @@ Fichiers et dossiers épinglés
     <string name="icon_toolbar_unpin">
 Désépingler
 </string>
+
+    <!-- Per-folder Sort &amp; Filter scope selector (SortFilterSheet) -->
+    <string name="sort_scope_section_label">
+Appliquer à
+</string>
+    <string name="sort_scope_global">
+Global
+</string>
+    <string name="sort_scope_folder">
+Ce dossier
+</string>
+
+    <!-- Folder Sort Manager Activity -->
+    <string name="folder_sort_manager_title">
+Remplacements de tri par dossier
+</string>
+    <string name="folder_sort_manager_empty">
+Aucun paramètre de tri spécifique au dossier enregistré.\n
+\n
+Ouvrez un dossier, appuyez sur Trier &amp; Filtrer et choisissez \\\"Ce dossier\\\" pour créer un remplacement.
+</string>
+    <string name="folder_sort_manager_clear_all">
+Tout effacer
+</string>
+    <string name="folder_sort_manager_clear_confirm">
+Supprimer tous les remplacements de tri spécifiques aux dossiers ? Les dossiers reviendront au paramètre de tri global.
+</string>
+    <string name="folder_sort_manager_deleted">
+Remplacement supprimé
+</string>
+    <string name="folder_sort_network_badge">
+Réseau / En ligne
+</string>
+    <string name="folder_sort_manager_settings_summary_asc">
+Croissant
+</string>
+    <string name="folder_sort_manager_settings_summary_desc">
+Décroissant
+</string>
+    <string name="folder_sort_manager_delete_cd">
+Supprimer le remplacement de tri pour ce dossier
+</string>
+
+    <!-- Settings card for Folder Sort Manager -->
+    <string name="settings_folder_sort_title">
+Remplacements de tri par dossier
+</string>
+    <string name="settings_folder_sort_subtitle">
+Gérer les paramètres de tri et de filtre par dossier
+</string>
+
+    <!-- Backup label -->
+    <string name="backup_pref_folder_sort">
+Tri &amp; Filtre par dossier
+</string>
 </resources>
-
-

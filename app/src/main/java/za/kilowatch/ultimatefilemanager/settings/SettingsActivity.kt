@@ -459,6 +459,12 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, ManageFavoritesActivity::class.java))
         }
 
+        // Folder Sort Overrides row
+        val cardFolderSort = findViewById<MaterialCardView?>(R.id.cardFolderSort)
+        cardFolderSort?.setOnClickListener {
+            startActivity(Intent(this, FolderSortManagerActivity::class.java))
+        }
+
         // Default Applications row
         val cardDefaultApps = findViewById<MaterialCardView>(R.id.cardDefaultApps)
         cardDefaultApps.setOnClickListener {
@@ -513,6 +519,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
+            cardFolderSort?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardDefaultApps)
             setupTvCardFocus(cardLongPressDuration)
             findViewById<MaterialCardView?>(R.id.cardControlsTimeout)?.let { setupTvCardFocus(it) }
@@ -1277,6 +1284,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardControlsTimeout, "settings_controls_timeout", R.drawable.ic_controls_timeout),
             CardIcon(R.id.cardToolbarIcons, "settings_toolbar_icons", R.drawable.ic_star),
             CardIcon(R.id.cardFavorites, "settings_favorites", R.drawable.ic_star),
+            CardIcon(R.id.cardFolderSort, "settings_folder_sort", R.drawable.ic_sort),
             CardIcon(R.id.cardStorageRename, "settings_custom_drive_names", R.drawable.ic_edit),
             CardIcon(R.id.cardDefaultApps, "settings_default_apps", R.drawable.ic_apps),
             CardIcon(R.id.cardFileServerTiles, "settings_file_server_tiles", R.drawable.ic_ufm_ftp),

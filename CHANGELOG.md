@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [Unreleased]
+
+### Added
+- Added per-folder Sort & Filter scope selector to the Sort & Filter bottom sheet on both Mobile and TV. Users can now choose **Global** (applies to all folders) or **This Folder** (applies only to the current folder). Scope is available across Local, Network (SMB, FTP, SFTP, NFS, WebDAV, DLNA), and Online (OneDrive, Google Drive, Dropbox, S3) storage.
+- Per-folder sort settings are stored encrypted (AES-256-GCM via Android Keystore) and keyed by a SHA-256 hash of the folder path, ensuring no path data is exposed in plaintext.
+- Added a coloured sort icon badge (accent tint) to the sort button in all browser views when the current folder has an active custom sort override.
+- Added **Folder Sort Overrides** management screen (accessible from Settings) on both Mobile and TV, listing all folders with custom sort settings. Users can delete individual overrides or clear all overrides at once.
+- Added **Folder Sort Overrides** card to Settings (Mobile and TV layouts).
+- Added folder-specific **View Mode** options directly inside the Sort & Filter dialog (visible when the scope is set to "This Folder") on both Mobile and TV layouts, allowing users to save distinct layout styles (List/Grid sizes) per folder.
+- Integrated folder-specific View Mode layout loading and saving across Local, Network, and Cloud browser fragments/activities, syncing toolbar view toggle controls to the active folder override.
+- Redesigned the Android TV Sort & Filter dialog using a `NestedScrollView` content body with sticky header title/scope selector and sticky footer Apply button to support vertical scrolling for the new options.
+
 ## [1.6.7] — 2026-07-09
 
 ### Added
