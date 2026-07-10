@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added paperclip status badges to list, compact, and grid layout item views.
 - Integrated Pin/Unpin icons in Toolbar Customization settings, Backup/Restore preferences, and Icon Pack Export categories.
 
+### Fixed
+- Fixed false "Network share not found" notification in Advanced Sync firing even when the share is configured and the connection is stable. The issue was caused by a transient repository load failure (process restart or Direct Boot) that made `getById()` return null. The worker now silently retries up to 3 times with WorkManager exponential backoff before giving up, instead of immediately showing an error notification.
+
 ### Security
 - Fixed unsafe WebView SSL error handler in Box OAuth flow to comply with Google Play Device and Network Abuse policy
 

@@ -40,6 +40,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         const val TAG = "AdvancedSyncWorker"
         const val CHANNEL_ID = "advanced_sync_channel"
         const val NOTIFICATION_ID_BASE = 2000
+        /** Maximum number of automatic retries before WorkManager stops retrying this run. */
+        const val MAX_RETRIES = 3
     }
 
     override suspend fun doWork(): Result {
@@ -149,14 +151,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             }
 
             if (share == null) {
-                Log.w(TAG, "Share not found for profile '${profile.name}'")
-                if (profile.notificationsEnabled) {
-                    showErrorNotification(
-                        applicationContext.getString(R.string.network_share_not_found_for_profilename, profile.name),
-                        profile.id.hashCode() + 10
-                    )
-                }
-                return Result.failure()
+                // The repository may not have loaded yet (process restart / Direct Boot /
+                // transient I/O error in load()). Retry silently — do NOT notify the user,
+                // because this is almost always a transient state, not a real misconfiguration.
+                Log.w(TAG, "Share not found for profile '${profile.name}' (attempt ${runAttemptCount + 1}/$MAX_RETRIES) — retrying")
+                return if (runAttemptCount < MAX_RETRIES) Result.retry() else Result.success()
             }
 
             if (share.isServerMode) {
