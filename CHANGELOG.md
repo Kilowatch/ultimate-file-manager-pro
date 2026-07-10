@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [1.6.8] — 2026-07-10
 
 ### Added
 - Added per-folder Sort & Filter scope selector to the Sort & Filter bottom sheet on both Mobile and TV. Users can now choose **Global** (applies to all folders) or **This Folder** (applies only to the current folder). Scope is available across Local, Network (SMB, FTP, SFTP, NFS, WebDAV, DLNA), and Online (OneDrive, Google Drive, Dropbox, S3) storage.
@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added folder-specific **View Mode** options directly inside the Sort & Filter dialog (visible when the scope is set to "This Folder") on both Mobile and TV layouts, allowing users to save distinct layout styles (List/Grid sizes) per folder.
 - Integrated folder-specific View Mode layout loading and saving across Local, Network, and Cloud browser fragments/activities, syncing toolbar view toggle controls to the active folder override.
 - Redesigned the Android TV Sort & Filter dialog using a `NestedScrollView` content body with sticky header title/scope selector and sticky footer Apply button to support vertical scrolling for the new options.
+
+### Fixed
+- Fixed network video playback length showing 0:00 and failing to load or play in UFM Media Player by correctly initializing the file size in the custom Media3 DataSource (`UfmMedia3DataSource`).
 
 ## [1.6.7] — 2026-07-09
 

@@ -1465,17 +1465,21 @@ class UfmMedia3DataSource(
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
                 else -> throw IllegalStateException("Unsupported share type: ${share.type}")
             }
-            fileLength = -1L // Will be updated after open if possible
+            fileLength = randomAccess?.size ?: -1L
             streamPosition = dataSpec.position
-            val remaining = if (dataSpec.length != -1L) dataSpec.length else fileLength
-            bytesRemaining = if (remaining == -1L) 0 else remaining - streamPosition
+            val remaining = if (dataSpec.length != -1L) {
+                dataSpec.length
+            } else {
+                if (fileLength != -1L) fileLength - streamPosition else -1L
+            }
+            bytesRemaining = if (remaining == -1L) 0L else remaining
             cacheStartPos = -1L
             cacheEndPos = -1L
+            return remaining
         } catch (e: Exception) {
             GoRoLog.e("UFMPlayer", "UfmMedia3DataSource open failed", e)
             return -1L
         }
-        return fileLength
     }
 
     override fun read(buffer: ByteArray, offset: Int, length: Int): Int {
