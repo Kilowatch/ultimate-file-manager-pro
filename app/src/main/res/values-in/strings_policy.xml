@@ -667,7 +667,20 @@ File Anda tetap di perangkat Anda — kami tidak pernah melihatnya. Kami hanya m
 Pengungkapan Penting — Informasi Aplikasi Terinstal
 </string>
     <string name="pd_dialog_body">
-Ultimate File Manager Pro mengakses daftar aplikasi yang terinstal di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan fitur App Manager dan Debloater. Informasi ini diproses dan disimpan secara lokal di perangkat Anda saja dan tidak pernah diunggah atau dibagikan. Untuk detail lengkap, silakan merujuk ke Bagian 13b dari Kebijakan Privasi kami.
+Ultimate File Manager Pro mengakses daftar aplikasi yang terinstal di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan tampilan App Manager, fitur Debloater, dan manajemen jarak jauh Remote File Server. Informasi ini diproses dan disimpan secara lokal di perangkat Anda. Saat Remote File Server diaktifkan, daftar aplikasi yang terinstal dan metadata dapat ditransmisikan melalui jaringan lokal Anda ke perangkat yang diautentikasi melalui koneksi HTTPS terenkripsi TLS. Untuk detail lengkap, silakan merujuk ke Bagian 13b dari Kebijakan Privasi kami.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Akses Aplikasi Jarak Jauh
+</string>
+    <string name="pd_remote_apps_body">
+Aplikasi ini dapat mengekspos daftar aplikasi yang terinstal di perangkat Anda melalui jaringan lokal saat fitur Kelola Jarak Jauh (File Server) aktif. Saat Anda mengaktifkan server, perangkat yang terautentikasi di jaringan lokal Anda dapat mengakses daftar aplikasi dan metadata — termasuk nama aplikasi, ID paket, versi, ukuran, tanggal instalasi, dan ikon aplikasi — melalui REST API File Server. Koneksi ini dienkripsi TLS dan memerlukan autentikasi. Anda dapat menonaktifkannya kapan saja dengan menghentikan File Server. Untuk detail lengkap, lihat Bagian 13b dari Kebijakan Privasi kami.
+</string>
+    <string name="pd_remote_apps_accept">
+Aktifkan Akses Aplikasi
+</string>
+    <string name="pd_remote_apps_decline">
+Tetap Nonaktif
 </string>
     <string name="pp_s14_title">
 14. Hubungi Kami
@@ -838,7 +851,7 @@ Aplikasi ini dibuat untuk memenuhi standar Google Play. Semua izin yang diminta 
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
-Ultimate File Manager Pro mengakses daftar lengkap aplikasi yang terpasang di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan fitur App Manager dan Debloater. Pengungkapan ini menjelaskan secara rinci data apa yang diakses, mengapa, dan di mana data tersebut berada.
+Ultimate File Manager Pro mengakses daftar lengkap aplikasi yang terinstal di perangkat Anda melalui izin QUERY_ALL_PACKAGES untuk menyediakan fitur App Manager, Debloater, dan Remote File Server. Pengungkapan ini menjelaskan secara tepat data apa yang diakses, mengapa, dan di mana data tersebut tetap berada.
 </string>
     <string name="pp_s13b_data_heading">
 Data Apa yang Diakses
@@ -862,6 +875,12 @@ Klasifikasi aplikasi sistem vs. aplikasi yang diinstal pengguna
         <item>
 Keberadaan file ekspansi OBB
 </item>
+        <item>
+Ikon aplikasi (ditransmisikan sebagai base64 saat Remote File Server aktif)
+</item>
+        <item>
+Metadata file ekspansi Split APK / OBB
+</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">
 Mengapa Data Ini Diakses
@@ -876,12 +895,15 @@ Perhitungan Penyimpanan Per Aplikasi: Membaca ukuran file APK dan ukuran direkto
         <item>
 Pembersih: Mencocokkan nama paket yang terinstal dengan daftar referensi pembersihan yang tersedia untuk umum (diunduh dan disimpan di perangkat Anda) untuk mengidentifikasi aplikasi sistem bawaan yang dapat dihapus atau dinonaktifkan dengan aman.
 </item>
+        <item>
+Remote File Server: Mengekspos daftar aplikasi terinstal dan metadata melalui REST API melalui jaringan lokal ke perangkat terautentikasi untuk manajemen jarak jauh ketika File Server diaktifkan.
+</item>
     </string-array>
     <string name="pp_s13b_location_heading">
 Di Mana Data Ini Berada
 </string>
     <string name="pp_s13b_location_body">
-<b>Hanya di perangkat Anda.</b> Semua data aplikasi yang terpasang diproses dan disimpan secara lokal di dalam penyimpanan pribadi aplikasi. Data tersebut tidak pernah diunggah ke server KiloWatch, tidak pernah dibagikan kepada pihak ketiga mana pun, dan tidak pernah digunakan untuk iklan, pembuatan profil, analitik, pelatihan AI, atau tujuan apa pun selain fitur App Manager dan Debloater yang dijelaskan di atas.
+<b>Di perangkat Anda dan jaringan lokal.</b> Semua data aplikasi yang terinstal diproses dan disimpan secara lokal di dalam penyimpanan privat aplikasi. Data tersebut tidak pernah diunggah ke server KiloWatch, tidak pernah dibagikan kepada pihak ketiga mana pun, dan tidak pernah digunakan untuk iklan, pembuatan profil, analitik, atau pelatihan AI. Saat fitur Server File Jarak Jauh diaktifkan, daftar aplikasi yang terinstal dan metadata dapat ditransmisikan melalui jaringan lokal Anda ke perangkat yang terautentikasi melalui koneksi HTTPS terenkripsi TLS. Server hanya menerima koneksi dari perangkat di jaringan lokal yang sama, dan semua permintaan memerlukan autentikasi.
 </string>
 
     <string name="pp_s14_body">

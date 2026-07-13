@@ -25,6 +25,7 @@ object ProminentDisclosureHelper {
 
     private const val PREFS_NAME = "acceptance_prefs"
     private const val KEY_ACCEPTED_TIME = "prominent_disclosure_accepted_time"
+    private const val KEY_REMOTE_APPS_ACCEPTED = "remote_apps_disclosure_accepted_time"
 
     /**
      * @return true if the user has already accepted the prominent disclosure.
@@ -43,6 +44,28 @@ object ProminentDisclosureHelper {
             .putLong(KEY_ACCEPTED_TIME, System.currentTimeMillis())
             .apply()
     }
+
+    // ────────── Remote File Server Apps Disclosure ──────────
+
+    /**
+     * @return true if the user has accepted the Remote File Server apps disclosure.
+     */
+    fun isRemoteAppsAccepted(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getLong(KEY_REMOTE_APPS_ACCEPTED, 0L) > 0L
+    }
+
+    /**
+     * Persists the current timestamp as acceptance for Remote File Server apps access.
+     */
+    fun markRemoteAppsAccepted(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putLong(KEY_REMOTE_APPS_ACCEPTED, System.currentTimeMillis())
+            .apply()
+    }
+
+    // ─────────────────────────────────────────────────────────
 
     /**
      * If the user has already accepted, [onContinue] is called immediately.
@@ -81,6 +104,88 @@ object ProminentDisclosureHelper {
         // Wire buttons
         dialogView.findViewById<MaterialButton>(R.id.btnPdAccept).setOnClickListener {
             markAccepted(activity)
+            dialog.dismiss()
+            onContinue()
+        }
+
+        dialogView.findViewById<MaterialButton>(R.id.btnPdCancel).setOnClickListener {
+            dialog.dismiss()
+            onCancel()
+        }
+
+        // TV focus styling
+        if (isTv) {
+            val yellow = activity.getColor(R.color.tv_button_focused_yellow)
+            val yellowText = activity.getColor(R.color.tv_button_focused_yellow_text)
+            val white = activity.getColor(R.color.tv_text_primary)
+            val glass = 0x26FFFFFF.toInt()
+            val yellowCsl = ColorStateList.valueOf(yellow)
+            val glassCsl = ColorStateList.valueOf(glass)
+
+            val btnAccept = dialogView.findViewById<MaterialButton>(R.id.btnPdAccept)
+            val btnCancel = dialogView.findViewById<MaterialButton>(R.id.btnPdCancel)
+
+            // Accept button: yellow default, focus retains yellow
+            btnAccept.backgroundTintList = yellowCsl
+            btnAccept.setTextColor(yellowText)
+            btnAccept.setOnFocusChangeListener { _, hasFocus ->
+                btnAccept.backgroundTintList = if (hasFocus) yellowCsl else yellowCsl
+                btnAccept.setTextColor(if (hasFocus) yellowText else yellowText)
+            }
+            btnAccept.requestFocus()
+
+            // Cancel button: glass default, yellow on focus
+            btnCancel.backgroundTintList = glassCsl
+            btnCancel.setTextColor(white)
+            btnCancel.setOnFocusChangeListener { _, hasFocus ->
+                btnCancel.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                btnCancel.setTextColor(if (hasFocus) yellowText else white)
+            }
+        }
+    }
+
+    /**
+     * Shows the Remote File Server-specific prominent disclosure dialog
+     * if the user has not yet accepted it. Unlike [showIfNeeded], this is
+     * shown before the File Server starts, not before local App Manager use.
+     *
+     * If the user declines, [onCancel] is called — the server still starts
+     * but the `/api/apps` endpoint returns an empty list.
+     */
+    fun showRemoteAppsIfNeeded(
+        activity: Activity,
+        onContinue: () -> Unit,
+        onCancel: () -> Unit
+    ) {
+        if (isRemoteAppsAccepted(activity)) {
+            onContinue()
+            return
+        }
+
+        val isTv = DeviceUtils.isTvDevice(activity)
+        val layoutRes = if (isTv) R.layout.dialog_prominent_disclosure_tv
+        else R.layout.dialog_prominent_disclosure
+
+        val dialogView = LayoutInflater.from(activity).inflate(layoutRes, null)
+
+        // Swap in the Remote Apps strings
+        dialogView.findViewById<TextView>(R.id.txtPdTitle).setText(R.string.pd_remote_apps_title)
+        dialogView.findViewById<TextView>(R.id.txtPdBody).setText(R.string.pd_remote_apps_body)
+        dialogView.findViewById<MaterialButton>(R.id.btnPdAccept).setText(R.string.pd_remote_apps_accept)
+        dialogView.findViewById<MaterialButton>(R.id.btnPdCancel).setText(R.string.pd_remote_apps_decline)
+
+        val dialog = MaterialAlertDialogBuilder(activity, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .setOnCancelListener { onCancel() }
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+
+        // Wire buttons
+        dialogView.findViewById<MaterialButton>(R.id.btnPdAccept).setOnClickListener {
+            markRemoteAppsAccepted(activity)
             dialog.dismiss()
             onContinue()
         }

@@ -188,7 +188,7 @@ Manajemen file lengkap: buat, ganti nama, salin, pindahkan, dan hapus file atau 
 Secara opsional instal file APK yang ditemukan di penyimpanan Anda — Anda akan selalu diminta untuk mengonfirmasi setiap instalasi.
 </string>
     <string name="perm_query_apps_desc">
-Diperlukan oleh App Manager dan Debloater. Membaca daftar lengkap paket yang terinstal (nama aplikasi, ID paket, versi, ukuran APK, waktu pemasangan/pembaruan, klasifikasi sistem/pengguna) — diproses sepenuhnya di perangkat. Tidak ada data yang pernah dikirimkan kepada kami atau pihak ketiga mana pun.
+Diperlukan oleh App Manager, Debloater, dan Remote File Server. Membaca daftar lengkap paket yang terinstal (nama aplikasi, ID paket, versi, ukuran APK, cap waktu instalasi/pembaruan, klasifikasi sistem/pengguna). Data tetap berada di perangkat Anda secara lokal tetapi dapat dikirimkan melalui jaringan lokal Anda untuk pengelolaan jarak jauh saat File Server diaktifkan. Tidak ada data yang pernah dikirimkan ke KiloWatch atau pihak ketiga mana pun.
 </string>
     <string name="pd_accept">
 Saya Mengerti
@@ -9856,5 +9856,16 @@ Kelola pengaturan urutan dan filter per folder
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 Urut &amp; Filter Per Folder
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+Mode Folder
+</string>
+    <string name="sort_folder_mode_root">
+Hanya Folder Root
+</string>
+    <string name="sort_folder_mode_recursive">
+Rekursif (Subfolder)
 </string>
 </resources>

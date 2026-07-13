@@ -188,7 +188,7 @@ Gestion complète des fichiers : créez, renommez, copiez, déplacez et supprime
 Installez éventuellement les fichiers APK trouvés sur votre stockage — vous serez toujours invité à confirmer chaque installation.
 </string>
     <string name="perm_query_apps_desc">
-Requis par App Manager et Debloater. Lit la liste complète des paquets installés (noms d\'applications, identifiants de paquets, versions, tailles des APK, horodatages d\'installation/mise à jour, classification système/utilisateur) — traité entièrement sur l\'appareil. Aucune donnée n\'est jamais transmise à nous ou à un tiers.
+Requis par le Gestionnaire d\\\'applications, Debloater et le Serveur de fichiers à distance. Lit la liste complète des paquets installés (noms d\\\'applications, identifiants de paquet, versions, tailles d\\\'APK, horodatages d\\\'installation/mise à jour, classification système/utilisateur). Les données restent localement sur votre appareil mais peuvent être transmises sur votre réseau local pour la gestion à distance lorsque le Serveur de fichiers est activé. Aucune donnée n\\\'est jamais transmise à KiloWatch ou à un tiers.
 </string>
     <string name="pd_accept">
 Je comprends
@@ -9856,5 +9856,16 @@ Gérer les paramètres de tri et de filtre par dossier
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 Tri &amp; Filtre par dossier
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+Mode Dossier
+</string>
+    <string name="sort_folder_mode_root">
+Dossier racine uniquement
+</string>
+    <string name="sort_folder_mode_recursive">
+Récursif (Sous-dossiers)
 </string>
 </resources>

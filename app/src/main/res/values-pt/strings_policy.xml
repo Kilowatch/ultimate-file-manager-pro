@@ -667,7 +667,20 @@ Seus arquivos permanecem no seu dispositivo — nunca os vemos. Coletamos apenas
 Divulgação Proeminente — Informações de Aplicativos Instalados
 </string>
     <string name="pd_dialog_body">
-Ultimate File Manager Pro acessa a lista de aplicativos instalados no seu dispositivo através da permissão QUERY_ALL_PACKAGES para fornecer os recursos de Gerenciador de Aplicativos e Debloater. Essas informações são processadas e armazenadas localmente no seu dispositivo e nunca são enviadas ou compartilhadas. Para detalhes completos, consulte a Seção 13b da nossa Política de Privacidade.
+O Ultimate File Manager Pro acessa a lista de aplicativos instalados no seu dispositivo por meio da permissão QUERY_ALL_PACKAGES para fornecer a exibição do Gerenciador de Aplicativos, recursos do Desbloqueador e gerenciamento remoto do Servidor de Arquivos Remoto. Essas informações são processadas e armazenadas localmente no seu dispositivo. Quando o Servidor de Arquivos Remoto está ativado, a lista de aplicativos instalados e metadados podem ser transmitidos pela sua rede local para dispositivos autenticados por meio de uma conexão HTTPS criptografada por TLS. Para mais detalhes, consulte a Seção 13b da nossa Política de Privacidade.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Acesso Remoto a Aplicativos
+</string>
+    <string name="pd_remote_apps_body">
+Este aplicativo pode expor a lista de aplicativos instalados no seu dispositivo pela rede local quando o recurso Remote Manage (File Server) estiver ativo. Quando você ativa o servidor, qualquer dispositivo autenticado na sua rede local pode acessar a lista de aplicativos e metadados — incluindo nomes de aplicativos, IDs de pacotes, versões, tamanhos, datas de instalação e ícones dos aplicativos — por meio da API REST do File Server. Esta conexão é criptografada por TLS e requer autenticação. Você pode desativar isso a qualquer momento parando o File Server. Para mais detalhes, consulte a Seção 13b da nossa Política de Privacidade.
+</string>
+    <string name="pd_remote_apps_accept">
+Ativar acesso a aplicativos
+</string>
+    <string name="pd_remote_apps_decline">
+Manter Desativado
 </string>
     <string name="pp_s14_title">
 14. Fale conosco
@@ -838,7 +851,7 @@ Este aplicativo foi desenvolvido para atender aos padrões do Google Play. Todas
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
-O Ultimate File Manager Pro acessa a lista completa de aplicativos instalados no seu dispositivo por meio da permissão QUERY_ALL_PACKAGES para fornecer os recursos de Gerenciador de Aplicativos e Debloater. Esta divulgação explica exatamente quais dados são acessados, por que e onde eles permanecem.
+O Ultimate File Manager Pro acessa a lista completa de aplicativos instalados no seu dispositivo por meio da permissão QUERY_ALL_PACKAGES para fornecer os recursos do Gerenciador de Aplicativos, Desinstalador em Massa e Servidor Remoto de Arquivos. Esta divulgação explica exatamente quais dados são acessados, por que e onde eles permanecem.
 </string>
     <string name="pp_s13b_data_heading">
 Quais Dados São Acessados
@@ -862,6 +875,12 @@ Classificação de aplicativo do sistema versus aplicativo instalado pelo usuár
         <item>
 Presença de arquivos de expansão OBB
 </item>
+        <item>
+Ícone do aplicativo (transmitido como base64 quando o Remote File Server está ativo)
+</item>
+        <item>
+Metadados de arquivo de expansão Split APK / OBB
+</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">
 Por Que Esses Dados São Acessados
@@ -876,12 +895,15 @@ Cálculo de Armazenamento por Aplicativo: Lê o tamanho do arquivo APK e o taman
         <item>
 Debloater: Cruzando referências dos nomes dos pacotes instalados com uma lista de referência de desobstrução publicamente disponível (baixada e armazenada em cache localmente no seu dispositivo) para identificar aplicativos de sistema pré-instalados que podem ser removidos ou desativados com segurança.
 </item>
+        <item>
+Remote File Server: Expondo a lista de aplicativos instalados e metadados através da API REST pela rede local para dispositivos autenticados para gerenciamento remoto quando o File Server está ativado.
+</item>
     </string-array>
     <string name="pp_s13b_location_heading">
 Onde Esses Dados Permanecem
 </string>
     <string name="pp_s13b_location_body">
-<b>Apenas no seu dispositivo.</b> Todos os dados de aplicativos instalados são processados e armazenados localmente no armazenamento privado do aplicativo. Eles nunca são enviados para os servidores da KiloWatch, nunca compartilhados com terceiros e nunca usados para publicidade, criação de perfis, análises, treinamento de IA ou qualquer outra finalidade que não sejam os recursos de Gerenciador de Aplicativos e Debloater descritos acima.
+<b>No seu dispositivo e na rede local.</b> Todos os dados dos aplicativos instalados são processados e armazenados localmente no armazenamento privado do aplicativo. Nunca são enviados para os servidores da KiloWatch, nunca compartilhados com terceiros e nunca usados para publicidade, criação de perfis, análises ou treinamento de IA. Quando o recurso de Servidor de Arquivos Remoto está ativado, a lista de aplicativos instalados e metadados podem ser transmitidos pela sua rede local para dispositivos autenticados por meio de uma conexão HTTPS criptografada por TLS. O servidor aceita apenas conexões de dispositivos na mesma rede local, e todas as solicitações exigem autenticação.
 </string>
 
     <string name="pp_s14_body">

@@ -448,9 +448,9 @@ class FileBrowserFragment : Fragment() {
             btnViewToggle?.setOnClickListener {
                 ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
                     val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
-                    if (SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)) {
+                    if (SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentDir.absolutePath)) {
                         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                            val state = SortFilterPreferenceManager.loadForFolder(requireContext(), folderKey)
+                            val state = SortFilterPreferenceManager.loadForPath(requireContext(), currentDir.absolutePath)
                             if (state != null) {
                                 SortFilterPreferenceManager.saveFolderSpecific(
                                     requireContext(), folderKey, currentDir.absolutePath,
@@ -981,8 +981,7 @@ class FileBrowserFragment : Fragment() {
             if (hasFocus) {
                 btnSortTv.imageTintList = iconTintFocused
             } else {
-                val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
-                val hasOverride = SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)
+                val hasOverride = SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentDir.absolutePath)
                 btnSortTv.imageTintList = android.content.res.ColorStateList.valueOf(
                     requireContext().getColor(
                         if (hasOverride) R.color.tv_button_focused_yellow else R.color.tv_text_primary
@@ -996,9 +995,9 @@ class FileBrowserFragment : Fragment() {
         wireTvIconBtn(view.findViewById(R.id.btnViewToggle)) {
             ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
                 val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
-                if (SortFilterPreferenceManager.hasFolderSpecific(requireContext(), folderKey)) {
+                if (SortFilterPreferenceManager.hasFolderOverride(requireContext(), currentDir.absolutePath)) {
                     lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                        val state = SortFilterPreferenceManager.loadForFolder(requireContext(), folderKey)
+                        val state = SortFilterPreferenceManager.loadForPath(requireContext(), currentDir.absolutePath)
                         if (state != null) {
                             SortFilterPreferenceManager.saveFolderSpecific(
                                 requireContext(), folderKey, currentDir.absolutePath,
@@ -1197,11 +1196,10 @@ class FileBrowserFragment : Fragment() {
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         // before the coroutine that actually reads the files starts.
-        val folderKey = SortFilterPreferenceManager.folderKey(directory.absolutePath)
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = SortFilterPreferenceManager.loadForFolder(ctx, folderKey)
+            val state = SortFilterPreferenceManager.loadForPath(ctx, directory.absolutePath)
                 ?: SortFilterPreferenceManager.loadGlobal(ctx)
-            val hasFolderOverride = SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(ctx, directory.absolutePath)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
@@ -1979,17 +1977,18 @@ class FileBrowserFragment : Fragment() {
         val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
         sheet.currentFolderKey = folderKey
         sheet.currentFolderDisplayPath = currentDir.absolutePath
-        val hasFolderOverride = SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+        val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(ctx, currentDir.absolutePath)
         sheet.currentScope = if (hasFolderOverride) SortFilterSheet.Scope.FOLDER else SortFilterSheet.Scope.GLOBAL
         
-        sheet.currentViewMode = if (hasFolderOverride) {
-            val state = SortFilterPreferenceManager.loadForFolder(ctx, folderKey)
-            state?.viewMode
+        val activeState = if (hasFolderOverride) {
+            SortFilterPreferenceManager.loadForPath(ctx, currentDir.absolutePath)
         } else {
             null
         }
+        sheet.currentViewMode = activeState?.viewMode
+        sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode ->
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
             sortMode = mode
             sortOrder = order
             filterType = filter
@@ -1998,7 +1997,8 @@ class FileBrowserFragment : Fragment() {
 
             val state = SortFilterPreferenceManager.SortFilterState(
                 mode, order, filter, showHidden, groupByDate, tags,
-                viewMode = if (scope == SortFilterSheet.Scope.FOLDER) selectedViewMode else null
+                viewMode = if (scope == SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
+                isRecursive = if (scope == SortFilterSheet.Scope.FOLDER) isRecursive else false
             )
             lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 if (scope == SortFilterSheet.Scope.FOLDER) {
@@ -2010,7 +2010,7 @@ class FileBrowserFragment : Fragment() {
                     // When switching to global, remove any existing folder override
                     SortFilterPreferenceManager.clearFolderSpecific(ctx, folderKey)
                 }
-                val hasFolderOverrideNow = SortFilterPreferenceManager.hasFolderSpecific(ctx, folderKey)
+                val hasFolderOverrideNow = SortFilterPreferenceManager.hasFolderOverride(ctx, currentDir.absolutePath)
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                     updateSortBadge(hasFolderOverrideNow)
                 }

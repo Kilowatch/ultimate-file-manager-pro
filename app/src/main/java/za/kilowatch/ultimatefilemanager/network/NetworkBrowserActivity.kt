@@ -790,9 +790,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
             btnViewToggle?.setOnClickListener {
                 ViewModeManager.showSelectionDialog(this, fileAdapter.viewMode) { selectedMode ->
                     val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
-                    if (za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(this, folderKey)) {
+                    if (za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this, currentPath, share.id)) {
                         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForFolder(this@NetworkBrowserActivity, folderKey)
+                            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(this@NetworkBrowserActivity, currentPath, share.id)
                             if (state != null) {
                                 za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveFolderSpecific(
                                     this@NetworkBrowserActivity, folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath",
@@ -1453,7 +1453,6 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val tvButtons = mutableListOf(btnBack, btnCreateNew, btnRefresh,
                    btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
                    btnCopyEncrypt, btnMoveEncrypt)
-            btnSort?.let { tvButtons.add(it) }
             btnViewToggle?.let { tvButtons.add(it) }
             btnRetriggerThumbnails?.let { tvButtons.add(it) }
             
@@ -1464,10 +1463,39 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
             }
             
+            btnSort?.let { sortBtn ->
+                sortBtn.imageTintList = iconTintDefault
+                sortBtn.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        sortBtn.imageTintList = iconTintFocused
+                    } else {
+                        val hasOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this, currentPath, share.id)
+                        sortBtn.imageTintList = android.content.res.ColorStateList.valueOf(
+                            getColor(
+                                if (hasOverride) R.color.tv_button_focused_yellow else R.color.tv_text_primary
+                            )
+                        )
+                    }
+                }
+            }
+            
             // View mode toggle for TV
             btnViewToggle?.setOnClickListener {
                 ViewModeManager.showSelectionDialog(this, fileAdapter.viewMode) { selectedMode ->
-                    ViewModeManager.save(this, selectedMode)
+                    val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
+                    if (za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this, currentPath, share.id)) {
+                        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(this@NetworkBrowserActivity, currentPath, share.id)
+                            if (state != null) {
+                                za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.saveFolderSpecific(
+                                    this@NetworkBrowserActivity, folderKey, "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath",
+                                    state.copy(viewMode = selectedMode), isNetwork = true
+                                )
+                            }
+                        }
+                    } else {
+                        ViewModeManager.save(this, selectedMode)
+                    }
                     applyViewMode(selectedMode)
                 }
             }
@@ -2077,11 +2105,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         Log.d("NetBrowser", "loadDirectory: share=${share.name} type=${share.type} currentPath='$currentPath'")
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
-        val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForFolder(this@NetworkBrowserActivity, folderKey)
+            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(this@NetworkBrowserActivity, currentPath, share.id)
                 ?: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadGlobal(this@NetworkBrowserActivity)
-            val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(this@NetworkBrowserActivity, folderKey)
+            val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this@NetworkBrowserActivity, currentPath, share.id)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(this@NetworkBrowserActivity)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
@@ -2451,18 +2478,20 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val folderKey = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.folderKey(share.id, currentPath)
         sheet.currentFolderKey = folderKey
         sheet.currentFolderDisplayPath = "${if (share.name.isNotEmpty()) share.name else share.host}:$currentPath"
-        val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(this, folderKey)
+        val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this, currentPath, share.id)
         sheet.currentScope = if (hasFolderOverride)
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER
             else za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.GLOBAL
 
-        sheet.currentViewMode = if (hasFolderOverride) {
-            za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForFolder(this, folderKey)?.viewMode
+        val activeState = if (hasFolderOverride) {
+            za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(this, currentPath, share.id)
         } else {
             null
         }
+        sheet.currentViewMode = activeState?.viewMode
+        sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
-        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode ->
+        sheet.onApply = { mode, order, filter, showHidden, groupByDate, tags, scope, selectedViewMode, isRecursive ->
             sortMode = mode
             sortOrder = order
             filterType = filter
@@ -2471,7 +2500,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
             val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
                 mode, order, filter, showHidden, groupByDate, tags,
-                viewMode = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) selectedViewMode else null
+                viewMode = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) selectedViewMode else null,
+                isRecursive = if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) isRecursive else false
             )
             lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                 if (scope == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.Scope.FOLDER) {
@@ -2483,7 +2513,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     ViewModeManager.save(this@NetworkBrowserActivity, selectedViewMode)
                     za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.clearFolderSpecific(this@NetworkBrowserActivity, folderKey)
                 }
-                val hasFolderOverrideNow = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderSpecific(this@NetworkBrowserActivity, folderKey)
+                val hasFolderOverrideNow = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(this@NetworkBrowserActivity, currentPath, share.id)
                 kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                     updateSortBadge(hasFolderOverrideNow)
                 }

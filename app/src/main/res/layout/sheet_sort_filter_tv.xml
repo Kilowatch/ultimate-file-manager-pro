@@ -263,6 +263,48 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Folder Mode (shown only for folder scope) -->
+            <LinearLayout
+                android:id="@+id/layoutFolderModeSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sort_folder_mode_label"
+                    android:textColor="@color/ufm_text_secondary"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgFolderMode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFolderModeRoot"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sort_folder_mode_root"
+                        android:focusable="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFolderModeRecursive"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sort_folder_mode_recursive"
+                        android:focusable="true" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+
             <!-- View Mode (shown only for folder scope) -->
             <LinearLayout
                 android:id="@+id/layoutViewModeSection"

@@ -667,7 +667,20 @@ support@kilowatch.co.za
 주요 공개 — 설치된 애플리케이션 정보
 </string>
     <string name="pd_dialog_body">
-Ultimate File Manager Pro는 QUERY_ALL_PACKAGES 권한을 통해 기기에 설치된 애플리케이션 목록에 접근하여 앱 관리자 및 디블로터 기능을 제공합니다. 이 정보는 기기 내에서만 처리 및 저장되며 업로드되거나 공유되지 않습니다. 자세한 내용은 개인정보처리방침의 Section 13b를 참조하십시오.
+Ultimate File Manager Pro는 QUERY_ALL_PACKAGES 권한을 통해 기기에 설치된 애플리케이션 목록에 접근하여 App Manager 표시, Debloater 기능 및 Remote File Server 원격 관리를 제공합니다. 이 정보는 기기 내에서 로컬로 처리 및 저장됩니다. Remote File Server가 활성화되면 설치된 앱 목록과 메타데이터가 TLS로 암호화된 HTTPS 연결을 통해 로컬 네트워크를 통해 인증된 기기로 전송될 수 있습니다. 자세한 내용은 당사의 Privacy Policy 13b항을 참조하십시오.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+원격 앱 접근
+</string>
+    <string name="pd_remote_apps_body">
+이 앱은 원격 관리(파일 서버) 기능이 활성화된 경우 로컬 네트워크를 통해 기기에 설치된 애플리케이션 목록을 노출할 수 있습니다. 서버를 활성화하면 로컬 네트워크의 인증된 모든 기기가 파일 서버의 REST API를 통해 앱 이름, 패키지 ID, 버전, 크기, 설치 날짜, 앱 아이콘을 포함한 앱 목록과 메타데이터에 액세스할 수 있습니다. 이 연결은 TLS로 암호화되며 인증이 필요합니다. 파일 서버를 중지하여 언제든지 이 기능을 비활성화할 수 있습니다. 자세한 내용은 개인정보 보호정책 13b항을 참조하세요.
+</string>
+    <string name="pd_remote_apps_accept">
+앱 접근 활성화
+</string>
+    <string name="pd_remote_apps_decline">
+비활성화 유지
 </string>
     <string name="pp_s14_title">
 14. 문의하기
@@ -838,7 +851,7 @@ Ultimate File Manager Pro는 남아프리카에서 개발되었습니다. 다른
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
-Ultimate File Manager Pro는 App Manager 및 Debloater 기능을 제공하기 위해 QUERY_ALL_PACKAGES 권한을 통해 기기에 설치된 전체 앱 목록에 접근합니다. 이 공개는 어떤 데이터에 접근하는지, 그 이유와 데이터가 어디에 남아 있는지를 설명합니다.
+Ultimate File Manager Pro는 QUERY_ALL_PACKAGES 권한을 통해 기기에 설치된 전체 애플리케이션 목록에 접근하여 앱 관리자, 디블로터 및 원격 파일 서버 기능을 제공합니다. 이 공개문은 접근되는 데이터의 종류, 이유 및 데이터가 머무는 위치를 정확히 설명합니다.
 </string>
     <string name="pp_s13b_data_heading">
 접근되는 데이터
@@ -862,6 +875,12 @@ APK 파일 크기
         <item>
 OBB 확장 파일 존재 여부
 </item>
+        <item>
+앱 아이콘 (Remote File Server가 활성화되면 base64로 전송됨)
+</item>
+        <item>
+Split APK / OBB 확장 파일 메타데이터
+</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">
 이 데이터에 접근하는 이유
@@ -876,12 +895,15 @@ OBB 확장 파일 존재 여부
         <item>
 디블로터: 설치된 패키지 이름을 공개적으로 제공되는 디블로트 참조 목록(기기에 다운로드 및 캐시됨)과 대조하여 안전하게 제거하거나 비활성화할 수 있는 사전 설치된 시스템 앱을 식별합니다.
 </item>
+        <item>
+원격 파일 서버: 파일 서버가 활성화되면 로컬 네트워크를 통해 REST API를 사용하여 인증된 장치에 설치된 앱 목록과 메타데이터를 노출하여 원격 관리를 수행합니다.
+</item>
     </string-array>
     <string name="pp_s13b_location_heading">
 데이터 저장 위치
 </string>
     <string name="pp_s13b_location_body">
-<b>기기 내에서만 처리됩니다.</b> 모든 설치된 앱 데이터는 앱의 비공개 저장소 내에서 로컬로 처리 및 저장됩니다. 이 데이터는 절대 KiloWatch 서버에 업로드되지 않으며, 제3자와 공유되지 않으며, 광고, 프로파일링, 분석, AI 학습 또는 위에서 설명한 App Manager 및 Debloater 기능 외의 다른 목적으로 사용되지 않습니다.
+<b>귀하의 기기와 로컬 네트워크에서.</b> 모든 설치된 애플리케이션 데이터는 앱의 비공개 저장소 내에서 처리 및 저장됩니다. 이 데이터는 KiloWatch 서버에 업로드되지 않으며, 제3자와 공유되지 않으며, 광고, 프로파일링, 분석, AI 학습에 사용되지 않습니다. 원격 파일 서버 기능이 활성화되면 설치된 앱 목록과 메타데이터가 TLS 암호화 HTTPS 연결을 통해 로컬 네트워크의 인증된 기기로 전송될 수 있습니다. 서버는 동일한 로컬 네트워크의 기기에서만 연결을 수락하며, 모든 요청에는 인증이 필요합니다.
 </string>
 
     <string name="pp_s14_body">

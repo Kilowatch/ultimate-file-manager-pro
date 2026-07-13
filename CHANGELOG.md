@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.6.8] — 2026-07-10
+## [1.6.9] — 2026-07-13
+
+### Added
+- Added per-folder **Folder Scope Mode** selector (supporting **Only Root Folder** and **Recursive (Subfolders)** options) to the Sort & Filter sheets on both Mobile and TV, allowing users to automatically propagate sort, filter, and view overrides down nested directory structures.
+- Added recursive parent lookup resolvers across Local and Network directory browsers to apply inherited parent overrides and color-highlight sort badges.
+
+### Changed
+- Updated in-app Prominent Disclosure and Privacy Policy Section 13b to accurately describe installed application data use across App Manager, Debloater, and Remote File Server features, removing the incorrect "never uploaded" claim previously flagged by Google Play
+- Added a one-time Remote File Server-specific disclosure dialog that appears before the server transmits installed app data over the local network, with the `/api/apps` endpoint returning an empty response until the user accepts
 
 ### Added
 - Added per-folder Sort & Filter scope selector to the Sort & Filter bottom sheet on both Mobile and TV. Users can now choose **Global** (applies to all folders) or **This Folder** (applies only to the current folder). Scope is available across Local, Network (SMB, FTP, SFTP, NFS, WebDAV, DLNA), and Online (OneDrive, Google Drive, Dropbox, S3) storage.

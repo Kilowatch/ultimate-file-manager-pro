@@ -667,7 +667,20 @@ Ihre Dateien bleiben auf Ihrem Gerät – wir sehen sie nie. Wir sammeln nur ano
 Deutlicher Hinweis — Informationen zu installierten Anwendungen
 </string>
     <string name="pd_dialog_body">
-Ultimate File Manager Pro greift über die QUERY_ALL_PACKAGES-Berechtigung auf die Liste der installierten Anwendungen auf Ihrem Gerät zu, um die Funktionen App-Manager und Debloater bereitzustellen. Diese Informationen werden ausschließlich lokal auf Ihrem Gerät verarbeitet und gespeichert und niemals hochgeladen oder geteilt. Ausführliche Informationen finden Sie in Abschnitt 13b unserer Datenschutzrichtlinie.
+Ultimate File Manager Pro greift über die Berechtigung QUERY_ALL_PACKAGES auf die Liste der auf Ihrem Gerät installierten Apps zu, um die App Manager-Anzeige, die Debloater-Funktionen und die Remote-Fernverwaltung des Remote File Servers bereitzustellen. Diese Informationen werden lokal auf Ihrem Gerät verarbeitet und gespeichert. Wenn der Remote File Server aktiviert ist, können die Liste der installierten Apps und Metadaten über Ihr lokales Netzwerk an authentifizierte Geräte über eine TLS-verschlüsselte HTTPS-Verbindung übertragen werden. Weitere Einzelheiten finden Sie in Abschnitt 13b unserer Datenschutzrichtlinie.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Fernzugriff auf Apps
+</string>
+    <string name="pd_remote_apps_body">
+Diese App kann die Liste der auf Ihrem Gerät installierten Anwendungen über das lokale Netzwerk verfügbar machen, wenn die Funktion „Remote-Verwaltung (Dateiserver)“ aktiv ist. Wenn Sie den Server aktivieren, kann jedes authentifizierte Gerät in Ihrem lokalen Netzwerk über die REST-API des Dateiservers auf die App-Liste und Metadaten zugreifen – einschließlich App-Namen, Paket-IDs, Versionen, Größen, Installationsdaten und App-Symbole. Diese Verbindung ist TLS-verschlüsselt und erfordert eine Authentifizierung. Sie können dies jederzeit deaktivieren, indem Sie den Dateiserver stoppen. Ausführliche Informationen finden Sie in Abschnitt 13b unserer Datenschutzrichtlinie.
+</string>
+    <string name="pd_remote_apps_accept">
+App-Zugriff aktivieren
+</string>
+    <string name="pd_remote_apps_decline">
+Deaktiviert lassen
 </string>
     <string name="pp_s14_title">
 14. Kontaktieren Sie uns
@@ -838,7 +851,7 @@ Diese App wurde entwickelt, um den Google Play-Standards zu entsprechen. Alle an
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
-Ultimate File Manager Pro greift über die QUERY_ALL_PACKAGES-Berechtigung auf die vollständige Liste der auf Ihrem Gerät installierten Apps zu, um die Funktionen App-Manager und Debloater bereitzustellen. Diese Offenlegung erklärt genau, auf welche Daten zugegriffen wird, warum und wo sie verbleiben.
+Ultimate File Manager Pro greift über die QUERY_ALL_PACKAGES-Berechtigung auf die vollständige Liste der installierten Anwendungen auf Ihrem Gerät zu, um die Funktionen App-Manager, Debloater und Remote File Server bereitzustellen. In dieser Erläuterung wird genau erklärt, auf welche Daten zugegriffen wird, warum und wo sie bleiben.
 </string>
     <string name="pp_s13b_data_heading">
 Welche Daten abgerufen werden
@@ -862,6 +875,12 @@ System-App vs. benutzerinstallierte App-Klassifizierung
         <item>
 Vorhandensein von OBB-Erweiterungsdateien
 </item>
+        <item>
+App-Symbol (als base64 übertragen, wenn der Remote-Dateiserver aktiv ist)
+</item>
+        <item>
+Split-APK-/OBB-Erweiterungsdatei-Metadaten
+</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">
 Warum diese Daten abgerufen werden
@@ -876,12 +895,15 @@ Speicherberechnung pro App: Liest APK-Dateigröße und Datenverzeichnisgröße (
         <item>
 Debloater: Vergleicht installierte Paketnamen mit einer öffentlich verfügbaren Debloat-Referenzliste (auf Ihrem Gerät heruntergeladen und zwischengespeichert), um vorinstallierte System-Apps zu identifizieren, die sicher entfernt oder deaktiviert werden können.
 </item>
+        <item>
+Remote-Dateiserver: Stellt installierte App-Liste und Metadaten über die REST-API im lokalen Netzwerk für authentifizierte Geräte zur Fernverwaltung bereit, wenn der Dateiserver aktiviert ist.
+</item>
     </string-array>
     <string name="pp_s13b_location_heading">
 Wo diese Daten verbleiben
 </string>
     <string name="pp_s13b_location_body">
-<b>Ausschließlich auf Ihrem Gerät.</b> Alle Daten der installierten Apps werden lokal im privaten Speicher der App verarbeitet und gespeichert. Sie werden niemals auf KiloWatch-Server hochgeladen, niemals an Dritte weitergegeben und niemals für Werbung, Profiling, Analysen, KI-Training oder einen anderen Zweck als die oben beschriebenen Funktionen App-Manager und Debloater verwendet.
+<b>Auf Ihrem Gerät und im lokalen Netzwerk.</b> Alle installierten Anwendungsdaten werden lokal im privaten Speicher der App verarbeitet und gespeichert. Sie werden niemals auf KiloWatch-Server hochgeladen, niemals an Dritte weitergegeben und niemals für Werbung, Profiling, Analysen oder KI-Training verwendet. Wenn die Funktion \"Remote File Server\" aktiviert ist, können die Liste der installierten Apps und Metadaten über Ihr lokales Netzwerk an authentifizierte Geräte über eine TLS-verschlüsselte HTTPS-Verbindung übertragen werden. Der Server akzeptiert nur Verbindungen von Geräten im selben lokalen Netzwerk, und alle Anfragen erfordern eine Authentifizierung.
 </string>
 
     <string name="pp_s14_body">

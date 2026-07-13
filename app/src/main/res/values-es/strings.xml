@@ -188,7 +188,7 @@ Gestión completa de archivos: crea, renombra, copia, mueve y elimina cualquier 
 Opcionalmente instala archivos APK encontrados en tu almacenamiento; siempre se te pedirá confirmar cada instalación.
 </string>
     <string name="perm_query_apps_desc">
-Requerido por App Manager y Debloater. Lee la lista completa de paquetes instalados (nombres de aplicaciones, IDs de paquetes, versiones, tamaños de APK, marcas de tiempo de instalación/actualización, clasificación de sistema/usuario) — procesado completamente en el dispositivo. Ningún dato se transmite jamás a nosotros ni a terceros.
+Requerido por App Manager, Debloater y Remote File Server. Lee la lista completa de paquetes instalados (nombres de aplicaciones, IDs de paquetes, versiones, tamaños de APK, marcas de tiempo de instalación/actualización, clasificación de sistema/usuario). Los datos permanecen localmente en tu dispositivo, pero pueden transmitirse a través de tu red local para la gestión remota cuando el Servidor de Archivos está habilitado. Nunca se transmiten datos a KiloWatch ni a ningún tercero.
 </string>
     <string name="pd_accept">
 Entiendo
@@ -9868,5 +9868,16 @@ Administrar configuración de orden y filtro por carpeta
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 Orden y filtro por carpeta
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+Modo Carpeta
+</string>
+    <string name="sort_folder_mode_root">
+Solo Carpeta Raíz
+</string>
+    <string name="sort_folder_mode_recursive">
+Recursivo (Subcarpetas)
 </string>
 </resources>

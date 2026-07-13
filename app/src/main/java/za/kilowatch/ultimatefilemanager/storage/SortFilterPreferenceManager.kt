@@ -51,6 +51,7 @@ object SortFilterPreferenceManager {
     private const val SUFFIX_TAGS        = "_tags"
     private const val SUFFIX_IS_NETWORK  = "_is_network"
     private const val SUFFIX_VIEW_MODE   = "_view_mode"
+    private const val SUFFIX_IS_RECURSIVE = "_is_recursive"
 
     // ── Encrypted prefs singleton ─────────────────────────────────────────────
     @Volatile
@@ -175,7 +176,8 @@ object SortFilterPreferenceManager {
         val viewMode = viewModeStr?.let {
             try { ViewModeManager.ViewMode.valueOf(it) } catch (e: Exception) { null }
         }
-        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, viewMode)
+        val isRecursive = prefs.getBoolean(key + SUFFIX_IS_RECURSIVE, false)
+        return SortFilterState(sortMode, sortOrder, filterType, showHidden, groupByDate, activeTags, viewMode, isRecursive)
     }
 
     /**
@@ -208,6 +210,7 @@ object SortFilterPreferenceManager {
             .putBoolean(key + SUFFIX_GROUP_DATE, state.groupByDate)
             .putString(key + SUFFIX_TAGS, state.activeTags.joinToString(","))
             .putBoolean(key + SUFFIX_IS_NETWORK, isNetwork)
+            .putBoolean(key + SUFFIX_IS_RECURSIVE, state.isRecursive)
             .apply {
                 if (state.viewMode != null) {
                     putString(key + SUFFIX_VIEW_MODE, state.viewMode.name)
@@ -234,6 +237,7 @@ object SortFilterPreferenceManager {
             .remove(key + SUFFIX_TAGS)
             .remove(key + SUFFIX_IS_NETWORK)
             .remove(key + SUFFIX_VIEW_MODE)
+            .remove(key + SUFFIX_IS_RECURSIVE)
             .commit() // NOT apply() — see KDoc
     }
 
@@ -244,6 +248,81 @@ object SortFilterPreferenceManager {
     fun clearAllFolderSpecific(context: Context) {
         val prefs = getEncryptedPrefs(context) ?: return
         prefs.edit().clear().commit() // NOT apply() — see KDoc
+    }
+
+    /**
+     * Load sort/filter state for a local path, resolving recursive overrides from parent folders.
+     */
+    fun loadForLocalPath(context: Context, localPath: String): SortFilterState? {
+        val exactKey = folderKey(localPath)
+        val exactState = loadForFolder(context, exactKey)
+        if (exactState != null) {
+            return exactState
+        }
+
+        // Walk up parents
+        var file = java.io.File(localPath).parentFile
+        while (file != null) {
+            val parentPath = file.absolutePath
+            val parentKey = folderKey(parentPath)
+            val parentState = loadForFolder(context, parentKey)
+            if (parentState != null && parentState.isRecursive) {
+                return parentState
+            }
+            file = file.parentFile
+        }
+        return null
+    }
+
+    /**
+     * Load sort/filter state for a network/remote path, resolving recursive overrides from parent folders.
+     */
+    fun loadForNetworkPath(context: Context, shareId: String, remotePath: String): SortFilterState? {
+        val exactKey = folderKey(shareId, remotePath)
+        val exactState = loadForFolder(context, exactKey)
+        if (exactState != null) {
+            return exactState
+        }
+
+        // Walk up parents of remotePath
+        var path = remotePath.trim('/')
+        while (path.isNotEmpty() && path.contains('/')) {
+            val idx = path.lastIndexOf('/')
+            if (idx == -1) break
+            path = path.substring(0, idx)
+            val parentKey = folderKey(shareId, path)
+            val parentState = loadForFolder(context, parentKey)
+            if (parentState != null && parentState.isRecursive) {
+                return parentState
+            }
+        }
+        // Check root ("") of the share if remotePath wasn't already root
+        if (remotePath.trim('/').isNotEmpty()) {
+            val parentKey = folderKey(shareId, "")
+            val parentState = loadForFolder(context, parentKey)
+            if (parentState != null && parentState.isRecursive) {
+                return parentState
+            }
+        }
+        return null
+    }
+
+    /**
+     * Unified resolver that loads settings for a path (exact match or recursive parent match).
+     */
+    fun loadForPath(context: Context, path: String, shareId: String? = null): SortFilterState? {
+        return if (shareId != null) {
+            loadForNetworkPath(context, shareId, path)
+        } else {
+            loadForLocalPath(context, path)
+        }
+    }
+
+    /**
+     * Returns true if there is an exact or recursive override active for the path.
+     */
+    fun hasFolderOverride(context: Context, path: String, shareId: String? = null): Boolean {
+        return loadForPath(context, path, shareId) != null
     }
 
     /**
@@ -280,7 +359,8 @@ object SortFilterPreferenceManager {
         val showHidden: Boolean,
         val groupByDate: Boolean,
         val activeTags: Set<String>,
-        val viewMode: ViewModeManager.ViewMode? = null
+        val viewMode: ViewModeManager.ViewMode? = null,
+        val isRecursive: Boolean = false
     )
 
     /**

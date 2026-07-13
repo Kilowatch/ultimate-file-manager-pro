@@ -188,7 +188,7 @@ Ultimate File Manager Pro에 오신 것을 환영합니다
 선택적으로 저장소에서 발견된 APK 파일을 설치합니다 — 각 설치 시 항상 확인 메시지가 표시됩니다.
 </string>
     <string name="perm_query_apps_desc">
-앱 관리자 및 디블로터에 필요합니다. 설치된 패키지의 전체 목록(앱 이름, 패키지 ID, 버전, APK 크기, 설치/업데이트 타임스탬프, 시스템/사용자 분류)을 읽습니다. 모든 처리는 기기 내에서만 이루어집니다. 당사나 제3자에게 데이터가 전송되지 않습니다.
+앱 관리자, 디블로터 및 원격 파일 서버에 필요합니다. 설치된 패키지의 전체 목록(앱 이름, 패키지 ID, 버전, APK 크기, 설치/업데이트 타임스탬프, 시스템/사용자 분류)을 읽습니다. 데이터는 기기 내에 로컬로 보관되지만, 파일 서버가 활성화된 경우 원격 관리를 위해 로컬 네트워크를 통해 전송될 수 있습니다. 어떤 데이터도 KiloWatch나 제3자에게 전송되지 않습니다.
 </string>
     <string name="pd_accept">
 이해합니다
@@ -9856,5 +9856,16 @@ UFM 플레이어 설정
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 폴더별 정렬 및 필터
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+폴더 모드
+</string>
+    <string name="sort_folder_mode_root">
+루트 폴더만
+</string>
+    <string name="sort_folder_mode_recursive">
+재귀적(하위 폴더)
 </string>
 </resources>

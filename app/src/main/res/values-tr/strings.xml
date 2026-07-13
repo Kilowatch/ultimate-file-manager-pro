@@ -188,7 +188,7 @@ Tam dosya yönetimi: cihazınızdaki herhangi bir dosya veya klasörü oluşturu
 İsteğe bağlı olarak depolama alanınızda bulunan APK dosyalarını yükleyin — her yükleme için onay istenecektir.
 </string>
     <string name="perm_query_apps_desc">
-App Manager ve Debloater tarafından gereklidir. Yüklü paketlerin tam listesini okur (uygulama adları, paket kimlikleri, sürümler, APK boyutları, yükleme/güncelleme zaman damgaları, sistem/kullanıcı sınıflandırması) — tamamen cihaz üzerinde işlenir. Hiçbir veri bize veya herhangi bir üçüncü tarafa iletilmez.
+App Manager, Debloater ve Remote File Server tarafından gereklidir. Yüklü paketlerin tam listesini okur (uygulama adları, paket kimlikleri, sürümler, APK boyutları, yükleme/güncelleme zaman damgaları, sistem/kullanıcı sınıflandırması). Veriler cihazınızda yerel olarak kalır ancak File Server etkinleştirildiğinde uzaktan yönetim için yerel ağınız üzerinden iletilebilir. Hiçbir veri asla KiloWatch veya herhangi bir üçüncü tarafa iletilmez.
 </string>
     <string name="pd_accept">
 Anlıyorum
@@ -9856,5 +9856,16 @@ Klasör bazında sıralama ve filtre ayarlarını yönet
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 Klasöre Özel Sıralama ve Filtre
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+Klasör Modu
+</string>
+    <string name="sort_folder_mode_root">
+Yalnızca Kök Klasör
+</string>
+    <string name="sort_folder_mode_recursive">
+Özyinelemeli (Alt Klasörler)
 </string>
 </resources>

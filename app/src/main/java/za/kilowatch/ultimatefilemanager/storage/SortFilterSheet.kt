@@ -39,9 +39,10 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     var currentFolderKey: String? = null
     var currentFolderDisplayPath: String = ""
     var currentScope: Scope = Scope.GLOBAL
+    var currentIsRecursive = false
     var currentViewMode: ViewModeManager.ViewMode? = null
 
-    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>, Scope, ViewModeManager.ViewMode) -> Unit)? = null
+    var onApply: ((SortMode, SortOrder, FilterType, Boolean, Boolean, Set<String>, Scope, ViewModeManager.ViewMode, Boolean) -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -104,15 +105,28 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             ViewModeManager.ViewMode.GRID_LARGE -> chipViewGridLarge?.isChecked = true
         }
 
-        fun updateViewModeSectionVisibility(scope: Scope) {
+        // Folder mode (Root vs. Recursive) chips
+        val layoutFolderModeSection = view.findViewById<android.widget.LinearLayout?>(R.id.layoutFolderModeSection)
+        val cgFolderMode = view.findViewById<ChipGroup?>(R.id.cgFolderMode)
+        val chipFolderModeRoot = view.findViewById<Chip?>(R.id.chipFolderModeRoot)
+        val chipFolderModeRecursive = view.findViewById<Chip?>(R.id.chipFolderModeRecursive)
+
+        if (currentIsRecursive) {
+            chipFolderModeRecursive?.isChecked = true
+        } else {
+            chipFolderModeRoot?.isChecked = true
+        }
+
+        fun updateFolderOptionsVisibility(scope: Scope) {
             layoutViewModeSection?.visibility = if (scope == Scope.FOLDER) android.view.View.VISIBLE else android.view.View.GONE
+            layoutFolderModeSection?.visibility = if (scope == Scope.FOLDER) android.view.View.VISIBLE else android.view.View.GONE
         }
 
         if (currentFolderKey != null) {
-            updateViewModeSectionVisibility(currentScope)
+            updateFolderOptionsVisibility(currentScope)
             cgScope?.setOnCheckedStateChangeListener { _, checkedIds ->
                 val scope = if (checkedIds.contains(R.id.chipScopeFolder)) Scope.FOLDER else Scope.GLOBAL
-                updateViewModeSectionVisibility(scope)
+                updateFolderOptionsVisibility(scope)
             }
         }
 
@@ -248,6 +262,10 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipScopeFolder -> Scope.FOLDER
                 else -> Scope.GLOBAL
             }
+            val isRecursiveSelected = when (cgFolderMode?.checkedChipId) {
+                R.id.chipFolderModeRecursive -> true
+                else -> false
+            }
             val selectedViewMode = when (cgViewMode?.checkedChipId) {
                 R.id.chipViewListSmall -> ViewModeManager.ViewMode.LIST_SMALL
                 R.id.chipViewListMedium -> ViewModeManager.ViewMode.LIST_MEDIUM
@@ -258,7 +276,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
                 R.id.chipViewGridLarge -> ViewModeManager.ViewMode.GRID_LARGE
                 else -> ViewModeManager.load(requireContext())
             }
-            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags, scope, selectedViewMode)
+            onApply?.invoke(sortMode, sortOrder, filterType, showHidden, groupByDate, selectedTags, scope, selectedViewMode, isRecursiveSelected)
             dismiss()
         }
         
@@ -312,6 +330,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         }
 
         // Apply to Chips (including scope chips when visible)
+        val folderModeChips = if (currentFolderKey != null) listOf(R.id.chipFolderModeRoot, R.id.chipFolderModeRecursive) else emptyList()
         val scopeChips = if (currentFolderKey != null) listOf(R.id.chipScopeGlobal, R.id.chipScopeFolder) else emptyList()
         val chips = listOf(
             R.id.chipSortName, R.id.chipSortSize, R.id.chipSortDate, R.id.chipSortType,
@@ -321,7 +340,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
             R.id.chipGroupDateEnabled, R.id.chipGroupDateDisabled,
             R.id.chipViewListSmall, R.id.chipViewListMedium, R.id.chipViewListLarge, R.id.chipViewListXLarge,
             R.id.chipViewGridSmall, R.id.chipViewGridMedium, R.id.chipViewGridLarge
-        ) + scopeChips
+        ) + scopeChips + folderModeChips
         for (id in chips) {
             val chip = view.findViewById<Chip>(id)
             applyFocusListener(chip, defaultTextColor = whiteText)

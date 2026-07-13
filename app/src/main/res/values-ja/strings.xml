@@ -188,7 +188,7 @@ Ultimate File Manager Pro へようこそ
 ストレージにあるAPKファイルを必要に応じてインストール — 各インストールの確認を常に求められます。
 </string>
     <string name="perm_query_apps_desc">
-アプリマネージャーとデブラウターで必要です。インストール済みパッケージの全リスト（アプリ名、パッケージID、バージョン、APKサイズ、インストール/更新タイムスタンプ、システム/ユーザー分類）を読み取ります。すべてデバイス上で処理されます。データが当社や第三者に送信されることは一切ありません。
+アプリマネージャー、Debloater、リモートファイルサーバーで必要です。インストールされているパッケージの完全なリスト（アプリ名、パッケージID、バージョン、APKサイズ、インストール/更新タイムスタンプ、システム/ユーザー分類）を読み取ります。データはデバイス上にローカルに保存されますが、ファイルサーバーが有効な場合、リモート管理のためにローカルネットワーク経由で送信される場合があります。データがKiloWatchや第三者に送信されることは一切ありません。
 </string>
     <string name="pd_accept">
 わかりました
@@ -9856,5 +9856,16 @@ OK
     <!-- Backup label -->
     <string name="backup_pref_folder_sort">
 フォルダごとの並べ替えとフィルター
+</string>
+
+    <!-- Folder-specific Mode (Root vs. Recursive) -->
+    <string name="sort_folder_mode_label">
+フォルダモード
+</string>
+    <string name="sort_folder_mode_root">
+ルートフォルダのみ
+</string>
+    <string name="sort_folder_mode_recursive">
+再帰的（サブフォルダ）
 </string>
 </resources>

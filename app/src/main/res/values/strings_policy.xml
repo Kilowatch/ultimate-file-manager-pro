@@ -266,7 +266,12 @@
     <string name="pp_s13_title">13. Google Play Policy Compliance</string>
     <string name="pp_s13b_title">13b. Prominent Disclosure — Installed Application Information</string>
     <string name="pd_dialog_title">Prominent Disclosure — Installed Application Information</string>
-    <string name="pd_dialog_body">Ultimate File Manager Pro accesses the list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager and Debloater features. This information is processed and stored locally on your device only and is never uploaded or shared. For full details, please refer to Section 13b of our Privacy Policy.</string>
+    <string name="pd_dialog_body">Ultimate File Manager Pro accesses the list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager display, Debloater features, and Remote File Server remote management. This information is processed and stored locally on your device. When the Remote File Server is enabled, the installed app list and metadata may be transmitted over your local network to authenticated devices via a TLS-encrypted HTTPS connection. For full details, please refer to Section 13b of our Privacy Policy.</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">Remote Apps Access</string>
+    <string name="pd_remote_apps_body">This app can expose the list of installed applications on your device over the local network when the Remote Manage (File Server) feature is active. When you enable the server, any authenticated device on your local network can access the app list and metadata — including app names, package IDs, versions, sizes, install dates, and app icons — via the File Server\'s REST API. This connection is TLS-encrypted and requires authentication. You can disable this at any time by stopping the File Server. For full details, see Section 13b of our Privacy Policy.</string>
+    <string name="pd_remote_apps_accept">Enable Apps Access</string>
+    <string name="pd_remote_apps_decline">Keep Disabled</string>
     <string name="pp_s14_title">14. Contact Us</string>
 
     <!-- Section body text -->
@@ -337,7 +342,7 @@
     <string name="pp_s13_body">This app is built to meet Google Play\'s standards. All requested permissions are required for core app functionality. Before requesting any sensitive permission, the app clearly explains why it\'s needed and how it will be used. Regarding the October 2024 Photo and Video Policy updates: broad access is necessary because this is a comprehensive file manager designed for bulk operations (moving, renaming, and syncing) across all storage volumes, which cannot be efficiently performed using standard system pickers.</string>
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
-    <string name="pp_s13b_intro">Ultimate File Manager Pro accesses the full list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager and Debloater features. This disclosure explains exactly what data is accessed, why, and where it stays.</string>
+    <string name="pp_s13b_intro">Ultimate File Manager Pro accesses the full list of installed applications on your device via the QUERY_ALL_PACKAGES permission to provide the App Manager, Debloater, and Remote File Server features. This disclosure explains exactly what data is accessed, why, and where it stays.</string>
     <string name="pp_s13b_data_heading">What Data Is Accessed</string>
     <string-array name="pp_s13b_data_items">
         <item>App name and package identifier (package ID)</item>
@@ -346,15 +351,18 @@
         <item>First install time and last update time</item>
         <item>System app vs. user-installed app classification</item>
         <item>Presence of OBB expansion files</item>
+        <item>App icon (transmitted as base64 when Remote File Server is active)</item>
+        <item>Split APK / OBB expansion file metadata</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">Why This Data Is Accessed</string>
     <string-array name="pp_s13b_purpose_items">
         <item>App Manager: Displaying the full list of installed apps with their details (name, version, size, install date) so you can browse, search, and manage your applications from one place.</item>
         <item>Per-App Storage Calculation: Reading APK file size and data directory size (best-effort) to show how much storage each app uses.</item>
         <item>Debloater: Cross-referencing installed package names against a publicly available debloat reference list (downloaded and cached locally on your device) to identify pre-installed system apps that can safely be removed or disabled.</item>
+        <item>Remote File Server: Exposing installed app list and metadata via the REST API over the local network to authenticated devices for remote management when the File Server is enabled.</item>
     </string-array>
     <string name="pp_s13b_location_heading">Where This Data Stays</string>
-    <string name="pp_s13b_location_body"><b>On your device only.</b> All installed application data is processed and stored locally within the app\'s private storage. It is never uploaded to KiloWatch servers, never shared with any third party, and never used for advertising, profiling, analytics, AI training, or any purpose other than the App Manager and Debloater features described above.</string>
+    <string name="pp_s13b_location_body"><b>On your device and local network.</b> All installed application data is processed and stored locally within the app\'s private storage. It is never uploaded to KiloWatch servers, never shared with any third party, and never used for advertising, profiling, analytics, AI training. When the Remote File Server feature is enabled, the installed app list and metadata may be transmitted over your local network to authenticated devices via a TLS-encrypted HTTPS connection. The server only accepts connections from devices on the same local network, and all requests require authentication.</string>
 
     <string name="pp_s14_body">If you have any questions or concerns about this Privacy Policy, please reach out.</string>
 

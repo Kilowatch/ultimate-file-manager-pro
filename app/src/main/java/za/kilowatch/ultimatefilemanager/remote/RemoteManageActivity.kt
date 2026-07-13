@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
+import za.kilowatch.ultimatefilemanager.ui.policy.ProminentDisclosureHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.net.Inet4Address
 import java.net.NetworkInterface
@@ -368,9 +369,19 @@ class RemoteManageActivity : AppCompatActivity() {
     }
 
     private fun startServer(pin: String) {
+        // Show the Remote File Server apps disclosure if not yet accepted.
+        // The server starts regardless of acceptance — only /api/apps is gated.
+        ProminentDisclosureHelper.showRemoteAppsIfNeeded(
+            activity = this,
+            onContinue = { doStartServer(pin) },
+            onCancel = { doStartServer(pin) }
+        )
+    }
+
+    private fun doStartServer(pin: String) {
         // Kill any still-running global instance synchronously before trying to bind.
         FileServer.stopGlobal()
-        
+
         val progressContainer = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.CENTER_VERTICAL

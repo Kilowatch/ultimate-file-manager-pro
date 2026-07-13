@@ -667,7 +667,20 @@ Dosyalarınız cihazınızda kalır — onları asla görmeyiz. Uygulamayı iyil
 Önemli Açıklama — Yüklü Uygulama Bilgileri
 </string>
     <string name="pd_dialog_body">
-Ultimate File Manager Pro, QUERY_ALL_PACKAGES izni aracılığıyla cihazınızdaki yüklü uygulamaların listesine erişerek Uygulama Yöneticisi ve Debloat Aracı özelliklerini sağlar. Bu bilgiler yalnızca cihazınızda yerel olarak işlenir ve saklanır, asla yüklenmez veya paylaşılmaz. Tam ayrıntılar için lütfen Gizlilik Politikamızın Bölüm 13b\'ye bakın.
+Ultimate File Manager Pro, QUERY_ALL_PACKAGES iznini kullanarak cihazınızdaki yüklü uygulamaların listesine erişir; bu sayede Uygulama Yöneticisi görünümünü, Debloater özelliklerini ve Uzaktan Dosya Sunucusu uzaktan yönetimini sağlar. Bu bilgiler işlenir ve cihazınızda yerel olarak saklanır. Uzaktan Dosya Sunucusu etkinleştirildiğinde, yüklü uygulama listesi ve meta verileri, TLS şifreli bir HTTPS bağlantısı aracılığıyla yerel ağınız üzerinden kimliği doğrulanmış cihazlara iletilebilir. Tam ayrıntılar için lütfen Gizlilik Politikamızın 13b bölümüne bakın.
+</string>
+    <!-- File Server Remote Apps Disclosure (FR-03) -->
+    <string name="pd_remote_apps_title">
+Uygulamalara Uzaktan Erişim
+</string>
+    <string name="pd_remote_apps_body">
+Bu uygulama, Uzaktan Yönetim (Dosya Sunucusu) özelliği etkin olduğunda, cihazınızdaki yüklü uygulamaların listesini yerel ağ üzerinden açığa çıkarabilir. Sunucuyu etkinleştirdiğinizde, yerel ağınızdaki kimliği doğrulanmış herhangi bir cihaz, Dosya Sunucusu\'nun REST API\'si aracılığıyla uygulama listesine ve meta verilere (uygulama adları, paket kimlikleri, sürümler, boyutlar, yükleme tarihleri ve uygulama simgeleri dahil) erişebilir. Bu bağlantı TLS ile şifrelenir ve kimlik doğrulaması gerektirir. Dosya Sunucusu\'nu durdurarak bu özelliği istediğiniz zaman devre dışı bırakabilirsiniz. Tam ayrıntılar için Gizlilik Politikamızın 13b bölümüne bakın.
+</string>
+    <string name="pd_remote_apps_accept">
+Uygulama Erişimini Etkinleştir
+</string>
+    <string name="pd_remote_apps_decline">
+Devre Dışı Tut
 </string>
     <string name="pp_s14_title">
 14. Bize Ulaşın
@@ -838,7 +851,7 @@ Bu uygulama Google Play standartlarını karşılamak için oluşturulmuştur. T
 
     <!-- Section 13b — Installed Application Information Prominent Disclosure -->
     <string name="pp_s13b_intro">
-Ultimate File Manager Pro, Uygulama Yöneticisi ve Debloater özelliklerini sağlamak için QUERY_ALL_PACKAGES izni aracılığıyla cihazınızdaki yüklü uygulamaların tam listesine erişir. Bu açıklama, hangi verilere erişildiğini, nedenini ve bunların nerede kaldığını tam olarak açıklar.
+Ultimate File Manager Pro, QUERY_ALL_PACKAGES izni aracılığıyla cihazınızdaki yüklü uygulamaların tam listesine erişerek Uygulama Yöneticisi, Debloater ve Uzaktan Dosya Sunucusu özelliklerini sağlar. Bu açıklama, hangi verilere erişildiğini, nedenini ve verilerin nerede kaldığını tam olarak açıklar.
 </string>
     <string name="pp_s13b_data_heading">
 Hangi Verilere Erişilir
@@ -862,6 +875,12 @@ Sistem uygulaması ve kullanıcı tarafından yüklenen uygulama sınıflandırm
         <item>
 OBB genişletme dosyalarının varlığı
 </item>
+        <item>
+Uygulama simgesi (Remote File Server etkinken base64 olarak iletilir)
+</item>
+        <item>
+Split APK / OBB genişletme dosyası meta verileri
+</item>
     </string-array>
     <string name="pp_s13b_purpose_heading">
 Bu Verilere Neden Erişilir
@@ -876,12 +895,15 @@ Uygulama Bazında Depolama Hesaplaması: Her uygulamanın ne kadar depolama kull
         <item>
 Debloat Aracı: Yüklü paket adlarını, cihazınıza yerel olarak indirilen ve önbelleğe alınan herkese açık bir debloat referans listesiyle karşılaştırarak güvenle kaldırılabilecek veya devre dışı bırakılabilecek önceden yüklenmiş sistem uygulamalarını tanımlar.
 </item>
+        <item>
+Remote File Server: File Server etkinken, uzaktan yönetim için REST API aracılığıyla yerel ağ üzerinden doğrulanmış cihazlara yüklü uygulama listesini ve meta verilerini sunar.
+</item>
     </string-array>
     <string name="pp_s13b_location_heading">
 Bu Veriler Nerede Kalır
 </string>
     <string name="pp_s13b_location_body">
-<b>Yalnızca cihazınızda.</b> Tüm yüklü uygulama verileri, uygulamanın özel depolama alanında yerel olarak işlenir ve saklanır. Bu veriler asla KiloWatch sunucularına yüklenmez, herhangi bir üçüncü tarafla paylaşılmaz ve yukarıda açıklanan Uygulama Yöneticisi ve Debloater özellikleri dışında reklam, profilleme, analitik, AI eğitimi veya herhangi bir amaç için kullanılmaz.
+<b>Cihazınızda ve yerel ağınızda.</b> Tüm yüklü uygulama verileri, uygulamanın özel depolama alanında işlenir ve saklanır. Bu veriler asla KiloWatch sunucularına yüklenmez, herhangi bir üçüncü tarafla paylaşılmaz ve reklam, profilleme, analitik veya yapay zeka eğitimi için kullanılmaz. Uzaktan Dosya Sunucusu özelliği etkinleştirildiğinde, yüklü uygulama listesi ve meta veriler TLS şifreli HTTPS bağlantısı üzerinden yerel ağınızdaki kimliği doğrulanmış cihazlara iletilebilir. Sunucu yalnızca aynı yerel ağdaki cihazlardan gelen bağlantıları kabul eder ve tüm istekler kimlik doğrulaması gerektirir.
 </string>
 
     <string name="pp_s14_body">
