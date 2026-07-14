@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added FOSS-specific terms &amp; conditions and privacy policy agreement notice on the welcome language screen.
 - Automatically accept terms &amp; conditions and privacy policy on language confirmation in FOSS builds (setting both acceptance timestamps in shared preferences), skipping the policy welcome screen and navigating directly to the permissions screen on both mobile and TV layouts.
+- Updated README.md and index.html to include Amazon Downloader code `1581139` instructions for easy installation of the official Amazon TV edition.
 
 
 ## [1.6.9] — 2026-07-13

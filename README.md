@@ -48,6 +48,13 @@ Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Releas
 | **Mobile** (phones & tablets) | `app-mobile-foss-release.apk` |
 | **TV** (Android TV / Fire TV) | `app-tv-foss-release.apk` |
 
+> [!TIP]
+> **Easy Installation on Android TV / Fire TV:**
+> You can quickly install the official Amazon TV edition on Android TV or Fire TV devices using the popular **Downloader** app by AFTVnews (available on the Amazon Appstore and Google Play Store).
+> 1. Open the **Downloader** app.
+> 2. Enter the quick code **`1581139`** in the URL/Search box.
+> 3. The Amazon TV variant APK will automatically download and prompt for installation.
+
 Users and developers may also generate and sign the APKs themselves using the build instructions below.
 
 ---
