@@ -41,12 +41,14 @@ If you require Google Drive, OneDrive, or Dropbox integrations, please download 
 
 ## 📦 Pre-compiled APKs
 
-Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Release](https://github.com/Kilowatch/ultimate-file-manager-pro/releases).
+Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Release](https://github.com/Kilowatch/ultimate-file-manager-pro/releases), along with the Windows Companion installer.
 
-| Variant | APK File |
-|---------|----------|
+| Variant | File |
+|---|---|
 | **Mobile** (phones & tablets) | `app-mobile-foss-release.apk` |
 | **TV** (Android TV / Fire TV) | `app-tv-foss-release.apk` |
+| **Windows Companion** (installer) | `ufm-windows-setup.exe` |
+| **Windows Companion** (portable, no install) | `ufm-windows-portable.exe` |
 
 > [!TIP]
 > **Easy Installation on Android TV / Fire TV:**
@@ -56,6 +58,39 @@ Pre-built FOSS APKs for both mobile and TV are bundled with every [GitHub Releas
 > 3. The Amazon TV variant APK will automatically download and prompt for installation.
 
 Users and developers may also generate and sign the APKs themselves using the build instructions below.
+
+---
+
+## 🖥️ Windows Companion App
+
+UFM comes with a **native Windows desktop companion** — a dual-pane file manager that connects to your Android device over Wi-Fi, giving you drag-and-drop file transfers, folder sync, and one-click APK sideloading directly from your PC.
+
+| Feature | Description |
+|---|---|
+| 📁 **Dual-Pane Browser** | Browse Windows and Android filesystems side by side |
+| ⬆️⬇️ **File Transfer** | Upload and download files and entire folder trees with live byte-level progress |
+| 📦 **APK Sideloading** | Drop an `.apk` or `.xapk` onto the Sideload Zone to install it remotely |
+| 🔐 **Secure Pairing** | PIN-based authentication with TLS certificate pinning — no cloud, no account |
+| 🔍 **Auto-Discovery** | Finds UFM devices on your LAN automatically — no IP address needed |
+| 🖥️ **TV Support** | Works with Android TV and Fire TV devices as well as phones |
+
+> [!TIP]
+> **Don't want to build it yourself?** Pre-built Windows installers are available on every [GitHub Release](https://github.com/Kilowatch/ultimate-file-manager-pro/releases):
+> - `ufm-windows-setup.exe` — standard NSIS installer (recommended)
+> - `ufm-windows-portable.exe` — portable single-file executable, no installation needed
+
+### Build It Yourself
+
+```bash
+cd UFM-Windows
+npm install
+npm run tauri dev        # Run in development mode
+npm run tauri build      # Build the Windows installer (.exe)
+```
+
+> The installer is output to `UFM-Windows/src-tauri/target/release/bundle/nsis/`.
+
+📖 **[Full setup guide, security architecture, and build instructions → UFM-Windows/README_Windows.md](UFM-Windows/README.md)**
 
 ---
 
