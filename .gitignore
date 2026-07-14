@@ -123,3 +123,23 @@ test_smb.kts
 *.bak
 *.tmp
 Thumbs.db
+
+# ── UFM-Windows Companion (Tauri / Rust / Node) ───────────────
+# Rust build output — this is the main culprit at ~9 GB
+UFM-Windows/src-tauri/target/
+
+# Rust crate download cache (if present inside project)
+UFM-Windows/src-tauri/.cargo/
+
+# Node / npm
+UFM-Windows/node_modules/
+
+# Vite production build output
+UFM-Windows/dist/
+UFM-Windows/dist-ssr/
+
+# Tauri generated schemas (regenerated on each build)
+UFM-Windows/src-tauri/gen/
+
+# Local dev overrides
+UFM-Windows/*.local
