@@ -41,6 +41,7 @@
     <string name="welcome_translation_disclaimer">All translations are based on best effort and may contain errors.</string>
     <string name="welcome_change_later_hint">You can change your language later in Settings -> Languages</string>
     <string name="btn_set_default_language">Set Default Language</string>
+    <string name="foss_legal_notice">By continuing, you agree to the Terms &amp; Conditions and Privacy Policy, which can be found in the Legal section.</string>
 
     <string name="welcome_title">Welcome to Ultimate File Manager Pro</string>
     <string name="welcome_subtitle">Manage all your files with ease.\nPlease grant the required permissions to get started.</string>

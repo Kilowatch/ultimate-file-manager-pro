@@ -117,6 +117,9 @@ Vous pouvez modifier votre langue plus tard dans Paramètres -> Langues
     <string name="btn_set_default_language">
 Définir la langue par défaut
 </string>
+    <string name="foss_legal_notice">
+En continuant, vous acceptez les Conditions d\'utilisation et la Politique de confidentialité, qui se trouvent dans la section Juridique.
+</string>
 
     <string name="welcome_title">
 Bienvenue dans Ultimate File Manager Pro

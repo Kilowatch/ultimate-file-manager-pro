@@ -117,6 +117,9 @@ Anda dapat mengubah bahasa nanti di Pengaturan -> Bahasa
     <string name="btn_set_default_language">
 Atur Bahasa Default
 </string>
+    <string name="foss_legal_notice">
+Dengan melanjutkan, Anda menyetujui Syarat &amp; Ketentuan dan Kebijakan Privasi, yang dapat ditemukan di bagian Legal.
+</string>
 
     <string name="welcome_title">
 Selamat datang di Ultimate File Manager Pro

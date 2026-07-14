@@ -128,6 +128,19 @@
                 android:gravity="center"
                 android:fontFamily="sans-serif-italic" />
 
+            <TextView
+                android:id="@+id/txtFossLegalNotice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/foss_legal_notice"
+                android:textColor="#BBFFFFFF"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
             <!-- Action Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSetDefault"

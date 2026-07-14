@@ -21,6 +21,7 @@ import coil3.asImage
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import za.kilowatch.ultimatefilemanager.BuildConfig
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -96,8 +97,23 @@ class LanguageWelcomeActivity : AppCompatActivity() {
             showLanguageSelectorDialog()
         }
         
+        val txtFossLegalNotice = findViewById<TextView>(R.id.txtFossLegalNotice)
+        if (BuildConfig.IS_FOSS) {
+            txtFossLegalNotice?.visibility = View.VISIBLE
+        } else {
+            txtFossLegalNotice?.visibility = View.GONE
+        }
+
         btnSetDefault.setOnClickListener {
             setWelcomeFinished()
+            if (BuildConfig.IS_FOSS) {
+                val acceptancePrefs = getSharedPreferences("acceptance_prefs", Context.MODE_PRIVATE)
+                val currentTime = System.currentTimeMillis()
+                acceptancePrefs.edit()
+                    .putLong("terms_accepted_time", currentTime)
+                    .putLong("privacy_accepted_time", currentTime)
+                    .apply()
+            }
             goToNextScreen()
         }
         
@@ -176,7 +192,12 @@ class LanguageWelcomeActivity : AppCompatActivity() {
     }
 
     private fun goToNextScreen() {
-        startActivity(Intent(this, PolicyWelcomeActivity::class.java))
+        val targetClass = if (BuildConfig.IS_FOSS) {
+            WelcomeActivity::class.java
+        } else {
+            PolicyWelcomeActivity::class.java
+        }
+        startActivity(Intent(this, targetClass))
         finish()
     }
 

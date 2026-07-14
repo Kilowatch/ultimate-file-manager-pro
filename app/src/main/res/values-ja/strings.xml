@@ -117,6 +117,9 @@ Ultimate File Manager Pro
     <string name="btn_set_default_language">
 デフォルト言語を設定
 </string>
+    <string name="foss_legal_notice">
+続けることにより、利用規約およびプライバシーポリシーに同意したものとみなされます。これらは法的情報セクションに記載されています。
+</string>
 
     <string name="welcome_title">
 Ultimate File Manager Pro へようこそ
