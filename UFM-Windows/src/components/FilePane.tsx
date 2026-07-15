@@ -4,6 +4,7 @@ import {
   Trash2, HardDrive, Smartphone, Tv, ChevronRight 
 } from "lucide-react";
 import { UfmFile } from "../hooks/useUfmApi";
+import { TranslationSet } from "../hooks/translations";
 
 interface FilePaneProps {
   title: string;
@@ -19,6 +20,7 @@ interface FilePaneProps {
   onDelete: (paths: string[]) => void;
   onFileSelect?: (files: UfmFile[]) => void;
   selectedFiles: UfmFile[];
+  t: TranslationSet;
 }
 
 export const FilePane: React.FC<FilePaneProps> = ({
@@ -35,6 +37,7 @@ export const FilePane: React.FC<FilePaneProps> = ({
   onDelete,
   onFileSelect,
   selectedFiles,
+  t,
 }) => {
   const [newFolderActive, setNewFolderActive] = useState(false);
   const [newFolderName, setNewFolderName] = useState("");
@@ -70,13 +73,19 @@ export const FilePane: React.FC<FilePaneProps> = ({
         list.push({ name: p, path: accumulated });
       });
     } else {
-      list.push({ name: "Root", path: "/" });
-      let accumulated = "";
+      const activeRoot = roots.find(r => currentPath.startsWith(r)) || roots[0] || "/";
+      list.push({ name: activeRoot === "/" ? "Root" : activeRoot, path: activeRoot });
       
-      parts.forEach((p) => {
-        accumulated = accumulated + "/" + p;
-        list.push({ name: p, path: accumulated });
-      });
+      if (currentPath.startsWith(activeRoot)) {
+        const relativePath = currentPath.substring(activeRoot.length);
+        const relParts = relativePath.split("/").filter(Boolean);
+        let accumulated = activeRoot;
+        
+        relParts.forEach((p) => {
+          accumulated = accumulated.endsWith("/") ? accumulated + p : accumulated + "/" + p;
+          list.push({ name: p, path: accumulated });
+        });
+      }
     }
     return list;
   };
@@ -93,9 +102,15 @@ export const FilePane: React.FC<FilePaneProps> = ({
         onNavigate(parent);
       }
     } else {
-      if (currentPath === "/") return;
+      const activeRoot = roots.find(r => currentPath.startsWith(r)) || roots[0] || "/";
+      if (currentPath === activeRoot || currentPath === "/") return;
+      
       const idx = currentPath.lastIndexOf("/");
-      const parent = idx === 0 ? "/" : currentPath.substring(0, idx);
+      let parent = idx === 0 ? "/" : currentPath.substring(0, idx);
+      
+      if (activeRoot !== "/" && !parent.startsWith(activeRoot)) {
+        parent = activeRoot;
+      }
       onNavigate(parent);
     }
   };
@@ -149,7 +164,7 @@ export const FilePane: React.FC<FilePaneProps> = ({
           <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flexShrink: 1 }}>
             {title}
           </span>
-          <span className="pane-badge" style={{ flexShrink: 0 }}>{isRemote ? "Remote" : "Local PC"}</span>
+          <span className="pane-badge" style={{ flexShrink: 0 }}>{isRemote ? t.remote_storage : t.local_storage}</span>
         </div>
 
         <div style={{ display: "flex", gap: "8px" }}>
@@ -171,13 +186,13 @@ export const FilePane: React.FC<FilePaneProps> = ({
             ))}
           </select>
 
-          <button onClick={handleGoUp} className="btn-secondary" style={{ padding: "4px 8px" }} title="Go up one level">
+          <button onClick={handleGoUp} className="btn-secondary" style={{ padding: "4px 8px" }} title={t.go_up}>
             <ArrowUp style={{ width: 14, height: 14 }} />
           </button>
-          <button onClick={onRefresh} className="btn-secondary" style={{ padding: "4px 8px" }} title="Refresh list">
+          <button onClick={onRefresh} className="btn-secondary" style={{ padding: "4px 8px" }} title={t.refresh}>
             <RefreshCw className={isLoading ? "status-dot pulsing" : ""} style={{ width: 14, height: 14 }} />
           </button>
-          <button onClick={() => setNewFolderActive(true)} className="btn-secondary" style={{ padding: "4px 8px" }} title="Create folder">
+          <button onClick={() => setNewFolderActive(true)} className="btn-secondary" style={{ padding: "4px 8px" }} title={t.new_folder}>
             <FolderPlus style={{ width: 14, height: 14 }} />
           </button>
           <button 
@@ -185,7 +200,7 @@ export const FilePane: React.FC<FilePaneProps> = ({
             className="btn-secondary" 
             style={{ padding: "4px 8px", color: selectedFiles.length > 0 ? "var(--danger)" : "var(--text-hint)" }} 
             disabled={selectedFiles.length === 0}
-            title="Delete selected item(s)"
+            title={t.delete}
           >
             <Trash2 style={{ width: 14, height: 14 }} />
           </button>
@@ -209,7 +224,7 @@ export const FilePane: React.FC<FilePaneProps> = ({
         <div style={{ display: "flex", gap: "8px", padding: "8px 16px", background: "rgba(255, 255, 255, 0.02)", borderBottom: "1px solid var(--glass-border)" }}>
           <input 
             type="text"
-            placeholder="New folder name..."
+            placeholder={t.new_folder + "..."}
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             style={{
@@ -223,8 +238,8 @@ export const FilePane: React.FC<FilePaneProps> = ({
             }}
             autoFocus
           />
-          <button onClick={handleMkdirSubmit} className="btn-primary" style={{ padding: "6px 12px", fontSize: "0.75rem" }}>Create</button>
-          <button onClick={() => setNewFolderActive(false)} className="btn-secondary" style={{ padding: "6px 12px", fontSize: "0.75rem" }}>Cancel</button>
+          <button onClick={handleMkdirSubmit} className="btn-primary" style={{ padding: "6px 12px", fontSize: "0.75rem" }}>{t.new_folder}</button>
+          <button onClick={() => setNewFolderActive(false)} className="btn-secondary" style={{ padding: "6px 12px", fontSize: "0.75rem" }}>{t.cancel}</button>
         </div>
       )}
 
@@ -233,12 +248,12 @@ export const FilePane: React.FC<FilePaneProps> = ({
         {isLoading ? (
           <div className="empty-state">
             <RefreshCw className="status-dot pulsing" style={{ width: 32, height: 32 }} />
-            <span>Reading directories...</span>
+            <span>{t.refresh}...</span>
           </div>
         ) : files.length === 0 ? (
           <div className="empty-state">
             <Folder style={{ width: 32, height: 32, color: "var(--text-hint)" }} />
-            <span>Folder is empty</span>
+            <span>{t.new_folder} ({t.disconnected.toLowerCase()})</span>
           </div>
         ) : (
           files.map((file, idx) => {

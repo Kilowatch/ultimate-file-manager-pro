@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Dynamic connection mode selector dialog in Remote Manage screen allowing users to choose between the Windows App Companion and HTTPS Web Server formats.
+- Windows App Companion mode UI that hides CA certificate details and displays a clean, un-prefixed Device IP address.
+- Windows Desktop Companion download section on the main product website featuring screenshots, feature descriptions, and MSI/EXE/Portable ZIP installer placeholders.
+
 ### Changed
 - Added FOSS-specific terms &amp; conditions and privacy policy agreement notice on the welcome language screen.
 - Automatically accept terms &amp; conditions and privacy policy on language confirmation in FOSS builds (setting both acceptance timestamps in shared preferences), skipping the policy welcome screen and navigating directly to the permissions screen on both mobile and TV layouts.

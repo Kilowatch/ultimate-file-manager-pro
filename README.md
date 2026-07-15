@@ -90,7 +90,7 @@ npm run tauri build      # Build the Windows installer (.exe)
 
 > The installer is output to `UFM-Windows/src-tauri/target/release/bundle/nsis/`.
 
-📖 **[Full setup guide, security architecture, and build instructions → UFM-Windows/README_Windows.md](UFM-Windows/README.md)**
+📖 **[Full setup guide, security architecture, and build instructions → UFM-Windows/README.md](UFM-Windows/README.md)**
 
 ---
 

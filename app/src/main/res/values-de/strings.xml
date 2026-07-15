@@ -639,6 +639,33 @@ Elemente werden gelöscht… Bitte warten.
     <string name="remote_manage_title">
 Remote-Verwaltung
 </string>
+    <string name="remote_connect_type_title">
+Verbindungstyp auswählen
+</string>
+    <string name="remote_connect_type_desc">
+Wählen Sie, wie Sie Ihre Dateien von einem Computer aus verwalten möchten.
+</string>
+    <string name="remote_option_windows_title">
+Windows App Companion
+</string>
+    <string name="remote_option_windows_desc">
+Verbinden Sie sich mit dem Ultimate File Manager Pro Desktop-Begleiter für Windows. Dies bietet Ihnen eine schnelle, sichere Desktop-Oberfläche mit zwei Fenstern zur Verwaltung Ihrer Dateien.
+</string>
+    <string name="remote_option_web_title">
+HTTPS-Webserver
+</string>
+    <string name="remote_option_web_desc">
+Führen Sie einen lokalen HTTPS-Webserver auf diesem Gerät aus. Sie können Ihre Dateien von jedem Webbrowser in Ihrem Netzwerk aus aufrufen und verwalten.
+</string>
+    <string name="remote_status_running">
+Läuft
+</string>
+    <string name="remote_device_ip">
+Geräte-IP-Adresse:
+</string>
+    <string name="remote_warning_windows_app">
+Die Windows-Anwendung wird beendet, wenn Sie diesen Bildschirm verlassen.
+</string>
     <string name="remote_manage_btn">
 Remote-Verwaltung
 </string>

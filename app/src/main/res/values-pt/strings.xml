@@ -639,6 +639,33 @@ Excluindo itens… Aguarde.
     <string name="remote_manage_title">
 Gerenciamento Remoto
 </string>
+    <string name="remote_connect_type_title">
+Selecione o Tipo de Conexão
+</string>
+    <string name="remote_connect_type_desc">
+Escolha como deseja gerenciar seus arquivos a partir de um computador.
+</string>
+    <string name="remote_option_windows_title">
+Windows App Companion
+</string>
+    <string name="remote_option_windows_desc">
+Conecte-se usando o aplicativo complementar de desktop do Ultimate File Manager Pro para Windows. Isso oferece uma interface de desktop rápida, segura e com dois painéis para gerenciar seus arquivos.
+</string>
+    <string name="remote_option_web_title">
+Servidor Web HTTPS
+</string>
+    <string name="remote_option_web_desc">
+Execute um servidor web HTTPS local neste dispositivo. Você pode acessar e gerenciar seus arquivos de qualquer navegador da web em sua rede.
+</string>
+    <string name="remote_status_running">
+Em execução
+</string>
+    <string name="remote_device_ip">
+Endereço IP do Dispositivo:
+</string>
+    <string name="remote_warning_windows_app">
+O Windows Application irá parar de funcionar quando você sair desta tela.
+</string>
     <string name="remote_manage_btn">
 Gerenciamento Remoto
 </string>

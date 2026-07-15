@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ufm-windows",
+  "productName": "Ultimate File Manager Pro Companion",
   "version": "0.1.0",
   "identifier": "za.kilowatch.ufm-windows",
   "build": {

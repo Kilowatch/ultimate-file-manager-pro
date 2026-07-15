@@ -451,9 +451,10 @@ class PairingServer(
                 multicastLock = wm.createMulticastLock("UFMPairingLock")
                 multicastLock.setReferenceCounted(true)
                 multicastLock.acquire()
-                Log.d("PairingServer", "MulticastLock acquired for UDP listener")
-
-                socket = DatagramSocket(PairingDiscovery.DISCOVERY_PORT)
+                val ds = DatagramSocket(null)
+                ds.reuseAddress = true
+                ds.bind(java.net.InetSocketAddress(PairingDiscovery.DISCOVERY_PORT))
+                socket = ds
                 socket.broadcast = true
                 val buffer = ByteArray(1024)
 
@@ -472,7 +473,8 @@ class PairingServer(
                         val myId = pairingManager.getMyDeviceId()
                         val myName = getDeviceName()
                         val myTvStatus = isTvDevice()
-                        val responsePayload = "${PairingDiscovery.RESPONSE_PREFIX}$myId:$port:$myTvStatus:$myName"
+                        val activePort = za.kilowatch.ultimatefilemanager.remote.FileServer.getActivePort() ?: port
+                        val responsePayload = "${PairingDiscovery.RESPONSE_PREFIX}$myId:$activePort:$myTvStatus:$myName"
                         val responseBytes = responsePayload.toByteArray()
                         val responsePacket = DatagramPacket(responseBytes, responseBytes.size, senderIp, packet.port)
                         socket.send(responsePacket)
@@ -484,7 +486,8 @@ class PairingServer(
                             val myId = pairingManager.getMyDeviceId()
                             val myName = getDeviceName()
                             val myTvStatus = isTvDevice()
-                            val responsePayload = "${PairingDiscovery.RESPONSE_PREFIX}$myId:$port:$myTvStatus:$myName"
+                            val activePort = za.kilowatch.ultimatefilemanager.remote.FileServer.getActivePort() ?: port
+                            val responsePayload = "${PairingDiscovery.RESPONSE_PREFIX}$myId:$activePort:$myTvStatus:$myName"
                             val responseBytes = responsePayload.toByteArray()
                             val responsePacket = DatagramPacket(responseBytes, responseBytes.size, senderIp, packet.port)
                             socket.send(responsePacket)

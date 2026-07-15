@@ -639,6 +639,33 @@ DCIM
     <string name="remote_manage_title">
 Удалённое управление
 </string>
+    <string name="remote_connect_type_title">
+Выберите тип подключения
+</string>
+    <string name="remote_connect_type_desc">
+Выберите, как вы хотите управлять файлами с компьютера.
+</string>
+    <string name="remote_option_windows_title">
+Приложение-компаньон для Windows
+</string>
+    <string name="remote_option_windows_desc">
+Подключитесь с помощью настольного приложения-компаньона Ultimate File Manager Pro для Windows. Это обеспечит быстрый, безопасный двухпанельный интерфейс для управления вашими файлами.
+</string>
+    <string name="remote_option_web_title">
+HTTPS веб-сервер
+</string>
+    <string name="remote_option_web_desc">
+Запустите локальный HTTPS веб-сервер на этом устройстве. Вы можете получать доступ к файлам и управлять ими из любого веб-браузера в вашей сети.
+</string>
+    <string name="remote_status_running">
+Запущено
+</string>
+    <string name="remote_device_ip">
+IP-адрес устройства:
+</string>
+    <string name="remote_warning_windows_app">
+Приложение Windows перестанет работать, когда вы покинете этот экран.
+</string>
     <string name="remote_manage_btn">
 Удалённое управление
 </string>

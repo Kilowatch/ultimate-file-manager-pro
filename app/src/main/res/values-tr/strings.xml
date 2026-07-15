@@ -639,6 +639,33 @@ Dizin temizleniyor…
     <string name="remote_manage_title">
 Uzaktan Yönet
 </string>
+    <string name="remote_connect_type_title">
+Bağlantı Türünü Seçin
+</string>
+    <string name="remote_connect_type_desc">
+Bilgisayarınızdan dosyalarınızı nasıl yönetmek istediğinizi seçin.
+</string>
+    <string name="remote_option_windows_title">
+Windows Uygulama Yardımcısı
+</string>
+    <string name="remote_option_windows_desc">
+Ultimate File Manager Pro Windows masaüstü yardımcısını kullanarak bağlanın. Bu, dosyalarınızı yönetmek için hızlı, güvenli, çift bölmeli bir masaüstü arayüzü sağlar.
+</string>
+    <string name="remote_option_web_title">
+HTTPS Web Sunucusu
+</string>
+    <string name="remote_option_web_desc">
+Bu cihazda yerel bir HTTPS web sunucusu çalıştırın. Ağınızdaki herhangi bir web tarayıcısından dosyalarınıza erişebilir ve yönetebilirsiniz.
+</string>
+    <string name="remote_status_running">
+Çalışıyor
+</string>
+    <string name="remote_device_ip">
+Cihaz IP Adresi:
+</string>
+    <string name="remote_warning_windows_app">
+Bu ekrandan ayrıldığınızda Windows Uygulaması çalışmayı durduracaktır.
+</string>
     <string name="remote_manage_btn">
 Uzaktan Yönet
 </string>

@@ -1,6 +1,6 @@
 use std::fs;
 use std::path::Path;
-use std::time::UNIX_EPOCH;
+use std::time::{UNIX_EPOCH, Duration};
 use std::io::{Read, Write};
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -106,6 +106,9 @@ fn pinned_async_client(fingerprint: &str) -> Result<reqwest::Client, String> {
         // First-time pairing: accept any cert so we can capture the fingerprint
         reqwest::Client::builder()
             .danger_accept_invalid_certs(true)
+            .tcp_keepalive(Duration::from_secs(30))
+            .connection_verbose(false)
+            .timeout(Duration::from_secs(5))
             .build()
             .map_err(|e| e.to_string())
     } else {
@@ -118,16 +121,23 @@ fn pinned_async_client(fingerprint: &str) -> Result<reqwest::Client, String> {
             .with_no_client_auth();
         reqwest::Client::builder()
             .use_preconfigured_tls(tls_config)
+            .tcp_keepalive(Duration::from_secs(30))
+            .connection_verbose(false)
+            .timeout(Duration::from_secs(10))
             .build()
             .map_err(|e| e.to_string())
     }
 }
 
 /// Build a pinned blocking reqwest client.
+/// Configured with TCP keepalive and no timeout for large file transfers.
 fn pinned_blocking_client(fingerprint: &str) -> Result<reqwest::blocking::Client, String> {
     if fingerprint.is_empty() || fingerprint == "pinned" {
         reqwest::blocking::Client::builder()
             .danger_accept_invalid_certs(true)
+            .tcp_keepalive(Duration::from_secs(30))
+            // No overall timeout — large files can take many minutes
+            .timeout(None)
             .build()
             .map_err(|e| e.to_string())
     } else {
@@ -140,6 +150,8 @@ fn pinned_blocking_client(fingerprint: &str) -> Result<reqwest::blocking::Client
             .with_no_client_auth();
         reqwest::blocking::Client::builder()
             .use_preconfigured_tls(tls_config)
+            .tcp_keepalive(Duration::from_secs(30))
+            .timeout(None)
             .build()
             .map_err(|e| e.to_string())
     }
@@ -408,7 +420,7 @@ fn collect_remote_files<'a>(
     list: &'a mut Vec<RemoteFileEntry>,
 ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<(), String>> + Send + 'a>> {
     Box::pin(async move {
-        let browse_url = format!("https://{}:8444/api/browse", remote_ip);
+        let browse_url = format!("https://{}/api/browse", remote_ip);
         let res = client.get(&browse_url)
             .header("Authorization", format!("Bearer {}", token))
             .query(&[("path", remote_path)])
@@ -549,7 +561,7 @@ pub async fn upload_folder_to_android(
                     current_rel.push_str(name);
 
                     if !created_dirs.contains(&current_rel) {
-                        let mkdir_url = format!("https://{}:8444/api/mkdir", remote_ip);
+                        let mkdir_url = format!("https://{}/api/mkdir", remote_ip);
                         let body = serde_json::json!({
                             "path": parent_path,
                             "name": name
@@ -587,7 +599,7 @@ pub async fn upload_folder_to_android(
                 app_handle: app_handle.clone(),
             };
 
-            let upload_url = format!("https://{}:8444/api/upload", remote_ip);
+            let upload_url = format!("https://{}/api/upload", remote_ip);
             let form = reqwest::blocking::multipart::Form::new()
                 .part("file", reqwest::blocking::multipart::Part::reader_with_length(reader, file_entry.size)
                     .file_name(file_name.clone())
@@ -657,7 +669,7 @@ pub async fn download_folder_from_android(
                 fs::create_dir_all(parent).map_err(|e| e.to_string())?;
             }
 
-            let ticket_url = format!("https://{}:8444/api/download-ticket", remote_ip);
+            let ticket_url = format!("https://{}/api/download-ticket", remote_ip);
             let ticket_body = serde_json::json!({ "path": entry.path });
             let ticket_res = client.post(&ticket_url)
                 .header("Authorization", format!("Bearer {}", token))
@@ -674,7 +686,7 @@ pub async fn download_folder_from_android(
             let ticket_json: serde_json::Value = serde_json::from_str(&ticket_body_str).map_err(|e| e.to_string())?;
             let ticket = ticket_json["ticket"].as_str().unwrap_or("");
 
-            let download_url = format!("https://{}:8444/api/download", remote_ip);
+            let download_url = format!("https://{}/api/download", remote_ip);
             let mut dl_res = client.get(&download_url)
                 .header("Authorization", format!("Bearer {}", token))
                 .query(&[("ticket", ticket), ("path", &entry.path)])

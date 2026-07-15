@@ -639,6 +639,33 @@ ADB कनेक्शन अस्वीकृत या विफल
     <string name="remote_manage_title">
 रिमोट मैनेज
 </string>
+    <string name="remote_connect_type_title">
+कनेक्शन प्रकार चुनें
+</string>
+    <string name="remote_connect_type_desc">
+कंप्यूटर से अपनी फ़ाइलों को प्रबंधित करने का तरीका चुनें।
+</string>
+    <string name="remote_option_windows_title">
+विंडोज ऐप साथी
+</string>
+    <string name="remote_option_windows_desc">
+विंडोज के लिए अल्टीमेट फ़ाइल मैनेजर प्रो डेस्कटॉप साथी का उपयोग करके कनेक्ट करें। यह आपको अपनी फ़ाइलों को प्रबंधित करने के लिए एक तेज़, सुरक्षित, दोहरे फलक वाला डेस्कटॉप इंटरफ़ेस प्रदान करता है।
+</string>
+    <string name="remote_option_web_title">
+HTTPS वेब सर्वर
+</string>
+    <string name="remote_option_web_desc">
+इस डिवाइस पर एक स्थानीय HTTPS वेब सर्वर चलाएँ। आप अपने नेटवर्क के किसी भी वेब ब्राउज़र से अपनी फ़ाइलों तक पहुँच सकते हैं और उन्हें प्रबंधित कर सकते हैं।
+</string>
+    <string name="remote_status_running">
+चल रहा है
+</string>
+    <string name="remote_device_ip">
+डिवाइस IP पता:
+</string>
+    <string name="remote_warning_windows_app">
+जब आप इस स्क्रीन से बाहर निकलेंगे तो विंडोज एप्लिकेशन काम करना बंद कर देगा।
+</string>
     <string name="remote_manage_btn">
 रिमोट मैनेज
 </string>

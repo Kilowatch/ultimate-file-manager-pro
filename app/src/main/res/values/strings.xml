@@ -225,6 +225,15 @@
 
     <!-- Remote Manage -->
     <string name="remote_manage_title">Remote Manage</string>
+    <string name="remote_connect_type_title">Select Connection Type</string>
+    <string name="remote_connect_type_desc">Choose how you want to manage your files from a computer.</string>
+    <string name="remote_option_windows_title">Windows App Companion</string>
+    <string name="remote_option_windows_desc">Connect using the Ultimate File Manager Pro desktop companion for Windows. This gives you a fast, secure, dual-pane desktop interface to manage your files.</string>
+    <string name="remote_option_web_title">HTTPS Web Server</string>
+    <string name="remote_option_web_desc">Run a local HTTPS web server on this device. You can access and manage your files from any web browser on your network.</string>
+    <string name="remote_status_running">Running</string>
+    <string name="remote_device_ip">Device IP Address:</string>
+    <string name="remote_warning_windows_app">Windows Application will stop working when you leave this screen</string>
     <string name="remote_manage_btn">Remote Manage</string>
     <string name="remote_server_starting_title">Starting Server</string>
     <string name="remote_server_starting_msg">Finding an available port...</string>

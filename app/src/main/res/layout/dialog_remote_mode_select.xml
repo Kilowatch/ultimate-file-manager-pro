@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Description Header -->
+    <TextView
+        android:id="@+id/txtSelectDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remote_connect_type_desc"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Card 1: Windows App Companion -->
+    <LinearLayout
+        android:id="@+id/cardWindowsApp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/bg_card_selector"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_remote_manage"
+            android:contentDescription="@null"
+            android:layout_marginEnd="16dp"
+            android:padding="6dp"
+            android:background="@drawable/bg_icon_circle_accent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_option_windows_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_option_windows_desc"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Card 2: HTTPS Web Server -->
+    <LinearLayout
+        android:id="@+id/cardHttpsServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:focusable="true"
+        android:clickable="true"
+        android:background="@drawable/bg_card_selector">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_file_server"
+            android:contentDescription="@null"
+            android:layout_marginEnd="16dp"
+            android:padding="6dp"
+            android:background="@drawable/bg_icon_circle_accent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_option_web_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remote_option_web_desc"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

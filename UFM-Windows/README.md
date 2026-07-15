@@ -1,6 +1,6 @@
-# UFM Windows Companion
+﻿# Ultimate File Manager Pro Companion
 
-> **Windows desktop companion for [Ultimate File Manager Pro](https://github.com/Kilowatch/ultimate-file-manager-pro)** � dual-pane file transfer, APK sideloading, and live device management over your local network.
+> **Official Windows desktop companion for [Ultimate File Manager Pro (UFM)](https://github.com/Kilowatch/ultimate-file-manager-pro)** — a high-performance dual-pane file transfer, APK/XAPK sideloading, and live device management utility operating over secure local network channels.
 
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%2B-blue?logo=windows)
 ![Tauri](https://img.shields.io/badge/built%20with-Tauri%202-24C8DB?logo=tauri)
@@ -10,173 +10,156 @@
 
 ---
 
-## What Is This?
+## Technical Overview
 
-UFM Windows Companion is a **native Windows desktop app** that pairs with the [Ultimate File Manager Pro](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager) Android app to give you a professional dual-pane file manager � just like WinSCP or Total Commander, but for your Android phone or TV, over Wi-Fi.
+The Ultimate File Manager Pro Companion allows power users to establish a secure, lightning-fast connection to their Android mobile or Android TV device running UFM Pro. It provides a dual-pane browsing layout side by side with the local Windows filesystem, facilitating fluid drag-and-drop transfers, batch operations, and remote application deployment.
 
 ```
-+--------------------------+--------------------------+
-|      LOCAL (Windows)     |      REMOTE (Android)    |
-|  Browse  C:\, D:\, ...   |  Browse /sdcard, USB, �  |
-|  -----------------------  |  -----------------------  |
-|  <- Download  Upload ->  |  <- Download  Upload ->  |
-+--------------------------+--------------------------+
-                     Sideload Zone
-               Drop APK / XAPK -> Install
++-------------------------------------------------------------+
+|               ULTIMATE FILE MANAGER PRO COMPANION           |
++------------------------------+------------------------------+
+|       LOCAL FILESYSTEM       |       REMOTE FILESYSTEM      |
+|     (Windows Explorer)       |     (UFM Pro Mobile / TV)    |
+|   Browse C:\, D:\, Network   |   Browse /sdcard, USB OTG    |
+|  --------------------------  |  --------------------------  |
+|      <- Download / Upload    |      Upload / Download ->    |
++------------------------------+------------------------------+
+|                     REMOTE SIDELOAD ZONE                    |
+|           Drag & Drop APK / XAPK -> Remote Install          |
++-------------------------------------------------------------+
 ```
 
 ---
 
-## Features
+## Core Features & Architecture Enhancements
 
-| Feature | Description |
-|---|---|
-| ?? **Auto-Discovery** | Finds UFM devices on your LAN via UDP broadcast � no IP needed |
-| ?? **PIN Pairing** | Authenticates with a 4-digit PIN shown in the Android app |
-| ?? **Dual-Pane Browser** | Navigate Windows and Android filesystems side by side |
-| ?? **Upload** | Transfer files and entire folder trees to Android with real byte-level progress |
-| ?? **Download** | Download files and folders from Android to any local path |
-| ?? **APK Sideloading** | Drag-and-drop `.apk` or `.xapk` files onto the Sideload Zone to install remotely |
-| ??? **Remote Delete** | Multi-select and delete files/folders on Android |
-| ?? **Live Progress Bar** | Accurate byte-level transfer progress fed directly from the Rust backend |
-| ??? **Android TV Support** | Works with both phones and Android TV devices |
-| ?? **TLS Certificate Pinning** | Pins to the device self-signed cert after first pairing � MITM-resistant |
+### 🎨 Premium Glassmorphic Design System
+* Completely designed with a modern **Dark Glassmorphic UI** theme featuring standard CSS variables.
+* Implements dynamic backdrop-filter blurs, smooth linear gradients, micro-animations, and interactive layouts.
+
+### 🌐 Zero-Dependency Flag Dictionary & Localization
+* Supports 13 major international languages (English, Arabic, German, Spanish, French, Hindi, Indonesian, Japanese, Korean, Portuguese, Russian, Turkish, and Ukrainian) with 100% localized application elements.
+* Bypasses the native Windows OS flag emoji rendering limitation (which renders flags as country code letters rather than graphic flags) by embedding high-quality offline Base64 PNG assets directly inside the CSP-compliant translation layer.
+
+### 📡 Multi-NIC Subnet LAN Auto-Discovery
+* Incorporates interface-level LAN discovery using the Rust [`get_if_addrs`](https://crates.io/crates/get_if_addrs) library.
+* Solves common UDP packet drop or routing problems (such as those caused by WSL, VMware, or Docker virtual switches) by broadcasting the discovery probe (`"UFM_DISCOVER:"`) directly to interface-specific subnet broadcast addresses (e.g. `192.168.1.255`), instead of relying on the widely filtered `255.255.255.255` global broadcast.
+
+### 🔒 Self-Healing Auth & Automatic Re-pairing
+* Monitors connection state continuously. If a client attempt returns a `401 Unauthorized` payload (e.g., when the PIN on the mobile or TV app has been regenerated), the companion app automatically deletes the stale token, prompts the connection modal, and launches it pre-focused on the target device's PIN entry.
+
+### ⚡ Optimized Large File Transfer Engine
+* Built with custom Rust stream buffers that prevent stack overflows and loop crashes on transfers exceeding 2GB.
+* Emits live, byte-level tracking telemetry to update progress bars with correct speeds, percentages, and status alerts.
 
 ---
 
 ## Prerequisites
 
-| Tool | Version | Notes |
+| Requirement | Supported Version | Details |
 |---|---|---|
-| [Rust](https://rustup.rs/) | 1.78+ | Install via `rustup` |
-| [Node.js](https://nodejs.org/) | 20 LTS+ | Required for the Vite/React frontend |
-| [Tauri CLI v2](https://v2.tauri.app/start/prerequisites/) | 2.x | Installed via `npm install` |
-| Windows SDK | 10.0+ | Usually already present on Windows 10/11 |
-| UFM Android App | Latest | [Play Store](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager) |
+| **Rust Compiler** | `rustup` 1.78+ | Required to compile Tauri's native Rust backend modules |
+| **Node.js** | 20 LTS (or higher) | Required to run Vite build tools and compile React code |
+| **Windows SDK** | 10.0+ | Native build toolchain (usually bundled with Visual Studio C++) |
+| **UFM Android App** | Latest release | Loaded on target device ([Google Play Store](https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager)) |
 
 ---
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone the Workspace
 
 ```bash
 git clone https://github.com/Kilowatch/ultimate-file-manager-pro.git
 cd ultimate-file-manager-pro/UFM-Windows
 ```
 
-### 2. Install JavaScript dependencies
+### 2. Install NPM Packages
 
 ```bash
 npm install
 ```
 
-### 3. Run in development mode
+### 3. Run Development Build
 
 ```bash
 npm run tauri dev
 ```
+Starts the React Vite compilation under Tauri window runner with full Hot Module Replacement (HMR).
 
-This starts both the Vite dev server and the Tauri app with hot reload.
-
-### 4. Build a production installer
+### 4. Build Production Bundle
 
 ```bash
 npm run tauri build
 ```
-
-The signed installer will be output to `src-tauri/target/release/bundle/`.
-
-> **Note:** The first build downloads Rust crates and can take 5�10 minutes. Subsequent builds are much faster.
-
----
-
-## Pairing with Your Android Device
-
-1. Open **Ultimate File Manager Pro** on your Android device.
-2. Go to **Menu ? Windows Companion** and note the PIN displayed.
-3. Launch UFM Windows Companion on your PC.
-4. Click the device icon in the toolbar ? **Search for Devices**.
-5. Select your device, enter the PIN, and click **Pair**.
-6. The app stores the device TLS certificate fingerprint for secure future connections.
+Creates fully optimized, bundled installers under `src-tauri/target/release/bundle/`:
+* **MSI Package:** `Ultimate File Manager Pro Companion_0.1.0_x64_en-US.msi`
+* **NSIS Installer:** `Ultimate File Manager Pro Companion_0.1.0_x64-setup.exe`
 
 ---
 
-## Project Structure
+## Setup & Pairing Guide
+
+1. Ensure both the Windows PC and the target Android mobile/TV are connected to the same local area network (LAN).
+2. Open **Ultimate File Manager Pro** on the Android device.
+3. Open the main menu, select **Remote Manage**, then choose **Windows App** and follow the instructions to show the dynamic 4-digit PIN.
+4. Launch the desktop Companion on Windows.
+5. If auto-discovery finds the device, click the **Pair** button next to its name. If not, enter the IP address manually in the IP field.
+6. Enter the 4-digit PIN shown on the device and press **Submit**.
+7. The companion securely saves the device’s TLS fingerprint to verify identity on subsequent launches.
+
+---
+
+## Repository Directory Structure
 
 ```
 UFM-Windows/
-+-- src/                        # React + TypeScript frontend
-�   +-- App.tsx                 # Main layout, window chrome, transfer logic
-�   +-- App.css                 # Design system (dark glassmorphism theme)
-�   +-- components/
-�   �   +-- FilePane.tsx        # Dual-pane file browser component
-�   �   +-- DeviceSelector.tsx  # Device discovery & PIN pairing dialog
-�   �   +-- ProgressBar.tsx     # Transfer progress indicator
-�   �   +-- SideloadZone.tsx    # APK drag-and-drop installer
-�   +-- hooks/
-�       +-- useUfmApi.ts        # All Tauri invoke calls & device state
-+-- src-tauri/                  # Rust + Tauri backend
-�   +-- src/
-�   �   +-- commands.rs         # All Tauri commands (file ops, transfer, TLS pinning)
-�   �   +-- discovery.rs        # UDP LAN device discovery
-�   �   +-- lib.rs              # Tauri app setup & command registration
-�   �   +-- main.rs             # Binary entry point
-�   +-- Cargo.toml              # Rust dependencies
-�   +-- tauri.conf.json         # Tauri config, CSP, window settings
-�   +-- capabilities/
-�       +-- default.json        # Tauri IPC capability grants
-+-- package.json
-+-- README.md           # This file
+├── src/                          # TypeScript React Frontend
+│   ├── App.tsx                   # Main Shell Layout & State coordinator
+│   ├── App.css                   # Theme styles, glassmorphic layout components
+│   ├── components/
+│   │   ├── FilePane.tsx          # Directory structure explorer pane
+│   │   ├── DeviceSelector.tsx    # LAN discovery & PIN credentials entry
+│   │   ├── ProgressBar.tsx       # Byte-level progression panel
+│   │   └── SideloadZone.tsx      # Target APK/XAPK installer drag zone
+│   └── hooks/
+│       ├── useUfmApi.ts          # State handlers & Tauri IPC bridge
+│       └── translations.ts       # Base64 flag dictionary & localization texts
+├── src-tauri/                    # Rust Tauri Desktop Backend
+│   ├── src/
+│   │   ├── commands.rs           # Disk I/O command implementations & TLS cert validation
+│   │   ├── discovery.rs          # Interface-level UDP socket LAN scanning
+│   │   ├── lib.rs                # Rust libraries & Tauri Command registries
+│   │   └── main.rs               # Execution entry point
+│   ├── Cargo.toml                # Rust crate definitions (get_if_addrs, reqwest, etc.)
+│   ├── tauri.conf.json           # Native windows properties & CSP configs
+│   └── capabilities/
+│       └── default.json          # System IPC capability rules
+├── package.json
+└── README.md                     # Documentation file
 ```
 
 ---
 
 ## Security Architecture
 
-| Layer | Implementation |
+| Boundary | Technical Design |
 |---|---|
-| **Transport** | All communication uses `https://` (TLS 1.2/1.3 via rustls) |
-| **Certificate Pinning** | After first pairing, the device SHA-256 cert fingerprint is stored and verified on every subsequent connection |
-| **Authentication** | Bearer token from PIN-based exchange � never passed as a URL query parameter |
-| **Path Traversal Guard** | All user-supplied file paths validated for `..` components before any filesystem operation |
-| **Content Security Policy** | Strict CSP in `tauri.conf.json` � blocks all external script/resource loading |
-| **IPC Scope** | Capabilities limited to only window controls needed (minimize, maximize, close, drag) |
-| **No Cleartext Traffic** | All device endpoints use port `8444` over HTTPS only |
+| **HTTPS Transport** | All communication runs on TLS 1.2/1.3 using rustls. Plain HTTP endpoints are strictly prohibited. |
+| **Trust on First Use (TOFU)** | Certificates are verified directly using SHA-256 fingerprint hashes stored upon first pairing, eliminating CA authority dependencies. |
+| **Path Sanitization** | Paths are checked for relative traversal payloads (`..`) prior to command routing in Rust to prevent unauthorized reads/writes. |
+| **CSP Compliance** | Hardened Content Security Policy inside `tauri.conf.json` prevents script injection or unsanctioned network endpoints. |
+| **IPC Guard** | The front-end has no raw filesystem access. All read/write operations must go through the Rust Tauri IPC handler. |
 
 ---
 
-## Architecture Notes
+## Contributions
 
-- **Backend (Rust):** Handles all file I/O and network operations. Transfer progress is tracked at the byte level using a custom `ProgressReader` wrapper and emitted to the frontend via Tauri events.
-- **Frontend (React):** Pure UI layer. Never makes network requests directly � all HTTPS calls go through the Rust backend via Tauri `invoke()`.
-- **Discovery:** UDP broadcast on port `8086`. Responses are parsed but still require PIN authentication before any data access.
-
----
-
-## Building for Release
-
-```bash
-# Full production build (creates NSIS installer + MSI in src-tauri/target/release/bundle/)
-npm run tauri build
-
-# Frontend-only TypeScript/Vite check
-npm run build
-```
-
----
-
-## Contributing
-
-This is a companion app for **Ultimate File Manager Pro**. Contributions are welcome � please open an issue first to discuss what you would like to change.
-
-- Follow the existing Rust/TypeScript code style
-- All Tauri commands must go through the capability system
-- Run `npm run build` (TypeScript check) before submitting a PR
+Ultimate File Manager Pro is proprietary software. For bugs, features, and pull requests, please contact **support@kilowatch.co.za** or create a ticket on the main repository.
 
 ---
 
 ## License
 
-Proprietary � � Kilowatch. All rights reserved.
-See the [main repository](https://github.com/Kilowatch/ultimate-file-manager-pro) for the full license.
+Proprietary — © Kilowatch. All rights reserved.
+See the [main repository](https://github.com/Kilowatch/ultimate-file-manager-pro) for licensing terms.

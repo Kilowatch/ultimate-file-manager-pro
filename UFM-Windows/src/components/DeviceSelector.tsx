@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Smartphone, Tv, Search, Lock, Trash2, RefreshCw } from "lucide-react";
 import { DiscoveredDevice, PairedDevice } from "../hooks/useUfmApi";
+import { TranslationSet } from "../hooks/translations";
 
 interface DeviceSelectorProps {
   discovered: DiscoveredDevice[];
@@ -13,6 +14,8 @@ interface DeviceSelectorProps {
   onPair: (device: DiscoveredDevice, pin: string) => Promise<boolean>;
   onUnpair: (deviceId: string) => void;
   onClose: () => void;
+  t: TranslationSet;
+  initialPairDevice?: DiscoveredDevice | null;
 }
 
 export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
@@ -26,23 +29,45 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
   onPair,
   onUnpair,
   onClose,
+  t,
+  initialPairDevice,
 }) => {
-  const [selectedDiscovered, setSelectedDiscovered] = useState<DiscoveredDevice | null>(null);
+  const [selectedDiscovered, setSelectedDiscovered] = useState<DiscoveredDevice | null>(initialPairDevice || null);
+
+  useEffect(() => {
+    if (initialPairDevice) {
+      setSelectedDiscovered(initialPairDevice);
+    }
+  }, [initialPairDevice]);
+
   const [pinDigits, setPinDigits] = useState<string[]>(["", "", "", ""]);
   const [pairError, setPairError] = useState<string | null>(null);
   const [manualIp, setManualIp] = useState("");
 
   const handleManualSubmit = () => {
+    const rawInput = manualIp.trim();
+    let ip = rawInput;
+    let port = 8444;
+
+    if (rawInput.includes(":")) {
+      const parts = rawInput.split(":");
+      ip = parts[0];
+      const parsedPort = parseInt(parts[1], 10);
+      if (!isNaN(parsedPort)) {
+        port = parsedPort;
+      }
+    }
+
     const ipPattern = /^(\d{1,3}\.){3}\d{1,3}$/;
-    if (!ipPattern.test(manualIp.trim())) {
-      alert("Please enter a valid IP address.");
+    if (!ipPattern.test(ip)) {
+      alert(t.invalid_ip);
       return;
     }
     const manualDevice: DiscoveredDevice = {
-      ip: manualIp.trim(),
-      id: "manual-" + manualIp.trim().replace(/\./g, "-"),
-      name: "Android Device (Manual)",
-      port: 8444,
+      ip: ip,
+      id: "manual-" + ip.replace(/\./g, "-"),
+      name: t.manual_device_name,
+      port: port,
       is_tv: false,
     };
     setSelectedDiscovered(manualDevice);
@@ -74,7 +99,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
     if (!selectedDiscovered) return;
     const pin = pinDigits.join("");
     if (pin.length !== 4) {
-      setPairError("Please enter a 4-digit PIN.");
+      setPairError(t.enter_4_digit_pin);
       return;
     }
 
@@ -84,7 +109,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
       setSelectedDiscovered(null);
       setPinDigits(["", "", "", ""]);
     } else {
-      setPairError("Invalid PIN or connection refused.");
+      setPairError(t.invalid_pin);
     }
   };
 
@@ -104,13 +129,13 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
 
         {!selectedDiscovered ? (
           <>
-            <h2 className="modal-title">Connect to UFM Device</h2>
+            <h2 className="modal-title">{t.connect_device}</h2>
             <p className="modal-desc">
-              Ensure Ultimate File Manager is running its Remote Server or Pairing mode on your Android Phone or Android TV.
+              {t.open_ufm_pro} {t.follow_instructions}
             </p>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-sec)" }}>PAIRED DEVICES</span>
+              <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-sec)" }}>{t.pair.toUpperCase()}D {t.name.toUpperCase()}S</span>
               <button 
                 onClick={onSearch} 
                 className="btn-primary" 
@@ -118,14 +143,14 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                 disabled={isSearching}
               >
                 {isSearching ? <RefreshCw className="status-dot pulsing" style={{ width: 14, height: 14 }} /> : <Search style={{ width: 14, height: 14 }} />}
-                Scan LAN
+                {t.search}
               </button>
             </div>
 
             <div className="device-list">
               {paired.length === 0 ? (
                 <div style={{ padding: "16px", color: "var(--text-hint)", fontSize: "0.8rem" }}>
-                  No paired devices yet. Run a Scan to discover active devices.
+                  {t.no_device_connected}
                 </div>
               ) : (
                 paired.map((dev) => (
@@ -150,7 +175,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }} onClick={(e) => e.stopPropagation()}>
                       <span className={`device-badge ${dev.is_tv ? "tv" : ""}`}>
-                        {dev.is_tv ? "TV" : "PHONE"}
+                        {dev.is_tv ? t.tv : t.mobile.toUpperCase()}
                       </span>
                       <button 
                         onClick={() => onUnpair(dev.id)} 
@@ -165,17 +190,17 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
             </div>
 
             <h3 style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-sec)", textAlign: "left", marginBottom: "12px" }}>
-              DISCOVERED DEVICES ({discovered.length})
+              {t.search.toUpperCase()}ED {t.name.toUpperCase()}S ({discovered.length})
             </h3>
 
             <div className="device-list" style={{ maxHeight: "150px" }}>
               {isSearching ? (
                 <div style={{ padding: "16px", color: "var(--text-sec)", fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "8px", justifyContent: "center" }}>
-                  <RefreshCw className="status-dot pulsing" style={{ width: 14, height: 14 }} /> Scanning local network...
+                  <RefreshCw className="status-dot pulsing" style={{ width: 14, height: 14 }} /> {t.search}...
                 </div>
               ) : discovered.length === 0 ? (
                 <div style={{ padding: "16px", color: "var(--text-hint)", fontSize: "0.8rem" }}>
-                  No new UFM servers detected. Check that WiFi is on.
+                  {t.no_device_connected}
                 </div>
               ) : (
                 discovered.map((dev) => (
@@ -193,10 +218,10 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <span className={`device-badge ${dev.is_tv ? "tv" : ""}`}>
-                        {dev.is_tv ? "TV" : "PHONE"}
+                        {dev.is_tv ? t.tv : t.mobile.toUpperCase()}
                       </span>
                       <span style={{ fontSize: "0.75rem", color: "var(--primary-light)", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <Lock style={{ width: 12, height: 12 }} /> Pair
+                        <Lock style={{ width: 12, height: 12 }} /> {t.pair}
                       </span>
                     </div>
                   </div>
@@ -206,12 +231,12 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
             
             <div style={{ marginTop: "20px", borderTop: "1px solid var(--glass-border)", paddingTop: "16px", textAlign: "left" }}>
               <h3 style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-sec)", marginBottom: "8px" }}>
-                CONNECT MANUALLY
+                {t.connect_device.toUpperCase()} ({t.mobile.toUpperCase()})
               </h3>
               <div style={{ display: "flex", gap: "8px" }}>
                 <input
                   type="text"
-                  placeholder="Enter IP (e.g. 192.168.1.100)"
+                  placeholder={`${t.ip_address} (e.g. 192.168.1.100)`}
                   value={manualIp}
                   onChange={(e) => setManualIp(e.target.value)}
                   style={{
@@ -228,16 +253,16 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                   className="btn-primary"
                   style={{ padding: "6px 12px", fontSize: "0.75rem" }}
                 >
-                  Pair Directly
+                  {t.pair}
                 </button>
               </div>
             </div>
           </>
         ) : (
           <>
-            <h2 className="modal-title">Pair with {selectedDiscovered.name}</h2>
+            <h2 className="modal-title">{t.pair} - {selectedDiscovered.name}</h2>
             <p className="modal-desc">
-              Enter the 4-digit PIN displayed on your {selectedDiscovered.is_tv ? "Android TV" : "Android Phone"}.
+              {t.enter_pin}
             </p>
 
             <div className="pin-input-container">
@@ -267,7 +292,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                 style={{ flex: 1, justifyContent: "center" }}
                 disabled={isConnecting}
               >
-                Back
+                {t.cancel}
               </button>
               <button 
                 onClick={handlePairSubmit} 
@@ -275,7 +300,7 @@ export const DeviceSelector: React.FC<DeviceSelectorProps> = ({
                 style={{ flex: 1, justifyContent: "center" }}
                 disabled={isConnecting}
               >
-                {isConnecting ? "Connecting..." : "Confirm PIN"}
+                {isConnecting ? `${t.connect_device}...` : t.pair}
               </button>
             </div>
           </>

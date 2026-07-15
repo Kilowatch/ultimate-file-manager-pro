@@ -639,6 +639,33 @@ ADB 연결이 거부되었거나 실패했습니다
     <string name="remote_manage_title">
 원격 관리
 </string>
+    <string name="remote_connect_type_title">
+연결 유형 선택
+</string>
+    <string name="remote_connect_type_desc">
+컴퓨터에서 파일을 관리하는 방법을 선택하세요.
+</string>
+    <string name="remote_option_windows_title">
+Windows 앱 동반자
+</string>
+    <string name="remote_option_windows_desc">
+Windows용 Ultimate File Manager Pro 데스크톱 동반자를 사용하여 연결하세요. 이를 통해 빠르고 안전한 이중 창 데스크톱 인터페이스로 파일을 관리할 수 있습니다.
+</string>
+    <string name="remote_option_web_title">
+HTTPS 웹 서버
+</string>
+    <string name="remote_option_web_desc">
+이 기기에서 로컬 HTTPS 웹 서버를 실행하세요. 네트워크에 있는 모든 웹 브라우저에서 파일에 액세스하고 관리할 수 있습니다.
+</string>
+    <string name="remote_status_running">
+실행 중
+</string>
+    <string name="remote_device_ip">
+기기 IP 주소:
+</string>
+    <string name="remote_warning_windows_app">
+이 화면을 벗어나면 Windows 애플리케이션이 중지됩니다.
+</string>
     <string name="remote_manage_btn">
 원격 관리
 </string>

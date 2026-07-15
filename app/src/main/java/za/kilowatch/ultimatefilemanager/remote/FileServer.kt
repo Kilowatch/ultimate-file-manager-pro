@@ -148,6 +148,13 @@ class FileServer(
             globalInstance?.stop()
             globalInstance = null
         }
+
+        /**
+         * Returns the active bound port of the running FileServer.
+         */
+        fun getActivePort(): Int? {
+            return globalInstance?.boundPort
+        }
     }
 
     var serverCertFingerprint: String? = null

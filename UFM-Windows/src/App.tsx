@@ -7,6 +7,7 @@ import { FilePane } from "./components/FilePane";
 import { DeviceSelector } from "./components/DeviceSelector";
 import { ProgressBar } from "./components/ProgressBar";
 import { useUfmApi, UfmFile } from "./hooks/useUfmApi";
+import { languagesList } from "./hooks/translations";
 import logo from "./assets/logo.png";
 import "./App.css";
 
@@ -15,6 +16,28 @@ const appWindow = getCurrentWindow();
 function App() {
   const ufm = useUfmApi();
   const sideloadInputRef = useRef<HTMLInputElement>(null);
+  const { lang, handleLanguageChange, t, authExpiredDevice, setAuthExpiredDevice } = ufm;
+
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setLangDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
+
+  // Automatically open device selector on auth expiration
+  useEffect(() => {
+    if (authExpiredDevice) {
+      setShowDeviceSelector(true);
+    }
+  }, [authExpiredDevice]);
 
   // Dialog state
   const [showDeviceSelector, setShowDeviceSelector] = useState(false);
@@ -291,11 +314,11 @@ function App() {
         <div className="titlebar-logo" data-tauri-drag-region>
           <img src={logo} alt="UFM Logo" style={{ width: "16px", height: "16px", objectFit: "contain", borderRadius: "3px", pointerEvents: "none" }} />
           <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-hint)", pointerEvents: "none" }}>
-            Ultimate File Manager Pro
+            {t.app_title}
           </span>
         </div>
         <div className="titlebar-title" data-tauri-drag-region>
-          Companion Console
+          {t.companion_console}
         </div>
         <div className="titlebar-controls">
           <button className="titlebar-btn" onClick={handleMinimize} title="Minimize">—</button>
@@ -316,11 +339,87 @@ function App() {
               alt="UFM Logo" 
               style={{ width: "28px", height: "28px", objectFit: "contain", borderRadius: "6px" }} 
             />
-            <span className="app-title">Ultimate File Manager Pro</span>
+            <span className="app-title">{t.app_title}</span>
           </div>
         </div>
 
-        <div className="connection-section">
+        <div className="connection-section" style={{ display: "flex", alignItems: "center" }}>
+          <div ref={dropdownRef} style={{ position: "relative", marginRight: "12px" }}>
+            <button
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="btn-secondary"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 12px",
+                fontSize: "0.85rem",
+                borderRadius: "var(--radius-sm)",
+                height: "36px",
+                cursor: "pointer",
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid var(--glass-border)",
+                color: "var(--text)"
+              }}
+            >
+              <img 
+                src={languagesList.find(l => l.code === lang)?.flag} 
+                alt="" 
+                style={{ width: "20px", height: "14px", objectFit: "contain", borderRadius: "1px" }} 
+              />
+              <span>{languagesList.find(l => l.code === lang)?.name}</span>
+            </button>
+            
+            {langDropdownOpen && (
+              <div 
+                style={{
+                  position: "absolute",
+                  top: "42px",
+                  right: 0,
+                  width: "180px",
+                  background: "var(--surface)",
+                  border: "1px solid var(--glass-border)",
+                  borderRadius: "var(--radius-sm)",
+                  boxShadow: "var(--shadow-lg)",
+                  zIndex: 1000,
+                  maxHeight: "250px",
+                  overflowY: "auto",
+                  padding: "4px 0"
+                }}
+              >
+                {languagesList.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => {
+                      handleLanguageChange(l.code);
+                      setLangDropdownOpen(false);
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      width: "100%",
+                      padding: "8px 12px",
+                      background: lang === l.code ? "rgba(255, 255, 255, 0.08)" : "transparent",
+                      border: "none",
+                      color: "white",
+                      textAlign: "left",
+                      cursor: "pointer",
+                      fontSize: "0.85rem"
+                    }}
+                  >
+                    <img 
+                      src={l.flag} 
+                      alt="" 
+                      style={{ width: "20px", height: "14px", objectFit: "contain", borderRadius: "1px" }} 
+                    />
+                    <span>{l.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {ufm.activeDevice ? (
             <div className="device-status">
               <span className="status-dot connected"></span>
@@ -330,7 +429,7 @@ function App() {
           ) : (
             <div className="device-status">
               <span className="status-dot"></span>
-              <span>Disconnected</span>
+              <span>{t.disconnected}</span>
             </div>
           )}
 
@@ -342,7 +441,7 @@ function App() {
             }}
           >
             <Link style={{ width: 16, height: 16 }} />
-            Connect Device
+            {t.connect_device}
           </button>
         </div>
       </header>
@@ -351,7 +450,7 @@ function App() {
       <div className="panes-container">
         {/* Local PC Pane */}
         <FilePane
-          title="Local Storage"
+          title={t.local_storage}
           isRemote={false}
           files={localFiles}
           currentPath={localPath}
@@ -363,6 +462,7 @@ function App() {
           onDelete={() => {}} // Read-only local filesystem protection in MVP
           onFileSelect={setSelectedLocalFiles}
           selectedFiles={selectedLocalFiles}
+          t={t}
         />
 
         {/* Transfer Button Column */}
@@ -433,7 +533,7 @@ function App() {
         {/* Remote Android / TV Pane */}
         {ufm.activeDevice ? (
           <FilePane
-            title="Remote Storage"
+            title={t.remote_storage}
             isRemote={true}
             isTv={ufm.activeDevice.is_tv}
             files={remoteFiles}
@@ -446,15 +546,34 @@ function App() {
             onDelete={(paths) => handleDelete(true, paths)}
             onFileSelect={setSelectedRemoteFiles}
             selectedFiles={selectedRemoteFiles}
+            t={t}
           />
         ) : (
-          <div className="file-pane glass-panel" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div className="empty-state">
-              <Smartphone style={{ width: 48, height: 48, color: "var(--text-hint)" }} />
-              <span style={{ fontWeight: 600 }}>No Device Connected</span>
-              <span style={{ fontSize: "0.8rem", textAlign: "center" }}>
-                Click the "Connect Device" button in the header to pair and explore your phone or Android TV storage.
-              </span>
+          <div className="file-pane glass-panel" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", maxWidth: "450px", textAlign: "center" }}>
+              <Smartphone style={{ width: 48, height: 48, color: "var(--text-hint)", marginBottom: "16px" }} />
+              <span style={{ fontWeight: 600, fontSize: "1.1rem", marginBottom: "12px", color: "var(--text)" }}>{t.no_device_connected}</span>
+              
+              <div style={{ 
+                textAlign: "left", 
+                backgroundColor: "rgba(255, 255, 255, 0.02)", 
+                border: "1px solid var(--glass-border)", 
+                borderRadius: "var(--radius-sm)", 
+                padding: "16px", 
+                marginTop: "8px",
+                marginBottom: "16px",
+                fontSize: "0.85rem",
+                lineHeight: "1.6",
+                color: "var(--text-sec)"
+              }}>
+                <div style={{ fontWeight: 600, color: "var(--text)", marginBottom: "10px" }}>{t.to_connect_device}</div>
+                <ol style={{ margin: 0, paddingLeft: "1.2rem" }}>
+                  <li style={{ marginBottom: "6px" }}>{t.open_ufm_pro}</li>
+                  <li style={{ marginBottom: "6px" }}>{t.go_to_remote_manage}</li>
+                  <li style={{ marginBottom: "6px" }}>{t.select_windows_app}</li>
+                  <li>{t.follow_instructions}</li>
+                </ol>
+              </div>
             </div>
           </div>
         )}
@@ -480,12 +599,17 @@ function App() {
           onSelect={ufm.selectDevice}
           onPair={ufm.pairDevice}
           onUnpair={ufm.unpairDevice}
-          onClose={() => setShowDeviceSelector(false)}
+          onClose={() => {
+            setShowDeviceSelector(false);
+            setAuthExpiredDevice(null);
+          }}
+          t={t}
+          initialPairDevice={authExpiredDevice}
         />
       )}
 
       {/* Global Error Banner */}
-      {ufm.error && (
+      {ufm.error && ufm.activeDevice && (
         <div style={{
           position: "fixed", bottom: "24px", left: "24px",
           background: "rgba(239, 68, 68, 0.95)", color: "white",

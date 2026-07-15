@@ -639,6 +639,33 @@ Menghapus item… Harap tunggu.
     <string name="remote_manage_title">
 Kelola Jarak Jauh
 </string>
+    <string name="remote_connect_type_title">
+Pilih Tipe Koneksi
+</string>
+    <string name="remote_connect_type_desc">
+Pilih cara Anda ingin mengelola file dari komputer.
+</string>
+    <string name="remote_option_windows_title">
+Windows App Companion
+</string>
+    <string name="remote_option_windows_desc">
+Hubungkan menggunakan pendamping desktop Ultimate File Manager Pro untuk Windows. Ini memberi Anda antarmuka desktop panel ganda yang cepat dan aman untuk mengelola file Anda.
+</string>
+    <string name="remote_option_web_title">
+Server Web HTTPS
+</string>
+    <string name="remote_option_web_desc">
+Jalankan server web HTTPS lokal di perangkat ini. Anda dapat mengakses dan mengelola file dari browser web mana pun di jaringan Anda.
+</string>
+    <string name="remote_status_running">
+Berjalan
+</string>
+    <string name="remote_device_ip">
+Alamat IP Perangkat:
+</string>
+    <string name="remote_warning_windows_app">
+Aplikasi Windows akan berhenti berfungsi saat Anda meninggalkan layar ini
+</string>
     <string name="remote_manage_btn">
 Kelola Jarak Jauh
 </string>

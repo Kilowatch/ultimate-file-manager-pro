@@ -639,6 +639,33 @@ NAS المنزلي
     <string name="remote_manage_title">
 الإدارة عن بعد
 </string>
+    <string name="remote_connect_type_title">
+اختيار نوع الاتصال
+</string>
+    <string name="remote_connect_type_desc">
+اختر كيف تريد إدارة ملفاتك من جهاز الكمبيوتر.
+</string>
+    <string name="remote_option_windows_title">
+التطبيق المصاحب لنظام ويندوز
+</string>
+    <string name="remote_option_windows_desc">
+الاتصال باستخدام التطبيق المصاحب لسطح المكتب Ultimate File Manager Pro لويندوز. يتيح لك ذلك واجهة سطح مكتب سريعة وآمنة ذات لوحتين لإدارة ملفاتك.
+</string>
+    <string name="remote_option_web_title">
+خادم ويب HTTPS
+</string>
+    <string name="remote_option_web_desc">
+تشغيل خادم ويب محلي HTTPS على هذا الجهاز. يمكنك الوصول إلى ملفاتك وإدارتها من أي متصفح ويب على شبكتك.
+</string>
+    <string name="remote_status_running">
+قيد التشغيل
+</string>
+    <string name="remote_device_ip">
+عنوان IP الجهاز:
+</string>
+    <string name="remote_warning_windows_app">
+سيتوقف تطبيق ويندوز عن العمل عند مغادرة هذه الشاشة
+</string>
     <string name="remote_manage_btn">
 الإدارة عن بعد
 </string>

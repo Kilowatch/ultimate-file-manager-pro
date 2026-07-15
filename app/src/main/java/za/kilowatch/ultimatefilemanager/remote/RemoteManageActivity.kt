@@ -41,6 +41,12 @@ class RemoteManageActivity : AppCompatActivity() {
         private const val PORT = 8444
     }
 
+    private enum class ConnectionMode {
+        WINDOWS_APP,
+        HTTPS_SERVER
+    }
+
+    private var currentMode: ConnectionMode? = null
     private var fileServer: FileServer? = null
     private var pendingCertPath: String? = null
 
@@ -108,11 +114,99 @@ class RemoteManageActivity : AppCompatActivity() {
         }
 
         setupUI(pin)
-        // setupCertButton/updateCaStatusBadge read prefs directly, not the running server:
-        setupCertButton()
-        updateCaStatusBadge()
-        if (savedInstanceState == null) {
-            // First creation only — avoid re-binding the port on config change re-creates.
+
+        var restoredMode: ConnectionMode? = null
+        if (savedInstanceState != null) {
+            savedInstanceState.getString("saved_mode")?.let {
+                restoredMode = ConnectionMode.valueOf(it)
+            }
+        }
+
+        if (restoredMode != null) {
+            currentMode = restoredMode
+            applyConnectionMode(restoredMode!!, pin, startServer = false)
+        } else {
+            showConnectionModeDialog(pin)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        currentMode?.let {
+            outState.putString("saved_mode", it.name)
+        }
+    }
+
+    private fun showConnectionModeDialog(pin: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_remote_mode_select, null)
+        val cardWindows = dialogView.findViewById<LinearLayout>(R.id.cardWindowsApp)
+        val cardHttps = dialogView.findViewById<LinearLayout>(R.id.cardHttpsServer)
+
+        if (DeviceUtils.isTvDevice(this)) {
+            cardWindows.setBackgroundResource(R.drawable.bg_tv_card_selector)
+            cardHttps.setBackgroundResource(R.drawable.bg_tv_card_selector)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.remote_connect_type_title)
+            .setView(dialogView)
+            .setCancelable(false)
+            .show()
+
+        cardWindows.setOnClickListener {
+            dialog.dismiss()
+            currentMode = ConnectionMode.WINDOWS_APP
+            applyConnectionMode(ConnectionMode.WINDOWS_APP, pin, startServer = true)
+        }
+
+        cardHttps.setOnClickListener {
+            dialog.dismiss()
+            currentMode = ConnectionMode.HTTPS_SERVER
+            applyConnectionMode(ConnectionMode.HTTPS_SERVER, pin, startServer = true)
+        }
+    }
+
+    private fun applyConnectionMode(mode: ConnectionMode, pin: String, startServer: Boolean) {
+        val txtServerUrl = findViewById<TextView>(R.id.txtServerUrl)
+        val txtOpenBrowser = findViewById<TextView>(R.id.txtOpenBrowser)
+        val txtWarning = findViewById<TextView>(R.id.txtWarning)
+        val txtStatus = findViewById<TextView>(R.id.txtStatus)
+        val btnUseCA = findViewById<MaterialButton>(R.id.btnUseCA)
+        val layoutCaStatus = findViewById<LinearLayout>(R.id.layoutCaStatus)
+        val txtFingerprintLabel = findViewById<TextView>(R.id.txtFingerprintLabel)
+        val txtFingerprint = findViewById<TextView>(R.id.txtFingerprint)
+        val txtVerifyFingerprint = findViewById<TextView>(R.id.txtVerifyFingerprint)
+
+        if (mode == ConnectionMode.WINDOWS_APP) {
+            txtStatus.text = getString(R.string.remote_status_running)
+            txtOpenBrowser.text = getString(R.string.remote_device_ip)
+            txtWarning.text = getString(R.string.remote_warning_windows_app)
+            btnUseCA.visibility = View.GONE
+            layoutCaStatus.visibility = View.GONE
+            txtFingerprintLabel.visibility = View.GONE
+            txtFingerprint.visibility = View.GONE
+            txtVerifyFingerprint.visibility = View.GONE
+            if (!startServer) {
+                txtServerUrl.text = getDeviceIpAddress()
+            }
+        } else {
+            txtStatus.text = getString(R.string.remote_server_running)
+            txtOpenBrowser.text = getString(R.string.remote_open_browser)
+            txtWarning.text = getString(R.string.remote_warning_screen)
+            btnUseCA.visibility = View.VISIBLE
+            layoutCaStatus.visibility = View.VISIBLE
+            txtFingerprintLabel.visibility = if (fileServer?.serverCertFingerprint != null) View.VISIBLE else View.GONE
+            txtFingerprint.visibility = if (fileServer?.serverCertFingerprint != null) View.VISIBLE else View.GONE
+            txtVerifyFingerprint.visibility = if (fileServer?.serverCertFingerprint != null) View.VISIBLE else View.GONE
+            if (!startServer) {
+                val ip = getDeviceIpAddress()
+                txtServerUrl.text = "https://$ip:${fileServer?.boundPort ?: PORT}"
+            }
+            setupCertButton()
+            updateCaStatusBadge()
+        }
+
+        if (startServer) {
             startServer(pin)
         }
     }
@@ -150,6 +244,10 @@ class RemoteManageActivity : AppCompatActivity() {
      */
     private fun updateCaStatusBadge() {
         val layout = findViewById<LinearLayout>(R.id.layoutCaStatus) ?: return
+        if (currentMode == ConnectionMode.WINDOWS_APP) {
+            layout.visibility = View.GONE
+            return
+        }
         val imgShield = findViewById<ImageView>(R.id.imgCaShield) ?: return
         val txtStatus = findViewById<TextView>(R.id.txtCaStatus) ?: return
         layout.visibility = View.VISIBLE
@@ -169,6 +267,10 @@ class RemoteManageActivity : AppCompatActivity() {
 
     private fun setupCertButton() {
         val btn = findViewById<MaterialButton>(R.id.btnUseCA) ?: return
+        if (currentMode == ConnectionMode.WINDOWS_APP) {
+            btn.visibility = View.GONE
+            return
+        }
         val isTv = DeviceUtils.isTvDevice(this)
         // Use prefs directly so button state is correct before the server has started.
         if (fileServer?.hasCustomCert() == true || hasCustomCertImported()) {
@@ -421,12 +523,20 @@ class RemoteManageActivity : AppCompatActivity() {
                 fileServer = server
                 runOnUiThread {
                     startingDialog.dismiss()
-                    // Refresh URL with actual bound port (may differ from 8443 if fallback was used).
                     val ip = getDeviceIpAddress()
-                    findViewById<TextView>(R.id.txtServerUrl)?.text = "https://$ip:${server.boundPort}"
-                    updateFingerprintDisplay()
-                    setupCertButton()
-                    updateCaStatusBadge()
+                    if (currentMode == ConnectionMode.WINDOWS_APP) {
+                        findViewById<TextView>(R.id.txtServerUrl)?.text = ip
+                        findViewById<TextView>(R.id.txtFingerprintLabel)?.visibility = View.GONE
+                        findViewById<TextView>(R.id.txtFingerprint)?.visibility = View.GONE
+                        findViewById<TextView>(R.id.txtVerifyFingerprint)?.visibility = View.GONE
+                        findViewById<View>(R.id.layoutCaStatus)?.visibility = View.GONE
+                        findViewById<View>(R.id.btnUseCA)?.visibility = View.GONE
+                    } else {
+                        findViewById<TextView>(R.id.txtServerUrl)?.text = "https://$ip:${server.boundPort}"
+                        updateFingerprintDisplay()
+                        setupCertButton()
+                        updateCaStatusBadge()
+                    }
                 }
             } catch (e: Exception) {
                 android.util.Log.e("RemoteManageActivity", "startServer failed", e)

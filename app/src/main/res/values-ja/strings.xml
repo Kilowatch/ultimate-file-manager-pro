@@ -639,6 +639,33 @@ ADB接続が拒否されるか失敗しました
     <string name="remote_manage_title">
 リモート管理
 </string>
+    <string name="remote_connect_type_title">
+接続タイプを選択
+</string>
+    <string name="remote_connect_type_desc">
+コンピュータからファイルを管理する方法を選択してください。
+</string>
+    <string name="remote_option_windows_title">
+Windowsアプリコンパニオン
+</string>
+    <string name="remote_option_windows_desc">
+Windows用のUltimate File Manager Proデスクトップコンパニオンを使用して接続します。これにより、ファイルを管理するための高速で安全なデュアルペインデスクトップインターフェースが提供されます。
+</string>
+    <string name="remote_option_web_title">
+HTTPSウェブサーバー
+</string>
+    <string name="remote_option_web_desc">
+このデバイスでローカルHTTPSウェブサーバーを実行します。ネットワーク上の任意のウェブブラウザからファイルにアクセスして管理できます。
+</string>
+    <string name="remote_status_running">
+実行中
+</string>
+    <string name="remote_device_ip">
+デバイスのIPアドレス:
+</string>
+    <string name="remote_warning_windows_app">
+この画面を離れるとWindowsアプリケーションは動作を停止します
+</string>
     <string name="remote_manage_btn">
 リモート管理
 </string>

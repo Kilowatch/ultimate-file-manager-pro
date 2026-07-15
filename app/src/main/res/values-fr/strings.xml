@@ -639,6 +639,33 @@ Suppression des éléments… Veuillez patienter.
     <string name="remote_manage_title">
 Gestion à distance
 </string>
+    <string name="remote_connect_type_title">
+Sélectionnez le type de connexion
+</string>
+    <string name="remote_connect_type_desc">
+Choisissez comment gérer vos fichiers depuis un ordinateur.
+</string>
+    <string name="remote_option_windows_title">
+Application compagnon Windows
+</string>
+    <string name="remote_option_windows_desc">
+Connectez-vous en utilisant l\\\'application de bureau compagnon Ultimate File Manager Pro pour Windows. Cela vous offre une interface de bureau rapide, sécurisée et à deux volets pour gérer vos fichiers.
+</string>
+    <string name="remote_option_web_title">
+Serveur Web HTTPS
+</string>
+    <string name="remote_option_web_desc">
+Exécutez un serveur Web HTTPS local sur cet appareil. Vous pouvez accéder à vos fichiers et les gérer depuis n\\\'importe quel navigateur Web de votre réseau.
+</string>
+    <string name="remote_status_running">
+En cours
+</string>
+    <string name="remote_device_ip">
+Adresse IP de l\\\'appareil :
+</string>
+    <string name="remote_warning_windows_app">
+L\\\'application Windows cessera de fonctionner lorsque vous quitterez cet écran
+</string>
     <string name="remote_manage_btn">
 Gestion à distance
 </string>
