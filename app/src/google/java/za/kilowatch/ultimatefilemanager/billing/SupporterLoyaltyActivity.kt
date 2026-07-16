@@ -115,6 +115,19 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         setupViews(isTv)
 
+        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isAmazonDevice(this)) {
+            findViewById<View>(R.id.rowRistretto)?.visibility = View.GONE
+            findViewById<View>(R.id.dividerRistretto)?.visibility = View.GONE
+            findViewById<View>(R.id.rowCappuccino)?.visibility = View.GONE
+            findViewById<View>(R.id.dividerCappuccino)?.visibility = View.GONE
+            findViewById<View>(R.id.cardGlobalProgress)?.visibility = View.GONE
+
+            setButtonsEnabled(false)
+            txtThankYou.visibility = View.VISIBLE
+            txtThankYou.text = getString(R.string.billing_unavailable_amazon_msg)
+            return
+        }
+
         // Google Play path
         initBilling()
         refreshLoyaltyUI()

@@ -244,6 +244,7 @@
 
                     <!-- Row 1: Ristretto Shot ($1) -->
                     <LinearLayout
+                        android:id="@+id/rowRistretto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -306,6 +307,7 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/dividerRistretto"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant"
@@ -382,6 +384,7 @@
 
                     <!-- Row 3: The Cappuccino ($5) -->
                     <LinearLayout
+                        android:id="@+id/rowCappuccino"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -463,6 +466,7 @@
                     </LinearLayout>
 
                     <View
+                        android:id="@+id/dividerCappuccino"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="?attr/colorOutlineVariant"

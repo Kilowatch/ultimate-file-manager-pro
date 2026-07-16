@@ -75,6 +75,7 @@ class BillingManager(
                 if (result.responseCode == BillingClient.BillingResponseCode.OK) {
                     scope.launch {
                         queryProducts()
+                        queryAndConsumePurchases()
                         withContext(Dispatchers.Main) { onReady() }
                     }
                 } else {
@@ -86,6 +87,19 @@ class BillingManager(
                 // Auto-reconnection is handled via enableAutoServiceReconnection()
             }
         })
+    }
+
+    /** Queries active purchases and consumes any unconsumed items. */
+    private suspend fun queryAndConsumePurchases() {
+        val params = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+            .build()
+        val result = billingClient.queryPurchasesAsync(params)
+        if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            result.purchasesList.forEach { purchase ->
+                handlePurchase(purchase)
+            }
+        }
     }
 
     /** Queries in-app product details and populates [productDetails]. */
