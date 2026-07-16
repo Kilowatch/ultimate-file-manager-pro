@@ -9,11 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.0] — 2026-07-15
 
 ### Added
+- Created 5 custom vector drawables (`ic_loyalty_ristretto`, `ic_loyalty_espresso`, `ic_loyalty_cappuccino`, `ic_loyalty_latte`, `ic_loyalty_coffee_bag`) for the supporter loyalty buttons.
+- Created custom raised fist icon drawable (`ic_fist.xml`) for the header blurb.
+- Added support for 5 new Google Play billing SKUs: `tip_ristretto_shot` ($1), `tip_quick_espresso` ($3), `tip_cappuccino` ($5), `tip_full_latte` ($10), and `tip_coffee_bean_bag` ($25).
 - Dynamic connection mode selector dialog in Remote Manage screen allowing users to choose between the Windows App Companion and HTTPS Web Server formats.
 - Windows App Companion mode UI that hides CA certificate details and displays a clean, un-prefixed Device IP address.
 - Windows Desktop Companion download section on the main product website featuring screenshots, feature descriptions, and MSI/EXE/Portable ZIP installer placeholders.
 
 ### Changed
+- Redesigned the "Fuel the Developer" screen layout for Mobile and TV to match the premium list-based mockup (integrating the first-coffee blurb, community progress bar, vertical 5-tier product list with custom prices, and footer info card).
+- Updated BillingManager and SupporterLoyaltyActivity (Google flavor) to support all 5 new billing tiers on Google Mobile & TV while preserving Amazon Appstore compatibility.
+- Updated TipCelebrationHelper to support celebration palettes and custom titles for all 5 billing tiers.
 - Added FOSS-specific terms &amp; conditions and privacy policy agreement notice on the welcome language screen.
 - Automatically accept terms &amp; conditions and privacy policy on language confirmation in FOSS builds (setting both acceptance timestamps in shared preferences), skipping the policy welcome screen and navigating directly to the permissions screen on both mobile and TV layouts.
 - Updated README.md and index.html to include Amazon Downloader code `1581139` instructions for easy installation of the official Amazon TV edition.

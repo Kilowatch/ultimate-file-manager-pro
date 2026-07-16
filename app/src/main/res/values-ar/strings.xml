@@ -2105,6 +2105,21 @@ SMB3 فقط (آمن حديث)
     <string name="tip_jar_title">
 دعم المطور
 </string>
+    <string name="tip_jar_buy_button">
+شراء >
+</string>
+    <string name="tip_jar_popular_badge">
+شائع
+</string>
+    <string name="tip_jar_every_coffee_powers">
+كل فنجان قهوة يدعم هذا التطبيق.
+</string>
+    <string name="tip_jar_thanks_flowing">
+شكرًا لاستمرار التدفق! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+مساهمات المجتمع هذا الشهر
+</string>
     <string name="tip_jar_subtitle">
 دعم المطور ☕
 </string>
@@ -2117,29 +2132,47 @@ SMB3 فقط (آمن حديث)
     <string name="tip_jar_transparency">
 تم بناء UFM ليكون مجانيًا تمامًا بدون إعلانات، وسيبقى كذلك دائمًا. البقشيش اختياري تمامًا — فهو ببساطة يساعد في استمرار تدفق القهوة وظهور ميزات جديدة! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+جرعة رستريتو
+</string>
+    <string name="tip_jar_ristretto_desc">
+تم فتح القفل! أنت داعم حقيقي.
+</string>
     <string name="tip_jar_espresso_title">
 إسبرسو سريع
 </string>
     <string name="tip_jar_espresso_desc">
-جرعة صغيرة من الطاقة للمساعدة في إصلاح ذلك الخطأ المزعج.
+بداية شيء عظيم.
+</string>
+    <string name="tip_jar_cappuccino_title">
+الكابتشينو
+</string>
+    <string name="tip_jar_cappuccino_desc">
+بناء الزخم.
 </string>
     <string name="tip_jar_latte_title">
 لاتيه كامل
 </string>
     <string name="tip_jar_latte_desc">
-وقود متوازن تمامًا — يكفي لبناء ميزة جديدة كاملة!
+أنت تصنع فرقًا.
 </string>
     <string name="tip_jar_beans_title">
 كيس حبوب القهوة
 </string>
     <string name="tip_jar_beans_desc">
-دعم أسطوري. تخزين المؤن لشهر من البرمجة الليلية.
+الشكر الجزيل!
 </string>
     <string name="tip_jar_thanks">
 شكرًا جزيلاً! ☕ أنت رائع!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+تم تقديم جرعة الرستريتو — شكرًا لدعمك!
+</string>
     <string name="tip_jar_thanks_espresso">
 إسبرسو صغير في الطريق — شكرًا جزيلاً!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+كابتشينو طازج في طريقه — شكرًا لك!
 </string>
     <string name="tip_jar_thanks_latte">
 لاتيه كامل قادم — أنت تبقي الكود على قيد الحياة!
@@ -2159,8 +2192,14 @@ SMB3 فقط (آمن حديث)
     <string name="product_not_found">
 المنتج غير موجود. تحقق من اتصالك بالإنترنت.
 </string>
+    <string name="tip_celebrate_ristretto_title">
+تم تقديم جرعة الرستريتو! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 تم توصيل جرعة الإسبرسو! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+تم تقديم الكابتشينو! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 اللاتيه قادم! ☕💛

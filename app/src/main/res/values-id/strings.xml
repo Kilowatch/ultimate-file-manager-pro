@@ -2105,6 +2105,21 @@ Tetap Edit
     <string name="tip_jar_title">
 Dukung Pengembang
 </string>
+    <string name="tip_jar_buy_button">
+Beli >
+</string>
+    <string name="tip_jar_popular_badge">
+Populer
+</string>
+    <string name="tip_jar_every_coffee_powers">
+Setiap kopi mendukung aplikasi ini.
+</string>
+    <string name="tip_jar_thanks_flowing">
+Terima kasih telah menjaganya tetap mengalir! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+Kontribusi komunitas bulan ini
+</string>
     <string name="tip_jar_subtitle">
 Dukung pengembang ☕
 </string>
@@ -2117,29 +2132,47 @@ Memuat harga dari Google Play...
     <string name="tip_jar_transparency">
 UFM dibuat sepenuhnya gratis tanpa iklan, dan akan selalu begitu. Memberi tip sepenuhnya opsional — ini hanya membantu agar kopi tetap mengalir dan fitur baru terus hadir! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+Ristretto Shot
+</string>
+    <string name="tip_jar_ristretto_desc">
+Terbuka! Anda adalah pendukung sejati.
+</string>
     <string name="tip_jar_espresso_title">
 Espresso Cepat
 </string>
     <string name="tip_jar_espresso_desc">
-Semburan energi kecil untuk membantu membasmi bug yang mengganggu itu.
+Awal dari sesuatu yang hebat.
+</string>
+    <string name="tip_jar_cappuccino_title">
+Cappuccino
+</string>
+    <string name="tip_jar_cappuccino_desc">
+Membangun momentum.
 </string>
     <string name="tip_jar_latte_title">
 Latte Penuh
 </string>
     <string name="tip_jar_latte_desc">
-Bahan bakar yang seimbang sempurna — cukup untuk membangun fitur baru!
+Kamu membuat perbedaan.
 </string>
     <string name="tip_jar_beans_title">
 Sekantong Biji Kopi
 </string>
     <string name="tip_jar_beans_desc">
-Dukungan legendaris. Mengisi dapur untuk sebulan coding larut malam.
+Terima kasih yang terbaik!
 </string>
     <string name="tip_jar_thanks">
 Terima kasih banyak! ☕ Kamu luar biasa!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+Ristretto shot telah terkirim — terima kasih atas dukungan Anda!
+</string>
     <string name="tip_jar_thanks_espresso">
 Espresso kecil sedang dalam perjalanan — terima kasih banyak!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+Satu cappuccino segar sedang dalam perjalanan — terima kasih!
 </string>
     <string name="tip_jar_thanks_latte">
 Satu latte penuh masuk — kamu menjaga kode tetap hidup!
@@ -2159,8 +2192,14 @@ Penagihan tidak tersedia: %1$s
     <string name="product_not_found">
 Produk tidak ditemukan. Periksa koneksi internet Anda.
 </string>
+    <string name="tip_celebrate_ristretto_title">
+Ristretto Shot Terkirim! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 Espresso Terkirim! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+Cappuccino Terkirim! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 Latte Siap! ☕💛

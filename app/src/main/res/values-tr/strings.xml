@@ -2105,6 +2105,21 @@ Düzenlemeye Devam Et
     <string name="tip_jar_title">
 Geliştiriciyi Destekle
 </string>
+    <string name="tip_jar_buy_button">
+Satın Al >
+</string>
+    <string name="tip_jar_popular_badge">
+Popüler
+</string>
+    <string name="tip_jar_every_coffee_powers">
+Her kahve bu uygulamayı çalıştırır.
+</string>
+    <string name="tip_jar_thanks_flowing">
+Devam etmesini sağladığın için teşekkürler! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+Bu ayki topluluk katkıları
+</string>
     <string name="tip_jar_subtitle">
 Geliştiriciyi destekle ☕
 </string>
@@ -2117,29 +2132,47 @@ Google Play\'den fiyatlar yükleniyor...
     <string name="tip_jar_transparency">
 UFM tamamen ücretsiz ve reklamsız olarak yapıldı ve her zaman böyle kalacak. Bahşiş tamamen isteğe bağlıdır — sadece kahvenin taze kalmasına ve yeni özelliklerin gelmesine yardımcı olur! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+Ristretto Shot
+</string>
+    <string name="tip_jar_ristretto_desc">
+Kilit açıldı! Gerçek bir destekçisiniz.
+</string>
     <string name="tip_jar_espresso_title">
 Hızlı Bir Espresso
 </string>
     <string name="tip_jar_espresso_desc">
-O sinir bozucu hatayı düzeltmek için küçük bir enerji patlaması.
+Harika bir şeyin başlangıcı.
+</string>
+    <string name="tip_jar_cappuccino_title">
+Cappuccino
+</string>
+    <string name="tip_jar_cappuccino_desc">
+Momentum kazanılıyor.
 </string>
     <string name="tip_jar_latte_title">
 Tam Latte
 </string>
     <string name="tip_jar_latte_desc">
-Mükemmel dengelenmiş yakıt — yepyeni bir özellik inşa etmeye yeter!
+Fark yaratıyorsun.
 </string>
     <string name="tip_jar_beans_title">
 Kahve Çekirdeği Çuvalı
 </string>
     <string name="tip_jar_beans_desc">
-Efsanevi destek. Bir aylık gece kodlaması için kileri dolduruyor.
+En büyük teşekkür!
 </string>
     <string name="tip_jar_thanks">
 Çok teşekkür ederim! ☕ Harikasın!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+Ristretto shot teslim edildi — desteğiniz için teşekkürler!
+</string>
     <string name="tip_jar_thanks_espresso">
 Küçük bir espresso yolda — çok teşekkür ederim!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+Bir taze cappuccino yolda — teşekkürler!
 </string>
     <string name="tip_jar_thanks_latte">
 Bir tam latte geliyor — kodu hayatta tutuyorsun!
@@ -2159,8 +2192,14 @@ Faturalandırma kullanılamıyor: %1$s
     <string name="product_not_found">
 Ürün bulunamadı. İnternet bağlantınızı kontrol edin.
 </string>
+    <string name="tip_celebrate_ristretto_title">
+Ristretto Shot Teslim Edildi! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 Espresso Şutu Teslim Edildi! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+Cappuccino Teslim Edildi! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 Latte Hazır! ☕💛

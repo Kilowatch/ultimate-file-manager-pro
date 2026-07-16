@@ -28,11 +28,13 @@ class BillingManager(
         // TODO: Replace these with your real Google Play product IDs
         //       configured in the Play Console → Monetize → Products.
         // ─────────────────────────────────────────────────────────────
-        const val SKU_ESPRESSO = "tip_espresso_01"   // e.g. "tip_espresso_01"
-        const val SKU_LATTE    = "tip_latte_05"      // e.g. "tip_latte_05"
-        const val SKU_BEANS    = "tip_beans_15"      // e.g. "tip_beans_15"
+        const val SKU_RISTRETTO  = "tip_ristretto_shot"
+        const val SKU_ESPRESSO   = "tip_quick_espresso"
+        const val SKU_CAPPUCCINO = "tip_cappuccino"
+        const val SKU_LATTE      = "tip_full_latte"
+        const val SKU_BEANS      = "tip_coffee_bean_bag"
 
-        val ALL_SKUS = listOf(SKU_ESPRESSO, SKU_LATTE, SKU_BEANS)
+        val ALL_SKUS = listOf(SKU_RISTRETTO, SKU_ESPRESSO, SKU_CAPPUCCINO, SKU_LATTE, SKU_BEANS)
     }
 
     // Live prices fetched from Play — keyed by product ID

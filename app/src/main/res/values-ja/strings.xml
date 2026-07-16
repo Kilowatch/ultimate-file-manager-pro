@@ -2105,6 +2105,21 @@ SMB3のみ（最新セキュア）
     <string name="tip_jar_title">
 開発者を応援
 </string>
+    <string name="tip_jar_buy_button">
+購入 >
+</string>
+    <string name="tip_jar_popular_badge">
+人気
+</string>
+    <string name="tip_jar_every_coffee_powers">
+一杯のコーヒーがこのアプリを支えています。
+</string>
+    <string name="tip_jar_thanks_flowing">
+ご支援ありがとうございます！☕
+</string>
+    <string name="tip_jar_community_contributions">
+今月のコミュニティからの貢献
+</string>
     <string name="tip_jar_subtitle">
 開発者を応援 ☕
 </string>
@@ -2117,29 +2132,47 @@ Google Playから価格を読み込み中...
     <string name="tip_jar_transparency">
 UFMは完全無料で広告なしで作られ、これからもそのままであり続けます。チップは完全に任意です — コーヒーが絶えず、新機能が登場するのを助けるだけです！ ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+リストレット ショット
+</string>
+    <string name="tip_jar_ristretto_desc">
+アンロック達成！真のサポーターですね。
+</string>
     <string name="tip_jar_espresso_title">
 クイックエスプレッソ
 </string>
     <string name="tip_jar_espresso_desc">
-厄介なバグを潰すための小さなエネルギー補給。
+何か素晴らしいことの始まり。
+</string>
+    <string name="tip_jar_cappuccino_title">
+カプチーノ
+</string>
+    <string name="tip_jar_cappuccino_desc">
+勢いを加速中。
 </string>
     <string name="tip_jar_latte_title">
 フルラテ
 </string>
     <string name="tip_jar_latte_desc">
-完璧にバランスの取れた燃料 — まったく新しい機能を構築するのに十分！
+あなたは違いを生み出しています。
 </string>
     <string name="tip_jar_beans_title">
 コーヒー豆袋
 </string>
     <string name="tip_jar_beans_desc">
-伝説的なサポート。深夜のコーディングのための食料を一ヶ月分ストック。
+心からの感謝を込めて！
 </string>
     <string name="tip_jar_thanks">
 本当にありがとうございます！ ☕ あなたは素晴らしい！
 </string>
+    <string name="tip_jar_thanks_ristretto">
+リストレットショットをお届けしました — ご支援ありがとうございます！
+</string>
     <string name="tip_jar_thanks_espresso">
 小さなエスプレッソが届きます — 本当にありがとう！
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+できたてのカプチーノをお届け中 — ありがとうございます！
 </string>
     <string name="tip_jar_thanks_latte">
 フルラテが一つ到着 — コードを生かし続けてくれています！
@@ -2159,8 +2192,14 @@ Google Play経由で安全に処理されました · ありがとう！ ☕
     <string name="product_not_found">
 商品が見つかりません。インターネット接続を確認してください。
 </string>
+    <string name="tip_celebrate_ristretto_title">
+リストレットショットをお届けしました！☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 エスプレッソショット配信！ ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+カプチーノをお届けしました！☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 ラテ入りました！ ☕💛

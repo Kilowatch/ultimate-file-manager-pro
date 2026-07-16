@@ -2105,6 +2105,21 @@ SMB प्रोटोकॉल संस्करण (केवल SMB)
     <string name="tip_jar_title">
 डेवलपर को प्रोत्साहित करें
 </string>
+    <string name="tip_jar_buy_button">
+खरीदें >
+</string>
+    <string name="tip_jar_popular_badge">
+लोकप्रिय
+</string>
+    <string name="tip_jar_every_coffee_powers">
+हर कप कॉफी इस ऐप को शक्ति देता है।
+</string>
+    <string name="tip_jar_thanks_flowing">
+इसे प्रवाहित रखने के लिए धन्यवाद! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+इस महीने के सामुदायिक योगदान
+</string>
     <string name="tip_jar_subtitle">
 डेवलपर को प्रोत्साहित करें ☕
 </string>
@@ -2117,29 +2132,47 @@ Google Play से मूल्य लोड हो रहे हैं...
     <string name="tip_jar_transparency">
 UFM पूरी तरह से मुफ़्त बनाया गया था और हमेशा ऐसा ही रहेगा। टिप देना पूरी तरह से ऐच्छिक है — यह बस कॉफी का प्रवाह बनाए रखने और नई सुविधाएँ लाने में मदद करता है! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+रिस्ट्रेटो शॉट
+</string>
+    <string name="tip_jar_ristretto_desc">
+अनलॉक! आप सच्चे समर्थक हैं।
+</string>
     <string name="tip_jar_espresso_title">
 एक त्वरित एस्प्रेसो
 </string>
     <string name="tip_jar_espresso_desc">
-उस एक कष्टप्रद बग को दूर करने के लिए ऊर्जा का एक छोटा सा झटका।
+महानता की शुरुआत।
+</string>
+    <string name="tip_jar_cappuccino_title">
+कैप्पुचीनो
+</string>
+    <string name="tip_jar_cappuccino_desc">
+गति बनाना।
 </string>
     <string name="tip_jar_latte_title">
 पूर्ण लट्टे
 </string>
     <string name="tip_jar_latte_desc">
-पूरी तरह से संतुलित ईंधन — एक पूरी नई सुविधा बनाने के लिए पर्याप्त!
+आप फर्क ला रहे हैं।
 </string>
     <string name="tip_jar_beans_title">
 कॉफ़ी बीन बैग
 </string>
     <string name="tip_jar_beans_desc">
-महान समर्थन। देर रात कोडिंग के एक महीने के लिए पेंट्री भरना।
+सबसे बड़ा धन्यवाद!
 </string>
     <string name="tip_jar_thanks">
 बहुत-बहुत धन्यवाद! ☕ आप अद्भुत हैं!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+रिस्ट्रेटो शॉट डिलीवर हुआ — आपके समर्थन के लिए धन्यवाद!
+</string>
     <string name="tip_jar_thanks_espresso">
 एक छोटी एस्प्रेसो रास्ते में है — बहुत-बहुत धन्यवाद!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+एक ताज़ा कैप्पुचीनो रास्ते में है — धन्यवाद!
 </string>
     <string name="tip_jar_thanks_latte">
 एक पूरा लट्टे आ रहा है — आप कोड को जीवित रख रहे हैं!
@@ -2159,8 +2192,14 @@ Google Play के माध्यम से सुरक्षित रूप 
     <string name="product_not_found">
 उत्पाद नहीं मिला। अपना इंटरनेट कनेक्शन जांचें।
 </string>
+    <string name="tip_celebrate_ristretto_title">
+रिस्ट्रेटो शॉट डिलीवर! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 एस्प्रेसो शॉट डिलीवर! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+कैप्पुचीनो डिलीवर! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 लट्टे ऑन! ☕💛

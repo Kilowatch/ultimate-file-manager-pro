@@ -2105,6 +2105,21 @@ Continuar Editando
     <string name="tip_jar_title">
 Apoie o Desenvolvedor
 </string>
+    <string name="tip_jar_buy_button">
+Comprar >
+</string>
+    <string name="tip_jar_popular_badge">
+Popular
+</string>
+    <string name="tip_jar_every_coffee_powers">
+Cada café alimenta este aplicativo.
+</string>
+    <string name="tip_jar_thanks_flowing">
+Obrigado por manter o fluxo! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+Contribuições da comunidade este mês
+</string>
     <string name="tip_jar_subtitle">
 Apoie o desenvolvedor ☕
 </string>
@@ -2117,29 +2132,47 @@ Carregando preços do Google Play...
     <string name="tip_jar_transparency">
 O UFM foi construído para ser completamente gratuito e sem anúncios, e sempre será assim. Dar gorjeta é totalmente opcional — apenas ajuda a manter o café fluindo e novos recursos chegando! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+Dose de Ristretto
+</string>
+    <string name="tip_jar_ristretto_desc">
+Desbloqueado! Você é um verdadeiro apoiador.
+</string>
     <string name="tip_jar_espresso_title">
 Um Café Rápido
 </string>
     <string name="tip_jar_espresso_desc">
-Um pequeno impulso de energia para ajudar a eliminar aquele bug irritante.
+O começo de algo grande.
+</string>
+    <string name="tip_jar_cappuccino_title">
+O Cappuccino
+</string>
+    <string name="tip_jar_cappuccino_desc">
+Construindo impulso.
 </string>
     <string name="tip_jar_latte_title">
 O Latte Completo
 </string>
     <string name="tip_jar_latte_desc">
-Combustível perfeitamente equilibrado — o suficiente para criar um novo recurso completo!
+Você está fazendo a diferença.
 </string>
     <string name="tip_jar_beans_title">
 O Saco de Grãos de Café
 </string>
     <string name="tip_jar_beans_desc">
-Apoio lendário. Abastecendo a despensa para um mês de codificação até tarde da noite.
+O agradecimento definitivo!
 </string>
     <string name="tip_jar_thanks">
 Muito obrigado! ☕ Você é incrível!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+Dose de Ristretto entregue — obrigado pelo seu apoio!
+</string>
     <string name="tip_jar_thanks_espresso">
 Um pequeno café a caminho — muito obrigado!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+Um cappuccino fresco a caminho — obrigado!
 </string>
     <string name="tip_jar_thanks_latte">
 Um latte completo chegando — você está mantendo o código vivo!
@@ -2159,8 +2192,14 @@ Faturamento indisponível: %1$s
     <string name="product_not_found">
 Produto não encontrado. Verifique sua conexão com a internet.
 </string>
+    <string name="tip_celebrate_ristretto_title">
+Dose de Ristretto Entregue! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 Café Expresso Entregue! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+Cappuccino Entregue! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 Latte é por nossa conta! ☕💛

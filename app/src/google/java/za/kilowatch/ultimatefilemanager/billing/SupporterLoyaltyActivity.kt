@@ -34,9 +34,17 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     // Google Play Billing manager — used on all Google Play/non-Amazon devices.
     private lateinit var billingManager: BillingManager
 
+    private lateinit var btnRistretto: MaterialButton
     private lateinit var btnEspresso: MaterialButton
+    private lateinit var btnCappuccino: MaterialButton
     private lateinit var btnLatte: MaterialButton
     private lateinit var btnBeans: MaterialButton
+    
+    private lateinit var txtRistrettoPrice: TextView
+    private lateinit var txtEspressoPrice: TextView
+    private lateinit var txtCappuccinoPrice: TextView
+    private lateinit var txtLattePrice: TextView
+    private lateinit var txtBeansPrice: TextView
     
     private lateinit var progressBar: android.widget.ProgressBar
     private lateinit var gridStamps: GridLayout
@@ -132,9 +140,17 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
             }
         }
 
+        btnRistretto = findViewById(R.id.btnRistretto)
         btnEspresso  = findViewById(R.id.btnEspresso)
+        btnCappuccino = findViewById(R.id.btnCappuccino)
         btnLatte     = findViewById(R.id.btnLatte)
         btnBeans     = findViewById(R.id.btnBeans)
+        
+        txtRistrettoPrice = findViewById(R.id.txtRistrettoPrice)
+        txtEspressoPrice  = findViewById(R.id.txtEspressoPrice)
+        txtCappuccinoPrice = findViewById(R.id.txtCappuccinoPrice)
+        txtLattePrice     = findViewById(R.id.txtLattePrice)
+        txtBeansPrice     = findViewById(R.id.txtBeansPrice)
         
         txtThankYou  = findViewById(R.id.txtThankYou)
         txtLoading   = findViewById(R.id.txtTipLoading)
@@ -164,13 +180,21 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
         setButtonsEnabled(false)
         if (isTv) {
+            applyTvFocusLogic(btnRistretto)
             applyTvFocusLogic(btnEspresso)
+            applyTvFocusLogic(btnCappuccino)
             applyTvFocusLogic(btnLatte)
             applyTvFocusLogic(btnBeans)
         }
 
+        btnRistretto.setOnClickListener {
+            billingManager.launchPurchaseFlow(this, BillingManager.SKU_RISTRETTO)
+        }
         btnEspresso.setOnClickListener {
             billingManager.launchPurchaseFlow(this, BillingManager.SKU_ESPRESSO)
+        }
+        btnCappuccino.setOnClickListener {
+            billingManager.launchPurchaseFlow(this, BillingManager.SKU_CAPPUCCINO)
         }
         btnLatte.setOnClickListener {
             billingManager.launchPurchaseFlow(this, BillingManager.SKU_LATTE)
@@ -205,9 +229,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     }
 
     private fun applyTvFocusLogic(button: MaterialButton) {
-        val defaultTint  = ColorStateList.valueOf(getColor(R.color.ufm_primary))
         val focusTint    = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-        val defaultText  = getColor(R.color.tv_text_primary)
         val focusText    = getColor(R.color.tv_button_focused_yellow_text)
 
         button.setOnFocusChangeListener { _, hasFocus ->
@@ -215,8 +237,8 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 button.backgroundTintList = focusTint
                 button.setTextColor(focusText)
             } else {
-                button.backgroundTintList = defaultTint
-                button.setTextColor(defaultText)
+                button.backgroundTintList = null
+                button.setTextColor(android.graphics.Color.WHITE)
             }
         }
     }
@@ -248,34 +270,26 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 ?: ""
         }
 
-        val espressoSku   = BillingManager.SKU_ESPRESSO
-        val latteSku      = BillingManager.SKU_LATTE
-        val beansSku      = BillingManager.SKU_BEANS
-        val espressoPrice = priceFor(espressoSku)
-        val lattePrice    = priceFor(latteSku)
-        val beansPrice    = priceFor(beansSku)
+        val ristrettoPrice = priceFor(BillingManager.SKU_RISTRETTO)
+        val espressoPrice  = priceFor(BillingManager.SKU_ESPRESSO)
+        val cappuccinoPrice = priceFor(BillingManager.SKU_CAPPUCCINO)
+        val lattePrice     = priceFor(BillingManager.SKU_LATTE)
+        val beansPrice     = priceFor(BillingManager.SKU_BEANS)
 
-        btnEspresso.text = if (espressoPrice.isNotEmpty())
-            getString(R.string.tip_jar_espresso_title) + getString(R.string.loyalty_price_separator_format, espressoPrice)
-        else
-            getString(R.string.tip_jar_espresso_title)
-
-        btnLatte.text = if (lattePrice.isNotEmpty())
-            getString(R.string.tip_jar_latte_title) + getString(R.string.loyalty_price_separator_format, lattePrice)
-        else
-            getString(R.string.tip_jar_latte_title)
-
-        btnBeans.text = if (beansPrice.isNotEmpty())
-            getString(R.string.tip_jar_beans_title) + getString(R.string.loyalty_price_separator_format, beansPrice)
-        else
-            getString(R.string.tip_jar_beans_title)
+        txtRistrettoPrice.text = ristrettoPrice.ifEmpty { "—" }
+        txtEspressoPrice.text  = espressoPrice.ifEmpty { "—" }
+        txtCappuccinoPrice.text = cappuccinoPrice.ifEmpty { "—" }
+        txtLattePrice.text     = lattePrice.ifEmpty { "—" }
+        txtBeansPrice.text     = beansPrice.ifEmpty { "—" }
     }
 
     private fun handlePurchaseSuccess(sku: String) {
         val tipAmount = when (sku) {
-            BillingManager.SKU_ESPRESSO -> 1
-            BillingManager.SKU_LATTE    -> 5
-            BillingManager.SKU_BEANS    -> 15
+            BillingManager.SKU_RISTRETTO  -> 1
+            BillingManager.SKU_ESPRESSO   -> 3
+            BillingManager.SKU_CAPPUCCINO -> 5
+            BillingManager.SKU_LATTE      -> 10
+            BillingManager.SKU_BEANS      -> 25
             else -> 0
         }
         
@@ -436,10 +450,12 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
 
     private fun showThankYou(sku: String, onDismissed: (() -> Unit)? = null) {
         val message = when (sku) {
-            BillingManager.SKU_ESPRESSO -> getString(R.string.tip_jar_thanks_espresso)
-            BillingManager.SKU_LATTE    -> getString(R.string.tip_jar_thanks_latte)
-            BillingManager.SKU_BEANS    -> getString(R.string.tip_jar_thanks_beans)
-            else                        -> getString(R.string.tip_jar_thanks)
+            BillingManager.SKU_RISTRETTO  -> getString(R.string.tip_jar_thanks_ristretto)
+            BillingManager.SKU_ESPRESSO   -> getString(R.string.tip_jar_thanks_espresso)
+            BillingManager.SKU_CAPPUCCINO -> getString(R.string.tip_jar_thanks_cappuccino)
+            BillingManager.SKU_LATTE      -> getString(R.string.tip_jar_thanks_latte)
+            BillingManager.SKU_BEANS      -> getString(R.string.tip_jar_thanks_beans)
+            else                          -> getString(R.string.tip_jar_thanks)
         }
         txtThankYou.text = message
         txtThankYou.visibility = View.VISIBLE
@@ -455,9 +471,11 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     }
 
     private fun setButtonsEnabled(enabled: Boolean) {
-        btnEspresso.isEnabled = enabled
-        btnLatte.isEnabled    = enabled
-        btnBeans.isEnabled    = enabled
+        btnRistretto.isEnabled  = enabled
+        btnEspresso.isEnabled   = enabled
+        btnCappuccino.isEnabled = enabled
+        btnLatte.isEnabled      = enabled
+        btnBeans.isEnabled      = enabled
     }
 
     override fun onDestroy() {

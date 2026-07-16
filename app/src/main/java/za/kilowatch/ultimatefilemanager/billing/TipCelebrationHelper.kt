@@ -30,12 +30,27 @@ import za.kilowatch.ultimatefilemanager.R
  */
 object TipCelebrationHelper {
 
-    // ─── Local SKU Constant Decoupling ───────────────────────────────────────
-    const val SKU_ESPRESSO = "tip_espresso_01"
-    const val SKU_LATTE    = "tip_latte_05"
-    const val SKU_BEANS    = "tip_beans_15"
+    // Google Play Product IDs (5 tiers)
+    const val SKU_RISTRETTO_GOOG  = "tip_ristretto_shot"
+    const val SKU_ESPRESSO_GOOG   = "tip_quick_espresso"
+    const val SKU_CAPPUCCINO_GOOG = "tip_cappuccino"
+    const val SKU_LATTE_GOOG      = "tip_full_latte"
+    const val SKU_BEANS_GOOG      = "tip_coffee_bean_bag"
+
+    // Amazon Appstore Product IDs (3 legacy tiers)
+    const val SKU_ESPRESSO_AMZN   = "tip_espresso_01"
+    const val SKU_LATTE_AMZN      = "tip_latte_05"
+    const val SKU_BEANS_AMZN      = "tip_beans_15"
 
     // ─── Per-tier particle colour palettes ───────────────────────────────────
+
+    /** Ristretto: rich bronze / coffee brown / gold / dark cream */
+    private val COLORS_RISTRETTO = intArrayOf(
+        Color.parseColor("#8C6239"),  // bronze
+        Color.parseColor("#4E3629"),  // espresso brown
+        Color.parseColor("#E5C158"),  // warm gold
+        Color.parseColor("#F5EBE6")   // light cream
+    )
 
     /** Espresso: warm amber / dark brown / cream */
     private val COLORS_ESPRESSO = intArrayOf(
@@ -43,6 +58,14 @@ object TipCelebrationHelper {
         Color.parseColor("#B45309"),  // espresso brown
         Color.parseColor("#FFFBEB"),  // cream
         Color.parseColor("#F59E0B")   // warm yellow
+    )
+
+    /** Cappuccino: chocolate milk / dusty rose / soft brown / white */
+    private val COLORS_CAPPUCCINO = intArrayOf(
+        Color.parseColor("#C68B59"),  // warm caramel
+        Color.parseColor("#F3E9DD"),  // cappuccino foam
+        Color.parseColor("#DDBEAA"),  // cocoa dust
+        Color.parseColor("#E4AEC5")   // soft pinkish accent
     )
 
     /** Latte: creamy gold / caramel / soft brown */
@@ -67,7 +90,7 @@ object TipCelebrationHelper {
      * Trigger the full celebration for the given [sku].
      *
      * @param activity  The hosting Activity (used for vibration & context).
-     * @param sku       One of [SKU_ESPRESSO/LATTE/BEANS].
+     * @param sku       One of Google or Amazon SKUs.
      * @param rootView  A [ViewGroup] to overlay the confetti and dialog on top of.
      * @param coffeeIcon Optional [ImageView] of the coffee icon to animate (can be null).
      */
@@ -81,17 +104,21 @@ object TipCelebrationHelper {
         val ctx = activity.applicationContext
 
         val colors = when (sku) {
-            SKU_ESPRESSO -> COLORS_ESPRESSO
-            SKU_LATTE    -> COLORS_LATTE
-            SKU_BEANS    -> COLORS_BEANS
-            else          -> COLORS_LATTE
+            SKU_RISTRETTO_GOOG -> COLORS_RISTRETTO
+            SKU_ESPRESSO_GOOG, SKU_ESPRESSO_AMZN -> COLORS_ESPRESSO
+            SKU_CAPPUCCINO_GOOG -> COLORS_CAPPUCCINO
+            SKU_LATTE_GOOG, SKU_LATTE_AMZN -> COLORS_LATTE
+            SKU_BEANS_GOOG, SKU_BEANS_AMZN -> COLORS_BEANS
+            else -> COLORS_LATTE
         }
 
         val title = when (sku) {
-            SKU_ESPRESSO -> ctx.getString(R.string.tip_celebrate_espresso_title)
-            SKU_LATTE    -> ctx.getString(R.string.tip_celebrate_latte_title)
-            SKU_BEANS    -> ctx.getString(R.string.tip_celebrate_beans_title)
-            else          -> ctx.getString(R.string.tip_celebrate_espresso_title)
+            SKU_RISTRETTO_GOOG -> ctx.getString(R.string.tip_celebrate_ristretto_title)
+            SKU_ESPRESSO_GOOG, SKU_ESPRESSO_AMZN -> ctx.getString(R.string.tip_celebrate_espresso_title)
+            SKU_CAPPUCCINO_GOOG -> ctx.getString(R.string.tip_celebrate_cappuccino_title)
+            SKU_LATTE_GOOG, SKU_LATTE_AMZN -> ctx.getString(R.string.tip_celebrate_latte_title)
+            SKU_BEANS_GOOG, SKU_BEANS_AMZN -> ctx.getString(R.string.tip_celebrate_beans_title)
+            else -> ctx.getString(R.string.tip_celebrate_espresso_title)
         }
 
         fireHaptic(activity)

@@ -2105,6 +2105,21 @@ DLNA
     <string name="tip_jar_title">
 Поддержите разработчика
 </string>
+    <string name="tip_jar_buy_button">
+Купить >
+</string>
+    <string name="tip_jar_popular_badge">
+Популярное
+</string>
+    <string name="tip_jar_every_coffee_powers">
+Каждая чашка кофе поддерживает это приложение.
+</string>
+    <string name="tip_jar_thanks_flowing">
+Спасибо, что поддерживаете его работу! ☕
+</string>
+    <string name="tip_jar_community_contributions">
+Взносы сообщества за этот месяц
+</string>
     <string name="tip_jar_subtitle">
 Поддержите разработчика ☕
 </string>
@@ -2117,29 +2132,47 @@ DLNA
     <string name="tip_jar_transparency">
 UFM создан полностью бесплатным без рекламы и останется таким навсегда. Чаевые совершенно необязательны — они просто помогают поддерживать поток кофе и появление новых функций! ☕
 </string>
+    <string name="tip_jar_ristretto_title">
+Ристретто Шот
+</string>
+    <string name="tip_jar_ristretto_desc">
+Разблокировано! Вы настоящий сторонник.
+</string>
     <string name="tip_jar_espresso_title">
 Быстрый эспрессо
 </string>
     <string name="tip_jar_espresso_desc">
-Небольшой заряд энергии, чтобы исправить одну надоедливую ошибку.
+Начало чего-то великого.
+</string>
+    <string name="tip_jar_cappuccino_title">
+Капучино
+</string>
+    <string name="tip_jar_cappuccino_desc">
+Набирая обороты.
 </string>
     <string name="tip_jar_latte_title">
 Полный латте
 </string>
     <string name="tip_jar_latte_desc">
-Идеально сбалансированное топливо — достаточно для создания целой новой функции!
+Вы вносите свой вклад.
 </string>
     <string name="tip_jar_beans_title">
 Мешок кофейных зерен
 </string>
     <string name="tip_jar_beans_desc">
-Легендарная поддержка. Пополнение запасов на месяц ночного кодинга.
+Огромное спасибо!
 </string>
     <string name="tip_jar_thanks">
 Огромное спасибо! ☕ Вы потрясающие!
 </string>
+    <string name="tip_jar_thanks_ristretto">
+Ристретто шот доставлен — спасибо за вашу поддержку!
+</string>
     <string name="tip_jar_thanks_espresso">
 Маленький эспрессо в пути — огромное спасибо!
+</string>
+    <string name="tip_jar_thanks_cappuccino">
+Один свежий капучино в пути — спасибо!
 </string>
     <string name="tip_jar_thanks_latte">
 Прибывает полный латте — вы поддерживаете код в живых!
@@ -2159,8 +2192,14 @@ UFM создан полностью бесплатным без рекламы �
     <string name="product_not_found">
 Товар не найден. Проверьте подключение к интернету.
 </string>
+    <string name="tip_celebrate_ristretto_title">
+Ристретто Шот Доставлен! ☕✨
+</string>
     <string name="tip_celebrate_espresso_title">
 Эспрессо доставлен! ☕⚡
+</string>
+    <string name="tip_celebrate_cappuccino_title">
+Капучино Доставлен! ☕🌸
 </string>
     <string name="tip_celebrate_latte_title">
 Латте подается! ☕💛

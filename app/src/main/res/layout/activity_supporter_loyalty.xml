@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tipJarRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground">
 
-    <!-- Toolbar: back button + coffee icon + title/subtitle -->
+    <!-- Toolbar: back button + coffee icon + title/subtitle + more options -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
@@ -39,9 +40,8 @@
             app:tint="?attr/colorPrimary" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -80,173 +80,67 @@
             android:padding="12dp"
             android:gravity="center_horizontal">
 
-            <!-- Transparency blurb -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="?attr/colorSurfaceVariant">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tip_jar_transparency"
-                    android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="11sp"
-                    android:lineSpacingMultiplier="1.3"
-                    android:padding="10dp" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Loyalty Card -->
+            <!-- Fist Promo Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/colorPrimaryContainer">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="12dp">
+                    android:orientation="horizontal"
+                    android:padding="12dp"
+                    android:gravity="center_vertical">
 
-                    <!-- Progress labels -->
+                    <!-- Circular container for Raised Fist icon -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSecondaryContainer"
+                        app:strokeWidth="0dp">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_fist"
+                            app:tint="?attr/colorOnSecondaryContainer" />
+                    </com.google.android.material.card.MaterialCardView>
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="4dp">
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_amount_tipped_label"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:alpha="0.8"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/txtGoalTarget"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/loyalty_goal_static"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:alpha="0.8"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                    <!-- Progress bar -->
-                    <ProgressBar
-                        android:id="@+id/progressBar"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:max="15"
-                        android:progressTint="?attr/colorPrimary"
-                        android:progressBackgroundTint="?attr/colorOnPrimaryContainer"
-                        android:layout_marginBottom="6dp" />
-
-                    <!-- Tipped / to-go -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="12dp">
+                            android:text="@string/tip_jar_every_coffee_powers"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/txtTippedTitle"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_tipped_format"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/txtToGoTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/loyalty_to_go_format"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnPrimaryContainer"
-                            android:textSize="13sp" />
+                            android:text="@string/tip_jar_thanks_flowing"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="11sp"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
-
-                    <!-- Stamps Grid (5 x 3) -->
-                    <GridLayout
-                        android:id="@+id/gridStamps"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:rowCount="3"
-                        android:columnCount="5"
-                        android:alignmentMode="alignBounds"
-                        android:useDefaultMargins="true" />
-
-                    <!-- Divider -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="?attr/colorOnPrimaryContainer"
-                        android:alpha="0.2" />
-
-                    <!-- Member status + tier badge -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/loyalty_status_label"
-                                android:textColor="?attr/colorOnPrimaryContainer"
-                                android:alpha="0.7"
-                                android:textSize="10sp" />
-
-                            <TextView
-                                android:id="@+id/txtMemberTier"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/loyalty_tier_free"
-                                android:textStyle="bold"
-                                android:textColor="?attr/colorOnPrimaryContainer"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/txtTierBadge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_tier_badge_format"
-                            android:background="@drawable/bg_icon_circle_accent"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="3dp"
-                            android:textSize="10sp"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:backgroundTint="?attr/colorPrimary"
-                            android:layout_gravity="center_vertical" />
-                    </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Global Progress Card -->
+            <!-- Tip Jar Progress Card (Global Progress Card styled to mockup) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardGlobalProgress"
                 android:layout_width="match_parent"
@@ -254,7 +148,11 @@
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="1dp">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -266,28 +164,26 @@
                         android:id="@+id/txtGlobalTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/tip_jar_global_title"
-                        android:textColor="@color/tile_tip_jar_accent"
+                        android:text="Tip jar progress • July 2026"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-black" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtGlobalDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="@string/tip_jar_global_desc"
+                        android:text="@string/tip_jar_community_contributions"
                         android:textColor="?attr/colorOnSurfaceVariant"
-                        android:textSize="10sp"
-                        android:alpha="0.7" />
+                        android:textSize="11sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="14dp">
 
                         <ProgressBar
                             android:id="@+id/progressGlobal"
@@ -298,120 +194,25 @@
                             android:max="100"
                             android:progressDrawable="@drawable/bg_tip_jar_progress" />
 
-                        <TextView
-                            android:id="@+id/txtGlobalPercent"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:textColor="@color/tile_tip_jar_accent"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:fontFamily="sans-serif-black" />
+                            android:orientation="vertical"
+                            android:gravity="end"
+                            android:layout_marginStart="14dp">
 
+                            <TextView
+                                android:id="@+id/txtGlobalPercent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                tools:text="23%" />
+                        </LinearLayout>
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- Stat Tiles -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp"
-                android:baselineAligned="false">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="1dp"
-                    android:layout_marginEnd="5dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_stat_total_label"
-                            android:textSize="10sp"
-                            android:alpha="0.7" />
-                        <TextView
-                            android:id="@+id/txtStatTotal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_currency_format"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="2dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="1dp"
-                    android:layout_marginHorizontal="2dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:gravity="center">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_stat_coffees_label"
-                            android:textSize="10sp"
-                            android:alpha="0.7" />
-                        <TextView
-                            android:id="@+id/txtStatCoffees"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_value_format"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="2dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="1dp"
-                    android:layout_marginStart="5dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp"
-                        android:gravity="center">
-                        <TextView
-                            android:id="@+id/txtStatGoalLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_stat_to_goal_label"
-                            android:textSize="10sp"
-                            android:alpha="0.7" />
-                        <TextView
-                            android:id="@+id/txtStatGoal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loyalty_currency_format"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="2dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
 
             <!-- Loading indicator -->
             <TextView
@@ -422,34 +223,384 @@
                 android:gravity="center"
                 android:layout_marginBottom="6dp"
                 android:alpha="0.6"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
-            <!-- Tip buttons -->
-            <LinearLayout
+            <!-- Products List Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="10dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnEspresso"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="@string/tip_jar_espresso_title"
-                    android:layout_marginBottom="5dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLatte"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="@string/tip_jar_latte_title"
-                    android:layout_marginBottom="5dp" />
+                    <!-- Row 1: Ristretto Shot ($1) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBeans"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="@string/tip_jar_beans_title" />
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:src="@drawable/ic_loyalty_ristretto" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_ristretto_title"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_ristretto_desc"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtRistrettoPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"
+                            tools:text="R 17,99" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnRistretto"
+                            android:layout_width="76dp"
+                            android:layout_height="36dp"
+                            android:text="@string/tip_jar_buy_button"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_buy_button"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="18dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:alpha="0.2" />
+
+                    <!-- Row 2: A Quick Espresso ($3) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:src="@drawable/ic_loyalty_espresso" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_espresso_title"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_espresso_desc"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtEspressoPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"
+                            tools:text="R 39,99" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnEspresso"
+                            android:layout_width="76dp"
+                            android:layout_height="36dp"
+                            android:text="@string/tip_jar_buy_button"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_buy_button"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="18dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:alpha="0.2" />
+
+                    <!-- Row 3: The Cappuccino ($5) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:src="@drawable/ic_loyalty_cappuccino" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_cappuccino_title"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_cappuccino_desc"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtCappuccinoPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"
+                            tools:text="R 91,99" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCappuccino"
+                                android:layout_width="76dp"
+                                android:layout_height="36dp"
+                                android:text="@string/tip_jar_buy_button"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                android:background="@drawable/bg_buy_button"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:padding="0dp"
+                                app:backgroundTint="@null"
+                                app:cornerRadius="18dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_popular_badge"
+                                android:textColor="@color/white"
+                                android:textSize="8sp"
+                                android:textStyle="bold"
+                                android:background="@drawable/bg_popular_badge"
+                                android:paddingHorizontal="6dp"
+                                android:paddingVertical="2dp"
+                                android:layout_marginTop="3dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:alpha="0.2" />
+
+                    <!-- Row 4: The Full Latte ($10) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:src="@drawable/ic_loyalty_latte" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_latte_title"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_latte_desc"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtLattePrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"
+                            tools:text="R 139,99" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLatte"
+                            android:layout_width="76dp"
+                            android:layout_height="36dp"
+                            android:text="@string/tip_jar_buy_button"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_buy_button"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="18dp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/colorOutlineVariant"
+                        android:alpha="0.2" />
+
+                    <!-- Row 5: The Coffee Bean Bag ($25) -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:src="@drawable/ic_loyalty_coffee_bag" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_beans_title"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/tip_jar_beans_desc"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textSize="11sp"
+                                android:layout_marginTop="2dp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtBeansPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="10dp"
+                            tools:text="R 274,99" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBeans"
+                            android:layout_width="76dp"
+                            android:layout_height="36dp"
+                            android:text="@string/tip_jar_buy_button"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:background="@drawable/bg_buy_button"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            app:backgroundTint="@null"
+                            app:cornerRadius="18dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Thank you message -->
             <TextView
@@ -464,16 +615,117 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone" />
 
-            <!-- Footer disclaimer -->
-            <TextView
+            <!-- Shield Footer Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/loyalty_disclaimer"
-                android:textSize="10sp"
-                android:alpha="0.5"
-                android:gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="8dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                app:strokeWidth="1dp"
+                app:strokeColor="?attr/colorOutlineVariant">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/imgShield"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_shield_check"
+                        app:tint="?attr/colorOnSurfaceVariant"
+                        android:alpha="0.8" />
+
+                    <ImageView
+                        android:id="@+id/imgSparkle"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:src="@drawable/ic_star"
+                        app:tint="?attr/colorOnSurfaceVariant"
+                        android:alpha="0.4" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/imgShield"
+                        android:layout_toStartOf="@id/imgSparkle"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerVertical="true"
+                        android:text="@string/loyalty_disclaimer"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="10sp"
+                        android:alpha="0.85"
+                        android:lineSpacingMultiplier="1.2" />
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hidden container for legacy loyalty views (avoids NullPointerExceptions in activity code) -->
+            <FrameLayout
+                android:id="@+id/layoutLegacyLoyalty"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <GridLayout
+                    android:id="@+id/gridStamps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtTippedTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtToGoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtMemberTier"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtTierBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtStatTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtStatCoffees"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtStatGoalLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/txtStatGoal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
