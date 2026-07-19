@@ -66,6 +66,7 @@ class TwinWindowPlayerFragment : Fragment() {
     private var remotePath: String? = null
 
     private var isMuted: Boolean = false
+    private var isLocalPlayer: Boolean = true
     private var isRepeat: Boolean = false
     private var isRepeatingPlayback: Boolean = false
     private var isTracking: Boolean = false
@@ -353,6 +354,7 @@ class TwinWindowPlayerFragment : Fragment() {
         }
 
         val newPlayer = ExoPlayer.Builder(requireContext()).build()
+        isLocalPlayer = shareId == null
 
         if (shareId != null) {
             // Network file — use UfmMedia3DataSource
@@ -389,7 +391,7 @@ class TwinWindowPlayerFragment : Fragment() {
         newPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 when (state) {
-                    Player.STATE_BUFFERING -> bufferingLayout.visibility = View.VISIBLE
+                    Player.STATE_BUFFERING -> if (!isLocalPlayer) bufferingLayout.visibility = View.VISIBLE
                     else -> bufferingLayout.visibility = View.GONE
                 }
                 if (state == Player.STATE_ENDED) {

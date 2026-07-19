@@ -482,7 +482,7 @@ class SlideShowActivity : AppCompatActivity() {
         val isLocal = shareId.isEmpty() && shareHost.isEmpty()
         val context = this
 
-        holder.progressBar.visibility = View.VISIBLE
+        if (!isLocal) holder.progressBar.visibility = View.VISIBLE
 
         Thread {
             try {
@@ -550,7 +550,7 @@ class SlideShowActivity : AppCompatActivity() {
                     newPlayer.addListener(playerListener)
                     newPlayer.playWhenReady = true
                     newPlayer.play()
-                    holder.progressBar.visibility = View.GONE
+                    if (!isLocal) holder.progressBar.visibility = View.GONE
                     handler.post(progressUpdater)
                     resetHideTimer()
                 }

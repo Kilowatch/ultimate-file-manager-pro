@@ -132,7 +132,7 @@ class UFMPlaybackService : Service() {
     interface PlaybackCallback {
         fun onProgressUpdate(position: Long, duration: Long)
         fun onTrackChanged(trackInfo: QueueItem?)
-        fun onPlaybackStateChanged(isPlaying: Boolean, state: Int)
+        fun onPlaybackStateChanged(isPlaying: Boolean, state: Int, isLocal: Boolean)
         fun onMetadataChanged(metadata: MediaMetadata)
         fun onQueueChanged(queue: List<QueueItem>)
         fun onError(error: String)
@@ -144,7 +144,7 @@ class UFMPlaybackService : Service() {
         playbackCallback = callback
         // Push current state immediately
         player?.let { p ->
-            callback.onPlaybackStateChanged(p.isPlaying, p.playbackState)
+            callback.onPlaybackStateChanged(p.isPlaying, p.playbackState, isCurrentLocal)
             callback.onProgressUpdate(p.currentPosition, p.duration)
         }
         callback.onQueueChanged(queueManager.queue)
@@ -340,6 +340,10 @@ class UFMPlaybackService : Service() {
     val isPlaying: Boolean get() = player?.isPlaying == true
     val currentQueueItem: QueueItem? get() = queueManager.currentItem
 
+    /** Whether the currently playing source is local (vs network). */
+    var isCurrentLocal: Boolean = false
+        private set
+
     // ── Internal Playback ───────────────────────────────────────────
 
     private fun playCurrent() {
@@ -371,6 +375,7 @@ class UFMPlaybackService : Service() {
 
         // Build media source
         val isNetwork = networkShare != null
+        isCurrentLocal = !isNetwork
         val mediaSource = if (isNetwork) {
             // Network file
             var share = networkShare ?: run {
@@ -414,7 +419,7 @@ class UFMPlaybackService : Service() {
 
         // Notify callback
         playbackCallback?.onTrackChanged(item)
-        playbackCallback?.onPlaybackStateChanged(true, Player.STATE_READY)
+        playbackCallback?.onPlaybackStateChanged(true, Player.STATE_READY, isCurrentLocal)
     }
 
     // ── Player Listener ─────────────────────────────────────────────
@@ -426,7 +431,12 @@ class UFMPlaybackService : Service() {
             if (state == Player.STATE_ENDED) {
                 handler.post {
                     if (isRepeat) {
-                        playCurrent()
+                        if (isCurrentLocal) {
+                            p?.seekTo(0)
+                            p?.play()
+                        } else {
+                            playCurrent()
+                        }
                     } else if (skipAutoplayOnce) {
                         // Cancel was tapped earlier — stop here
                         skipAutoplayOnce = false
@@ -450,7 +460,7 @@ class UFMPlaybackService : Service() {
             }
 
             if (state == Player.STATE_BUFFERING) {
-                playbackCallback?.onPlaybackStateChanged(p.isPlaying, state)
+                playbackCallback?.onPlaybackStateChanged(p.isPlaying, state, isCurrentLocal)
             }
 
             if (state != Player.STATE_BUFFERING) {
@@ -459,7 +469,7 @@ class UFMPlaybackService : Service() {
         }
 
         override fun onIsPlayingChanged(isPlaying: Boolean) {
-            playbackCallback?.onPlaybackStateChanged(isPlaying, player?.playbackState ?: Player.STATE_IDLE)
+            playbackCallback?.onPlaybackStateChanged(isPlaying, player?.playbackState ?: Player.STATE_IDLE, isCurrentLocal)
             if (isPlaying) {
                 acquireWakeLock()
                 startForeground(NOTIFICATION_ID, buildNotification())

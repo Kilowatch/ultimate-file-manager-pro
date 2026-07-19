@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.7.1] — 2026-07-19
+
+### Fixed
+- Local video playback no longer shows a buffering spinner or experiences playback delay on initial open, repeat loop transitions, and seeks across the full-screen player, side-by-side player, and slideshow on mobile and TV
+- Android 13+ themed icons (Adopt system colors) now render the UFM logo stencil correctly instead of showing a solid colored block. A proper monochrome vector drawable was traced exactly from the official logo reference image and is now referenced by the adaptive icon's `<monochrome>` layer.
+
 ## [1.7.0] — 2026-07-15
 
 ### Added

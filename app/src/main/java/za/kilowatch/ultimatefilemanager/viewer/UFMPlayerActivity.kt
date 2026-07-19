@@ -264,9 +264,9 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         }
 
-        override fun onPlaybackStateChanged(isPlaying: Boolean, state: Int) {
+        override fun onPlaybackStateChanged(isPlaying: Boolean, state: Int, isLocal: Boolean) {
             runOnUiThread {
-                if (state == Player.STATE_BUFFERING) {
+                if (state == Player.STATE_BUFFERING && !isLocal) {
                     bufferingLayout.visibility = View.VISIBLE
                 } else {
                     bufferingLayout.visibility = View.GONE

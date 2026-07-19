@@ -4,6 +4,6 @@
     <background android:drawable="@drawable/ic_launcher_background" />
     <!-- Foreground: direct reference to avoid layer indirection -->
     <foreground android:drawable="@mipmap/ic_launcher_foreground" />
-    <!-- Monochrome layer helps some TV launchers and theming engines -->
-    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+    <!-- Monochrome vector drawable for Android 13+ themed icons -->
+    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />
 </adaptive-icon>
