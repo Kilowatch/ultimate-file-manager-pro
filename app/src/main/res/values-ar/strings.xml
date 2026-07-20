@@ -9950,4 +9950,22 @@ Box
     <string name="sort_folder_mode_recursive">
 متكرر (المجلدات الفرعية)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+مكتشف المكررات
+</string>
+    <string name="folder_duplicate_finder_title">
+مكتشف المكررات
+</string>
+    <string name="no_duplicates_found_title">
+لم يتم العثور على مكررات
+</string>
+    <string name="no_duplicates_found_message">
+لم يتم العثور على ملفات مكررة في هذا المجلد أو أي من مجلداته الفرعية.
+</string>
+    <string name="icon_action_duplicate_finder">
+مكتشف المكررات
+</string>
 </resources>
+

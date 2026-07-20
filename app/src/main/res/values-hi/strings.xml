@@ -9950,4 +9950,22 @@ UFM प्लेयर सेटिंग्स
     <string name="sort_folder_mode_recursive">
 पुनरावर्ती (उपफ़ोल्डर)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+डुप्लिकेट खोजक
+</string>
+    <string name="folder_duplicate_finder_title">
+डुप्लिकेट खोजक
+</string>
+    <string name="no_duplicates_found_title">
+कोई डुप्लिकेट नहीं मिला
+</string>
+    <string name="no_duplicates_found_message">
+इस फ़ोल्डर या इसके किसी भी उपफ़ोल्डर में कोई डुप्लिकेट फ़ाइल नहीं मिली।
+</string>
+    <string name="icon_action_duplicate_finder">
+डुप्लिकेट खोजक
+</string>
 </resources>
+

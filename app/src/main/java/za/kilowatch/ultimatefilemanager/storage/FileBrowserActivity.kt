@@ -89,6 +89,8 @@ class FileBrowserActivity : AppCompatActivity() {
     private lateinit var btnImageCompress: android.view.View
     private var btnViewToggle: ImageView? = null
     private var btnRetriggerThumbnails: ImageView? = null
+    private var btnDuplicateFinder: ImageView? = null
+
     private var btnSort: ImageView? = null
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
@@ -117,6 +119,16 @@ class FileBrowserActivity : AppCompatActivity() {
             loadDirectory(currentDir)
         }
     }
+
+    private val folderDuplicateFinderLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            fileAdapter.exitSelectionMode()
+            triggerReindex()
+        }
+    }
+
 
     private lateinit var rootPath: String
     private lateinit var currentDir: File
@@ -958,7 +970,9 @@ class FileBrowserActivity : AppCompatActivity() {
         btnCompress = findViewById(R.id.btnCompress)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
+        btnDuplicateFinder = findViewById(R.id.btnDuplicateFinder)
         fabPaste = findViewById(R.id.fabPaste)
+
         fabTools = findViewById(R.id.fabTools)
 
         // Apply custom toolbar action icons
@@ -1555,6 +1569,24 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnDuplicateFinder?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && selected.first().isDirectory) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    fileAdapter.exitSelectionMode()
+                    val intent = Intent(this@FileBrowserActivity, FolderDuplicateFinderActivity::class.java).apply {
+                        putExtra(FolderDuplicateFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                        putExtra(FolderDuplicateFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                    }
+                    folderDuplicateFinderLauncher.launch(intent)
+                }
+            }
+        }
+
+
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
             if (selected.size == 1 && !selected.first().isDirectory) {
@@ -1851,6 +1883,23 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Duplicate Finder (single folder, indexed storage)
+            if (count == 1 && selected.first().isDirectory && pm.isIconEnabled(this, pm.KEY_DUPLICATE_FINDER)) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    list.add(FileToolsBottomSheet.ActionItem("duplicate_finder", getString(R.string.action_duplicate_finder), R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder") {
+                        fileAdapter.exitSelectionMode()
+                        val intent = Intent(this@FileBrowserActivity, FolderDuplicateFinderActivity::class.java).apply {
+                            putExtra(FolderDuplicateFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                            putExtra(FolderDuplicateFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                        }
+                        folderDuplicateFinderLauncher.launch(intent)
+                    })
+                }
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -1870,6 +1919,7 @@ class FileBrowserActivity : AppCompatActivity() {
             val tvButtons = mutableListOf(btnCloseSelection, btnCopy, btnMove, btnRename, btnFavorite, btnShare,
                    btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide)
             btnRetriggerThumbnails?.let { tvButtons.add(it) }
+            btnDuplicateFinder?.let { tvButtons.add(it) }
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault  // set initial white tint
                 btn.setOnFocusChangeListener { _, hasFocus ->
@@ -1877,6 +1927,7 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun showSortFilterSheet() {
@@ -2012,7 +2063,13 @@ class FileBrowserActivity : AppCompatActivity() {
                     it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
                 }
                 btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(this, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
+
+                val isSingleFolderSel = imgFiles.size == 1 && imgFiles.first().isDirectory
+                val (selStorageId, _, _) = if (isSingleFolderSel) za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(imgFiles.first().absolutePath) else Triple("", "", "")
+                val isSelFolderIndexed = selStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(selStorageId)
+                btnDuplicateFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(this, pm.KEY_DUPLICATE_FINDER)) View.VISIBLE else View.GONE
             }
+
 
             val selectedFiles = fileAdapter.getSelectedFiles()
             val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory

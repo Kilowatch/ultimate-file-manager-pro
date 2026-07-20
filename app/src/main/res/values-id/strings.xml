@@ -9950,4 +9950,22 @@ Hanya Folder Root
     <string name="sort_folder_mode_recursive">
 Rekursif (Subfolder)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Pencari Duplikat
+</string>
+    <string name="folder_duplicate_finder_title">
+Pencari Duplikat
+</string>
+    <string name="no_duplicates_found_title">
+Tidak Ada Duplikat Ditemukan
+</string>
+    <string name="no_duplicates_found_message">
+Tidak ada file duplikat yang ditemukan di folder ini atau subfolder mana pun.
+</string>
+    <string name="icon_action_duplicate_finder">
+Pencari Duplikat
+</string>
 </resources>
+

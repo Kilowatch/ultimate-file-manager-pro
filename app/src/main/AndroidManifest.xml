@@ -237,6 +237,12 @@
             android:name=".storage.StorageAnalyzerActivity"
             android:exported="false" />
 
+        <!-- Folder Duplicate Finder -->
+        <activity
+            android:name=".storage.FolderDuplicateFinderActivity"
+            android:exported="false" />
+
+
         <!-- Smart Sort -->
         <activity
             android:name=".smartsort.SmartSortActivity"

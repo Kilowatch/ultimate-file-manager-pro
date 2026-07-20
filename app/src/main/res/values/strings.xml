@@ -3513,4 +3513,12 @@
     <string name="sort_folder_mode_label">Folder Mode</string>
     <string name="sort_folder_mode_root">Only Root Folder</string>
     <string name="sort_folder_mode_recursive">Recursive (Subfolders)</string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">Duplicate Finder</string>
+    <string name="folder_duplicate_finder_title">Duplicate Finder</string>
+    <string name="no_duplicates_found_title">No Duplicates Found</string>
+    <string name="no_duplicates_found_message">No duplicate files were found in this folder or any of its subfolders.</string>
+    <string name="icon_action_duplicate_finder">Duplicate Finder</string>
 </resources>
+

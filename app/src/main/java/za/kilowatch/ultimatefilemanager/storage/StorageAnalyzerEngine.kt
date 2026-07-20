@@ -71,6 +71,17 @@ class StorageAnalyzerEngine(private val context: Context) {
         return buildDuplicateGroups(storageId)
     }
 
+    suspend fun getDuplicateGroupsReportForFolder(storageId: String, folderPath: String): List<DuplicateGroup> {
+        val cleanFolderPath = folderPath.trimEnd('/')
+        return buildDuplicateGroupsForFolder(storageId, cleanFolderPath)
+    }
+
+    private fun isPathInFolder(fileFolderPath: String, targetFolder: String): Boolean {
+        val a = fileFolderPath.trimEnd('/')
+        val b = targetFolder.trimEnd('/')
+        return a == b || a.startsWith("$b/")
+    }
+
     suspend fun getOldFiles(storageId: String): List<FileIndex> {
         val oldThreshold = System.currentTimeMillis() - (180L * 24 * 60 * 60 * 1000)
         return dao.getOldFiles(storageId, oldThreshold, limit = 200)
@@ -257,7 +268,7 @@ class StorageAnalyzerEngine(private val context: Context) {
      */
     private suspend fun buildDuplicateGroups(storageId: String): List<DuplicateGroup> {
         // ── Phase 1: DB query for quick-hash candidate groups ────────────────────
-        val summaries = dao.getDuplicateGroups(storageId, limit = 200)
+        val summaries = dao.getDuplicateGroups(storageId, limit = 500)
         if (summaries.isEmpty()) return emptyList()
 
         // Batch-fetch all candidate files in one SQL call (avoids N+1 pattern)
@@ -272,18 +283,14 @@ class StorageAnalyzerEngine(private val context: Context) {
             if (candidates.size < 2) continue
 
             // ── Phase 2: full-hash verification ─────────────────────────────────
-            // Separate candidates into those that fit within the size threshold and
-            // those that are too large to full-hash within a reasonable time budget.
             val (smallEnough, tooLarge) = candidates.partition { it.size <= FULL_HASH_MAX_BYTES }
 
-            // Full-hash the files that are within the threshold
-            if (smallEnough.size >= 2) {
+            if (smallEnough.isNotEmpty()) {
                 val byFullHash = smallEnough.groupBy { file ->
                     try {
                         computeFullHash(File(file.path))
                     } catch (e: Exception) {
                         GoRoLog.w(TAG, "Full-hash failed for ${file.path}: ${e.message}")
-                        // On failure fall back to the quick hash so the file stays in its group
                         file.hash
                     }
                 }
@@ -298,12 +305,8 @@ class StorageAnalyzerEngine(private val context: Context) {
                         ))
                     }
                 }
-            } else if (smallEnough.size == 1 && tooLarge.isEmpty()) {
-                // Only one small-enough file after grouping — not a duplicate group
-                continue
             }
 
-            // Files above the threshold: group by quick-hash as before but mark unverified
             if (tooLarge.size >= 2) {
                 val wastedBytes = tooLarge.sumOf { it.size } - tooLarge.minOf { it.size }
                 result.add(DuplicateGroup(
@@ -317,6 +320,66 @@ class StorageAnalyzerEngine(private val context: Context) {
 
         return result.sortedByDescending { it.wastedBytes }
     }
+
+    private suspend fun buildDuplicateGroupsForFolder(storageId: String, cleanFolder: String): List<DuplicateGroup> {
+        val summaries = dao.getDuplicateGroupsForFolder(storageId, cleanFolder, limit = 500)
+        if (summaries.isEmpty()) return emptyList()
+
+        val hashes = summaries.map { it.hash }
+        val allCandidates = dao.getFilesForHashes(hashes, storageId)
+        val byQuickHash = allCandidates.groupBy { it.hash }
+
+        val result = mutableListOf<DuplicateGroup>()
+
+        for (summary in summaries) {
+            val candidates = byQuickHash[summary.hash] ?: continue
+            val hasFileInFolder = candidates.any { isPathInFolder(it.folderPath, cleanFolder) }
+            if (!hasFileInFolder || candidates.size < 2) continue
+
+            val (smallEnough, tooLarge) = candidates.partition { it.size <= FULL_HASH_MAX_BYTES }
+
+            if (smallEnough.isNotEmpty()) {
+                val byFullHash = smallEnough.groupBy { file ->
+                    try {
+                        computeFullHash(File(file.path))
+                    } catch (e: Exception) {
+                        GoRoLog.w(TAG, "Full-hash failed for ${file.path}: ${e.message}")
+                        file.hash
+                    }
+                }
+                for ((fullHash, group) in byFullHash) {
+                    val inFolderCount = group.count { isPathInFolder(it.folderPath, cleanFolder) }
+                    if (group.size >= 2 && inFolderCount > 0) {
+                        val wastedBytes = group.sumOf { it.size } - group.minOf { it.size }
+                        result.add(DuplicateGroup(
+                            hash        = fullHash,
+                            files       = group,
+                            wastedBytes = wastedBytes,
+                            isVerified  = true
+                        ))
+                    }
+                }
+            }
+
+            if (tooLarge.size >= 2) {
+                val inFolderCount = tooLarge.count { isPathInFolder(it.folderPath, cleanFolder) }
+                if (inFolderCount > 0) {
+                    val wastedBytes = tooLarge.sumOf { it.size } - tooLarge.minOf { it.size }
+                    result.add(DuplicateGroup(
+                        hash        = summary.hash,
+                        files       = tooLarge,
+                        wastedBytes = wastedBytes,
+                        isVerified  = false
+                    ))
+                }
+            }
+        }
+
+        return result.sortedByDescending { it.wastedBytes }
+    }
+
+
+
 
     /**
      * Compute a full MD5 hash of [file]'s entire content.

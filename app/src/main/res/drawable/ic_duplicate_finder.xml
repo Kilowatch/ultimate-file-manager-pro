@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Back duplicate document card -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M15,1H4C2.9,1 2,1.9 2,3v12h2V3h11V1z" />
+    <!-- Front document card -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M18,5H8C6.9,5 6,5.9 6,7v12c0,1.1 0.9,2 2,2h10c1.1,0 2,-0.9 2,-2V7C20,5.9 19.1,5 18,5zM18,19H8V7h10V19z" />
+    <!-- Search / Finder magnifying glass overlay -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M13.5,10c-1.38,0 -2.5,1.12 -2.5,2.5c0,0.53 0.17,1.02 0.45,1.42l-1.39,1.39l1.06,1.06l1.39,-1.39c0.4,0.28 0.89,0.45 1.42,0.45c1.38,0 2.5,-1.12 2.5,-2.5c0,-1.38 -1.12,-2.5 -2.5,-2.5zM13.5,13.5c-0.55,0 -1,-0.45 -1,-1c0,-0.55 0.45,-1 1,-1c0.55,0 1,0.45 1,1c0,0.55 -0.45,1 -1,1z" />
+</vector>

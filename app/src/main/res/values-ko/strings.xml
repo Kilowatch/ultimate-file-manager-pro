@@ -9950,4 +9950,22 @@ UFM 플레이어 설정
     <string name="sort_folder_mode_recursive">
 재귀적(하위 폴더)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+중복 파일 찾기
+</string>
+    <string name="folder_duplicate_finder_title">
+중복 파일 찾기
+</string>
+    <string name="no_duplicates_found_title">
+중복 파일 없음
+</string>
+    <string name="no_duplicates_found_message">
+이 폴더 및 하위 폴더에서 중복 파일을 찾을 수 없습니다.
+</string>
+    <string name="icon_action_duplicate_finder">
+중복 파일 찾기
+</string>
 </resources>
+

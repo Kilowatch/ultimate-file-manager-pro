@@ -88,8 +88,10 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_photo_video, R.string.action_retrigger_thumbnails, ToolbarIconsPreferenceManager.KEY_RETRIGGER_THUMBNAILS),
             IconItem(R.drawable.ic_delete, R.string.action_delete, ToolbarIconsPreferenceManager.KEY_DELETE),
             IconItem(R.drawable.ic_paperclip, R.string.pin, ToolbarIconsPreferenceManager.KEY_PIN),
-            IconItem(R.drawable.ic_paperclip_off, R.string.unpin, ToolbarIconsPreferenceManager.KEY_UNPIN)
+            IconItem(R.drawable.ic_paperclip_off, R.string.unpin, ToolbarIconsPreferenceManager.KEY_UNPIN),
+            IconItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER)
         )
+
 
         for (item in items) {
             val view = if (isTv) {

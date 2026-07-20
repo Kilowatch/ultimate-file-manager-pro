@@ -369,10 +369,52 @@ interface FileIndexDao {
      */
     @Query("""
         SELECT * FROM file_index
-        WHERE hash IN (:hashes) AND hash != '' AND isDirectory = 0 AND storageId = :storageId
+        WHERE hash IN (:hashes) AND hash != '' AND isDirectory = 0 AND (:storageId = '' OR storageId = :storageId)
         ORDER BY hash, path ASC
     """)
     suspend fun getFilesForHashes(hashes: List<String>, storageId: String): List<FileIndex>
+
+    /**
+     * Folder-scoped variant: returns hash groups that have at least one file in [folderPath] or its subfolders,
+     * and have more than one file total across the storage.
+     */
+    @Query("""
+        SELECT hash, COUNT(*) as fileCount, SUM(size) as totalSize
+        FROM file_index
+        WHERE hash != '' AND isDirectory = 0 
+          AND (:storageId = '' OR storageId = :storageId)
+          AND hash IN (
+              SELECT DISTINCT hash FROM file_index
+              WHERE (:storageId = '' OR storageId = :storageId) 
+                AND isDirectory = 0 AND hash != ''
+                AND (
+                    folderPath = :folderPath COLLATE NOCASE
+                    OR folderPath = :folderPath || '/' COLLATE NOCASE
+                    OR folderPath LIKE :folderPath || '/%' COLLATE NOCASE
+                )
+          )
+        GROUP BY hash
+        HAVING fileCount > 1
+        ORDER BY totalSize DESC
+        LIMIT :limit
+    """)
+    suspend fun getDuplicateGroupsForFolder(storageId: String, folderPath: String, limit: Int = 500): List<DuplicateGroupSummary>
+
+
+
+
+    /**
+     * Folder-scoped batch variant: fetches candidate files for hashes inside [folderPath] or its subfolders.
+     */
+    @Query("""
+        SELECT * FROM file_index
+        WHERE hash IN (:hashes) AND hash != '' AND isDirectory = 0 AND storageId = :storageId
+          AND (folderPath = :folderPath OR folderPath LIKE :folderPath || '/%')
+        ORDER BY hash, path ASC
+    """)
+    suspend fun getFilesForHashesInFolder(hashes: List<String>, storageId: String, folderPath: String): List<FileIndex>
+
+
 
     // ============ ANALYZER — OLD FILES ============
 

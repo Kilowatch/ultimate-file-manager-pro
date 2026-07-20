@@ -58,7 +58,8 @@ class FilesystemScanner(private val context: Context) {
 
                 try {
                     val existing = dao.getByPath(file.absolutePath)
-                    if (existing == null || existing.lastScannedAt < file.lastModified()) {
+                    val needsHash = !file.isDirectory && file.length() > 0L && (existing == null || existing.hash.isEmpty())
+                    if (existing == null || existing.lastScannedAt < file.lastModified() || needsHash) {
                         val fileIndex = metadataExtractor.extractMetadata(file, storageId, storageType)
                         emit(fileIndex)
                     }
@@ -242,7 +243,8 @@ class FilesystemScanner(private val context: Context) {
                 if (shouldExclude(file, DEFAULT_EXCLUDE_PATHS)) return@forEach
                 try {
                     val existing = dao.getByPath(file.absolutePath)
-                    if (existing == null || existing.lastScannedAt < file.lastModified()) {
+                    val needsHash = !file.isDirectory && file.length() > 0L && (existing == null || existing.hash.isEmpty())
+                    if (existing == null || existing.lastScannedAt < file.lastModified() || needsHash) {
                         emit(metadataExtractor.extractMetadata(file, storageId, storageType))
                     }
                 } catch (e: Exception) {

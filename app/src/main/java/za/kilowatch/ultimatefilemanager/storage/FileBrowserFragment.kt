@@ -83,8 +83,10 @@ class FileBrowserFragment : Fragment() {
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var btnRetriggerThumbnails: ImageView? = null
+    private var btnDuplicateFinder: ImageView? = null
     private lateinit var fileAdapter: FileAdapter
-    
+
+
     private val batchRenameTvLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -93,6 +95,17 @@ class FileBrowserFragment : Fragment() {
             refresh()
         }
     }
+
+    private val folderDuplicateFinderLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            fileAdapter.exitSelectionMode()
+            triggerReindex()
+        }
+    }
+
+
     
     private lateinit var btnSearchToggle: ImageView
     private lateinit var layoutSearchRow: LinearLayout
@@ -288,6 +301,8 @@ class FileBrowserFragment : Fragment() {
         btnCopyEncrypt = view.findViewById(R.id.btnCopyEncrypt)
         btnMoveEncrypt = view.findViewById(R.id.btnMoveEncrypt)
         btnRetriggerThumbnails = view.findViewById(R.id.btnRetriggerThumbnails)
+        btnDuplicateFinder = view.findViewById(R.id.btnDuplicateFinder)
+
         btnHide = view.findViewById(R.id.btnHide)
         btnUnhide = view.findViewById(R.id.btnUnhide)
         btnProtect = view.findViewById(R.id.btnProtect)
@@ -589,6 +604,24 @@ class FileBrowserFragment : Fragment() {
                 }
             }
         }
+
+        btnDuplicateFinder?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && selected.first().isDirectory) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    fileAdapter.exitSelectionMode()
+                    val intent = android.content.Intent(requireContext(), FolderDuplicateFinderActivity::class.java).apply {
+                        putExtra(FolderDuplicateFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                        putExtra(FolderDuplicateFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                    }
+                    folderDuplicateFinderLauncher.launch(intent)
+                }
+            }
+        }
+
 
         btnImageCompress.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
@@ -948,6 +981,23 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Duplicate Finder (single folder, indexed storage)
+            if (count == 1 && selected.first().isDirectory && pm.isIconEnabled(context, pm.KEY_DUPLICATE_FINDER)) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    list.add(FileToolsBottomSheet.ActionItem("duplicate_finder", getString(R.string.action_duplicate_finder), R.drawable.ic_duplicate_finder, "toolbar_duplicate_finder") {
+                        fileAdapter.exitSelectionMode()
+                        val intent = android.content.Intent(requireContext(), FolderDuplicateFinderActivity::class.java).apply {
+                            putExtra(FolderDuplicateFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                            putExtra(FolderDuplicateFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                        }
+                        folderDuplicateFinderLauncher.launch(intent)
+                    })
+                }
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -955,6 +1005,7 @@ class FileBrowserFragment : Fragment() {
                 sheet.show(parentFragmentManager, FileToolsBottomSheet.TAG)
             }
         }
+
 
         if (isTv) setupTvFocus(view)
     }
@@ -992,6 +1043,8 @@ class FileBrowserFragment : Fragment() {
 
         wireTvIconBtn(view.findViewById(R.id.btnSearchToggle)) { toggleSearch() }
         wireTvIconBtn(view.findViewById(R.id.btnRefreshIndex)) { triggerReindex() }
+        wireTvIconBtn(view.findViewById(R.id.btnDuplicateFinder)) { }
+
         wireTvIconBtn(view.findViewById(R.id.btnViewToggle)) {
             ViewModeManager.showSelectionDialog(requireContext(), fileAdapter.viewMode) { selectedMode ->
                 val folderKey = SortFilterPreferenceManager.folderKey(currentDir.absolutePath)
@@ -1160,6 +1213,12 @@ class FileBrowserFragment : Fragment() {
                     it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
                 }
                 btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
+                
+                val isSingleFolderSel = imgFiles.size == 1 && imgFiles.first().isDirectory
+                val (selStorageId, _, _) = if (isSingleFolderSel) za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(imgFiles.first().absolutePath) else Triple("", "", "")
+                val isSelFolderIndexed = selStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(selStorageId)
+                btnDuplicateFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(context, pm.KEY_DUPLICATE_FINDER)) View.VISIBLE else View.GONE
+
                 
                 btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
                 btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE

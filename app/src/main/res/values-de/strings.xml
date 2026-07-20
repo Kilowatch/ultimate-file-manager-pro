@@ -9950,4 +9950,22 @@ Nur Stammordner
     <string name="sort_folder_mode_recursive">
 Rekursiv (Unterordner)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Duplikatsuche
+</string>
+    <string name="folder_duplicate_finder_title">
+Duplikatsuche
+</string>
+    <string name="no_duplicates_found_title">
+Keine Duplikate gefunden
+</string>
+    <string name="no_duplicates_found_message">
+In diesem Ordner oder seinen Unterordnern wurden keine doppelten Dateien gefunden.
+</string>
+    <string name="icon_action_duplicate_finder">
+Duplikatsuche
+</string>
 </resources>
+

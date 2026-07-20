@@ -9950,4 +9950,22 @@ Yalnızca Kök Klasör
     <string name="sort_folder_mode_recursive">
 Özyinelemeli (Alt Klasörler)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Yinelenen Bulucu
+</string>
+    <string name="folder_duplicate_finder_title">
+Yinelenen Bulucu
+</string>
+    <string name="no_duplicates_found_title">
+Yinelenen Bulunamadı
+</string>
+    <string name="no_duplicates_found_message">
+Bu klasörde veya alt klasörlerinde yinelenen dosya bulunamadı.
+</string>
+    <string name="icon_action_duplicate_finder">
+Yinelenen Bulucu
+</string>
 </resources>
+

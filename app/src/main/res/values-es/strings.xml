@@ -9962,4 +9962,22 @@ Solo Carpeta Raíz
     <string name="sort_folder_mode_recursive">
 Recursivo (Subcarpetas)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Buscador de duplicados
+</string>
+    <string name="folder_duplicate_finder_title">
+Buscador de duplicados
+</string>
+    <string name="no_duplicates_found_title">
+No se encontraron duplicados
+</string>
+    <string name="no_duplicates_found_message">
+No se encontraron archivos duplicados en esta carpeta ni en ninguna de sus subcarpetas.
+</string>
+    <string name="icon_action_duplicate_finder">
+Buscador de duplicados
+</string>
 </resources>
+

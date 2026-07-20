@@ -9950,4 +9950,22 @@ URL-адреса сервера
     <string name="sort_folder_mode_recursive">
 Рекурсивно (підпапки)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Пошук дублікатів
+</string>
+    <string name="folder_duplicate_finder_title">
+Пошук дублікатів
+</string>
+    <string name="no_duplicates_found_title">
+Дублікатів не знайдено
+</string>
+    <string name="no_duplicates_found_message">
+У цій папці або її підпапках не знайдено файлів-дублікатів.
+</string>
+    <string name="icon_action_duplicate_finder">
+Пошук дублікатів
+</string>
 </resources>
+

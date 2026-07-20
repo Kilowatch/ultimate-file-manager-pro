@@ -9950,4 +9950,22 @@ OK
     <string name="sort_folder_mode_recursive">
 再帰的（サブフォルダ）
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+重複ファイル検出
+</string>
+    <string name="folder_duplicate_finder_title">
+重複ファイル検出
+</string>
+    <string name="no_duplicates_found_title">
+重複ファイルは見つかりませんでした
+</string>
+    <string name="no_duplicates_found_message">
+このフォルダーまたはそのサブフォルダーに重複ファイルは見つかりませんでした。
+</string>
+    <string name="icon_action_duplicate_finder">
+重複ファイル検出
+</string>
 </resources>
+

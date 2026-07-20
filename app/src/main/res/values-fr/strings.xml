@@ -9950,4 +9950,22 @@ Dossier racine uniquement
     <string name="sort_folder_mode_recursive">
 Récursif (Sous-dossiers)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Détecteur de doublons
+</string>
+    <string name="folder_duplicate_finder_title">
+Détecteur de doublons
+</string>
+    <string name="no_duplicates_found_title">
+Aucun doublon trouvé
+</string>
+    <string name="no_duplicates_found_message">
+Aucun fichier en double n\'a été trouvé dans ce dossier ou ses sous-dossiers.
+</string>
+    <string name="icon_action_duplicate_finder">
+Détecteur de doublons
+</string>
 </resources>
+

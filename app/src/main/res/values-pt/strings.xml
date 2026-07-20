@@ -9950,4 +9950,22 @@ Apenas Pasta Raiz
     <string name="sort_folder_mode_recursive">
 Recursivo (Subpastas)
 </string>
+
+    <!-- Duplicate Finder -->
+    <string name="action_duplicate_finder">
+Localizador de Duplicatas
+</string>
+    <string name="folder_duplicate_finder_title">
+Localizador de Duplicatas
+</string>
+    <string name="no_duplicates_found_title">
+Nenhuma duplicata encontrada
+</string>
+    <string name="no_duplicates_found_message">
+Nenhum arquivo duplicado foi encontrado nesta pasta ou em suas subpastas.
+</string>
+    <string name="icon_action_duplicate_finder">
+Localizador de Duplicatas
+</string>
 </resources>
+
