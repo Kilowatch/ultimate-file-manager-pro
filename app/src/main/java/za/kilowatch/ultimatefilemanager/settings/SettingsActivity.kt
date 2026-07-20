@@ -1482,6 +1482,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private data class ListSizeConfig(
+        val cardHeightDp: Int,
         val padH: Int,
         val padV: Int,
         val frameSize: Int,
@@ -1497,16 +1498,16 @@ class SettingsActivity : AppCompatActivity() {
 
         val cfg = when (currentSize) {
             SettingsListSizeManager.ItemSize.LARGE -> {
-                if (isTv) ListSizeConfig(24, 20, 72, 36, 22f, 16f)
-                else ListSizeConfig(20, 18, 52, 26, 17f, 13f)
+                if (isTv) ListSizeConfig(0, 24, 20, 48, 44, 22f, 16f)
+                else ListSizeConfig(0, 20, 18, 52, 26, 17f, 13f)
             }
             SettingsListSizeManager.ItemSize.MEDIUM -> {
-                if (isTv) ListSizeConfig(16, 12, 60, 28, 18f, 14f)
-                else ListSizeConfig(16, 12, 44, 22, 15f, 12f)
+                if (isTv) ListSizeConfig(0, 20, 12, 40, 36, 18f, 14f)
+                else ListSizeConfig(0, 16, 12, 44, 22, 15f, 12f)
             }
             SettingsListSizeManager.ItemSize.SMALL -> {
-                if (isTv) ListSizeConfig(12, 8, 48, 22, 16f, 13f)
-                else ListSizeConfig(12, 8, 36, 18, 13f, 11f)
+                if (isTv) ListSizeConfig(0, 16, 8, 32, 28, 15f, 12f)
+                else ListSizeConfig(0, 12, 8, 36, 18, 13f, 11f)
             }
         }
 
@@ -1521,27 +1522,46 @@ class SettingsActivity : AppCompatActivity() {
             for (i in 0 until vg.childCount) {
                 val child = vg.getChildAt(i)
                 if (child is MaterialCardView) {
+                    val cardLp = child.layoutParams
+                    if (cfg.cardHeightDp > 0) {
+                        cardLp.height = (cfg.cardHeightDp * density).toInt()
+                    } else {
+                        cardLp.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                    }
+                    child.layoutParams = cardLp
+
                     val inner = child.getChildAt(0) as? android.view.ViewGroup ?: continue
+                    if (cfg.cardHeightDp == 0) {
+                        val innerLp = inner.layoutParams
+                        innerLp.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                        inner.layoutParams = innerLp
+                    }
                     inner.setPadding(padHPx, padVPx, padHPx, padVPx)
+
                     if (inner.childCount > 0) {
-                        val iconFrame = inner.getChildAt(0) as? android.widget.FrameLayout
-                        iconFrame?.let { frame ->
-                            val lp = frame.layoutParams
+                        val firstChild = inner.getChildAt(0)
+                        if (firstChild is android.widget.FrameLayout) {
+                            val lp = firstChild.layoutParams
                             lp.width = framePx
                             lp.height = framePx
-                            frame.layoutParams = lp
+                            firstChild.layoutParams = lp
 
-                            if (frame.childCount > 0) {
-                                val iv = frame.getChildAt(0) as? ImageView
-                                iv?.let { img ->
+                            if (firstChild.childCount > 0) {
+                                (firstChild.getChildAt(0) as? ImageView)?.let { img ->
                                     val imgLp = img.layoutParams
                                     imgLp.width = iconPx
                                     imgLp.height = iconPx
                                     img.layoutParams = imgLp
                                 }
                             }
+                        } else if (firstChild is ImageView) {
+                            val imgLp = firstChild.layoutParams
+                            imgLp.width = iconPx
+                            imgLp.height = iconPx
+                            firstChild.layoutParams = imgLp
                         }
                     }
+
                     if (inner.childCount > 1) {
                         val textBlock = inner.getChildAt(1) as? android.view.ViewGroup
                         textBlock?.let { tb ->

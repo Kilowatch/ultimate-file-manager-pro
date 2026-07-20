@@ -175,7 +175,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSettingsSearch"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -189,7 +189,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/margin_xl"
@@ -240,7 +240,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardDefaultStartScreen"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -254,7 +254,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/margin_xl"
@@ -305,7 +305,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLanguage"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
@@ -318,7 +318,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="@dimen/margin_xl"
