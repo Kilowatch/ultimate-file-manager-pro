@@ -59,6 +59,18 @@
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnListViewSize"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_list_view_custom"
+            android:contentDescription="@string/cd_settings_list_size"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_icon_btn" />
     </LinearLayout>
 
     <!-- Hidden toolbar stub for compat -->

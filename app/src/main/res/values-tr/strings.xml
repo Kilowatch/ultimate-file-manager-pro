@@ -50,6 +50,12 @@ Dil Seçin
     <string name="language_system_default">
 Sistem Varsayılanı
 </string>
+    <string name="settings_list_size_title">
+Ayarlar Satır Boyutu
+</string>
+    <string name="cd_settings_list_size">
+Ayarlar satır boyutunu ayarla
+</string>
 
     <!-- Spreadsheet Viewer -->
     <string name="view_mode_list">

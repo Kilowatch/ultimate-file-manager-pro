@@ -50,6 +50,12 @@ Sélectionnez la langue
     <string name="language_system_default">
 Par défaut du système
 </string>
+    <string name="settings_list_size_title">
+Taille de la ligne des paramètres
+</string>
+    <string name="cd_settings_list_size">
+Ajuster la taille de la ligne des paramètres
+</string>
 
     <!-- Spreadsheet Viewer -->
     <string name="view_mode_list">

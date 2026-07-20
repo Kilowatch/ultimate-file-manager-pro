@@ -285,6 +285,7 @@ object SettingsBackupManager {
         add("grid_indicators_prefs",     context.getString(R.string.backup_pref_grid_indicators))
         add("scrolling_text_prefs",      context.getString(R.string.backup_pref_scrolling_text))
         add("settings_search_prefs",      context.getString(R.string.backup_pref_settings_search))
+        add("ufm_settings_list_prefs",    context.getString(R.string.settings_list_size_title))
         add("file_server_prefs",         context.getString(R.string.backup_pref_file_server))
         add("tile_icons_prefs",          context.getString(R.string.backup_pref_tile_icons))
         add("icon_customization_prefs",  context.getString(R.string.backup_pref_icon_customization))

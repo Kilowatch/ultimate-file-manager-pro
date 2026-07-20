@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.1] — 2026-07-19
 
+### Added
+- Added a list-view density toggle icon (`ic_list_view_custom`) to the Settings header bar on mobile and TV, allowing users to switch settings row size between Small, Medium (default), and Large. Adjusts card row padding, icon circle dimensions, and text sizes dynamically.
+
 ### Changed
 - Duplicate detector upgraded to a two-phase content-hashing pipeline. Phase 1 groups files by the existing 64 KB quick-hash (DB query, no I/O). Phase 2 computes a full-file MD5 for each candidate group at analysis time, confirming true content identity regardless of filename — eliminating false positives and detecting copies that differ only in name. Files larger than 500 MB skip the full-hash and are shown in the Duplicates tab with an amber "⚠ Quick match only" badge on both mobile and TV layouts. A "Verifying content…" progress indicator appears at the bottom of the Duplicates tab while the verification pass is running.
 

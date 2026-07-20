@@ -2,10 +2,12 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
 import android.content.Intent
+import android.view.LayoutInflater
 import android.view.View
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RadioButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -146,6 +148,22 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         btnBack?.setOnClickListener { finish() }
+
+        // List view size toolbar button
+        val btnListViewSize = findViewById<ImageView?>(R.id.btnListViewSize)
+        if (isTv) {
+            btnListViewSize?.let { btn ->
+                val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+                val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+                btn.imageTintList = whiteCsl
+                btn.setOnFocusChangeListener { _, hasFocus ->
+                    btn.imageTintList = if (hasFocus) blackCsl else whiteCsl
+                }
+                btn.setOnClickListener { showTvListSizeOptions() }
+            }
+        } else {
+            btnListViewSize?.setOnClickListener { showListSizeBottomSheet() }
+        }
 
         // Font Size row
         val cardFontSize = findViewById<MaterialCardView>(R.id.cardFontSize)
@@ -664,10 +682,13 @@ class SettingsActivity : AppCompatActivity() {
         // Apply initial search container visibility from preference manager
         val isSearchEnabled = SettingsSearchPreferenceManager.isEnabled(this)
         updateSearchContainerVisibility(isSearchEnabled)
+
+        applyListSize()
     }
 
     override fun onResume() {
         super.onResume()
+        applyListSize()
         // Refresh the font size subtitle
         val txtFontSizeSubtitle = findViewById<TextView?>(R.id.txtFontSizeSubtitle)
         txtFontSizeSubtitle?.text = when (FontSizeHelper.getSavedSize(this)) {
@@ -1389,5 +1410,155 @@ class SettingsActivity : AppCompatActivity() {
                 getAllTextFromView(view.getChildAt(i), sb)
             }
         }
+    }
+
+    private fun showListSizeBottomSheet() {
+        val sheet = SettingsListSizeBottomSheet.newInstance()
+        sheet.onSettingsChanged = {
+            applyListSize()
+        }
+        sheet.show(supportFragmentManager, SettingsListSizeBottomSheet.TAG)
+    }
+
+    private fun showTvListSizeOptions() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_view_mode_options_tv, null)
+        val imgDialogIcon = dialogView.findViewById<ImageView>(R.id.imgDialogIcon)
+        val txtDialogTitle = dialogView.findViewById<TextView>(R.id.txtDialogTitle)
+        val layoutColumns = dialogView.findViewById<View>(R.id.layoutColumns)
+        val layoutListSize = dialogView.findViewById<View>(R.id.layoutListSize)
+        val btnTvClose = dialogView.findViewById<View>(R.id.btnTvClose)
+
+        val dialog = android.app.AlertDialog.Builder(this, android.R.style.Theme_Translucent_NoTitleBar)
+            .setView(dialogView)
+            .create()
+
+        btnTvClose.setOnClickListener { dialog.dismiss() }
+
+        imgDialogIcon.setImageResource(R.drawable.ic_list_view_custom)
+        txtDialogTitle.text = getString(R.string.settings_list_size_title)
+        layoutListSize.visibility = View.VISIBLE
+        layoutColumns.visibility = View.GONE
+
+        val currentSize = SettingsListSizeManager.loadItemSize(this)
+        val cardLarge = dialogView.findViewById<MaterialCardView>(R.id.cardSizeLarge)
+        val cardMedium = dialogView.findViewById<MaterialCardView>(R.id.cardSizeMedium)
+        val cardSmall = dialogView.findViewById<MaterialCardView>(R.id.cardSizeSmall)
+        val rbLarge = dialogView.findViewById<RadioButton>(R.id.rbSizeLarge)
+        val rbMedium = dialogView.findViewById<RadioButton>(R.id.rbSizeMedium)
+        val rbSmall = dialogView.findViewById<RadioButton>(R.id.rbSizeSmall)
+
+        rbLarge.isChecked = currentSize == SettingsListSizeManager.ItemSize.LARGE
+        rbMedium.isChecked = currentSize == SettingsListSizeManager.ItemSize.MEDIUM
+        rbSmall.isChecked = currentSize == SettingsListSizeManager.ItemSize.SMALL
+
+        val activeColor = getColor(R.color.tv_accent)
+        val inactiveColor = getColor(R.color.tv_glass_border)
+
+        cardLarge.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.LARGE) activeColor else inactiveColor
+        cardMedium.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.MEDIUM) activeColor else inactiveColor
+        cardSmall.strokeColor = if (currentSize == SettingsListSizeManager.ItemSize.SMALL) activeColor else inactiveColor
+
+        setupTvCardFocus(cardLarge)
+        setupTvCardFocus(cardMedium)
+        setupTvCardFocus(cardSmall)
+
+        cardLarge.setOnClickListener {
+            SettingsListSizeManager.saveItemSize(this, SettingsListSizeManager.ItemSize.LARGE)
+            applyListSize()
+            dialog.dismiss()
+        }
+        cardMedium.setOnClickListener {
+            SettingsListSizeManager.saveItemSize(this, SettingsListSizeManager.ItemSize.MEDIUM)
+            applyListSize()
+            dialog.dismiss()
+        }
+        cardSmall.setOnClickListener {
+            SettingsListSizeManager.saveItemSize(this, SettingsListSizeManager.ItemSize.SMALL)
+            applyListSize()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private data class ListSizeConfig(
+        val padH: Int,
+        val padV: Int,
+        val frameSize: Int,
+        val iconSize: Int,
+        val titleSize: Float,
+        val subSize: Float
+    )
+
+    private fun applyListSize() {
+        val list = findViewById<android.widget.LinearLayout>(R.id.layoutSettingsList) ?: return
+        val currentSize = SettingsListSizeManager.loadItemSize(this)
+        val density = resources.displayMetrics.density
+
+        val cfg = when (currentSize) {
+            SettingsListSizeManager.ItemSize.LARGE -> {
+                if (isTv) ListSizeConfig(24, 20, 72, 36, 22f, 16f)
+                else ListSizeConfig(20, 18, 52, 26, 17f, 13f)
+            }
+            SettingsListSizeManager.ItemSize.MEDIUM -> {
+                if (isTv) ListSizeConfig(16, 12, 60, 28, 18f, 14f)
+                else ListSizeConfig(16, 12, 44, 22, 15f, 12f)
+            }
+            SettingsListSizeManager.ItemSize.SMALL -> {
+                if (isTv) ListSizeConfig(12, 8, 48, 22, 16f, 13f)
+                else ListSizeConfig(12, 8, 36, 18, 13f, 11f)
+            }
+        }
+
+        val padHPx = (cfg.padH * density).toInt()
+        val padVPx = (cfg.padV * density).toInt()
+        val framePx = (cfg.frameSize * density).toInt()
+        val iconPx = (cfg.iconSize * density).toInt()
+        val titleSp = cfg.titleSize
+        val subSp = cfg.subSize
+
+        fun applyToViewGroup(vg: android.view.ViewGroup) {
+            for (i in 0 until vg.childCount) {
+                val child = vg.getChildAt(i)
+                if (child is MaterialCardView) {
+                    val inner = child.getChildAt(0) as? android.view.ViewGroup ?: continue
+                    inner.setPadding(padHPx, padVPx, padHPx, padVPx)
+                    if (inner.childCount > 0) {
+                        val iconFrame = inner.getChildAt(0) as? android.widget.FrameLayout
+                        iconFrame?.let { frame ->
+                            val lp = frame.layoutParams
+                            lp.width = framePx
+                            lp.height = framePx
+                            frame.layoutParams = lp
+
+                            if (frame.childCount > 0) {
+                                val iv = frame.getChildAt(0) as? ImageView
+                                iv?.let { img ->
+                                    val imgLp = img.layoutParams
+                                    imgLp.width = iconPx
+                                    imgLp.height = iconPx
+                                    img.layoutParams = imgLp
+                                }
+                            }
+                        }
+                    }
+                    if (inner.childCount > 1) {
+                        val textBlock = inner.getChildAt(1) as? android.view.ViewGroup
+                        textBlock?.let { tb ->
+                            if (tb.childCount > 0) {
+                                (tb.getChildAt(0) as? TextView)?.textSize = titleSp
+                            }
+                            if (tb.childCount > 1) {
+                                (tb.getChildAt(1) as? TextView)?.textSize = subSp
+                            }
+                        }
+                    }
+                } else if (child is android.view.ViewGroup) {
+                    applyToViewGroup(child)
+                }
+            }
+        }
+
+        applyToViewGroup(list)
     }
 }

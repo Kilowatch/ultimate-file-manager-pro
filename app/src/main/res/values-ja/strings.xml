@@ -50,6 +50,12 @@ Ultimate File Manager Pro
     <string name="language_system_default">
 システムデフォルト
 </string>
+    <string name="settings_list_size_title">
+設定の行サイズ
+</string>
+    <string name="cd_settings_list_size">
+設定の行サイズを調整
+</string>
 
     <!-- Spreadsheet Viewer -->
     <string name="view_mode_list">
