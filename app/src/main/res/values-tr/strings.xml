@@ -1028,6 +1028,13 @@ Bu yinelenen gruplar için TÜM kopyaları seçtiniz. Devam ederseniz, bu dosyal
     <string name="analyzer_delete_anyway">
 Tüm Kopyaları Sil
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ Yalnızca hızlı eşleşme
+</string>
+    <string name="analyzer_dup_verifying">
+İçerik doğrulanıyor…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 Dahili Depolama

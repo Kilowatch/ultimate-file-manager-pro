@@ -1028,6 +1028,13 @@ APK
     <string name="analyzer_delete_anyway">
 Удалить все копии
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ Только быстрое сопоставление
+</string>
+    <string name="analyzer_dup_verifying">
+Проверка содержимого…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 Внутренняя память

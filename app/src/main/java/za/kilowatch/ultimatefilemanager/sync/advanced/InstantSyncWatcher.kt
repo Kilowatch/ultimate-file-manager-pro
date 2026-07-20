@@ -11,7 +11,9 @@ import android.os.FileObserver
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import java.io.File
@@ -22,6 +24,19 @@ import java.io.File
  * Watches the local source folder for file create/modify/delete events,
  * debounces bursts, checks battery and network constraints, then enqueues
  * a one-shot [AdvancedSyncWorker] via WorkManager.
+ *
+ * ## Queued re-trigger (race-condition fix)
+ *
+ * Files can land in the source folder while [AdvancedSyncWorker] is already running.
+ * To avoid missing those files, [performTrigger] checks whether an instant sync for
+ * the profile is currently RUNNING or ENQUEUED.  If so, it sets a flag in
+ * [pendingTriggers] rather than enqueuing another request.  When the worker finishes
+ * it calls [onSyncCompleted]; that callback fires the pending trigger so the
+ * newly-arrived files are picked up in a follow-up run.
+ *
+ * At most **one** follow-up run is queued per profile — many rapid arrivals collapse
+ * into a single follow-up thanks to the set semantics of [pendingTriggers].
+ * WorkManager's [ExistingWorkPolicy.KEEP] additionally prevents accidental stacking.
  */
 object InstantSyncWatcher {
 
@@ -32,6 +47,16 @@ object InstantSyncWatcher {
     private val watchers = mutableMapOf<String, FileObserver>()
     private val debounceHandlers = mutableMapOf<String, Handler>()
     private val debounceRunnables = mutableMapOf<String, Runnable>()
+
+    /**
+     * Profile IDs that received a file-system event while a sync was already running.
+     * At most one pending re-trigger is stored per profile — rapid arrivals during a
+     * sync collapse into a single follow-up run.
+     */
+    private val pendingTriggers = mutableSetOf<String>()
+
+    /** Unique WorkManager work name for one-shot instant sync of the given profile. */
+    private fun instantWorkName(profileId: String) = "instant_sync_$profileId"
 
     /**
      * Start watching the source folder of the given profile.
@@ -59,8 +84,10 @@ object InstantSyncWatcher {
 
     /**
      * Stop watching the given profile. Safe to call even if not watching.
+     * Also clears any pending re-trigger for this profile.
      */
     fun stopWatching(profileId: String) {
+        pendingTriggers.remove(profileId)
         // Remove and stop the FileObserver (inner stopWatching() is FileObserver's method)
         watchers.remove(profileId)?.apply {
             stopWatching()
@@ -70,9 +97,10 @@ object InstantSyncWatcher {
     }
 
     /**
-     * Stop all active watchers.
+     * Stop all active watchers and clear all pending re-triggers.
      */
     fun stopAll() {
+        pendingTriggers.clear()
         val ids = watchers.keys.toList()
         ids.forEach { stopWatching(it) }
     }
@@ -91,6 +119,23 @@ object InstantSyncWatcher {
         val repo = AdvancedSyncProfileRepository.getInstance(context)
         repo.getAll().filter { it.instantSyncEnabled && it.enabled }.forEach { profile ->
             startWatching(context, profile)
+        }
+    }
+
+    /**
+     * Called by [AdvancedSyncWorker] when a sync run for [profileId] completes.
+     *
+     * If a file-system event arrived while the worker was running, a pending trigger
+     * was recorded. This method fires that pending trigger so the newly arrived
+     * files are synced in a follow-up run.
+     */
+    fun onSyncCompleted(context: Context, profileId: String) {
+        if (pendingTriggers.remove(profileId)) {
+            Log.d(TAG, "Pending trigger fired for profile $profileId after sync completion")
+            val profile = AdvancedSyncProfileRepository.getInstance(context).getById(profileId)
+            if (profile != null && profile.enabled && profile.instantSyncEnabled) {
+                performTrigger(context, profile)
+            }
         }
     }
 
@@ -139,13 +184,44 @@ object InstantSyncWatcher {
             return
         }
 
-        // Enqueue one-shot work
+        val workName = instantWorkName(profile.id)
+
+        // If a run for this profile is already RUNNING or ENQUEUED, record a pending
+        // trigger so a follow-up sync fires once the current run completes.
+        // WorkManager's KEEP policy ensures we never stack duplicate requests on top of
+        // each other — at most one queued run exists at any time per profile.
+        val infos = try {
+            WorkManager.getInstance(context)
+                .getWorkInfosForUniqueWork(workName)
+                .get() // blocking — we are already on a background handler thread
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not query work info for $workName", e)
+            emptyList()
+        }
+
+        val isActive = infos.any { info ->
+            info.state == WorkInfo.State.RUNNING || info.state == WorkInfo.State.ENQUEUED
+        }
+
+        if (isActive) {
+            pendingTriggers.add(profile.id)
+            Log.d(TAG, "Pending trigger queued for ${profile.name} — sync already running")
+            return
+        }
+
+        // Enqueue a unique one-shot work request. KEEP means if somehow a request is
+        // already queued (e.g. a race between the isActive check above and this call),
+        // we do not stack another on top of it.
         val inputData = workDataOf("PROFILE_ID" to profile.id)
         val workRequest = OneTimeWorkRequestBuilder<AdvancedSyncWorker>()
             .setInputData(inputData)
             .build()
 
-        WorkManager.getInstance(context).enqueue(workRequest)
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            workName,
+            ExistingWorkPolicy.KEEP,
+            workRequest
+        )
         Log.d(TAG, "Instant sync triggered for ${profile.name}")
     }
 

@@ -3322,10 +3322,17 @@ class FileBrowserActivity : AppCompatActivity() {
 
                         val sourceSize = source.length()
                         updateProgress(source.name, 0, sourceSize, fileIndex, totalFiles)
-                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(source, destBase, resolvedAction) { c, t ->
+                        // Resolve the final destination before copying. For KEEP_BOTH this
+                        // produces a unique name (e.g. "photo (1).jpg") so copyLocalToLocalAtomic
+                        // never receives a same-as-source path and the self-copy guard cannot
+                        // silently swallow the operation.
+                        val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(destBase.parentFile!!, destBase.name)
+                        else destBase
+                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.copyLocalToLocalAtomic(source, finalDest, resolvedAction) { c, t ->
                             updateProgress(source.name, c, t, fileIndex, totalFiles)
                         }
-                        
+
                         // Index incrementally
                         if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                             pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))

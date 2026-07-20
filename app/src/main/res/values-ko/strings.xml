@@ -1028,6 +1028,13 @@ APK
     <string name="analyzer_delete_anyway">
 모든 복사본 삭제
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ 빠른 일치만
+</string>
+    <string name="analyzer_dup_verifying">
+내용 확인 중…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 내부 저장소

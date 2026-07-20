@@ -8,9 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.1] — 2026-07-19
 
+### Changed
+- Duplicate detector upgraded to a two-phase content-hashing pipeline. Phase 1 groups files by the existing 64 KB quick-hash (DB query, no I/O). Phase 2 computes a full-file MD5 for each candidate group at analysis time, confirming true content identity regardless of filename — eliminating false positives and detecting copies that differ only in name. Files larger than 500 MB skip the full-hash and are shown in the Duplicates tab with an amber "⚠ Quick match only" badge on both mobile and TV layouts. A "Verifying content…" progress indicator appears at the bottom of the Duplicates tab while the verification pass is running.
+
 ### Fixed
 - Local video playback no longer shows a buffering spinner or experiences playback delay on initial open, repeat loop transitions, and seeks across the full-screen player, side-by-side player, and slideshow on mobile and TV
 - Android 13+ themed icons (Adopt system colors) now render the UFM logo stencil correctly instead of showing a solid colored block. A proper monochrome vector drawable was traced exactly from the official logo reference image and is now referenced by the adaptive icon's `<monochrome>` layer.
+- "Keep Both" when pasting a file into the same directory it was copied from (local internal storage, SD card, USB OTG) now correctly creates the renamed duplicate (e.g. `photo (1).jpg`) instead of silently doing nothing. The self-copy safety guard in `TransferConflictHelper` was firing before the unique-name resolution, blocking the operation entirely; it now runs after the new name is generated so it cannot interfere with `KEEP_BOTH`.
+- Advanced Sync — Instant Sync no longer silently drops files that arrive in the source folder while a sync is already running. `InstantSyncWatcher` now tracks a pending-trigger flag per profile: if a file-system event fires during an active run, the flag is set instead of enqueuing a duplicate request. When `AdvancedSyncWorker` completes successfully, it calls back into `InstantSyncWatcher.onSyncCompleted()`, which fires exactly one follow-up sync run if the flag is set. Instant sync enqueuing also switched from an unmanaged `enqueue()` to `enqueueUniqueWork(KEEP)` to prevent multiple requests stacking up.
 
 ## [1.7.0] — 2026-07-15
 

@@ -92,6 +92,8 @@ class AnalyzerDuplicateAdapter(
                 vh.txtWasted.text   = "$countStr · $savesStr"
                 val collapsed = collapsedGroups.contains(g.hash)
                 vh.txtToggle.text = if (collapsed) "▶" else "▼"
+                // Show amber "⚠ Quick match only" badge for groups skipped by Phase-2 full-hash
+                vh.txtUnverifiedBadge.visibility = if (g.isVerified) android.view.View.GONE else android.view.View.VISIBLE
                 vh.itemView.setOnClickListener {
                     if (collapsed) collapsedGroups.remove(g.hash) else collapsedGroups.add(g.hash)
                     refresh()
@@ -117,9 +119,10 @@ class AnalyzerDuplicateAdapter(
     override fun getItemCount(): Int = rows.size
 
     inner class GroupVH(v: View) : RecyclerView.ViewHolder(v) {
-        val txtHash   : TextView = v.findViewById(R.id.txtDupHash)
-        val txtWasted : TextView = v.findViewById(R.id.txtDupWasted)
-        val txtToggle : TextView = v.findViewById(R.id.txtDupToggle)
+        val txtHash           : TextView = v.findViewById(R.id.txtDupHash)
+        val txtWasted         : TextView = v.findViewById(R.id.txtDupWasted)
+        val txtToggle         : TextView = v.findViewById(R.id.txtDupToggle)
+        val txtUnverifiedBadge: TextView = v.findViewById(R.id.txtUnverifiedBadge)
     }
 
     inner class FileVH(v: View) : RecyclerView.ViewHolder(v) {

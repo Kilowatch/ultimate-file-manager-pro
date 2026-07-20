@@ -1028,6 +1028,13 @@ Vous avez sélectionné TOUTES les copies pour ces groupes de doublons. Si vous 
     <string name="analyzer_delete_anyway">
 Supprimer toutes les copies
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ Correspondance rapide uniquement
+</string>
+    <string name="analyzer_dup_verifying">
+Vérification du contenu…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 Stockage interne

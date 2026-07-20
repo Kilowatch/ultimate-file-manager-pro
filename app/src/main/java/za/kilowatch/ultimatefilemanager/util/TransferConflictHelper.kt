@@ -189,16 +189,17 @@ object TransferConflictHelper {
         action: ConflictAction,
         onProgress: ((bytesCopied: Long, totalBytes: Long) -> Unit)? = null
     ): File {
-        // Safety: never copy a file onto itself â€” that would truncate it to 0 bytes.
-        if (src.canonicalPath == dest.canonicalPath) {
-            android.util.Log.w("TransferConflictHelper", "copyLocalToLocalAtomic: src == dest, skipping self-copy: ${src.canonicalPath}")
-            return dest
-        }
         if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(src.absolutePath) ||
             za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(dest.absolutePath)) {
             val actualDest = when (action) {
                 ConflictAction.KEEP_BOTH -> uniqueLocalFile(dest.parentFile!!, dest.name)
                 else -> dest
+            }
+            // Safety: never copy a file onto itself — that would truncate it to 0 bytes.
+            // Guard is applied AFTER unique-name resolution so KEEP_BOTH is never blocked by it.
+            if (src.canonicalPath == actualDest.canonicalPath) {
+                android.util.Log.w("TransferConflictHelper", "copyLocalToLocalAtomic(shizuku): src == actualDest, skipping self-copy: ${src.canonicalPath}")
+                return actualDest
             }
             if (!actualDest.exists() || action == ConflictAction.OVERWRITE) {
                 if (action == ConflictAction.OVERWRITE && actualDest.exists()) {
@@ -213,8 +214,15 @@ object TransferConflictHelper {
             ConflictAction.KEEP_BOTH -> uniqueLocalFile(dest.parentFile!!, dest.name)
             else -> dest
         }
+        // Safety: never copy a file onto itself — that would truncate it to 0 bytes.
+        // Guard is applied AFTER unique-name resolution so KEEP_BOTH is never blocked by it.
+        if (src.canonicalPath == actualDest.canonicalPath) {
+            android.util.Log.w("TransferConflictHelper", "copyLocalToLocalAtomic: src == actualDest, skipping self-copy: ${src.canonicalPath}")
+            return actualDest
+        }
 
         val sourceSize = src.length()
+
 
         if (!actualDest.exists() || action == ConflictAction.OVERWRITE) {
             val useCacheCopy = za.kilowatch.ultimatefilemanager.settings.CacheCopyPreferenceManager.isEnabled(

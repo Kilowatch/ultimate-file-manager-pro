@@ -1028,6 +1028,13 @@ APK
     <string name="analyzer_delete_anyway">
 حذف جميع النسخ
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ مطابقة سريعة فقط
+</string>
+    <string name="analyzer_dup_verifying">
+جارٍ التحقق من المحتوى…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 التخزين الداخلي

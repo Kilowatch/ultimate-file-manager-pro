@@ -1028,6 +1028,13 @@ Has seleccionado TODAS las copias de estos grupos duplicados. Si continúas, no 
     <string name="analyzer_delete_anyway">
 Eliminar todas las copias
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ Solo coincidencia rápida
+</string>
+    <string name="analyzer_dup_verifying">
+Verificando contenido…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 Almacenamiento interno

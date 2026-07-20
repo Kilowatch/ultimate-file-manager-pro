@@ -105,6 +105,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 nm.cancel(notificationId)
             }
+            // Notify watcher so any pending re-trigger (files that arrived during this run)
+            // can fire a follow-up sync immediately.
+            if (profile.instantSyncEnabled) {
+                InstantSyncWatcher.onSyncCompleted(applicationContext, profile.id)
+            }
             return Result.success()
         }
 
@@ -218,6 +223,12 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             if (profile.notificationsEnabled) {
                 val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 nm.cancel(notificationId)
+            }
+
+            // Notify watcher so any pending re-trigger (files that arrived during this run)
+            // can fire a follow-up sync immediately.
+            if (profile.instantSyncEnabled) {
+                InstantSyncWatcher.onSyncCompleted(applicationContext, profile.id)
             }
 
             return Result.success()

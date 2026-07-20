@@ -363,6 +363,17 @@ interface FileIndexDao {
     """)
     suspend fun getFilesForHash(hash: String, storageId: String): List<FileIndex>
 
+    /**
+     * Batch variant: fetches all candidate files for a list of quick-hashes in one query.
+     * Used by the two-phase duplicate-detection pipeline to avoid N+1 calls.
+     */
+    @Query("""
+        SELECT * FROM file_index
+        WHERE hash IN (:hashes) AND hash != '' AND isDirectory = 0 AND storageId = :storageId
+        ORDER BY hash, path ASC
+    """)
+    suspend fun getFilesForHashes(hashes: List<String>, storageId: String): List<FileIndex>
+
     // ============ ANALYZER — OLD FILES ============
 
     /**

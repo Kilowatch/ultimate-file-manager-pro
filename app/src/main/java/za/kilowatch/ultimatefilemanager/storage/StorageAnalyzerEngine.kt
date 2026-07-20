@@ -9,6 +9,7 @@ import za.kilowatch.ultimatefilemanager.indexing.FileTypeUsage
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
+import java.security.MessageDigest
 import za.kilowatch.ultimatefilemanager.R
 
 /**
@@ -240,20 +241,97 @@ class StorageAnalyzerEngine(private val context: Context) {
         ).sortedByDescending { it.bytes }
     }
 
-    /** Build duplicate groups: query summaries then fetch files for each group. */
+    /**
+     * Two-phase duplicate detection pipeline.
+     *
+     * Phase 1 — SQL: group records by the quick-hash (64 KB MD5) already stored in the DB.
+     *            This quickly narrows the candidate pool without touching the filesystem.
+     *
+     * Phase 2 — Full-file MD5: for every candidate pair from Phase 1, compute a full-content
+     *            hash on-the-fly and re-group by it. This eliminates false positives caused by
+     *            quick-hash collisions on large files, and — crucially — detects duplicates
+     *            regardless of filename because only the bytes are compared.
+     *
+     *            Files larger than [FULL_HASH_MAX_BYTES] skip Phase 2 (to bound I/O) and are
+     *            returned as [DuplicateGroup] with [DuplicateGroup.isVerified] = false.
+     */
     private suspend fun buildDuplicateGroups(storageId: String): List<DuplicateGroup> {
+        // ── Phase 1: DB query for quick-hash candidate groups ────────────────────
         val summaries = dao.getDuplicateGroups(storageId, limit = 200)
-        return summaries.mapNotNull { summary ->
-            val files = dao.getFilesForHash(summary.hash, storageId)
-            if (files.size < 2) return@mapNotNull null
-            // Wasted bytes = sum of all minus one copy
-            val wastedBytes = files.sumOf { it.size } - files.minOf { it.size }
-            DuplicateGroup(
-                hash        = summary.hash,
-                files       = files,
-                wastedBytes = wastedBytes
-            )
-        }.sortedByDescending { it.wastedBytes }
+        if (summaries.isEmpty()) return emptyList()
+
+        // Batch-fetch all candidate files in one SQL call (avoids N+1 pattern)
+        val hashes = summaries.map { it.hash }
+        val allCandidates = dao.getFilesForHashes(hashes, storageId)
+        val byQuickHash = allCandidates.groupBy { it.hash }
+
+        val result = mutableListOf<DuplicateGroup>()
+
+        for (summary in summaries) {
+            val candidates = byQuickHash[summary.hash] ?: continue
+            if (candidates.size < 2) continue
+
+            // ── Phase 2: full-hash verification ─────────────────────────────────
+            // Separate candidates into those that fit within the size threshold and
+            // those that are too large to full-hash within a reasonable time budget.
+            val (smallEnough, tooLarge) = candidates.partition { it.size <= FULL_HASH_MAX_BYTES }
+
+            // Full-hash the files that are within the threshold
+            if (smallEnough.size >= 2) {
+                val byFullHash = smallEnough.groupBy { file ->
+                    try {
+                        computeFullHash(File(file.path))
+                    } catch (e: Exception) {
+                        GoRoLog.w(TAG, "Full-hash failed for ${file.path}: ${e.message}")
+                        // On failure fall back to the quick hash so the file stays in its group
+                        file.hash
+                    }
+                }
+                for ((fullHash, group) in byFullHash) {
+                    if (group.size >= 2) {
+                        val wastedBytes = group.sumOf { it.size } - group.minOf { it.size }
+                        result.add(DuplicateGroup(
+                            hash        = fullHash,
+                            files       = group,
+                            wastedBytes = wastedBytes,
+                            isVerified  = true
+                        ))
+                    }
+                }
+            } else if (smallEnough.size == 1 && tooLarge.isEmpty()) {
+                // Only one small-enough file after grouping — not a duplicate group
+                continue
+            }
+
+            // Files above the threshold: group by quick-hash as before but mark unverified
+            if (tooLarge.size >= 2) {
+                val wastedBytes = tooLarge.sumOf { it.size } - tooLarge.minOf { it.size }
+                result.add(DuplicateGroup(
+                    hash        = summary.hash,
+                    files       = tooLarge,
+                    wastedBytes = wastedBytes,
+                    isVerified  = false
+                ))
+            }
+        }
+
+        return result.sortedByDescending { it.wastedBytes }
+    }
+
+    /**
+     * Compute a full MD5 hash of [file]'s entire content.
+     * This is intentionally kept simple and synchronous — callers run it on Dispatchers.IO.
+     */
+    private fun computeFullHash(file: File): String {
+        val md = MessageDigest.getInstance("MD5")
+        val buffer = ByteArray(65_536)  // 64 KB read buffer
+        file.inputStream().use { input ->
+            var len: Int
+            while (input.read(buffer).also { len = it } != -1) {
+                md.update(buffer, 0, len)
+            }
+        }
+        return md.digest().joinToString("") { "%02x".format(it) }
     }
 
     /** Build the well-known app-storage list. */
@@ -342,6 +420,14 @@ class StorageAnalyzerEngine(private val context: Context) {
 
     companion object {
         /**
+         * Maximum file size for the Phase-2 full-hash verification pass.
+         * Files larger than this are kept in the results with [DuplicateGroup.isVerified] = false
+         * to bound the I/O cost of the analysis scan.
+         * Default: 500 MB.
+         */
+        const val FULL_HASH_MAX_BYTES: Long = 500L * 1024L * 1024L
+
+        /**
          * Well-known app package → friendly name mapping.
          * Key = display name, Value = path prefix on the filesystem.
          */
@@ -403,11 +489,21 @@ data class AnalyzerFolder(
     val fileCount  : Long
 )
 
-/** A group of duplicate files sharing the same quick-hash. */
+/**
+ * A group of duplicate files sharing the same content hash.
+ *
+ * @param hash        Full-file MD5 when [isVerified] is true; quick-hash (64 KB MD5) when false.
+ * @param files       All files in the group — every entry has identical content.
+ * @param wastedBytes Total size minus the smallest copy (bytes recoverable by deleting duplicates).
+ * @param isVerified  true  → confirmed by a full-file MD5 (100% identical content, name-independent).
+ *                   false → only the first-64-KB quick-hash matched; file was too large to
+ *                           full-hash within the analysis time budget. Treat with caution.
+ */
 data class DuplicateGroup(
     val hash        : String,
     val files       : List<FileIndex>,
-    val wastedBytes : Long   // total - one copy
+    val wastedBytes : Long,       // total - one copy
+    val isVerified  : Boolean = true
 )
 
 /** Aggregated junk / cache report. */

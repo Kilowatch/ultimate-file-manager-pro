@@ -15,43 +15,70 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:orientation="vertical"
         android:paddingHorizontal="16dp"
+        android:paddingVertical="6dp"
         android:duplicateParentState="true">
 
-        <TextView
-            android:id="@+id/txtDupToggle"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:gravity="center"
-            android:textColor="@color/selector_tv_storage_category_text_accent"
-            android:textSize="14sp"
-            android:layout_marginEnd="8dp"
-            android:duplicateParentState="true"
-            tools:text="▼" />
+        <!-- Main row: toggle | hash | wasted -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:duplicateParentState="true">
 
-        <TextView
-            android:id="@+id/txtDupHash"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/selector_tv_storage_category_text_primary"
-            android:textSize="14sp"
-            android:fontFamily="monospace"
-            android:duplicateParentState="true"
-            tools:text="⋯a3f9c12b0d4e" />
+            <TextView
+                android:id="@+id/txtDupToggle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:textColor="@color/selector_tv_storage_category_text_accent"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp"
+                android:duplicateParentState="true"
+                tools:text="▼" />
 
+            <TextView
+                android:id="@+id/txtDupHash"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/selector_tv_storage_category_text_primary"
+                android:textSize="14sp"
+                android:fontFamily="monospace"
+                android:duplicateParentState="true"
+                tools:text="⋯a3f9c12b0d4e" />
+
+            <TextView
+                android:id="@+id/txtDupWasted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_moderate"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:duplicateParentState="true"
+                tools:text="3 copies · saves 48 MB" />
+
+        </LinearLayout>
+
+        <!-- Unverified badge — only shown when isVerified=false (file too large for full-hash) -->
         <TextView
-            android:id="@+id/txtDupWasted"
+            android:id="@+id/txtUnverifiedBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/selector_tv_storage_category_text_moderate"
-            android:textSize="13sp"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/analyzer_dup_unverified_badge"
+            android:textColor="#FFFFA726"
+            android:textSize="12sp"
             android:fontFamily="sans-serif-medium"
             android:duplicateParentState="true"
-            tools:text="3 copies · saves 48 MB" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 </FrameLayout>
+

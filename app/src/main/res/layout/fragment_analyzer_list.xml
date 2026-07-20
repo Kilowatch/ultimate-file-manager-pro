@@ -48,6 +48,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="No duplicates found" />
 
+    <!-- "Verifying content…" progress row — shown only during Phase-2 full-hash pass (Duplicates tab) -->
+    <LinearLayout
+        android:id="@+id/layoutVerifying"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_md"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/progressBarVerifying"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/txtVerifying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/analyzer_dup_verifying"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
     <!-- Main list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerAnalyzerList"
@@ -57,8 +88,9 @@
         android:paddingVertical="@dimen/margin_sm"
         android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

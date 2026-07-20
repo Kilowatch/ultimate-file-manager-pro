@@ -1028,6 +1028,13 @@ APK
     <string name="analyzer_delete_anyway">
 すべてのコピーを削除
 </string>
+    <!-- Duplicate verification badges (two-phase content hashing) -->
+    <string name="analyzer_dup_unverified_badge">
+⚠ クイックマッチのみ
+</string>
+    <string name="analyzer_dup_verifying">
+コンテンツを確認中…
+</string>
     <!-- Common aliases used in activity -->
     <string name="internal_storage">
 内部ストレージ

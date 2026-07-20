@@ -68,7 +68,7 @@ class StorageAnalyzerActivity : AppCompatActivity() {
     private lateinit var fabDeleteDuplicates   : ExtendedFloatingActionButton
 
     private val isTv by lazy { DeviceUtils.isTvDevice(this) }
-    private val viewModel: StorageAnalyzerViewModel by viewModels()
+    internal val viewModel: StorageAnalyzerViewModel by viewModels()
     private val indexingRepo by lazy { IndexingRepository.getInstance(this) }
 
     // ── Drive entries ────────────────────────────────────────────────────────
@@ -1015,6 +1015,20 @@ class DuplicatesTabFragment : AnalyzerTabFragment() {
 
     override fun onCreateView(inf: LayoutInflater, container: ViewGroup?, state: Bundle?): View =
         inf.inflate(R.layout.fragment_analyzer_list, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Observe the Phase-2 verification flag from the shared ViewModel to drive the
+        // "Verifying content…" progress indicator pinned at the bottom of the list.
+        val vm = (activity as? StorageAnalyzerActivity)?.viewModel ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            vm.isDuplicateScanRunning.collectLatest { running: Boolean ->
+                view.findViewById<View>(R.id.layoutVerifying)?.visibility =
+                    if (running) View.VISIBLE else View.GONE
+            }
+        }
+    }
 
     override fun bindReport(report: AnalyzerReport) {
         val v = view ?: return

@@ -30,6 +30,13 @@ class StorageAnalyzerViewModel(app: Application) : AndroidViewModel(app) {
     val error: StateFlow<String?> = _error
 
     /**
+     * True while the Phase-2 full-hash duplicate verification pass is running.
+     * Observed by [DuplicatesTabFragment] to show a "Verifying content…" progress bar.
+     */
+    private val _isDuplicateScanRunning = MutableStateFlow(false)
+    val isDuplicateScanRunning: StateFlow<Boolean> = _isDuplicateScanRunning
+
+    /**
      * Kick off analysis for [storageId] / [storagePath].
      * If [isIndexed] is false, falls back to the filesystem-walk overview.
      */
@@ -65,8 +72,10 @@ class StorageAnalyzerViewModel(app: Application) : AndroidViewModel(app) {
                     currentReport = currentReport.copy(largeFiles = large, junkReport = junk, oldFiles = old)
                     _report.value = currentReport
 
-                    // Stage 5: Duplicates (potentially heavy)
+                    // Stage 5: Duplicates — two-phase (potentially heavy); signal the Duplicates tab
+                    _isDuplicateScanRunning.value = true
                     val dups = withContext(Dispatchers.IO) { engine.getDuplicateGroupsReport(storageId) }
+                    _isDuplicateScanRunning.value = false
                     val recs = engine.getRecommendations(dups, large, old, junk)
                     currentReport = currentReport.copy(duplicateGroups = dups, recommendations = recs)
                     _report.value = currentReport
@@ -79,6 +88,7 @@ class StorageAnalyzerViewModel(app: Application) : AndroidViewModel(app) {
                     _report.value = result
                 }
             } catch (e: Exception) {
+                _isDuplicateScanRunning.value = false
                 _error.value = e.message
             } finally {
                 _isLoading.value = false
@@ -89,5 +99,7 @@ class StorageAnalyzerViewModel(app: Application) : AndroidViewModel(app) {
     /** Clear the current report (e.g. when the user switches drives). */
     fun clearReport() {
         _report.value = null
+        _isDuplicateScanRunning.value = false
     }
 }
+
