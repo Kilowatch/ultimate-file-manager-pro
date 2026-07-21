@@ -376,4 +376,110 @@ object SortFilterPreferenceManager {
         /** The stored sort & filter settings. */
         val state: SortFilterState
     )
+
+    // ── Comparators ────────────────────────────────────────────────────────────
+
+    /**
+     * Creates a comparator for java.io.File objects using the specified sort mode & order,
+     * optional context for pinned files, and optionally grouping directories first.
+     */
+    fun getFileComparator(
+        state: SortFilterState,
+        context: Context? = null,
+        directoriesFirst: Boolean = false
+    ): Comparator<java.io.File> {
+        val secondaryComparator: Comparator<java.io.File> = when (state.sortMode) {
+            SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: java.io.File -> f.name }
+            SortFilterSheet.SortMode.SIZE -> compareBy { f: java.io.File -> if (f.isDirectory) 0L else f.length() }
+            SortFilterSheet.SortMode.DATE -> compareBy { f: java.io.File -> f.lastModified() }
+            SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: java.io.File -> f.extension }
+        }
+        val orderedComparator = if (state.sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
+
+        return Comparator { f1, f2 ->
+            if (context != null) {
+                val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f1.absolutePath)
+                val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f2.absolutePath)
+                if (p1 && p2) {
+                    f1.name.compareTo(f2.name, ignoreCase = true)
+                } else if (p1) {
+                    -1
+                } else if (p2) {
+                    1
+                } else if (directoriesFirst) {
+                    val dir1 = f1.isDirectory
+                    val dir2 = f2.isDirectory
+                    if (dir1 != dir2) {
+                        if (dir1) -1 else 1
+                    } else {
+                        orderedComparator.compare(f1, f2)
+                    }
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            } else if (directoriesFirst) {
+                val dir1 = f1.isDirectory
+                val dir2 = f2.isDirectory
+                if (dir1 != dir2) {
+                    if (dir1) -1 else 1
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            } else {
+                orderedComparator.compare(f1, f2)
+            }
+        }
+    }
+
+    /**
+     * Creates a comparator for NetworkFile objects using the specified sort mode & order.
+     */
+    fun getNetworkFileComparator(
+        state: SortFilterState,
+        context: Context? = null,
+        shareId: String? = null,
+        directoriesFirst: Boolean = false
+    ): Comparator<za.kilowatch.ultimatefilemanager.network.NetworkFile> {
+        val secondaryComparator: Comparator<za.kilowatch.ultimatefilemanager.network.NetworkFile> = when (state.sortMode) {
+            SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+            SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
+            SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
+            SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
+        }
+        val orderedComparator = if (state.sortOrder == SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
+
+        return Comparator { f1, f2 ->
+            if (context != null && shareId != null) {
+                val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f1.path, shareId)
+                val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f2.path, shareId)
+                if (p1 && p2) {
+                    f1.name.compareTo(f2.name, ignoreCase = true)
+                } else if (p1) {
+                    -1
+                } else if (p2) {
+                    1
+                } else if (directoriesFirst) {
+                    val dir1 = f1.isDirectory
+                    val dir2 = f2.isDirectory
+                    if (dir1 != dir2) {
+                        if (dir1) -1 else 1
+                    } else {
+                        orderedComparator.compare(f1, f2)
+                    }
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            } else if (directoriesFirst) {
+                val dir1 = f1.isDirectory
+                val dir2 = f2.isDirectory
+                if (dir1 != dir2) {
+                    if (dir1) -1 else 1
+                } else {
+                    orderedComparator.compare(f1, f2)
+                }
+            } else {
+                orderedComparator.compare(f1, f2)
+            }
+        }
+    }
 }

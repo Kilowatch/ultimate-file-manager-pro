@@ -1563,6 +1563,7 @@ class NetworkBrowserFragment : Fragment() {
     fun getCurrentPath(): String = currentPath
     fun getShare(): NetworkShare = share
     fun getCurrentFiles(): List<NetworkFile> = currentFiles
+    fun getSortedFiles(): List<NetworkFile> = sortAndFilterFiles(currentFiles)
 
     private fun setupTvFocus(view: View) {
         val iconTintFocused = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.tv_button_focused_yellow_text))

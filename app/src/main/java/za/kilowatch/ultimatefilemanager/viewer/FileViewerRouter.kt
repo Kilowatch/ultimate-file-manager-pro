@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import java.io.File
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 
 /**
  * Central routing helper that dispatches file opens to built-in viewer activities.
@@ -258,10 +259,21 @@ object FileViewerRouter {
         if (ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS) return
 
         val parentDir = file.parentFile
-        val playlist = parentDir?.listFiles { f ->
+        val sortState = if (parentDir != null) {
+            SortFilterPreferenceManager.loadForLocalPath(context, parentDir.absolutePath)
+                ?: SortFilterPreferenceManager.loadGlobal(context)
+        } else {
+            SortFilterPreferenceManager.loadGlobal(context)
+        }
+        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
+
+        val mediaFiles = parentDir?.listFiles { f ->
             val e = f.extension.lowercase()
             e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
-        }?.map { it.absolutePath }?.toCollection(java.util.ArrayList()) ?: java.util.ArrayList<String>().apply { add(file.absolutePath) }
+        }?.sortedWith(comparator)
+
+        val playlist = mediaFiles?.map { it.absolutePath }?.toCollection(java.util.ArrayList())
+            ?: java.util.ArrayList<String>().apply { add(file.absolutePath) }
 
         val intent = Intent(context, UFMPlayerActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
@@ -272,7 +284,17 @@ object FileViewerRouter {
     }
 
     private fun openInSlideShow(context: Context, file: File, filesToConsider: List<File>) {
-        val playlist = filesToConsider.map { it.absolutePath }.toCollection(java.util.ArrayList())
+        val parentDir = file.parentFile
+        val sortState = if (parentDir != null) {
+            SortFilterPreferenceManager.loadForLocalPath(context, parentDir.absolutePath)
+                ?: SortFilterPreferenceManager.loadGlobal(context)
+        } else {
+            SortFilterPreferenceManager.loadGlobal(context)
+        }
+        val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
+
+        val sortedFiles = filesToConsider.sortedWith(comparator)
+        val playlist = sortedFiles.map { it.absolutePath }.toCollection(java.util.ArrayList())
         val intent = Intent(context, SlideShowActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
             putExtra("initialPath", file.absolutePath)

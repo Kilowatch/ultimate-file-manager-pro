@@ -2,12 +2,14 @@ package za.kilowatch.ultimatefilemanager.viewer
 
 import android.app.AlertDialog
 import android.graphics.Color
+import android.content.Context
 import android.os.Bundle
 import android.text.style.BackgroundColorSpan
 import android.text.Spannable
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.ImageView
@@ -273,16 +275,19 @@ class TextViewerActivity : AppCompatActivity() {
             val fullText = allChunks.joinToString("\n")
             txtContent.setText(fullText)
             txtContent.textSize = textSize
-            // ── Restore EditText editing capabilities (mobile only) ─────
-            if (!isTv) {
-                txtContent.setKeyListener(android.text.method.TextKeyListener.getInstance())
-                txtContent.setCursorVisible(true)
-                txtContent.setCustomSelectionActionModeCallback(null)
-            }
+            // ── Restore EditText editing capabilities (mobile and TV) ─────
+            txtContent.setKeyListener(android.text.method.TextKeyListener.getInstance())
+            txtContent.setCursorVisible(true)
+            txtContent.setCustomSelectionActionModeCallback(null)
             txtContent.isEnabled = true
             txtContent.isFocusable = true
             txtContent.isFocusableInTouchMode = true
             txtContent.requestFocus()
+            txtContent.post {
+                txtContent.requestFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.showSoftInput(txtContent, InputMethodManager.SHOW_IMPLICIT)
+            }
             btnSave.visibility = View.VISIBLE
             paginationBar.visibility = View.GONE
             txtLineNumbers.visibility = View.GONE
@@ -761,9 +766,10 @@ class TextViewerActivity : AppCompatActivity() {
                     paginationBar.visibility =
                         if (allChunks.size > 1) View.VISIBLE else View.GONE
 
-                    showPage(0)
                     if (startInEditMode) {
                         toggleEditMode()
+                    } else {
+                        showPage(0)
                     }
                 }
             } catch (e: Exception) {
@@ -783,6 +789,7 @@ class TextViewerActivity : AppCompatActivity() {
      * On TV this is a no-op — the TV path disables the view outright in toggleEditMode().
      */
     private fun applyViewModeTextSelection() {
+        if (isEditMode) return
         if (!isTv) {
             txtContent.isEnabled = true
             txtContent.setTextIsSelectable(true)
@@ -809,6 +816,7 @@ class TextViewerActivity : AppCompatActivity() {
                 val context = this@TextViewerActivity
                 val spannable = SyntaxHighlightEngine.highlight(chunk, lang, context)
                 withContext(Dispatchers.Main) {
+                    if (isEditMode) return@withContext
                     txtContent.setText(spannable, android.widget.TextView.BufferType.SPANNABLE)
                     txtLineNumbers.text = lineNums
                     txtContent.textSize = textSize
@@ -825,6 +833,7 @@ class TextViewerActivity : AppCompatActivity() {
                 }
                 val precomputed = PrecomputedTextCompat.create(chunk, params)
                 withContext(Dispatchers.Main) {
+                    if (isEditMode) return@withContext
                     txtContent.setText(precomputed, android.widget.TextView.BufferType.SPANNABLE)
                     txtLineNumbers.text = lineNums
                     txtContent.textSize = textSize

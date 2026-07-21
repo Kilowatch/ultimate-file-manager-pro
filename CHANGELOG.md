@@ -5,11 +5,19 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.2] — 2026-07-21
+
+### Fixed
+- Fixed an issue where creating a new file on Mobile or TV (local, network, or cloud) opened the text editor in a non-editable state, requiring closing and reopening the file to edit.
+- Fixed UFM Player and Slideshow next/previous navigation and auto-advance to strictly respect the set sort mode (Name, Size, Date, Type) and sort order (Ascending, Descending) of local and network folders on both mobile and TV.
+
+### Added
+- Added Targeted Duplicate Finder feature for individual folders on Mobile (Tools FAB) and TV (Toolbar button) when storage is indexed, launching a dedicated edge-to-edge activity to scan the selected folder and its subfolder tree.
+
 
 ## [1.7.1] — 2026-07-19
 
 ### Added
-- Added Targeted Duplicate Finder feature for individual folders on Mobile (Tools FAB) and TV (Toolbar button) when storage is indexed, launching a dedicated edge-to-edge activity to scan the selected folder and its subfolder tree.
 - Added a list-view density toggle icon (`ic_list_view_custom`) to the Settings header bar on mobile and TV, allowing users to switch settings row size between Small, Medium (default), and Large. Adjusts card row padding, icon circle dimensions, and text sizes dynamically.
 
 ### Changed

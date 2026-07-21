@@ -4764,8 +4764,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
         dialog.window?.setLayout(dp(320), android.view.ViewGroup.LayoutParams.WRAP_CONTENT)
     }
 
+    private fun getActiveNetworkComparator(): Comparator<NetworkFile> {
+        val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.SortFilterState(
+            sortMode = sortMode,
+            sortOrder = sortOrder,
+            filterType = filterType,
+            showHidden = false,
+            groupByDate = false,
+            activeTags = emptySet()
+        )
+        return za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.getNetworkFileComparator(
+            state = state,
+            context = this,
+            shareId = share.id,
+            directoriesFirst = false
+        )
+    }
+
     private fun startUfmPlayer(file: NetworkFile) {
-        val playlist = currentFiles.filter {
+        val comparator = getActiveNetworkComparator()
+        val sortedFiles = currentFiles.sortedWith(comparator)
+        val playlist = sortedFiles.filter {
             val x = it.name.substringAfterLast('.', "").lowercase()
             za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(x) || za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(x)
         }.map { it.path }
@@ -4789,8 +4808,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun startSlideShow(file: NetworkFile, filesToConsider: List<NetworkFile>) {
-        val playlist = filesToConsider.map { it.path }
-        val sizesMap = filesToConsider.associate { it.path to it.size }
+        val comparator = getActiveNetworkComparator()
+        val sortedFiles = filesToConsider.sortedWith(comparator)
+        val playlist = sortedFiles.map { it.path }
+        val sizesMap = sortedFiles.associate { it.path to it.size }
         val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.viewer.SlideShowActivity::class.java).apply {
             putExtra("shareId", share.id)
             putExtra(EXTRA_REMOTE_PATH, share.remotePath)

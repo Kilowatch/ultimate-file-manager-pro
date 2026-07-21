@@ -428,12 +428,23 @@ class TwinWindowActivity : AppCompatActivity() {
                 // Network file — route to UFMPlayerActivity instead of local FileViewerRouter
                 val share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this).getById(shareId)
                 if (share != null) {
+                    val currentPane = getPaneFragment(index)
+                    val playlist = if (currentPane is za.kilowatch.ultimatefilemanager.network.NetworkBrowserFragment) {
+                        currentPane.getSortedFiles().filter {
+                            val x = it.name.substringAfterLast('.', "").lowercase()
+                            FileViewerRouter.isAudio(x) || FileViewerRouter.isVideo(x)
+                        }.map { it.path }
+                    } else null
+
                     val intent = Intent(this, za.kilowatch.ultimatefilemanager.viewer.UFMPlayerActivity::class.java).apply {
                         putExtra("shareId", shareId)
                         putExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH, remotePath)
                         putExtra("shareHost", share.host)
                         putExtra("shareName", share.name)
                         putExtra("initialPath", filePath)
+                        if (!playlist.isNullOrEmpty()) {
+                            putStringArrayListExtra("playlist", ArrayList(playlist))
+                        }
                     }
                     startActivity(intent)
                     return
