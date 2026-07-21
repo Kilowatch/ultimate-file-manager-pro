@@ -26,6 +26,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_PIN = "pref_icon_pin"
     const val KEY_UNPIN = "pref_icon_unpin"
     const val KEY_DUPLICATE_FINDER = "pref_icon_duplicate_finder"
+    const val KEY_LARGE_FILES_FINDER = "pref_icon_large_files_finder"
 
 
     fun isIconEnabled(context: Context, key: String): Boolean {

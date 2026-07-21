@@ -9988,5 +9988,25 @@ OK
     <string name="badge_across_storage">
 フォルダ外
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+大容量ファイル
+</string>
+    <string name="folder_large_files_finder_title">
+大容量ファイル検索
+</string>
+    <string name="folder_large_files_desc">
+このフォルダとサブフォルダ内の10 MBを超えるファイルを表示しています。
+</string>
+    <string name="no_large_files_found_title">
+大容量ファイルが見つかりませんでした
+</string>
+    <string name="no_large_files_found_message">
+このフォルダまたはそのサブフォルダには10 MBを超えるファイルは見つかりませんでした。
+</string>
+    <string name="icon_action_large_files_finder">
+大容量ファイル
+</string>
 </resources>
 

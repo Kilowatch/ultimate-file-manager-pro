@@ -3527,5 +3527,13 @@
     <string name="badge_in_folder">In Folder</string>
     <string name="badge_subfolder">Subfolder</string>
     <string name="badge_across_storage">Outside Folder</string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">Large Files</string>
+    <string name="folder_large_files_finder_title">Large Files Finder</string>
+    <string name="folder_large_files_desc">Showing files larger than 10 MB in this folder and its subfolders.</string>
+    <string name="no_large_files_found_title">No Large Files Found</string>
+    <string name="no_large_files_found_message">No files larger than 10 MB were found in this folder or any of its subfolders.</string>
+    <string name="icon_action_large_files_finder">Large Files</string>
 </resources>
 

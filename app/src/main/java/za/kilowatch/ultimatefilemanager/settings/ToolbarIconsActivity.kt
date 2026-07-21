@@ -89,7 +89,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_delete, R.string.action_delete, ToolbarIconsPreferenceManager.KEY_DELETE),
             IconItem(R.drawable.ic_paperclip, R.string.pin, ToolbarIconsPreferenceManager.KEY_PIN),
             IconItem(R.drawable.ic_paperclip_off, R.string.unpin, ToolbarIconsPreferenceManager.KEY_UNPIN),
-            IconItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER)
+            IconItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER),
+            IconItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER)
         )
 
 

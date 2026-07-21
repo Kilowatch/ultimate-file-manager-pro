@@ -327,6 +327,26 @@ interface FileIndexDao {
     """)
     suspend fun getLargestFiles(storageId: String, limit: Int): List<FileIndex>
 
+    @Query("""
+        SELECT * FROM file_index
+        WHERE isDirectory = 0 
+          AND (:storageId = '' OR storageId = :storageId)
+          AND size >= :minSize
+          AND (
+              folderPath = :folderPath COLLATE NOCASE
+              OR folderPath = :folderPath || '/' COLLATE NOCASE
+              OR folderPath LIKE :folderPath || '/%' COLLATE NOCASE
+          )
+        ORDER BY size DESC
+        LIMIT :limit
+    """)
+    suspend fun getLargestFilesForFolder(
+        storageId: String,
+        folderPath: String,
+        minSize: Long = 10L * 1024 * 1024,
+        limit: Int = 500
+    ): List<FileIndex>
+
     // ============ ANALYZER — FOLDER USAGE ============
 
     @Query("""

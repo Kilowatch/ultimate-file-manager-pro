@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Large File Row — Mobile
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="58dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="@dimen/margin_md"
+    android:paddingEnd="@dimen/margin_md"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <CheckBox
+        android:id="@+id/checkLargeFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_sm"
+        android:buttonTint="@color/tv_accent" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtLargeFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="13.5sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="sample_video.mp4" />
+
+        <TextView
+            android:id="@+id/txtLargeFilePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="start"
+            tools:text="/storage/emulated/0/Download" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/txtLargeFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="145.2 MB" />
+
+        <TextView
+            android:id="@+id/txtLargeFileLocationBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_badge_in_folder"
+            android:textColor="#00897B"
+            tools:text="In Folder" />
+    </LinearLayout>
+
+</LinearLayout>

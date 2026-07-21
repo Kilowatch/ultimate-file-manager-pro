@@ -9988,5 +9988,25 @@ URL-адреса сервера
     <string name="badge_across_storage">
 Поза папкою
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Великі файли
+</string>
+    <string name="folder_large_files_finder_title">
+Пошук великих файлів
+</string>
+    <string name="folder_large_files_desc">
+Показано файли, більші за 10 МБ, у цій папці та її підпапках.
+</string>
+    <string name="no_large_files_found_title">
+Великих файлів не знайдено
+</string>
+    <string name="no_large_files_found_message">
+Не знайдено файлів, більших за 10 МБ, у цій папці чи будь-якій її підпапці.
+</string>
+    <string name="icon_action_large_files_finder">
+Великі файли
+</string>
 </resources>
 

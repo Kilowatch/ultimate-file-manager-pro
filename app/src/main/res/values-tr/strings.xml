@@ -9988,5 +9988,25 @@ Alt Klasör
     <string name="badge_across_storage">
 Klasör Dışında
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Büyük Dosyalar
+</string>
+    <string name="folder_large_files_finder_title">
+Büyük Dosya Bulucu
+</string>
+    <string name="folder_large_files_desc">
+Bu klasör ve alt klasörlerinde 10 MB\'tan büyük dosyalar gösteriliyor.
+</string>
+    <string name="no_large_files_found_title">
+Büyük Dosya Bulunamadı
+</string>
+    <string name="no_large_files_found_message">
+Bu klasörde veya alt klasörlerinde 10 MB\'tan büyük dosya bulunamadı.
+</string>
+    <string name="icon_action_large_files_finder">
+Büyük Dosyalar
+</string>
 </resources>
 

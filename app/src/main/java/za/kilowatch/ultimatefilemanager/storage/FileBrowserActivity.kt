@@ -90,6 +90,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var btnViewToggle: ImageView? = null
     private var btnRetriggerThumbnails: ImageView? = null
     private var btnDuplicateFinder: ImageView? = null
+    private var btnLargeFilesFinder: ImageView? = null
 
     private var btnSort: ImageView? = null
     private var btnOptionsToggle: ImageView? = null
@@ -121,6 +122,15 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private val folderDuplicateFinderLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            fileAdapter.exitSelectionMode()
+            triggerReindex()
+        }
+    }
+
+    private val folderLargeFilesFinderLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK) {
@@ -971,6 +981,7 @@ class FileBrowserActivity : AppCompatActivity() {
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
         btnDuplicateFinder = findViewById(R.id.btnDuplicateFinder)
+        btnLargeFilesFinder = findViewById(R.id.btnLargeFilesFinder)
         fabPaste = findViewById(R.id.fabPaste)
 
         fabTools = findViewById(R.id.fabTools)
@@ -1586,6 +1597,23 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnLargeFilesFinder?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.size == 1 && selected.first().isDirectory) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    fileAdapter.exitSelectionMode()
+                    val intent = Intent(this@FileBrowserActivity, FolderLargeFilesFinderActivity::class.java).apply {
+                        putExtra(FolderLargeFilesFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                        putExtra(FolderLargeFilesFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                    }
+                    folderLargeFilesFinderLauncher.launch(intent)
+                }
+            }
+        }
+
 
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
@@ -1900,6 +1928,23 @@ class FileBrowserActivity : AppCompatActivity() {
                 }
             }
 
+            // Large Files Finder (single folder, indexed storage)
+            if (count == 1 && selected.first().isDirectory && pm.isIconEnabled(this, pm.KEY_LARGE_FILES_FINDER)) {
+                val targetFolder = selected.first()
+                val (folderStorageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(targetFolder.absolutePath)
+                val isFolderIndexed = folderStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(folderStorageId)
+                if (isFolderIndexed) {
+                    list.add(FileToolsBottomSheet.ActionItem("large_files_finder", getString(R.string.action_large_files_finder), R.drawable.ic_folder_large_files, "toolbar_large_files_finder") {
+                        fileAdapter.exitSelectionMode()
+                        val intent = Intent(this@FileBrowserActivity, FolderLargeFilesFinderActivity::class.java).apply {
+                            putExtra(FolderLargeFilesFinderActivity.EXTRA_FOLDER_PATH, targetFolder.absolutePath)
+                            putExtra(FolderLargeFilesFinderActivity.EXTRA_STORAGE_ID, folderStorageId)
+                        }
+                        folderLargeFilesFinderLauncher.launch(intent)
+                    })
+                }
+            }
+
             if (list.isNotEmpty()) {
                 val title = getString(R.string.action_tools)
                 val subtitle = getString(R.string.selection_count, selected.size)
@@ -1920,6 +1965,7 @@ class FileBrowserActivity : AppCompatActivity() {
                    btnCopyEncrypt, btnMoveEncrypt, btnHide, btnUnhide)
             btnRetriggerThumbnails?.let { tvButtons.add(it) }
             btnDuplicateFinder?.let { tvButtons.add(it) }
+            btnLargeFilesFinder?.let { tvButtons.add(it) }
             tvButtons.forEach { btn ->
                 btn.imageTintList = iconTintDefault  // set initial white tint
                 btn.setOnFocusChangeListener { _, hasFocus ->
@@ -2068,6 +2114,7 @@ class FileBrowserActivity : AppCompatActivity() {
                 val (selStorageId, _, _) = if (isSingleFolderSel) za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(imgFiles.first().absolutePath) else Triple("", "", "")
                 val isSelFolderIndexed = selStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(selStorageId)
                 btnDuplicateFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(this, pm.KEY_DUPLICATE_FINDER)) View.VISIBLE else View.GONE
+                btnLargeFilesFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(this, pm.KEY_LARGE_FILES_FINDER)) View.VISIBLE else View.GONE
             }
 
 

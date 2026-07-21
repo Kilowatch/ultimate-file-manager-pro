@@ -10000,5 +10000,25 @@ Subcarpeta
     <string name="badge_across_storage">
 Fuera de la carpeta
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Archivos grandes
+</string>
+    <string name="folder_large_files_finder_title">
+Buscador de archivos grandes
+</string>
+    <string name="folder_large_files_desc">
+Mostrando archivos de más de 10 MB en esta carpeta y sus subcarpetas.
+</string>
+    <string name="no_large_files_found_title">
+No se encontraron archivos grandes
+</string>
+    <string name="no_large_files_found_message">
+No se encontraron archivos de más de 10 MB en esta carpeta ni en ninguna de sus subcarpetas.
+</string>
+    <string name="icon_action_large_files_finder">
+Archivos grandes
+</string>
 </resources>
 

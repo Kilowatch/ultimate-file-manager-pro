@@ -9988,5 +9988,25 @@ Sous-dossier
     <string name="badge_across_storage">
 Hors dossier
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Fichiers volumineux
+</string>
+    <string name="folder_large_files_finder_title">
+Recherche de fichiers volumineux
+</string>
+    <string name="folder_large_files_desc">
+Affichage des fichiers de plus de 10 Mo dans ce dossier et ses sous-dossiers.
+</string>
+    <string name="no_large_files_found_title">
+Aucun fichier volumineux trouvé
+</string>
+    <string name="no_large_files_found_message">
+Aucun fichier de plus de 10 Mo n\\\'a été trouvé dans ce dossier ou ses sous-dossiers.
+</string>
+    <string name="icon_action_large_files_finder">
+Fichiers volumineux
+</string>
 </resources>
 

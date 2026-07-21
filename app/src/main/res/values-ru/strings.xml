@@ -9988,5 +9988,25 @@ URL сервера
     <string name="badge_across_storage">
 Вне папки
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Крупные файлы
+</string>
+    <string name="folder_large_files_finder_title">
+Поиск крупных файлов
+</string>
+    <string name="folder_large_files_desc">
+Показываются файлы размером более 10 МБ в этой папке и её подпапках.
+</string>
+    <string name="no_large_files_found_title">
+Крупные файлы не найдены
+</string>
+    <string name="no_large_files_found_message">
+В этой папке и её подпапках не найдено файлов размером более 10 МБ.
+</string>
+    <string name="icon_action_large_files_finder">
+Крупные файлы
+</string>
 </resources>
 

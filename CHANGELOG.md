@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue in server-mode SMB root listing where returning to discovered shares spammed background folder count requests with empty remote paths.
 
 ### Added
+- Added Targeted Folder Large Files Finder feature for individual folders on Mobile (Tools section) and TV (Toolbar button) when storage is indexed, launching a dedicated edge-to-edge activity to find files > 10 MB ordered descending by size with 2-state location badges (In Folder vs Subfolder).
 - Added Targeted Duplicate Finder feature for individual folders on Mobile (Tools FAB) and TV (Toolbar button) when storage is indexed, launching a dedicated edge-to-edge activity to scan the selected folder and its subfolder tree.
 - Added automatic network transition listener (`ConnectivityManager.NetworkCallback`) in `UfmApplication` to instantly purge pooled SMB sessions when switching Wi-Fi networks or reconnecting, preventing stale socket handles.
 

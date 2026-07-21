@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Large File Row — Android TV
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:background="@drawable/selector_tv_storage_category_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="16dp"
+        android:duplicateParentState="true">
+
+        <CheckBox
+            android:id="@+id/checkLargeFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:buttonTint="@color/selector_tv_storage_category_icon_tint"
+            android:duplicateParentState="true"
+            android:focusable="false"
+            android:clickable="false" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:duplicateParentState="true">
+
+            <TextView
+                android:id="@+id/txtLargeFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:duplicateParentState="true"
+                tools:text="sample_video.mp4" />
+
+            <TextView
+                android:id="@+id/txtLargeFilePath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_secondary"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="start"
+                android:duplicateParentState="true"
+                tools:text="/storage/emulated/0/Download" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginStart="8dp"
+            android:duplicateParentState="true">
+
+            <TextView
+                android:id="@+id/txtLargeFileSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_tv_storage_category_text_secondary"
+                android:textSize="13sp"
+                android:duplicateParentState="true"
+                tools:text="145.2 MB" />
+
+            <TextView
+                android:id="@+id/txtLargeFileLocationBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_badge_in_folder"
+                android:textColor="#00897B"
+                android:duplicateParentState="true"
+                tools:text="In Folder" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

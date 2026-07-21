@@ -9988,5 +9988,25 @@ UFM प्लेयर सेटिंग्स
     <string name="badge_across_storage">
 फ़ोल्डर के बाहर
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+बड़ी फ़ाइलें
+</string>
+    <string name="folder_large_files_finder_title">
+बड़ी फ़ाइलें खोजक
+</string>
+    <string name="folder_large_files_desc">
+इस फ़ोल्डर और इसके उप-फ़ोल्डरों में 10 MB से बड़ी फ़ाइलें दिखाई जा रही हैं।
+</string>
+    <string name="no_large_files_found_title">
+कोई बड़ी फ़ाइल नहीं मिली
+</string>
+    <string name="no_large_files_found_message">
+इस फ़ोल्डर या इसके किसी भी उप-फ़ोल्डर में 10 MB से बड़ी कोई फ़ाइल नहीं मिली।
+</string>
+    <string name="icon_action_large_files_finder">
+बड़ी फ़ाइलें
+</string>
 </resources>
 

@@ -9988,5 +9988,25 @@ Unterordner
     <string name="badge_across_storage">
 Außerhalb des Ordners
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Große Dateien
+</string>
+    <string name="folder_large_files_finder_title">
+Große Dateien suchen
+</string>
+    <string name="folder_large_files_desc">
+Zeigt Dateien größer als 10 MB in diesem Ordner und seinen Unterordnern an.
+</string>
+    <string name="no_large_files_found_title">
+Keine großen Dateien gefunden
+</string>
+    <string name="no_large_files_found_message">
+In diesem Ordner oder seinen Unterordnern wurden keine Dateien größer als 10 MB gefunden.
+</string>
+    <string name="icon_action_large_files_finder">
+Große Dateien
+</string>
 </resources>
 

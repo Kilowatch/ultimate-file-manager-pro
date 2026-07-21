@@ -9988,5 +9988,25 @@ Box
     <string name="badge_across_storage">
 خارج المجلد
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+الملفات الكبيرة
+</string>
+    <string name="folder_large_files_finder_title">
+مكتشف الملفات الكبيرة
+</string>
+    <string name="folder_large_files_desc">
+عرض الملفات الأكبر من 10 ميغابايت في هذا المجلد ومجلداته الفرعية.
+</string>
+    <string name="no_large_files_found_title">
+لا توجد ملفات كبيرة
+</string>
+    <string name="no_large_files_found_message">
+لم يتم العثور على ملفات أكبر من 10 ميغابايت في هذا المجلد أو أي من مجلداته الفرعية.
+</string>
+    <string name="icon_action_large_files_finder">
+الملفات الكبيرة
+</string>
 </resources>
 

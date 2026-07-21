@@ -242,6 +242,11 @@
             android:name=".storage.FolderDuplicateFinderActivity"
             android:exported="false" />
 
+        <!-- Folder Large Files Finder -->
+        <activity
+            android:name=".storage.FolderLargeFilesFinderActivity"
+            android:exported="false" />
+
 
         <!-- Smart Sort -->
         <activity

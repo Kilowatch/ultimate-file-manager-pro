@@ -9988,5 +9988,25 @@ UFM 플레이어 설정
     <string name="badge_across_storage">
 폴더 외부
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+대용량 파일
+</string>
+    <string name="folder_large_files_finder_title">
+대용량 파일 찾기
+</string>
+    <string name="folder_large_files_desc">
+이 폴더와 하위 폴더에서 10MB보다 큰 파일을 표시합니다.
+</string>
+    <string name="no_large_files_found_title">
+대용량 파일을 찾을 수 없음
+</string>
+    <string name="no_large_files_found_message">
+이 폴더 또는 하위 폴더에서 10MB보다 큰 파일을 찾을 수 없습니다.
+</string>
+    <string name="icon_action_large_files_finder">
+대용량 파일
+</string>
 </resources>
 

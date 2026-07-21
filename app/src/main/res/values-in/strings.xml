@@ -9988,5 +9988,25 @@ Subfolder
     <string name="badge_across_storage">
 Di Luar Folder
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Berkas Besar
+</string>
+    <string name="folder_large_files_finder_title">
+Pencari Berkas Besar
+</string>
+    <string name="folder_large_files_desc">
+Menampilkan berkas yang lebih besar dari 10 MB di folder ini dan subfolder-nya.
+</string>
+    <string name="no_large_files_found_title">
+Tidak Ada Berkas Besar Ditemukan
+</string>
+    <string name="no_large_files_found_message">
+Tidak ada berkas yang lebih besar dari 10 MB ditemukan di folder ini atau subfolder mana pun.
+</string>
+    <string name="icon_action_large_files_finder">
+Berkas Besar
+</string>
 </resources>
 

@@ -9988,5 +9988,25 @@ Subpasta
     <string name="badge_across_storage">
 Fora da pasta
 </string>
+
+    <!-- Large Files Finder -->
+    <string name="action_large_files_finder">
+Arquivos Grandes
+</string>
+    <string name="folder_large_files_finder_title">
+Localizador de Arquivos Grandes
+</string>
+    <string name="folder_large_files_desc">
+Exibindo arquivos maiores que 10 MB nesta pasta e em suas subpastas.
+</string>
+    <string name="no_large_files_found_title">
+Nenhum Arquivo Grande Encontrado
+</string>
+    <string name="no_large_files_found_message">
+Nenhum arquivo maior que 10 MB foi encontrado nesta pasta ou em qualquer uma de suas subpastas.
+</string>
+    <string name="icon_action_large_files_finder">
+Arquivos Grandes
+</string>
 </resources>
 

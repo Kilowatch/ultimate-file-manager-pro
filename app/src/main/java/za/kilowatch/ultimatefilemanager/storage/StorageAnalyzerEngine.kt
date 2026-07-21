@@ -67,6 +67,15 @@ class StorageAnalyzerEngine(private val context: Context) {
         return dao.getLargestFiles(storageId, limit = 200)
     }
 
+    suspend fun getLargestFilesReportForFolder(
+        storageId: String,
+        folderPath: String,
+        minSize: Long = 10L * 1024 * 1024
+    ): List<FileIndex> {
+        val cleanFolderPath = folderPath.trimEnd('/')
+        return dao.getLargestFilesForFolder(storageId, cleanFolderPath, minSize, limit = 500)
+    }
+
     enum class DuplicateScope {
         THIS_FOLDER_ONLY,
         ACROSS_STORAGE
