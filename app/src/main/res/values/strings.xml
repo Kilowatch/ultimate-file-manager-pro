@@ -3520,5 +3520,12 @@
     <string name="no_duplicates_found_title">No Duplicates Found</string>
     <string name="no_duplicates_found_message">No duplicate files were found in this folder or any of its subfolders.</string>
     <string name="icon_action_duplicate_finder">Duplicate Finder</string>
+    <string name="duplicate_scope_this_folder">This Folder Only</string>
+    <string name="duplicate_scope_across_storage">Across Storage</string>
+    <string name="duplicate_scope_desc_this_folder">Only showing duplicates where multiple copies exist inside this folder or its subfolders.</string>
+    <string name="duplicate_scope_desc_across_storage">Showing files in this folder that also exist anywhere else on this device.</string>
+    <string name="badge_in_folder">In Folder</string>
+    <string name="badge_subfolder">Subfolder</string>
+    <string name="badge_across_storage">Outside Folder</string>
 </resources>
 

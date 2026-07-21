@@ -9967,5 +9967,26 @@ Nenhum arquivo duplicado foi encontrado nesta pasta ou em suas subpastas.
     <string name="icon_action_duplicate_finder">
 Localizador de Duplicatas
 </string>
+    <string name="duplicate_scope_this_folder">
+Apenas esta pasta
+</string>
+    <string name="duplicate_scope_across_storage">
+Em todo o armazenamento
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Mostrando apenas duplicatas onde há várias cópias dentro desta pasta ou suas subpastas.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Mostrando arquivos nesta pasta que também existem em qualquer outro lugar neste dispositivo.
+</string>
+    <string name="badge_in_folder">
+Na pasta
+</string>
+    <string name="badge_subfolder">
+Subpasta
+</string>
+    <string name="badge_across_storage">
+Fora da pasta
+</string>
 </resources>
 

@@ -67,13 +67,22 @@ class StorageAnalyzerEngine(private val context: Context) {
         return dao.getLargestFiles(storageId, limit = 200)
     }
 
+    enum class DuplicateScope {
+        THIS_FOLDER_ONLY,
+        ACROSS_STORAGE
+    }
+
     suspend fun getDuplicateGroupsReport(storageId: String): List<DuplicateGroup> {
         return buildDuplicateGroups(storageId)
     }
 
-    suspend fun getDuplicateGroupsReportForFolder(storageId: String, folderPath: String): List<DuplicateGroup> {
+    suspend fun getDuplicateGroupsReportForFolder(
+        storageId: String,
+        folderPath: String,
+        scope: DuplicateScope = DuplicateScope.THIS_FOLDER_ONLY
+    ): List<DuplicateGroup> {
         val cleanFolderPath = folderPath.trimEnd('/')
-        return buildDuplicateGroupsForFolder(storageId, cleanFolderPath)
+        return buildDuplicateGroupsForFolder(storageId, cleanFolderPath, scope)
     }
 
     private fun isPathInFolder(fileFolderPath: String, targetFolder: String): Boolean {
@@ -321,7 +330,11 @@ class StorageAnalyzerEngine(private val context: Context) {
         return result.sortedByDescending { it.wastedBytes }
     }
 
-    private suspend fun buildDuplicateGroupsForFolder(storageId: String, cleanFolder: String): List<DuplicateGroup> {
+    private suspend fun buildDuplicateGroupsForFolder(
+        storageId: String,
+        cleanFolder: String,
+        scope: DuplicateScope = DuplicateScope.THIS_FOLDER_ONLY
+    ): List<DuplicateGroup> {
         val summaries = dao.getDuplicateGroupsForFolder(storageId, cleanFolder, limit = 500)
         if (summaries.isEmpty()) return emptyList()
 
@@ -348,29 +361,55 @@ class StorageAnalyzerEngine(private val context: Context) {
                     }
                 }
                 for ((fullHash, group) in byFullHash) {
-                    val inFolderCount = group.count { isPathInFolder(it.folderPath, cleanFolder) }
-                    if (group.size >= 2 && inFolderCount > 0) {
-                        val wastedBytes = group.sumOf { it.size } - group.minOf { it.size }
-                        result.add(DuplicateGroup(
-                            hash        = fullHash,
-                            files       = group,
-                            wastedBytes = wastedBytes,
-                            isVerified  = true
-                        ))
+                    if (scope == DuplicateScope.THIS_FOLDER_ONLY) {
+                        val folderFiles = group.filter { isPathInFolder(it.folderPath, cleanFolder) }
+                        if (folderFiles.size >= 2) {
+                            val wastedBytes = folderFiles.sumOf { it.size } - folderFiles.minOf { it.size }
+                            result.add(DuplicateGroup(
+                                hash        = fullHash,
+                                files       = folderFiles,
+                                wastedBytes = wastedBytes,
+                                isVerified  = true
+                            ))
+                        }
+                    } else {
+                        val inFolderCount = group.count { isPathInFolder(it.folderPath, cleanFolder) }
+                        if (group.size >= 2 && inFolderCount > 0) {
+                            val wastedBytes = group.sumOf { it.size } - group.minOf { it.size }
+                            result.add(DuplicateGroup(
+                                hash        = fullHash,
+                                files       = group,
+                                wastedBytes = wastedBytes,
+                                isVerified  = true
+                            ))
+                        }
                     }
                 }
             }
 
             if (tooLarge.size >= 2) {
-                val inFolderCount = tooLarge.count { isPathInFolder(it.folderPath, cleanFolder) }
-                if (inFolderCount > 0) {
-                    val wastedBytes = tooLarge.sumOf { it.size } - tooLarge.minOf { it.size }
-                    result.add(DuplicateGroup(
-                        hash        = summary.hash,
-                        files       = tooLarge,
-                        wastedBytes = wastedBytes,
-                        isVerified  = false
-                    ))
+                if (scope == DuplicateScope.THIS_FOLDER_ONLY) {
+                    val folderFiles = tooLarge.filter { isPathInFolder(it.folderPath, cleanFolder) }
+                    if (folderFiles.size >= 2) {
+                        val wastedBytes = folderFiles.sumOf { it.size } - folderFiles.minOf { it.size }
+                        result.add(DuplicateGroup(
+                            hash        = summary.hash,
+                            files       = folderFiles,
+                            wastedBytes = wastedBytes,
+                            isVerified  = false
+                        ))
+                    }
+                } else {
+                    val inFolderCount = tooLarge.count { isPathInFolder(it.folderPath, cleanFolder) }
+                    if (inFolderCount > 0) {
+                        val wastedBytes = tooLarge.sumOf { it.size } - tooLarge.minOf { it.size }
+                        result.add(DuplicateGroup(
+                            hash        = summary.hash,
+                            files       = tooLarge,
+                            wastedBytes = wastedBytes,
+                            isVerified  = false
+                        ))
+                    }
                 }
             }
         }

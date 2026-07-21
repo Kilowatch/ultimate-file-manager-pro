@@ -9967,5 +9967,26 @@ Aucun fichier en double n\'a été trouvé dans ce dossier ou ses sous-dossiers.
     <string name="icon_action_duplicate_finder">
 Détecteur de doublons
 </string>
+    <string name="duplicate_scope_this_folder">
+Ce dossier uniquement
+</string>
+    <string name="duplicate_scope_across_storage">
+Tout le stockage
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Affiche uniquement les doublons où plusieurs copies existent dans ce dossier ou ses sous-dossiers.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Affiche les fichiers de ce dossier qui existent également ailleurs sur cet appareil.
+</string>
+    <string name="badge_in_folder">
+Dans le dossier
+</string>
+    <string name="badge_subfolder">
+Sous-dossier
+</string>
+    <string name="badge_across_storage">
+Hors dossier
+</string>
 </resources>
 

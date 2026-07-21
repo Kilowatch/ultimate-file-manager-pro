@@ -9967,5 +9967,26 @@ UFM 플레이어 설정
     <string name="icon_action_duplicate_finder">
 중복 파일 찾기
 </string>
+    <string name="duplicate_scope_this_folder">
+이 폴더만
+</string>
+    <string name="duplicate_scope_across_storage">
+저장소 전체
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+이 폴더나 하위 폴더 내에 여러 복사본이 있는 중복 항목만 표시합니다.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+이 폴더에 있는 파일 중 기기 내 다른 곳에도 존재하는 파일을 표시합니다.
+</string>
+    <string name="badge_in_folder">
+폴더 안에
+</string>
+    <string name="badge_subfolder">
+하위 폴더
+</string>
+    <string name="badge_across_storage">
+폴더 외부
+</string>
 </resources>
 

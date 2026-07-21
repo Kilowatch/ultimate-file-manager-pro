@@ -9967,5 +9967,26 @@ OK
     <string name="icon_action_duplicate_finder">
 重複ファイル検出
 </string>
+    <string name="duplicate_scope_this_folder">
+このフォルダのみ
+</string>
+    <string name="duplicate_scope_across_storage">
+ストレージ全体
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+このフォルダまたはそのサブフォルダ内に複数のコピーが存在する重複のみを表示しています。
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+このフォルダ内にあり、このデバイス上の他の場所にも存在するファイルを表示しています。
+</string>
+    <string name="badge_in_folder">
+フォルダ内
+</string>
+    <string name="badge_subfolder">
+サブフォルダ
+</string>
+    <string name="badge_across_storage">
+フォルダ外
+</string>
 </resources>
 

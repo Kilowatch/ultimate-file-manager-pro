@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -14,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -45,11 +47,17 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
     private lateinit var txtTitle: TextView
     private lateinit var txtSubtitle: TextView
+    private lateinit var txtScopeDescription: TextView
     private lateinit var btnBack: View
     private lateinit var recyclerDuplicates: RecyclerView
     private lateinit var layoutEmptyState: View
     private lateinit var progressBarLoading: ProgressBar
     private lateinit var layoutVerifying: View
+
+    private var btnScopeThisFolder: TextView? = null
+    private var btnScopeAcrossStorage: TextView? = null
+    private var btnScopeThisFolderTv: Button? = null
+    private var btnScopeAcrossStorageTv: Button? = null
 
     private var fabDeleteDuplicates: ExtendedFloatingActionButton? = null
     private var btnDeleteDuplicatesTv: Button? = null
@@ -105,6 +113,7 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
         txtTitle = findViewById(R.id.txtTitle)
         txtSubtitle = findViewById(R.id.txtSubtitle)
+        txtScopeDescription = findViewById(R.id.txtScopeDescription)
         recyclerDuplicates = findViewById(R.id.recyclerDuplicates)
         layoutEmptyState = findViewById(R.id.layoutEmptyState)
         progressBarLoading = findViewById(R.id.progressBarLoading)
@@ -112,8 +121,12 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
         if (isTv) {
             btnDeleteDuplicatesTv = findViewById(R.id.btnDeleteDuplicates)
+            btnScopeThisFolderTv = findViewById(R.id.btnScopeThisFolderTv)
+            btnScopeAcrossStorageTv = findViewById(R.id.btnScopeAcrossStorageTv)
         } else {
             fabDeleteDuplicates = findViewById(R.id.fabDeleteDuplicates)
+            btnScopeThisFolder = findViewById(R.id.btnScopeThisFolder)
+            btnScopeAcrossStorage = findViewById(R.id.btnScopeAcrossStorage)
         }
 
         recyclerDuplicates.layoutManager = LinearLayoutManager(this)
@@ -132,6 +145,22 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         btnDeleteDuplicatesTv?.setOnClickListener {
             onDeleteClicked()
         }
+
+        btnScopeThisFolder?.setOnClickListener {
+            viewModel.setScope(StorageAnalyzerEngine.DuplicateScope.THIS_FOLDER_ONLY)
+        }
+
+        btnScopeAcrossStorage?.setOnClickListener {
+            viewModel.setScope(StorageAnalyzerEngine.DuplicateScope.ACROSS_STORAGE)
+        }
+
+        btnScopeThisFolderTv?.setOnClickListener {
+            viewModel.setScope(StorageAnalyzerEngine.DuplicateScope.THIS_FOLDER_ONLY)
+        }
+
+        btnScopeAcrossStorageTv?.setOnClickListener {
+            viewModel.setScope(StorageAnalyzerEngine.DuplicateScope.ACROSS_STORAGE)
+        }
     }
 
     private fun observeViewModel() {
@@ -148,10 +177,44 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
+            viewModel.scope.collectLatest { scope ->
+                updateScopeUI(scope)
+            }
+        }
+
+        lifecycleScope.launch {
             viewModel.duplicateGroups.collectLatest { groups ->
                 if (groups == null) return@collectLatest
                 currentDuplicateGroups = groups
                 updateDuplicateList(groups)
+            }
+        }
+    }
+
+    private fun updateScopeUI(scope: StorageAnalyzerEngine.DuplicateScope) {
+        val isThisFolder = scope == StorageAnalyzerEngine.DuplicateScope.THIS_FOLDER_ONLY
+        txtScopeDescription.setText(if (isThisFolder) R.string.duplicate_scope_desc_this_folder else R.string.duplicate_scope_desc_across_storage)
+
+        if (isTv) {
+            btnScopeThisFolderTv?.setBackgroundResource(if (isThisFolder) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
+            btnScopeAcrossStorageTv?.setBackgroundResource(if (!isThisFolder) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button)
+        } else {
+            if (isThisFolder) {
+                btnScopeThisFolder?.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                btnScopeThisFolder?.setTextColor(ContextCompat.getColor(this, R.color.white))
+                btnScopeThisFolder?.setTypeface(null, Typeface.BOLD)
+
+                btnScopeAcrossStorage?.setBackgroundResource(android.R.color.transparent)
+                btnScopeAcrossStorage?.setTextColor(ContextCompat.getColor(this, R.color.mobile_text_secondary))
+                btnScopeAcrossStorage?.setTypeface(null, Typeface.NORMAL)
+            } else {
+                btnScopeAcrossStorage?.setBackgroundResource(R.drawable.bg_view_toggle_item_active)
+                btnScopeAcrossStorage?.setTextColor(ContextCompat.getColor(this, R.color.white))
+                btnScopeAcrossStorage?.setTypeface(null, Typeface.BOLD)
+
+                btnScopeThisFolder?.setBackgroundResource(android.R.color.transparent)
+                btnScopeThisFolder?.setTextColor(ContextCompat.getColor(this, R.color.mobile_text_secondary))
+                btnScopeThisFolder?.setTypeface(null, Typeface.NORMAL)
             }
         }
     }
@@ -167,7 +230,7 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
         layoutEmptyState.visibility = View.GONE
         recyclerDuplicates.visibility = View.VISIBLE
 
-        val adapter = AnalyzerDuplicateAdapter(groups, isTv) { count ->
+        val adapter = AnalyzerDuplicateAdapter(groups, isTv, folderPath) { count ->
             updateDeleteButtonVisibility(count)
         }
         duplicateAdapter = adapter

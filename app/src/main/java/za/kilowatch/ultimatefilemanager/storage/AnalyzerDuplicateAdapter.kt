@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.storage
 
+import android.graphics.Color
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 class AnalyzerDuplicateAdapter(
     private var groups : List<DuplicateGroup>,
     private val isTv   : Boolean = false,
+    private val targetFolder: String? = null,
     var onSelectionChanged: (count: Int) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -105,6 +107,32 @@ class AnalyzerDuplicateAdapter(
                 vh.txtName.text   = fi.filename
                 vh.txtPath.text   = fi.folderPath
                 vh.txtSize.text   = Formatter.formatFileSize(ctx, fi.size)
+
+                if (!targetFolder.isNullOrEmpty()) {
+                    val cleanFileFolder = fi.folderPath.trimEnd('/')
+                    val cleanTarget = targetFolder.trimEnd('/')
+                    vh.txtLocationBadge.visibility = View.VISIBLE
+                    when {
+                        cleanFileFolder.equals(cleanTarget, ignoreCase = true) -> {
+                            vh.txtLocationBadge.text = ctx.getString(R.string.badge_in_folder)
+                            vh.txtLocationBadge.setBackgroundResource(R.drawable.bg_badge_in_folder)
+                            vh.txtLocationBadge.setTextColor(Color.parseColor("#00897B"))
+                        }
+                        cleanFileFolder.startsWith("$cleanTarget/", ignoreCase = true) -> {
+                            vh.txtLocationBadge.text = ctx.getString(R.string.badge_subfolder)
+                            vh.txtLocationBadge.setBackgroundResource(R.drawable.bg_badge_subfolder)
+                            vh.txtLocationBadge.setTextColor(Color.parseColor("#0284C7"))
+                        }
+                        else -> {
+                            vh.txtLocationBadge.text = ctx.getString(R.string.badge_across_storage)
+                            vh.txtLocationBadge.setBackgroundResource(R.drawable.bg_badge_across_storage)
+                            vh.txtLocationBadge.setTextColor(Color.parseColor("#F57C00"))
+                        }
+                    }
+                } else {
+                    vh.txtLocationBadge.visibility = View.GONE
+                }
+
                 vh.checkbox.setOnCheckedChangeListener(null)
                 vh.checkbox.isChecked = checkedFiles.contains(fi)
                 vh.checkbox.setOnCheckedChangeListener { _, checked ->
@@ -126,10 +154,11 @@ class AnalyzerDuplicateAdapter(
     }
 
     inner class FileVH(v: View) : RecyclerView.ViewHolder(v) {
-        val txtName : TextView = v.findViewById(R.id.txtDupFileName)
-        val txtPath : TextView = v.findViewById(R.id.txtDupFilePath)
-        val txtSize : TextView = v.findViewById(R.id.txtDupFileSize)
-        val checkbox: CheckBox = v.findViewById(R.id.checkDupFile)
+        val txtName          : TextView = v.findViewById(R.id.txtDupFileName)
+        val txtPath          : TextView = v.findViewById(R.id.txtDupFilePath)
+        val txtSize          : TextView = v.findViewById(R.id.txtDupFileSize)
+        val txtLocationBadge : TextView = v.findViewById(R.id.txtDupLocationBadge)
+        val checkbox         : CheckBox = v.findViewById(R.id.checkDupFile)
     }
 
     companion object {

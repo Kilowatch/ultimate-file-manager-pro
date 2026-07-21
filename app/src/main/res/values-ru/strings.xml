@@ -9967,5 +9967,26 @@ URL сервера
     <string name="icon_action_duplicate_finder">
 Поиск дубликатов
 </string>
+    <string name="duplicate_scope_this_folder">
+Только эта папка
+</string>
+    <string name="duplicate_scope_across_storage">
+По всему хранилищу
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Показаны только дубликаты, несколько копий которых находятся в этой папке или её подпапках.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Отображаются файлы в этой папке, которые также существуют в любом другом месте этого устройства.
+</string>
+    <string name="badge_in_folder">
+В папке
+</string>
+    <string name="badge_subfolder">
+Подпапка
+</string>
+    <string name="badge_across_storage">
+Вне папки
+</string>
 </resources>
 

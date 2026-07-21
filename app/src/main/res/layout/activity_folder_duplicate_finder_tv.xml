@@ -61,6 +61,77 @@
                 android:ellipsize="middle"
                 tools:text="/storage/emulated/0/Download" />
         </LinearLayout>
+
+        <!-- TV Scope Toggle Buttons -->
+        <LinearLayout
+            android:id="@+id/layoutScopeToggleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/btnScopeThisFolderTv"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/duplicate_scope_this_folder"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:background="@drawable/selector_tv_button_yellow"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btnScopeAcrossStorageTv"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/duplicate_scope_across_storage"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:background="@drawable/selector_tv_button"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- TV Scope Description Glass Card Bar -->
+    <LinearLayout
+        android:id="@+id/layoutScopeDescTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_tv_glass_card"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgScopeDescIconTv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_duplicate_finder"
+            android:contentDescription="@null"
+            app:tint="@color/tv_button_focused_yellow" />
+
+        <TextView
+            android:id="@+id/txtScopeDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13.5sp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/duplicate_scope_desc_this_folder" />
     </LinearLayout>
 
     <!-- Initial Loading Indicator -->
@@ -69,7 +140,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDescTv"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -85,7 +156,7 @@
         android:layout_marginHorizontal="32dp"
         android:background="@drawable/bg_tv_glass_card"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDescTv"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -128,7 +199,7 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDescTv"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

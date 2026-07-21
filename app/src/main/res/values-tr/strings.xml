@@ -9967,5 +9967,26 @@ Bu klasörde veya alt klasörlerinde yinelenen dosya bulunamadı.
     <string name="icon_action_duplicate_finder">
 Yinelenen Bulucu
 </string>
+    <string name="duplicate_scope_this_folder">
+Yalnızca Bu Klasör
+</string>
+    <string name="duplicate_scope_across_storage">
+Tüm Depolamada
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Yalnızca bu klasör veya alt klasörlerinde birden fazla kopyası bulunan yinelenenler gösteriliyor.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Bu cihazda başka bir yerde de bulunan, bu klasördeki dosyalar gösteriliyor.
+</string>
+    <string name="badge_in_folder">
+Klasör İçinde
+</string>
+    <string name="badge_subfolder">
+Alt Klasör
+</string>
+    <string name="badge_across_storage">
+Klasör Dışında
+</string>
 </resources>
 

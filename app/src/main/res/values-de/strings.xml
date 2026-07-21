@@ -9967,5 +9967,26 @@ In diesem Ordner oder seinen Unterordnern wurden keine doppelten Dateien gefunde
     <string name="icon_action_duplicate_finder">
 Duplikatsuche
 </string>
+    <string name="duplicate_scope_this_folder">
+Nur diesen Ordner
+</string>
+    <string name="duplicate_scope_across_storage">
+Über den gesamten Speicher
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Nur Duplikate anzeigen, von denen mehrere Kopien in diesem Ordner oder seinen Unterordnern vorhanden sind.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Zeige Dateien in diesem Ordner an, die auch an anderer Stelle auf diesem Gerät vorhanden sind.
+</string>
+    <string name="badge_in_folder">
+Im Ordner
+</string>
+    <string name="badge_subfolder">
+Unterordner
+</string>
+    <string name="badge_across_storage">
+Außerhalb des Ordners
+</string>
 </resources>
 

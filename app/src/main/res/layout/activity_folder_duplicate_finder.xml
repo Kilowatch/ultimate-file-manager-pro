@@ -68,13 +68,101 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Scope Filter Bar -->
+    <LinearLayout
+        android:id="@+id/layoutScopeToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_view_toggle_container"
+            android:padding="3dp">
+
+            <TextView
+                android:id="@+id/btnScopeThisFolder"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/duplicate_scope_this_folder"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_view_toggle_item_active"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnScopeAcrossStorage"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/duplicate_scope_across_storage"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Scope Description Glass Card -->
+    <LinearLayout
+        android:id="@+id/layoutScopeDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="9dp"
+        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_glass_card"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeToggle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgScopeDescIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_duplicate_finder"
+            android:contentDescription="@null"
+            app:tint="@color/ufm_accent_light" />
+
+        <TextView
+            android:id="@+id/txtScopeDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12.5sp"
+            android:lineSpacingExtra="2dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="@string/duplicate_scope_desc_this_folder" />
+    </LinearLayout>
+
     <!-- Initial Loading Indicator -->
     <ProgressBar
         android:id="@+id/progressBarLoading"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDesc"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -88,7 +176,7 @@
         android:gravity="center"
         android:padding="@dimen/margin_lg"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDesc"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -138,7 +226,7 @@
         android:paddingHorizontal="@dimen/margin_md"
         android:paddingVertical="@dimen/margin_sm"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toBottomOf="@id/layoutScopeDesc"
         app:layout_constraintBottom_toTopOf="@id/layoutVerifying"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

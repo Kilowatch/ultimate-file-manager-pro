@@ -9967,5 +9967,26 @@ UFM प्लेयर सेटिंग्स
     <string name="icon_action_duplicate_finder">
 डुप्लिकेट खोजक
 </string>
+    <string name="duplicate_scope_this_folder">
+केवल यह फ़ोल्डर
+</string>
+    <string name="duplicate_scope_across_storage">
+सभी स्टोरेज में
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+केवल वे डुप्लिकेट दिखा रहे हैं जिनकी कई प्रतियाँ इस फ़ोल्डर या इसकी उप-फ़ोल्डरों में मौजूद हैं।
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+इस फ़ोल्डर में उन फ़ाइलों को दिखा रहे हैं जो इस डिवाइस पर कहीं और भी मौजूद हैं।
+</string>
+    <string name="badge_in_folder">
+फ़ोल्डर में
+</string>
+    <string name="badge_subfolder">
+उपफ़ोल्डर
+</string>
+    <string name="badge_across_storage">
+फ़ोल्डर के बाहर
+</string>
 </resources>
 

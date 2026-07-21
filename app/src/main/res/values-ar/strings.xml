@@ -9967,5 +9967,26 @@ Box
     <string name="icon_action_duplicate_finder">
 مكتشف المكررات
 </string>
+    <string name="duplicate_scope_this_folder">
+هذا المجلد فقط
+</string>
+    <string name="duplicate_scope_across_storage">
+عبر التخزين
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+يتم عرض الملفات المكررة فقط عندما توجد نسخ متعددة منها داخل هذا المجلد أو مجلداته الفرعية.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+يتم عرض الملفات الموجودة في هذا المجلد والتي توجد أيضًا في أي مكان آخر على هذا الجهاز.
+</string>
+    <string name="badge_in_folder">
+في المجلد
+</string>
+    <string name="badge_subfolder">
+مجلد فرعي
+</string>
+    <string name="badge_across_storage">
+خارج المجلد
+</string>
 </resources>
 

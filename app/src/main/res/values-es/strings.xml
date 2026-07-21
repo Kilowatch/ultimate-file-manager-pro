@@ -9979,5 +9979,26 @@ No se encontraron archivos duplicados en esta carpeta ni en ninguna de sus subca
     <string name="icon_action_duplicate_finder">
 Buscador de duplicados
 </string>
+    <string name="duplicate_scope_this_folder">
+Solo esta carpeta
+</string>
+    <string name="duplicate_scope_across_storage">
+En todo el almacenamiento
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Mostrando solo duplicados donde existen múltiples copias dentro de esta carpeta o sus subcarpetas.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Mostrando archivos en esta carpeta que también existen en cualquier otro lugar de este dispositivo.
+</string>
+    <string name="badge_in_folder">
+En la carpeta
+</string>
+    <string name="badge_subfolder">
+Subcarpeta
+</string>
+    <string name="badge_across_storage">
+Fuera de la carpeta
+</string>
 </resources>
 

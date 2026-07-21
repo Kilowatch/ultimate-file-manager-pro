@@ -9967,5 +9967,26 @@ Tidak ada file duplikat yang ditemukan di folder ini atau subfolder mana pun.
     <string name="icon_action_duplicate_finder">
 Pencari Duplikat
 </string>
+    <string name="duplicate_scope_this_folder">
+Folder Ini Saja
+</string>
+    <string name="duplicate_scope_across_storage">
+Di Seluruh Penyimpanan
+</string>
+    <string name="duplicate_scope_desc_this_folder">
+Hanya menampilkan duplikat yang memiliki beberapa salinan di dalam folder ini atau subfolder-nya.
+</string>
+    <string name="duplicate_scope_desc_across_storage">
+Menampilkan file di folder ini yang juga ada di mana pun di perangkat ini.
+</string>
+    <string name="badge_in_folder">
+Di Folder
+</string>
+    <string name="badge_subfolder">
+Subfolder
+</string>
+    <string name="badge_across_storage">
+Di Luar Folder
+</string>
 </resources>
 
