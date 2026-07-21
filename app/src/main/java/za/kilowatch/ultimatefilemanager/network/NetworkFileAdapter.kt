@@ -189,6 +189,10 @@ class NetworkFileAdapter(
 
         // Pre-compute directory child counts off the main thread
         childCountJob?.cancel()
+        if (share.isServerMode && share.remotePath.isEmpty()) {
+            // At server mode root (discovered shares list) — skip pre-computing child counts
+            return
+        }
         val dirs = newFiles.filter { it.isDirectory && it.freeSpace < 0 && it.iconRes == 0 }
         if (dirs.isNotEmpty()) {
             childCountJob = adapterScope.launch(Dispatchers.IO) {
@@ -196,8 +200,13 @@ class NetworkFileAdapter(
                 for (dir in dirs) {
                     if (!isActive) return@launch
                     try {
-                        val rawFiles = when (share.type) {
-                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, dir.path)
+                        val effectiveShare = if (share.isServerMode && share.remotePath.isEmpty()) {
+                            share.copy(remotePath = dir.path)
+                        } else {
+                            share
+                        }
+                        val rawFiles = when (effectiveShare.type) {
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(effectiveShare, if (share.isServerMode && share.remotePath.isEmpty()) "" else dir.path)
                             za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, dir.path)
                             za.kilowatch.ultimatefilemanager.network.ShareType.TV -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, dir.path)
                             za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, dir.path)

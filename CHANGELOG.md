@@ -10,9 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed an issue where creating a new file on Mobile or TV (local, network, or cloud) opened the text editor in a non-editable state, requiring closing and reopening the file to edit.
 - Fixed UFM Player and Slideshow next/previous navigation and auto-advance to strictly respect the set sort mode (Name, Size, Date, Type) and sort order (Ascending, Descending) of local and network folders on both mobile and TV.
+- Fixed SMB connection reliability, infinite loading spinners, and batch delete stalls by adding a 2-second proactive idle session refresh, validating `diskShare.isConnected` upfront, invalidating stale pool entries on attempt 1, and tuning command timeouts.
+- Fixed an issue where folder-specific custom sort and filtering was not applied when navigating SMB folders, by ensuring folder preferences are loaded before sorting and rendering directory file listings.
+- Fixed an issue in server-mode SMB root listing where returning to discovered shares spammed background folder count requests with empty remote paths.
 
 ### Added
 - Added Targeted Duplicate Finder feature for individual folders on Mobile (Tools FAB) and TV (Toolbar button) when storage is indexed, launching a dedicated edge-to-edge activity to scan the selected folder and its subfolder tree.
+- Added automatic network transition listener (`ConnectivityManager.NetworkCallback`) in `UfmApplication` to instantly purge pooled SMB sessions when switching Wi-Fi networks or reconnecting, preventing stale socket handles.
 
 
 ## [1.7.1] — 2026-07-19

@@ -454,15 +454,21 @@ object SmbShareClient {
             try {
                 val (shareName, basePath) = splitSharePath(share.remotePath, "")
                 val diskShare = pooled.session.connectShare(shareName) as DiskShare
+
+                if (!diskShare.isConnected) {
+                    pooled.invalidate()
+                    if (attempt == 1) {
+                        continue
+                    }
+                }
+
                 val result = block(diskShare, basePath)
                 pooled.release()
                 return result
             } catch (e: Exception) {
                 pooled.invalidate()
                 lastError = e
-                // If it's a transport error, we retry once with a fresh connection/session
-                if (attempt == 1 && (e is com.hierynomus.protocol.transport.TransportException || e.cause is java.io.IOException)) {
-                    android.util.Log.w("SmbShareClient", "SMB Transport error (attempt 1), retrying: ${e.message}")
+                if (attempt == 1 && e !is kotlinx.coroutines.CancellationException) {
                     continue
                 }
                 throw e

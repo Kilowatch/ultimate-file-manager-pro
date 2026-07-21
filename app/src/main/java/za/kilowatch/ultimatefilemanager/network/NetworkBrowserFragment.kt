@@ -779,24 +779,6 @@ class NetworkBrowserFragment : Fragment() {
         val isTv = context?.packageManager?.hasSystemFeature("android.software.leanback") == true
         val ctx = context ?: return
 
-        // Load folder-specific sort settings (or fall back to global) on IO thread
-        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(ctx, currentPath, share.id)
-                ?: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadGlobal(ctx)
-            val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(ctx, currentPath, share.id)
-            val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
-            kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                sortMode  = state.sortMode
-                sortOrder = state.sortOrder
-                filterType = state.filterType
-                activeTagsFilter = state.activeTags
-                updateSortBadge(hasFolderOverride)
-                if (fileAdapter.viewMode != viewModeToApply) {
-                    applyViewMode(viewModeToApply)
-                }
-            }
-        }
-
         if (isTv && ::recyclerFiles.isInitialized) {
             val hadFocus = view?.hasFocus() == true || recyclerFiles.hasFocus()
             if (hadFocus) {
@@ -810,37 +792,23 @@ class NetworkBrowserFragment : Fragment() {
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("NetFragment", "[${hashCode()}] Loading directory: $currentPath")
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
+            val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(ctx, currentPath, share.id)
+                ?: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadGlobal(ctx)
+            val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(ctx, currentPath, share.id)
+            val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
+
             try {
                 // Server-mode SMB: intercept at root to discover shares
-                if (share.type == ShareType.SMB && share.isServerMode) {
+                val files = if (share.type == ShareType.SMB && share.isServerMode) {
                     if (currentPath.isEmpty()) {
-                        val discovered = discoverServerShares(share)
-                        withContext(Dispatchers.Main) {
-                            progressBar.visibility = View.GONE
-                            if (discovered.isEmpty()) {
-                                currentFiles = emptyList()
-                                fileAdapter.submitList(emptyList())
-                                layoutEmpty.visibility = View.VISIBLE
-                            } else {
-                                currentFiles = discovered
-                                performSearch(edtSearch.text.toString().trim())
-                                updateSubtitle()
-                            }
-                        }
+                        discoverServerShares(share)
                     } else {
                         // Inside a discovered share
                         val existingShare = share.remotePath.trimStart('/')
                         if (existingShare.isNotEmpty()) {
                             // Already navigated into a share — currentPath is relative to share root
                             val innerPath = stripSharePrefix(currentPath.trimStart('/'))
-                            var files = SmbShareClient.listFiles(share, innerPath)
-                            files = files.filter { it.name != ".." }
-                            withContext(Dispatchers.Main) {
-                                progressBar.visibility = View.GONE
-                                currentFiles = files
-                                performSearch(edtSearch.text.toString().trim())
-                                updateSubtitle()
-                            }
+                            SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                         } else {
                             // First navigation into a share — extract share name from currentPath
                             val parts = currentPath.trimStart('/').split("/", limit = 2)
@@ -849,38 +817,46 @@ class NetworkBrowserFragment : Fragment() {
                             // Update share to the effective copy so all file operations
                             // (copy, delete, rename, etc.) use the correct remotePath
                             share = share.copy(remotePath = "/$shareName")
-                            fileAdapter.share = share
-                            var files = SmbShareClient.listFiles(share, innerPath)
-                            files = files.filter { it.name != ".." }
                             withContext(Dispatchers.Main) {
-                                progressBar.visibility = View.GONE
-                                currentFiles = files
-                                performSearch(edtSearch.text.toString().trim())
-                                updateSubtitle()
+                                fileAdapter.share = share
                             }
+                            SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                         }
                     }
-                    return@launch
+                } else {
+                    when (share.type) {
+                        ShareType.SMB          -> SmbShareClient.listFiles(share, currentPath)
+                        ShareType.FTP          -> FtpShareClient.listFiles(share, currentPath)
+                        ShareType.TV           -> TvShareClient.listFiles(share, currentPath)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
+                        ShareType.NFS          -> NfsShareClient.listFiles(share, currentPath)
+                        ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, currentPath)
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, currentPath)
+                        ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, currentPath)
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, currentPath)
+                        ShareType.WEBDAV       -> WebDavShareClient.listFiles(share, currentPath)
+                        ShareType.DLNA         -> DlnaShareClient.listFiles(share, currentPath)
+                    }
                 }
 
-                val files = when (share.type) {
-                    ShareType.SMB          -> SmbShareClient.listFiles(share, currentPath)
-                    ShareType.FTP          -> FtpShareClient.listFiles(share, currentPath)
-                    ShareType.TV           -> TvShareClient.listFiles(share, currentPath)
-                    ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
-                    ShareType.NFS          -> NfsShareClient.listFiles(share, currentPath)
-                    ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, currentPath)
-                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, currentPath)
-                    ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, currentPath)
-                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, currentPath)
-                    ShareType.WEBDAV       -> WebDavShareClient.listFiles(share, currentPath)
-                    ShareType.DLNA         -> DlnaShareClient.listFiles(share, currentPath)
-                }
-                
                 withContext(Dispatchers.Main) {
+                    sortMode  = state.sortMode
+                    sortOrder = state.sortOrder
+                    filterType = state.filterType
+                    activeTagsFilter = state.activeTags
+                    updateSortBadge(hasFolderOverride)
+                    if (fileAdapter.viewMode != viewModeToApply) {
+                        applyViewMode(viewModeToApply)
+                    }
+
                     progressBar.visibility = View.GONE
                     currentFiles = files
-                    performSearch(edtSearch.text.toString().trim())
+                    if (share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty() && files.isEmpty()) {
+                        fileAdapter.submitList(emptyList())
+                        layoutEmpty.visibility = View.VISIBLE
+                    } else {
+                        performSearch(edtSearch.text.toString().trim())
+                    }
                     updateSubtitle()
                 }
             } catch (e: Exception) {

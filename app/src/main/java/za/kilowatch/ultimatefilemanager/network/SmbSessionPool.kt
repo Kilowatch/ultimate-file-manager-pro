@@ -85,7 +85,10 @@ object SmbSessionPool {
 
         synchronized(entry) {
             val existing = entry.session
-            if (existing != null && isAlive(existing)) {
+            val idleMs   = if (entry.lastReleasedMs > 0) System.currentTimeMillis() - entry.lastReleasedMs else 0L
+            val isStale  = idleMs > 2_000L // SMB servers often drop idle sessions after 3-5s
+
+            if (existing != null && !isStale && isAlive(existing)) {
                 entry.useCount++
                 return PooledConnection(
                     session      = existing,
@@ -106,7 +109,7 @@ object SmbSessionPool {
             }
 
             // Fresh connection needed. If the slot is empty or the existing connection
-            // is dead, we open a new one. Stale entries with useCount=0 are closed.
+            // is dead/stale, we open a new one. Stale entries with useCount=0 are closed.
             if (entry.useCount == 0) {
                 closeEntryQuietly(entry)
             }
@@ -119,6 +122,7 @@ object SmbSessionPool {
             entry.connection = conn
             entry.session    = session
             entry.useCount   = 1
+            entry.lastReleasedMs = System.currentTimeMillis()
 
             return PooledConnection(
                 session      = session,
@@ -204,14 +208,14 @@ object SmbSessionPool {
         // button which closes the underlying TCP socket directly.
         val soTimeoutSec = when {
             forWrite  -> 60L
-            dedicated -> 0L  // streaming / long-lived — no socket timeout
-            else      -> 120L // pooled metadata — 2 min idle before timeout
+            dedicated -> 0L // streaming / long-lived — no socket timeout
+            else      -> 2L // pooled metadata — 2s timeout for fast failover on stale connections
         }
 
         val builder = SmbConfig.builder()
-            .withTimeout(if (forWrite) 60L else 15L, TimeUnit.SECONDS)
+            .withTimeout(if (forWrite) 60L else 2L, TimeUnit.SECONDS)
             .withSoTimeout(soTimeoutSec, TimeUnit.SECONDS)
-            .withSocketFactory(KeepAliveSocketFactory(15000))
+            .withSocketFactory(KeepAliveSocketFactory(5000))
             // smbj 0.14.0 may require signing by default, which causes
             // STATUS_ACCESS_DENIED on NAS devices / servers that don't support
             // SMB signing.  Disable signing to match the 0.13.0 behaviour.
@@ -241,11 +245,8 @@ object SmbSessionPool {
     }
 
     private fun isAlive(session: Session): Boolean = try {
-        // isConnected() verifies transport != null && transport.isConnected(),
-        // which checks the underlying socket's isConnected() && !isClosed().
-        // TCP keepalive (enabled via KeepAliveSocketFactory) is the primary
-        // defense against half-open connections.
-        session.connection.isConnected
+        val conn = session.connection
+        conn != null && conn.isConnected
     } catch (_: Exception) { false }
 
     private fun closeQuietly(client: SMBClient?, conn: Connection?, session: Session?) {

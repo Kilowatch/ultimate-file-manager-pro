@@ -244,6 +244,36 @@ class UfmApplication : Application() {
         } catch (e: Exception) {
             Log.e(TAG, "Failed to schedule Recycle Bin cleanup", e)
         }
+
+        // Register network connectivity listener to purge SMB pool on Wi-Fi network transitions
+        registerNetworkCallback()
+    }
+
+    private fun registerNetworkCallback() {
+        try {
+            val cm = getSystemService(android.content.Context.CONNECTIVITY_SERVICE) as? android.net.ConnectivityManager ?: return
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                cm.registerDefaultNetworkCallback(object : android.net.ConnectivityManager.NetworkCallback() {
+                    private var currentNetwork: android.net.Network? = null
+
+                    override fun onAvailable(network: android.net.Network) {
+                        if (currentNetwork != null && currentNetwork != network) {
+                            Log.d(TAG, "Network changed -> purging SMB session pool")
+                            SmbSessionPool.closeAll()
+                        }
+                        currentNetwork = network
+                    }
+
+                    override fun onLost(network: android.net.Network) {
+                        Log.d(TAG, "Network lost -> purging SMB session pool")
+                        SmbSessionPool.closeAll()
+                        if (currentNetwork == network) currentNetwork = null
+                    }
+                })
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to register network callback", e)
+        }
     }
 
     /**
