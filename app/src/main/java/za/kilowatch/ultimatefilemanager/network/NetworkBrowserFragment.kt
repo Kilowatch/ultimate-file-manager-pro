@@ -105,6 +105,7 @@ class NetworkBrowserFragment : Fragment() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private var fabSelectAll: ExtendedFloatingActionButton? = null
     private lateinit var cacheManager: za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
@@ -126,16 +127,17 @@ class NetworkBrowserFragment : Fragment() {
     var onMediaFileSelected: ((NetworkFile) -> Unit)? = null
     var onCloseTwinWindow: (() -> Unit)? = null
     var onSelectionChanged: ((List<NetworkFile>) -> Unit)? = null
+    var onInvalidShare: (() -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val shareId = arguments?.getString(ARG_SHARE_ID) ?: return
+        val shareId = arguments?.getString(ARG_SHARE_ID) ?: ""
         currentPath = arguments?.getString(ARG_INITIAL_PATH) ?: ""
         
         // Resolve share
         val context = requireContext()
         val fromRepo = NetworkShareRepository.getInstance(context).getById(shareId)
-        share = if (fromRepo != null) {
+        val resolvedShare = if (fromRepo != null) {
             fromRepo
         } else {
             val online = OnlineStorageRepository.getInstance(context).getById(shareId)
@@ -159,9 +161,6 @@ class NetworkBrowserFragment : Fragment() {
                     domain = online.s3Bucket ?: "",
                     remotePath = online.s3Region ?: "",
                     username = when (online.provider) {
-                        // Use online.id as the rclone remote name — matches the section
-                        // key in the encrypted config file and the name registered via
-                        // launchRCloneBrowse, so all three stay in sync.
                         OnlineStorageProvider.RCLONE -> online.id
                         else -> if (online.isWebDavProvider) online.webDavUsername ?: "" else online.s3AccessKey ?: online.email
                     },
@@ -174,10 +173,15 @@ class NetworkBrowserFragment : Fragment() {
             } else {
                 PairingManager.getInstance(context).getPairedDevice(shareId)?.let { dev ->
                     NetworkShare(id = dev.deviceId, name = dev.name, type = ShareType.TV, host = dev.lastIp, port = dev.lastPort, readOnly = false)
-                } ?: return
+                }
             }
         }
 
+        if (resolvedShare == null) {
+            onInvalidShare?.invoke()
+            return
+        }
+        share = resolvedShare
         originalRemotePath = share.remotePath
 
         isTv = context.packageManager.hasSystemFeature("android.software.leanback")
@@ -199,6 +203,10 @@ class NetworkBrowserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (!::share.isInitialized) {
+            onInvalidShare?.invoke()
+            return
+        }
         cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(requireContext())
         setupViews(view)
         loadDirectory()
@@ -213,15 +221,91 @@ class NetworkBrowserFragment : Fragment() {
 
     private fun applyLeftHandedFabSettings() {
         val ctx = context ?: return
-        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
         val viewsToUpdate = mutableListOf<android.view.View>()
         if (::fabPaste.isInitialized) {
             viewsToUpdate.add(fabPaste)
         }
         fabTools?.let { viewsToUpdate.add(it) }
+        fabSelectAll?.let { viewsToUpdate.add(it) }
 
+        if (isCompactMode) {
+            val fabT = fabTools
+            val fabS = fabSelectAll
+            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+
+            fabT?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabP?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabS?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToTop = R.id.fabTools
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            return
+        }
+
+        if (isTwinWindow) {
+            val fabS = fabSelectAll
+            val fabT = fabTools
+            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+
+            fabS?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToStart = R.id.fabTools
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.horizontalChainStyle = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.CHAIN_PACKED
+                lp.horizontalBias = 0.5f
+                fab.layoutParams = lp
+            }
+            fabT?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.startToEnd = R.id.fabSelectAll
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabP?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.startToEnd = R.id.fabSelectAll
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            return
+        }
+
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
         for (fab in viewsToUpdate) {
             val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+            lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            lp.bottomToTop = R.id.layoutActionPillsScroll
+            lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -268,6 +352,10 @@ class NetworkBrowserFragment : Fragment() {
         layoutEmpty = view.findViewById(R.id.layoutEmpty)
         fabPaste = view.findViewById(R.id.fabPaste)
         fabTools = view.findViewById(R.id.fabTools)
+        fabSelectAll = view.findViewById(R.id.fabSelectAll)
+        fabSelectAll?.setOnClickListener {
+            if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+        }
         fabPaste.setOnClickListener {
             val act = activity
             if (act is TwinWindowActivity) {
@@ -913,32 +1001,30 @@ class NetworkBrowserFragment : Fragment() {
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             val context = context ?: return
             if (isTwinWindow) {
-                view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = if (showSelection) View.VISIBLE else View.GONE
-                view?.findViewById<View>(R.id.layoutActionPills)?.visibility = if (showSelection) View.VISIBLE else View.GONE
-                layoutSelectionBar.visibility = View.GONE
-                
                 if (!isTv) {
-                    view?.findViewById<View>(R.id.btnPillCopy)?.visibility = View.GONE
-                    view?.findViewById<View>(R.id.btnPillMove)?.visibility = View.GONE
-                    val btnPillSelectAll = view?.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPillSelectAll)
-                    if (btnPillSelectAll != null) {
-                        btnPillSelectAll.visibility = View.VISIBLE
+                    view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
+                    view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
+                    layoutSelectionBar.visibility = View.GONE
+
+                    val fabSelAll = fabSelectAll
+                    if (fabSelAll != null) {
                         val isAllSel = fileAdapter.isAllSelected()
-                        btnPillSelectAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
-                        btnPillSelectAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
+                        fabSelAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+                        fabSelAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
+                        fabSelAll.visibility = View.VISIBLE
                     }
-                    view?.findViewById<View>(R.id.btnPillDelete)?.visibility = View.GONE
                 } else {
+                    view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                    view?.findViewById<View>(R.id.layoutActionPills)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                    fabSelectAll?.visibility = View.GONE
                     view?.findViewById<View>(R.id.btnPillCopy)?.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY)) View.VISIBLE else View.GONE
                     view?.findViewById<View>(R.id.btnPillMove)?.visibility = if (showActions && !share.readOnly && pm.isIconEnabled(context, pm.KEY_MOVE)) View.VISIBLE else View.GONE
                     view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
                     view?.findViewById<View>(R.id.btnPillDelete)?.visibility = if (showActions && !share.readOnly && pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
-                    // On TV twin window, hide the pills container entirely if no actions are showable
-                    view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = if (showActions) View.VISIBLE else View.GONE
-                    view?.findViewById<View>(R.id.layoutActionPills)?.visibility = if (showActions) View.VISIBLE else View.GONE
                 }
                 fabTools?.visibility = if (showActions && !isTv) View.VISIBLE else View.GONE
             } else {
+                fabSelectAll?.visibility = View.GONE
                 layoutSelectionBar.visibility = View.VISIBLE
                 view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
                 view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
@@ -1008,6 +1094,7 @@ class NetworkBrowserFragment : Fragment() {
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar as ViewGroup)
             fabProperties?.visibility = View.GONE
             fabTools?.visibility = View.GONE
+            fabSelectAll?.visibility = View.GONE
             updatePasteFab()
         }
     }

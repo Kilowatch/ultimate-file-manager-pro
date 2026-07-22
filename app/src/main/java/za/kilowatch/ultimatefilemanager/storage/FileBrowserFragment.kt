@@ -82,6 +82,7 @@ class FileBrowserFragment : Fragment() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private var fabSelectAll: ExtendedFloatingActionButton? = null
     private var btnRetriggerThumbnails: ImageView? = null
     private var btnDuplicateFinder: ImageView? = null
     private var btnLargeFilesFinder: ImageView? = null
@@ -203,15 +204,32 @@ class FileBrowserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        rootPath = arguments?.getString(ARG_MOUNT_PATH) ?: ""
-        storageLabel = arguments?.getString(ARG_STORAGE_LABEL) ?: "Storage"
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        var mount = arguments?.getString(ARG_MOUNT_PATH) ?: ""
+        var label = arguments?.getString(ARG_STORAGE_LABEL) ?: internalLabel
+        if (mount.isEmpty() || !File(mount).exists()) {
+            mount = internalPath
+            label = internalLabel
+        }
+        rootPath = mount
+        storageLabel = label
         isPickerMode = arguments?.getBoolean(ARG_PICKER_MODE, false) == true
         labelPrefix = arguments?.getString(ARG_LABEL_PREFIX) ?: ""
         hideBack = arguments?.getBoolean(ARG_HIDE_BACK, false) == true
         isTwinWindow = arguments?.getBoolean(ARG_IS_TWIN_WINDOW, false) == true
 
         val initialPath = arguments?.getString(ARG_INITIAL_PATH)
-        currentDir = if (!initialPath.isNullOrEmpty()) File(initialPath) else File(rootPath)
+        currentDir = when {
+            !initialPath.isNullOrEmpty() && File(initialPath).exists() -> File(initialPath)
+            File(rootPath).exists() -> File(rootPath)
+            else -> {
+                rootPath = internalPath
+                storageLabel = internalLabel
+                File(internalPath)
+            }
+        }
 
         // Resolve storage ID/Type for indexing
         val resolved = IndexingRepository.resolveStorageForPath(rootPath)
@@ -244,15 +262,91 @@ class FileBrowserFragment : Fragment() {
 
     private fun applyLeftHandedFabSettings() {
         val ctx = context ?: return
-        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
         val viewsToUpdate = mutableListOf<android.view.View>()
         if (::fabPaste.isInitialized) {
             viewsToUpdate.add(fabPaste)
         }
         fabTools?.let { viewsToUpdate.add(it) }
+        fabSelectAll?.let { viewsToUpdate.add(it) }
 
+        if (isCompactMode) {
+            val fabT = fabTools
+            val fabS = fabSelectAll
+            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+
+            fabT?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabP?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabS?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToTop = R.id.fabTools
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            return
+        }
+
+        if (isTwinWindow) {
+            val fabS = fabSelectAll
+            val fabT = fabTools
+            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+
+            fabS?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToStart = R.id.fabTools
+                lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.horizontalChainStyle = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.CHAIN_PACKED
+                lp.horizontalBias = 0.5f
+                fab.layoutParams = lp
+            }
+            fabT?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.startToEnd = R.id.fabSelectAll
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            fabP?.let { fab ->
+                val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                lp.startToEnd = R.id.fabSelectAll
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                fab.layoutParams = lp
+            }
+            return
+        }
+
+        val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
         for (fab in viewsToUpdate) {
             val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+            lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            lp.bottomToTop = R.id.layoutActionPillsScroll
+            lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -324,6 +418,10 @@ class FileBrowserFragment : Fragment() {
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
         fabTools = view.findViewById(R.id.fabTools)
+        fabSelectAll = view.findViewById(R.id.fabSelectAll)
+        fabSelectAll?.setOnClickListener {
+            if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
+        }
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
         btnSearchToggle.setImageResource(R.drawable.ic_search) 
@@ -1207,21 +1305,26 @@ class FileBrowserFragment : Fragment() {
                     btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
                     btnDelete.visibility = View.GONE
                     btnCompress.visibility = View.GONE
+                    fabSelectAll?.visibility = View.GONE
                 } else {
                     view?.findViewById<View>(R.id.btnPillCopy)?.visibility = View.GONE
                     view?.findViewById<View>(R.id.btnPillMove)?.visibility = View.GONE
-                    val btnPillSelectAll = view?.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPillSelectAll)
-                    if (btnPillSelectAll != null) {
-                        btnPillSelectAll.visibility = View.VISIBLE
-                        val isAllSel = fileAdapter.isAllSelected()
-                        btnPillSelectAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
-                        btnPillSelectAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
-                    }
+                    view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
                     view?.findViewById<View>(R.id.btnPillDelete)?.visibility = View.GONE
+                    layoutActionPills.visibility = View.GONE
+                    
+                    val fabSelAll = fabSelectAll
+                    if (fabSelAll != null) {
+                        val isAllSel = fileAdapter.isAllSelected()
+                        fabSelAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+                        fabSelAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
+                        fabSelAll.visibility = View.VISIBLE
+                    }
                 }
                 fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
             } else {
                 fabTools?.visibility = View.GONE
+                fabSelectAll?.visibility = View.GONE
                 if (!isTwinWindow) {
                     val row2 = btnCopy.parent.parent as? View
                     if (showActions) {
@@ -1291,6 +1394,7 @@ class FileBrowserFragment : Fragment() {
             za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
             fabProperties?.visibility = View.GONE
             fabTools?.visibility = View.GONE
+            fabSelectAll?.visibility = View.GONE
             updatePasteFab()
         }
     }
@@ -1298,13 +1402,26 @@ class FileBrowserFragment : Fragment() {
     private fun loadDirectory(directory: File) {
         val ctx = context ?: return
         val isTv = DeviceUtils.isTvDevice(ctx)
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        var targetDir = directory
+        if (!targetDir.exists()) {
+            if (rootPath.isNotEmpty() && File(rootPath).exists()) {
+                targetDir = File(rootPath)
+            } else {
+                rootPath = internalPath
+                storageLabel = internalLabel
+                targetDir = File(internalPath)
+            }
+        }
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         // before the coroutine that actually reads the files starts.
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = SortFilterPreferenceManager.loadForPath(ctx, directory.absolutePath)
+            val state = SortFilterPreferenceManager.loadForPath(ctx, targetDir.absolutePath)
                 ?: SortFilterPreferenceManager.loadGlobal(ctx)
-            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(ctx, directory.absolutePath)
+            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(ctx, targetDir.absolutePath)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(ctx)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
@@ -1331,7 +1448,7 @@ class FileBrowserFragment : Fragment() {
             }
         }
 
-        currentDir = directory
+        currentDir = targetDir
         val displayTitle = if (labelPrefix.isNotEmpty()) "$labelPrefix${if (directory.absolutePath == rootPath) storageLabel else directory.name}" 
                           else if (directory.absolutePath == rootPath) storageLabel else directory.name
         view?.findViewById<TextView>(R.id.txtTvTitle)?.text = displayTitle

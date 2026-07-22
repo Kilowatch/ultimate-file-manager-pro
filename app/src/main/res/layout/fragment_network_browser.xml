@@ -595,7 +595,6 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:text="@string/action_select_all"
                 app:icon="@drawable/ic_check"
                 app:iconSize="18dp" />
@@ -605,6 +604,7 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/action_copy"
                 app:icon="@drawable/ic_copy"
@@ -647,6 +647,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_file" />
 
+    <!-- Select All FAB (Twin Window) -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabSelectAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_md"
+        android:text="@string/action_select_all"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_check"
+        app:iconTint="@color/white"
+        app:backgroundTint="#FF0284C7"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fabTools"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintHorizontal_bias="0.5" />
+
     <!-- Paste FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabPaste"
@@ -659,7 +677,7 @@
         app:iconTint="@color/white"
         app:backgroundTint="#FF0284C7"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layoutActionPillsScroll"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Tools FAB -->
@@ -674,7 +692,7 @@
         app:iconTint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layoutActionPillsScroll"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Empty State -->

@@ -474,7 +474,7 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
                 android:text="@string/action_select_all"
                 app:icon="@drawable/ic_check"
                 app:iconSize="18dp" />
@@ -529,6 +529,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_file_compact" />
 
+    <!-- Select All FAB (Twin Window) -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabSelectAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/action_select_all"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="12sp"
+        app:icon="@drawable/ic_check"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/fabTools"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- Paste FAB -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabPaste"
@@ -542,7 +559,25 @@
         app:iconTint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/layoutActionPillsScroll"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Tools FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabTools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@string/action_tools"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="12sp"
+        app:icon="@drawable/ic_settings"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Empty State -->

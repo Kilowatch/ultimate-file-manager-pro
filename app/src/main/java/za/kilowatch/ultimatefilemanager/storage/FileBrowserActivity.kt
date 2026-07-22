@@ -330,13 +330,20 @@ class FileBrowserActivity : AppCompatActivity() {
             insets
         }
 
-        rootPath = intent.getStringExtra(EXTRA_MOUNT_PATH) ?: run {
-            finish()
-            return
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        rootPath = intent.getStringExtra(EXTRA_MOUNT_PATH) ?: internalPath
+        if (rootPath.isEmpty() || !File(rootPath).exists()) {
+            rootPath = internalPath
+            storageLabel = internalLabel
+            storageId = "internal"
+            storageType = "internal"
+        } else {
+            storageLabel = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: getString(R.string.storage)
+            storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: if (rootPath.contains("emulated")) "internal" else "external"
+            storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (rootPath.contains("emulated")) "internal" else "external"
         }
-        storageLabel = intent.getStringExtra(EXTRA_STORAGE_LABEL) ?: getString(R.string.storage)
-        storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: if (rootPath.contains("emulated")) "internal" else "external"
-        storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (rootPath.contains("emulated")) "internal" else "external"
         currentDir = File(rootPath)
         focusPath = intent.getStringExtra(EXTRA_FOCUS_PATH)
 

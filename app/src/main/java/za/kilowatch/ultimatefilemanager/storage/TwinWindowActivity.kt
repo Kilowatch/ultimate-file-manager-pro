@@ -191,9 +191,12 @@ class TwinWindowActivity : AppCompatActivity() {
         when {
             topLocalPath != null -> {
                 pane1IsNetwork = false
-                setupLocalPane(1, topLocalPath, topLocalLabel, topLocalInitialPath, requestInitialFocus = true)
+                val validPath = if (java.io.File(topLocalPath).exists()) topLocalPath else internalPath
+                val validLabel = if (java.io.File(topLocalPath).exists()) topLocalLabel else internalLabel
+                val validInit = if (topLocalInitialPath.isNotEmpty() && java.io.File(topLocalInitialPath).exists()) topLocalInitialPath else ""
+                setupLocalPane(1, validPath, validLabel, validInit, requestInitialFocus = true)
             }
-            topShareId   != null -> {
+            topShareId   != null && isShareValid(topShareId) -> {
                 pane1IsNetwork = true
                 pane1ShareId = topShareId
                 pane1SharePath = topSharePath
@@ -215,12 +218,14 @@ class TwinWindowActivity : AppCompatActivity() {
         val p2ShareId     = p2PrefsManager.getPane2ShareId(this)
         val p2InitialPath = p2PrefsManager.getPane2InitialPath(this) ?: ""
         val p2PathValid   = p2Path != null && java.io.File(p2Path).exists()
+        val p2InitValid   = p2InitialPath.isNotEmpty() && java.io.File(p2InitialPath).exists()
+        val p2ShareValid  = p2ShareId != null && isShareValid(p2ShareId)
 
         when {
-            p2Type == "network" && p2ShareId != null -> setupNetworkPane(2, p2ShareId, p2InitialPath, requestInitialFocus = false)
+            p2Type == "network" && p2ShareValid -> setupNetworkPane(2, p2ShareId!!, if (p2InitValid) p2InitialPath else "", requestInitialFocus = false)
             p2Type == "apps"                         -> setupAppPane(2)
-            p2Type == "local" && p2PathValid          -> setupLocalPane(2, p2Path!!, p2Label ?: internalLabel, p2InitialPath, requestInitialFocus = false)
-            else                                     -> setupLocalPane(2, internalPath, internalLabel, p2InitialPath, requestInitialFocus = false)
+            p2Type == "local" && p2PathValid          -> setupLocalPane(2, p2Path!!, p2Label ?: internalLabel, if (p2InitValid) p2InitialPath else "", requestInitialFocus = false)
+            else                                     -> setupLocalPane(2, internalPath, internalLabel, "", requestInitialFocus = false)
         }
 
         if (!DeviceUtils.isTvDevice(this)) {
@@ -308,9 +313,27 @@ class TwinWindowActivity : AppCompatActivity() {
         return false
     }
 
+    private fun isShareValid(shareId: String): Boolean {
+        if (shareId.isEmpty()) return false
+        val repoShare = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this).getById(shareId)
+        if (repoShare != null) return true
+        val onlineShare = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this).getById(shareId)
+        if (onlineShare != null) return true
+        val pairedDev = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this).getPairedDevice(shareId)
+        if (pairedDev != null) return true
+        return false
+    }
+
     private fun setupLocalPane(index: Int, path: String, label: String, initialPath: String = "", requestInitialFocus: Boolean = false) {
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        val validPath = if (path.isNotEmpty() && java.io.File(path).exists()) path else internalPath
+        val validLabel = if (path.isNotEmpty() && java.io.File(path).exists()) label else internalLabel
+        val validInit = if (initialPath.isNotEmpty() && java.io.File(initialPath).exists()) initialPath else ""
+
         // Both panes show their back button so the user can navigate/exit from either side.
-        val fragment = FileBrowserFragment.newInstance(path, label, isTwinWindow = true, hideBack = false, initialPath = initialPath, requestInitialFocus = requestInitialFocus)
+        val fragment = FileBrowserFragment.newInstance(validPath, validLabel, isTwinWindow = true, hideBack = false, initialPath = validInit, requestInitialFocus = requestInitialFocus)
         fragment.onStoragePickerRequested = {
             selectedPaneIndex = index
             launchStoragePicker()
@@ -341,7 +364,18 @@ class TwinWindowActivity : AppCompatActivity() {
     }
 
     private fun setupNetworkPane(index: Int, shareId: String, initialPath: String = "", requestInitialFocus: Boolean = false) {
+        val internalPath = android.os.Environment.getExternalStorageDirectory().absolutePath
+        val internalLabel = getString(R.string.storage_internal)
+
+        if (!isShareValid(shareId)) {
+            setupLocalPane(index, internalPath, internalLabel, requestInitialFocus = requestInitialFocus)
+            return
+        }
+
         val fragment = NetworkBrowserFragment.newInstance(shareId, initialPath = initialPath, isTwinWindow = true, requestInitialFocus = requestInitialFocus)
+        fragment.onInvalidShare = {
+            setupLocalPane(index, internalPath, internalLabel, requestInitialFocus = requestInitialFocus)
+        }
         fragment.onStoragePickerRequested = {
             selectedPaneIndex = index
             launchStoragePicker()

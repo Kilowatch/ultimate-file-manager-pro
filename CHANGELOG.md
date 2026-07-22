@@ -5,6 +5,12 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.3] — 2026-07-22
+
+### Fixed
+- Fixed missing "Tools" FAB and converted "Select All" into a standalone `ExtendedFloatingActionButton` matching the exact size and style of "Tools". Aligned both FABs in twin window mode (stacked vertically in center for vertical split, side-by-side at bottom center for horizontal split).
+- Fixed application crash when opening pane 1, pane 2, or standard browser window for non-existent local directory paths, removed SD cards/USB drives, or deleted network shares by falling back safely to Internal Storage root.
+
 ## [1.7.2] — 2026-07-21
 
 ### Fixed
