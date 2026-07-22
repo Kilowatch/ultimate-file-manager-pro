@@ -87,10 +87,10 @@ class NetworkBrowserFragment : Fragment() {
     private var txtTitle: TextView? = null
     private var txtSubtitle: TextView? = null
     
-    private lateinit var btnSearchToggle: ImageView
-    private lateinit var layoutSearchRow: LinearLayout
-    private lateinit var edtSearch: EditText
-    private lateinit var btnSearchClear: ImageView
+    private var btnSearchToggle: ImageView? = null
+    private var layoutSearchRow: LinearLayout? = null
+    private var edtSearch: EditText? = null
+    private var btnSearchClear: ImageView? = null
     private var isSearchVisible = false
     private var searchJob: Job? = null
 
@@ -99,10 +99,10 @@ class NetworkBrowserFragment : Fragment() {
     private var filterType = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL
     private var activeTagsFilter: Set<String> = emptySet()
     private var currentFiles: List<NetworkFile> = emptyList()
-    private lateinit var layoutSelectionBar: View
-    private lateinit var txtSelectionCount: TextView
-    private lateinit var layoutEmpty: View
-    private lateinit var fabPaste: ExtendedFloatingActionButton
+    private var layoutSelectionBar: View? = null
+    private var txtSelectionCount: TextView? = null
+    private var layoutEmpty: View? = null
+    private var fabPaste: ExtendedFloatingActionButton? = null
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var fabSelectAll: ExtendedFloatingActionButton? = null
@@ -222,16 +222,14 @@ class NetworkBrowserFragment : Fragment() {
     private fun applyLeftHandedFabSettings() {
         val ctx = context ?: return
         val viewsToUpdate = mutableListOf<android.view.View>()
-        if (::fabPaste.isInitialized) {
-            viewsToUpdate.add(fabPaste)
-        }
+        fabPaste?.let { viewsToUpdate.add(it) }
         fabTools?.let { viewsToUpdate.add(it) }
         fabSelectAll?.let { viewsToUpdate.add(it) }
 
         if (isCompactMode) {
             val fabT = fabTools
             val fabS = fabSelectAll
-            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+            val fabP = fabPaste
 
             fabT?.let { fab ->
                 val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -266,7 +264,7 @@ class NetworkBrowserFragment : Fragment() {
         if (isTwinWindow) {
             val fabS = fabSelectAll
             val fabT = fabTools
-            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+            val fabP = fabPaste
 
             fabS?.let { fab ->
                 val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -356,7 +354,7 @@ class NetworkBrowserFragment : Fragment() {
         fabSelectAll?.setOnClickListener {
             if (fileAdapter.isAllSelected()) fileAdapter.deselectAll() else fileAdapter.selectAll()
         }
-        fabPaste.setOnClickListener {
+        fabPaste?.setOnClickListener {
             val act = activity
             if (act is TwinWindowActivity) {
                 act.onPasteRequested(this)
@@ -578,8 +576,8 @@ class NetworkBrowserFragment : Fragment() {
         }
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
-        btnSearchToggle.setImageResource(R.drawable.ic_search)
-        btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+        btnSearchToggle?.setImageResource(R.drawable.ic_search)
+        btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
         layoutSearchRow = view.findViewById(R.id.layoutSearchRow)
         edtSearch = view.findViewById(R.id.edtSearch)
         btnSearchClear = view.findViewById(R.id.btnSearchClear)
@@ -617,15 +615,15 @@ class NetworkBrowserFragment : Fragment() {
             }
         }
         
-        btnSearchToggle.setOnClickListener { toggleSearch() }
-        btnSearchClear.setOnClickListener { edtSearch.setText("") }
+        btnSearchToggle?.setOnClickListener { toggleSearch() }
+        btnSearchClear?.setOnClickListener { edtSearch?.setText("") }
         
-        edtSearch.addTextChangedListener(object : android.text.TextWatcher {
+        edtSearch?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) {
                 val query = s?.toString()?.trim() ?: ""
-                btnSearchClear.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
+                btnSearchClear?.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
                 
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
@@ -635,9 +633,9 @@ class NetworkBrowserFragment : Fragment() {
             }
         })
         
-        edtSearch.setOnEditorActionListener { _, actionId, _ ->
+        edtSearch?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                val query = edtSearch.text.toString().trim()
+                val query = edtSearch?.text?.toString()?.trim() ?: ""
                 performSearch(query)
                 true
             } else false
@@ -941,9 +939,9 @@ class NetworkBrowserFragment : Fragment() {
                     currentFiles = files
                     if (share.type == ShareType.SMB && share.isServerMode && currentPath.isEmpty() && files.isEmpty()) {
                         fileAdapter.submitList(emptyList())
-                        layoutEmpty.visibility = View.VISIBLE
+                        layoutEmpty?.visibility = View.VISIBLE
                     } else {
-                        performSearch(edtSearch.text.toString().trim())
+                        performSearch(edtSearch?.text?.toString()?.trim() ?: "")
                     }
                     updateSubtitle()
                 }
@@ -1004,7 +1002,7 @@ class NetworkBrowserFragment : Fragment() {
                 if (!isTv) {
                     view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
                     view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
-                    layoutSelectionBar.visibility = View.GONE
+                    layoutSelectionBar?.visibility = View.GONE
 
                     val fabSelAll = fabSelectAll
                     if (fabSelAll != null) {
@@ -1025,7 +1023,7 @@ class NetworkBrowserFragment : Fragment() {
                 fabTools?.visibility = if (showActions && !isTv) View.VISIBLE else View.GONE
             } else {
                 fabSelectAll?.visibility = View.GONE
-                layoutSelectionBar.visibility = View.VISIBLE
+                layoutSelectionBar?.visibility = View.VISIBLE
                 view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
                 view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
                 
@@ -1041,11 +1039,11 @@ class NetworkBrowserFragment : Fragment() {
                 } else {
                     fabTools?.visibility = View.GONE
                     if (showActions) {
-                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar as ViewGroup)
+                        (layoutSelectionBar as? ViewGroup)?.let { za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(it) }
                         row2?.visibility = View.VISIBLE
                     } else {
                         row2?.visibility = View.GONE
-                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar as ViewGroup)
+                        (layoutSelectionBar as? ViewGroup)?.let { za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(it) }
                     }
                     
                     // TV-only icon/row visibility
@@ -1086,12 +1084,12 @@ class NetworkBrowserFragment : Fragment() {
             if (!isTv) {
                 fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
             }
-            txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
+            txtSelectionCount?.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
         } else {
-            layoutSelectionBar.visibility = View.GONE
+            layoutSelectionBar?.visibility = View.GONE
             view?.findViewById<View>(R.id.layoutActionPillsScroll)?.visibility = View.GONE
             view?.findViewById<View>(R.id.layoutActionPills)?.visibility = View.GONE
-            za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar as ViewGroup)
+            (layoutSelectionBar as? ViewGroup)?.let { za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(it) }
             fabProperties?.visibility = View.GONE
             fabTools?.visibility = View.GONE
             fabSelectAll?.visibility = View.GONE
@@ -1715,20 +1713,24 @@ class NetworkBrowserFragment : Fragment() {
         }
     }
     private fun toggleSearch() {
+        val btnToggle = btnSearchToggle ?: return
+        val searchEdit = edtSearch ?: return
+        val searchRow = layoutSearchRow ?: return
+
         isSearchVisible = !isSearchVisible
-        layoutSearchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
+        searchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
         
         val colorRes = if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied
-        btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
+        btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
         
         if (isSearchVisible) {
-            edtSearch.requestFocus()
+            searchEdit.requestFocus()
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.showSoftInput(edtSearch, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            imm.showSoftInput(searchEdit, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
         } else {
-            edtSearch.setText("")
+            searchEdit.setText("")
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.hideSoftInputFromWindow(edtSearch.windowToken, 0)
+            imm.hideSoftInputFromWindow(searchEdit.windowToken, 0)
             performSearch("") // Reset filter
         }
     }
@@ -1739,7 +1741,7 @@ class NetworkBrowserFragment : Fragment() {
         val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
         val sortedAndFiltered = sortAndFilterFiles(filtered)
         fileAdapter.submitList(sortedAndFiltered)
-        layoutEmpty.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
+        layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
 
         if (isTv) {
             val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
@@ -1793,17 +1795,17 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     fun updatePasteFab() {
-        if (!::fabPaste.isInitialized) return
+        val fab = fabPaste ?: return
         val hasLocal = za.kilowatch.ultimatefilemanager.storage.FileClipboard.hasItems()
         val hasNet = NetworkClipboard.hasItems()
         val total = (if (hasLocal) za.kilowatch.ultimatefilemanager.storage.FileClipboard.files.size else 0) + (if (hasNet) NetworkClipboard.files.size else 0)
 
         if (total > 0) {
             val label = "${getString(R.string.action_paste)} ($total)"
-            fabPaste.text = label
-            fabPaste.visibility = View.VISIBLE
+            fab.text = label
+            fab.visibility = View.VISIBLE
         } else {
-            fabPaste.visibility = View.GONE
+            fab.visibility = View.GONE
         }
     }
 
@@ -1952,7 +1954,7 @@ class NetworkBrowserFragment : Fragment() {
             }
 
             applyViewMode(selectedViewMode)
-            performSearch(edtSearch.text.toString().trim())
+            performSearch(edtSearch?.text?.toString()?.trim() ?: "")
         }
         sheet.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.TAG)
     }

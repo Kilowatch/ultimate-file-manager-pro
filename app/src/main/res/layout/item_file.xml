@@ -24,7 +24,7 @@
         android:gravity="center_vertical">
 
         <!-- Selection Checkbox (hidden by default) -->
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkSelect"
             android:layout_width="28dp"
             android:layout_height="28dp"

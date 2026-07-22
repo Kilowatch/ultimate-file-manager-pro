@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.apache.commons.compress.MemoryLimitException
 import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod
@@ -154,16 +155,24 @@ class SevenZipViewerActivity : AppCompatActivity() {
         }
     }
 
+    @Suppress("DEPRECATION")
+    private fun createSevenZFile(file: File, password: String? = null): SevenZFile {
+        val maxMemoryKb = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+        val options = org.apache.commons.compress.archivers.sevenz.SevenZFileOptions.builder()
+            .withMaxMemoryLimitInKb(maxMemoryKb)
+            .build()
+        return if (password != null) {
+            SevenZFile(file, password.toCharArray(), options)
+        } else {
+            SevenZFile(file, options)
+        }
+    }
+
     private fun load7z(file: File) {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // If we have a password, use it. If not, try without.
-                val szf = if (archivePassword != null) {
-                    SevenZFile(file, archivePassword?.toCharArray())
-                } else {
-                    SevenZFile(file)
-                }
+                val szf = createSevenZFile(file, archivePassword)
                 
                 val entries = szf.entries.toList()
                 
@@ -211,7 +220,12 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     if (archivePassword == null && isPasswordError(e)) {
                         showPasswordPrompt(file)
                     } else {
-                        showSnackbar(getString(R.string.error_opening_7z_emessage, e.message ?: "Unknown error"))
+                        val msg = if (e is MemoryLimitException) {
+                            getString(R.string.error_not_enough_memory)
+                        } else {
+                            e.message ?: "Unknown error"
+                        }
+                        showSnackbar(getString(R.string.error_opening_7z_emessage, msg))
                     }
                 }
             }
@@ -231,7 +245,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     // Test password by attempting to read from the first file entry
-                    SevenZFile(file, password.toCharArray()).use { testSzf ->
+                    createSevenZFile(file, password).use { testSzf ->
                         val entries = testSzf.entries.toList()
                         val firstFile = entries.firstOrNull { it.hasStream() && it.size > 0 }
                         if (firstFile != null) {
@@ -246,6 +260,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     }
                     withContext(Dispatchers.Main) {
                         load7z(file)
+                    }
+                } catch (e: OutOfMemoryError) {
+                    withContext(Dispatchers.Main) {
+                        showSnackbar(getString(R.string.error_opening_7z_emessage, getString(R.string.error_not_enough_memory)))
+                        archivePassword = null
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -333,11 +352,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 destDir.mkdirs()
-                val szf = if (archivePassword != null) {
-                    SevenZFile(sourceFile!!, archivePassword?.toCharArray())
-                } else {
-                    SevenZFile(sourceFile!!)
-                }
+                val szf = createSevenZFile(sourceFile!!, archivePassword)
 
                 szf.use { z ->
                     val canonicalDest = destDir.canonicalPath
@@ -372,10 +387,20 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                 }
+            } catch (e: OutOfMemoryError) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar("${getString(R.string.archive_extract_error)}: ${getString(R.string.error_not_enough_memory)}")
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    showSnackbar("${getString(R.string.archive_extract_error)}: ${e.message}")
+                    val msg = if (e is MemoryLimitException) {
+                        getString(R.string.error_not_enough_memory)
+                    } else {
+                        e.message
+                    }
+                    showSnackbar("${getString(R.string.archive_extract_error)}: $msg")
                 }
             }
         }
@@ -386,11 +411,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val szf = if (archivePassword != null) {
-                    SevenZFile(sourceFile!!, archivePassword?.toCharArray())
-                } else {
-                    SevenZFile(sourceFile!!)
-                }
+                val szf = createSevenZFile(sourceFile!!, archivePassword)
 
                 szf.use { z ->
                     var entry = z.getNextEntry()
@@ -415,10 +436,20 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                 }
+            } catch (e: OutOfMemoryError) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar("${getString(R.string.archive_extract_error)}: ${getString(R.string.error_not_enough_memory)}")
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    showSnackbar("${getString(R.string.archive_extract_error)}: ${e.message}")
+                    val msg = if (e is MemoryLimitException) {
+                        getString(R.string.error_not_enough_memory)
+                    } else {
+                        e.message
+                    }
+                    showSnackbar("${getString(R.string.archive_extract_error)}: $msg")
                 }
             }
         }

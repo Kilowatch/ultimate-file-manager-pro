@@ -118,7 +118,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Video_001.mp4" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkSelect"
             android:layout_width="28dp"
             android:layout_height="28dp"

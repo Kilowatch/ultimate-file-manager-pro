@@ -24,6 +24,19 @@ object ArchiveManager {
 
     enum class Format { ZIP, SEVEN_Z }
 
+    @Suppress("DEPRECATION")
+    private fun createSevenZFile(archiveFile: File, password: String?): org.apache.commons.compress.archivers.sevenz.SevenZFile {
+        val maxMemoryKb = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+        val options = org.apache.commons.compress.archivers.sevenz.SevenZFileOptions.builder()
+            .withMaxMemoryLimitInKb(maxMemoryKb)
+            .build()
+        return if (password != null) {
+            org.apache.commons.compress.archivers.sevenz.SevenZFile(archiveFile, password.toCharArray(), options)
+        } else {
+            org.apache.commons.compress.archivers.sevenz.SevenZFile(archiveFile, options)
+        }
+    }
+
     suspend fun compress(
         sourceFiles: List<File>,
         destFile: File,
@@ -37,6 +50,8 @@ object ArchiveManager {
                 Format.SEVEN_Z -> compress7z(sourceFiles, destFile, password, onProgress)
             }
             Result.success(Unit)
+        } catch (e: OutOfMemoryError) {
+            Result.failure(Exception("Not enough memory for compression", e))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -103,6 +118,10 @@ object ArchiveManager {
                 else -> throw IllegalArgumentException(context.getString(R.string.unsupported_archive_format_extension, extension))
             }
             Result.success(Unit)
+        } catch (e: OutOfMemoryError) {
+            Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
+        } catch (e: org.apache.commons.compress.MemoryLimitException) {
+            Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -127,11 +146,7 @@ object ArchiveManager {
         password: String?,
         onProgress: (Int) -> Unit
     ) {
-        val sevenZFile = if (password != null) {
-            org.apache.commons.compress.archivers.sevenz.SevenZFile(archiveFile, password.toCharArray())
-        } else {
-            org.apache.commons.compress.archivers.sevenz.SevenZFile(archiveFile)
-        }
+        val sevenZFile = createSevenZFile(archiveFile, password)
         
         sevenZFile.use { archive ->
             val canonicalDest = destDir.canonicalPath

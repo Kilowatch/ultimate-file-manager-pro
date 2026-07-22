@@ -274,7 +274,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
                         displaySheet(0)
                     }
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     Toast.makeText(this@SpreadsheetViewerActivity, getString(R.string.spreadsheet_error_parsing, e.message ?: ""), Toast.LENGTH_LONG).show()

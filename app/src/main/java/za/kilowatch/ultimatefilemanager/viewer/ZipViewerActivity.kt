@@ -199,6 +199,11 @@ class ZipViewerActivity : AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     displayEntries()
                 }
+            } catch (e: OutOfMemoryError) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.error_opening_archive_emessage, getString(R.string.error_not_enough_memory)))
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -228,6 +233,11 @@ class ZipViewerActivity : AppCompatActivity() {
                     allEntries = headers
                     withContext(Dispatchers.Main) {
                         displayEntries()
+                    }
+                } catch (e: OutOfMemoryError) {
+                    withContext(Dispatchers.Main) {
+                        showSnackbar(getString(R.string.error_opening_archive_emessage, getString(R.string.error_not_enough_memory)))
+                        archivePassword = null
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -340,6 +350,11 @@ class ZipViewerActivity : AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
                 }
+            } catch (e: OutOfMemoryError) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar("${getString(R.string.archive_extract_error)}: ${getString(R.string.error_not_enough_memory)}")
+                }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -368,6 +383,11 @@ class ZipViewerActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     showSnackbar(getString(R.string.archive_extract_success, outFile.absolutePath))
+                }
+            } catch (e: OutOfMemoryError) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar("${getString(R.string.archive_extract_error)}: ${getString(R.string.error_not_enough_memory)}")
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

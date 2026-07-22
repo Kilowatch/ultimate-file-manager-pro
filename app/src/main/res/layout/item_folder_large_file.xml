@@ -15,7 +15,7 @@
     android:clickable="true"
     android:focusable="true">
 
-    <CheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/checkLargeFile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

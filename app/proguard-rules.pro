@@ -12,13 +12,12 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve line number information for readable release stack traces
+-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Keep Kotlin exception classes unobfuscated for stack traces
+-keep class kotlin.UninitializedPropertyAccessException { *; }
+-keep class kotlin.KotlinNullPointerException { *; }
 
 # R8 generated: suppress warnings for classes used by JCIFS (SMB) / GSSAPI
 # that are not present on Android.
@@ -36,12 +35,20 @@
 -dontwarn org.ietf.jgss.GSSName
 -dontwarn org.ietf.jgss.Oid
 
-# Apache POI — keep Escher/DDF record fields accessed via reflection.
-# DefaultEscherRecordFactory uses Class.getField("RECORD_ID") in its static initializer.
-# Without this, R8 strips RECORD_ID causing java.lang.NoSuchFieldException at runtime.
+# Apache POI — keep HSSF and DDF records accessed reflectively via sid and RECORD_ID fields.
+# RecordFactory uses Class.getField("sid") in its static initializer (<clinit>), causing
+# ExceptionInInitializerError if R8 strips sid or record classes.
+-keep class org.apache.poi.hssf.record.** { *; }
+-keepclassmembers class org.apache.poi.hssf.record.** {
+    public static final short sid;
+}
+-keep class org.apache.poi.ddf.** { *; }
 -keepclassmembers class org.apache.poi.ddf.** {
     public static final short RECORD_ID;
 }
+-keep class org.apache.poi.hssf.model.** { *; }
+-keep class org.apache.poi.poifs.** { *; }
+-dontwarn org.apache.poi.**
 
 # Apache POI — java.awt and javax.xml classes not present on Android
 -dontwarn java.awt.Color
@@ -331,3 +338,12 @@
     native <methods>;
     *;
 }
+
+# ── Media3 / ExoPlayer Format Extensions ────────────────
+# Preserve MediaSource factories accessed reflectively by DefaultMediaSourceFactory
+-keep class androidx.media3.exoplayer.hls.** { *; }
+-keep class androidx.media3.exoplayer.dash.** { *; }
+-keep class androidx.media3.exoplayer.rtsp.** { *; }
+-dontwarn androidx.media3.exoplayer.hls.**
+-dontwarn androidx.media3.exoplayer.dash.**
+-dontwarn androidx.media3.exoplayer.rtsp.**

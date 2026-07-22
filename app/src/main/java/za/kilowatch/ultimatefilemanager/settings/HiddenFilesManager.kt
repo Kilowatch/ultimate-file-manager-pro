@@ -29,30 +29,63 @@ object HiddenFilesManager {
         "#snapshot"
     )
 
-    private lateinit var prefs: SharedPreferences
-    private lateinit var dao: HiddenFileDao
+    @Volatile
+    private var prefs: SharedPreferences? = null
+
+    @Volatile
+    private var dao: HiddenFileDao? = null
 
     fun init(context: Context) {
-        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        dao = HiddenFilesDatabase.getInstance(context).hiddenFileDao()
+        val appContext = context.applicationContext
+        prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        try {
+            dao = HiddenFilesDatabase.getInstance(appContext).hiddenFileDao()
+        } catch (e: Exception) {
+            android.util.Log.e("HiddenFilesManager", "Failed to initialize hidden files DAO", e)
+        }
+    }
+
+    private fun ensureInitialized(context: Context? = null) {
+        if (prefs == null || dao == null) {
+            val ctx = context?.applicationContext ?: try { UfmApplication.instance } catch (_: Exception) { null }
+            if (ctx != null) {
+                if (prefs == null) {
+                    try {
+                        prefs = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                    } catch (_: Exception) {}
+                }
+                if (dao == null) {
+                    try {
+                        dao = HiddenFilesDatabase.getInstance(ctx).hiddenFileDao()
+                    } catch (_: Exception) {}
+                }
+            }
+        }
     }
 
     var isShowHiddenFilesEnabled: Boolean
-        get() = prefs.getBoolean(KEY_SHOW_HIDDEN, false)
+        get() {
+            ensureInitialized()
+            return prefs?.getBoolean(KEY_SHOW_HIDDEN, false) ?: false
+        }
         set(value) {
-            prefs.edit().putBoolean(KEY_SHOW_HIDDEN, value).apply()
+            ensureInitialized()
+            prefs?.edit()?.putBoolean(KEY_SHOW_HIDDEN, value)?.apply()
         }
 
     suspend fun hide(path: String) = withContext(Dispatchers.IO) {
-        dao.insert(HiddenFileEntity(path))
+        ensureInitialized()
+        dao?.insert(HiddenFileEntity(path))
     }
 
     suspend fun unhide(path: String) = withContext(Dispatchers.IO) {
-        dao.delete(path)
+        ensureInitialized()
+        dao?.delete(path)
     }
 
     suspend fun isHidden(path: String): Boolean = withContext(Dispatchers.IO) {
-        dao.exists(path)
+        ensureInitialized()
+        dao?.exists(path) ?: false
     }
 
     fun isJunkOrHidden(name: String): Boolean {

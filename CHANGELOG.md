@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.3] — 2026-07-22
 
 ### Fixed
+- Fixed an `ExceptionInInitializerError` when opening `.xls` spreadsheets in release builds by preserving Apache POI HSSF record classes and `sid` fields in R8 ProGuard rules.
+- Fixed an `UninitializedPropertyAccessException` (`lateinit property prefs has not been initialized`) in `HiddenFilesManager` by implementing safe lazy auto-initialization and fallback guards for `prefs` and `dao`.
+- Fixed an `UninitializedPropertyAccessException` (`Exception jr3`) crash in `NetworkBrowserFragment` and `FileBrowserFragment` by making view bindings null-safe across mobile, TV, and compact twin-window layout variants.
+- Fixed `ClassNotFoundException` (`HlsMediaSource$Factory`) crash in `UFMPlaybackService` when streaming or playing HLS (`.m3u8`), DASH, or RTSP media files by adding Media3 format extension dependencies and ProGuard keep rules.
 - Fixed missing "Tools" FAB and converted "Select All" into a standalone `ExtendedFloatingActionButton` matching the exact size and style of "Tools". Aligned both FABs in twin window mode (stacked vertically in center for vertical split, side-by-side at bottom center for horizontal split).
 - Fixed application crash when opening pane 1, pane 2, or standard browser window for non-existent local directory paths, removed SD cards/USB drives, or deleted network shares by falling back safely to Internal Storage root.
+- Fixed main-thread inflation lag and ANRs during file list scrolling by using lightweight `AppCompatCheckBox` in RecyclerView item layouts.
+- Fixed an `OutOfMemoryError` crash during 7-Zip (`.7z`) archive viewing and extraction by applying dynamic memory limits via `SevenZFileOptions`, catching memory errors safely with user-friendly notices, and enabling `largeHeap` in the application manifest.
 
 ## [1.7.2] — 2026-07-21
 

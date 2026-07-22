@@ -57,7 +57,7 @@
             tools:text="Deleted 2 hours ago" />
     </LinearLayout>
 
-    <CheckBox
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/checkSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

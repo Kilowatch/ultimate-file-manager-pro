@@ -79,7 +79,7 @@ class FileBrowserFragment : Fragment() {
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: View? = null
     private var isOptionsVisible = false
-    private lateinit var fabPaste: ExtendedFloatingActionButton
+    private var fabPaste: ExtendedFloatingActionButton? = null
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
     private var fabSelectAll: ExtendedFloatingActionButton? = null
@@ -118,10 +118,10 @@ class FileBrowserFragment : Fragment() {
 
 
     
-    private lateinit var btnSearchToggle: ImageView
-    private lateinit var layoutSearchRow: LinearLayout
-    private lateinit var edtSearch: EditText
-    private lateinit var btnSearchClear: ImageView
+    private var btnSearchToggle: ImageView? = null
+    private var layoutSearchRow: LinearLayout? = null
+    private var edtSearch: EditText? = null
+    private var btnSearchClear: ImageView? = null
     private var isSearchVisible = false
     private var searchJob: Job? = null
 
@@ -263,16 +263,14 @@ class FileBrowserFragment : Fragment() {
     private fun applyLeftHandedFabSettings() {
         val ctx = context ?: return
         val viewsToUpdate = mutableListOf<android.view.View>()
-        if (::fabPaste.isInitialized) {
-            viewsToUpdate.add(fabPaste)
-        }
+        fabPaste?.let { viewsToUpdate.add(it) }
         fabTools?.let { viewsToUpdate.add(it) }
         fabSelectAll?.let { viewsToUpdate.add(it) }
 
         if (isCompactMode) {
             val fabT = fabTools
             val fabS = fabSelectAll
-            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+            val fabP = fabPaste
 
             fabT?.let { fab ->
                 val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -307,7 +305,7 @@ class FileBrowserFragment : Fragment() {
         if (isTwinWindow) {
             val fabS = fabSelectAll
             val fabT = fabTools
-            val fabP = if (::fabPaste.isInitialized) fabPaste else null
+            val fabP = fabPaste
 
             fabS?.let { fab ->
                 val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
@@ -424,8 +422,8 @@ class FileBrowserFragment : Fragment() {
         }
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
-        btnSearchToggle.setImageResource(R.drawable.ic_search) 
-        btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+        btnSearchToggle?.setImageResource(R.drawable.ic_search) 
+        btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
         layoutSearchRow = view.findViewById(R.id.layoutSearchRow)
         edtSearch = view.findViewById(R.id.edtSearch)
         btnSearchClear = view.findViewById(R.id.btnSearchClear)
@@ -533,15 +531,15 @@ class FileBrowserFragment : Fragment() {
             }
         }
         
-        btnSearchToggle.setOnClickListener { toggleSearch() }
-        btnSearchClear.setOnClickListener { edtSearch.setText("") }
+        btnSearchToggle?.setOnClickListener { toggleSearch() }
+        btnSearchClear?.setOnClickListener { edtSearch?.setText("") }
         
-        edtSearch.addTextChangedListener(object : android.text.TextWatcher {
+        edtSearch?.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: android.text.Editable?) {
                 val query = s?.toString()?.trim() ?: ""
-                btnSearchClear.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
+                btnSearchClear?.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
                 
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
@@ -551,9 +549,9 @@ class FileBrowserFragment : Fragment() {
             }
         })
         
-        edtSearch.setOnEditorActionListener { _, actionId, _ ->
+        edtSearch?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                val query = edtSearch.text.toString().trim()
+                val query = edtSearch?.text?.toString()?.trim() ?: ""
                 performSearch(query)
                 true
             } else false
@@ -825,7 +823,7 @@ class FileBrowserFragment : Fragment() {
             }
         }
         
-        fabPaste.setOnClickListener {
+        fabPaste?.setOnClickListener {
             val act = activity
             if (act is TwinWindowActivity) {
                 act.onPasteRequested(this)
@@ -1580,17 +1578,17 @@ class FileBrowserFragment : Fragment() {
     }
 
     fun updatePasteFab() {
-        if (!::fabPaste.isInitialized) return
+        val fab = fabPaste ?: return
         val hasLocal = FileClipboard.hasItems()
         val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
         val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
 
         if (total > 0) {
             val label = "${getString(R.string.action_paste)} ($total)"
-            fabPaste.text = label
-            fabPaste.visibility = View.VISIBLE
+            fab.text = label
+            fab.visibility = View.VISIBLE
         } else {
-            fabPaste.visibility = View.GONE
+            fab.visibility = View.GONE
         }
     }
 
@@ -2311,20 +2309,24 @@ class FileBrowserFragment : Fragment() {
             .show()
     }
     private fun toggleSearch() {
+        val btnToggle = btnSearchToggle ?: return
+        val searchEdit = edtSearch ?: return
+        val searchRow = layoutSearchRow ?: return
+
         isSearchVisible = !isSearchVisible
-        layoutSearchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
+        searchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
         
         val colorRes = if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied
-        btnSearchToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
+        btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
         
         if (isSearchVisible) {
-            edtSearch.requestFocus()
+            searchEdit.requestFocus()
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.showSoftInput(edtSearch, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+            imm.showSoftInput(searchEdit, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
         } else {
-            edtSearch.setText("")
+            searchEdit.setText("")
             val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-            imm.hideSoftInputFromWindow(edtSearch.windowToken, 0)
+            imm.hideSoftInputFromWindow(searchEdit.windowToken, 0)
             loadDirectory(currentDir)
         }
     }

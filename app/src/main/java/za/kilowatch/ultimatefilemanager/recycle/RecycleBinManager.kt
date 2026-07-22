@@ -16,10 +16,32 @@ object RecycleBinManager {
 
     fun init(context: Context) {
         appContext = context.applicationContext
-        dao = RecycleBinDatabase.getInstance(context).recycleBinDao()
+        try {
+            dao = RecycleBinDatabase.getInstance(context.applicationContext).recycleBinDao()
+        } catch (e: Exception) {
+            android.util.Log.e("RecycleBinManager", "Failed to initialize RecycleBin DAO", e)
+        }
     }
 
-    val isEnabled: Boolean get() = RecycleBinSettingsManager.isEnabled(appContext)
+    private fun ensureInitialized(context: Context? = null) {
+        if (!::appContext.isInitialized || !::dao.isInitialized) {
+            val ctx = context?.applicationContext ?: try { za.kilowatch.ultimatefilemanager.UfmApplication.instance } catch (_: Exception) { null }
+            if (ctx != null) {
+                if (!::appContext.isInitialized) appContext = ctx
+                if (!::dao.isInitialized) {
+                    try {
+                        dao = RecycleBinDatabase.getInstance(ctx).recycleBinDao()
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+    }
+
+    val isEnabled: Boolean
+        get() {
+            ensureInitialized()
+            return if (::appContext.isInitialized) RecycleBinSettingsManager.isEnabled(appContext) else false
+        }
 
     // ── Local file trash ─────────────────────────────────────────────────────
 
