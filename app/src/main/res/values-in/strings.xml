@@ -4129,6 +4129,58 @@ USB Debugging Diperlukan
     <string name="take_screenshot">
 Ambil Screenshot
 </string>
+    <string name="record_screen">
+Rekam Layar
+</string>
+    <string name="record_screen_audio_title">
+Audio TV
+</string>
+    <string name="record_screen_audio_enabled">
+Sertakan audio TV dalam rekaman
+</string>
+    <string name="record_screen_audio_disabled">
+Bisukan rekaman audio TV
+</string>
+    <string name="record_screen_duration">
+Waktu Rekam Maksimum
+</string>
+    <string name="record_screen_1min">
+1 Menit
+</string>
+    <string name="record_screen_3min">
+3 Menit
+</string>
+    <string name="record_screen_5min">
+5 Menit
+</string>
+    <string name="record_screen_10min">
+10 Menit
+</string>
+    <string name="record_screen_ready">
+Siap merekam layar TV
+</string>
+    <string name="record_screen_start">
+Mulai Rekam
+</string>
+    <string name="record_screen_stop">
+Hentikan Rekam
+</string>
+    <string name="record_screen_exit">
+Keluar
+</string>
+    <string name="record_screen_saving">
+Menyelesaikan dan menyimpan rekaman…
+</string>
+    <string name="record_screen_saved">
+Rekaman disimpan ke %s
+</string>
+    <string name="record_screen_failed">
+Rekaman layar gagal: %s
+</string>
+    <string name="record_screen_remaining">
+Merekam... Sisa waktu: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10004,9 +10056,6 @@ Tidak Ada Berkas Besar Ditemukan
 </string>
     <string name="no_large_files_found_message">
 Tidak ada berkas yang lebih besar dari 10 MB ditemukan di folder ini atau subfolder mana pun.
-</string>
-    <string name="icon_action_large_files_finder">
-Berkas Besar
 </string>
 </resources>
 

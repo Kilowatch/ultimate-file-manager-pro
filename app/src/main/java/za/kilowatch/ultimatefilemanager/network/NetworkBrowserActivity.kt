@@ -38,6 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.VaultActivity
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
@@ -127,6 +128,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         private const val SIDELOAD_APK_PATH = "__sideload_apk__"
         private const val SIDELOAD_XAPK_PATH = "__sideload_xapk__"
         const val SCREENSHOT_PATH = "__screenshot__"
+        const val RECORD_SCREEN_PATH = "__record_screen__"
         private const val USE_REMOTE_PATH = "__use_remote__"
         private const val TRANSFER_SETTINGS_PATH = "__transfer_settings__"
         
@@ -822,6 +824,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 when (file.path) {
                     SCREENSHOT_PATH -> {
                         performTvScreenshot()
+                        return@NetworkFileAdapter
+                    }
+                    RECORD_SCREEN_PATH -> {
+                        performTvRecordScreen()
                         return@NetworkFileAdapter
                     }
                     SIDELOAD_APK_PATH -> {
@@ -2391,6 +2397,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     path = SCREENSHOT_PATH,
                     isDirectory = false,
                     iconRes = R.drawable.ic_screenshot
+                ),
+                NetworkFile(
+                    name = getString(R.string.record_screen),
+                    path = RECORD_SCREEN_PATH,
+                    isDirectory = false,
+                    iconRes = R.drawable.ic_record_screen
                 ),
                 NetworkFile(
                     name = getString(R.string.sideload_apk),
@@ -5592,6 +5604,393 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
     }
 
+    // ── TV Screen Record ───────────────────────────────────────────────────────
+
+    private fun performTvRecordScreen() {
+        lifecycleScope.launch {
+            val adbEnabled = withContext(Dispatchers.IO) {
+                TvShareClient.isAdbEnabled(share)
+            }
+            android.util.Log.d("GoRoScreen", "performTvRecordScreen() adbEnabled=$adbEnabled")
+
+            if (!adbEnabled) {
+                showEnableAdbDialog()
+            } else {
+                showScreenRecordingDialog()
+            }
+        }
+    }
+
+    private fun showScreenRecordingDialog() {
+        val adbManager = AdbManager.getInstance(this)
+        val sheetView = layoutInflater.inflate(R.layout.bottom_sheet_record_screen, null)
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(this).apply {
+            setContentView(sheetView)
+            setCancelable(false)
+        }
+
+        val cardMicToggle = sheetView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMicToggle)
+        val imgMicIcon = sheetView.findViewById<ImageView>(R.id.imgMicIcon)
+        val tvMicDesc = sheetView.findViewById<TextView>(R.id.tvMicDesc)
+        val switchMicAudio = sheetView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchMicAudio)
+
+        val layoutConfigContainer = sheetView.findViewById<View>(R.id.layoutConfigContainer)
+        val cardActiveRecording = sheetView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardActiveRecording)
+        val tvCountdownClock = sheetView.findViewById<TextView>(R.id.tvCountdownClock)
+        val tvRecordingStatusDetail = sheetView.findViewById<TextView>(R.id.tvRecordingStatusDetail)
+
+        val chip1Min = sheetView.findViewById<TextView>(R.id.chip1Min)
+        val chip3Min = sheetView.findViewById<TextView>(R.id.chip3Min)
+        val chip5Min = sheetView.findViewById<TextView>(R.id.chip5Min)
+        val chip10Min = sheetView.findViewById<TextView>(R.id.chip10Min)
+
+        val btnExit = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnExit)
+        val btnStartStop = sheetView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStartStop)
+
+        var isAudioEnabled = true
+        fun updateMicUI() {
+            if (isAudioEnabled) {
+                imgMicIcon.setImageResource(R.drawable.ic_mic)
+                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_primary))
+                tvMicDesc.text = getString(R.string.record_screen_audio_enabled)
+                switchMicAudio.isChecked = true
+            } else {
+                imgMicIcon.setImageResource(R.drawable.ic_mic_off)
+                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_text_secondary))
+                tvMicDesc.text = getString(R.string.record_screen_audio_disabled)
+                switchMicAudio.isChecked = false
+            }
+        }
+
+        cardMicToggle.setOnClickListener {
+            isAudioEnabled = !isAudioEnabled
+            updateMicUI()
+        }
+        switchMicAudio.setOnCheckedChangeListener { _, isChecked ->
+            if (isAudioEnabled != isChecked) {
+                isAudioEnabled = isChecked
+                updateMicUI()
+            }
+        }
+
+        var selectedDurationSeconds = 180
+        fun selectDurationChip(selectedChip: TextView, duration: Int) {
+            selectedDurationSeconds = duration
+            val chips = listOf(chip1Min, chip3Min, chip5Min, chip10Min)
+            for (c in chips) {
+                if (c == selectedChip) {
+                    c.setBackgroundResource(R.drawable.bg_chip_selected)
+                    c.setTextColor(getColor(R.color.white))
+                    c.setTypeface(null, android.graphics.Typeface.BOLD)
+                } else {
+                    c.setBackgroundResource(R.drawable.bg_chip_unselected)
+                    c.setTextColor(getColor(R.color.ufm_text_primary))
+                    c.setTypeface(null, android.graphics.Typeface.NORMAL)
+                }
+            }
+        }
+
+        // Pre-select 3 Min by default
+        selectDurationChip(chip3Min, 180)
+
+        chip1Min.setOnClickListener { selectDurationChip(chip1Min, 60) }
+        chip3Min.setOnClickListener { selectDurationChip(chip3Min, 180) }
+        chip5Min.setOnClickListener { selectDurationChip(chip5Min, 300) }
+        chip10Min.setOnClickListener { selectDurationChip(chip10Min, 600) }
+
+        var isRecording = false
+        var isStopping = false
+        var recordingExecJob: kotlinx.coroutines.Job? = null
+        var timerJob: kotlinx.coroutines.Job? = null
+        var screenRecordPid: Int? = null
+
+        fun stopAndSaveRecording(userInitiated: Boolean) {
+            if (isStopping) return
+            isStopping = true
+            isRecording = false
+            timerJob?.cancel()
+
+            btnStartStop.isEnabled = false
+            btnStartStop.text = getString(R.string.record_screen_stop)
+            tvRecordingStatusDetail.text = getString(R.string.record_screen_saving)
+
+            lifecycleScope.launch {
+                var savedFile: File? = null
+                try {
+                    if (userInitiated) {
+                        screenRecordPid?.let { pid ->
+                            withContext(Dispatchers.IO) {
+                                try {
+                                    adbManager.sendShellCommandSync("kill -2 $pid")
+                                } catch (e: Exception) {
+                                    android.util.Log.w("GoRoScreen", "kill -2 $pid failed: ${e.message}")
+                                }
+                            }
+                        }
+                        delay(2000)
+                    }
+
+                    // Wait for the recording coroutine to finish
+                    try {
+                        kotlinx.coroutines.withTimeout(10_000L) {
+                            recordingExecJob?.join()
+                        }
+                    } catch (e: kotlinx.coroutines.TimeoutCancellationException) {
+                        android.util.Log.e("GoRoScreen", "screenrecord did not exit within 10s, force-cancelling")
+                        recordingExecJob?.cancel()
+                    }
+
+                    savedFile = pullRecordingFile(adbManager) { pct ->
+                        android.os.Handler(android.os.Looper.getMainLooper()).post {
+                            tvRecordingStatusDetail.text = getString(R.string.record_screen_saving) + " $pct%"
+                        }
+                    }
+
+                    withContext(Dispatchers.IO) {
+                        adbManager.sendShellCommandSync("rm -f /data/local/tmp/ufm_record.mp4")
+                        adbManager.disconnectExplicit()
+                    }
+
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    withContext(kotlinx.coroutines.NonCancellable) {
+                        adbManager.disconnectExplicit()
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("GoRoScreen", "stopAndSaveRecording error: ${e.message}", e)
+                    withContext(Dispatchers.IO) { adbManager.disconnectExplicit() }
+                } finally {
+                    withContext(Dispatchers.Main) {
+                        if (bottomSheet.isShowing) {
+                            bottomSheet.dismiss()
+                        }
+                        if (savedFile != null && savedFile.length() > 0) {
+                            showPremiumSnackbar(getString(R.string.record_screen_saved, "Movies/Recordings/${savedFile.name}"))
+                        } else {
+                            showPremiumSnackbar(getString(R.string.record_screen_failed, "No video data received"))
+                        }
+                    }
+                }
+            }
+        }
+
+        btnExit.setOnClickListener {
+            if (!isRecording && !isStopping) {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    adbManager.disconnectExplicit()
+                }
+                bottomSheet.dismiss()
+            }
+        }
+
+        btnStartStop.setOnClickListener {
+            if (!isRecording && !isStopping) {
+                btnStartStop.isEnabled = false
+                btnStartStop.text = getString(R.string.adb_terminal_status_connecting)
+
+                lifecycleScope.launch {
+                    val host = share.host
+                    val port = 5555
+                    val connected = withContext(Dispatchers.IO) {
+                        adbManager.connect(host, port)
+                    }
+
+                    if (!connected) {
+                        btnStartStop.isEnabled = true
+                        btnStartStop.text = getString(R.string.record_screen_start)
+                        val reason = adbManager.lastError ?: ""
+                        showPremiumSnackbar(getString(R.string.adb_connection_denied_or_failed) + " ($host:$port) $reason")
+                        return@launch
+                    }
+
+                    isRecording = true
+                    btnStartStop.isEnabled = true
+                    layoutConfigContainer.visibility = View.GONE
+                    cardActiveRecording.visibility = View.VISIBLE
+                    btnExit.visibility = View.GONE
+
+                    btnStartStop.text = getString(R.string.record_screen_stop)
+                    btnStartStop.backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_error))
+
+                    // Clean slate: best-effort cleanup of stale screenrecord processes
+                    withContext(Dispatchers.IO) {
+                        try { adbManager.sendShellCommandSync("pkill -2 -f screenrecord") } catch (_: Exception) {}
+                        try { adbManager.sendShellCommandSync("rm -f /data/local/tmp/ufm_record.mp4") } catch (_: Exception) {}
+                    }
+                    delay(300)
+
+                    // Reset PID before starting new recording
+                    screenRecordPid = null
+
+                    // Query TV display resolution for auto bitrate
+                    var bitrate = 8000000
+                    try {
+                        withContext(Dispatchers.IO) {
+                            val wmStream = adbManager.openExec("wm size")
+                            val wmOutput = wmStream?.openInputStream()?.bufferedReader()?.readLine()?.trim() ?: ""
+                            val match = Regex("""(\d+)x(\d+)""").find(wmOutput)
+                            if (match != null) {
+                                val width = match.groupValues[1].toInt()
+                                val height = match.groupValues[2].toInt()
+                                bitrate = ((width * height) * 4).coerceIn(4_000_000, 20_000_000)
+                            }
+                        }
+                    } catch (_: Exception) {}
+
+                    // Use 180s as the screenrecord time-limit — this is the max supported on all
+                    // Android TV versions. Our own timer + SIGINT handle stopping at the user's
+                    // selected duration (60s, 180s, 300s, 600s). The screenrecord time-limit is
+                    // just a safety fallback in case SIGINT delivery fails.
+                    val tvSafetyLimit = kotlin.math.min(selectedDurationSeconds, 180)
+                    val cmd = "screenrecord --time-limit $tvSafetyLimit --bit-rate $bitrate /data/local/tmp/ufm_record.mp4"
+                    recordingExecJob = lifecycleScope.launch(Dispatchers.IO) {
+                        val stream = adbManager.openExec(cmd)
+                        if (stream != null) {
+                            try {
+                                stream.openInputStream()?.use { it.readBytes() }
+                            } catch (_: Exception) {}
+                        }
+                    }
+
+                    // Give screenrecord a moment to start, then capture its PID
+                    delay(500)
+                    try {
+                        withContext(Dispatchers.IO) {
+                            val pidofStream = adbManager.openExec("pidof screenrecord")
+                            val pidOutput = pidofStream?.openInputStream()?.bufferedReader()?.readLine()?.trim() ?: ""
+                            screenRecordPid = pidOutput.split("\\s+".toRegex()).mapNotNull { it.toIntOrNull() }.firstOrNull()
+                        }
+                    } catch (_: Exception) {
+                        screenRecordPid = null
+                    }
+
+                    var remainingSeconds = selectedDurationSeconds
+                    timerJob = lifecycleScope.launch(Dispatchers.Main) {
+                        while (isActive && isRecording) {
+                            val mins = remainingSeconds / 60
+                            val secs = remainingSeconds % 60
+                            val timeStr = String.format("%02d:%02d", mins, secs)
+                            tvCountdownClock.text = timeStr
+                            if (remainingSeconds <= 0) {
+                                stopAndSaveRecording(userInitiated = false)
+                                break
+                            }
+                            delay(1000)
+                            remainingSeconds--
+                        }
+                    }
+                }
+            } else if (isRecording && !isStopping) {
+                stopAndSaveRecording(userInitiated = true)
+            }
+        }
+
+        bottomSheet.show()
+    }
+
+    private suspend fun pullRecordingFile(adbManager: AdbManager, onProgress: (Int) -> Unit = {}): File? = withContext(Dispatchers.IO) {
+        // Check file exists on TV before attempting pull
+        val existsCheck = adbManager.openExec("test -f /data/local/tmp/ufm_record.mp4 && echo 1 || echo 0")
+        val existsResult = existsCheck?.openInputStream()?.bufferedReader()?.readLine()?.trim()
+        if (existsResult != "1") return@withContext null
+
+        // Get file size for progress tracking and dd block count
+        val totalSize = try {
+            val s = adbManager.openExec("stat -c%s /data/local/tmp/ufm_record.mp4")
+            s?.openInputStream()?.bufferedReader()?.readLine()?.trim()?.toLongOrNull() ?: 0L
+        } catch (_: Exception) { 0L }
+
+        onProgress(0)
+
+        // Use dd with explicit count to avoid hanging on incomplete MP4 blocks
+        val blockSize = 16384
+        val ddCmd = if (totalSize > 0)
+            "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize count=${((totalSize + blockSize - 1) / blockSize)}"
+        else
+            "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize"
+        val ddStream = adbManager.openExec(ddCmd) ?: return@withContext null
+
+        val moviesDir = File(
+            android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_MOVIES),
+            "Recordings"
+        ).apply { if (!exists()) mkdirs() }
+
+        val timestamp = java.text.SimpleDateFormat("yyyyMMdd_HHmmss", java.util.Locale.US).format(java.util.Date())
+        val outputFile = File(moviesDir, "TV_Record_$timestamp.mp4")
+
+        var totalBytes = 0L
+        // Watchdog: close the stream after 15s to unblock a hung read()
+        val watchdogJob = kotlinx.coroutines.GlobalScope.launch {
+            delay(15_000L)
+            try { ddStream.close() } catch (_: Exception) {}
+        }
+        try {
+            ddStream.openInputStream().use { input ->
+                java.io.FileOutputStream(outputFile).use { out ->
+                    val buffer = ByteArray(blockSize)
+                    var bytesRead: Int
+                    while (input.read(buffer).also { bytesRead = it } != -1) {
+                        out.write(buffer, 0, bytesRead)
+                        totalBytes += bytesRead
+                        if (totalSize > 0) {
+                            onProgress(((totalBytes * 100) / totalSize).toInt().coerceAtMost(99))
+                        }
+                    }
+                }
+            }
+        } catch (_: Exception) {
+        } finally {
+            watchdogJob.cancel()
+        }
+
+        onProgress(100)
+
+        if (!outputFile.exists() || outputFile.length() == 0L) {
+            android.util.Log.w("GoRoScreen", "Recording file empty or missing after pull")
+            return@withContext null
+        }
+
+        // Extract duration via MediaPlayer for accurate container timestamps
+        val durationMs = try {
+            val player = android.media.MediaPlayer()
+            try {
+                player.setDataSource(outputFile.absolutePath)
+                player.prepare()
+                val dur = player.duration.toLong()
+                if (dur > 0) dur else 0L
+            } finally {
+                player.release()
+            }
+        } catch (_: Exception) {
+            // Fallback to MediaMetadataRetriever
+            try {
+                android.media.MediaMetadataRetriever().use { retriever ->
+                    retriever.setDataSource(outputFile.absolutePath)
+                    retriever.extractMetadata(
+                        android.media.MediaMetadataRetriever.METADATA_KEY_DURATION
+                    )?.toLongOrNull() ?: 0L
+                }
+            } catch (_: Exception) { 0L }
+        }
+
+        contentResolver.insert(
+            android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            android.content.ContentValues().apply {
+                put(android.provider.MediaStore.Video.Media.DISPLAY_NAME, outputFile.name)
+                put(android.provider.MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+                put(android.provider.MediaStore.Video.Media.DATA, outputFile.absolutePath)
+                put(android.provider.MediaStore.Video.Media.DURATION, durationMs)
+            }
+        )
+        android.media.MediaScannerConnection.scanFile(
+            this@NetworkBrowserActivity,
+            arrayOf(outputFile.absolutePath),
+            arrayOf("video/mp4"),
+            null
+        )
+
+        outputFile
+    }
+
     private fun showPremiumSnackbar(message: String) {
         val rootView = findViewById<View>(R.id.main)
         Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
@@ -5600,6 +5999,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
             .setActionTextColor(getColor(R.color.ufm_primary))
             .show()
     }
+
+
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
         fileAdapter.viewMode = mode

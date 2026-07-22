@@ -1474,6 +1474,24 @@
     <string name="usb_debugging_required">USB Debugging Required</string>
 
     <string name="take_screenshot">Take Screenshot</string>
+    <string name="record_screen">Record Screen</string>
+    <string name="record_screen_audio_title">TV Audio</string>
+    <string name="record_screen_audio_enabled">Include TV audio in recording</string>
+    <string name="record_screen_audio_disabled">Mute TV audio recording</string>
+    <string name="record_screen_duration">Max Recording Time</string>
+    <string name="record_screen_1min">1 Min</string>
+    <string name="record_screen_3min">3 Min</string>
+    <string name="record_screen_5min">5 Min</string>
+    <string name="record_screen_10min">10 Min</string>
+    <string name="record_screen_ready">Ready to record TV screen</string>
+    <string name="record_screen_start">Start Recording</string>
+    <string name="record_screen_stop">Stop Recording</string>
+    <string name="record_screen_exit">Exit</string>
+    <string name="record_screen_saving">Finalizing and saving recording…</string>
+    <string name="record_screen_saved">Recording saved to %s</string>
+    <string name="record_screen_failed">Screen recording failed: %s</string>
+    <string name="record_screen_remaining">Recording... Time remaining: %s</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">Remote</string>
@@ -3534,6 +3552,5 @@
     <string name="folder_large_files_desc">Showing files larger than 10 MB in this folder and its subfolders.</string>
     <string name="no_large_files_found_title">No Large Files Found</string>
     <string name="no_large_files_found_message">No files larger than 10 MB were found in this folder or any of its subfolders.</string>
-    <string name="icon_action_large_files_finder">Large Files</string>
 </resources>
 

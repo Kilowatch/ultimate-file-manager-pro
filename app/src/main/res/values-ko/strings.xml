@@ -4129,6 +4129,58 @@ USB 디버깅 필요
     <string name="take_screenshot">
 스크린샷 찍기
 </string>
+    <string name="record_screen">
+화면 녹화
+</string>
+    <string name="record_screen_audio_title">
+TV 오디오
+</string>
+    <string name="record_screen_audio_enabled">
+녹화에 TV 오디오 포함
+</string>
+    <string name="record_screen_audio_disabled">
+TV 오디오 녹화 음소거
+</string>
+    <string name="record_screen_duration">
+최대 녹화 시간
+</string>
+    <string name="record_screen_1min">
+1분
+</string>
+    <string name="record_screen_3min">
+3분
+</string>
+    <string name="record_screen_5min">
+5분
+</string>
+    <string name="record_screen_10min">
+10분
+</string>
+    <string name="record_screen_ready">
+TV 화면 녹화 준비 완료
+</string>
+    <string name="record_screen_start">
+녹화 시작
+</string>
+    <string name="record_screen_stop">
+녹화 중지
+</string>
+    <string name="record_screen_exit">
+종료
+</string>
+    <string name="record_screen_saving">
+녹화 마무리 및 저장 중…
+</string>
+    <string name="record_screen_saved">
+%s에 녹화 저장됨
+</string>
+    <string name="record_screen_failed">
+화면 녹화 실패: %s
+</string>
+    <string name="record_screen_remaining">
+녹화 중... 남은 시간: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10004,9 +10056,6 @@ UFM 플레이어 설정
 </string>
     <string name="no_large_files_found_message">
 이 폴더 또는 하위 폴더에서 10MB보다 큰 파일을 찾을 수 없습니다.
-</string>
-    <string name="icon_action_large_files_finder">
-대용량 파일
 </string>
 </resources>
 

@@ -29,7 +29,8 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     R.drawable.ic_scanner, R.drawable.ic_terminal, R.drawable.ic_file_server,
     R.drawable.ic_about, R.drawable.ic_delete, R.drawable.ic_sort, R.drawable.ic_twin_window,
     R.drawable.ic_tv, R.drawable.ic_tv_remote, R.drawable.ic_remote_manage,
-    R.drawable.ic_remote_enabled, R.drawable.ic_remote_disabled,
+    R.drawable.ic_remote_enabled, R.drawable.ic_remote_disabled, R.drawable.ic_screenshot, R.drawable.ic_record_screen,
+    R.drawable.ic_mic, R.drawable.ic_mic_off,
     // File Types
     R.drawable.ic_file, R.drawable.ic_file_image, R.drawable.ic_file_video,
     R.drawable.ic_file_audio, R.drawable.ic_file_pdf, R.drawable.ic_file_word,

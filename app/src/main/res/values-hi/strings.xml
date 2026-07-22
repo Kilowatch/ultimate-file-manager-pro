@@ -4129,6 +4129,58 @@ USB डीबगिंग आवश्यक
     <string name="take_screenshot">
 स्क्रीनशॉट लें
 </string>
+    <string name="record_screen">
+स्क्रीन रिकॉर्ड करें
+</string>
+    <string name="record_screen_audio_title">
+टीवी ऑडियो
+</string>
+    <string name="record_screen_audio_enabled">
+रिकॉर्डिंग में टीवी ऑडियो शामिल करें
+</string>
+    <string name="record_screen_audio_disabled">
+टीवी ऑडियो रिकॉर्डिंग म्यूट करें
+</string>
+    <string name="record_screen_duration">
+अधिकतम रिकॉर्डिंग समय
+</string>
+    <string name="record_screen_1min">
+1 मिनट
+</string>
+    <string name="record_screen_3min">
+3 मिनट
+</string>
+    <string name="record_screen_5min">
+5 मिनट
+</string>
+    <string name="record_screen_10min">
+10 मिनट
+</string>
+    <string name="record_screen_ready">
+टीवी स्क्रीन रिकॉर्ड करने के लिए तैयार
+</string>
+    <string name="record_screen_start">
+रिकॉर्डिंग शुरू करें
+</string>
+    <string name="record_screen_stop">
+रिकॉर्डिंग बंद करें
+</string>
+    <string name="record_screen_exit">
+बाहर निकलें
+</string>
+    <string name="record_screen_saving">
+रिकॉर्डिंग अंतिम रूप दी जा रही है और सहेजी जा रही है…
+</string>
+    <string name="record_screen_saved">
+रिकॉर्डिंग %s में सहेजी गई
+</string>
+    <string name="record_screen_failed">
+स्क्रीन रिकॉर्डिंग विफल: %s
+</string>
+    <string name="record_screen_remaining">
+रिकॉर्डिंग... शेष समय: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10004,9 +10056,6 @@ UFM प्लेयर सेटिंग्स
 </string>
     <string name="no_large_files_found_message">
 इस फ़ोल्डर या इसके किसी भी उप-फ़ोल्डर में 10 MB से बड़ी कोई फ़ाइल नहीं मिली।
-</string>
-    <string name="icon_action_large_files_finder">
-बड़ी फ़ाइलें
 </string>
 </resources>
 

@@ -4129,6 +4129,58 @@ ASS
     <string name="take_screenshot">
 Зробити знімок екрана
 </string>
+    <string name="record_screen">
+Запис екрану
+</string>
+    <string name="record_screen_audio_title">
+Аудіо ТВ
+</string>
+    <string name="record_screen_audio_enabled">
+Включати аудіо ТВ у запис
+</string>
+    <string name="record_screen_audio_disabled">
+Вимкнути звук аудіо ТВ у записі
+</string>
+    <string name="record_screen_duration">
+Максимальний час запису
+</string>
+    <string name="record_screen_1min">
+1 хв
+</string>
+    <string name="record_screen_3min">
+3 хв
+</string>
+    <string name="record_screen_5min">
+5 хв
+</string>
+    <string name="record_screen_10min">
+10 хв
+</string>
+    <string name="record_screen_ready">
+Готовий записувати екран ТВ
+</string>
+    <string name="record_screen_start">
+Почати запис
+</string>
+    <string name="record_screen_stop">
+Зупинити запис
+</string>
+    <string name="record_screen_exit">
+Вихід
+</string>
+    <string name="record_screen_saving">
+Завершення та збереження запису…
+</string>
+    <string name="record_screen_saved">
+Запис збережено до %s
+</string>
+    <string name="record_screen_failed">
+Запис екрану не вдався: %s
+</string>
+    <string name="record_screen_remaining">
+Запис... Залишилося часу: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10004,9 +10056,6 @@ URL-адреса сервера
 </string>
     <string name="no_large_files_found_message">
 Не знайдено файлів, більших за 10 МБ, у цій папці чи будь-якій її підпапці.
-</string>
-    <string name="icon_action_large_files_finder">
-Великі файли
 </string>
 </resources>
 

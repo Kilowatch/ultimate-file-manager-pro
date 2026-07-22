@@ -4129,6 +4129,58 @@ ASS
     <string name="take_screenshot">
 التقاط لقطة شاشة
 </string>
+    <string name="record_screen">
+تسجيل الشاشة
+</string>
+    <string name="record_screen_audio_title">
+صوت التلفاز
+</string>
+    <string name="record_screen_audio_enabled">
+تضمين صوت التلفاز في التسجيل
+</string>
+    <string name="record_screen_audio_disabled">
+كتم صوت التلفاز أثناء التسجيل
+</string>
+    <string name="record_screen_duration">
+الحد الأقصى لمدة التسجيل
+</string>
+    <string name="record_screen_1min">
+دقيقة واحدة
+</string>
+    <string name="record_screen_3min">
+3 دقائق
+</string>
+    <string name="record_screen_5min">
+5 دقائق
+</string>
+    <string name="record_screen_10min">
+10 دقائق
+</string>
+    <string name="record_screen_ready">
+جاهز لتسجيل شاشة التلفاز
+</string>
+    <string name="record_screen_start">
+بدء التسجيل
+</string>
+    <string name="record_screen_stop">
+إيقاف التسجيل
+</string>
+    <string name="record_screen_exit">
+خروج
+</string>
+    <string name="record_screen_saving">
+جارٍ إنهاء التسجيل وحفظه…
+</string>
+    <string name="record_screen_saved">
+تم حفظ التسجيل في %s
+</string>
+    <string name="record_screen_failed">
+فشل تسجيل الشاشة: %s
+</string>
+    <string name="record_screen_remaining">
+جارٍ التسجيل... الوقت المتبقي: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10004,9 +10056,6 @@ Box
 </string>
     <string name="no_large_files_found_message">
 لم يتم العثور على ملفات أكبر من 10 ميغابايت في هذا المجلد أو أي من مجلداته الفرعية.
-</string>
-    <string name="icon_action_large_files_finder">
-الملفات الكبيرة
 </string>
 </resources>
 

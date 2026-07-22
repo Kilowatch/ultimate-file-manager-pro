@@ -4129,6 +4129,58 @@ Depuración USB requerida
     <string name="take_screenshot">
 Tomar captura de pantalla
 </string>
+    <string name="record_screen">
+Grabar pantalla
+</string>
+    <string name="record_screen_audio_title">
+Audio del TV
+</string>
+    <string name="record_screen_audio_enabled">
+Incluir audio del TV en la grabación
+</string>
+    <string name="record_screen_audio_disabled">
+Silenciar grabación de audio del TV
+</string>
+    <string name="record_screen_duration">
+Tiempo máximo de grabación
+</string>
+    <string name="record_screen_1min">
+1 min
+</string>
+    <string name="record_screen_3min">
+3 min
+</string>
+    <string name="record_screen_5min">
+5 min
+</string>
+    <string name="record_screen_10min">
+10 min
+</string>
+    <string name="record_screen_ready">
+Listo para grabar la pantalla del TV
+</string>
+    <string name="record_screen_start">
+Iniciar grabación
+</string>
+    <string name="record_screen_stop">
+Detener grabación
+</string>
+    <string name="record_screen_exit">
+Salir
+</string>
+    <string name="record_screen_saving">
+Finalizando y guardando grabación…
+</string>
+    <string name="record_screen_saved">
+Grabación guardada en %s
+</string>
+    <string name="record_screen_failed">
+Grabación de pantalla fallida: %s
+</string>
+    <string name="record_screen_remaining">
+Grabando... Tiempo restante: %s
+</string>
+
 
     <!-- TV Remote -->
     <string name="tv_remote">
@@ -10016,9 +10068,6 @@ No se encontraron archivos grandes
 </string>
     <string name="no_large_files_found_message">
 No se encontraron archivos de más de 10 MB en esta carpeta ni en ninguna de sus subcarpetas.
-</string>
-    <string name="icon_action_large_files_finder">
-Archivos grandes
 </string>
 </resources>
 

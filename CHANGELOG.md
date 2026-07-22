@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.3] — 2026-07-22
 
+### Added
+- Added "Record Screen" option below "Take Screenshot" for paired TV devices on mobile featuring audio mic toggle, max duration selector (1m/3m/5m/10m), countdown clock, and auto-export to Movies/Recordings.
+
 ### Fixed
 - Fixed an `ExceptionInInitializerError` when opening `.xls` spreadsheets in release builds by preserving Apache POI HSSF record classes and `sid` fields in R8 ProGuard rules.
 - Fixed an `UninitializedPropertyAccessException` (`lateinit property prefs has not been initialized`) in `HiddenFilesManager` by implementing safe lazy auto-initialization and fallback guards for `prefs` and `dao`.
