@@ -5864,8 +5864,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     // selected duration (60s, 180s, 300s, 600s). The screenrecord time-limit is
                     // just a safety fallback in case SIGINT delivery fails.
                     val tvSafetyLimit = kotlin.math.min(selectedDurationSeconds, 180)
+                    // audio-source=playback reliably fails on most Android TVs — shell
+                    // doesn't have the system-level permissions required for internal capture
                     val cmd = "screenrecord --time-limit $tvSafetyLimit --bit-rate $bitrate /data/local/tmp/ufm_record.mp4"
-                    android.util.Log.d("GoRoScreen", "cmd: $cmd")
                     recordingExecJob = lifecycleScope.launch(Dispatchers.IO) {
                         val stream = adbManager.openExec(cmd)
                         if (stream != null) {
@@ -5924,9 +5925,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         onProgress(0)
 
-        val blockSize = 16384
-        val ddCmd = if (totalSize > 0)
-            "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize count=${((totalSize + blockSize - 1) / blockSize)}"
+        val blockSize = 65536 // larger blocks = faster transfer for big files
+        val blockCount = if (totalSize > 0) ((totalSize + blockSize - 1) / blockSize).toInt() else 0
+        val ddCmd = if (blockCount > 0)
+            "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize count=$blockCount"
         else
             "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize"
         val ddStream = adbManager.openExec(ddCmd) ?: return@withContext null
@@ -5940,9 +5942,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val outputFile = File(moviesDir, "TV_Record_$timestamp.mp4")
 
         var totalBytes = 0L
-        // Watchdog: close the stream after 15s to unblock a hung read()
+        // Dynamic watchdog: at least 60s, scales with file size assuming ~1 MB/s worst-case
+        val watchdogSec = if (totalSize > 0) kotlin.math.max(totalSize / 1_000_000L, 60L) else 60L
         val watchdogJob = kotlinx.coroutines.GlobalScope.launch {
-            delay(15_000L)
+            delay(watchdogSec * 1000L)
             try { ddStream.close() } catch (_: Exception) {}
         }
         try {
