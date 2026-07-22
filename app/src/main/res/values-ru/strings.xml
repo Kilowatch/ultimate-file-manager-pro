@@ -4180,6 +4180,18 @@ ASS
     <string name="record_screen_remaining">
 Запись... Осталось времени: %s
 </string>
+    <string name="record_screen_detecting">
+Определение характеристик телевизора…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+Подготовка…
+</string>
 
 
     <!-- TV Remote -->

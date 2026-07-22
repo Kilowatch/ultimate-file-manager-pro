@@ -4180,6 +4180,18 @@ TV 화면 녹화 준비 완료
     <string name="record_screen_remaining">
 녹화 중... 남은 시간: %s
 </string>
+    <string name="record_screen_detecting">
+TV 사양을 확인하는 중…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+준비 중…
+</string>
 
 
     <!-- TV Remote -->

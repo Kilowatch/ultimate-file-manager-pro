@@ -4180,6 +4180,18 @@ Rekaman layar gagal: %s
     <string name="record_screen_remaining">
 Merekam... Waktu tersisa: %s
 </string>
+    <string name="record_screen_detecting">
+Mendeteksi spesifikasi TV…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+Mempersiapkan…
+</string>
 
 
     <!-- TV Remote -->

@@ -4180,6 +4180,18 @@ Bildschirmaufnahme fehlgeschlagen: %s
     <string name="record_screen_remaining">
 Aufnahme... Verbleibende Zeit: %s
 </string>
+    <string name="record_screen_detecting">
+Ermittle TV-Spezifikationen…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+Wird vorbereitet…
+</string>
 
 
     <!-- TV Remote -->

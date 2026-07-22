@@ -4180,6 +4180,18 @@ Ekran kaydı başarısız oldu: %s
     <string name="record_screen_remaining">
 Kaydediliyor... Kalan süre: %s
 </string>
+    <string name="record_screen_detecting">
+TV özellikleri algılanıyor…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+Hazırlanıyor…
+</string>
 
 
     <!-- TV Remote -->

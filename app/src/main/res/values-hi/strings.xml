@@ -4180,6 +4180,18 @@ USB डीबगिंग आवश्यक
     <string name="record_screen_remaining">
 रिकॉर्डिंग... शेष समय: %s
 </string>
+    <string name="record_screen_detecting">
+टीवी विनिर्देशों का पता लगाया जा रहा है…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+तैयार किया जा रहा है…
+</string>
 
 
     <!-- TV Remote -->

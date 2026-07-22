@@ -4180,6 +4180,18 @@ USBデバッグが必要です
     <string name="record_screen_remaining">
 録画中... 残り時間: %s
 </string>
+    <string name="record_screen_detecting">
+テレビの仕様を検出しています…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d @ %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+準備中…
+</string>
 
 
     <!-- TV Remote -->

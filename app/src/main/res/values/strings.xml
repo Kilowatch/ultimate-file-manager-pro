@@ -1491,6 +1491,10 @@
     <string name="record_screen_saved">Recording saved to %s</string>
     <string name="record_screen_failed">Screen recording failed: %s</string>
     <string name="record_screen_remaining">Recording... Time remaining: %s</string>
+    <string name="record_screen_detecting">Detecting TV specifications…</string>
+    <string name="record_screen_quality_full">%1$dx%2$d @ %3$dfps %4$dMbps</string>
+    <string name="record_screen_quality_min">%1$dfps %2$dMbps</string>
+    <string name="record_screen_preparing">Preparing…</string>
 
 
     <!-- TV Remote -->

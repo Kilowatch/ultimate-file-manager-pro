@@ -5821,20 +5821,43 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     // Reset PID before starting new recording
                     screenRecordPid = null
 
-                    // Query TV display resolution for auto bitrate
+                    // Auto-detect: resolution → bitrate, refresh rate → fps
+                    tvRecordingStatusDetail.text = getString(R.string.record_screen_detecting)
+                    var resW = 0; var resH = 0
                     var bitrate = 8000000
+                    var frameRate = 60
                     try {
                         withContext(Dispatchers.IO) {
                             val wmStream = adbManager.openExec("wm size")
                             val wmOutput = wmStream?.openInputStream()?.bufferedReader()?.readLine()?.trim() ?: ""
                             val match = Regex("""(\d+)x(\d+)""").find(wmOutput)
                             if (match != null) {
-                                val width = match.groupValues[1].toInt()
-                                val height = match.groupValues[2].toInt()
-                                bitrate = ((width * height) * 4).coerceIn(4_000_000, 20_000_000)
+                                resW = match.groupValues[1].toInt()
+                                resH = match.groupValues[2].toInt()
+                                bitrate = ((resW * resH) * 4).coerceIn(4_000_000, 20_000_000)
                             }
                         }
                     } catch (_: Exception) {}
+                    try {
+                        withContext(Dispatchers.IO) {
+                            // Use head -1 instead of grep -m1 (toybox grep lacks -m).
+                            // Drop stderr redirect — toybox sh may not support 2>/dev/null.
+                            val fpsStream = adbManager.openExec("sh -c \"dumpsys display | grep mRefreshRate | head -1\"")
+                            val fpsLine = fpsStream?.openInputStream()?.bufferedReader()?.readLine()?.trim() ?: ""
+                            val fpsMatch = Regex("""(\d+)""").find(fpsLine)
+                            if (fpsMatch != null) {
+                                val detected = fpsMatch.groupValues[1].toInt()
+                                if (detected > 0) frameRate = detected
+                            }
+                        }
+                    } catch (_: Exception) {}
+
+                    val mbps = bitrate / 1_000_000
+                    tvRecordingStatusDetail.text = if (resW > 0) {
+                        getString(R.string.record_screen_quality_full, resW, resH, frameRate, mbps)
+                    } else {
+                        getString(R.string.record_screen_quality_min, frameRate, mbps)
+                    }
 
                     // Use 180s as the screenrecord time-limit — this is the max supported on all
                     // Android TV versions. Our own timer + SIGINT handle stopping at the user's
@@ -5842,6 +5865,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     // just a safety fallback in case SIGINT delivery fails.
                     val tvSafetyLimit = kotlin.math.min(selectedDurationSeconds, 180)
                     val cmd = "screenrecord --time-limit $tvSafetyLimit --bit-rate $bitrate /data/local/tmp/ufm_record.mp4"
+                    android.util.Log.d("GoRoScreen", "cmd: $cmd")
                     recordingExecJob = lifecycleScope.launch(Dispatchers.IO) {
                         val stream = adbManager.openExec(cmd)
                         if (stream != null) {
@@ -5890,8 +5914,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private suspend fun pullRecordingFile(adbManager: AdbManager, onProgress: (Int) -> Unit = {}): File? = withContext(Dispatchers.IO) {
         // Check file exists on TV before attempting pull
         val existsCheck = adbManager.openExec("test -f /data/local/tmp/ufm_record.mp4 && echo 1 || echo 0")
-        val existsResult = existsCheck?.openInputStream()?.bufferedReader()?.readLine()?.trim()
-        if (existsResult != "1") return@withContext null
+        if (existsCheck?.openInputStream()?.bufferedReader()?.readLine()?.trim() != "1") return@withContext null
 
         // Get file size for progress tracking and dd block count
         val totalSize = try {
@@ -5901,7 +5924,6 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         onProgress(0)
 
-        // Use dd with explicit count to avoid hanging on incomplete MP4 blocks
         val blockSize = 16384
         val ddCmd = if (totalSize > 0)
             "dd if=/data/local/tmp/ufm_record.mp4 bs=$blockSize count=${((totalSize + blockSize - 1) / blockSize)}"

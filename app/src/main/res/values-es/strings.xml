@@ -4180,6 +4180,18 @@ Grabación de pantalla fallida: %s
     <string name="record_screen_remaining">
 Grabando... Tiempo restante: %s
 </string>
+    <string name="record_screen_detecting">
+Detectando especificaciones de TV…
+</string>
+    <string name="record_screen_quality_full">
+%1$dx%2$d a %3$dfps %4$dMbps
+</string>
+    <string name="record_screen_quality_min">
+%1$dfps %2$dMbps
+</string>
+    <string name="record_screen_preparing">
+Preparando…
+</string>
 
 
     <!-- TV Remote -->
