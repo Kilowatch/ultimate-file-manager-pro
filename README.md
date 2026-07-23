@@ -1,11 +1,9 @@
 <div align="center">
-  <img src="app/src/main/res/drawable-nodpi/ic_launcher_512.png" width="128" height="128" alt="Ultimate File Manager Pro Logo" />
+  <img src="app/src/main/assets/remote/logo.png" width="128" height="128" alt="Ultimate File Manager Pro Logo" />
 
   <h1>Ultimate File Manager Pro</h1>
 
   <p><b>The Ultimate Dual-Pane File Manager for Android Mobile, Android TV, and Windows PC.</b></p>
-
-  <p>🌐 <b>Official Website:</b> <a href="https://www.kilowatch.co.za"><b>www.kilowatch.co.za</b></a></p>
 
   <p>
     <a href="https://www.kilowatch.co.za"><img src="https://img.shields.io/badge/Website-kilowatch.co.za-0066CC?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website" /></a>
