@@ -163,8 +163,15 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 return if (runAttemptCount < MAX_RETRIES) Result.retry() else Result.success()
             }
 
-            if (share.isServerMode) {
-                Log.w(TAG, "Server-mode SMB shares are not supported for sync")
+            // Resolve effective share: for server-mode SMB shares (or empty remotePath), combine with profile.remotePath
+            val effectiveShare = if (share.isServerMode || share.remotePath.isEmpty()) {
+                share.copy(remotePath = profile.remotePath, isServerMode = false)
+            } else {
+                share
+            }
+
+            if (effectiveShare.remotePath.isEmpty() && effectiveShare.type == ShareType.SMB) {
+                Log.w(TAG, "No SMB share path specified for profile '${profile.name}'")
                 if (profile.notificationsEnabled) {
                     showErrorNotification(
                         applicationContext.getString(R.string.network_share_not_found_for_profilename, profile.name),
@@ -173,19 +180,19 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 }
                 return Result.failure()
             }
-            Log.d(TAG, "Resolved share: '${share.name}' type=${share.type} host=${share.host}")
+            Log.d(TAG, "Resolved share: '${effectiveShare.name}' type=${effectiveShare.type} host=${effectiveShare.host} remotePath=${effectiveShare.remotePath}")
 
             // Test connection — skip test for online storage types (they handle auth differently)
             // RCLONE shares also skip the test — they use rclone RC, not direct HTTP.
             val connError = when {
-                RCloneShareClient.isRCloneShare(share) -> null
-                else -> when (share.type) {
-                    ShareType.SMB    -> SmbShareClient.testConnection(share)
-                    ShareType.NFS    -> NfsShareClient.testConnection(share)
-                    ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(applicationContext, share)
-                    ShareType.WEBDAV -> if (WebDavShareClient.testConnection(share)) null else "WebDAV connection failed"
+                RCloneShareClient.isRCloneShare(effectiveShare) -> null
+                else -> when (effectiveShare.type) {
+                    ShareType.SMB    -> SmbShareClient.testConnection(effectiveShare)
+                    ShareType.NFS    -> NfsShareClient.testConnection(effectiveShare)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.testConnection(applicationContext, effectiveShare)
+                    ShareType.WEBDAV -> if (WebDavShareClient.testConnection(effectiveShare)) null else "WebDAV connection failed"
                     ShareType.DLNA   -> "DLNA does not support sync"
-                    ShareType.FTP    -> FtpShareClient.testConnection(share)
+                    ShareType.FTP    -> FtpShareClient.testConnection(effectiveShare)
                     else             -> null // OneDrive, Google Drive, Dropbox, S3
                 }
             }
@@ -214,9 +221,9 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
             Log.d(TAG, "Connection test passed. Starting ${profile.direction} sync for '${profile.name}'")
             when (profile.direction) {
-                "upload" -> doUpload(share, profile, localDir, notificationId)
-                "download" -> doDownload(share, profile, localDir, notificationId)
-                "twoway" -> doTwoway(share, profile, localDir, notificationId)
+                "upload" -> doUpload(effectiveShare, profile, localDir, notificationId)
+                "download" -> doDownload(effectiveShare, profile, localDir, notificationId)
+                "twoway" -> doTwoway(effectiveShare, profile, localDir, notificationId)
                 else -> Log.w(TAG, "Unknown direction: ${profile.direction}")
             }
 
