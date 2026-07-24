@@ -1239,37 +1239,47 @@ class FileBrowserFragment : Fragment() {
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
-        fileAdapter.viewMode = mode
-        val lm = if (!ViewModeManager.isGrid(mode)) {
-            androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-        } else {
-            androidx.recyclerview.widget.GridLayoutManager(
-                requireContext(), ViewModeManager.spanCount(requireContext(), mode)
-            ).apply {
-                spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+        val updateLayout = {
+            fileAdapter.viewMode = mode
+            val lm = if (!ViewModeManager.isGrid(mode)) {
+                androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+            } else {
+                androidx.recyclerview.widget.GridLayoutManager(
+                    requireContext(), ViewModeManager.spanCount(requireContext(), mode)
+                ).apply {
+                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                        }
                     }
                 }
             }
-        }
-        recyclerFiles.layoutManager = lm
-        
-        // Remove existing sticky decoration
-        for (i in 0 until recyclerFiles.itemDecorationCount) {
-            val dec = recyclerFiles.getItemDecorationAt(i)
-            if (dec is DateGroupStickyHeaderDecoration) {
-                recyclerFiles.removeItemDecoration(dec)
+            recyclerFiles.layoutManager = lm
+            
+            // Remove existing sticky decoration
+            for (i in 0 until recyclerFiles.itemDecorationCount) {
+                val dec = recyclerFiles.getItemDecorationAt(i)
+                if (dec is DateGroupStickyHeaderDecoration) {
+                    recyclerFiles.removeItemDecoration(dec)
+                }
             }
-        }
-        
-        if (fileAdapter.isGroupedByDate) {
-            recyclerFiles.addItemDecoration(DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            
+            if (fileAdapter.isGroupedByDate) {
+                recyclerFiles.addItemDecoration(DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            }
+
+            btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
+            // Re-attach adapter so the layout manager change takes effect immediately
+            recyclerFiles.adapter = fileAdapter
         }
 
-        btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
-        // Re-attach adapter so the layout manager change takes effect immediately
-        recyclerFiles.adapter = fileAdapter
+        if (::recyclerFiles.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerFiles) {
+                updateLayout()
+            }
+        } else {
+            updateLayout()
+        }
     }
 
     private fun updateSelectionBar(count: Int) {
@@ -1521,14 +1531,32 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    private var lastLoadedPath: String? = null
+
     private fun submitAdapterList(sorted: List<File>, showAllAsIndexed: Boolean?, hiddenPaths: Set<String>) {
-        if (showAllAsIndexed != null) {
-            fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths)
-        } else {
-            fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths)
+        val currentPath = currentDir.absolutePath
+        val oldPath = lastLoadedPath
+        val isNavigatingFolder = oldPath != null && oldPath != currentPath
+        lastLoadedPath = currentPath
+
+        val updateAdapter = {
+            if (showAllAsIndexed != null) {
+                fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths)
+            } else {
+                fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths)
+            }
+            updateEmptyState(sorted.isEmpty())
+            updatePasteFab()
         }
-        updateEmptyState(sorted.isEmpty())
-        updatePasteFab()
+
+        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(requireContext())) {
+            val isForward = currentPath.length > (oldPath?.length ?: 0)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
+                updateAdapter()
+            }
+        } else {
+            updateAdapter()
+        }
 
         val isTv = DeviceUtils.isTvDevice(requireContext())
         if (isTv) {

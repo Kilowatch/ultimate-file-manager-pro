@@ -5,6 +5,16 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.4] — 2026-07-24
+
+### Added
+- Added modern directional folder navigation transition animations with staggered item cascading on mobile.
+- Added custom application-wide window transition styles for activity navigation.
+- Added "Enable Folder Transitions" setting toggle directly on the main App Settings screen (mobile only, enabled by default, hidden on TV).
+
+### Changed
+- Added smooth layout morphing transitions when toggling view modes (List, Grid, Compact), changing list sizes (Small, Medium, Large, Extra Large), or changing grid column counts across main menu storage tiles and file browsers.
+
 ## [1.7.3] — 2026-07-22
 
 ### Added

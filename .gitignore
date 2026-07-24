@@ -103,6 +103,7 @@ build.bat
 translate_strings*.py
 translate_release_notes.py
 phone_mockup_generator*.py
+tv_screenshot_generator*.py
 reorder.py
 restore.py
 extract.py

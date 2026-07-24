@@ -1056,6 +1056,12 @@ Erscheinungsbild
     <string name="theme_tile_subtitle">
 Hell, dunkel, AMOLED oder automatisch
 </string>
+    <string name="folder_transitions_title">
+Ordnerübergänge
+</string>
+    <string name="folder_transitions_subtitle">
+Sanfte Animationen beim Navigieren durch Ordner
+</string>
     <string name="vault_title">
 Verschlüsselter Tresor
 </string>

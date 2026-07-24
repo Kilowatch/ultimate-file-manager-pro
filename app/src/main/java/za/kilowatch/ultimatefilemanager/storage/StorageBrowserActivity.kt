@@ -1883,7 +1883,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         }
                     }
                     
-                    startActivity(intent)
+                    za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
                     showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
                 } else {
                     // It's a file
@@ -2102,7 +2102,7 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (isPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode || isExtractDestPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker || isAutoBackupFolderPicker) {
             pickerLauncher.launch(intent)
         } else {
-            startActivity(intent)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
             showPremiumSnackbar(getString(R.string.opening_itemlabel, item.label))
         }
     }
@@ -4029,63 +4029,63 @@ class StorageBrowserActivity : AppCompatActivity() {
     }
 
     private fun applyViewMode() {
-        val mode = MainMenuViewModeManager.loadViewMode(this)
-        val cols = MainMenuViewModeManager.loadColumnCount(this)
-        val size = MainMenuViewModeManager.loadItemSize(this)
+        val updateLayout = {
+            val mode = MainMenuViewModeManager.loadViewMode(this)
+            val cols = MainMenuViewModeManager.loadColumnCount(this)
+            val size = MainMenuViewModeManager.loadItemSize(this)
 
-        if (::storageAdapter.isInitialized) {
-            storageAdapter.viewMode = mode
-            storageAdapter.itemSize = size
-            storageAdapter.gridColumnCount = cols
-        }
+            if (::storageAdapter.isInitialized) {
+                storageAdapter.viewMode = mode
+                storageAdapter.itemSize = size
+                storageAdapter.gridColumnCount = cols
+            }
 
-        // Remove any previously attached TV grid listeners before switching mode
+            // Remove any previously attached TV grid listeners before switching mode
+            tvSnapHelper?.attachToRecyclerView(null)
+            tvSnapHelper = null
 
-        tvSnapHelper?.attachToRecyclerView(null)
-        tvSnapHelper = null
+            if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+                recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+            } else {
+                recyclerStorage.layoutManager = GridLayoutManager(this, cols)
 
-        if (mode == MainMenuViewModeManager.ViewMode.LIST) {
-            recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            // Clear any dynamic height previously set for TV grid mode
-            if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
-            
+                if (isTv) {
+                    recyclerStorage.doOnLayout {
+                        val density = resources.displayMetrics.density
+                        val rvH = recyclerStorage.height
+                        val pTop = recyclerStorage.paddingTop
+                        val pBot = recyclerStorage.paddingBottom
+                        val marginPx = (16f * density).toInt() * 4
 
-        } else {
-            recyclerStorage.layoutManager = GridLayoutManager(this, cols)
-
-            if (isTv) {
-                // After the RecyclerView has a real measured height, calculate the exact inner-tile
-                // height that makes exactly 2 complete rows visible â€” no partial rows on 4K TV.
-                recyclerStorage.doOnLayout {
-                    val density = resources.displayMetrics.density
-                    val rvH = recyclerStorage.height
-                    val pTop = recyclerStorage.paddingTop
-                    val pBot = recyclerStorage.paddingBottom
-                    val marginPx = (16f * density).toInt() * 4 // 16dp top/bottom margin per item * 2 items
-
-                    val availableHeight = rvH - pTop - pBot - marginPx
-                    val itemInnerHeightPx = availableHeight / 2 // Exact integer division ensures no overflowing scroll jumps!
-                    
-                    if (::storageAdapter.isInitialized && itemInnerHeightPx > 0) {
-                        // Forcing adapter to use this exact height for TV grid mode (3-grid and 4-grid)
-                        storageAdapter.gridItemHeightPx = itemInnerHeightPx
+                        val availableHeight = rvH - pTop - pBot - marginPx
+                        val itemInnerHeightPx = availableHeight / 2
+                        
+                        if (::storageAdapter.isInitialized && itemInnerHeightPx > 0) {
+                            storageAdapter.gridItemHeightPx = itemInnerHeightPx
+                        }
                     }
 
+                    if (mode == MainMenuViewModeManager.ViewMode.GRID) {
+                        val snapHelper = TopSnapHelper()
+                        snapHelper.attachToRecyclerView(recyclerStorage)
+                        tvSnapHelper = snapHelper
+                    }
                 }
+            }
 
-                // Re-enable TopSnapHelper ONLY for grid view perfectly clean cuts
-                // ListView has small items, so TopSnapHelper pushes the bottom-most focused items out of bounds
-                if (mode == MainMenuViewModeManager.ViewMode.GRID) {
-                    val snapHelper = TopSnapHelper()
-                    snapHelper.attachToRecyclerView(recyclerStorage)
-                    tvSnapHelper = snapHelper
-                }
+            updateToggleVisuals()
+            if (::storageAdapter.isInitialized) {
+                storageAdapter.notifyDataSetChanged()
             }
         }
 
-        updateToggleVisuals()
-        if (::storageAdapter.isInitialized) {
-            storageAdapter.notifyDataSetChanged()
+        if (::recyclerStorage.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerStorage) {
+                updateLayout()
+            }
+        } else {
+            updateLayout()
         }
     }
 

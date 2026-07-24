@@ -1056,6 +1056,12 @@ Apariencia
     <string name="theme_tile_subtitle">
 Claro, oscuro, AMOLED o automático
 </string>
+    <string name="folder_transitions_title">
+Transiciones de carpeta
+</string>
+    <string name="folder_transitions_subtitle">
+Animaciones suaves al navegar por carpetas
+</string>
     <string name="vault_title">
 Bóveda cifrada
 </string>

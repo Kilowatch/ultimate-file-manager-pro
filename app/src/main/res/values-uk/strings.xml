@@ -1056,6 +1056,12 @@ APK
     <string name="theme_tile_subtitle">
 Світла, темна, AMOLED або автоматично
 </string>
+    <string name="folder_transitions_title">
+Переходи між папками
+</string>
+    <string name="folder_transitions_subtitle">
+Плавні анімації під час навігації по папках
+</string>
     <string name="vault_title">
 Зашифроване сховище
 </string>

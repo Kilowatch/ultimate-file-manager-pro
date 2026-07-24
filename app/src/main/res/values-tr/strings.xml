@@ -1056,6 +1056,12 @@ Görünüm
     <string name="theme_tile_subtitle">
 Açık, koyu, AMOLED veya otomatik
 </string>
+    <string name="folder_transitions_title">
+Klasör Geçişleri
+</string>
+    <string name="folder_transitions_subtitle">
+Klasörler arasında gezinirken akıcı animasyonlar
+</string>
     <string name="vault_title">
 Şifreli Kasa
 </string>

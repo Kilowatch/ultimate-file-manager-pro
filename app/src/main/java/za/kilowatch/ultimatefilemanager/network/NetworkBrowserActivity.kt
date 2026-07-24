@@ -217,6 +217,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private lateinit var fabPaste: ExtendedFloatingActionButton
     private var fabProperties: ExtendedFloatingActionButton? = null
     private var fabTools: ExtendedFloatingActionButton? = null
+    private var lastLoadedPath: String? = null
 
     // TV-only: inline clipboard panel (avoids BottomSheetDialog clipping on TV)
     private var tvClipboardPanel: View? = null
@@ -2437,9 +2438,24 @@ class NetworkBrowserActivity : AppCompatActivity() {
             sortedFiles
         }
 
-        fileAdapter.submitList(displayFiles)
-        progressBar.visibility = View.GONE
-        if (displayFiles.isEmpty()) layoutEmpty.visibility = View.VISIBLE else recyclerFiles.visibility = View.VISIBLE
+        val oldPath = lastLoadedPath
+        val isNavigatingFolder = oldPath != null && oldPath != currentPath
+        lastLoadedPath = currentPath
+
+        val updateAdapter = {
+            fileAdapter.submitList(displayFiles)
+            progressBar.visibility = View.GONE
+            if (displayFiles.isEmpty()) layoutEmpty.visibility = View.VISIBLE else recyclerFiles.visibility = View.VISIBLE
+        }
+
+        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
+            val isForward = currentPath.length > (oldPath?.length ?: 0)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
+                updateAdapter()
+            }
+        } else {
+            updateAdapter()
+        }
     }
 
     private fun handleUseRemoteToggle(deviceId: String, enable: Boolean) {
@@ -6028,37 +6044,47 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
-        fileAdapter.viewMode = mode
-        btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
+        val updateLayout = {
+            fileAdapter.viewMode = mode
+            btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
 
-        val lm = if (!ViewModeManager.isGrid(mode)) {
-            androidx.recyclerview.widget.LinearLayoutManager(this)
-        } else {
-            androidx.recyclerview.widget.GridLayoutManager(
-                this, ViewModeManager.spanCount(this, mode)
-            ).apply {
-                spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+            val lm = if (!ViewModeManager.isGrid(mode)) {
+                androidx.recyclerview.widget.LinearLayoutManager(this)
+            } else {
+                androidx.recyclerview.widget.GridLayoutManager(
+                    this, ViewModeManager.spanCount(this, mode)
+                ).apply {
+                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                        }
                     }
                 }
             }
-        }
-        recyclerFiles.layoutManager = lm
-        
-        for (i in 0 until recyclerFiles.itemDecorationCount) {
-            val dec = recyclerFiles.getItemDecorationAt(i)
-            if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
-                recyclerFiles.removeItemDecoration(dec)
+            recyclerFiles.layoutManager = lm
+            
+            for (i in 0 until recyclerFiles.itemDecorationCount) {
+                val dec = recyclerFiles.getItemDecorationAt(i)
+                if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
+                    recyclerFiles.removeItemDecoration(dec)
+                }
             }
-        }
-        
-        if (fileAdapter.isGroupedByDate) {
-            recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            
+            if (fileAdapter.isGroupedByDate) {
+                recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            }
+
+            // Re-attach adapter to ensure layout manager updates correctly
+            recyclerFiles.adapter = fileAdapter
         }
 
-        // Re-attach adapter to ensure layout manager updates correctly
-        recyclerFiles.adapter = fileAdapter
+        if (::recyclerFiles.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerFiles) {
+                updateLayout()
+            }
+        } else {
+            updateLayout()
+        }
     }
 
     private fun updateBreadcrumbs() {

@@ -371,6 +371,8 @@
     <!-- Theme -->
     <string name="theme_title">Appearance</string>
     <string name="theme_tile_subtitle">Light, dark, AMOLED, or auto</string>
+    <string name="folder_transitions_title">Folder Transitions</string>
+    <string name="folder_transitions_subtitle">Smooth animations when navigating folders</string>
     <string name="vault_title">Encrypted Vault</string>
     <string name="vault_tile_subtitle">Secure private folders</string>
     <string name="vault_subtitle">Protected with PIN</string>

@@ -586,6 +586,20 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, ThemeActivity::class.java))
         }
 
+        // Folder Transitions row (Mobile Only - completely hidden on TV)
+        val cardFolderTransitions = findViewById<MaterialCardView?>(R.id.cardFolderTransitions)
+        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)) {
+            cardFolderTransitions?.visibility = android.view.View.GONE
+        } else {
+            val switchFolderTransitions = findViewById<com.google.android.material.switchmaterial.SwitchMaterial?>(R.id.switchFolderTransitions)
+            switchFolderTransitions?.isChecked = za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)
+            cardFolderTransitions?.setOnClickListener {
+                val newState = !(switchFolderTransitions?.isChecked ?: true)
+                switchFolderTransitions?.isChecked = newState
+                za.kilowatch.ultimatefilemanager.util.AnimationHelper.setFolderTransitionsEnabled(this, newState)
+            }
+        }
+
         // Default Icon Colors row
         val cardDefaultIconColors = findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)
         cardDefaultIconColors?.setOnClickListener {
@@ -1294,6 +1308,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardDefaultStartScreen, "settings_default_start_screen", R.drawable.ic_storage_internal),
             CardIcon(R.id.cardLanguage, "settings_language", R.drawable.ic_language),
             CardIcon(R.id.cardAppearance, "settings_appearance", R.drawable.ic_theme),
+            CardIcon(R.id.cardFolderTransitions, "settings_folder_transitions", R.drawable.ic_transitions),
             CardIcon(R.id.cardIcons, "settings_icons", R.drawable.ic_palette),
             CardIcon(R.id.cardDefaultIconColors, "settings_default_icon_colors", R.drawable.ic_tune),
             CardIcon(R.id.cardBackupRestore, "settings_backup_restore", R.drawable.ic_export),

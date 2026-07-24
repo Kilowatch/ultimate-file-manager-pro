@@ -1056,6 +1056,12 @@ Aparência
     <string name="theme_tile_subtitle">
 Claro, escuro, AMOLED ou automático
 </string>
+    <string name="folder_transitions_title">
+Transições de Pastas
+</string>
+    <string name="folder_transitions_subtitle">
+Animações suaves ao navegar em pastas
+</string>
     <string name="vault_title">
 Cofre Criptografado
 </string>

@@ -1056,6 +1056,12 @@ Tampilan
     <string name="theme_tile_subtitle">
 Terang, gelap, AMOLED, atau otomatis
 </string>
+    <string name="folder_transitions_title">
+Transisi Folder
+</string>
+    <string name="folder_transitions_subtitle">
+Animasi halus saat menjelajahi folder
+</string>
     <string name="vault_title">
 Brankas Terenkripsi
 </string>

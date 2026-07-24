@@ -855,24 +855,34 @@ class CustomTileActivity : AppCompatActivity() {
     // ── View Mode ──────────────────────────────────────────────────────────
 
     private fun applyViewMode() {
-        val mode = MainMenuViewModeManager.loadViewMode(this)
-        val cols = MainMenuViewModeManager.loadColumnCount(this)
-        val size = MainMenuViewModeManager.loadItemSize(this)
+        val updateLayout = {
+            val mode = MainMenuViewModeManager.loadViewMode(this)
+            val cols = MainMenuViewModeManager.loadColumnCount(this)
+            val size = MainMenuViewModeManager.loadItemSize(this)
 
-        if (::storageAdapter.isInitialized) {
-            storageAdapter.viewMode = mode
-            storageAdapter.itemSize = size
-            storageAdapter.gridColumnCount = cols
+            if (::storageAdapter.isInitialized) {
+                storageAdapter.viewMode = mode
+                storageAdapter.itemSize = size
+                storageAdapter.gridColumnCount = cols
+            }
+
+            try { tvSnapHelper?.attachToRecyclerView(null) } catch (_: Exception) {}
+            tvSnapHelper = null
+
+            if (mode == MainMenuViewModeManager.ViewMode.LIST) {
+                recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+            } else {
+                recyclerStorage.layoutManager = GridLayoutManager(this, cols)
+            }
         }
 
-        try { tvSnapHelper?.attachToRecyclerView(null) } catch (_: Exception) {}
-        tvSnapHelper = null
-
-        if (mode == MainMenuViewModeManager.ViewMode.LIST) {
-            recyclerStorage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-            if (::storageAdapter.isInitialized) storageAdapter.gridItemHeightPx = -1
+        if (::recyclerStorage.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerStorage) {
+                updateLayout()
+            }
         } else {
-            recyclerStorage.layoutManager = GridLayoutManager(this, cols)
+            updateLayout()
         }
     }
 

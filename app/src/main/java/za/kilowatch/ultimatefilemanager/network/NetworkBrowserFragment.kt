@@ -1856,35 +1856,45 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
-        fileAdapter.viewMode = mode
-        val lm = if (!ViewModeManager.isGrid(mode)) {
-            androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-        } else {
-            androidx.recyclerview.widget.GridLayoutManager(
-                requireContext(), ViewModeManager.spanCount(requireContext(), mode)
-            ).apply {
-                spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+        val updateLayout = {
+            fileAdapter.viewMode = mode
+            val lm = if (!ViewModeManager.isGrid(mode)) {
+                androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+            } else {
+                androidx.recyclerview.widget.GridLayoutManager(
+                    requireContext(), ViewModeManager.spanCount(requireContext(), mode)
+                ).apply {
+                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                        }
                     }
                 }
             }
-        }
-        recyclerFiles.layoutManager = lm
-        
-        for (i in 0 until recyclerFiles.itemDecorationCount) {
-            val dec = recyclerFiles.getItemDecorationAt(i)
-            if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
-                recyclerFiles.removeItemDecoration(dec)
+            recyclerFiles.layoutManager = lm
+            
+            for (i in 0 until recyclerFiles.itemDecorationCount) {
+                val dec = recyclerFiles.getItemDecorationAt(i)
+                if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
+                    recyclerFiles.removeItemDecoration(dec)
+                }
             }
-        }
-        
-        if (fileAdapter.isGroupedByDate) {
-            recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            
+            if (fileAdapter.isGroupedByDate) {
+                recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            }
+
+            view?.findViewById<ImageView>(R.id.btnViewToggle)?.setImageResource(ViewModeManager.iconRes(mode))
+            recyclerFiles.adapter = fileAdapter
         }
 
-        view?.findViewById<ImageView>(R.id.btnViewToggle)?.setImageResource(ViewModeManager.iconRes(mode))
-        recyclerFiles.adapter = fileAdapter
+        if (::recyclerFiles.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerFiles) {
+                updateLayout()
+            }
+        } else {
+            updateLayout()
+        }
     }
 
     /**

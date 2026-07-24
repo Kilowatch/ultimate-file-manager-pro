@@ -33,6 +33,14 @@
         <item name="android:navigationBarColor">@color/ufm_background</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowAnimationStyle">@style/UFM.WindowAnimation</item>
+    </style>
+
+    <style name="UFM.WindowAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/ufm_slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/ufm_slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ufm_slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/ufm_slide_out_right</item>
     </style>
 
     <style name="Theme.UltimateFileManager" parent="Base.Theme.UltimateFileManager" />

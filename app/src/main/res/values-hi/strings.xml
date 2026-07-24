@@ -1056,6 +1056,12 @@ APKs
     <string name="theme_tile_subtitle">
 हल्का, गहरा, AMOLED, या ऑटो
 </string>
+    <string name="folder_transitions_title">
+फ़ोल्डर संक्रमण
+</string>
+    <string name="folder_transitions_subtitle">
+फ़ोल्डरों में नेविगेट करते समय सहज एनिमेशन
+</string>
     <string name="vault_title">
 एन्क्रिप्टेड वॉल्ट
 </string>

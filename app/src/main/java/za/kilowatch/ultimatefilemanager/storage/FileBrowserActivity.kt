@@ -855,6 +855,24 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
 
+    private var lastLoadedPath: String? = null
+
+    private fun submitAdapterList(action: () -> Unit) {
+        val currentPath = currentDir.absolutePath
+        val oldPath = lastLoadedPath
+        val isNavigatingFolder = oldPath != null && oldPath != currentPath
+        lastLoadedPath = currentPath
+
+        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
+            val isForward = currentPath.length > (oldPath?.length ?: 0)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
+                action()
+            }
+        } else {
+            action()
+        }
+    }
+
     private fun navigateBack() {
         // If in selection mode, exit it first
         if (fileAdapter.isSelectionMode) {
@@ -869,9 +887,10 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         if (isTaskRoot) {
             val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java)
-            startActivity(intent)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.startActivityWithTransition(this, intent)
         }
         finish()
+        za.kilowatch.ultimatefilemanager.util.AnimationHelper.applyActivityCloseTransition(this)
     }
 
     private fun triggerReindex() {
@@ -3927,17 +3946,21 @@ class FileBrowserActivity : AppCompatActivity() {
                                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
                                 withContext(Dispatchers.Main) {
-                                    fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
-                                    updateEmptyState(sorted.isEmpty())
-                                    applyFileFocus()
+                                    submitAdapterList {
+                                        fileAdapter.submitList(sorted, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                                        updateEmptyState(sorted.isEmpty())
+                                        applyFileFocus()
+                                    }
                                 }
                             } else {
                                 val files = fileIndices.map { File(it.path) }.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
-                                    fileAdapter.submitList(sorted, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
-                                    updateEmptyState(sorted.isEmpty())
-                                    applyFileFocus()
+                                    submitAdapterList {
+                                        fileAdapter.submitList(sorted, showAllAsIndexed = true, hiddenPaths = hiddenPaths)
+                                        updateEmptyState(sorted.isEmpty())
+                                        applyFileFocus()
+                                    }
                                 }
                             }
                         }
@@ -4850,37 +4873,47 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
-        fileAdapter.viewMode = mode
-        btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
+        val updateLayout = {
+            fileAdapter.viewMode = mode
+            btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
 
-        val lm = if (!ViewModeManager.isGrid(mode)) {
-            androidx.recyclerview.widget.LinearLayoutManager(this)
-        } else {
-            androidx.recyclerview.widget.GridLayoutManager(
-                this, ViewModeManager.spanCount(this, mode)
-            ).apply {
-                spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                    override fun getSpanSize(position: Int): Int {
-                        return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+            val lm = if (!ViewModeManager.isGrid(mode)) {
+                androidx.recyclerview.widget.LinearLayoutManager(this)
+            } else {
+                androidx.recyclerview.widget.GridLayoutManager(
+                    this, ViewModeManager.spanCount(this, mode)
+                ).apply {
+                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                        override fun getSpanSize(position: Int): Int {
+                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                        }
                     }
                 }
             }
-        }
-        recyclerFiles.layoutManager = lm
-        
-        for (i in 0 until recyclerFiles.itemDecorationCount) {
-            val dec = recyclerFiles.getItemDecorationAt(i)
-            if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
-                recyclerFiles.removeItemDecoration(dec)
+            recyclerFiles.layoutManager = lm
+            
+            for (i in 0 until recyclerFiles.itemDecorationCount) {
+                val dec = recyclerFiles.getItemDecorationAt(i)
+                if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
+                    recyclerFiles.removeItemDecoration(dec)
+                }
             }
-        }
-        
-        if (fileAdapter.isGroupedByDate) {
-            recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            
+            if (fileAdapter.isGroupedByDate) {
+                recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+            }
+
+            // Re-attach adapter to ensure layout manager updates correctly
+            recyclerFiles.adapter = fileAdapter
         }
 
-        // Re-attach adapter to ensure layout manager updates correctly
-        recyclerFiles.adapter = fileAdapter
+        if (::recyclerFiles.isInitialized) {
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateViewModeSwitch(recyclerFiles) {
+                updateLayout()
+            }
+        } else {
+            updateLayout()
+        }
     }
     private fun toggleSearch() {
         isSearchVisible = !isSearchVisible
