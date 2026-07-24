@@ -1569,10 +1569,7 @@ class NetworkShareEditActivity : AppCompatActivity() {
                     testedHostKeyFingerprint = fp
                 }
                 ShareType.NFS  -> {
-                    Log.i("NFS_TEST", "=== NFS Connection Test: ${share.host}:${share.effectivePort} path=${share.remotePath} version=${share.nfsVersion} uid=${share.username} ===")
-                    // No port probes — the RPC handshake itself is the connectivity check.
-                    // libnfs's mount call handles DNS resolution, TCP connection, and
-                    // protocol negotiation internally.
+                    Log.i("NFS_TEST", "=== NFS Connection Test: host=${share.host}:${share.effectivePort} path=${share.remotePath} version=${share.nfsVersion} uid=${share.username} ===")
                     NfsShareClient.testConnection(share)
                 }
                 ShareType.DLNA -> DlnaShareClient.testConnection(share)

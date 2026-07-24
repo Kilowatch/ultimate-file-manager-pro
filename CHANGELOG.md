@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added smooth layout morphing transitions when toggling view modes (List, Grid, Compact), changing list sizes (Small, Medium, Large, Extra Large), or changing grid column counts across main menu storage tiles and file browsers.
 
+### Fixed
+- Fixed NFS server connection timeouts on servers using dynamic or non-20048 mountd ports (such as HaneWin NFS) by allowing standard Portmapper lookup on port 111 with fallback for firewalled setups.
+- Optimized NFS auto-negotiation to attempt NFSv3 first before falling back to NFSv4 cascades.
+- Fixed NFS permission denied errors (ret=-13 / EACCES) by using native UID/GID binding with automatic retry fallback for servers requiring explicit AUTH_SYS headers.
+
 ## [1.7.3] — 2026-07-22
 
 ### Added

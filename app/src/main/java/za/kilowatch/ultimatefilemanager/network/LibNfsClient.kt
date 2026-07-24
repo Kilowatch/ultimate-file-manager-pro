@@ -67,17 +67,13 @@ object LibNfsClient {
      * @param nfsV4MinorVersion NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2).
      *   Only added to the URL when [NetworkShare.nfsVersion] is 4 or when
      *   explicitly overridden during the auto-detect cascade.
+     * @param forceMountPort Custom mountport override (0 = default portmapper lookup).
      */
-    private fun buildNfsUrl(share: NetworkShare, nfsV4MinorVersion: Int = 0): String {
+    private fun buildNfsUrl(share: NetworkShare, nfsV4MinorVersion: Int = 0, forceMountPort: Int = 0): String {
         val host = share.host
         val export = normalizePath(share.remotePath)
         val params = mutableListOf<String>()
 
-        // Always pin nfsport — even at the default 2049.
-        // Without this, libnfs contacts portmapper (port 111) to ask "what port
-        // is NFS on?" before every mount. That portmapper RPC hangs for the full
-        // timeo duration when port 111 is firewalled or slow, causing 10-second
-        // mount timeouts even though port 2049 is directly reachable.
         val port = share.effectivePort
         if (port != 2049) {
             params.add("nfsport=$port")
@@ -96,17 +92,14 @@ object LibNfsClient {
 
         // Encode the timeout in the URL so nfs_parse_url_full applies it to ALL
         // sub-RPCs (portmapper, mountd, nfsd) — rpc_set_timeout() only covers the
-        // main context and is ignored by the internal connections NFSv3 opens for
-        // the MOUNT protocol. libnfs timeo= is in deciseconds (1/10s units).
-        // Minimum accepted by libnfs is 100 (= 10 seconds).
-        params.add("timeo=100") // 100 × 0.1s = 10 seconds
+        // main context. timeo= is in deciseconds (1/10s units).
+        // Minimum accepted by libnfs parser is 100 (= 10 seconds).
+        params.add("timeo=100")
 
-        // For NFSv3, pin mountd to port 20048 so we bypass portmapper dynamic-port
-        // discovery. Without this, the client asks portmapper what port mountd is on,
-        // then connects to that random high port — which is never forwarded through
-        // NAT/portproxy, causing a 130-second timeout. NFSv4 ignores this param.
-        if ((share.nfsVersion == 0 || share.nfsVersion == 3)) {
-            params.add("mountport=20048")
+        // Only add explicit mountport parameter if explicitly requested (e.g. NAT fallback).
+        // Standard NFSv3 relies on Portmapper (port 111) to discover mountd dynamic port (e.g. 1058 on HaneWin NFS).
+        if (forceMountPort > 0) {
+            params.add("mountport=$forceMountPort")
         }
 
         val query = if (params.isEmpty()) "" else "?" + params.joinToString("&")
@@ -130,18 +123,19 @@ object LibNfsClient {
     /**
      * Mount using an explicit NFS version (must be 3 or 4).
      *
-     * @param version  Major NFS version (3 or 4).
-     * @param minorVersion  NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2). Ignored for NFSv3.
+     * @param version Major NFS version (3 or 4).
+     * @param minorVersion NFSv4 minor version (0=v4.0, 1=v4.1, 2=v4.2). Ignored for NFSv3.
+     * @param mountPort Custom mountport override (0 = portmapper lookup).
+     * @param useExplicitAuthFlavor Whether to force explicit nfsSetAuthFlavor (true) vs native 1.6.1 uid/gid binding (false).
      * @return (contextHandle, null) on success, (0, errorMessage) on failure.
-     *         The caller is responsible for destroying the handle on success.
      */
     private fun mountContextForVersion(
         share: NetworkShare,
         version: Int,
-        minorVersion: Int = 0
+        minorVersion: Int = 0,
+        mountPort: Int = 0,
+        useExplicitAuthFlavor: Boolean = false
     ): Pair<Long, String?> {
-        // Build a share copy with the explicit version so buildNfsUrl produces
-        // the correct URL params (version=, mountport=, etc.).
         val vShare = if (share.nfsVersion == version) share else share.copy(nfsVersion = version)
         val versionLabel = if (version == 4) "NFSv4.$minorVersion" else "NFSv$version"
 
@@ -157,38 +151,45 @@ object LibNfsClient {
 
         val uid = vShare.username.toIntOrNull() ?: 0
 
-        val t1 = System.currentTimeMillis()
-        LibNfsBridge.nfsSetAuthFlavor(handle, 1, uid, 0)
-        Log.d(TAG, "mountContext: nfsSetAuthFlavor(AUTH_SYS, uid=$uid) (${System.currentTimeMillis() - t1}ms)")
+        if (useExplicitAuthFlavor) {
+            val t1 = System.currentTimeMillis()
+            LibNfsBridge.nfsSetAuthFlavor(handle, 1, uid, 0)
+            Log.d(TAG, "mountContext: nfsSetAuthFlavor(AUTH_SYS, uid=$uid) (${System.currentTimeMillis() - t1}ms)")
+        }
 
         LibNfsBridge.nfsSetTimeout(handle, 5_000)
-        Log.d(TAG, "mountContext: nfsSetTimeout(5000)")
-
         LibNfsBridge.nfsSetVersion(handle, version)
         if (version == 4) {
             LibNfsBridge.nfsSetV4MinorVersion(handle, minorVersion)
         }
-        Log.d(TAG, "mountContext: nfsSetVersion($version) minor=$minorVersion")
 
         LibNfsBridge.nfsSetUid(handle, uid)
         LibNfsBridge.nfsSetGid(handle, 0)
-        Log.d(TAG, "mountContext: nfsSetUid($uid) nfsSetGid(0)")
-
         LibNfsBridge.nfsSetDebug(handle, 1)
 
-        val url = buildNfsUrl(vShare, nfsV4MinorVersion = minorVersion)
+        val url = buildNfsUrl(vShare, nfsV4MinorVersion = minorVersion, forceMountPort = mountPort)
         Log.i(TAG, "mountContext: calling nfsMountUrl(\"$url\") (uid=$uid, $versionLabel)")
 
         val t2 = System.currentTimeMillis()
         val err = LibNfsBridge.nfsMountUrl(handle, url)
         val mountDuration = System.currentTimeMillis() - t2
         if (err != null) {
-            Log.e(TAG, "mountContext: $versionLabel nfsMountUrl FAILED after ${mountDuration}ms: $err")
             val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
-            if (rpcErr.isNotEmpty() && rpcErr != err) {
-                Log.e(TAG, "mountContext: last RPC error: $rpcErr")
-            }
+            Log.e(TAG, "mountContext: $versionLabel nfsMountUrl FAILED after ${mountDuration}ms: $err | rpcErr=$rpcErr")
             LibNfsBridge.nfsDestroy(handle)
+
+            // Fallback 1: If NFSv3 fails due to portmapper/rpcbind issue and mountPort was 0, try fallback with mountport=20048 (for NAT/Docker/Portproxy)
+            if (version == 3 && mountPort == 0 && (err.contains("portmap", true) || err.contains("rpcbind", true) || rpcErr.contains("portmap", true))) {
+                Log.w(TAG, "mountContext: NFSv3 standard mount failed with portmapper error, attempting fallback with mountport=20048")
+                return mountContextForVersion(share, 3, 0, mountPort = 20048, useExplicitAuthFlavor = useExplicitAuthFlavor)
+            }
+
+            // Fallback 2: If mount failed with ret=-13 / EACCES (Permission Denied) and we haven't tried explicit auth flavor yet, retry with explicit auth flavor
+            if (!useExplicitAuthFlavor && (err.contains("-13") || err.contains("13") || err.contains("acces", true) || err.contains("denied", true) || rpcErr.contains("-13"))) {
+                Log.w(TAG, "mountContext: mount failed with ret=-13 (EACCES/Permission Denied), retrying with explicit AUTH_SYS flavor")
+                return mountContextForVersion(share, version, minorVersion, mountPort = mountPort, useExplicitAuthFlavor = true)
+            }
+
             return 0L to err
         }
         Log.i(TAG, "mountContext: $versionLabel mount succeeded (${System.currentTimeMillis() - t0}ms total)")
@@ -200,47 +201,57 @@ object LibNfsClient {
      * Returns a pair of (contextHandle, null) on success,
      * or (0, errorMessage) on failure.
      *
-     * When [NetworkShare.nfsVersion] is 0 (auto), a full version cascade is
-     * performed: NFSv4.2 → 4.1 → 4.0 → NFSv3. This handles servers that
-     * disable specific minor versions (e.g. `-4.0 +4.1 +4.2`).
+     * When [NetworkShare.nfsVersion] is 0 (auto):
+     *   1. NFSv3 attempt (fastest & most compatible with servers like HaneWin, Synology, Linux, macOS).
+     *   2. If NFSv3 fails due to version/service mismatch, fall back to NFSv4.2 → 4.1 → 4.0 cascade.
      *
      * When [NetworkShare.nfsVersion] is 4 (explicit NFSv4), only the NFSv4
-     * minor version cascade is attempted (4.2 → 4.1 → 4.0), with no NFSv3
-     * fallback.
-     *
-     * Non-version errors (permission denied, auth rejected, etc.) cause an
-     * immediate exit from the cascade.
+     * minor version cascade is attempted (4.2 → 4.1 → 4.0).
      */
     @WorkerThread
     private fun mountContext(share: NetworkShare): Pair<Long, String?> {
+        val t0 = System.currentTimeMillis()
+
         if (share.nfsVersion == 3) {
-            // Explicit NFSv3 — single attempt, no fallback.
+            // Explicit NFSv3
             return mountContextForVersion(share, 3)
         }
 
         if (share.nfsVersion == 4) {
-            // Explicit NFSv4 — try minor version cascade (4.2 → 4.1 → 4.0).
+            // Explicit NFSv4
             return mountV4WithMinorVersionCascade(share)
         }
 
         // Auto-detect (nfsVersion == 0):
-        //   1. NFSv4.2 → 4.1 → 4.0 (with early exit on non-version errors)
-        //   2. NFSv3 fallback
-        Log.i(TAG, "mountContext: nfsVersion=auto — starting version cascade")
-
-        val (v4Handle, v4Err) = mountV4WithMinorVersionCascade(share)
-        if (v4Handle != 0L) return v4Handle to null
-
-        // All v4 attempts failed — try NFSv3
-        Log.w(TAG, "mountContext: all NFSv4 attempts failed — trying NFSv3")
+        // Try NFSv3 FIRST because 99%+ of home/NAS servers (HaneWin NFS, Synology, Linux, macOS, unRAID) run NFSv3.
+        Log.i(TAG, "mountContext: nfsVersion=auto (0) — attempting NFSv3 first")
         val (v3Handle, v3Err) = mountContextForVersion(share, 3)
         if (v3Handle != 0L) {
-            Log.i(TAG, "mountContext: auto-detected NFSv3 ✓")
+            Log.i(TAG, "mountContext: auto-detected NFSv3 SUCCESS in ${System.currentTimeMillis() - t0}ms ✓")
             return v3Handle to null
         }
 
-        Log.e(TAG, "mountContext: auto-detect exhausted — v4: $v4Err | v3: $v3Err")
-        val combined = "NFSv4: $v4Err | NFSv3: ${v3Err ?: "failed"}"
+        // If NFSv3 failed with auth/permission/stale error, don't try NFSv4 (the server rejected us, not version issue)
+        if (v3Err != null) {
+            val classified = classifyError(v3Err)
+            if (classified == ErrorSentinel.PERMISSION_DENIED ||
+                classified == ErrorSentinel.AUTH_REJECTED ||
+                classified == ErrorSentinel.STALE_HANDLE ||
+                classified == ErrorSentinel.PATH_NOT_FOUND) {
+                Log.w(TAG, "mountContext: NFSv3 failed with definitive non-version error ($classified): $v3Err — skipping NFSv4 cascade")
+                return 0L to v3Err
+            }
+        }
+
+        Log.w(TAG, "mountContext: NFSv3 auto-detect attempt failed ($v3Err) — falling back to NFSv4 cascade")
+        val (v4Handle, v4Err) = mountV4WithMinorVersionCascade(share)
+        if (v4Handle != 0L) {
+            Log.i(TAG, "mountContext: auto-detected NFSv4 SUCCESS in ${System.currentTimeMillis() - t0}ms ✓")
+            return v4Handle to null
+        }
+
+        Log.e(TAG, "mountContext: auto-detect exhausted in ${System.currentTimeMillis() - t0}ms — NFSv3: $v3Err | NFSv4: $v4Err")
+        val combined = "NFSv3: $v3Err | NFSv4: ${v4Err ?: "failed"}"
         return 0L to combined
     }
 
@@ -324,9 +335,10 @@ object LibNfsClient {
             msg.contains("stale") || msg.contains("nfs3err_stale") ->
                 ErrorSentinel.STALE_HANDLE
 
-            // Permission denied
+            // Permission denied / Read-only filesystem
             msg.contains("permission denied") || msg.contains("access denied") ||
-            msg.contains("nfs3err_acces") ->
+            msg.contains("nfs3err_acces") || msg.contains("nfs3err_perm") ||
+            msg.contains("nfs3err_rofs") || msg.contains("read-only") ->
                 ErrorSentinel.PERMISSION_DENIED
 
             // Path / export not found
@@ -369,8 +381,6 @@ object LibNfsClient {
         Log.i(TAG, "testConnection: START host=${share.host} port=${share.effectivePort} version=$versionLabel")
 
         // Stage 1: NFS context init + mount.
-        // mountContext() handles auto-detect (v=0) internally: tries NFSv3 first,
-        // falls back to NFSv4 automatically if NFSv3 fails.
         val initStart = System.currentTimeMillis()
         val (handle, mountErr) = mountContext(share)
         val mountDuration = System.currentTimeMillis() - initStart
@@ -428,7 +438,7 @@ object LibNfsClient {
                 host = share.host,
                 path = share.remotePath,
                 port = share.effectivePort,
-                versionAttempted = share.nfsVersion.takeIf { it > 0 } ?: 4,
+                versionAttempted = share.nfsVersion.takeIf { it > 0 } ?: 3,
                 nfsV4MinorVersion = nfsV4MinorVersion,
                 authFlavor = share.nfsAuthFlavor,
                 stages = stages,
@@ -441,7 +451,7 @@ object LibNfsClient {
     fun listFiles(share: NetworkShare, remotePath: String): List<NetworkFile> {
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) {
-            Log.e(TAG, "listFiles mount failed: $mountErr")
+            Log.e(TAG, "listFiles mount failed for $remotePath: $mountErr")
             return emptyList()
         }
 
@@ -479,7 +489,7 @@ object LibNfsClient {
             val size = LibNfsBridge.nfsFileSize(handle, normalizePath(remotePath))
             if (size >= 0) size else null
         } catch (e: Exception) {
-            Log.e(TAG, "getFileSize failed", e)
+            Log.e(TAG, "getFileSize failed for $remotePath", e)
             null
         } finally {
             LibNfsBridge.nfsDestroy(handle)
@@ -487,25 +497,33 @@ object LibNfsClient {
     }
 
     fun openInputStream(share: NetworkShare, remotePath: String): InputStream {
+        Log.d(TAG, "openInputStream: host=${share.host} path=$remotePath")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
 
-        val fh = LibNfsBridge.nfsOpen(handle, normalizePath(remotePath), 0)
+        val path = normalizePath(remotePath)
+        val fh = LibNfsBridge.nfsOpen(handle, path, 0)
         if (fh == 0L) {
             LibNfsBridge.nfsDestroy(handle)
-            throw IOException("Failed to open file for reading: $remotePath")
+            val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
+            Log.e(TAG, "openInputStream FAILED for $path: $rpcErr")
+            throw IOException("Failed to open file for reading ($path): ${rpcErr.ifEmpty { "Permission denied or missing file" }}")
         }
         return NfsNativeInputStream(handle, fh)
     }
 
     fun openOutputStream(share: NetworkShare, remotePath: String): OutputStream {
+        Log.d(TAG, "openOutputStream: host=${share.host} path=$remotePath")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
 
-        val fh = LibNfsBridge.nfsOpen(handle, normalizePath(remotePath), 1)
+        val path = normalizePath(remotePath)
+        val fh = LibNfsBridge.nfsOpen(handle, path, 1)
         if (fh == 0L) {
+            val rpcErr = LibNfsBridge.nfsGetLastRpcError(handle)
             LibNfsBridge.nfsDestroy(handle)
-            throw IOException("Failed to open file for writing: $remotePath")
+            Log.e(TAG, "openOutputStream FAILED for $path: $rpcErr")
+            throw IOException("Failed to open file for writing ($path): ${rpcErr.ifEmpty { "Permission denied (NFS3ERR_ACCES) or read-only export" }}")
         }
         return NfsNativeOutputStream(handle, fh)
     }
@@ -519,46 +537,69 @@ object LibNfsClient {
     }
 
     fun mkdir(share: NetworkShare, remotePath: String) {
+        val path = normalizePath(remotePath)
+        Log.d(TAG, "mkdir START: host=${share.host} path=$path")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
         try {
-            val err = LibNfsBridge.nfsMkdir(handle, normalizePath(remotePath))
-            if (err != null) throw IOException("mkdir failed: $err")
+            val err = LibNfsBridge.nfsMkdir(handle, path)
+            if (err != null) {
+                Log.e(TAG, "mkdir FAILED for $path: $err")
+                throw IOException(err)
+            }
+            Log.i(TAG, "mkdir SUCCESS: $path")
         } finally {
             LibNfsBridge.nfsDestroy(handle)
         }
     }
 
     fun deleteFile(share: NetworkShare, remotePath: String) {
+        val path = normalizePath(remotePath)
+        Log.d(TAG, "deleteFile START: host=${share.host} path=$path")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
         try {
-            val err = LibNfsBridge.nfsUnlink(handle, normalizePath(remotePath))
-            if (err != null) throw IOException("delete failed: $err")
+            val err = LibNfsBridge.nfsUnlink(handle, path)
+            if (err != null) {
+                Log.e(TAG, "deleteFile FAILED for $path: $err")
+                throw IOException("delete failed: $err")
+            }
+            Log.i(TAG, "deleteFile SUCCESS: $path")
         } finally {
             LibNfsBridge.nfsDestroy(handle)
         }
     }
 
     fun deleteDir(share: NetworkShare, remotePath: String) {
+        val path = normalizePath(remotePath)
+        Log.d(TAG, "deleteDir START: host=${share.host} path=$path")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
         try {
-            val err = LibNfsBridge.nfsRmdir(handle, normalizePath(remotePath))
-            if (err != null) throw IOException("rmdir failed: $err")
+            val err = LibNfsBridge.nfsRmdir(handle, path)
+            if (err != null) {
+                Log.e(TAG, "deleteDir FAILED for $path: $err")
+                throw IOException("rmdir failed: $err")
+            }
+            Log.i(TAG, "deleteDir SUCCESS: $path")
         } finally {
             LibNfsBridge.nfsDestroy(handle)
         }
     }
 
     fun rename(share: NetworkShare, fromPath: String, toPath: String) {
+        val src = normalizePath(fromPath)
+        val dst = normalizePath(toPath)
+        Log.d(TAG, "rename START: host=${share.host} from=$src to=$dst")
         val (handle, mountErr) = mountContext(share)
         if (mountErr != null) throw IOException("NFS mount failed: $mountErr")
         try {
-            val err = LibNfsBridge.nfsRename(
-                handle, normalizePath(fromPath), normalizePath(toPath)
-            )
-            if (err != null) throw IOException("rename failed: $err")
+            val err = LibNfsBridge.nfsRename(handle, src, dst)
+            if (err != null) {
+                Log.e(TAG, "rename FAILED from $src to $dst: $err")
+                throw IOException("rename failed: $err")
+            }
+            Log.i(TAG, "rename SUCCESS from $src to $dst")
         } finally {
             LibNfsBridge.nfsDestroy(handle)
         }
