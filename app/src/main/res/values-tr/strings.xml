@@ -10075,5 +10075,121 @@ Büyük Dosya Bulunamadı
     <string name="no_large_files_found_message">
 Bu klasörde veya alt klasörlerinde 10 MB\'tan büyük dosya bulunamadı.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Yardım ve Destek
+</string>
+    <string name="support_tile_subtitle">
+Geliştiriciyle İletişime Geç
+</string>
+    <string name="support_report_bug">
+Hata Bildir
+</string>
+    <string name="support_report_bug_subtitle">
+Teknik bir sorun bildir
+</string>
+    <string name="support_feature_request">
+Özellik Talebi
+</string>
+    <string name="support_feature_request_subtitle">
+Bir iyileştirme öner
+</string>
+    <string name="support_general">
+Genel
+</string>
+    <string name="support_general_subtitle">
+Genel geri bildirim gönder
+</string>
+    <string name="support_subject">
+Konu
+</string>
+    <string name="support_description">
+Açıklama
+</string>
+    <string name="support_steps">
+Tekrarlama Adımları
+</string>
+    <string name="support_use_case">
+Kullanım Senaryosu
+</string>
+    <string name="support_message">
+Mesaj
+</string>
+    <string name="support_email">
+E-posta Adresiniz (isteğe bağlı)
+</string>
+    <string name="support_attach_file">
+Dosya Ekle
+</string>
+    <string name="support_file_attached">
+Eklenen dosya: %s
+</string>
+    <string name="support_send">
+Gönder
+</string>
+    <string name="support_sending">
+Gönderiliyor…
+</string>
+    <string name="support_success_title">
+Mesaj Gönderildi
+</string>
+    <string name="support_success_message">
+Teşekkürler! Mesajınız geliştiriciye gönderildi.
+</string>
+    <string name="support_error_title">
+Gönderilemedi
+</string>
+    <string name="support_error_message">
+Bir hata oluştu. Lütfen tekrar deneyin.
+</string>
+    <string name="support_retry">
+Tekrar Dene
+</string>
+    <string name="support_no_internet">
+İnternet bağlantısı yok. Lütfen bağlantınızı kontrol edip tekrar deneyin.
+</string>
+    <string name="support_file_too_large">
+Dosya çok büyük. Maksimum boyut 10 MB.
+</string>
+    <string name="support_discard_title">
+Mesajı İptal Et?
+</string>
+    <string name="support_discard_message">
+Kaydedilmemiş değişiklikler var. Bunları iptal etmek istiyor musunuz?
+</string>
+    <string name="support_discard_confirm">
+İptal Et
+</string>
+    <string name="support_rate_limited">
+Çok fazla istek. Lütfen daha sonra tekrar deneyin.
+</string>
+    <string name="icon_support_help">
+Yardım ve Destek
+</string>
+    <string name="cd_support_back">
+Geri
+</string>
+    <string name="invalid_email_format">
+Lütfen geçerli bir e-posta adresi girin
+</string>
+    <string name="support_remove_file">
+Eki Kaldır
+</string>
+    <string name="support_attachment_confirm_title">
+Eki Onayla
+</string>
+    <string name="support_attachment_confirm_message">
+\"%1$s\" (%2$s) dosyası mesajınızla birlikte gönderilecek. Devam etmek istiyor musunuz?
+</string>
+    <string name="support_proceed">
+Devam Et
+</string>
+    <string name="support_max_attachments_reached">
+En fazla %d ek eklenebilir
+</string>
+    <string name="support_file_already_attached">
+Dosya zaten eklenmiş
+</string>
 </resources>
 

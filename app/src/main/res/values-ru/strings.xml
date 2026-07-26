@@ -10075,5 +10075,121 @@ URL сервера
     <string name="no_large_files_found_message">
 В этой папке и её подпапках не найдено файлов размером более 10 МБ.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Помощь и поддержка
+</string>
+    <string name="support_tile_subtitle">
+Связаться с разработчиком
+</string>
+    <string name="support_report_bug">
+Сообщить об ошибке
+</string>
+    <string name="support_report_bug_subtitle">
+Сообщить о технической проблеме
+</string>
+    <string name="support_feature_request">
+Предложить функцию
+</string>
+    <string name="support_feature_request_subtitle">
+Предложить улучшение
+</string>
+    <string name="support_general">
+Общее
+</string>
+    <string name="support_general_subtitle">
+Отправить общий отзыв
+</string>
+    <string name="support_subject">
+Тема
+</string>
+    <string name="support_description">
+Описание
+</string>
+    <string name="support_steps">
+Шаги для воспроизведения
+</string>
+    <string name="support_use_case">
+Сценарий использования
+</string>
+    <string name="support_message">
+Сообщение
+</string>
+    <string name="support_email">
+Ваш email (необязательно)
+</string>
+    <string name="support_attach_file">
+Прикрепить файл
+</string>
+    <string name="support_file_attached">
+Файл прикреплен: %s
+</string>
+    <string name="support_send">
+Отправить
+</string>
+    <string name="support_sending">
+Отправка…
+</string>
+    <string name="support_success_title">
+Сообщение отправлено
+</string>
+    <string name="support_success_message">
+Спасибо! Ваше сообщение отправлено разработчику.
+</string>
+    <string name="support_error_title">
+Не удалось отправить
+</string>
+    <string name="support_error_message">
+Что-то пошло не так. Пожалуйста, попробуйте снова.
+</string>
+    <string name="support_retry">
+Попробовать снова
+</string>
+    <string name="support_no_internet">
+Нет подключения к интернету. Проверьте соединение и попробуйте снова.
+</string>
+    <string name="support_file_too_large">
+Файл слишком большой. Максимальный размер — 10 МБ.
+</string>
+    <string name="support_discard_title">
+Отменить сообщение?
+</string>
+    <string name="support_discard_message">
+У вас есть несохраненные изменения. Хотите отменить их?
+</string>
+    <string name="support_discard_confirm">
+Отменить
+</string>
+    <string name="support_rate_limited">
+Слишком много запросов. Пожалуйста, попробуйте позже.
+</string>
+    <string name="icon_support_help">
+Помощь и поддержка
+</string>
+    <string name="cd_support_back">
+Назад
+</string>
+    <string name="invalid_email_format">
+Пожалуйста, введите действительный email адрес
+</string>
+    <string name="support_remove_file">
+Удалить вложение
+</string>
+    <string name="support_attachment_confirm_title">
+Подтвердить вложение
+</string>
+    <string name="support_attachment_confirm_message">
+Файл \"%1$s\" (%2$s) будет отправлен с вашим сообщением. Продолжить?
+</string>
+    <string name="support_proceed">
+Продолжить
+</string>
+    <string name="support_max_attachments_reached">
+Максимум %d вложений разрешено
+</string>
+    <string name="support_file_already_attached">
+Файл уже прикреплен
+</string>
 </resources>
 

@@ -10075,5 +10075,121 @@ Keine großen Dateien gefunden
     <string name="no_large_files_found_message">
 In diesem Ordner oder seinen Unterordnern wurden keine Dateien größer als 10 MB gefunden.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Hilfe &amp; Support
+</string>
+    <string name="support_tile_subtitle">
+Kontakt zum Entwickler
+</string>
+    <string name="support_report_bug">
+Fehler melden
+</string>
+    <string name="support_report_bug_subtitle">
+Ein technisches Problem melden
+</string>
+    <string name="support_feature_request">
+Funktionsanfrage
+</string>
+    <string name="support_feature_request_subtitle">
+Eine Verbesserung vorschlagen
+</string>
+    <string name="support_general">
+Allgemein
+</string>
+    <string name="support_general_subtitle">
+Allgemeines Feedback senden
+</string>
+    <string name="support_subject">
+Betreff
+</string>
+    <string name="support_description">
+Beschreibung
+</string>
+    <string name="support_steps">
+Schritte zur Reproduktion
+</string>
+    <string name="support_use_case">
+Anwendungsfall
+</string>
+    <string name="support_message">
+Nachricht
+</string>
+    <string name="support_email">
+Ihre E-Mail (optional)
+</string>
+    <string name="support_attach_file">
+Datei anhängen
+</string>
+    <string name="support_file_attached">
+Datei angehängt: %s
+</string>
+    <string name="support_send">
+Senden
+</string>
+    <string name="support_sending">
+Senden…
+</string>
+    <string name="support_success_title">
+Nachricht gesendet
+</string>
+    <string name="support_success_message">
+Vielen Dank! Ihre Nachricht wurde an den Entwickler gesendet.
+</string>
+    <string name="support_error_title">
+Senden fehlgeschlagen
+</string>
+    <string name="support_error_message">
+Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
+</string>
+    <string name="support_retry">
+Erneut versuchen
+</string>
+    <string name="support_no_internet">
+Keine Internetverbindung. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.
+</string>
+    <string name="support_file_too_large">
+Datei ist zu groß. Maximale Größe beträgt 10 MB.
+</string>
+    <string name="support_discard_title">
+Nachricht verwerfen?
+</string>
+    <string name="support_discard_message">
+Sie haben nicht gespeicherte Änderungen. Möchten Sie diese verwerfen?
+</string>
+    <string name="support_discard_confirm">
+Verwerfen
+</string>
+    <string name="support_rate_limited">
+Zu viele Anfragen. Bitte versuchen Sie es später erneut.
+</string>
+    <string name="icon_support_help">
+Hilfe &amp; Support
+</string>
+    <string name="cd_support_back">
+Zurück
+</string>
+    <string name="invalid_email_format">
+Bitte geben Sie eine gültige E-Mail-Adresse ein.
+</string>
+    <string name="support_remove_file">
+Anhang entfernen
+</string>
+    <string name="support_attachment_confirm_title">
+Anhang bestätigen
+</string>
+    <string name="support_attachment_confirm_message">
+Die Datei \"%1$s\" (%2$s) wird mit Ihrer Nachricht gesendet. Möchten Sie fortfahren?
+</string>
+    <string name="support_proceed">
+Fortfahren
+</string>
+    <string name="support_max_attachments_reached">
+Maximal %d Anhänge erlaubt
+</string>
+    <string name="support_file_already_attached">
+Datei ist bereits angehängt
+</string>
 </resources>
 

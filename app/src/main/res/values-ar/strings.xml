@@ -10075,5 +10075,121 @@ Box
     <string name="no_large_files_found_message">
 لم يتم العثور على ملفات أكبر من 10 ميغابايت في هذا المجلد أو أي من مجلداته الفرعية.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+المساعدة والدعم
+</string>
+    <string name="support_tile_subtitle">
+اتصل بالمطور
+</string>
+    <string name="support_report_bug">
+الإبلاغ عن خطأ
+</string>
+    <string name="support_report_bug_subtitle">
+أبلغ عن مشكلة تقنية
+</string>
+    <string name="support_feature_request">
+طلب ميزة
+</string>
+    <string name="support_feature_request_subtitle">
+اقترح تحسينًا
+</string>
+    <string name="support_general">
+عام
+</string>
+    <string name="support_general_subtitle">
+أرسل ملاحظات عامة
+</string>
+    <string name="support_subject">
+الموضوع
+</string>
+    <string name="support_description">
+الوصف
+</string>
+    <string name="support_steps">
+خطوات إعادة التكرار
+</string>
+    <string name="support_use_case">
+حالة الاستخدام
+</string>
+    <string name="support_message">
+الرسالة
+</string>
+    <string name="support_email">
+بريدك الإلكتروني (اختياري)
+</string>
+    <string name="support_attach_file">
+إرفاق ملف
+</string>
+    <string name="support_file_attached">
+الملف المُرفق: %s
+</string>
+    <string name="support_send">
+إرسال
+</string>
+    <string name="support_sending">
+جارٍ الإرسال…
+</string>
+    <string name="support_success_title">
+تم إرسال الرسالة
+</string>
+    <string name="support_success_message">
+شكرًا لك! تم إرسال رسالتك إلى المطور.
+</string>
+    <string name="support_error_title">
+تعذر الإرسال
+</string>
+    <string name="support_error_message">
+حدث خطأ ما. يرجى المحاولة مرة أخرى.
+</string>
+    <string name="support_retry">
+حاول مرة أخرى
+</string>
+    <string name="support_no_internet">
+لا يوجد اتصال بالإنترنت. يرجى التحقق من اتصالك والمحاولة مرة أخرى.
+</string>
+    <string name="support_file_too_large">
+حجم الملف كبير جدًا. الحد الأقصى هو 10 ميغابايت.
+</string>
+    <string name="support_discard_title">
+هل تريد تجاهل الرسالة؟
+</string>
+    <string name="support_discard_message">
+لديك تغييرات غير محفوظة. هل تريد تجاهلها؟
+</string>
+    <string name="support_discard_confirm">
+تجاهل
+</string>
+    <string name="support_rate_limited">
+عدد الطلبات كبير جدًا. يرجى المحاولة لاحقًا.
+</string>
+    <string name="icon_support_help">
+المساعدة والدعم
+</string>
+    <string name="cd_support_back">
+رجوع
+</string>
+    <string name="invalid_email_format">
+يرجى إدخال عنوان بريد إلكتروني صالح
+</string>
+    <string name="support_remove_file">
+إزالة المرفق
+</string>
+    <string name="support_attachment_confirm_title">
+تأكيد المرفق
+</string>
+    <string name="support_attachment_confirm_message">
+سيتم إرسال الملف \"%1$s\" (%2$s) مع رسالتك. هل تريد المتابعة؟
+</string>
+    <string name="support_proceed">
+متابعة
+</string>
+    <string name="support_max_attachments_reached">
+الحد الأقصى لعدد المرفقات المسموح به هو %d
+</string>
+    <string name="support_file_already_attached">
+الملف مرفق بالفعل
+</string>
 </resources>
 

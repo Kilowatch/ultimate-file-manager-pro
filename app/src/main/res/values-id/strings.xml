@@ -10075,5 +10075,121 @@ Tidak Ada Berkas Besar Ditemukan
     <string name="no_large_files_found_message">
 Tidak ada berkas yang lebih besar dari 10 MB ditemukan di folder ini atau subfolder mana pun.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Bantuan &amp; Dukungan
+</string>
+    <string name="support_tile_subtitle">
+Hubungi pengembang
+</string>
+    <string name="support_report_bug">
+Laporkan Bug
+</string>
+    <string name="support_report_bug_subtitle">
+Laporkan masalah teknis
+</string>
+    <string name="support_feature_request">
+Permintaan Fitur
+</string>
+    <string name="support_feature_request_subtitle">
+Sarankan perbaikan
+</string>
+    <string name="support_general">
+Umum
+</string>
+    <string name="support_general_subtitle">
+Kirim masukan umum
+</string>
+    <string name="support_subject">
+Subjek
+</string>
+    <string name="support_description">
+Deskripsi
+</string>
+    <string name="support_steps">
+Langkah-langkah untuk Mereproduksi
+</string>
+    <string name="support_use_case">
+Kasus Penggunaan
+</string>
+    <string name="support_message">
+Pesan
+</string>
+    <string name="support_email">
+Email Anda (opsional)
+</string>
+    <string name="support_attach_file">
+Lampirkan Berkas
+</string>
+    <string name="support_file_attached">
+Berkas terlampir: %s
+</string>
+    <string name="support_send">
+Kirim
+</string>
+    <string name="support_sending">
+Mengirim…
+</string>
+    <string name="support_success_title">
+Pesan Terkirim
+</string>
+    <string name="support_success_message">
+Terima kasih! Pesan Anda telah dikirim ke pengembang.
+</string>
+    <string name="support_error_title">
+Tidak Dapat Mengirim
+</string>
+    <string name="support_error_message">
+Terjadi kesalahan. Silakan coba lagi.
+</string>
+    <string name="support_retry">
+Coba Lagi
+</string>
+    <string name="support_no_internet">
+Tidak ada koneksi internet. Periksa koneksi Anda dan coba lagi.
+</string>
+    <string name="support_file_too_large">
+Berkas terlalu besar. Ukuran maksimal adalah 10MB.
+</string>
+    <string name="support_discard_title">
+Hapus Pesan?
+</string>
+    <string name="support_discard_message">
+Anda memiliki perubahan yang belum disimpan. Apakah Anda ingin membuangnya?
+</string>
+    <string name="support_discard_confirm">
+Buang
+</string>
+    <string name="support_rate_limited">
+Terlalu banyak permintaan. Silakan coba lagi nanti.
+</string>
+    <string name="icon_support_help">
+Bantuan &amp; Dukungan
+</string>
+    <string name="cd_support_back">
+Kembali
+</string>
+    <string name="invalid_email_format">
+Harap masukkan alamat email yang valid
+</string>
+    <string name="support_remove_file">
+Hapus lampiran
+</string>
+    <string name="support_attachment_confirm_title">
+Konfirmasi Lampiran
+</string>
+    <string name="support_attachment_confirm_message">
+Berkas \"%1$s\" (%2$s) akan dikirim bersama pesan Anda. Apakah Anda ingin melanjutkan?
+</string>
+    <string name="support_proceed">
+Lanjutkan
+</string>
+    <string name="support_max_attachments_reached">
+Maksimal %d lampiran diperbolehkan
+</string>
+    <string name="support_file_already_attached">
+Berkas sudah dilampirkan
+</string>
 </resources>
 

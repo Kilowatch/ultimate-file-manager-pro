@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Outer Perimeter Life Line / Rope Loops -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/ufm_text_primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M 12,1.8 C 17.6,1.8 22.2,6.4 22.2,12" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/ufm_text_primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M 22.2,12 C 22.2,17.6 17.6,22.2 12,22.2" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/ufm_text_primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M 12,22.2 C 6.4,22.2 1.8,17.6 1.8,12" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@color/ufm_text_primary"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:pathData="M 1.8,12 C 1.8,6.4 6.4,1.8 12,1.8" />
+
+    <!-- 4 Anchor Straps at 12, 3, 6, 9 o'clock -->
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:pathData="M 11,1.5 h 2 v 2.5 h -2 z" />
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:pathData="M 20,11 h 2.5 v 2 h -2.5 z" />
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:pathData="M 11,20 h 2 v 2.5 h -2 z" />
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:pathData="M 1.5,11 h 2.5 v 2 h -2.5 z" />
+
+    <!-- Life Preserver Torus Body -->
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:fillType="evenOdd"
+        android:pathData="M 12,3.5 C 7.31,3.5 3.5,7.31 3.5,12 C 3.5,16.69 7.31,20.5 12,20.5 C 16.69,20.5 20.5,16.69 20.5,12 C 20.5,7.31 16.69,3.5 12,3.5 Z M 12,7.5 C 9.51,7.5 7.5,9.51 7.5,12 C 7.5,14.49 9.51,16.5 12,16.5 C 14.49,16.5 16.5,14.49 16.5,12 C 16.5,9.51 14.49,7.5 12,7.5 Z" />
+
+    <!-- 4 Reflective Tape Bands (White Accent Wraps) -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M 14.3,5.8 L 18.2,9.7" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M 18.2,14.3 L 14.3,18.2" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M 9.7,18.2 L 5.8,14.3" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="@android:color/white"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M 5.8,9.7 L 9.7,5.8" />
+
+</vector>

@@ -10075,5 +10075,121 @@ UFM प्लेयर सेटिंग्स
     <string name="no_large_files_found_message">
 इस फ़ोल्डर या इसके किसी भी उप-फ़ोल्डर में 10 MB से बड़ी कोई फ़ाइल नहीं मिली।
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+सहायता और समर्थन
+</string>
+    <string name="support_tile_subtitle">
+डेवलपर से संपर्क करें
+</string>
+    <string name="support_report_bug">
+बग रिपोर्ट करें
+</string>
+    <string name="support_report_bug_subtitle">
+तकनीकी समस्या की रिपोर्ट करें
+</string>
+    <string name="support_feature_request">
+सुविधा अनुरोध
+</string>
+    <string name="support_feature_request_subtitle">
+सुधार का सुझाव दें
+</string>
+    <string name="support_general">
+सामान्य
+</string>
+    <string name="support_general_subtitle">
+सामान्य प्रतिक्रिया भेजें
+</string>
+    <string name="support_subject">
+विषय
+</string>
+    <string name="support_description">
+विवरण
+</string>
+    <string name="support_steps">
+पुनरुत्पादन के चरण
+</string>
+    <string name="support_use_case">
+उपयोग केस
+</string>
+    <string name="support_message">
+संदेश
+</string>
+    <string name="support_email">
+आपका ईमेल (वैकल्पिक)
+</string>
+    <string name="support_attach_file">
+फ़ाइल संलग्न करें
+</string>
+    <string name="support_file_attached">
+फ़ाइल संलग्न: %s
+</string>
+    <string name="support_send">
+भेजें
+</string>
+    <string name="support_sending">
+भेजा जा रहा है…
+</string>
+    <string name="support_success_title">
+संदेश भेज दिया गया
+</string>
+    <string name="support_success_message">
+धन्यवाद! आपका संदेश डेवलपर को भेज दिया गया है।
+</string>
+    <string name="support_error_title">
+भेजा नहीं जा सका
+</string>
+    <string name="support_error_message">
+कुछ गड़बड़ हुई। कृपया पुनः प्रयास करें।
+</string>
+    <string name="support_retry">
+पुनः प्रयास करें
+</string>
+    <string name="support_no_internet">
+कोई इंटरनेट कनेक्शन नहीं। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।
+</string>
+    <string name="support_file_too_large">
+फ़ाइल बहुत बड़ी है। अधिकतम आकार 10MB है।
+</string>
+    <string name="support_discard_title">
+संदेश छोड़ दें?
+</string>
+    <string name="support_discard_message">
+आपके पास सहेजे न गए परिवर्तन हैं। क्या आप उन्हें छोड़ देना चाहते हैं?
+</string>
+    <string name="support_discard_confirm">
+छोड़ें
+</string>
+    <string name="support_rate_limited">
+बहुत अधिक अनुरोध। कृपया बाद में पुनः प्रयास करें।
+</string>
+    <string name="icon_support_help">
+सहायता और समर्थन
+</string>
+    <string name="cd_support_back">
+वापस
+</string>
+    <string name="invalid_email_format">
+कृपया एक मान्य ईमेल पता दर्ज करें
+</string>
+    <string name="support_remove_file">
+अनुलग्नक हटाएं
+</string>
+    <string name="support_attachment_confirm_title">
+अनुलग्नक की पुष्टि करें
+</string>
+    <string name="support_attachment_confirm_message">
+फ़ाइल \"%1$s\" (%2$s) आपके संदेश के साथ भेजी जाएगी। क्या आप आगे बढ़ना चाहते हैं?
+</string>
+    <string name="support_proceed">
+आगे बढ़ें
+</string>
+    <string name="support_max_attachments_reached">
+अधिकतम %d अनुलग्नकों की अनुमति है
+</string>
+    <string name="support_file_already_attached">
+फ़ाइल पहले से ही संलग्न है
+</string>
 </resources>
 

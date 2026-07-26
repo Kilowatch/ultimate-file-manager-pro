@@ -3558,5 +3558,45 @@
     <string name="folder_large_files_desc">Showing files larger than 10 MB in this folder and its subfolders.</string>
     <string name="no_large_files_found_title">No Large Files Found</string>
     <string name="no_large_files_found_message">No files larger than 10 MB were found in this folder or any of its subfolders.</string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">Help &amp; Support</string>
+    <string name="support_tile_subtitle">Contact the developer</string>
+    <string name="support_report_bug">Report Bug</string>
+    <string name="support_report_bug_subtitle">Report a technical issue</string>
+    <string name="support_feature_request">Feature Request</string>
+    <string name="support_feature_request_subtitle">Suggest an improvement</string>
+    <string name="support_general">General</string>
+    <string name="support_general_subtitle">Send general feedback</string>
+    <string name="support_subject">Subject</string>
+    <string name="support_description">Description</string>
+    <string name="support_steps">Steps to Reproduce</string>
+    <string name="support_use_case">Use Case</string>
+    <string name="support_message">Message</string>
+    <string name="support_email">Your Email (optional)</string>
+    <string name="support_attach_file">Attach File</string>
+    <string name="support_file_attached">File attached: %s</string>
+    <string name="support_send">Send</string>
+    <string name="support_sending">Sending…</string>
+    <string name="support_success_title">Message Sent</string>
+    <string name="support_success_message">Thank you! Your message has been sent to the developer.</string>
+    <string name="support_error_title">Couldn\'t Send</string>
+    <string name="support_error_message">Something went wrong. Please try again.</string>
+    <string name="support_retry">Try Again</string>
+    <string name="support_no_internet">No internet connection. Please check your connection and try again.</string>
+    <string name="support_file_too_large">File is too large. Maximum size is 10MB.</string>
+    <string name="support_discard_title">Discard Message?</string>
+    <string name="support_discard_message">You have unsaved changes. Do you want to discard them?</string>
+    <string name="support_discard_confirm">Discard</string>
+    <string name="support_rate_limited">Too many requests. Please try again later.</string>
+    <string name="icon_support_help">Help &amp; Support</string>
+    <string name="cd_support_back">Back</string>
+    <string name="invalid_email_format">Please enter a valid email address</string>
+    <string name="support_remove_file">Remove attachment</string>
+    <string name="support_attachment_confirm_title">Confirm Attachment</string>
+    <string name="support_attachment_confirm_message">The file "%1$s" (%2$s) will be sent with your message. Do you want to proceed?</string>
+    <string name="support_proceed">Proceed</string>
+    <string name="support_max_attachments_reached">Maximum %d attachments allowed</string>
+    <string name="support_file_already_attached">File is already attached</string>
 </resources>
 

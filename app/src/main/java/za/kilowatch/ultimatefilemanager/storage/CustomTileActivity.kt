@@ -503,6 +503,9 @@ class CustomTileActivity : AppCompatActivity() {
             item.isAboutTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.AboutActivity::class.java))
             }
+            item.isSupportTile -> {
+                startActivity(Intent(this, za.kilowatch.ultimatefilemanager.support.SupportActivity::class.java))
+            }
             item.isTipJarTile -> {
                 startActivity(Intent(this, za.kilowatch.ultimatefilemanager.billing.SupporterLoyaltyActivity::class.java))
             }

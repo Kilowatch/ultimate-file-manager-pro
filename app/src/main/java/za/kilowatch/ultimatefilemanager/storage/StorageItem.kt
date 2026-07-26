@@ -52,6 +52,7 @@ data class StorageItem(
     val isNotepadTile: Boolean = false,
     val isScannerTile: Boolean = false,
     val isSmartSortTile: Boolean = false,
+    val isSupportTile: Boolean = false,
     val networkShare: za.kilowatch.ultimatefilemanager.network.NetworkShare? = null,
     val onlineStorage: za.kilowatch.ultimatefilemanager.network.OnlineStorage? = null,
     val subtitle: String? = null,   // Optional override shown instead of auto-generated subtitle
@@ -91,7 +92,7 @@ data class StorageItem(
          isFavoriteTile || isTwinWindowTile || isTerminalTile || isShizukuTile ||
           isOnlineStoragesTile || isFileServerTile || isAboutTile ||
             isRecycleBinTile || isLegalTile || isRateUsTile || isTipJarTile ||
-            isNotepadTile || isScannerTile || isSmartSortTile))
+            isNotepadTile || isScannerTile || isSmartSortTile || isSupportTile))
 
 
     val usagePercent: Int get() {

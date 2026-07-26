@@ -543,7 +543,7 @@ class StorageAdapter(
                     item.isSearchTile || item.isAnalyzerTile ||
                     item.isVaultTile  || item.isLegalTile   || item.isRateUsTile || item.isSafTile ||
                     item.isNetworkTile || item.isNetworkRoot || item.isPairedDevicesTile ||
-                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile
+                    item.isExtractsTile || item.isTipJarTile || item.isSyncTile || item.isAdvancedSyncTile || item.isSettingsTile || item.isFavoriteTile || item.isTwinWindowTile  || item.isTerminalTile || item.isShizukuTile || item.isOnlineStoragesTile || item.isOnlineStorage || item.isFileServerTile || item.isAboutTile || item.isSupportTile || item.isRecycleBinTile || item.isNotepadTile || item.isScannerTile || item.isSmartSortTile || item.isCustomTile
 
             if (isSpecialTile) {
                 circularProgress?.visibility = View.GONE
@@ -570,6 +570,7 @@ class StorageAdapter(
                     item.isLegalTile     -> context.getString(R.string.policy_selection_subtitle)
                     item.isRateUsTile    -> context.getString(R.string.rate_us_subtitle)
                     item.isAboutTile     -> context.getString(R.string.about_tile_subtitle)
+                    item.isSupportTile   -> context.getString(R.string.support_tile_subtitle)
                     item.isSafTile       -> context.getString(R.string.saf_tile_subtitle)
                     item.isNetworkTile   -> context.getString(R.string.network_tile_subtitle)
                     item.isOnlineStoragesTile -> za.kilowatch.ultimatefilemanager.util.DeviceUtils.getOnlineStoragesSubtitle(context)

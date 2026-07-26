@@ -10075,5 +10075,121 @@ URL-адреса сервера
     <string name="no_large_files_found_message">
 Не знайдено файлів, більших за 10 МБ, у цій папці чи будь-якій її підпапці.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Довідка та підтримка
+</string>
+    <string name="support_tile_subtitle">
+Зв\\\'язатися з розробником
+</string>
+    <string name="support_report_bug">
+Повідомити про помилку
+</string>
+    <string name="support_report_bug_subtitle">
+Повідомити про технічну проблему
+</string>
+    <string name="support_feature_request">
+Запит на функцію
+</string>
+    <string name="support_feature_request_subtitle">
+Запропонувати покращення
+</string>
+    <string name="support_general">
+Загальне
+</string>
+    <string name="support_general_subtitle">
+Надіслати загальний відгук
+</string>
+    <string name="support_subject">
+Тема
+</string>
+    <string name="support_description">
+Опис
+</string>
+    <string name="support_steps">
+Кроки для відтворення
+</string>
+    <string name="support_use_case">
+Випадок використання
+</string>
+    <string name="support_message">
+Повідомлення
+</string>
+    <string name="support_email">
+Ваш Email (необов\\\'язково)
+</string>
+    <string name="support_attach_file">
+Прикріпити файл
+</string>
+    <string name="support_file_attached">
+Файл прикріплено: %s
+</string>
+    <string name="support_send">
+Надіслати
+</string>
+    <string name="support_sending">
+Надсилання…
+</string>
+    <string name="support_success_title">
+Повідомлення надіслано
+</string>
+    <string name="support_success_message">
+Дякуємо! Ваше повідомлення надіслано розробнику.
+</string>
+    <string name="support_error_title">
+Не вдалося надіслати
+</string>
+    <string name="support_error_message">
+Щось пішло не так. Спробуйте ще раз.
+</string>
+    <string name="support_retry">
+Спробувати знову
+</string>
+    <string name="support_no_internet">
+Немає підключення до Інтернету. Перевірте з\\\'єднання та спробуйте знову.
+</string>
+    <string name="support_file_too_large">
+Файл завеликий. Максимальний розмір — 10 МБ.
+</string>
+    <string name="support_discard_title">
+Відхилити повідомлення?
+</string>
+    <string name="support_discard_message">
+У вас є незбережені зміни. Бажаєте їх відхилити?
+</string>
+    <string name="support_discard_confirm">
+Відхилити
+</string>
+    <string name="support_rate_limited">
+Забагато запитів. Спробуйте пізніше.
+</string>
+    <string name="icon_support_help">
+Довідка та підтримка
+</string>
+    <string name="cd_support_back">
+Назад
+</string>
+    <string name="invalid_email_format">
+Будь ласка, введіть дійсну адресу електронної пошти
+</string>
+    <string name="support_remove_file">
+Видалити вкладення
+</string>
+    <string name="support_attachment_confirm_title">
+Підтвердити вкладення
+</string>
+    <string name="support_attachment_confirm_message">
+Файл \\\"%1$s\\\" (%2$s) буде надіслано з вашим повідомленням. Бажаєте продовжити?
+</string>
+    <string name="support_proceed">
+Продовжити
+</string>
+    <string name="support_max_attachments_reached">
+Максимально дозволено %d вкладень
+</string>
+    <string name="support_file_already_attached">
+Файл уже прикріплено
+</string>
 </resources>
 

@@ -275,6 +275,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         /** When true, the user is picking a destination folder for Auto Backup */
         const val EXTRA_AUTO_BACKUP_FOLDER_PICKER = "extra_auto_backup_folder_picker"
+
+        /** When true, the user is picking a file to attach to a support request */
+        const val EXTRA_SUPPORT_ATTACHMENT_PICKER = "extra_support_attachment_picker"
     }
     
     private var isLocationPickerMode = false
@@ -292,6 +295,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isNotepadFolderPicker = false
     private var isScannerFolderPicker = false
     private var isAutoBackupFolderPicker = false
+    private var isSupportAttachmentPicker = false
     private var isSmartSortPickerMode = false
 
     // (Removed Saf directory permission launchers)
@@ -378,6 +382,7 @@ class FileBrowserActivity : AppCompatActivity() {
         isNotepadFolderPicker = intent.getBooleanExtra(EXTRA_NOTEPAD_FOLDER_PICKER, false)
         isScannerFolderPicker = intent.getBooleanExtra(EXTRA_SCANNER_FOLDER_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
+        isSupportAttachmentPicker = intent.getBooleanExtra(EXTRA_SUPPORT_ATTACHMENT_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
 
         // Category mode — read extras that drive the filtered file list
@@ -615,6 +620,78 @@ class FileBrowserActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+    }
+
+    private fun showConfirmSupportAttachmentDialog() {
+        val path = selectedKeyFilePath ?: return
+        val fileName = path.substringAfterLast('/')
+        val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+        val layoutRes = if (isTv) R.layout.dialog_support_message_tv else R.layout.dialog_support_message
+        val customView = layoutInflater.inflate(layoutRes, null)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(customView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(
+            android.graphics.Color.TRANSPARENT
+        ))
+
+        val imgIcon = customView.findViewById<android.widget.ImageView>(R.id.imgDialogIcon)
+        imgIcon.setImageResource(R.drawable.ic_add)
+        imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_primary))
+
+        customView.findViewById<android.widget.TextView>(R.id.txtDialogTitle).text = getString(R.string.support_attach_file)
+        customView.findViewById<android.widget.TextView>(R.id.txtDialogMessage).text = getString(R.string.support_file_attached, fileName)
+
+        val btnPositive = customView.findViewById<android.view.View>(R.id.btnDialogPositive)
+        if (btnPositive is android.widget.TextView) btnPositive.text = getString(R.string.support_attach_file)
+
+        if (isTv && btnPositive is android.widget.Button) {
+            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            btnPositive.setTextColor(defaultCsl)
+            btnPositive.setOnFocusChangeListener { _, hasFocus ->
+                btnPositive.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
+                btnPositive.setBackgroundResource(
+                    if (hasFocus) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button
+                )
+            }
+        }
+
+        btnPositive.setOnClickListener {
+            dialog.dismiss()
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+
+        val btnNegative = customView.findViewById<android.view.View>(R.id.btnDialogNegative)
+        btnNegative.visibility = android.view.View.VISIBLE
+        if (btnNegative is android.widget.TextView) btnNegative.text = getString(R.string.cancel)
+
+        if (isTv && btnNegative is android.widget.Button) {
+            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_secondary))
+            btnNegative.setTextColor(defaultCsl)
+            btnNegative.setOnFocusChangeListener { _, hasFocus ->
+                btnNegative.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
+                btnNegative.setBackgroundResource(
+                    if (hasFocus) R.drawable.selector_tv_button_yellow else R.drawable.selector_tv_button
+                )
+            }
+        }
+
+        btnNegative.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        if (isTv) {
+            btnPositive.requestFocus()
+        }
     }
 
     private fun showConfirmKeyfilePickedDialog() {
@@ -1246,6 +1323,13 @@ class FileBrowserActivity : AppCompatActivity() {
                     selectedKeyFilePath = file.absolutePath
                     fabPaste.visibility = View.VISIBLE
                     fabPaste.text = getString(R.string.remote_use_ca)
+                } else if (isSupportAttachmentPicker) {
+                    selectedKeyFilePath = file.absolutePath
+                    fabPaste.visibility = View.VISIBLE
+                    fabPaste.text = getString(R.string.support_attach_file)
+                    // Highlight the selected file
+                    fileAdapter.focusedPath = file.absolutePath
+                    fileAdapter.notifyDataSetChanged()
                 } else if (isPickerMode) {
                     // Return selected file path to caller
                     val resultIntent = Intent().apply {
@@ -2980,7 +3064,7 @@ class FileBrowserActivity : AppCompatActivity() {
             isLocationPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode ||
             isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker ||
             isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode ||
-            isSmartSortPickerMode) {
+            isSupportAttachmentPicker || isSmartSortPickerMode) {
             applyPickerFabState()
             return
         }
@@ -3078,6 +3162,12 @@ class FileBrowserActivity : AppCompatActivity() {
                 fabPaste.setIconResource(R.drawable.ic_cloud)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmAutoBackupFolderDialog() }
+            }
+            isSupportAttachmentPicker -> {
+                fabPaste.setText(R.string.support_attach_file)
+                fabPaste.setIconResource(R.drawable.ic_add)
+                fabPaste.visibility = if (selectedKeyFilePath != null) View.VISIBLE else View.GONE
+                fabPaste.setOnClickListener { showConfirmSupportAttachmentDialog() }
             }
             isKeyfilePickerMode -> {
                 fabPaste.setText(R.string.use_this_key_file)
@@ -3760,6 +3850,12 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun loadDirectory(directory: File) {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
+
+        // Clear file selection highlight when navigating directories
+        if (isSupportAttachmentPicker) {
+            selectedKeyFilePath = null
+            fileAdapter.focusedPath = null
+        }
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {

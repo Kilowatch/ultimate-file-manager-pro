@@ -379,6 +379,11 @@
         <activity
             android:name=".settings.AboutActivity"
             android:exported="false" />
+        <!-- Support -->
+        <activity
+            android:name=".support.SupportActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Backup & Restore -->
         <activity

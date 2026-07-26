@@ -10075,5 +10075,121 @@ OK
     <string name="no_large_files_found_message">
 このフォルダまたはそのサブフォルダには10 MBを超えるファイルは見つかりませんでした。
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+ヘルプ&amp;amp;サポート
+</string>
+    <string name="support_tile_subtitle">
+開発者に連絡
+</string>
+    <string name="support_report_bug">
+バグを報告
+</string>
+    <string name="support_report_bug_subtitle">
+技術的な問題を報告する
+</string>
+    <string name="support_feature_request">
+機能リクエスト
+</string>
+    <string name="support_feature_request_subtitle">
+改善を提案する
+</string>
+    <string name="support_general">
+一般
+</string>
+    <string name="support_general_subtitle">
+一般的なフィードバックを送信する
+</string>
+    <string name="support_subject">
+件名
+</string>
+    <string name="support_description">
+説明
+</string>
+    <string name="support_steps">
+再現手順
+</string>
+    <string name="support_use_case">
+使用例
+</string>
+    <string name="support_message">
+メッセージ
+</string>
+    <string name="support_email">
+メールアドレス（任意）
+</string>
+    <string name="support_attach_file">
+ファイルを添付
+</string>
+    <string name="support_file_attached">
+添付ファイル: %s
+</string>
+    <string name="support_send">
+送信
+</string>
+    <string name="support_sending">
+送信中…
+</string>
+    <string name="support_success_title">
+メッセージを送信しました
+</string>
+    <string name="support_success_message">
+ありがとうございます！メッセージが開発者に送信されました。
+</string>
+    <string name="support_error_title">
+送信できませんでした
+</string>
+    <string name="support_error_message">
+エラーが発生しました。もう一度お試しください。
+</string>
+    <string name="support_retry">
+再試行
+</string>
+    <string name="support_no_internet">
+インターネット接続がありません。接続を確認してからもう一度お試しください。
+</string>
+    <string name="support_file_too_large">
+ファイルが大きすぎます。最大サイズは10MBです。
+</string>
+    <string name="support_discard_title">
+メッセージを破棄しますか？
+</string>
+    <string name="support_discard_message">
+保存されていない変更があります。破棄してもよろしいですか？
+</string>
+    <string name="support_discard_confirm">
+破棄
+</string>
+    <string name="support_rate_limited">
+リクエストが多すぎます。しばらくしてからもう一度お試しください。
+</string>
+    <string name="icon_support_help">
+ヘルプ&amp;amp;サポート
+</string>
+    <string name="cd_support_back">
+戻る
+</string>
+    <string name="invalid_email_format">
+有効なメールアドレスを入力してください
+</string>
+    <string name="support_remove_file">
+添付ファイルを削除
+</string>
+    <string name="support_attachment_confirm_title">
+添付ファイルの確認
+</string>
+    <string name="support_attachment_confirm_message">
+ファイル「%1$s」（%2$s）がメッセージとともに送信されます。続行してもよろしいですか？
+</string>
+    <string name="support_proceed">
+続行
+</string>
+    <string name="support_max_attachments_reached">
+添付ファイルは最大 %d 個まで許可されています
+</string>
+    <string name="support_file_already_attached">
+ファイルは既に添付されています
+</string>
 </resources>
 

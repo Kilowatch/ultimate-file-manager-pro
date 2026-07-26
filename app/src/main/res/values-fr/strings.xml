@@ -10075,5 +10075,121 @@ Aucun fichier volumineux trouvé
     <string name="no_large_files_found_message">
 Aucun fichier de plus de 10 Mo n\\\'a été trouvé dans ce dossier ou ses sous-dossiers.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+Aide et assistance
+</string>
+    <string name="support_tile_subtitle">
+Contacter le développeur
+</string>
+    <string name="support_report_bug">
+Signaler un bogue
+</string>
+    <string name="support_report_bug_subtitle">
+Signaler un problème technique
+</string>
+    <string name="support_feature_request">
+Demander une fonctionnalité
+</string>
+    <string name="support_feature_request_subtitle">
+Suggérer une amélioration
+</string>
+    <string name="support_general">
+Général
+</string>
+    <string name="support_general_subtitle">
+Envoyer un commentaire général
+</string>
+    <string name="support_subject">
+Sujet
+</string>
+    <string name="support_description">
+Description
+</string>
+    <string name="support_steps">
+Étapes pour reproduire
+</string>
+    <string name="support_use_case">
+Cas d\'utilisation
+</string>
+    <string name="support_message">
+Message
+</string>
+    <string name="support_email">
+Votre e-mail (facultatif)
+</string>
+    <string name="support_attach_file">
+Joindre un fichier
+</string>
+    <string name="support_file_attached">
+Fichier joint : %s
+</string>
+    <string name="support_send">
+Envoyer
+</string>
+    <string name="support_sending">
+Envoi en cours…
+</string>
+    <string name="support_success_title">
+Message envoyé
+</string>
+    <string name="support_success_message">
+Merci ! Votre message a été envoyé au développeur.
+</string>
+    <string name="support_error_title">
+Échec de l\'envoi
+</string>
+    <string name="support_error_message">
+Une erreur s\'est produite. Veuillez réessayer.
+</string>
+    <string name="support_retry">
+Réessayer
+</string>
+    <string name="support_no_internet">
+Aucune connexion Internet. Veuillez vérifier votre connexion et réessayer.
+</string>
+    <string name="support_file_too_large">
+Le fichier est trop volumineux. La taille maximale est de 10 Mo.
+</string>
+    <string name="support_discard_title">
+Abandonner le message ?
+</string>
+    <string name="support_discard_message">
+Vous avez des modifications non enregistrées. Voulez-vous les abandonner ?
+</string>
+    <string name="support_discard_confirm">
+Abandonner
+</string>
+    <string name="support_rate_limited">
+Trop de demandes. Veuillez réessayer plus tard.
+</string>
+    <string name="icon_support_help">
+Aide et assistance
+</string>
+    <string name="cd_support_back">
+Retour
+</string>
+    <string name="invalid_email_format">
+Veuillez saisir une adresse e-mail valide
+</string>
+    <string name="support_remove_file">
+Supprimer la pièce jointe
+</string>
+    <string name="support_attachment_confirm_title">
+Confirmer la pièce jointe
+</string>
+    <string name="support_attachment_confirm_message">
+Le fichier \"%1$s\" (%2$s) sera envoyé avec votre message. Voulez-vous continuer ?
+</string>
+    <string name="support_proceed">
+Continuer
+</string>
+    <string name="support_max_attachments_reached">
+Maximum %d pièces jointes autorisées
+</string>
+    <string name="support_file_already_attached">
+Fichier déjà joint
+</string>
 </resources>
 

@@ -46,6 +46,7 @@ scripts/
 server/
 URL/
 Amazon Store/
+WEBSITE/
 
 # ── 🔴 SENSITIVE: Signing Configuration ──────────────────────
 # If you have a keystore.properties or signing.properties, block them:

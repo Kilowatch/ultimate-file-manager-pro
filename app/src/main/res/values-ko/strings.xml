@@ -10075,5 +10075,121 @@ UFM 플레이어 설정
     <string name="no_large_files_found_message">
 이 폴더 또는 하위 폴더에서 10MB보다 큰 파일을 찾을 수 없습니다.
 </string>
+
+    <!-- Support / Help & Support -->
+    <string name="support_title">
+도움말 및 지원
+</string>
+    <string name="support_tile_subtitle">
+개발자에게 문의
+</string>
+    <string name="support_report_bug">
+버그 신고
+</string>
+    <string name="support_report_bug_subtitle">
+기술 문제 신고
+</string>
+    <string name="support_feature_request">
+기능 요청
+</string>
+    <string name="support_feature_request_subtitle">
+개선 제안
+</string>
+    <string name="support_general">
+일반
+</string>
+    <string name="support_general_subtitle">
+일반 피드백 보내기
+</string>
+    <string name="support_subject">
+제목
+</string>
+    <string name="support_description">
+설명
+</string>
+    <string name="support_steps">
+재현 단계
+</string>
+    <string name="support_use_case">
+사용 사례
+</string>
+    <string name="support_message">
+메시지
+</string>
+    <string name="support_email">
+이메일 (선택사항)
+</string>
+    <string name="support_attach_file">
+파일 첨부
+</string>
+    <string name="support_file_attached">
+첨부된 파일: %s
+</string>
+    <string name="support_send">
+보내기
+</string>
+    <string name="support_sending">
+보내는 중…
+</string>
+    <string name="support_success_title">
+메시지 전송됨
+</string>
+    <string name="support_success_message">
+감사합니다! 메시지가 개발자에게 전송되었습니다.
+</string>
+    <string name="support_error_title">
+전송 실패
+</string>
+    <string name="support_error_message">
+문제가 발생했습니다. 다시 시도해주세요.
+</string>
+    <string name="support_retry">
+다시 시도
+</string>
+    <string name="support_no_internet">
+인터넷 연결이 없습니다. 연결을 확인하고 다시 시도해주세요.
+</string>
+    <string name="support_file_too_large">
+파일이 너무 큽니다. 최대 크기는 10MB입니다.
+</string>
+    <string name="support_discard_title">
+메시지를 취소할까요?
+</string>
+    <string name="support_discard_message">
+저장되지 않은 변경사항이 있습니다. 취소하시겠습니까?
+</string>
+    <string name="support_discard_confirm">
+취소
+</string>
+    <string name="support_rate_limited">
+요청이 너무 많습니다. 나중에 다시 시도해주세요.
+</string>
+    <string name="icon_support_help">
+도움말 및 지원
+</string>
+    <string name="cd_support_back">
+뒤로
+</string>
+    <string name="invalid_email_format">
+유효한 이메일 주소를 입력해주세요
+</string>
+    <string name="support_remove_file">
+첨부 파일 제거
+</string>
+    <string name="support_attachment_confirm_title">
+첨부 확인
+</string>
+    <string name="support_attachment_confirm_message">
+\"%1$s\" (%2$s) 파일이 메시지와 함께 전송됩니다. 계속하시겠습니까?
+</string>
+    <string name="support_proceed">
+계속
+</string>
+    <string name="support_max_attachments_reached">
+최대 %d개의 첨부 파일이 허용됩니다
+</string>
+    <string name="support_file_already_attached">
+파일이 이미 첨부되었습니다
+</string>
 </resources>
 
