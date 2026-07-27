@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added Help & Support section to the main menu with Report Bug, Feature Request, and General contact forms (Mobile & TV). Submissions are sent via SMTP email with optional file attachments and auto-captured device info.
 
+### Fixed
+- Fixed external subtitle files not being recognised by external players (Vimu, MX Player, VLC, etc.) when opening video files from network shares. UFM now scans the same network directory for companion subtitle files matching the video name and passes them directly to the external player via standard subtitle extras. Applies to all network share types (SMB, SFTP, NFS, FTP, WebDAV, and paired TV shares). The built-in UFM player also now detects and loads companion subtitles when playing video from a network location (Mobile & TV).
+
 ## [1.7.4] — 2026-07-24
 
 ### Added

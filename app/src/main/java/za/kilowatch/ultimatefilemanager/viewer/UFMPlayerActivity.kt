@@ -70,6 +70,13 @@ import za.kilowatch.ultimatefilemanager.settings.BackgroundVideoMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.util.ArrayList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.lifecycle.lifecycleScope
+import za.kilowatch.ultimatefilemanager.network.NetworkFile
+import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
+import za.kilowatch.ultimatefilemanager.network.SubtitleIntentHelper
 
 /**
  * UFM Media Player — Full-featured audio/video player.
@@ -259,6 +266,29 @@ class UFMPlayerActivity : AppCompatActivity() {
                         audioPlaceholder.visibility = View.GONE
                         playerView.visibility = View.VISIBLE
                         btnSubtitles.visibility = View.VISIBLE
+                    }
+
+                    // Reset external subtitles for the new track, then scan in parallel
+                    externalSubtitleInfos = emptyList()
+                    val isNetwork = shareId.isNotEmpty() || shareHost.isNotEmpty()
+                    if (trackInfo.isVideo && isNetwork) {
+                        this@UFMPlayerActivity.lifecycleScope.launch {
+                            val scanned = withContext(Dispatchers.IO) {
+                                scanNetworkSubtitles(trackInfo.path)
+                            }
+                            // Update on main thread and refresh the track sheet
+                            externalSubtitleInfos = scanned
+                            player?.currentTracks?.let { detectAndUpdateTracks(it) }
+                        }
+                    } else if (trackInfo.isVideo) {
+                        // Local file — run synchronously off main thread
+                        this@UFMPlayerActivity.lifecycleScope.launch(Dispatchers.IO) {
+                            val scanned = scanExternalSubtitles(trackInfo.path)
+                            withContext(Dispatchers.Main) {
+                                externalSubtitleInfos = scanned
+                                player?.currentTracks?.let { detectAndUpdateTracks(it) }
+                            }
+                        }
                     }
                 }
             }
@@ -903,7 +933,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private fun scanExternalSubtitles(videoPath: String): List<SubtitleTrackInfo> {
         val isLocal = shareId.isEmpty() && shareHost.isEmpty()
-        if (!isLocal) return emptyList()
+        if (!isLocal) return emptyList()  // Network path: use scanNetworkSubtitles() instead
 
         val videoFile = java.io.File(videoPath)
         val parentDir = videoFile.parentFile ?: return emptyList()
@@ -945,6 +975,80 @@ class UFMPlayerActivity : AppCompatActivity() {
             )
         }
     }
+
+    /**
+     * Scan the network directory containing [videoPath] for companion subtitle files.
+     *
+     * This function performs a blocking directory listing, so it must be called from
+     * a background thread / IO dispatcher.
+     *
+     * For each matched subtitle, it registers the file with [NetworkHttpProxyServer] so
+     * ExoPlayer can load it as a local HTTP stream.
+     */
+    private suspend fun scanNetworkSubtitles(videoPath: String): List<SubtitleTrackInfo> {
+        val share = resolveCurrentShare() ?: return emptyList()
+        val videoBase = videoPath.substringAfterLast('/').substringBeforeLast('.')
+        val parentDir  = videoPath.substringBeforeLast('/')
+
+        val siblings: List<NetworkFile> = try {
+            when (share.type) {
+                ShareType.SMB     -> SmbShareClient.listFiles(share, parentDir)
+                ShareType.SFTP,
+                ShareType.SCP     -> SshShareClient.listFiles(share, parentDir)
+                ShareType.NFS     -> NfsShareClient.listFiles(share, parentDir)
+                ShareType.FTP     -> FtpShareClient.listFiles(share, parentDir)
+                ShareType.WEBDAV  -> WebDavShareClient.listFiles(share, parentDir)
+                else              -> emptyList()
+            }
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlayerActivity", "scanNetworkSubtitles: failed to list $parentDir", e)
+            return emptyList()
+        }
+
+        val matched = SubtitleIntentHelper.findNetworkSubtitles(
+            videoPath.substringAfterLast('/'), siblings
+        )
+
+        return matched.mapIndexed { index, netFile ->
+            val ext       = netFile.name.substringAfterLast('.', "").lowercase()
+            val mime      = getMimeForSubtitleExtension(ext)
+            val typeLabel = ext.uppercase()
+            val langCode  = inferSubtitleLanguage(netFile.name.substringBeforeLast('.'), videoBase)
+            val langDisplay = languageCodeToDisplay(langCode)
+
+            // Register with HTTP proxy so ExoPlayer can stream it over HTTP locally
+            val proxyUrl = NetworkHttpProxyServer.register(share, netFile.path, mime, netFile.size)
+
+            SubtitleTrackInfo(
+                trackGroup   = null,
+                trackIndex   = index,
+                language     = langDisplay,
+                languageCode = langCode,
+                label        = "${langDisplay} ($typeLabel)",
+                sourceType   = typeLabel,
+                isExternal   = true,
+                isSelected   = false,
+                subtitleUri  = Uri.parse(proxyUrl),
+                subtitleMime = mime
+            )
+        }
+    }
+
+    /**
+     * Look up the [NetworkShare] for the currently playing track from the share repository.
+     * Returns null if the track is local or the share cannot be found.
+     */
+    private fun resolveCurrentShare(): za.kilowatch.ultimatefilemanager.network.NetworkShare? {
+        if (shareId.isEmpty()) return null
+        return try {
+            NetworkShareRepository.getInstance(this).getAll()
+                .firstOrNull { it.id == shareId }
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlayerActivity", "resolveCurrentShare failed", e)
+            null
+        }
+    }
+
 
     private fun applyAudioTrack(trackInfo: AudioTrackInfo) {
         player?.let { p ->

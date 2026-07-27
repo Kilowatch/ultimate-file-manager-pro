@@ -4970,6 +4970,70 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
 
                         // Fall back to external app — try preferred package first
+                        // ── Subtitle support: download all companion subtitles to cache ──
+                        val isExternalVideo = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)
+                        if (isExternalVideo && forceExternal) {
+                            val subFiles = SubtitleIntentHelper.findNetworkSubtitles(file.name, currentFiles)
+                            if (subFiles.isNotEmpty()) {
+                                val cachedSubs = SubtitleIntentHelper.downloadSubtitlesToCache(
+                                    cacheDir, subFiles
+                                ) { subPath ->
+                                    when (share.type) {
+                                        ShareType.SMB -> SmbShareClient.openInputStream(share, subPath)
+                                        ShareType.FTP -> FtpShareClient.openInputStream(share, subPath)
+                                        ShareType.TV  -> TvShareClient.openInputStream(share, subPath)
+                                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, subPath)
+                                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, subPath).first
+                                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, subPath).first
+                                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, subPath).first
+                                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, subPath).first
+                                        ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, subPath).first
+                                        ShareType.NFS -> NfsShareClient.openInputStream(share, subPath)
+                                        ShareType.DLNA -> DlnaShareClient.openInputStream(share, subPath)
+                                    }
+                                }
+                                // Attach to both the direct intent and the chooser
+                                withContext(Dispatchers.Main) {
+                                    val externalIntent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                                        setDataAndType(uri, mime)
+                                        addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubs)
+                                    }
+                                    if (preferredPackage != null) {
+                                        val pm = packageManager
+                                        val isInstalled = try { pm.getPackageInfo(preferredPackage, 0); true }
+                                                          catch (_: android.content.pm.PackageManager.NameNotFoundException) { false }
+                                        if (isInstalled) {
+                                            val directIntent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                                                setDataAndType(uri, mime)
+                                                setPackage(preferredPackage)
+                                                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubs)
+                                            }
+                                            val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
+                                            if (resolves.isNotEmpty()) {
+                                                startActivity(directIntent)
+                                                return@withContext
+                                            }
+                                        }
+                                        za.kilowatch.ultimatefilemanager.viewer.DefaultOpenManager.clearPreferredPackage(
+                                            this@NetworkBrowserActivity, extension, isNetwork = true
+                                        )
+                                    }
+                                    try {
+                                        val chooser = android.content.Intent.createChooser(externalIntent, getString(R.string.open_with))
+                                        chooser.addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        startActivity(chooser)
+                                    } catch (e: android.content.ActivityNotFoundException) {
+                                        showPremiumSnackbar(getString(R.string.no_app_found_to_open_this_file_type))
+                                    }
+                                }
+                                return@withContext
+                            }
+                        }
+                        // No subtitles (or not a video) — fall through to standard intent
                         val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                             setDataAndType(uri, mime)
                             addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -5073,11 +5137,39 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         val proxyUrl = NetworkHttpProxyServer.register(share, file.path, mime, file.size)
                         android.util.Log.d("NetworkBrowser", "Streaming via HTTP proxy for: ${file.name}")
 
+                        // ── Subtitle support: register all companion subtitles in the proxy ──
+                        val isExternalVideo = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)
+                        val proxySubtitleUris: List<android.net.Uri> = if (isExternalVideo && forceExternal) {
+                            SubtitleIntentHelper.findNetworkSubtitles(file.name, currentFiles).map { subFile ->
+                                val subExt = subFile.name.substringAfterLast('.', "").lowercase()
+                                val subMime = when (subExt) {
+                                    "vtt" -> "text/vtt"
+                                    "ass", "ssa" -> "text/x-ass"
+                                    else -> "application/x-subrip"
+                                }
+                                val subProxyUrl = NetworkHttpProxyServer.register(share, subFile.path, subMime, subFile.size)
+                                android.net.Uri.parse(subProxyUrl)
+                            }
+                        } else emptyList()
+
                         withContext(Dispatchers.Main) {
                             snack.dismiss()
                             val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
                                 setDataAndType(android.net.Uri.parse(proxyUrl), mime)
                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                if (proxySubtitleUris.isNotEmpty()) {
+                                    val subNames  = currentFiles.filter { f ->
+                                        val e = f.name.substringAfterLast('.', "").lowercase()
+                                        e in SubtitleIntentHelper.SUBTITLE_EXTENSIONS &&
+                                        f.name.substringBeforeLast('.').let { b ->
+                                            val vb = file.name.substringBeforeLast('.')
+                                            b.equals(vb, ignoreCase = true) || b.startsWith("$vb.", ignoreCase = true)
+                                        }
+                                    }.sortedBy { it.name.lowercase() }
+                                    val names  = subNames.map { it.name.substringBeforeLast('.') }
+                                    val fnames = subNames.map { it.name }
+                                    SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
+                                }
                             }
 
                             // Attempt direct launch if a preferred package is saved
@@ -5090,6 +5182,19 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                         setDataAndType(android.net.Uri.parse(proxyUrl), mime)
                                         setPackage(preferredPackage)
                                         addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        if (proxySubtitleUris.isNotEmpty()) {
+                                            val subNames  = currentFiles.filter { f ->
+                                                val e = f.name.substringAfterLast('.', "").lowercase()
+                                                e in SubtitleIntentHelper.SUBTITLE_EXTENSIONS &&
+                                                f.name.substringBeforeLast('.').let { b ->
+                                                    val vb = file.name.substringBeforeLast('.')
+                                                    b.equals(vb, ignoreCase = true) || b.startsWith("$vb.", ignoreCase = true)
+                                                }
+                                            }.sortedBy { it.name.lowercase() }
+                                            val names  = subNames.map { it.name.substringBeforeLast('.') }
+                                            val fnames = subNames.map { it.name }
+                                            SubtitleIntentHelper.attachSubtitleExtras(this, proxySubtitleUris, names, fnames)
+                                        }
                                     }
                                     val resolves = pm.queryIntentActivities(directIntent, android.content.pm.PackageManager.MATCH_DEFAULT_ONLY)
                                     if (resolves.isNotEmpty()) { startActivity(directIntent); return@withContext }
@@ -5135,6 +5240,20 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
                     } else {
                         // FTP / TV: sequential pipe via UfmDocumentsProvider (no seeking)
+                        // ── Subtitle support: always download companion subtitles to cache ──
+                        val isExternalVideo = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)
+                        val cachedSubsFtpTv: List<java.io.File> = if (isExternalVideo && forceExternal) {
+                            val subFiles = SubtitleIntentHelper.findNetworkSubtitles(file.name, currentFiles)
+                            SubtitleIntentHelper.downloadSubtitlesToCache(cacheDir, subFiles) { subPath ->
+                                when (share.type) {
+                                    ShareType.FTP  -> FtpShareClient.openInputStream(share, subPath)
+                                    ShareType.TV   -> TvShareClient.openInputStream(share, subPath)
+                                    ShareType.DLNA -> DlnaShareClient.openInputStream(share, subPath)
+                                    else -> throw UnsupportedOperationException("Subtitle download not supported for ${share.type}")
+                                }
+                            }
+                        } else emptyList()
+
                         val cleanPath = file.path.removePrefix("/")
                         val docId = "${share.docIdPrefix}${cleanPath}"
                         val uri = android.provider.DocumentsContract.buildDocumentUri(
@@ -5149,6 +5268,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 setDataAndType(uri, mime)
                                 addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                if (cachedSubsFtpTv.isNotEmpty()) {
+                                    SubtitleIntentHelper.attachCachedSubtitleExtras(this, packageName, this@NetworkBrowserActivity, cachedSubsFtpTv)
+                                }
                             }
 
                             // Attempt direct launch if a preferred package is saved
