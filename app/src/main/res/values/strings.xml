@@ -1141,6 +1141,16 @@
     <string name="extract_location_title">Choose Extract Location</string>
     <string name="extract_location_body">Select the folder where the contents will be extracted to.</string>
     <string name="extract_set_location">Set Extract Location</string>
+    <string name="action_copy_out">Extract to...</string>
+    <string name="action_move_out">Move out of archive</string>
+    <string name="action_delete_from_archive">Delete from archive</string>
+    <string name="confirm_delete_archive_entry_title">Delete from Archive</string>
+    <string name="confirm_delete_archive_entry_msg">Are you sure you want to delete \"%1$s\" from the archive?</string>
+    <string name="archive_move_success">Moved \"%1$s\" to %2$s</string>
+    <string name="archive_delete_success">Deleted \"%1$s\" from archive</string>
+    <string name="archive_operation_failed">Archive operation failed: %1$s</string>
+    <string name="moving_out">Moving out of archive...</string>
+    <string name="deleting_from_archive">Deleting from archive...</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">Main Menu Layout</string>

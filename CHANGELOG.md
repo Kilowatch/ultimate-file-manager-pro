@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.5] — 2026-07-26
 
 ### Added
+- **Move Files Out of Archives**: Move or delete individual files and folders directly from within ZIP and 7Z archives without full archive extraction (Mobile & TV).
 - Added Help & Support section to the main menu with Report Bug, Feature Request, and General contact forms (Mobile & TV). Submissions are sent via SMTP email with optional file attachments and auto-captured device info.
 
 ### Fixed

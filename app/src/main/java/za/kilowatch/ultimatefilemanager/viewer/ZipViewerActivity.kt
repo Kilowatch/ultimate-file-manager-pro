@@ -24,6 +24,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.archive.ArchiveItemOptionsDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -38,9 +40,11 @@ import net.lingala.zip4j.model.FileHeader
 
 /**
  * Built-in ZIP browser. Lists entries, supports navigating into subdirectories,
- * extracting individual files or the entire archive.
+ * extracting individual files, moving entries out of archive, deleting entries, or extracting the entire archive.
  */
 class ZipViewerActivity : AppCompatActivity() {
+
+    private enum class ExtractOpMode { EXTRACT_ALL, COPY_SINGLE, MOVE_OUT_SINGLE }
 
     private lateinit var recyclerEntries: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -55,10 +59,10 @@ class ZipViewerActivity : AppCompatActivity() {
     private var allEntries = listOf<FileHeader>()
     private var archivePassword: String? = null
 
-    // Stash single-file header while the user picks a destination
     private var pendingExtractHeader: FileHeader? = null
-    // true = extract all; false = single file stored in pendingExtractHeader
+    private var pendingTargetItem: ZipItem? = null
     private var pendingExtractAll: Boolean = false
+    private var pendingOpMode: ExtractOpMode = ExtractOpMode.EXTRACT_ALL
 
     /** Receives destination folder chosen via StorageBrowserActivity / FileBrowserActivity */
     private val extractDestLauncher = registerForActivityResult(
@@ -69,13 +73,17 @@ class ZipViewerActivity : AppCompatActivity() {
                 ?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
                 ?: return@registerForActivityResult
             val destDir = File(localPath)
-            if (pendingExtractAll) {
+            if (pendingExtractAll || pendingOpMode == ExtractOpMode.EXTRACT_ALL) {
                 doExtractAll(destDir)
+            } else if (pendingOpMode == ExtractOpMode.MOVE_OUT_SINGLE) {
+                pendingTargetItem?.let { doMoveOutSingleItem(it, destDir) }
             } else {
                 pendingExtractHeader?.let { doExtractSingleFile(it, destDir) }
+                    ?: pendingTargetItem?.let { doExtractSingleItem(it, destDir) }
             }
         }
         pendingExtractHeader = null
+        pendingTargetItem = null
         pendingExtractAll = false
     }
 
@@ -304,7 +312,9 @@ class ZipViewerActivity : AppCompatActivity() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
             pendingExtractAll = true
+            pendingOpMode = ExtractOpMode.EXTRACT_ALL
             pendingExtractHeader = null
+            pendingTargetItem = null
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
             }
@@ -313,18 +323,125 @@ class ZipViewerActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, ExtractLocationDialog.TAG)
     }
 
-    /** Shows the extract-location dialog, then navigates to the storage/folder picker. */
-    private fun extractSingleFile(header: FileHeader) {
+    private fun showItemOptions(item: ZipItem) {
+        val dialog = ArchiveItemOptionsDialog()
+        dialog.setItemName(item.name)
+        dialog.setOnCopyOut {
+            pendingExtractAll = false
+            pendingExtractHeader = item.entry
+            pendingTargetItem = item
+            pendingOpMode = ExtractOpMode.COPY_SINGLE
+            launchDestPicker()
+        }
+        dialog.setOnMoveOut {
+            pendingExtractAll = false
+            pendingExtractHeader = item.entry
+            pendingTargetItem = item
+            pendingOpMode = ExtractOpMode.MOVE_OUT_SINGLE
+            launchDestPicker()
+        }
+        dialog.setOnDelete {
+            confirmDeleteZipItem(item)
+        }
+        dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
+    }
+
+    private fun launchDestPicker() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
-            pendingExtractAll = false
-            pendingExtractHeader = header
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
             }
             extractDestLauncher.launch(intent)
         }
         dialog.show(supportFragmentManager, ExtractLocationDialog.TAG)
+    }
+
+    /** Performs single-item extraction once the user has chosen a destination. */
+    private fun doExtractSingleItem(item: ZipItem, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
+    /** Performs moving a single item out of the archive once the user has chosen a destination. */
+    private fun doMoveOutSingleItem(item: ZipItem, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_move_success, item.name, destDir.absolutePath))
+                        loadZip(file)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
+    private fun confirmDeleteZipItem(item: ZipItem) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_delete_archive_entry_title)
+            .setMessage(getString(R.string.confirm_delete_archive_entry_msg, item.name))
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                doDeleteZipItem(item)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun doDeleteZipItem(item: ZipItem) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.deleteZipEntry(file, entryPath, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_delete_success, item.name))
+                        loadZip(file)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
     }
 
     /** Performs the actual "Extract All" once the user has chosen a destination. */
@@ -449,6 +566,10 @@ class ZipViewerActivity : AppCompatActivity() {
                     currentPath = if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}"
                     displayEntries()
                 }
+                holder.itemView.setOnLongClickListener {
+                    showItemOptions(item)
+                    true
+                }
             } else {
                 holder.icon.setImageResource(
                     FileTypeIconProvider.iconForExtension(holder.itemView.context, item.name.substringAfterLast('.', ""))
@@ -461,7 +582,11 @@ class ZipViewerActivity : AppCompatActivity() {
                 } else 0
                 holder.txtInfo.text = getString(R.string.size_compressed_ratio_saved, size, compressed, ratio)
                 holder.itemView.setOnClickListener {
-                    extractSingleFile(entry)
+                    showItemOptions(item)
+                }
+                holder.itemView.setOnLongClickListener {
+                    showItemOptions(item)
+                    true
                 }
             }
 

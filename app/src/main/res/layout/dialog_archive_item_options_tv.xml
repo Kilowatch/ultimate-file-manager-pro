@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TV Archive Item Options Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog_glass">
+
+    <TextView
+        android:id="@+id/txtItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginBottom="20dp"
+        tools:text="sample_file.pdf" />
+
+    <!-- Action 1: Extract / Copy Out -->
+    <LinearLayout
+        android:id="@+id/btnExtractTo"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/selector_tv_policy_scroll"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/imgExtractIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_export"
+            app:tint="@color/tv_text_primary"
+            android:contentDescription="@string/action_copy_out" />
+
+        <TextView
+            android:id="@+id/txtExtractText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/action_copy_out"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Action 2: Move Out of Archive -->
+    <LinearLayout
+        android:id="@+id/btnMoveOut"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/selector_tv_policy_scroll"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/imgMoveIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_move"
+            app:tint="@color/tv_accent"
+            android:contentDescription="@string/action_move_out" />
+
+        <TextView
+            android:id="@+id/txtMoveText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/action_move_out"
+            android:textColor="@color/tv_accent"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium" />
+    </LinearLayout>
+
+    <!-- Action 3: Delete from Archive -->
+    <LinearLayout
+        android:id="@+id/btnDeleteFromArchive"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/selector_tv_policy_scroll"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/imgDeleteIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_delete"
+            app:tint="#FFFF5555"
+            android:contentDescription="@string/action_delete_from_archive" />
+
+        <TextView
+            android:id="@+id/txtDeleteText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/action_delete_from_archive"
+            android:textColor="#FFFF5555"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -28,6 +28,8 @@ import org.apache.commons.compress.archivers.sevenz.SevenZArchiveEntry
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import org.apache.commons.compress.archivers.sevenz.SevenZMethod
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.archive.ArchiveItemOptionsDialog
+import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -44,6 +46,8 @@ import java.util.Locale
  */
 class SevenZipViewerActivity : AppCompatActivity() {
 
+    private enum class ExtractOpMode { EXTRACT_ALL, COPY_SINGLE, MOVE_OUT_SINGLE }
+
     private lateinit var recyclerEntries: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var txtTitle: TextView
@@ -57,10 +61,10 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private var allEntries = listOf<SevenZArchiveEntry>()
     private var archivePassword: String? = null
 
-    // Stash single-file entry while the user picks a destination
     private var pendingExtractEntry: SevenZArchiveEntry? = null
-    // true = extract all; false = single entry stored in pendingExtractEntry
+    private var pendingTargetItem: SevenZipItem? = null
     private var pendingExtractAll: Boolean = false
+    private var pendingOpMode: ExtractOpMode = ExtractOpMode.EXTRACT_ALL
 
     /** Receives destination folder chosen via StorageBrowserActivity / FileBrowserActivity */
     private val extractDestLauncher = registerForActivityResult(
@@ -71,13 +75,17 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 ?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
                 ?: return@registerForActivityResult
             val destDir = File(localPath)
-            if (pendingExtractAll) {
+            if (pendingExtractAll || pendingOpMode == ExtractOpMode.EXTRACT_ALL) {
                 doExtractAll(destDir)
+            } else if (pendingOpMode == ExtractOpMode.MOVE_OUT_SINGLE) {
+                pendingTargetItem?.let { doMoveOutSingleItem(it, destDir) }
             } else {
                 pendingExtractEntry?.let { doExtractSingleFile(it, destDir) }
+                    ?: pendingTargetItem?.let { doExtractSingleItem(it, destDir) }
             }
         }
         pendingExtractEntry = null
+        pendingTargetItem = null
         pendingExtractAll = false
     }
 
@@ -323,7 +331,9 @@ class SevenZipViewerActivity : AppCompatActivity() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
             pendingExtractAll = true
+            pendingOpMode = ExtractOpMode.EXTRACT_ALL
             pendingExtractEntry = null
+            pendingTargetItem = null
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
             }
@@ -332,18 +342,125 @@ class SevenZipViewerActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, ExtractLocationDialog.TAG)
     }
 
-    /** Shows the extract-location dialog, then navigates to the storage/folder picker. */
-    private fun extractSingleFile(targetEntry: SevenZArchiveEntry) {
+    private fun showItemOptions(item: SevenZipItem) {
+        val dialog = ArchiveItemOptionsDialog()
+        dialog.setItemName(item.name)
+        dialog.setOnCopyOut {
+            pendingExtractAll = false
+            pendingExtractEntry = item.entry
+            pendingTargetItem = item
+            pendingOpMode = ExtractOpMode.COPY_SINGLE
+            launchDestPicker()
+        }
+        dialog.setOnMoveOut {
+            pendingExtractAll = false
+            pendingExtractEntry = item.entry
+            pendingTargetItem = item
+            pendingOpMode = ExtractOpMode.MOVE_OUT_SINGLE
+            launchDestPicker()
+        }
+        dialog.setOnDelete {
+            confirmDeleteSevenZipItem(item)
+        }
+        dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
+    }
+
+    private fun launchDestPicker() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
-            pendingExtractAll = false
-            pendingExtractEntry = targetEntry
             val intent = Intent(this, StorageBrowserActivity::class.java).apply {
                 putExtra(StorageBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
             }
             extractDestLauncher.launch(intent)
         }
         dialog.show(supportFragmentManager, ExtractLocationDialog.TAG)
+    }
+
+    /** Performs single-item extraction once the user has chosen a destination. */
+    private fun doExtractSingleItem(item: SevenZipItem, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.extract7zEntry(file, entryPath, destDir, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
+    /** Performs moving a single item out of the 7z archive once the user has chosen a destination. */
+    private fun doMoveOutSingleItem(item: SevenZipItem, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.move7zEntry(file, entryPath, destDir, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_move_success, item.name, destDir.absolutePath))
+                        load7z(file)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
+    private fun confirmDeleteSevenZipItem(item: SevenZipItem) {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_delete_archive_entry_title)
+            .setMessage(getString(R.string.confirm_delete_archive_entry_msg, item.name))
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                doDeleteSevenZipItem(item)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun doDeleteSevenZipItem(item: SevenZipItem) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.delete7zEntry(file, entryPath, archivePassword)
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (res.isSuccess) {
+                        showSnackbar(getString(R.string.archive_delete_success, item.name))
+                        load7z(file)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
     }
 
     /** Performs the actual "Extract All" once the user has chosen a destination. */
@@ -486,6 +603,10 @@ class SevenZipViewerActivity : AppCompatActivity() {
                     currentPath = if (currentPath.isEmpty()) item.name else "${currentPath}/${item.name}"
                     displayEntries()
                 }
+                holder.itemView.setOnLongClickListener {
+                    showItemOptions(item)
+                    true
+                }
             } else {
                 holder.icon.setImageResource(
                     FileTypeIconProvider.iconForExtension(holder.itemView.context, item.name.substringAfterLast('.', ""))
@@ -493,7 +614,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 val entry = item.entry!!
                 val size = Formatter.formatFileSize(this@SevenZipViewerActivity, entry.size)
                 holder.txtInfo.text = size
-                holder.itemView.setOnClickListener { extractSingleFile(entry) }
+                holder.itemView.setOnClickListener { showItemOptions(item) }
+                holder.itemView.setOnLongClickListener {
+                    showItemOptions(item)
+                    true
+                }
             }
         }
         override fun getItemCount(): Int = items.size
