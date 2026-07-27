@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.6] — 2026-07-27
+
+### Fixed
+- Fixed image viewer edge-to-edge layout not being applied correctly in landscape orientation, causing content to bleed under system bars on the sides. Fixed toolbar being visually cut off when rotating back from landscape to portrait.
+
 ## [1.7.5] — 2026-07-26
 
 ### Added

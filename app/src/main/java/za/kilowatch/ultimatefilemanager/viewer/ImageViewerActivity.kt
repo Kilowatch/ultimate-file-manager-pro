@@ -93,14 +93,28 @@ class ImageViewerActivity : AppCompatActivity() {
             else R.layout.activity_image_viewer
         )
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { _, insets ->
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            findViewById<android.view.View>(R.id.toolbar)?.setPadding(0, sb.top, 0, 0)
+            // Mobile toolbar — absorbs status-bar top + landscape side insets
+            findViewById<android.view.View>(R.id.toolbar)
+                ?.setPadding(sb.left, sb.top, sb.right, 0)
+            // TV header — same treatment for consistency
+            findViewById<android.view.View>(R.id.layoutTvHeader)
+                ?.setPadding(sb.left, sb.top, sb.right, 0)
+            // Mobile image container
             val imageContainer = findViewById<android.view.View>(R.id.imageContainer)
             if (imageContainer != null) {
                 val topPadding = (8 * resources.displayMetrics.density).toInt()
-                imageContainer.setPadding(0, topPadding, 0, sb.bottom)
+                imageContainer.setPadding(sb.left, topPadding, sb.right, sb.bottom)
             }
+            // TV image container
+            val scrollContainer = findViewById<android.view.View>(R.id.scrollContainer)
+            if (scrollContainer != null) {
+                scrollContainer.setPadding(sb.left, 0, sb.right, 0)
+            }
+            // TV control bar — absorb bottom inset (navigation bar)
+            findViewById<android.view.View>(R.id.tvControlBar)
+                ?.setPadding(sb.left, 0, sb.right, sb.bottom)
             WindowInsetsCompat.CONSUMED
         }
 
@@ -138,6 +152,13 @@ class ImageViewerActivity : AppCompatActivity() {
         }
 
         setupViewer()
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // The Activity is not recreated on rotation (configChanges declared in manifest).
+        // Re-fit the image to the new view dimensions after layout has been updated.
+        imageView.post { fitImageToView() }
     }
 
     private fun setupMobileControls() {

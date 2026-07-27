@@ -15,7 +15,8 @@
     <LinearLayout
         android:id="@+id/layoutTvHeader"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
+        android:minHeight="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"

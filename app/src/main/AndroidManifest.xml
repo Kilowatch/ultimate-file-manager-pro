@@ -754,7 +754,8 @@
 
         <activity
             android:name=".viewer.ImageViewerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
 
         <activity
             android:name=".viewer.ImageCompressActivity"
