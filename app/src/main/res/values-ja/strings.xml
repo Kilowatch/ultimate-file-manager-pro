@@ -3163,6 +3163,36 @@ OK
     <string name="extract_set_location">
 展開先を設定
 </string>
+    <string name="action_copy_out">
+抽出先...
+</string>
+    <string name="action_move_out">
+アーカイブから移動
+</string>
+    <string name="action_delete_from_archive">
+アーカイブから削除
+</string>
+    <string name="confirm_delete_archive_entry_title">
+アーカイブから削除
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+本当にアーカイブから \"%1$s\" を削除してもよろしいですか？
+</string>
+    <string name="archive_move_success">
+\"%1$s\" を %2$s に移動しました
+</string>
+    <string name="archive_delete_success">
+アーカイブから \"%1$s\" を削除しました
+</string>
+    <string name="archive_operation_failed">
+アーカイブ操作に失敗しました: %1$s
+</string>
+    <string name="moving_out">
+アーカイブから移動中...
+</string>
+    <string name="deleting_from_archive">
+アーカイブから削除中...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

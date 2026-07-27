@@ -3163,6 +3163,36 @@ UFM रंग कोड
     <string name="extract_set_location">
 निष्कर्षण स्थान सेट करें
 </string>
+    <string name="action_copy_out">
+निकालें...
+</string>
+    <string name="action_move_out">
+आर्काइव से बाहर ले जाएँ
+</string>
+    <string name="action_delete_from_archive">
+आर्काइव से हटाएँ
+</string>
+    <string name="confirm_delete_archive_entry_title">
+आर्काइव से हटाएँ
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+क्या आप वाकई आर्काइव से \\\"%1$s\\\" हटाना चाहते हैं?
+</string>
+    <string name="archive_move_success">
+\\\"%1$s\\\" को %2$s में ले जाया गया
+</string>
+    <string name="archive_delete_success">
+आर्काइव से \\\"%1$s\\\" हटा दिया गया
+</string>
+    <string name="archive_operation_failed">
+आर्काइव ऑपरेशन विफल: %1$s
+</string>
+    <string name="moving_out">
+आर्काइव से बाहर ले जाया जा रहा है...
+</string>
+    <string name="deleting_from_archive">
+आर्काइव से हटाया जा रहा है...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

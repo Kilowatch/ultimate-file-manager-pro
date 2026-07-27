@@ -3163,6 +3163,36 @@ Pilih folder tempat konten akan diekstrak.
     <string name="extract_set_location">
 Atur Lokasi Ekstrak
 </string>
+    <string name="action_copy_out">
+Ekstrak ke...
+</string>
+    <string name="action_move_out">
+Pindahkan dari arsip
+</string>
+    <string name="action_delete_from_archive">
+Hapus dari arsip
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Hapus dari Arsip
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Yakin ingin menghapus \"%1$s\" dari arsip?
+</string>
+    <string name="archive_move_success">
+Memindahkan \"%1$s\" ke %2$s
+</string>
+    <string name="archive_delete_success">
+Menghapus \"%1$s\" dari arsip
+</string>
+    <string name="archive_operation_failed">
+Operasi arsip gagal: %1$s
+</string>
+    <string name="moving_out">
+Memindahkan dari arsip...
+</string>
+    <string name="deleting_from_archive">
+Menghapus dari arsip...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

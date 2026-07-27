@@ -3163,6 +3163,36 @@ NFSv4
     <string name="extract_set_location">
 تعيين موقع الاستخراج
 </string>
+    <string name="action_copy_out">
+استخراج إلى...
+</string>
+    <string name="action_move_out">
+نقل خارج الأرشيف
+</string>
+    <string name="action_delete_from_archive">
+حذف من الأرشيف
+</string>
+    <string name="confirm_delete_archive_entry_title">
+حذف من الأرشيف
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+هل أنت متأكد من رغبتك في حذف \"%1$s\" من الأرشيف؟
+</string>
+    <string name="archive_move_success">
+تم نقل \"%1$s\" إلى %2$s
+</string>
+    <string name="archive_delete_success">
+تم حذف \"%1$s\" من الأرشيف
+</string>
+    <string name="archive_operation_failed">
+فشلت عملية الأرشيف: %1$s
+</string>
+    <string name="moving_out">
+جارٍ النقل خارج الأرشيف...
+</string>
+    <string name="deleting_from_archive">
+جارٍ الحذف من الأرشيف...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

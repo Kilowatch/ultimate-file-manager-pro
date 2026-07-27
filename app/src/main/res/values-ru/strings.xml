@@ -3163,6 +3163,36 @@ NFSv4
     <string name="extract_set_location">
 Установить место извлечения
 </string>
+    <string name="action_copy_out">
+Извлечь в...
+</string>
+    <string name="action_move_out">
+Переместить из архива
+</string>
+    <string name="action_delete_from_archive">
+Удалить из архива
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Удалить из архива
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Вы уверены, что хотите удалить \"%1$s\" из архива?
+</string>
+    <string name="archive_move_success">
+Перемещено \"%1$s\" в %2$s
+</string>
+    <string name="archive_delete_success">
+Удалено \"%1$s\" из архива
+</string>
+    <string name="archive_operation_failed">
+Операция с архивом не удалась: %1$s
+</string>
+    <string name="moving_out">
+Перемещение из архива...
+</string>
+    <string name="deleting_from_archive">
+Удаление из архива...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

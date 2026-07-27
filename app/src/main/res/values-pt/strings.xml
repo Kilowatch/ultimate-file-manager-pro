@@ -3163,6 +3163,36 @@ Selecione a pasta onde o conteúdo será extraído.
     <string name="extract_set_location">
 Definir Local de Extração
 </string>
+    <string name="action_copy_out">
+Extrair para...
+</string>
+    <string name="action_move_out">
+Mover para fora do arquivo
+</string>
+    <string name="action_delete_from_archive">
+Excluir do arquivo
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Excluir do arquivo
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Tem certeza de que deseja excluir \"%1$s\" do arquivo?
+</string>
+    <string name="archive_move_success">
+Movido \"%1$s\" para %2$s
+</string>
+    <string name="archive_delete_success">
+Excluído \"%1$s\" do arquivo
+</string>
+    <string name="archive_operation_failed">
+Operação de arquivo falhou: %1$s
+</string>
+    <string name="moving_out">
+Movendo para fora do arquivo...
+</string>
+    <string name="deleting_from_archive">
+Excluindo do arquivo...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

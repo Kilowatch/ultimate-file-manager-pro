@@ -3163,6 +3163,36 @@ Sélectionnez le dossier dans lequel le contenu sera extrait.
     <string name="extract_set_location">
 Définir l\\\'emplacement d\\\'extraction
 </string>
+    <string name="action_copy_out">
+Extraire vers...
+</string>
+    <string name="action_move_out">
+Déplacer hors de l\'archive
+</string>
+    <string name="action_delete_from_archive">
+Supprimer de l\'archive
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Supprimer de l\'archive
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Voulez-vous vraiment supprimer \"%1$s\" de l\'archive ?
+</string>
+    <string name="archive_move_success">
+Déplacé \"%1$s\" vers %2$s
+</string>
+    <string name="archive_delete_success">
+Supprimé \"%1$s\" de l\'archive
+</string>
+    <string name="archive_operation_failed">
+L\'opération d\'archive a échoué : %1$s
+</string>
+    <string name="moving_out">
+Déplacement hors de l\'archive...
+</string>
+    <string name="deleting_from_archive">
+Suppression de l\'archive...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

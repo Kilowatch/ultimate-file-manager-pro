@@ -3163,6 +3163,36 @@ Tümünü Çıkart
     <string name="extract_set_location">
 Çıkartma Konumunu Ayarla
 </string>
+    <string name="action_copy_out">
+Çıkart...
+</string>
+    <string name="action_move_out">
+Arşivden çıkart
+</string>
+    <string name="action_delete_from_archive">
+Arşivden sil
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Arşivden Sil
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+\"%1$s\" öğesini arşivden silmek istediğinize emin misiniz?
+</string>
+    <string name="archive_move_success">
+\"%1$s\" öğesi %2$s konumuna taşındı
+</string>
+    <string name="archive_delete_success">
+\"%1$s\" arşivden silindi
+</string>
+    <string name="archive_operation_failed">
+Arşiv işlemi başarısız oldu: %1$s
+</string>
+    <string name="moving_out">
+Arşivden çıkartılıyor...
+</string>
+    <string name="deleting_from_archive">
+Arşivden siliniyor...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

@@ -3163,6 +3163,36 @@ Wählen Sie den Ordner, in den der Inhalt extrahiert werden soll.
     <string name="extract_set_location">
 Extraktionsort festlegen
 </string>
+    <string name="action_copy_out">
+Extrahieren nach...
+</string>
+    <string name="action_move_out">
+Aus Archiv verschieben
+</string>
+    <string name="action_delete_from_archive">
+Aus Archiv löschen
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Aus Archiv löschen
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Sind Sie sicher, dass Sie \\\"%1$s\\\" aus dem Archiv löschen möchten?
+</string>
+    <string name="archive_move_success">
+\\\"%1$s\\\" nach %2$s verschoben
+</string>
+    <string name="archive_delete_success">
+\\\"%1$s\\\" aus Archiv gelöscht
+</string>
+    <string name="archive_operation_failed">
+Archivoperation fehlgeschlagen: %1$s
+</string>
+    <string name="moving_out">
+Aus Archiv verschieben...
+</string>
+    <string name="deleting_from_archive">
+Aus Archiv löschen...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

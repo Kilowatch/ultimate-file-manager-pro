@@ -3163,6 +3163,36 @@ Selecciona la carpeta donde se extraerán los contenidos.
     <string name="extract_set_location">
 Establecer ubicación de extracción
 </string>
+    <string name="action_copy_out">
+Extraer en...
+</string>
+    <string name="action_move_out">
+Mover fuera del archivo
+</string>
+    <string name="action_delete_from_archive">
+Eliminar del archivo
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Eliminar del archivo
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+¿Estás seguro de que quieres eliminar \"%1$s\" del archivo?
+</string>
+    <string name="archive_move_success">
+Movido \"%1$s\" a %2$s
+</string>
+    <string name="archive_delete_success">
+Eliminado \"%1$s\" del archivo
+</string>
+    <string name="archive_operation_failed">
+Operación de archivo fallida: %1$s
+</string>
+    <string name="moving_out">
+Moviendo fuera del archivo...
+</string>
+    <string name="deleting_from_archive">
+Eliminando del archivo...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">

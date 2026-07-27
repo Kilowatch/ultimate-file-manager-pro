@@ -3163,6 +3163,36 @@ OK
     <string name="extract_set_location">
 Встановити місце розпакування
 </string>
+    <string name="action_copy_out">
+Розпакувати в...
+</string>
+    <string name="action_move_out">
+Перемістити з архіву
+</string>
+    <string name="action_delete_from_archive">
+Видалити з архіву
+</string>
+    <string name="confirm_delete_archive_entry_title">
+Видалити з архіву
+</string>
+    <string name="confirm_delete_archive_entry_msg">
+Ви впевнені, що хочете видалити \"%1$s\" з архіву?
+</string>
+    <string name="archive_move_success">
+Переміщено \"%1$s\" до %2$s
+</string>
+    <string name="archive_delete_success">
+Видалено \"%1$s\" з архіву
+</string>
+    <string name="archive_operation_failed">
+Операція з архівом не вдалася: %1$s
+</string>
+    <string name="moving_out">
+Переміщення з архіву...
+</string>
+    <string name="deleting_from_archive">
+Видалення з архіву...
+</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">
