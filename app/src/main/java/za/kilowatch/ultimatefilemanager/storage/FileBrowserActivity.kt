@@ -3206,7 +3206,8 @@ class FileBrowserActivity : AppCompatActivity() {
             return list
         }
 
-        var entries = buildEntries()
+        // Start with an empty list — the dialog opens immediately while entries load in the background
+        var entries = mutableListOf<ClipEntry>()
         val colorCopy = getColor(R.color.ufm_primary)
         val colorCut = getColor(R.color.ufm_denied)
 
@@ -3220,8 +3221,12 @@ class FileBrowserActivity : AppCompatActivity() {
         val btnClearAll = contentView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnClearClipboard)
         val txtTitle = contentView.findViewById<android.widget.TextView>(R.id.txtClipboardTitle)
 
+        // Title always reflects the real total from the singletons, not the loaded list size
+        fun realTotal() = (if (FileClipboard.hasItems()) FileClipboard.files.size else 0) +
+                (if (za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
+
         fun updateTitle() {
-            val n = entries.size
+            val n = realTotal()
             txtTitle.text = if (n == 1) getString(R.string.clipboard_1_file) else getString(R.string.clipboard_total_files, n)
         }
         updateTitle()
@@ -3278,6 +3283,18 @@ class FileBrowserActivity : AppCompatActivity() {
 
         recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recycler.adapter = adapter
+
+        // Load entries off the main thread — avoids ANR for large clipboards (5000+ files)
+        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
+            val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
+                buildEntries()
+            }
+            if (dialog.isShowing) {
+                entries = loaded
+                adapter.notifyDataSetChanged()
+                updateTitle()
+            }
+        }
 
         btnPasteHere.setOnClickListener {
             dialog.dismiss()

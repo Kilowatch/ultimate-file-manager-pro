@@ -272,13 +272,16 @@ object FileViewerRouter {
             e in AUDIO_EXTENSIONS || e in VIDEO_EXTENSIONS
         }?.sortedWith(comparator)
 
-        val playlist = mediaFiles?.map { it.absolutePath }?.toCollection(java.util.ArrayList())
-            ?: java.util.ArrayList<String>().apply { add(file.absolutePath) }
+        val paths: List<String> = mediaFiles?.map { it.absolutePath }
+            ?: listOf(file.absolutePath)
 
+        // Store in-memory to avoid TransactionTooLargeException for large folders
+        val cacheKey = PlaylistCache.put(paths)
         val intent = Intent(context, UFMPlayerActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
             putExtra("initialPath", file.absolutePath)
-            putStringArrayListExtra("playlist", playlist)
+            putExtra("playlistCacheKey", cacheKey)
+            putExtra("playlistDir", file.parent ?: "") // fallback scan dir
         }
         context.startActivity(intent)
     }
@@ -294,11 +297,15 @@ object FileViewerRouter {
         val comparator = SortFilterPreferenceManager.getFileComparator(sortState, context)
 
         val sortedFiles = filesToConsider.sortedWith(comparator)
-        val playlist = sortedFiles.map { it.absolutePath }.toCollection(java.util.ArrayList())
+        val paths = sortedFiles.map { it.absolutePath }
+
+        // Store in-memory to avoid TransactionTooLargeException for large folders
+        val cacheKey = PlaylistCache.put(paths)
         val intent = Intent(context, SlideShowActivity::class.java).apply {
             putExtra(EXTRA_FILE_PATH, file.absolutePath)
             putExtra("initialPath", file.absolutePath)
-            putStringArrayListExtra("playlist", playlist)
+            putExtra("playlistCacheKey", cacheKey)
+            putExtra("playlistDir", file.parent ?: "") // fallback scan dir
         }
         context.startActivity(intent)
     }

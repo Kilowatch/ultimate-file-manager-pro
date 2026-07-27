@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_bottom_sheet">
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@drawable/bg_bottom_sheet">
 
     <!-- Header -->
     <LinearLayout
@@ -45,12 +41,12 @@
         android:layout_height="1dp"
         android:background="?attr/colorOutlineVariant" />
 
-    <!-- List of clipboard items -->
+    <!-- List of clipboard items — fixed height so RecyclerView recycling is active -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerClipboard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
+        android:layout_height="320dp"
+        android:nestedScrollingEnabled="true"
         android:overScrollMode="never"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
@@ -97,5 +93,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>

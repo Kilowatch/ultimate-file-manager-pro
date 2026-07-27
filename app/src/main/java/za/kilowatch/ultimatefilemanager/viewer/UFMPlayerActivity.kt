@@ -428,7 +428,16 @@ class UFMPlayerActivity : AppCompatActivity() {
         remotePathExtra = intent.getStringExtra(
             za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
         ) ?: ""
-        playlist = intent.getStringArrayListExtra("playlist") ?: ArrayList()
+        // Prefer cache to avoid TransactionTooLargeException for large folders
+        val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
+        val cachedPlaylist = PlaylistCache.take(cacheKey)
+
+        playlist = when {
+            cachedPlaylist != null -> ArrayList(cachedPlaylist)
+            // Legacy path: small playlists still passed directly (e.g. from TwinWindow / network browser)
+            intent.hasExtra("playlist") -> intent.getStringArrayListExtra("playlist") ?: ArrayList()
+            else -> ArrayList()
+        }
 
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
             playlist.add(initialPath)
@@ -447,6 +456,11 @@ class UFMPlayerActivity : AppCompatActivity() {
                 }
             }
         })
+
+        // Store resolved playlist for UFMPlaybackService under a separate key, because
+        // PlaylistCache.take() is destructive — the entry above was already consumed.
+        val serviceCacheKey = PlaylistCache.put(playlist)
+        intent.putExtra("serviceCacheKey", serviceCacheKey)
 
         // Start & bind to the playback service
         UFMPlaybackService.start(this, intent)

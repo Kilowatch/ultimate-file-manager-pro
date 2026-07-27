@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed image viewer edge-to-edge layout not being applied correctly in landscape orientation, causing content to bleed under system bars on the sides. Fixed toolbar being visually cut off when rotating back from landscape to portrait.
+- Fixed app crash when opening the Slideshow or UFM Media Player from a folder containing a large number of files (e.g. DCIM/Camera with 5000+ items). The crash was caused by Android's 1 MB Binder IPC limit being exceeded when serialising the full playlist into an Intent. Playlists are now passed via an in-memory cache, with a legacy fallback for smaller lists and an on-device folder re-scan as a last resort.
+- Fixed app freeze when pressing the paste FAB with a large number of files on the clipboard (e.g. 5000+ items). The freeze was caused by the clipboard sheet's RecyclerView being placed inside a `NestedScrollView` with wrap-content height, which disabled view recycling and forced all items to be laid out synchronously on the main thread. Fixed by giving the RecyclerView a fixed height so recycling is restored, and by moving the clipboard entry list construction off the main thread. All files remain visible and scrollable. Applies to local, network, and online clipboard operations on both Mobile and TV.
 
 ## [1.7.5] — 2026-07-26
 

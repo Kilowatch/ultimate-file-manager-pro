@@ -1,103 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
     android:background="@drawable/bg_bottom_sheet">
 
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp">
 
-        <!-- Drag Handle -->
-        <View
-            android:layout_width="40dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/bg_drag_handle" />
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_paste"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
 
-        <!-- Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtClipboardTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="12dp">
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="@string/clipboard"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="?android:attr/textColorPrimary" />
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_paste"
-                app:tint="?attr/colorPrimary"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:id="@+id/txtClipboardTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:text="@string/clipboard"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary" />
-
-            <!-- Clear all button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnClearClipboard"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/clear_all"
-                android:textColor="@color/ufm_denied"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginHorizontal="16dp" />
-
-        <!-- List of clipboard items -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerClipboard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:overScrollMode="never"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="4dp" />
-
-        <!-- Paste Here Button -->
+        <!-- Clear all button -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPasteHere"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/paste_here"
-            android:textSize="15sp"
-            app:icon="@drawable/ic_paste"
-            app:backgroundTint="?attr/colorPrimary" />
-
+            android:id="@+id/btnClearClipboard"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear_all"
+            android:textColor="@color/ufm_denied"
+            android:textSize="13sp" />
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant"
+        android:layout_marginHorizontal="16dp" />
+
+    <!-- List of clipboard items — fixed height so RecyclerView recycling is active -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerClipboard"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:nestedScrollingEnabled="true"
+        android:overScrollMode="never"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp" />
+
+    <!-- Paste Here Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPasteHere"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/paste_here"
+        android:textSize="15sp"
+        app:icon="@drawable/ic_paste"
+        app:backgroundTint="?attr/colorPrimary" />
+
+</LinearLayout>

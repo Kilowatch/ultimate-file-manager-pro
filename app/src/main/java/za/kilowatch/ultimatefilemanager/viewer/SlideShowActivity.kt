@@ -249,12 +249,30 @@ class SlideShowActivity : AppCompatActivity() {
         initialFileSize = intent.getLongExtra("initialSize", 0L)
         remotePathExtra = intent.getStringExtra(za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH) ?: ""
         initialPath = intent.getStringExtra("initialPath") ?: ""
-        playlist = intent.getStringArrayListExtra("playlist") ?: ArrayList()
         @Suppress("UNCHECKED_CAST")
         sizesMap = (intent.getSerializableExtra("sizesMap") as? HashMap<String, Long>) ?: HashMap()
+        
+        // Prefer cache to avoid TransactionTooLargeException for large folders
+        val cacheKey = intent.getStringExtra("playlistCacheKey") ?: ""
+        val cachedPlaylist = PlaylistCache.take(cacheKey)
 
+        playlist = when {
+            cachedPlaylist != null -> ArrayList(cachedPlaylist)
+            // Legacy path: small playlists still passed directly (e.g. from TwinWindow / network browser)
+            intent.hasExtra("playlist") -> intent.getStringArrayListExtra("playlist") ?: ArrayList()
+            else -> ArrayList()
+        }
+
+        // Fallback: scan parent dir if playlist is still empty (e.g. process was restarted)
         if (playlist.isEmpty() && initialPath.isNotEmpty()) {
-            playlist.add(initialPath)
+            val parentDir = java.io.File(initialPath).parentFile
+            val scanned = parentDir?.listFiles { f ->
+                f.isFile && !f.name.startsWith(".") &&
+                (f.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS ||
+                 f.extension.lowercase() in FileViewerRouter.VIDEO_EXTENSIONS)
+            }?.sortedBy { it.name } ?: emptyList()
+            playlist = ArrayList(scanned.map { it.absolutePath })
+            if (playlist.isEmpty()) playlist.add(initialPath)
         }
 
         initViews()

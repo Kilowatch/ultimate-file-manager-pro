@@ -696,8 +696,15 @@ class UFMPlaybackService : Service() {
             GoRoLog.e("UFMPlaybackService", "handlePlayAction: no initialPath or extra_file_path in intent")
             return
         }
-        val playlist = intent.getStringArrayListExtra("playlist")
-        val playlistFinal: ArrayList<String> = playlist ?: arrayListOf(initialPath)
+        // Prefer cache written by UFMPlayerActivity (avoids TransactionTooLargeException)
+        val serviceCacheKey = intent.getStringExtra("serviceCacheKey") ?: ""
+        val cachedList = PlaylistCache.take(serviceCacheKey)
+        val legacyList = intent.getStringArrayListExtra("playlist")
+        val playlistFinal: ArrayList<String> = when {
+            cachedList != null -> ArrayList(cachedList)
+            legacyList != null -> legacyList
+            else -> arrayListOf(initialPath)
+        }
         val startIndex = playlistFinal.indexOf(initialPath).coerceAtLeast(0)
 
         startPlayback(
