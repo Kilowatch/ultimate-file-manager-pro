@@ -10221,5 +10221,43 @@ Maximal %d Anhänge erlaubt
     <string name="support_file_already_attached">
 Datei ist bereits angehängt
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Absturz erkannt
+</string>
+    <string name="crash_report_anr_title">
+App-Einfrieren erkannt
+</string>
+    <string name="crash_report_crash_message">
+UFM ist während Ihrer letzten Sitzung abgestürzt. Möchten Sie einen Absturzbericht senden, um uns bei der Behebung zu helfen? Es werden keine persönlichen Daten übermittelt.
+</string>
+    <string name="crash_report_anr_message">
+UFM hat während Ihrer letzten Sitzung nicht mehr reagiert. Möchten Sie einen Einfrierbericht senden, um uns bei der Behebung zu helfen? Es werden keine persönlichen Daten übermittelt.
+</string>
+    <string name="crash_report_send">
+Bericht senden
+</string>
+    <string name="crash_report_no_thanks">
+Nein, danke
+</string>
+    <string name="crash_report_sending">
+Senden…
+</string>
+    <string name="crash_report_sent">
+Bericht gesendet. Vielen Dank!
+</string>
+    <string name="crash_report_failed">
+Senden des Berichts fehlgeschlagen. Er wurde verworfen.
+</string>
+    <string name="settings_crash_report_title">
+Absturz- &amp; ANR-Meldungen
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Erkennt Abstürze &amp; App-Einfrieren beim Start, um Diagnoseprotokolle zu senden
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Absturz- und Einfriererkennung deaktiviert
+</string>
 </resources>
 

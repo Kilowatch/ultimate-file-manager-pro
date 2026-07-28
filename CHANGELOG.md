@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.6] — 2026-07-27
 
+### Added
+- **Crash & ANR Detection & Reporting System**: Automatically captures uncaught crashes and main-thread ANR freezes. Presents a prompt on app restart to submit structured crash/ANR details to support (or delete locally on skip), with layout support for both Mobile and Android TV.
+
 ### Security
 - **Pinned Netty to 4.1.136.Final** to patch 20+ CVEs in the transitive Netty dependency (bundled via Ktor 3.5.0). Fixes CVE-2026-50010 (High, hostname verification bypass), CVE-2026-55831 (High, SPDY heap overflow), CVE-2026-55833 (zip bomb), CVE-2026-56745 (memory exhaustion), and ~16 other CVEs. No code changes required — Gradle conflict resolution picks the pinned version.
 

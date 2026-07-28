@@ -10221,5 +10221,43 @@ URL сервера
     <string name="support_file_already_attached">
 Файл уже прикреплен
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Обнаружен сбой
+</string>
+    <string name="crash_report_anr_title">
+Обнаружено зависание приложения
+</string>
+    <string name="crash_report_crash_message">
+UFM аварийно завершился во время вашего последнего сеанса. Хотите отправить отчет о сбое, чтобы помочь нам его исправить? Личные данные не включаются.
+</string>
+    <string name="crash_report_anr_message">
+UFM перестал отвечать во время вашего последнего сеанса. Хотите отправить отчет о зависании, чтобы помочь нам его исправить? Личные данные не включаются.
+</string>
+    <string name="crash_report_send">
+Отправить отчет
+</string>
+    <string name="crash_report_no_thanks">
+Нет, спасибо
+</string>
+    <string name="crash_report_sending">
+Отправка…
+</string>
+    <string name="crash_report_sent">
+Отчет отправлен. Спасибо!
+</string>
+    <string name="crash_report_failed">
+Не удалось отправить отчет. Он был отклонен.
+</string>
+    <string name="settings_crash_report_title">
+Отчеты о сбоях и ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Обнаруживает сбои и зависания приложений при запуске для отправки диагностических журналов
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Обнаружение сбоев и зависаний отключено
+</string>
 </resources>
 

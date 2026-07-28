@@ -10221,5 +10221,43 @@ UFM 플레이어 설정
     <string name="support_file_already_attached">
 파일이 이미 첨부되었습니다
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+충돌 감지됨
+</string>
+    <string name="crash_report_anr_title">
+앱 멈춤 감지됨
+</string>
+    <string name="crash_report_crash_message">
+UFM이 마지막 사용 중 충돌했습니다. 문제 해결을 위해 충돌 보고서를 보내시겠습니까? 개인 정보는 포함되지 않습니다.
+</string>
+    <string name="crash_report_anr_message">
+UFM이 마지막 사용 중 응답하지 않았습니다. 문제 해결을 위해 멈춤 보고서를 보내시겠습니까? 개인 정보는 포함되지 않습니다.
+</string>
+    <string name="crash_report_send">
+보고서 보내기
+</string>
+    <string name="crash_report_no_thanks">
+아니요
+</string>
+    <string name="crash_report_sending">
+전송 중…
+</string>
+    <string name="crash_report_sent">
+보고서가 전송되었습니다. 감사합니다!
+</string>
+    <string name="crash_report_failed">
+보고서 전송에 실패했습니다. 폐기되었습니다.
+</string>
+    <string name="settings_crash_report_title">
+충돌 및 ANR 보고
+</string>
+    <string name="settings_crash_report_subtitle_on">
+시작 시 충돌 및 앱 정지를 감지하여 진단 로그를 제출합니다
+</string>
+    <string name="settings_crash_report_subtitle_off">
+충돌 및 정지 감지 비활성화됨
+</string>
 </resources>
 

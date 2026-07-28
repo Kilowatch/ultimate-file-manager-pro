@@ -10,6 +10,7 @@ import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
 import za.kilowatch.ultimatefilemanager.network.PairingServer
 import za.kilowatch.ultimatefilemanager.network.SmbSessionPool
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
+import za.kilowatch.ultimatefilemanager.support.CrashReportManager
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.security.Security
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -49,6 +50,10 @@ class UfmApplication : Application() {
         // FirebaseApp.initializeApp() manually below, after the provider list is stable.
         try { Security.removeProvider("BC") } catch (_: Exception) {}
         try { Security.addProvider(BouncyCastleProvider()) } catch (_: Exception) {}
+
+        // Install crash handler BEFORE super.onCreate() so any exception thrown
+        // during Activity/ContentProvider init is captured.
+        CrashReportManager.install(this)
 
         super.onCreate()
 
@@ -226,6 +231,9 @@ class UfmApplication : Application() {
                 Log.e(TAG, "Failed to start NetworkHttpProxyServer", e)
             }
         }.apply { name = "ufm-http-proxy-init"; isDaemon = true; start() }
+
+        // Start ANR watchdog after super.onCreate() — main looper must exist first
+        CrashReportManager.installAnrWatchdog(this)
 
         // Initialize Review Prefs
         za.kilowatch.ultimatefilemanager.util.ReviewPrefs.init(this)

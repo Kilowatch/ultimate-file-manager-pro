@@ -10221,5 +10221,43 @@ URL-адреса сервера
     <string name="support_file_already_attached">
 Файл уже прикріплено
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Виявлено збій
+</string>
+    <string name="crash_report_anr_title">
+Виявлено зависання додатку
+</string>
+    <string name="crash_report_crash_message">
+UFM аварійно завершив роботу під час вашого останнього сеансу. Бажаєте надіслати звіт про збій, щоб допомогти нам виправити це? Жодні особисті дані не включено.
+</string>
+    <string name="crash_report_anr_message">
+UFM перестав відповідати під час вашого останнього сеансу. Бажаєте надіслати звіт про зависання, щоб допомогти нам виправити це? Жодні особисті дані не включено.
+</string>
+    <string name="crash_report_send">
+Надіслати звіт
+</string>
+    <string name="crash_report_no_thanks">
+Ні, дякую
+</string>
+    <string name="crash_report_sending">
+Надсилання…
+</string>
+    <string name="crash_report_sent">
+Звіт надіслано. Дякуємо!
+</string>
+    <string name="crash_report_failed">
+Не вдалося надіслати звіт. Його скасовано.
+</string>
+    <string name="settings_crash_report_title">
+Звітування про збої та ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Виявляє збої та зависання додатків під час запуску для надсилання діагностичних журналів
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Виявлення збоїв та зависань вимкнено
+</string>
 </resources>
 

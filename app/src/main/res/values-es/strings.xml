@@ -10233,5 +10233,43 @@ Máximo de %d archivos adjuntos permitidos
     <string name="support_file_already_attached">
 El archivo ya está adjunto
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Bloqueo detectado
+</string>
+    <string name="crash_report_anr_title">
+Congelamiento de la aplicación detectado
+</string>
+    <string name="crash_report_crash_message">
+UFM falló durante tu última sesión. ¿Te gustaría enviar un informe de bloqueo para ayudarnos a solucionarlo? No se incluyen datos personales.
+</string>
+    <string name="crash_report_anr_message">
+UFM dejó de responder durante tu última sesión. ¿Te gustaría enviar un informe de congelamiento para ayudarnos a solucionarlo? No se incluyen datos personales.
+</string>
+    <string name="crash_report_send">
+Enviar informe
+</string>
+    <string name="crash_report_no_thanks">
+No, gracias
+</string>
+    <string name="crash_report_sending">
+Enviando…
+</string>
+    <string name="crash_report_sent">
+Informe enviado. ¡Gracias!
+</string>
+    <string name="crash_report_failed">
+No se pudo enviar el informe. Ha sido descartado.
+</string>
+    <string name="settings_crash_report_title">
+Informes de bloqueos y ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Detecta bloqueos y congelamientos de la aplicación al inicio para enviar registros de diagnóstico
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Detección de bloqueos y congelamientos desactivada
+</string>
 </resources>
 

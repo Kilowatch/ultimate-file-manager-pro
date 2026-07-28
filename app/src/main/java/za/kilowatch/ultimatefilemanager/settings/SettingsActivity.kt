@@ -32,6 +32,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchAnalytics: SwitchMaterial
     private lateinit var txtAnalyticsSubtitle: TextView
 
+    private lateinit var switchCrashReport: SwitchMaterial
+    private lateinit var txtCrashReportSubtitle: TextView
+
     private lateinit var switchHiddenFiles: SwitchMaterial
     private lateinit var txtHiddenFilesSubtitle: TextView
 
@@ -194,6 +197,18 @@ class SettingsActivity : AppCompatActivity() {
         // Tapping the whole card or just the switch both toggle it
         cardAnalytics.setOnClickListener { toggleAnalytics(prefs) }
         switchAnalytics.setOnCheckedChangeListener(null) // avoid double-fire; card handles it
+
+        // Crash & ANR Reporting toggle
+        val cardCrashReport = findViewById<MaterialCardView>(R.id.cardCrashReport)
+        switchCrashReport = findViewById(R.id.switchCrashReport)
+        txtCrashReportSubtitle = findViewById(R.id.txtCrashReportSubtitle)
+
+        val crashReportEnabled = za.kilowatch.ultimatefilemanager.support.CrashReportManager.isEnabled(this)
+        switchCrashReport.isChecked = crashReportEnabled
+        updateCrashReportSubtitle(crashReportEnabled)
+
+        cardCrashReport.setOnClickListener { toggleCrashReport() }
+        switchCrashReport.setOnCheckedChangeListener(null)
 
         // Hidden Files toggle
         val cardHiddenFiles = findViewById<MaterialCardView>(R.id.cardHiddenFiles)
@@ -738,6 +753,13 @@ class SettingsActivity : AppCompatActivity() {
             updateAnalyticsSubtitle(enabled)
         }
 
+        // Refresh crash & ANR reporting subtitle
+        if (::switchCrashReport.isInitialized) {
+            val enabled = za.kilowatch.ultimatefilemanager.support.CrashReportManager.isEnabled(this)
+            switchCrashReport.isChecked = enabled
+            updateCrashReportSubtitle(enabled)
+        }
+
         // Refresh hidden files subtitle
         if (::switchHiddenFiles.isInitialized) {
             val enabled = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
@@ -970,6 +992,21 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_analytics_subtitle_on)
         } else {
             getString(R.string.settings_analytics_subtitle_off)
+        }
+    }
+
+    private fun toggleCrashReport() {
+        val newValue = !switchCrashReport.isChecked
+        switchCrashReport.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.support.CrashReportManager.setEnabled(this, newValue)
+        updateCrashReportSubtitle(newValue)
+    }
+
+    private fun updateCrashReportSubtitle(enabled: Boolean) {
+        txtCrashReportSubtitle.text = if (enabled) {
+            getString(R.string.settings_crash_report_subtitle_on)
+        } else {
+            getString(R.string.settings_crash_report_subtitle_off)
         }
     }
 

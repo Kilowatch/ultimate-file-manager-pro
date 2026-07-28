@@ -10221,5 +10221,43 @@ Box
     <string name="support_file_already_attached">
 الملف مرفق بالفعل
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+تم اكتشاف تعطل
+</string>
+    <string name="crash_report_anr_title">
+تم اكتشاف تجميد التطبيق
+</string>
+    <string name="crash_report_crash_message">
+تعطل UFM خلال الجلسة السابقة. هل ترغب في إرسال تقرير تعطل لمساعدتنا في إصلاحه؟ لا تتضمن أي بيانات شخصية.
+</string>
+    <string name="crash_report_anr_message">
+توقف UFM عن الاستجابة خلال الجلسة السابقة. هل ترغب في إرسال تقرير تجميد لمساعدتنا في إصلاحه؟ لا تتضمن أي بيانات شخصية.
+</string>
+    <string name="crash_report_send">
+إرسال التقرير
+</string>
+    <string name="crash_report_no_thanks">
+لا، شكراً
+</string>
+    <string name="crash_report_sending">
+جارٍ الإرسال…
+</string>
+    <string name="crash_report_sent">
+تم إرسال التقرير. شكراً لك!
+</string>
+    <string name="crash_report_failed">
+فشل إرسال التقرير. تم التخلص منه.
+</string>
+    <string name="settings_crash_report_title">
+الإبلاغ عن الأعطال وتجمّد التطبيقات
+</string>
+    <string name="settings_crash_report_subtitle_on">
+يكتشف الأعطال وتجمّد التطبيقات عند بدء التشغيل لإرسال سجلات التشخيص
+</string>
+    <string name="settings_crash_report_subtitle_off">
+كشف الأعطال والتجمّد مُعطّل
+</string>
 </resources>
 

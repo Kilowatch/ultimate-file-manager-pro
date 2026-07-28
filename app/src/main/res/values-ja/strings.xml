@@ -10221,5 +10221,43 @@ OK
     <string name="support_file_already_attached">
 ファイルは既に添付されています
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+クラッシュが検出されました
+</string>
+    <string name="crash_report_anr_title">
+アプリのフリーズが検出されました
+</string>
+    <string name="crash_report_crash_message">
+UFMが前回のセッション中にクラッシュしました。修正に役立つクラッシュレポートを送信しますか？個人情報は含まれていません。
+</string>
+    <string name="crash_report_anr_message">
+UFMが前回のセッション中に応答しなくなりました。修正に役立つフリーズレポートを送信しますか？個人情報は含まれていません。
+</string>
+    <string name="crash_report_send">
+レポートを送信
+</string>
+    <string name="crash_report_no_thanks">
+結構です
+</string>
+    <string name="crash_report_sending">
+送信中…
+</string>
+    <string name="crash_report_sent">
+レポートを送信しました。ありがとうございます！
+</string>
+    <string name="crash_report_failed">
+レポートの送信に失敗しました。破棄されました。
+</string>
+    <string name="settings_crash_report_title">
+クラッシュ＆ANRレポート
+</string>
+    <string name="settings_crash_report_subtitle_on">
+起動時のクラッシュやアプリのフリーズを検出し、診断ログを送信します
+</string>
+    <string name="settings_crash_report_subtitle_off">
+クラッシュとフリーズの検出が無効
+</string>
 </resources>
 

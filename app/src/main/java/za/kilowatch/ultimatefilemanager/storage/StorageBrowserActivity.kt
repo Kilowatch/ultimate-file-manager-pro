@@ -71,6 +71,7 @@ import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.indexing.IndexingUiHelper
 import za.kilowatch.ultimatefilemanager.smartsort.SmartSortActivity
+import za.kilowatch.ultimatefilemanager.support.CrashReportDialogHelper
 import androidx.lifecycle.lifecycleScope
 import android.widget.RadioButton
 import com.google.android.material.card.MaterialCardView
@@ -609,6 +610,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
     private var hasShownReviewPopupThisSession = false
     private var hasCheckedAutoBackupRestoreThisSession = false
+    private var hasCheckedCrashReportThisSession = false
     /** Timestamp of the last background device-ping pass. Prevents hammering the OEM
      *  Kumiho telemetry hook (and the network) every time onResume fires. */
     private var lastDevicePingMs = 0L
@@ -676,6 +678,12 @@ class StorageBrowserActivity : AppCompatActivity() {
         if (!hasCheckedAutoBackupRestoreThisSession) {
             hasCheckedAutoBackupRestoreThisSession = true
             checkAutoBackupRestore()
+        }
+
+        // Check for pending crash/ANR report and offer to submit it
+        if (!hasCheckedCrashReportThisSession) {
+            hasCheckedCrashReportThisSession = true
+            CrashReportDialogHelper.maybeShowCrashReportDialog(this, lifecycleScope)
         }
     }
 

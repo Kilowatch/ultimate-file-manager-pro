@@ -10221,5 +10221,43 @@ Máximo de %d anexos permitidos
     <string name="support_file_already_attached">
 O arquivo já está anexado
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Crash Detectado
+</string>
+    <string name="crash_report_anr_title">
+Congelamento do App Detectado
+</string>
+    <string name="crash_report_crash_message">
+O UFM sofreu uma falha durante sua última sessão. Gostaria de enviar um relatório de falha para nos ajudar a corrigi-la? Nenhum dado pessoal é incluído.
+</string>
+    <string name="crash_report_anr_message">
+O UFM parou de responder durante sua última sessão. Gostaria de enviar um relatório de congelamento para nos ajudar a corrigir o problema? Nenhum dado pessoal é incluído.
+</string>
+    <string name="crash_report_send">
+Enviar Relatório
+</string>
+    <string name="crash_report_no_thanks">
+Não, obrigado
+</string>
+    <string name="crash_report_sending">
+Enviando…
+</string>
+    <string name="crash_report_sent">
+Relatório enviado. Obrigado!
+</string>
+    <string name="crash_report_failed">
+Falha ao enviar relatório. Ele foi descartado.
+</string>
+    <string name="settings_crash_report_title">
+Relatório de Crash e ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Detecta crashes e congelamentos de apps na inicialização para enviar logs de diagnóstico
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Detecção de crash e congelamento desativada
+</string>
 </resources>
 

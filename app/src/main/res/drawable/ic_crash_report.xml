@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ic_crash_report
+    Phone silhouette with a lightning bolt inside the screen area.
+    - The phone body uses a cutout (evenOdd fill) so the screen punch-through
+      is transparent, then the bolt is drawn as a separate path on top.
+    - 24x24 viewport, single colour — tinted at runtime via app:tint.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Phone body with home-button dot and screen cutout (evenOdd) -->
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:fillType="evenOdd"
+        android:pathData="
+M7,1 L17,1
+C18.66,1 20,2.34 20,4
+L20,20
+C20,21.66 18.66,23 17,23
+L7,23
+C5.34,23 4,21.66 4,20
+L4,4
+C4,2.34 5.34,1 7,1Z
+
+M6,5 L6,18 L18,18 L18,5Z
+
+M11.5,20 C11.5,19.72 11.72,19.5 12,19.5 C12.28,19.5 12.5,19.72 12.5,20 C12.5,20.28 12.28,20.5 12,20.5 C11.72,20.5 11.5,20.28 11.5,20Z
+" />
+
+    <!-- Lightning bolt inside the screen — crash / ANR metaphor -->
+    <path
+        android:fillColor="@color/ufm_text_primary"
+        android:pathData="M13.5,6 L10,12.5 L12.5,12.5 L10.5,17 L15,10 L12.5,10Z" />
+
+</vector>

@@ -3608,5 +3608,19 @@
     <string name="support_proceed">Proceed</string>
     <string name="support_max_attachments_reached">Maximum %d attachments allowed</string>
     <string name="support_file_already_attached">File is already attached</string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">Crash Detected</string>
+    <string name="crash_report_anr_title">App Freeze Detected</string>
+    <string name="crash_report_crash_message">UFM crashed during your last session. Would you like to send a crash report to help us fix it? No personal data is included.</string>
+    <string name="crash_report_anr_message">UFM stopped responding during your last session. Would you like to send a freeze report to help us fix it? No personal data is included.</string>
+    <string name="crash_report_send">Send Report</string>
+    <string name="crash_report_no_thanks">No Thanks</string>
+    <string name="crash_report_sending">Sending…</string>
+    <string name="crash_report_sent">Report sent. Thank you!</string>
+    <string name="crash_report_failed">Failed to send report. It has been discarded.</string>
+    <string name="settings_crash_report_title">Crash &amp; ANR Reporting</string>
+    <string name="settings_crash_report_subtitle_on">Detects crashes &amp; app freezes on startup to submit diagnostic logs</string>
+    <string name="settings_crash_report_subtitle_off">Crash and freeze detection disabled</string>
 </resources>
 

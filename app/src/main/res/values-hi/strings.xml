@@ -10221,5 +10221,43 @@ UFM प्लेयर सेटिंग्स
     <string name="support_file_already_attached">
 फ़ाइल पहले से ही संलग्न है
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+क्रैश डिटेक्ट हुआ
+</string>
+    <string name="crash_report_anr_title">
+ऐप फ़्रीज़ डिटेक्ट हुआ
+</string>
+    <string name="crash_report_crash_message">
+UFM आपके पिछले सत्र में क्रैश हो गया। क्या आप इसे ठीक करने में मदद करने के लिए क्रैश रिपोर्ट भेजना चाहेंगे? कोई व्यक्तिगत डेटा शामिल नहीं है।
+</string>
+    <string name="crash_report_anr_message">
+UFM ने आपके पिछले सत्र में प्रतिक्रिया देना बंद कर दिया। क्या आप इसे ठीक करने में मदद करने के लिए फ़्रीज़ रिपोर्ट भेजना चाहेंगे? कोई व्यक्तिगत डेटा शामिल नहीं है।
+</string>
+    <string name="crash_report_send">
+रिपोर्ट भेजें
+</string>
+    <string name="crash_report_no_thanks">
+नहीं धन्यवाद
+</string>
+    <string name="crash_report_sending">
+भेजा जा रहा है…
+</string>
+    <string name="crash_report_sent">
+रिपोर्ट भेज दी गई। धन्यवाद!
+</string>
+    <string name="crash_report_failed">
+रिपोर्ट भेजने में विफल। इसे त्याग दिया गया है।
+</string>
+    <string name="settings_crash_report_title">
+क्रैश और ANR रिपोर्टिंग
+</string>
+    <string name="settings_crash_report_subtitle_on">
+स्टार्टअप पर क्रैश और ऐप फ्रीज़ का पता लगाकर डायग्नोस्टिक लॉग सबमिट करता है
+</string>
+    <string name="settings_crash_report_subtitle_off">
+क्रैश और फ्रीज़ का पता लगाना अक्षम
+</string>
 </resources>
 

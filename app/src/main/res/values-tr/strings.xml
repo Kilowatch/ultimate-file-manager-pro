@@ -10221,5 +10221,43 @@ En fazla %d ek eklenebilir
     <string name="support_file_already_attached">
 Dosya zaten eklenmiş
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Çökme Algılandı
+</string>
+    <string name="crash_report_anr_title">
+Uygulama Donması Algılandı
+</string>
+    <string name="crash_report_crash_message">
+UFM son oturumunuzda çöktü. Sorunu çözmemize yardımcı olması için bir çökme raporu göndermek ister misiniz? Hiçbir kişisel veri dahil değildir.
+</string>
+    <string name="crash_report_anr_message">
+UFM son oturumunuzda yanıt vermeyi durdurdu. Sorunu çözmemize yardımcı olması için bir donma raporu göndermek ister misiniz? Hiçbir kişisel veri dahil değildir.
+</string>
+    <string name="crash_report_send">
+Raporu Gönder
+</string>
+    <string name="crash_report_no_thanks">
+Hayır, Teşekkürler
+</string>
+    <string name="crash_report_sending">
+Gönderiliyor…
+</string>
+    <string name="crash_report_sent">
+Rapor gönderildi. Teşekkürler!
+</string>
+    <string name="crash_report_failed">
+Rapor gönderilemedi. Atıldı.
+</string>
+    <string name="settings_crash_report_title">
+Çökme &amp; ANR Raporlama
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Başlangıçta çökmeleri ve uygulama donmalarını tespit ederek tanılama günlükleri gönderir
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Çökme ve donma algılama devre dışı
+</string>
 </resources>
 

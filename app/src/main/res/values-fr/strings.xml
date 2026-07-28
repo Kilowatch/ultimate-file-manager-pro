@@ -10221,5 +10221,43 @@ Maximum %d pièces jointes autorisées
     <string name="support_file_already_attached">
 Fichier déjà joint
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Plantage détecté
+</string>
+    <string name="crash_report_anr_title">
+Appli figée détectée
+</string>
+    <string name="crash_report_crash_message">
+UFM a planté lors de votre dernière session. Souhaitez-vous envoyer un rapport de plantage pour nous aider à le réparer ? Aucune donnée personnelle n\\\'est incluse.
+</string>
+    <string name="crash_report_anr_message">
+UFM a cessé de répondre lors de votre dernière session. Souhaitez-vous envoyer un rapport de blocage pour nous aider à le réparer ? Aucune donnée personnelle n\\\'est incluse.
+</string>
+    <string name="crash_report_send">
+Envoyer le rapport
+</string>
+    <string name="crash_report_no_thanks">
+Non merci
+</string>
+    <string name="crash_report_sending">
+Envoi en cours…
+</string>
+    <string name="crash_report_sent">
+Rapport envoyé. Merci !
+</string>
+    <string name="crash_report_failed">
+Échec de l\\\'envoi du rapport. Il a été supprimé.
+</string>
+    <string name="settings_crash_report_title">
+Signalement des plantages et des ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Détecte les plantages et les blocages de l\'application au démarrage pour soumettre des journaux de diagnostic
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Détection des plantages et blocages désactivée
+</string>
 </resources>
 

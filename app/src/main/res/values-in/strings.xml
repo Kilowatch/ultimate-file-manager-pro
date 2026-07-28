@@ -10221,5 +10221,43 @@ Maksimum %d lampiran diizinkan
     <string name="support_file_already_attached">
 Berkas sudah dilampirkan
 </string>
+
+    <!-- ── Crash / ANR Report ──────────────────────────────────── -->
+    <string name="crash_report_crash_title">
+Crash Terdeteksi
+</string>
+    <string name="crash_report_anr_title">
+Freeze Aplikasi Terdeteksi
+</string>
+    <string name="crash_report_crash_message">
+UFM mengalami crash pada sesi terakhir Anda. Apakah Anda ingin mengirim laporan crash untuk membantu kami memperbaikinya? Tidak ada data pribadi yang disertakan.
+</string>
+    <string name="crash_report_anr_message">
+UFM berhenti merespon selama sesi terakhir Anda. Apakah Anda ingin mengirim laporan freeze untuk membantu kami memperbaikinya? Tidak ada data pribadi yang disertakan.
+</string>
+    <string name="crash_report_send">
+Kirim Laporan
+</string>
+    <string name="crash_report_no_thanks">
+Tidak, Terima Kasih
+</string>
+    <string name="crash_report_sending">
+Mengirim…
+</string>
+    <string name="crash_report_sent">
+Laporan terkirim. Terima kasih!
+</string>
+    <string name="crash_report_failed">
+Gagal mengirim laporan. Laporan tersebut telah dibuang.
+</string>
+    <string name="settings_crash_report_title">
+Pelaporan Crash &amp; ANR
+</string>
+    <string name="settings_crash_report_subtitle_on">
+Mendeteksi crash dan pembekuan aplikasi saat startup untuk mengirimkan log diagnostik
+</string>
+    <string name="settings_crash_report_subtitle_off">
+Deteksi crash dan pembekuan dinonaktifkan
+</string>
 </resources>
 
