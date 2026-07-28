@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.6] — 2026-07-27
 
+### Security
+- **Pinned Netty to 4.1.136.Final** to patch 20+ CVEs in the transitive Netty dependency (bundled via Ktor 3.5.0). Fixes CVE-2026-50010 (High, hostname verification bypass), CVE-2026-55831 (High, SPDY heap overflow), CVE-2026-55833 (zip bomb), CVE-2026-56745 (memory exhaustion), and ~16 other CVEs. No code changes required — Gradle conflict resolution picks the pinned version.
+
 ### Fixed
 - Fixed image viewer edge-to-edge layout not being applied correctly in landscape orientation, causing content to bleed under system bars on the sides. Fixed toolbar being visually cut off when rotating back from landscape to portrait.
 - Fixed app crash when opening the Slideshow or UFM Media Player from a folder containing a large number of files (e.g. DCIM/Camera with 5000+ items). The crash was caused by Android's 1 MB Binder IPC limit being exceeded when serialising the full playlist into an Intent. Playlists are now passed via an in-memory cache, with a legacy fallback for smaller lists and an on-device folder re-scan as a last resort.

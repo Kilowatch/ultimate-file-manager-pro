@@ -343,11 +343,26 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.viewpager2)
     // Ktor embedded HTTP server for FileServer (replaces NanoHTTPD in FileServer.kt)
-    // SEC: upgraded 3.4.2 → 3.5.0 to pick up patched Netty ≥ 4.1.135.Final (CVE-2026-50010)
+    // SEC: upgraded 3.4.2 -> 3.5.0; Netty pinned to 4.1.136.Final below (CVE-2026-50010, CVE-2026-55831)
     implementation("io.ktor:ktor-server-core:3.5.0")
     implementation("io.ktor:ktor-server-netty:3.5.0")
     implementation("io.ktor:ktor-server-content-negotiation:3.5.0")
     implementation("io.ktor:ktor-server-status-pages:3.5.0")
+    // -- Netty Security Pins (transitive via Ktor) ----------------------------------
+    // Ktor 3.5.0 released 2026-05-14, before Netty 4.1.135.Final (2026-06-02).
+    // Pin to 4.1.136.Final (2026-07-09) to fix:
+    //   CVE-2026-50010  - High - hostname verification bypass (netty-handler)
+    //   CVE-2026-55831  - High - SPDY heap overflow (netty-codec-http)
+    //   CVE-2026-55833  - Med  - zip bomb (netty-codec-http)
+    //   CVE-2026-56745  - Med  - memory exhaustion (netty-codec-http)
+    //   ~16 other CVEs fixed up to 4.1.136.Final
+    implementation("io.netty:netty-codec-http:4.1.136.Final")
+    implementation("io.netty:netty-handler:4.1.136.Final")
+    implementation("io.netty:netty-codec:4.1.136.Final")
+    implementation("io.netty:netty-transport:4.1.136.Final")
+    implementation("io.netty:netty-common:4.1.136.Final")
+    implementation("io.netty:netty-buffer:4.1.136.Final")
+    // -------------------------------------------------------------------------------
     // NanoHTTPD retained for PairingServer (HTTPS/TLS TV pairing — uses makeSecure())
     implementation("org.nanohttpd:nanohttpd:2.3.1")
     // Google Play Billing (Tip Jar — Google variants)
