@@ -170,6 +170,34 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 share
             }
 
+            // Compute the true remote sub-path for all sync operations.
+            //
+            // Two configurations exist:
+            //
+            // A) Server-mode / empty remotePath share (isServerMode=true OR share.remotePath=""):
+            //    effectiveShare.remotePath = profile.remotePath  (e.g. "Media/Movies")
+            //    SmbShareClient.splitSharePath extracts "Media" as the share name and "Movies"
+            //    as the base-path. The entire path is already encoded in effectiveShare.remotePath,
+            //    so syncRemotePath must be "" — passing anything else double-counts the path.
+            //
+            // B) Standard non-server-mode share (share.remotePath = "/Media"):
+            //    effectiveShare = share (unchanged). splitSharePath extracts "Media" as the share
+            //    name, base-path="". The sub-path comes from profile.remotePath (e.g. "Movies").
+            //    For SMB, strip the leading share-name segment in case the browser included it.
+            val syncRemotePath: String = when {
+                share.isServerMode || share.remotePath.isEmpty() -> ""  // full path is in effectiveShare.remotePath
+                share.type == ShareType.SMB -> {
+                    val shareName = share.remotePath.trimStart('/').split("/").first()
+                    val raw = profile.remotePath.trimStart('/')
+                    when {
+                        raw == shareName -> ""                               // share root selected
+                        raw.startsWith("$shareName/") -> raw.removePrefix("$shareName/") // sub-folder
+                        else -> raw                                          // already relative (normal case)
+                    }
+                }
+                else -> profile.remotePath
+            }
+
             if (effectiveShare.remotePath.isEmpty() && effectiveShare.type == ShareType.SMB) {
                 Log.w(TAG, "No SMB share path specified for profile '${profile.name}'")
                 if (profile.notificationsEnabled) {
@@ -221,9 +249,9 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
             Log.d(TAG, "Connection test passed. Starting ${profile.direction} sync for '${profile.name}'")
             when (profile.direction) {
-                "upload" -> doUpload(effectiveShare, profile, localDir, notificationId)
-                "download" -> doDownload(effectiveShare, profile, localDir, notificationId)
-                "twoway" -> doTwoway(effectiveShare, profile, localDir, notificationId)
+                "upload" -> doUpload(effectiveShare, profile, localDir, notificationId, syncRemotePath)
+                "download" -> doDownload(effectiveShare, profile, localDir, notificationId, syncRemotePath)
+                "twoway" -> doTwoway(effectiveShare, profile, localDir, notificationId, syncRemotePath)
                 else -> Log.w(TAG, "Unknown direction: ${profile.direction}")
             }
 
@@ -253,10 +281,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     // ── Upload: local → remote ─────────────────────────────────────────────────
 
     private suspend fun doUpload(
-        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int
+        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int,
+        remotePath: String
     ) {
-        val remoteFiles = listRemoteFiles(share, profile.remotePath)
-        Log.d(TAG, "doUpload: ${remoteFiles.size} remote files, remotePath='${profile.remotePath}'")
+        val remoteFiles = listRemoteFiles(share, remotePath)
+        Log.d(TAG, "doUpload: ${remoteFiles.size} remote files, remotePath='$remotePath'")
         val remoteSizes = remoteFiles.associate { it.name to it.size }
         val remoteTimestamps = remoteFiles.associate { it.name to it.lastModified }
 
@@ -272,7 +301,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 Log.d(TAG, "doUpload: skipping directory '$name'")
                 continue
             }
-            val remoteSize = resolveRemoteSize(share, remoteSizes[name], name, profile.remotePath)
+            val remoteSize = resolveRemoteSize(share, remoteSizes[name], name, remotePath)
             val remoteTimestamp = remoteTimestamps[name] ?: 0L
 
             val needsUpload = remoteSize == null
@@ -287,7 +316,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         if (filesToUpload.isEmpty()) {
             Log.d(TAG, "doUpload: No files to upload (local dir contents: ${localDir.list()?.size ?: 0} files)")
         } else {
-            uploadFiles(share, profile, filesToUpload, notificationId)
+            uploadFiles(share, profile, filesToUpload, notificationId, remotePath)
         }
 
         // Sync deletions (upload direction): only delete remote files that UFM previously
@@ -308,7 +337,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                     // Only delete if UFM uploaded it before AND it is no longer in the local folder
                     if (hash in previousHashes && remoteFile.name !in currentLocalNames) {
                         try {
-                            deleteRemoteFileByType(share, "${profile.remotePath.trimEnd('/')}/${remoteFile.name}")
+                            deleteRemoteFileByType(share, if (remotePath.isEmpty()) remoteFile.name else "${remotePath.trimEnd('/')}/${remoteFile.name}")
                             Log.d(TAG, "Upload deletion: removed '${remoteFile.name}' from remote")
                         } catch (e: Exception) {
                             Log.e(TAG, "Failed to delete remote '${remoteFile.name}'", e)
@@ -335,12 +364,13 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     // ── Download: remote → local ───────────────────────────────────────────────
 
     private suspend fun doDownload(
-        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int
+        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int,
+        remotePath: String
     ) {
         val allRemoteFiles = if (profile.downloadSubfolders) {
-            listRemoteFilesRecursive(share, profile.remotePath)
+            listRemoteFilesRecursive(share, remotePath)
         } else {
-            listRemoteFiles(share, profile.remotePath)
+            listRemoteFiles(share, remotePath)
         }
         val remoteFiles = allRemoteFiles.filter { passesFilters(it.name, profile, it.path) }
             .filter { passesSizeAgeFilters(it, profile) }
@@ -365,7 +395,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         if (filesToDownload.isEmpty()) {
             Log.d(TAG, "doDownload: No files to download")
         } else {
-            downloadFiles(share, profile, localDir, filesToDownload, notificationId)
+            downloadFiles(share, profile, localDir, filesToDownload, notificationId, remotePath)
         }
 
         // Sync deletions (download direction): only delete local files that UFM previously
@@ -406,9 +436,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     // ── Two-way: upload + download with conflict resolution ────────────────────
 
     private suspend fun doTwoway(
-        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int
+        share: NetworkShare, profile: AdvancedSyncProfile, localDir: File, notificationId: Int,
+        remotePath: String
     ) {
-        val remoteFiles = listRemoteFiles(share, profile.remotePath)
+        val remoteFiles = listRemoteFiles(share, remotePath)
         val remoteSizes = remoteFiles.associate { it.name to it.size }
         val remoteTimestamps = remoteFiles.associate { it.name to it.lastModified }
 
@@ -430,7 +461,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         for (localFile in localFiles) {
             if (localFile.isDirectory) continue
             val name = localFile.name
-            val remoteSize = resolveRemoteSize(share, remoteSizes[name], name, profile.remotePath)
+            val remoteSize = resolveRemoteSize(share, remoteSizes[name], name, remotePath)
             val remoteTimestamp = remoteTimestamps[name] ?: 0L
 
             if (remoteSize == null) {
@@ -475,8 +506,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         }
 
         // Execute transfers
-        if (toUpload.isNotEmpty()) uploadFiles(share, profile, toUpload, notificationId)
-        if (toDownload.isNotEmpty()) downloadFiles(share, profile, localDir, toDownload, notificationId + 1)
+        if (toUpload.isNotEmpty()) uploadFiles(share, profile, toUpload, notificationId, remotePath)
+        if (toDownload.isNotEmpty()) downloadFiles(share, profile, localDir, toDownload, notificationId + 1, remotePath)
         if (conflictLog.length() > 0) profile.conflictLogJson = conflictLog.toString(2)
 
         profile.lastSyncTime = System.currentTimeMillis()
@@ -847,7 +878,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     }
 
     private suspend fun uploadFiles(
-        share: NetworkShare, profile: AdvancedSyncProfile, files: List<File>, notificationId: Int
+        share: NetworkShare, profile: AdvancedSyncProfile, files: List<File>, notificationId: Int,
+        remotePath: String
     ) {
         var syncedCount = 0
         // Track which files were fully and verifiably uploaded so the move-files
@@ -873,7 +905,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             }
 
             try {
-                val remoteFilePath = "${profile.remotePath.trimEnd('/')}/$name"
+                val remoteFilePath = if (remotePath.isEmpty()) name else "${remotePath.trimEnd('/')}/$name"
                 val success = za.kilowatch.ultimatefilemanager.util.FileTransferGuard.guardedCopy(
                     sourceName = name,
                     sourceSize = file.length(),
@@ -905,7 +937,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         if (profile.moveFiles && uploadedFiles.isNotEmpty()) {
             for (file in uploadedFiles) {
                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(
-                    share, "${profile.remotePath.trimEnd('/')}/${file.name}"
+                    share, if (remotePath.isEmpty()) file.name else "${remotePath.trimEnd('/')}/${file.name}"
                 )
                 if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                         remoteSize, file.length(), file.name
@@ -950,7 +982,8 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
     private suspend fun downloadFiles(
         share: NetworkShare, profile: AdvancedSyncProfile, localDir: File,
-        files: List<NetworkFile>, notificationId: Int
+        files: List<NetworkFile>, notificationId: Int,
+        remotePath: String
     ) {
         var syncedCount = 0
         for ((index, remoteFile) in files.withIndex()) {
@@ -974,11 +1007,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
             try {
                 // Determine the remote file path and local destination
                 val remoteFilePath = if (remoteFile.path.isNotEmpty() && remoteFile.path != remoteFile.name)
-                    remoteFile.path else "${profile.remotePath.trimEnd('/')}/$name"
+                    remoteFile.path else if (remotePath.isEmpty()) name else "${remotePath.trimEnd('/')}/$name"
                 // Preserve subdirectory structure when downloadSubfolders is enabled
                 val localFile = if (profile.downloadSubfolders && remoteFile.path.length > name.length) {
                     // Extract relative subdirectory from the path
-                    val relativePath = remoteFile.path.removePrefix(profile.remotePath.trimEnd('/')).trimStart('/')
+                    val relativePath = remoteFile.path.removePrefix(remotePath.trimEnd('/')).trimStart('/')
                     val targetFile = File(localDir, relativePath)
                     targetFile.parentFile?.mkdirs()
                     targetFile
@@ -1016,11 +1049,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         if (profile.moveFiles && syncedCount > 0) {
             for (remoteFile in files) {
                 val rfPath = if (remoteFile.path.isNotEmpty() && remoteFile.path != remoteFile.name)
-                    remoteFile.path else "${profile.remotePath.trimEnd('/')}/${remoteFile.name}"
+                    remoteFile.path else if (remotePath.isEmpty()) remoteFile.name else "${remotePath.trimEnd('/')}/${remoteFile.name}"
                 // Recompute local file path matching the download loop logic
                 val rName = remoteFile.name
                 val localFile = if (profile.downloadSubfolders && remoteFile.path.length > rName.length) {
-                    val relativePath = remoteFile.path.removePrefix(profile.remotePath.trimEnd('/')).trimStart('/')
+                    val relativePath = remoteFile.path.removePrefix(remotePath.trimEnd('/')).trimStart('/')
                     File(localDir, relativePath)
                 } else {
                     File(localDir, rName)
