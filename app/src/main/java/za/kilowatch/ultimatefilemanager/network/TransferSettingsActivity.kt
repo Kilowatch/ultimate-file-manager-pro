@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.app.KeyguardManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -146,7 +147,18 @@ class TransferSettingsActivity : AppCompatActivity() {
 
         // Check biometric / device credential enrolment
         val biometricManager = BiometricManager.from(this)
-        val canAuth = biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+        val canAuth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+        } else {
+            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as? KeyguardManager
+            val isDeviceSecure = keyguardManager?.isDeviceSecure == true
+            val biometricStatus = biometricManager.canAuthenticate(BIOMETRIC_STRONG)
+            if (isDeviceSecure || biometricStatus == BiometricManager.BIOMETRIC_SUCCESS) {
+                BiometricManager.BIOMETRIC_SUCCESS
+            } else {
+                biometricStatus
+            }
+        }
 
         if (canAuth == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ||
             canAuth == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ||
@@ -157,12 +169,19 @@ class TransferSettingsActivity : AppCompatActivity() {
 
         // Show biometric prompt — transfer only inside onAuthenticationSucceeded (H-2)
         val executor = ContextCompat.getMainExecutor(this)
-        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+        val promptInfoBuilder = BiometricPrompt.PromptInfo.Builder()
             .setTitle(getString(R.string.transfer_settings))
             .setSubtitle(getString(R.string.transfer_settings_biometric_subtitle))
-            .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
             .setConfirmationRequired(true)
-            .build()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            promptInfoBuilder.setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+        } else {
+            @Suppress("DEPRECATION")
+            promptInfoBuilder.setDeviceCredentialAllowed(true)
+        }
+
+        val promptInfo = promptInfoBuilder.build()
 
         BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {

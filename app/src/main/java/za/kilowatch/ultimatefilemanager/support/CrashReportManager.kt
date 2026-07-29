@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.support
 import android.app.Application
 import android.os.Build
 import android.os.Looper
+import android.os.SystemClock
 import android.util.Log
 import org.json.JSONObject
 import za.kilowatch.ultimatefilemanager.BuildConfig
@@ -292,14 +293,14 @@ object CrashReportManager {
 
     private class AnrWatchdogThread(private val app: Application) : Thread() {
 
-        @Volatile private var lastTickTimestamp = System.currentTimeMillis()
+        @Volatile private var lastTickTimestamp = SystemClock.uptimeMillis()
         @Volatile private var reportWrittenThisSession = false
 
         override fun run() {
             val mainHandler = android.os.Handler(Looper.getMainLooper())
             val ticker = object : Runnable {
                 override fun run() {
-                    lastTickTimestamp = System.currentTimeMillis()
+                    lastTickTimestamp = SystemClock.uptimeMillis()
                     mainHandler.postDelayed(this, 1_000L)
                 }
             }
@@ -314,23 +315,37 @@ object CrashReportManager {
 
                 if (!isEnabled(app)) continue
 
-                val blockedDuration = System.currentTimeMillis() - lastTickTimestamp
-                if (blockedDuration >= WATCHDOG_TIMEOUT_MS && !reportWrittenThisSession) {
-                    // Main thread has been frozen for >=5000ms
-                    val sb = StringBuilder()
+                val blockedDuration = SystemClock.uptimeMillis() - lastTickTimestamp
+                if (blockedDuration >= WATCHDOG_TIMEOUT_MS) {
                     val mainThread = Looper.getMainLooper().thread
-                    sb.appendLine("Thread: main [state=${mainThread.state}]")
-                    mainThread.stackTrace.forEach { sb.appendLine("  at $it") }
-                    sb.appendLine()
+                    val mainStackTrace = mainThread.stackTrace
 
-                    Thread.getAllStackTraces().filterKeys { it.name != "main" }.forEach { (t, frames) ->
-                        sb.appendLine("Thread: ${t.name} [state=${t.state}]")
-                        frames.forEach { sb.appendLine("  at $it") }
+                    // If top frame is nativePollOnce, main thread is idling in looper, NOT blocked!
+                    val isIdleInLooper = mainStackTrace.firstOrNull()?.methodName == "nativePollOnce"
+
+                    if (isIdleInLooper) {
+                        // Reset lastTickTimestamp so false positive is cleared when coming back from sleep/doze
+                        lastTickTimestamp = SystemClock.uptimeMillis()
+                    } else if (!reportWrittenThisSession) {
+                        val sb = StringBuilder()
+                        sb.appendLine("Thread: main [state=${mainThread.state}]")
+                        mainStackTrace.forEach { sb.appendLine("  at $it") }
                         sb.appendLine()
+
+                        Thread.getAllStackTraces().filterKeys { it.name != "main" }.forEach { (t, frames) ->
+                            sb.appendLine("Thread: ${t.name} [state=${t.state}]")
+                            frames.forEach { sb.appendLine("  at $it") }
+                            sb.appendLine()
+                        }
+                        writeAnrReport(app, sb.toString())
+                        reportWrittenThisSession = true
+                        Log.w(TAG, "ANR detected — main thread frozen for ${blockedDuration}ms — report written")
                     }
-                    writeAnrReport(app, sb.toString())
-                    reportWrittenThisSession = true
-                    Log.w(TAG, "ANR detected — main thread frozen for ${blockedDuration}ms — report written")
+                } else {
+                    // Main thread is responsive, reset session flag if previously set
+                    if (blockedDuration < 2_000L) {
+                        reportWrittenThisSession = false
+                    }
                 }
             }
             mainHandler.removeCallbacks(ticker)

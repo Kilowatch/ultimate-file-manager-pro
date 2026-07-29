@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Advanced Sync to SMB subfolders (e.g. `/Media/Movies`) producing no file transfers and no notification. The resolved path did not exist on the server, so the listing returned empty and the sync silently succeeded without copying anything.
 - Fixed ANR freeze when connecting to SMB servers or browsing server shares by moving blocking TCP socket connections outside session pool monitor locks and parallelizing server share accessibility probes.
 - Fixed ANR (App Freeze) on Android TV (Google Chromecast) and mobile caused by MediaStore change notifications flooding the main thread looper, by offloading `ContentObserver` callbacks to a background `HandlerThread`.
+- Fixed `IllegalArgumentException` crash (`Authenticator combination is unsupported on API 29: BIOMETRIC_STRONG | DEVICE_CREDENTIAL`) when initiating settings transfer authentication on Android 10 (API 29) devices.
+- Fixed false-positive ANR (App Freeze) reports when waking from device deep sleep or Doze mode by switching `AnrWatchdogThread` to use `SystemClock.uptimeMillis()` and filtering idle `nativePollOnce` looper stack states.
 
 ## [1.7.6] — 2026-07-27
 

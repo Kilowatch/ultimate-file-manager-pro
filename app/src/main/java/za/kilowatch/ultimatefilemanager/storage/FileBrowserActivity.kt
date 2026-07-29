@@ -349,6 +349,10 @@ class FileBrowserActivity : AppCompatActivity() {
             storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (rootPath.contains("emulated")) "internal" else "external"
         }
         currentDir = File(rootPath)
+        
+        // ANR Watchdog Verification Snippet: Simulates a 6-second main-thread freeze when opening local storage
+        // Uncomment the line below to test genuine ANR detection:
+        // Thread.sleep(6_000L)
         focusPath = intent.getStringExtra(EXTRA_FOCUS_PATH)
 
         // If an initial subfolder was provided (e.g. from closing twin window), navigate there
