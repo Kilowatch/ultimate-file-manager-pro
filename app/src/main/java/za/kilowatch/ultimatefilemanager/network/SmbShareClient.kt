@@ -440,16 +440,20 @@ object SmbShareClient {
             remotePath = "/$shareName"
         )
         return runCatching {
-            withDiskShare(probe) { diskShare, _ -> diskShare.list("") }
+            withDiskShare(probe, maxAttempts = 1) { diskShare, _ -> diskShare.list("") }
             true
         }.getOrElse { false }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    private fun <T> withDiskShare(share: NetworkShare, block: (DiskShare, String) -> T): T {
+    private fun <T> withDiskShare(
+        share: NetworkShare,
+        maxAttempts: Int = 2,
+        block: (DiskShare, String) -> T
+    ): T {
         var lastError: Exception? = null
-        for (attempt in 1..2) {
+        for (attempt in 1..maxAttempts) {
             val pooled = SmbSessionPool.borrow(share, authContext(share))
             try {
                 val (shareName, basePath) = splitSharePath(share.remotePath, "")
@@ -457,7 +461,7 @@ object SmbShareClient {
 
                 if (!diskShare.isConnected) {
                     pooled.invalidate()
-                    if (attempt == 1) {
+                    if (attempt < maxAttempts) {
                         continue
                     }
                 }
@@ -468,7 +472,7 @@ object SmbShareClient {
             } catch (e: Exception) {
                 pooled.invalidate()
                 lastError = e
-                if (attempt == 1 && e !is kotlinx.coroutines.CancellationException) {
+                if (attempt < maxAttempts && e !is kotlinx.coroutines.CancellationException) {
                     continue
                 }
                 throw e

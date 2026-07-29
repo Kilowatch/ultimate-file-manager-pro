@@ -27,8 +27,11 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
@@ -975,15 +978,22 @@ class NetworkBrowserFragment : Fragment() {
      * Throws if the server is unreachable or authentication fails.
      * Returns an empty list if the server is reachable but has no accessible shares.
      */
-    private fun discoverServerShares(server: NetworkShare): List<NetworkFile> {
+    private suspend fun discoverServerShares(server: NetworkShare): List<NetworkFile> = coroutineScope {
         val allShares = SmbDiscovery.listShares(
             server.host, server.username, server.password, server.domain
         )
-        return allShares.filter { shareName ->
-            SmbShareClient.isShareAccessible(
-                server.host, shareName, server.username, server.password, server.domain
-            )
-        }.map { shareName ->
+        val accessibleShares = allShares.map { shareName ->
+            async(Dispatchers.IO) {
+                val isAccessible = withTimeoutOrNull(2500L) {
+                    SmbShareClient.isShareAccessible(
+                        server.host, shareName, server.username, server.password, server.domain
+                    )
+                } ?: false
+                if (isAccessible) shareName else null
+            }
+        }.mapNotNull { it.await() }
+
+        accessibleShares.map { shareName ->
             NetworkFile(
                 name = shareName,
                 path = "/$shareName",

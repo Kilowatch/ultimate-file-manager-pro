@@ -113,33 +113,69 @@ object SmbSessionPool {
             if (entry.useCount == 0) {
                 closeEntryQuietly(entry)
             }
+        }
 
-            val client  = SMBClient(buildConfig(share.smbProtocol, forWrite, dedicated = false))
-            val conn    = client.connect(share.host, share.effectivePort)
+        // Perform blocking network TCP socket connect and authentication OUTSIDE synchronized block
+        // to prevent holding monitor locks during socket connection & NTLM handshake timeouts.
+        val newClient  = SMBClient(buildConfig(share.smbProtocol, forWrite, dedicated = false))
+        var newConn: Connection? = null
+        var newSession: Session? = null
+        try {
+            val conn = newClient.connect(share.host, share.effectivePort)
+            newConn = conn
             val session = conn.authenticate(auth)
+            newSession = session
 
-            entry.client     = client
-            entry.connection = conn
-            entry.session    = session
-            entry.useCount   = 1
-            entry.lastReleasedMs = System.currentTimeMillis()
-
-            return PooledConnection(
-                session      = session,
-                onRelease    = {
-                    synchronized(entry) {
-                        entry.useCount = maxOf(0, entry.useCount - 1)
-                        entry.lastReleasedMs = System.currentTimeMillis()
-                    }
-                },
-                onInvalidate = {
-                    synchronized(entry) {
-                        closeEntryQuietly(entry)
-                        entry.useCount       = 0
-                        entry.lastReleasedMs = 0L
-                    }
+            synchronized(entry) {
+                val existing = entry.session
+                if (existing != null && isAlive(existing)) {
+                    // Another thread established a session while we were connecting; reuse it
+                    closeQuietly(newClient, newConn, newSession)
+                    entry.useCount++
+                    return PooledConnection(
+                        session      = existing,
+                        onRelease    = {
+                            synchronized(entry) {
+                                entry.useCount = maxOf(0, entry.useCount - 1)
+                                entry.lastReleasedMs = System.currentTimeMillis()
+                            }
+                        },
+                        onInvalidate = {
+                            synchronized(entry) {
+                                closeEntryQuietly(entry)
+                                entry.useCount       = 0
+                                entry.lastReleasedMs = 0L
+                            }
+                        }
+                    )
                 }
-            )
+
+                entry.client     = newClient
+                entry.connection = newConn
+                entry.session    = newSession
+                entry.useCount   = 1
+                entry.lastReleasedMs = System.currentTimeMillis()
+
+                return PooledConnection(
+                    session      = session,
+                    onRelease    = {
+                        synchronized(entry) {
+                            entry.useCount = maxOf(0, entry.useCount - 1)
+                            entry.lastReleasedMs = System.currentTimeMillis()
+                        }
+                    },
+                    onInvalidate = {
+                        synchronized(entry) {
+                            closeEntryQuietly(entry)
+                            entry.useCount       = 0
+                            entry.lastReleasedMs = 0L
+                        }
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            closeQuietly(newClient, newConn, newSession)
+            throw e
         }
     }
 

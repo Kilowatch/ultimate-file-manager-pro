@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import android.provider.MediaStore
 import kotlinx.coroutines.CoroutineScope
@@ -28,12 +29,36 @@ import java.util.concurrent.ConcurrentHashMap
  * Burst detection: if ≥ [BURST_THRESHOLD] changes arrive within [BURST_WINDOW_MS], an incremental
  * WorkManager job is enqueued (not a full scan) to ensure completeness.
  */
-class MediaStoreChangeObserver(
+class MediaStoreChangeObserver private constructor(
     private val context: Context,
-    private val repository: IndexingRepository = IndexingRepository.getInstance(context)
-) : ContentObserver(Handler(Looper.getMainLooper())) {
+    private val repository: IndexingRepository,
+    handlerThread: HandlerThread
+) : ContentObserver(Handler(handlerThread.looper)) {
 
-    private val TAG = "MediaStoreObserver"
+    constructor(
+        context: Context,
+        repository: IndexingRepository = IndexingRepository.getInstance(context)
+    ) : this(context, repository, getOrCreateObserverThread())
+
+    companion object {
+        private const val TAG = "MediaStoreObserver"
+
+        @Volatile
+        private var observerThread: HandlerThread? = null
+
+        @Synchronized
+        private fun getOrCreateObserverThread(): HandlerThread {
+            val existing = observerThread
+            if (existing != null && existing.isAlive) {
+                return existing
+            }
+            return HandlerThread("MediaStoreObserverThread").also {
+                it.start()
+                observerThread = it
+            }
+        }
+    }
+
     private val observerScope = CoroutineScope(Dispatchers.IO + Job())
 
     // Deduplicate rapid multi-event bursts for the same URI
@@ -57,6 +82,12 @@ class MediaStoreChangeObserver(
         val lastSeen = processedUris[uriString] ?: 0L
         if (now - lastSeen < DEBOUNCE_MS) return
         processedUris[uriString] = now
+
+        // Periodically purge stale entries from processedUris map to prevent unbounded memory growth
+        if (processedUris.size > 500) {
+            val cutoff = now - (DEBOUNCE_MS * 2)
+            processedUris.entries.removeIf { it.value < cutoff }
+        }
 
         observerScope.launch {
             try {
