@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.7] — 2026-07-29
 
 ### Fixed
+- Fixed an ANR (App Freeze) on Android TV devices during SSDP discovery by implementing 10s TTL subnet caching in DlnaSsdpEngine and FileServer.
 - Fixed Advanced Sync to SMB shares creating a duplicate subfolder (e.g. `/Media/Media`) instead of syncing to the selected destination. The share name was being counted twice because `NetworkBrowserActivity` encodes it as the first segment of the path and `SmbShareClient` was independently extracting it again. A `syncRemotePath` correction now strips the leading share-name segment for standard SMB shares only; all other protocols (SFTP, FTP, WebDAV, NFS, online storages) are unaffected.
 - Fixed Advanced Sync to SMB subfolders (e.g. `/Media/Movies`) producing no file transfers and no notification. The resolved path did not exist on the server, so the listing returned empty and the sync silently succeeded without copying anything.
 

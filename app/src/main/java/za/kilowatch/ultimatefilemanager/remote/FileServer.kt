@@ -804,6 +804,47 @@ class FileServer(
         return KtorResult.Json(status, json.toString())
     }
 
+    private data class LocalSubnet(val localAddressBytes: ByteArray, val prefixLength: Short)
+
+    @Volatile
+    private var cachedServerSubnets: List<LocalSubnet> = emptyList()
+    @Volatile
+    private var lastServerSubnetCacheTime = 0L
+    private val serverSubnetCacheLock = Any()
+
+    private fun getOrUpdateServerSubnets(): List<LocalSubnet> {
+        val now = System.currentTimeMillis()
+        val current = cachedServerSubnets
+        if (now - lastServerSubnetCacheTime <= 10_000L && current.isNotEmpty()) {
+            return current
+        }
+        return synchronized(serverSubnetCacheLock) {
+            val nowInLock = System.currentTimeMillis()
+            if (nowInLock - lastServerSubnetCacheTime <= 10_000L && cachedServerSubnets.isNotEmpty()) {
+                return@synchronized cachedServerSubnets
+            }
+            val subnets = mutableListOf<LocalSubnet>()
+            try {
+                val interfaces = NetworkInterface.getNetworkInterfaces()
+                if (interfaces != null) {
+                    while (interfaces.hasMoreElements()) {
+                        val intf = interfaces.nextElement()
+                        if (intf.isLoopback || !intf.isUp) continue
+                        for (ifaceAddr in intf.interfaceAddresses) {
+                            val localAddr = ifaceAddr.address
+                            subnets.add(LocalSubnet(localAddr.address, ifaceAddr.networkPrefixLength))
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to read network interfaces", e)
+            }
+            cachedServerSubnets = subnets
+            lastServerSubnetCacheTime = System.currentTimeMillis()
+            cachedServerSubnets
+        }
+    }
+
     /**
      * SEC-CRIT-1: Returns true if [ip] is a loopback, local network, or RFC1918 LAN address.
      * Rejects all other origins to prevent exposure when the device is on a hostile network.
@@ -821,18 +862,12 @@ class FileServer(
 
         // 1. Dynamic Subnet Check
         try {
-            val interfaces = NetworkInterface.getNetworkInterfaces()?.toList() ?: emptyList()
-            for (intf in interfaces) {
-                if (intf.isLoopback || !intf.isUp) continue
-                for (ifaceAddr in intf.interfaceAddresses) {
-                    val localAddr = ifaceAddr.address
-                    val prefix = ifaceAddr.networkPrefixLength
-
-                    if (localAddr.address.size == remoteAddr.address.size) {
-                        if (isInSubnet(remoteAddr.address, localAddr.address, prefix)) {
-                            Log.d(TAG, "Allowed local address (Subnet Match): $ip")
-                            return true
-                        }
+            val subnets = getOrUpdateServerSubnets()
+            for (sub in subnets) {
+                if (sub.localAddressBytes.size == remoteAddr.address.size) {
+                    if (isInSubnet(remoteAddr.address, sub.localAddressBytes, sub.prefixLength)) {
+                        Log.d(TAG, "Allowed local address (Subnet Match): $ip")
+                        return true
                     }
                 }
             }

@@ -449,38 +449,72 @@ object DlnaSsdpEngine {
         return headers
     }
 
-    // ─── Source IP Validation ────────────────────────────────────────────
+    // Cache local network interface subnets with a 10-second TTL to avoid expensive
+    // JNI Linux.getifaddrs() system calls on every incoming SSDP packet.
+    private data class SubnetInfo(val localInt: Int, val mask: Int)
+
+    @Volatile
+    private var cachedSubnets: List<SubnetInfo> = emptyList()
+    @Volatile
+    private var lastSubnetCacheTime = 0L
+    private const val SUBNET_CACHE_TTL_MS = 10_000L
+    private val subnetCacheLock = Any()
+
+    private fun getOrUpdateSubnets(): List<SubnetInfo> {
+        val now = System.currentTimeMillis()
+        val current = cachedSubnets
+        if (now - lastSubnetCacheTime <= SUBNET_CACHE_TTL_MS && current.isNotEmpty()) {
+            return current
+        }
+        return synchronized(subnetCacheLock) {
+            val nowInLock = System.currentTimeMillis()
+            if (nowInLock - lastSubnetCacheTime <= SUBNET_CACHE_TTL_MS && cachedSubnets.isNotEmpty()) {
+                return@synchronized cachedSubnets
+            }
+            val newSubnets = mutableListOf<SubnetInfo>()
+            try {
+                val interfaces = NetworkInterface.getNetworkInterfaces()
+                if (interfaces != null) {
+                    while (interfaces.hasMoreElements()) {
+                        val iface = interfaces.nextElement()
+                        if (!iface.isUp || iface.isLoopback) continue
+
+                        for (ifAddr in iface.interfaceAddresses) {
+                            val local = ifAddr.address
+                            if (local is Inet4Address && !local.isLoopbackAddress) {
+                                val prefixLen = ifAddr.networkPrefixLength.toInt()
+                                if (prefixLen in 1..32) {
+                                    val mask = if (prefixLen < 32) {
+                                        (-1 shl (32 - prefixLen))
+                                    } else {
+                                        -1
+                                    }
+                                    val localInt = bytesToInt(local.address)
+                                    newSubnets.add(SubnetInfo(localInt, mask))
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Error refreshing network subnets", e)
+            }
+            cachedSubnets = newSubnets
+            lastSubnetCacheTime = System.currentTimeMillis()
+            cachedSubnets
+        }
+    }
 
     private fun isOnLocalSubnet(remoteAddress: InetAddress): Boolean {
         if (remoteAddress !is Inet4Address) return false
         if (remoteAddress.isLoopbackAddress) return false
 
         try {
-            val interfaces = NetworkInterface.getNetworkInterfaces() ?: return false
-            while (interfaces.hasMoreElements()) {
-                val iface = interfaces.nextElement()
-                if (!iface.isUp || iface.isLoopback) continue
-
-                for (ifAddr in iface.interfaceAddresses) {
-                    val local = ifAddr.address
-                    if (local is Inet4Address) {
-                        val prefixLen = ifAddr.networkPrefixLength.toInt()
-                        if (prefixLen <= 0 || prefixLen > 32) continue
-                        val localBytes = local.address
-                        val remoteBytes = remoteAddress.address
-                        if (localBytes.size == 4 && remoteBytes.size == 4) {
-                            val mask = if (prefixLen < 32) {
-                                (-1 shl (32 - prefixLen)).toInt()
-                            } else {
-                                -1
-                            }
-                            val localInt = bytesToInt(localBytes)
-                            val remoteInt = bytesToInt(remoteBytes)
-                            if ((localInt and mask) == (remoteInt and mask)) {
-                                return true
-                            }
-                        }
-                    }
+            val remoteInt = bytesToInt(remoteAddress.address)
+            val subnets = getOrUpdateSubnets()
+            for (subnet in subnets) {
+                if ((remoteInt and subnet.mask) == (subnet.localInt and subnet.mask)) {
+                    return true
                 }
             }
         } catch (e: Exception) {
@@ -586,5 +620,7 @@ object DlnaSsdpEngine {
             Log.e(TAG, "Error releasing MulticastLock", e)
         }
         multicastLock = null
+        cachedSubnets = emptyList()
+        lastSubnetCacheTime = 0L
     }
 }
