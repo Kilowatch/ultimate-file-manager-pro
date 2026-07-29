@@ -3998,9 +3998,11 @@ class FileBrowserActivity : AppCompatActivity() {
                             .sortedByDescending { it.lastModified() }
                             .toList()
                         withContext(Dispatchers.Main) {
-                            fileAdapter.submitList(files, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
-                            updateEmptyState(files.isEmpty())
-                            applyFileFocus()
+                            submitAdapterList {
+                                fileAdapter.submitList(files, showAllAsIndexed = false, hiddenPaths = hiddenPaths)
+                                updateEmptyState(files.isEmpty())
+                                applyFileFocus()
+                            }
                         }
                     } catch (e: Exception) {
                         Log.w("FileBrowser", "Category walk error: ${e.message}")
@@ -4032,9 +4034,11 @@ class FileBrowserActivity : AppCompatActivity() {
                 val indexedPaths = try { dao.getIndexedPathsInFolder(directory.absolutePath).toSet() } catch (e: Exception) { emptySet<String>() }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
-                    fileAdapter.submitList(sorted, indexedPaths = indexedPaths, hiddenPaths = hiddenPaths)
-                    updateEmptyState(sorted.isEmpty())
-                    applyFileFocus()
+                    submitAdapterList {
+                        fileAdapter.submitList(sorted, indexedPaths = indexedPaths, hiddenPaths = hiddenPaths)
+                        updateEmptyState(sorted.isEmpty())
+                        applyFileFocus()
+                    }
                 }
             }
         } else {

@@ -1563,8 +1563,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun performSearch(query: String) {
         if (query.isEmpty()) {
-            fileAdapter.submitList(currentFiles)
-            updateEmptyState(currentFiles.isEmpty())
+            applyData()
             return
         }
 

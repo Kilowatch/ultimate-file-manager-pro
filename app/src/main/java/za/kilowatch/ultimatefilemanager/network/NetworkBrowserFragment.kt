@@ -826,8 +826,9 @@ class NetworkBrowserFragment : Fragment() {
                     when (event.action) {
                         KeyEvent.ACTION_DOWN -> {
                             if (event.repeatCount == 0) {
+                                val ctx = context ?: return@setOnKeyListener false
                                 val durationMs = za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager
-                                    .loadDurationMs(requireContext())
+                                    .loadDurationMs(ctx)
                                 tvLongPressRunnable = Runnable {
                                     tvLongPressRunnable = null
                                     val focusedChild = recyclerFiles.focusedChild ?: return@Runnable
@@ -1735,13 +1736,37 @@ class NetworkBrowserFragment : Fragment() {
         }
     }
 
+    private var lastLoadedPath: String? = null
+
+    private fun submitAdapterList(action: () -> Unit) {
+        val safeContext = context ?: run { action(); return }
+        val currentPath = currentPath
+        val oldPath = lastLoadedPath
+        val isNavigatingFolder = oldPath != null && oldPath != currentPath
+        lastLoadedPath = currentPath
+
+        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(safeContext)) {
+            val isForward = currentPath.length > (oldPath?.length ?: 0)
+            za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
+                if (isAdded) {
+                    action()
+                }
+            }
+        } else {
+            action()
+        }
+    }
+
     private fun performSearch(query: String) {
         val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         val baseList = if (query.isEmpty()) currentFiles else currentFiles.filter { it.name.contains(query, ignoreCase = true) }
         val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
         val sortedAndFiltered = sortAndFilterFiles(filtered)
-        fileAdapter.submitList(sortedAndFiltered)
-        layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
+        
+        submitAdapterList {
+            fileAdapter.submitList(sortedAndFiltered)
+            layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
+        }
 
         if (isTv) {
             val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
@@ -1856,36 +1881,40 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
+        val safeContext = context ?: return
         val updateLayout = {
-            fileAdapter.viewMode = mode
-            val lm = if (!ViewModeManager.isGrid(mode)) {
-                androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-            } else {
-                androidx.recyclerview.widget.GridLayoutManager(
-                    requireContext(), ViewModeManager.spanCount(requireContext(), mode)
-                ).apply {
-                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+            if (isAdded) {
+                val ctx = context ?: safeContext
+                fileAdapter.viewMode = mode
+                val lm = if (!ViewModeManager.isGrid(mode)) {
+                    androidx.recyclerview.widget.LinearLayoutManager(ctx)
+                } else {
+                    androidx.recyclerview.widget.GridLayoutManager(
+                        ctx, ViewModeManager.spanCount(ctx, mode)
+                    ).apply {
+                        spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int): Int {
+                                return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                            }
                         }
                     }
                 }
-            }
-            recyclerFiles.layoutManager = lm
-            
-            for (i in 0 until recyclerFiles.itemDecorationCount) {
-                val dec = recyclerFiles.getItemDecorationAt(i)
-                if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
-                    recyclerFiles.removeItemDecoration(dec)
+                recyclerFiles.layoutManager = lm
+                
+                for (i in 0 until recyclerFiles.itemDecorationCount) {
+                    val dec = recyclerFiles.getItemDecorationAt(i)
+                    if (dec is za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration) {
+                        recyclerFiles.removeItemDecoration(dec)
+                    }
                 }
-            }
-            
-            if (fileAdapter.isGroupedByDate) {
-                recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
-            }
+                
+                if (fileAdapter.isGroupedByDate) {
+                    recyclerFiles.addItemDecoration(za.kilowatch.ultimatefilemanager.storage.DateGroupStickyHeaderDecoration(fileAdapter, 3))
+                }
 
-            view?.findViewById<ImageView>(R.id.btnViewToggle)?.setImageResource(ViewModeManager.iconRes(mode))
-            recyclerFiles.adapter = fileAdapter
+                view?.findViewById<ImageView>(R.id.btnViewToggle)?.setImageResource(ViewModeManager.iconRes(mode))
+                recyclerFiles.adapter = fileAdapter
+            }
         }
 
         if (::recyclerFiles.isInitialized) {

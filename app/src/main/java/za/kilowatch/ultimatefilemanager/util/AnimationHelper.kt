@@ -56,7 +56,7 @@ object AnimationHelper {
         onTransitionMiddle: () -> Unit
     ) {
         val context = recyclerView.context
-        if (!areFolderTransitionsEnabled(context)) {
+        if (!areFolderTransitionsEnabled(context) || !recyclerView.isAttachedToWindow) {
             onTransitionMiddle()
             return
         }
@@ -79,6 +79,10 @@ object AnimationHelper {
             .setDuration(110)
             .setInterpolator(FastOutSlowInInterpolator())
             .withEndAction {
+                if (!recyclerView.isAttachedToWindow) {
+                    recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                    return@withEndAction
+                }
                 // Swap adapter items at the midpoint of animation
                 onTransitionMiddle()
 
@@ -156,7 +160,7 @@ object AnimationHelper {
      */
     fun animateViewModeSwitch(recyclerView: RecyclerView, onApplyMode: () -> Unit) {
         val context = recyclerView.context
-        if (!areFolderTransitionsEnabled(context)) {
+        if (!areFolderTransitionsEnabled(context) || !recyclerView.isAttachedToWindow) {
             onApplyMode()
             return
         }
@@ -169,6 +173,10 @@ object AnimationHelper {
             .setDuration(120)
             .setInterpolator(FastOutSlowInInterpolator())
             .withEndAction {
+                if (!recyclerView.isAttachedToWindow) {
+                    recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                    return@withEndAction
+                }
                 onApplyMode()
                 recyclerView.animate()
                     .alpha(1.0f)

@@ -622,8 +622,9 @@ class FileBrowserFragment : Fragment() {
                     when (event.action) {
                         KeyEvent.ACTION_DOWN -> {
                             if (event.repeatCount == 0) {
+                                val ctx = context ?: return@setOnKeyListener false
                                 val durationMs = za.kilowatch.ultimatefilemanager.settings.LongPressDurationManager
-                                    .loadDurationMs(requireContext())
+                                    .loadDurationMs(ctx)
                                 tvLongPressRunnable = Runnable {
                                     // Null self out first — ACTION_UP checks this to decide
                                     // whether to consume the event and block the follow-up click.
@@ -1239,38 +1240,42 @@ class FileBrowserFragment : Fragment() {
     }
 
     private fun applyViewMode(mode: ViewModeManager.ViewMode) {
+        val safeContext = context ?: return
         val updateLayout = {
-            fileAdapter.viewMode = mode
-            val lm = if (!ViewModeManager.isGrid(mode)) {
-                androidx.recyclerview.widget.LinearLayoutManager(requireContext())
-            } else {
-                androidx.recyclerview.widget.GridLayoutManager(
-                    requireContext(), ViewModeManager.spanCount(requireContext(), mode)
-                ).apply {
-                    spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
-                        override fun getSpanSize(position: Int): Int {
-                            return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+            if (isAdded) {
+                val ctx = context ?: safeContext
+                fileAdapter.viewMode = mode
+                val lm = if (!ViewModeManager.isGrid(mode)) {
+                    androidx.recyclerview.widget.LinearLayoutManager(ctx)
+                } else {
+                    androidx.recyclerview.widget.GridLayoutManager(
+                        ctx, ViewModeManager.spanCount(ctx, mode)
+                    ).apply {
+                        spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+                            override fun getSpanSize(position: Int): Int {
+                                return if (fileAdapter.getItemViewType(position) == 3) spanCount else 1
+                            }
                         }
                     }
                 }
-            }
-            recyclerFiles.layoutManager = lm
-            
-            // Remove existing sticky decoration
-            for (i in 0 until recyclerFiles.itemDecorationCount) {
-                val dec = recyclerFiles.getItemDecorationAt(i)
-                if (dec is DateGroupStickyHeaderDecoration) {
-                    recyclerFiles.removeItemDecoration(dec)
+                recyclerFiles.layoutManager = lm
+                
+                // Remove existing sticky decoration
+                for (i in 0 until recyclerFiles.itemDecorationCount) {
+                    val dec = recyclerFiles.getItemDecorationAt(i)
+                    if (dec is DateGroupStickyHeaderDecoration) {
+                        recyclerFiles.removeItemDecoration(dec)
+                    }
                 }
-            }
-            
-            if (fileAdapter.isGroupedByDate) {
-                recyclerFiles.addItemDecoration(DateGroupStickyHeaderDecoration(fileAdapter, 3))
-            }
+                
+                if (fileAdapter.isGroupedByDate) {
+                    recyclerFiles.addItemDecoration(DateGroupStickyHeaderDecoration(fileAdapter, 3))
+                }
 
-            btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
-            // Re-attach adapter so the layout manager change takes effect immediately
-            recyclerFiles.adapter = fileAdapter
+                btnViewToggle?.setImageResource(ViewModeManager.iconRes(mode))
+                // Re-attach adapter so the layout manager change takes effect immediately
+                recyclerFiles.adapter = fileAdapter
+            }
         }
 
         if (::recyclerFiles.isInitialized) {
@@ -1534,22 +1539,25 @@ class FileBrowserFragment : Fragment() {
     private var lastLoadedPath: String? = null
 
     private fun submitAdapterList(sorted: List<File>, showAllAsIndexed: Boolean?, hiddenPaths: Set<String>) {
+        val safeContext = context ?: return
         val currentPath = currentDir.absolutePath
         val oldPath = lastLoadedPath
         val isNavigatingFolder = oldPath != null && oldPath != currentPath
         lastLoadedPath = currentPath
 
         val updateAdapter = {
-            if (showAllAsIndexed != null) {
-                fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths)
-            } else {
-                fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths)
+            if (isAdded) {
+                if (showAllAsIndexed != null) {
+                    fileAdapter.submitList(sorted, showAllAsIndexed = showAllAsIndexed, hiddenPaths = hiddenPaths)
+                } else {
+                    fileAdapter.submitList(sorted, hiddenPaths = hiddenPaths)
+                }
+                updateEmptyState(sorted.isEmpty())
+                updatePasteFab()
             }
-            updateEmptyState(sorted.isEmpty())
-            updatePasteFab()
         }
 
-        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(requireContext())) {
+        if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(safeContext)) {
             val isForward = currentPath.length > (oldPath?.length ?: 0)
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
                 updateAdapter()
@@ -1558,7 +1566,7 @@ class FileBrowserFragment : Fragment() {
             updateAdapter()
         }
 
-        val isTv = DeviceUtils.isTvDevice(requireContext())
+        val isTv = DeviceUtils.isTvDevice(safeContext)
         if (isTv) {
             val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
             arguments?.putBoolean(ARG_REQUEST_INITIAL_FOCUS, false)

@@ -89,6 +89,7 @@ class TwinWindowPlayerFragment : Fragment() {
         get() = player != null
 
     fun showControls(): Boolean {
+        val safeContext = context ?: return false
         if (controlsLayout.visibility != View.VISIBLE) {
             controlsLayout.visibility = View.VISIBLE
             controlsLayout.alpha = 1f
@@ -96,7 +97,7 @@ class TwinWindowPlayerFragment : Fragment() {
             topBar.alpha = 1f
             handler.removeCallbacks(hideControlsRunnable)
             if (player?.isPlaying == true) {
-                handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(requireContext()))
+                handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(safeContext))
             }
             return true
         }
@@ -542,14 +543,19 @@ class TwinWindowPlayerFragment : Fragment() {
 
     private val hideControlsRunnable = Runnable {
         controlsLayout.animate().alpha(0f).setDuration(300).withEndAction {
-            controlsLayout.visibility = View.GONE
+            if (isAdded) {
+                controlsLayout.visibility = View.GONE
+            }
         }
         topBar.animate().alpha(0f).setDuration(300).withEndAction {
-            topBar.visibility = View.GONE
+            if (isAdded) {
+                topBar.visibility = View.GONE
+            }
         }
     }
 
     private fun resetHideTimer() {
+        val safeContext = context ?: return
         isRepeatingPlayback = false
         handler.removeCallbacks(hideControlsRunnable)
         controlsLayout.visibility = View.VISIBLE
@@ -557,7 +563,7 @@ class TwinWindowPlayerFragment : Fragment() {
         topBar.visibility = View.VISIBLE
         topBar.alpha = 1f
         if (player?.isPlaying == true) {
-            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(requireContext()))
+            handler.postDelayed(hideControlsRunnable, ControlsTimeoutManager.loadDurationMs(safeContext))
         }
     }
 
