@@ -1936,6 +1936,13 @@ class NetworkBrowserFragment : Fragment() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (isAdded && ::fileAdapter.isInitialized && ViewModeManager.isGrid(fileAdapter.viewMode)) {
+            applyViewMode(fileAdapter.viewMode)
+        }
+    }
+
     /**
      * Determines whether a network file should be visible in the file list.
      * When [showHidden] is false, filters out files/folders whose name starts with "." (Unix dotfile convention).

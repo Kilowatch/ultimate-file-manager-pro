@@ -1287,6 +1287,13 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (isAdded && ::fileAdapter.isInitialized && ViewModeManager.isGrid(fileAdapter.viewMode)) {
+            applyViewMode(fileAdapter.viewMode)
+        }
+    }
+
     private fun updateSelectionBar(count: Int) {
         if (isPickerMode) return
         

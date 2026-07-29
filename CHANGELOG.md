@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.7] — 2026-07-29
 
 ### Fixed
+- Fixed grid view item size inconsistency between portrait and landscape modes on mobile devices.
 - Fixed folder navigation transition animations being bypassed in non-indexed local folders, network activities, and network fragments when enabled in settings.
 - Prevent `IllegalStateException` crash when fragment is detached during view animation end callbacks.
 - Fixed an ANR (App Freeze) on Android TV devices during SSDP discovery by implementing 10s TTL subnet caching in DlnaSsdpEngine and FileServer.

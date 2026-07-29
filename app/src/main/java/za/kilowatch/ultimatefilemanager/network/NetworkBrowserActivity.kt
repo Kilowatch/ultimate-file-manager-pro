@@ -6225,6 +6225,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::fileAdapter.isInitialized && ViewModeManager.isGrid(fileAdapter.viewMode)) {
+            applyViewMode(fileAdapter.viewMode)
+        }
+    }
+
     private fun updateBreadcrumbs() {
         val scroll = layoutBreadcrumbsScroll ?: return
         val container = layoutBreadcrumbs ?: return

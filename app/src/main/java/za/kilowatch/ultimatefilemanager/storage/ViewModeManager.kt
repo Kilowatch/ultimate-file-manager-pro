@@ -80,10 +80,29 @@ object ViewModeManager {
      */
     fun spanCount(context: Context, mode: ViewMode): Int {
         val isTv = DeviceUtils.isTvDevice(context)
+        if (isTv) {
+            return when (mode) {
+                ViewMode.GRID_SMALL  -> 6
+                ViewMode.GRID_MEDIUM -> 5
+                ViewMode.GRID_LARGE  -> 4
+                else -> 1
+            }
+        }
+        val widthDp = context.resources.configuration.screenWidthDp
+        if (widthDp > 0) {
+            val targetDp = when (mode) {
+                ViewMode.GRID_SMALL  -> 95f
+                ViewMode.GRID_MEDIUM -> 130f
+                ViewMode.GRID_LARGE  -> 195f
+                else -> return 1
+            }
+            return (widthDp / targetDp).let { kotlin.math.round(it).toInt() }.coerceAtLeast(1)
+        }
+        val isLandscape = context.resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
         return when (mode) {
-            ViewMode.GRID_SMALL  -> if (isTv) 6 else 4
-            ViewMode.GRID_MEDIUM -> if (isTv) 5 else 3
-            ViewMode.GRID_LARGE  -> if (isTv) 4 else 2
+            ViewMode.GRID_SMALL  -> if (isLandscape) 8 else 4
+            ViewMode.GRID_MEDIUM -> if (isLandscape) 6 else 3
+            ViewMode.GRID_LARGE  -> if (isLandscape) 4 else 2
             else -> 1
         }
     }

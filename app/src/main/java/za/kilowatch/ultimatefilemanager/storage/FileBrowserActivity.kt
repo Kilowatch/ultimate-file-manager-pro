@@ -5036,6 +5036,13 @@ class FileBrowserActivity : AppCompatActivity() {
             updateLayout()
         }
     }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (::fileAdapter.isInitialized && ViewModeManager.isGrid(fileAdapter.viewMode)) {
+            applyViewMode(fileAdapter.viewMode)
+        }
+    }
     private fun toggleSearch() {
         isSearchVisible = !isSearchVisible
         layoutSearchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
