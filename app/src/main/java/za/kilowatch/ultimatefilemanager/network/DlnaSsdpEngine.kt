@@ -69,6 +69,12 @@ object DlnaSsdpEngine {
         Thread(r, "DlnaSsdpMSearchResponder").also { it.isDaemon = true }
     }
 
+    // Dedicated background executor for outbound UDP multicast and unicast packets,
+    // ensuring DatagramSocket.send never executes on the main looper.
+    private val ssdpSendExecutor = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "DlnaSsdpSender").also { it.isDaemon = true }
+    }
+
     // ─── Public API ──────────────────────────────────────────────────────
 
     fun initialize(context: Context, bindAddress: String = ""): Boolean {
@@ -262,11 +268,13 @@ object DlnaSsdpEngine {
             Log.w(TAG, "Unicast response too large (${bytes.size} bytes), dropping")
             return
         }
-        try {
-            val packet = DatagramPacket(bytes, bytes.size, address, port)
-            socket.send(packet)
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to send unicast response to $address", e)
+        ssdpSendExecutor.submit {
+            try {
+                val packet = DatagramPacket(bytes, bytes.size, address, port)
+                socket.send(packet)
+            } catch (e: IOException) {
+                Log.e(TAG, "Failed to send unicast response to $address", e)
+            }
         }
     }
 
@@ -280,17 +288,18 @@ object DlnaSsdpEngine {
             )
             return false
         }
-        return try {
-            val packet = DatagramPacket(
-                bytes, bytes.size,
-                InetAddress.getByName(SSDP_MULTICAST_ADDRESS), SSDP_PORT
-            )
-            socket.send(packet)
-            true
-        } catch (e: IOException) {
-            Log.e(TAG, "Failed to send multicast packet", e)
-            false
+        ssdpSendExecutor.submit {
+            try {
+                val packet = DatagramPacket(
+                    bytes, bytes.size,
+                    InetAddress.getByName(SSDP_MULTICAST_ADDRESS), SSDP_PORT
+                )
+                socket.send(packet)
+            } catch (e: IOException) {
+                Log.e(TAG, "Failed to send multicast packet", e)
+            }
         }
+        return true
     }
 
     // ─── Listener Thread ─────────────────────────────────────────────────
