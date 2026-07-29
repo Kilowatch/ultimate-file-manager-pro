@@ -10271,5 +10271,40 @@ Detecta bloqueos y congelamientos de la aplicación al inicio para enviar regist
     <string name="settings_crash_report_subtitle_off">
 Detección de bloqueos y congelamientos desactivada
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Establecer fondo de pantalla de inicio
+</string>
+    <string name="action_set_lock_wallpaper">
+Establecer fondo de pantalla de bloqueo
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Fondo de pantalla de inicio actualizado
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Fondo de pantalla de bloqueo actualizado
+</string>
+    <string name="toast_wallpaper_set_failed">
+Error al establecer el fondo de pantalla
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Establecer fondo de pantalla de inicio
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Establecer fondo de pantalla de bloqueo
+</string>
+    <string name="wallpaper_confirm_title">
+Establecer fondo de pantalla
+</string>
+    <string name="wallpaper_confirm_home_message">
+¿Desea establecer \"%1$s\" como fondo de pantalla de inicio?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+¿Desea establecer \"%1$s\" como fondo de pantalla de bloqueo?
+</string>
+    <string name="action_set_wallpaper">
+Establecer fondo de pantalla
+</string>
 </resources>
 

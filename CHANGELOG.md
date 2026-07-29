@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.7] — 2026-07-29
 
+### Added
+- Added mobile-only feature to set selected image files directly as home screen or lock screen wallpaper with confirmation dialogs, supported across local, network, and cloud storage files.
+
 ### Fixed
 - Fixed grid view item size inconsistency between portrait and landscape modes on mobile devices.
 - Fixed folder navigation transition animations being bypassed in non-indexed local folders, network activities, and network fragments when enabled in settings.

@@ -10259,5 +10259,40 @@ Başlangıçta çökmeleri ve uygulama donmalarını tespit ederek tanılama gü
     <string name="settings_crash_report_subtitle_off">
 Çökme ve donma algılama devre dışı
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Ana Ekran Duvar Kağıdını Ayarla
+</string>
+    <string name="action_set_lock_wallpaper">
+Kilit Ekranı Duvar Kağıdını Ayarla
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Ana ekran duvar kağıdı güncellendi
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Kilit ekranı duvar kağıdı güncellendi
+</string>
+    <string name="toast_wallpaper_set_failed">
+Duvar kağıdı ayarlanamadı
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Ana Ekran Duvar Kağıdını Ayarla
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Kilit Ekranı Duvar Kağıdını Ayarla
+</string>
+    <string name="wallpaper_confirm_title">
+Duvar Kağıdını Ayarla
+</string>
+    <string name="wallpaper_confirm_home_message">
+Ana ekran duvar kağıdı olarak \"%1$s\" ayarlamak istiyor musunuz?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+Kilit ekranı duvar kağıdı olarak \"%1$s\" ayarlamak istiyor musunuz?
+</string>
+    <string name="action_set_wallpaper">
+Duvar Kağıdını Ayarla
+</string>
 </resources>
 

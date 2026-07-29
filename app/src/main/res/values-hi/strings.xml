@@ -10259,5 +10259,40 @@ UFM ने आपके पिछले सत्र में प्रति�
     <string name="settings_crash_report_subtitle_off">
 क्रैश और फ्रीज़ का पता लगाना अक्षम
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+होम वॉलपेपर सेट करें
+</string>
+    <string name="action_set_lock_wallpaper">
+लॉक वॉलपेपर सेट करें
+</string>
+    <string name="toast_wallpaper_set_home_success">
+होम स्क्रीन वॉलपेपर अपडेट किया गया
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+लॉक स्क्रीन वॉलपेपर अपडेट किया गया
+</string>
+    <string name="toast_wallpaper_set_failed">
+वॉलपेपर सेट करने में विफल
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+होम वॉलपेपर सेट करें
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+लॉक वॉलपेपर सेट करें
+</string>
+    <string name="wallpaper_confirm_title">
+वॉलपेपर सेट करें
+</string>
+    <string name="wallpaper_confirm_home_message">
+क्या आप \"%1$s\" को अपने होम स्क्रीन वॉलपेपर के रूप में सेट करना चाहते हैं?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+क्या आप \"%1$s\" को अपने लॉक स्क्रीन वॉलपेपर के रूप में सेट करना चाहते हैं?
+</string>
+    <string name="action_set_wallpaper">
+वॉलपेपर सेट करें
+</string>
 </resources>
 

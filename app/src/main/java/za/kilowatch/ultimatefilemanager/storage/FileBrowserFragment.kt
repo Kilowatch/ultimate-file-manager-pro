@@ -950,6 +950,61 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Wallpaper (Single image file, mobile only)
+            val isSingleImage = count == 1 && selected.first().isFile &&
+                selected.first().extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            if (isSingleImage && !DeviceUtils.isTvDevice(requireContext())) {
+                val imageFile = selected.first()
+
+                // Set Home Wallpaper
+                if (pm.isIconEnabled(context, pm.KEY_SET_HOME_WALLPAPER)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_home_wallpaper", getString(R.string.action_set_home_wallpaper), R.drawable.ic_wallpaper_home, "toolbar_set_home_wallpaper") {
+                        za.kilowatch.ultimatefilemanager.util.WallpaperHelper.showConfirmDialog(
+                            requireContext(),
+                            imageFile.name,
+                            android.app.WallpaperManager.FLAG_SYSTEM
+                        ) {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val success = za.kilowatch.ultimatefilemanager.util.WallpaperHelper.setWallpaper(
+                                    requireContext(),
+                                    imageFile,
+                                    android.app.WallpaperManager.FLAG_SYSTEM
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.exitSelectionMode()
+                                    val msg = if (success) getString(R.string.toast_wallpaper_set_home_success) else getString(R.string.toast_wallpaper_set_failed)
+                                    android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
+                }
+
+                // Set Lock Wallpaper
+                if (pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_lock_wallpaper", getString(R.string.action_set_lock_wallpaper), R.drawable.ic_wallpaper_lock, "toolbar_set_lock_wallpaper") {
+                        za.kilowatch.ultimatefilemanager.util.WallpaperHelper.showConfirmDialog(
+                            requireContext(),
+                            imageFile.name,
+                            android.app.WallpaperManager.FLAG_LOCK
+                        ) {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                val success = za.kilowatch.ultimatefilemanager.util.WallpaperHelper.setWallpaper(
+                                    requireContext(),
+                                    imageFile,
+                                    android.app.WallpaperManager.FLAG_LOCK
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.exitSelectionMode()
+                                    val msg = if (success) getString(R.string.toast_wallpaper_set_lock_success) else getString(R.string.toast_wallpaper_set_failed)
+                                    android.widget.Toast.makeText(requireContext(), msg, android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+
             // 6. Hide
             val hasVisible = fileAdapter.hasAnySelectedVisible()
             if (hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) {

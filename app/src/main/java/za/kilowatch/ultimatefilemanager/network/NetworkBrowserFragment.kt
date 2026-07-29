@@ -447,6 +447,27 @@ class NetworkBrowserFragment : Fragment() {
                 })
             }
 
+            // Wallpaper (Single network image file, mobile only)
+            val isSingleNetworkImage = count == 1 && !selected.first().isDirectory &&
+                selected.first().name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            if (isSingleNetworkImage && !DeviceUtils.isTvDevice(requireContext())) {
+                val targetFile = selected.first()
+
+                // Set Home Wallpaper
+                if (pm.isIconEnabled(context, pm.KEY_SET_HOME_WALLPAPER)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_home_wallpaper", getString(R.string.action_set_home_wallpaper), R.drawable.ic_wallpaper_home, "toolbar_set_home_wallpaper") {
+                        setNetworkWallpaper(targetFile, android.app.WallpaperManager.FLAG_SYSTEM)
+                    })
+                }
+
+                // Set Lock Wallpaper
+                if (pm.isIconEnabled(context, pm.KEY_SET_LOCK_WALLPAPER)) {
+                    list.add(FileToolsBottomSheet.ActionItem("set_lock_wallpaper", getString(R.string.action_set_lock_wallpaper), R.drawable.ic_wallpaper_lock, "toolbar_set_lock_wallpaper") {
+                        setNetworkWallpaper(targetFile, android.app.WallpaperManager.FLAG_LOCK)
+                    })
+                }
+            }
+
             // 4. Protect
             val hasUnprotected = fileAdapter.hasAnySelectedUnprotected(context, share.id)
             if (hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) {
@@ -2028,6 +2049,62 @@ class NetworkBrowserFragment : Fragment() {
         } else {
             btn.imageTintList = android.content.res.ColorStateList.valueOf(
                 ctx.getColor(if (isTv) za.kilowatch.ultimatefilemanager.R.color.tv_text_primary else za.kilowatch.ultimatefilemanager.R.color.mobile_icon_tint))
+        }
+    }
+
+    private fun setNetworkWallpaper(networkFile: NetworkFile, flag: Int) {
+        val ctx = context ?: return
+        za.kilowatch.ultimatefilemanager.util.WallpaperHelper.showConfirmDialog(
+            ctx,
+            networkFile.name,
+            flag
+        ) {
+            val toastFetching = android.widget.Toast.makeText(ctx, getString(R.string.fetching_filename, networkFile.name), android.widget.Toast.LENGTH_SHORT)
+            toastFetching.show()
+            lifecycleScope.launch(Dispatchers.IO) {
+                var tempFile: java.io.File? = null
+                var success = false
+                try {
+                    val tempDir = java.io.File(ctx.cacheDir, "wallpaper_temp")
+                    tempDir.mkdirs()
+                    tempFile = java.io.File(tempDir, "${System.currentTimeMillis()}_${networkFile.name}")
+                    val inp = when (share.type) {
+                        ShareType.SMB -> SmbShareClient.openInputStream(share, networkFile.path)
+                        ShareType.FTP -> FtpShareClient.openInputStream(share, networkFile.path)
+                        ShareType.TV  -> TvShareClient.openInputStream(share, networkFile.path)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, networkFile.path)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, networkFile.path).first
+                        ShareType.NFS -> NfsShareClient.openInputStream(share, networkFile.path)
+                        ShareType.DLNA -> DlnaShareClient.openInputStream(share, networkFile.path)
+                        else -> null
+                    }
+                    if (inp != null) {
+                        inp.use { input ->
+                            java.io.FileOutputStream(tempFile).use { output -> input.copyTo(output) }
+                        }
+                        success = za.kilowatch.ultimatefilemanager.util.WallpaperHelper.setWallpaper(ctx, tempFile, flag)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    tempFile?.delete()
+                }
+
+                withContext(Dispatchers.Main) {
+                    fileAdapter.exitSelectionMode()
+                    val isHome = flag == android.app.WallpaperManager.FLAG_SYSTEM
+                    val msgRes = if (success) {
+                        if (isHome) R.string.toast_wallpaper_set_home_success else R.string.toast_wallpaper_set_lock_success
+                    } else {
+                        R.string.toast_wallpaper_set_failed
+                    }
+                    android.widget.Toast.makeText(ctx, getString(msgRes), android.widget.Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

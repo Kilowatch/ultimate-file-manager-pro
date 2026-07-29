@@ -10259,5 +10259,40 @@ Detecta crashes e congelamentos de apps na inicialização para enviar logs de d
     <string name="settings_crash_report_subtitle_off">
 Detecção de crash e congelamento desativada
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Definir papel de parede da tela inicial
+</string>
+    <string name="action_set_lock_wallpaper">
+Definir papel de parede da tela de bloqueio
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Papel de parede da tela inicial atualizado
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Papel de parede da tela de bloqueio atualizado
+</string>
+    <string name="toast_wallpaper_set_failed">
+Falha ao definir papel de parede
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Definir papel de parede da tela inicial
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Definir papel de parede da tela de bloqueio
+</string>
+    <string name="wallpaper_confirm_title">
+Definir papel de parede
+</string>
+    <string name="wallpaper_confirm_home_message">
+Deseja definir \"%1$s\" como papel de parede da tela inicial?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+Deseja definir \"%1$s\" como papel de parede da tela de bloqueio?
+</string>
+    <string name="action_set_wallpaper">
+Definir papel de parede
+</string>
 </resources>
 

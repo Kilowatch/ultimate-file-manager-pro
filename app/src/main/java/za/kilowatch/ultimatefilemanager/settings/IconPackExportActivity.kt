@@ -124,7 +124,8 @@ class IconPackExportActivity : AppCompatActivity() {
             listOf("toolbar_create_new", "toolbar_copy", "toolbar_move", "toolbar_rename", "toolbar_share",
                 "toolbar_copy_encrypt", "toolbar_move_encrypt", "toolbar_favorite",
                 "toolbar_hide", "toolbar_unhide", "toolbar_select_all", "toolbar_compress",
-                "toolbar_image_compress", "toolbar_delete", "toolbar_pin", "toolbar_unpin", "toolbar_duplicate_finder")
+                "toolbar_image_compress", "toolbar_delete", "toolbar_pin", "toolbar_unpin", "toolbar_duplicate_finder",
+                "toolbar_set_home_wallpaper", "toolbar_set_lock_wallpaper")
         ))
 
 

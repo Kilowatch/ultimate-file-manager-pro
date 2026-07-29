@@ -10259,5 +10259,40 @@ UFM перестал отвечать во время вашего послед�
     <string name="settings_crash_report_subtitle_off">
 Обнаружение сбоев и зависаний отключено
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Установить обои на главный экран
+</string>
+    <string name="action_set_lock_wallpaper">
+Установить обои на экран блокировки
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Обои главного экрана обновлены
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Обои экрана блокировки обновлены
+</string>
+    <string name="toast_wallpaper_set_failed">
+Не удалось установить обои
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Установить обои на главный экран
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Установить обои на экран блокировки
+</string>
+    <string name="wallpaper_confirm_title">
+Установить обои
+</string>
+    <string name="wallpaper_confirm_home_message">
+Вы хотите установить \"%1$s\" в качестве обоев главного экрана?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+Вы хотите установить \"%1$s\" в качестве обоев экрана блокировки?
+</string>
+    <string name="action_set_wallpaper">
+Установить обои
+</string>
 </resources>
 

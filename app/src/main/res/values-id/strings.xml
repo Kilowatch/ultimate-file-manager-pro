@@ -10259,5 +10259,40 @@ Mendeteksi kerusakan dan pembekuan aplikasi saat startup untuk mengirimkan log d
     <string name="settings_crash_report_subtitle_off">
 Deteksi kerusakan dan pembekuan dinonaktifkan
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Atur Wallpaper Beranda
+</string>
+    <string name="action_set_lock_wallpaper">
+Atur Wallpaper Kunci
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Wallpaper layar beranda diperbarui
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Wallpaper layar kunci diperbarui
+</string>
+    <string name="toast_wallpaper_set_failed">
+Gagal mengatur wallpaper
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Atur Wallpaper Beranda
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Atur Wallpaper Kunci
+</string>
+    <string name="wallpaper_confirm_title">
+Atur Wallpaper
+</string>
+    <string name="wallpaper_confirm_home_message">
+Apakah Anda ingin mengatur \"%1$s\" sebagai wallpaper layar beranda?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+Apakah Anda ingin mengatur \"%1$s\" sebagai wallpaper layar kunci?
+</string>
+    <string name="action_set_wallpaper">
+Atur Wallpaper
+</string>
 </resources>
 

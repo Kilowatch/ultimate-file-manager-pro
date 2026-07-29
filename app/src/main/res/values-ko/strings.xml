@@ -10259,5 +10259,40 @@ UFM이 마지막 사용 중 응답하지 않았습니다. 문제 해결을 위�
     <string name="settings_crash_report_subtitle_off">
 충돌 및 정지 감지 비활성화됨
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+홈 화면 배경화면 설정
+</string>
+    <string name="action_set_lock_wallpaper">
+잠금 화면 배경화면 설정
+</string>
+    <string name="toast_wallpaper_set_home_success">
+홈 화면 배경화면이 업데이트되었습니다
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+잠금 화면 배경화면이 업데이트되었습니다
+</string>
+    <string name="toast_wallpaper_set_failed">
+배경화면 설정 실패
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+홈 화면 배경화면 설정
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+잠금 화면 배경화면 설정
+</string>
+    <string name="wallpaper_confirm_title">
+배경화면 설정
+</string>
+    <string name="wallpaper_confirm_home_message">
+\"%1$s\"을(를) 홈 화면 배경화면으로 설정하시겠습니까?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+\"%1$s\"을(를) 잠금 화면 배경화면으로 설정하시겠습니까?
+</string>
+    <string name="action_set_wallpaper">
+배경화면 설정
+</string>
 </resources>
 

@@ -3622,5 +3622,18 @@
     <string name="settings_crash_report_title">Crash &amp; ANR Reporting</string>
     <string name="settings_crash_report_subtitle_on">Detects crashes &amp; app freezes on startup to submit diagnostic logs</string>
     <string name="settings_crash_report_subtitle_off">Crash and freeze detection disabled</string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">Set Home Wallpaper</string>
+    <string name="action_set_lock_wallpaper">Set Lock Wallpaper</string>
+    <string name="toast_wallpaper_set_home_success">Home screen wallpaper updated</string>
+    <string name="toast_wallpaper_set_lock_success">Lock screen wallpaper updated</string>
+    <string name="toast_wallpaper_set_failed">Failed to set wallpaper</string>
+    <string name="icon_toolbar_set_home_wallpaper">Set Home Wallpaper</string>
+    <string name="icon_toolbar_set_lock_wallpaper">Set Lock Wallpaper</string>
+    <string name="wallpaper_confirm_title">Set Wallpaper</string>
+    <string name="wallpaper_confirm_home_message">Do you want to set \"%1$s\" as your home screen wallpaper?</string>
+    <string name="wallpaper_confirm_lock_message">Do you want to set \"%1$s\" as your lock screen wallpaper?</string>
+    <string name="action_set_wallpaper">Set Wallpaper</string>
 </resources>
 

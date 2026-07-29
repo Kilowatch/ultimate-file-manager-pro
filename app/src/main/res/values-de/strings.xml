@@ -10259,5 +10259,40 @@ Erkennt Abstürze &amp; App-Einfrieren beim Start, um Diagnoseprotokolle zu send
     <string name="settings_crash_report_subtitle_off">
 Absturz- und Einfriererkennung deaktiviert
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+Startbildschirm-Hintergrund festlegen
+</string>
+    <string name="action_set_lock_wallpaper">
+Sperrbildschirm-Hintergrund festlegen
+</string>
+    <string name="toast_wallpaper_set_home_success">
+Startbildschirm-Hintergrund aktualisiert
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+Sperrbildschirm-Hintergrund aktualisiert
+</string>
+    <string name="toast_wallpaper_set_failed">
+Fehler beim Festlegen des Hintergrunds
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+Startbildschirm-Hintergrund festlegen
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+Sperrbildschirm-Hintergrund festlegen
+</string>
+    <string name="wallpaper_confirm_title">
+Hintergrund festlegen
+</string>
+    <string name="wallpaper_confirm_home_message">
+Möchten Sie \"%1$s\" als Startbildschirm-Hintergrund festlegen?
+</string>
+    <string name="wallpaper_confirm_lock_message">
+Möchten Sie \"%1$s\" als Sperrbildschirm-Hintergrund festlegen?
+</string>
+    <string name="action_set_wallpaper">
+Hintergrund festlegen
+</string>
 </resources>
 

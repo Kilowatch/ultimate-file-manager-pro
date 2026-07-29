@@ -10259,5 +10259,40 @@ Box
     <string name="settings_crash_report_subtitle_off">
 كشف الأعطال والتجمّد مُعطّل
 </string>
+
+    <!-- Wallpaper Actions -->
+    <string name="action_set_home_wallpaper">
+تعيين خلفية الشاشة الرئيسية
+</string>
+    <string name="action_set_lock_wallpaper">
+تعيين خلفية شاشة القفل
+</string>
+    <string name="toast_wallpaper_set_home_success">
+تم تحديث خلفية الشاشة الرئيسية
+</string>
+    <string name="toast_wallpaper_set_lock_success">
+تم تحديث خلفية شاشة القفل
+</string>
+    <string name="toast_wallpaper_set_failed">
+فشل تعيين الخلفية
+</string>
+    <string name="icon_toolbar_set_home_wallpaper">
+تعيين خلفية الشاشة الرئيسية
+</string>
+    <string name="icon_toolbar_set_lock_wallpaper">
+تعيين خلفية شاشة القفل
+</string>
+    <string name="wallpaper_confirm_title">
+تعيين الخلفية
+</string>
+    <string name="wallpaper_confirm_home_message">
+هل تريد تعيين \"%1$s\" كخلفية للشاشة الرئيسية؟
+</string>
+    <string name="wallpaper_confirm_lock_message">
+هل تريد تعيين \"%1$s\" كخلفية لشاشة القفل؟
+</string>
+    <string name="action_set_wallpaper">
+تعيين الخلفية
+</string>
 </resources>
 
