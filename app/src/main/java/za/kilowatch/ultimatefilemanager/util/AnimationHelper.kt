@@ -83,29 +83,35 @@ object AnimationHelper {
                     recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                     return@withEndAction
                 }
-                // Swap adapter items at the midpoint of animation
-                onTransitionMiddle()
-
-                // Reset position for incoming entrance animation
-                recyclerView.translationX = entryStartTranslationX
-                recyclerView.alpha = 0f
-
-                // Load staggered item entrance animation
-                try {
-                    val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_staggered_slide_in)
-                    recyclerView.layoutAnimation = controller
-                    recyclerView.scheduleLayoutAnimation()
-                } catch (_: Exception) { /* Fallback gracefully if layoutAnimation fails */ }
-
-                recyclerView.animate()
-                    .translationX(0f)
-                    .alpha(1f)
-                    .setDuration(180)
-                    .setInterpolator(FastOutSlowInInterpolator())
-                    .withEndAction {
+                recyclerView.post {
+                    if (!recyclerView.isAttachedToWindow) {
                         recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                        return@post
                     }
-                    .start()
+                    // Swap adapter items at the midpoint of animation
+                    onTransitionMiddle()
+
+                    // Reset position for incoming entrance animation
+                    recyclerView.translationX = entryStartTranslationX
+                    recyclerView.alpha = 0f
+
+                    // Load staggered item entrance animation
+                    try {
+                        val controller = AnimationUtils.loadLayoutAnimation(context, R.anim.layout_staggered_slide_in)
+                        recyclerView.layoutAnimation = controller
+                        recyclerView.scheduleLayoutAnimation()
+                    } catch (_: Exception) { /* Fallback gracefully if layoutAnimation fails */ }
+
+                    recyclerView.animate()
+                        .translationX(0f)
+                        .alpha(1f)
+                        .setDuration(180)
+                        .setInterpolator(FastOutSlowInInterpolator())
+                        .withEndAction {
+                            recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                        }
+                        .start()
+                }
             }
             .start()
     }
@@ -177,17 +183,23 @@ object AnimationHelper {
                     recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                     return@withEndAction
                 }
-                onApplyMode()
-                recyclerView.animate()
-                    .alpha(1.0f)
-                    .scaleX(1.0f)
-                    .scaleY(1.0f)
-                    .setDuration(180)
-                    .setInterpolator(FastOutSlowInInterpolator())
-                    .withEndAction {
+                recyclerView.post {
+                    if (!recyclerView.isAttachedToWindow) {
                         recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                        return@post
                     }
-                    .start()
+                    onApplyMode()
+                    recyclerView.animate()
+                        .alpha(1.0f)
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(180)
+                        .setInterpolator(FastOutSlowInInterpolator())
+                        .withEndAction {
+                            recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
+                        }
+                        .start()
+                }
             }
             .start()
     }

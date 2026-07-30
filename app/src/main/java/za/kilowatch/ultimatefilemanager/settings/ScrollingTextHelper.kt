@@ -75,7 +75,7 @@ object ScrollingTextHelper {
 
         // Defer measurement to the next layout pass so the view has a width.
         textView.post {
-            if (textView.width == 0) return@post
+            if (!textView.isAttachedToWindow || textView.width == 0) return@post
 
             val text = textView.text.toString()
             if (text.isEmpty()) return@post
@@ -116,7 +116,7 @@ object ScrollingTextHelper {
      * direction or stop.
      */
     private fun scrollOneWay(textView: TextView, overflow: Int, forward: Boolean) {
-        if (!activeViews.containsKey(textView)) return
+        if (!activeViews.containsKey(textView) || !textView.isAttachedToWindow) return
 
         val from = if (forward) 0 else overflow
         val to = if (forward) overflow else 0
@@ -140,14 +140,17 @@ object ScrollingTextHelper {
             override fun onAnimationEnd(animation: Animator) {
                 if (activeAnimators[textView] !== animation) return
 
-                if (forward) {
-                    // Reached the end — pause briefly, then scroll back.
-                    postDelayed(textView, END_PAUSE_MS) {
-                        scrollOneWay(textView, overflow, forward = false)
+                textView.post {
+                    if (activeAnimators[textView] !== animation || !textView.isAttachedToWindow) return@post
+
+                    if (forward) {
+                        // Reached the end — pause briefly, then scroll back.
+                        postDelayed(textView, END_PAUSE_MS) {
+                            scrollOneWay(textView, overflow, forward = false)
+                        }
+                    } else {
+                        // Scrolled back to start — one-shot complete.
                     }
-                } else {
-                    // Scrolled back to start — one-shot complete.  Do nothing;
-                    // the view stays at scrollX = 0 until it is re-bound.
                 }
             }
         })
@@ -158,7 +161,7 @@ object ScrollingTextHelper {
     /** Post a [Runnable] that automatically checks [activeViews] validity. */
     private fun postDelayed(textView: TextView, delayMs: Long, action: () -> Unit) {
         val runnable = Runnable {
-            if (!activeViews.containsKey(textView)) return@Runnable
+            if (!activeViews.containsKey(textView) || !textView.isAttachedToWindow) return@Runnable
             action()
         }
         pendingActions[textView] = runnable
