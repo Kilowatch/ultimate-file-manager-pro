@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.ui
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
@@ -52,6 +53,15 @@ object SelectionAnimationHelper {
             layoutParams = lp
         }
 
+        animView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+            override fun onViewAttachedToWindow(v: View) {}
+            override fun onViewDetachedFromWindow(v: View) {
+                val animator = v.getTag(R.id.lottieEmptyFolder) as? ObjectAnimator
+                animator?.cancel()
+                v.setTag(R.id.lottieEmptyFolder, null)
+            }
+        })
+
         if (container is LinearLayout) {
             container.addView(animView, 1.coerceAtMost(container.childCount))
         } else {
@@ -60,7 +70,7 @@ object SelectionAnimationHelper {
 
         // Wait for container measurement to get exact screen/layout width
         container.post {
-            if (container.indexOfChild(animView) == -1) return@post
+            if (container.indexOfChild(animView) == -1 || !animView.isAttachedToWindow) return@post
             
             val containerWidth = if (container.width > 0) container.width.toFloat() else 1200f
             val startX = -150f * context.resources.displayMetrics.density
@@ -87,6 +97,7 @@ object SelectionAnimationHelper {
         
         val animator = animView.getTag(R.id.lottieEmptyFolder) as? ObjectAnimator
         animator?.cancel()
+        animView.setTag(R.id.lottieEmptyFolder, null)
         
         container.removeView(animView)
     }

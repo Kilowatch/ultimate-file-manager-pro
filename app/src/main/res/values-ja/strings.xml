@@ -7122,46 +7122,46 @@ Boxを認証
 承認が拒否またはキャンセルされました。
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+昇格したアクセス
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USBドライブ（制限あり）
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TVは直接USBアクセスを制限しています — Shizukuを使用してください
+Fire TVはUSBへの直接アクセスを制限しています — Shizuku / Sheveryを使用してください
 </string>
     <string name="shizuku_usb_access_desc">
-このデバイスのセキュリティポリシー（SELinux）により、/mnt/media_rw/にマウントされたUSBドライブへの直接アクセスがブロックされています。USBストレージにアクセスするには、Shizukuをインストールして認証してください。Shizukuはこの制限を回避するために必要な昇格された権限を提供します。
+このデバイスのセキュリティポリシー（SELinux）により、/mnt/media_rw/にマウントされたUSBドライブへの直接アクセスがブロックされています。USBストレージにアクセスするには、この制限を回避するために必要な昇格した権限を提供するShizukuまたはSheveryをインストールして認証してください。
 </string>
     <string name="opening_shizuku">
-Shizukuを開いています…
+昇格マネージャーを開いています…
 </string>
     <string name="shizuku_status_label">
 サービスステータス
 </string>
     <string name="shizuku_installed">
-Shizukuがインストールされています
+昇格マネージャー（Shizuku / Shevery）がインストールされています
 </string>
     <string name="shizuku_not_installed">
-Shizukuがインストールされていません
+昇格マネージャーがインストールされていません
 </string>
     <string name="shizuku_description">
-Shizukuを使用すると、アプリはシステムレベルのAPIを直接利用でき、ほとんどのAndroidバージョンでrootを必要とせずに、バックグラウンドファイル管理やシステムコマンド実行などの高度な機能を有効にできます。
+ShizukuとSheveryを使用すると、アプリはシステムレベルのAPIを直接使用でき、ほとんどのAndroidバージョンでルートを必要とせずに、バックグラウンドファイル管理やシステムコマンド実行などの高度な機能を有効にできます。
 </string>
     <string name="shizuku_service_status">
 サービスステータス
 </string>
     <string name="shizuku_service_running">
-Shizukuサービスが実行中です
+昇格サービスが実行中です
 </string>
     <string name="shizuku_service_not_running">
-Shizukuサービスが実行されていません
+昇格サービスが実行されていません
 </string>
     <string name="shizuku_btn_enable">
 サービスを有効にする
@@ -7173,59 +7173,69 @@ Shizukuサービスが実行されていません
 未認証
 </string>
     <string name="shizuku_installed_msg">
-Shizukuがインストールされており、使用可能な状態です。
+昇格マネージャーがインストールされており、使用できるようになります。
 </string>
     <string name="shizuku_download_hint">
-Shizukuの最新バージョンは公式GitHubリポジトリからダウンロードできます。
+ShizukuまたはSheveryの最新バージョンは、それぞれの公式GitHubリポジトリからダウンロードできます。
 </string>
     <string name="shizuku_download_link">
-Shizukuをダウンロード
+マネージャーをダウンロード
+</string>
+    <string name="shizuku_download_shizuku">
+ダウンロード Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+ダウンロード Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Shizukuをダウンロード
+Shizuku / Sheveryをダウンロード
 </string>
     <string name="shizuku_tv_download_msg">
-このデバイスにShizukuがインストールされていません。\n
+このデバイスに昇格マネージャー（ShizukuまたはShevery）がインストールされていません。\n
 \n
-スマートフォンまたはコンピュータで次のURLにアクセスして最新のAPKをダウンロードし、このテレビにサイドロードしてください:\n
+以下のURLのいずれかにスマートフォンまたはコンピューターからアクセスして最新のAPKをダウンロードし、このテレビにサイドロードしてください:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
 リンクをコピー
 </string>
     <string name="shizuku_link_copied">
-リンクがクリップボードにコピーされました
+リンクをクリップボードにコピーしました
 </string>
     <string name="shizuku_auth_title">
-Shizukuを認証
+昇格アクセスを認証
 </string>
     <string name="shizuku_auth_msg">
-UFMは高度なファイル操作を実行するためにShizukuの認証が必要です。次のシステムダイアログで許可を付与してください。
+UFMは高度なファイル操作を実行するために認証が必要です。次のシステムダイアログで権限を許可してください。
 </string>
     <string name="shizuku_btn_authorize">
 認証
 </string>
     <string name="shizuku_btn_start_service">
-Shizukuを有効にする
+昇格アクセスを有効化
 </string>
     <string name="shizuku_starting_service">
-Shizukuサービスを開始中...
+昇格サービスを開始しています...
 </string>
     <string name="shizuku_starting_msg">
-ブロードキャストインテントでShizukuサービスを開始しようとしています。お待ちください…
+ブロードキャストインテント経由で昇格サービスを開始しています。お待ちください…
 </string>
     <string name="shizuku_start_failed">
-Shizukuの開始に失敗しました。ワイヤレスデバッグが有効になっていることを確認するか、手動で開始してください。
+サービスの開始に失敗しました。ワイヤレスデバッグが有効になっていることを確認するか、手動で開始してください。
 </string>
     <string name="shizuku_enabled_and_active">
-Shizukuが有効でアクティブです
+昇格アクセスが有効でアクティブです
 </string>
     <string name="shizuku_adb_not_connected">
-ADBが接続されていません。ADBターミナル経由で接続してShizukuを自動的に有効にしてください。
+ADBが接続されていません。ADBターミナル経由で接続すると、昇格アクセスが自動的に有効になります。
 </string>
     <string name="shizuku_manager_open_error">
-Shizukuマネージャーを開けませんでした。最初にアプリをインストールしてください。
+マネージャーを開けませんでした。最初にShizukuまたはSheveryをインストールしてください。
 </string>
 
     <!-- Media Player errors -->

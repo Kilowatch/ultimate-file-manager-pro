@@ -71,8 +71,6 @@ object AnimationHelper {
         val exitTranslationX = if (isForward) -width * 0.25f else width * 0.25f
         val entryStartTranslationX = if (isForward) width * 0.25f else -width * 0.25f
 
-        recyclerView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-
         recyclerView.animate()
             .translationX(exitTranslationX)
             .alpha(0f)
@@ -80,12 +78,10 @@ object AnimationHelper {
             .setInterpolator(FastOutSlowInInterpolator())
             .withEndAction {
                 if (!recyclerView.isAttachedToWindow) {
-                    recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                     return@withEndAction
                 }
                 recyclerView.post {
                     if (!recyclerView.isAttachedToWindow) {
-                        recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                         return@post
                     }
                     // Swap adapter items at the midpoint of animation
@@ -107,9 +103,6 @@ object AnimationHelper {
                         .alpha(1f)
                         .setDuration(180)
                         .setInterpolator(FastOutSlowInInterpolator())
-                        .withEndAction {
-                            recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
-                        }
                         .start()
                 }
             }
@@ -171,7 +164,6 @@ object AnimationHelper {
             return
         }
 
-        recyclerView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         recyclerView.animate()
             .alpha(0.3f)
             .scaleX(0.96f)
@@ -180,12 +172,10 @@ object AnimationHelper {
             .setInterpolator(FastOutSlowInInterpolator())
             .withEndAction {
                 if (!recyclerView.isAttachedToWindow) {
-                    recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                     return@withEndAction
                 }
                 recyclerView.post {
                     if (!recyclerView.isAttachedToWindow) {
-                        recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
                         return@post
                     }
                     onApplyMode()
@@ -195,9 +185,6 @@ object AnimationHelper {
                         .scaleY(1.0f)
                         .setDuration(180)
                         .setInterpolator(FastOutSlowInInterpolator())
-                        .withEndAction {
-                            recyclerView.setLayerType(View.LAYER_TYPE_NONE, null)
-                        }
                         .start()
                 }
             }

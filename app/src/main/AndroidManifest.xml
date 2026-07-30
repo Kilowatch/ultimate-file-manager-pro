@@ -37,8 +37,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
-    <!-- Shizuku API Permission -->
+    <!-- Shizuku & Shevery API Permissions -->
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="com.hamondev.shevery.permission.API_V23" />
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" tools:ignore="ProtectedPermissions" />
 
     <!-- TV Support -->
@@ -58,12 +59,13 @@
         android:required="false" />
 
 
-    <!-- Queries for MSAL Broker Apps and Shizuku -->
+    <!-- Queries for MSAL Broker Apps, Shizuku, and Shevery -->
     <queries>
         <package android:name="com.azure.authenticator" />
         <package android:name="com.microsoft.windowsintune.companyportal" />
         <package android:name="com.microsoft.identity.testuserapp" />
         <package android:name="moe.shizuku.privileged.api" />
+        <package android:name="com.hamondev.shevery" />
     </queries>
 
     <application

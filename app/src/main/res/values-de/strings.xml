@@ -7122,46 +7122,46 @@ Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.
 Autorisierung wurde verweigert oder abgebrochen.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Erhöhter Zugriff
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB-Laufwerk (Eingeschränkt)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV schränkt den direkten USB-Zugriff ein – verwende Shizuku
+Fire TV beschränkt den direkten USB-Zugriff – verwenden Sie Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-Die Sicherheitsrichtlinie dieses Geräts (SELinux) blockiert den direkten Zugriff auf USB-Laufwerke, die unter /mnt/media_rw/ eingehängt sind. Um auf USB-Speicher zuzugreifen, installiere und autorisiere Shizuku, das die erhöhten Berechtigungen bereitstellt, um diese Einschränkung zu umgehen.
+Die Sicherheitsrichtlinie (SELinux) dieses Geräts blockiert den direkten Zugriff auf USB-Laufwerke, die unter /mnt/media_rw/ eingebunden sind. Um auf USB-Speicher zuzugreifen, installieren und autorisieren Sie Shizuku oder Shevery, das die erforderlichen erweiterten Berechtigungen bereitstellt, um diese Einschränkung zu umgehen.
 </string>
     <string name="opening_shizuku">
-Öffne Shizuku…
+Erweiterten Manager öffnen…
 </string>
     <string name="shizuku_status_label">
 Dienststatus
 </string>
     <string name="shizuku_installed">
-Shizuku ist installiert
+Erweiterter Manager (Shizuku / Shevery) ist installiert
 </string>
     <string name="shizuku_not_installed">
-Shizuku ist nicht installiert
+Erweiterter Manager ist nicht installiert
 </string>
     <string name="shizuku_description">
-Shizuku ermöglicht Apps die direkte Nutzung von systemnahen APIs und ermöglicht erweiterte Funktionen wie Hintergrund-Dateiverwaltung und Ausführung von Systembefehlen ohne Root auf den meisten Android-Versionen.
+Shizuku und Shevery ermöglichen Apps die direkte Nutzung von systemnahen APIs und ermöglichen erweiterte Funktionen wie Hintergrund-Dateiverwaltung und Systembefehlsausführung ohne Root auf den meisten Android-Versionen.
 </string>
     <string name="shizuku_service_status">
 Dienststatus
 </string>
     <string name="shizuku_service_running">
-Shizuku-Dienst läuft
+Erweiterter Dienst läuft
 </string>
     <string name="shizuku_service_not_running">
-Shizuku-Dienst läuft nicht
+Erweiterter Dienst läuft nicht
 </string>
     <string name="shizuku_btn_enable">
 Dienst aktivieren
@@ -7173,59 +7173,69 @@ Autorisiert
 Nicht autorisiert
 </string>
     <string name="shizuku_installed_msg">
-Shizuku ist installiert und kann verwendet werden.
+Erweiterter Manager ist installiert und kann verwendet werden.
 </string>
     <string name="shizuku_download_hint">
-Du kannst die neueste Version von Shizuku aus dem offiziellen GitHub-Repository herunterladen.
+Sie können die neueste Version von Shizuku oder Shevery von deren offiziellen GitHub-Repositories herunterladen.
 </string>
     <string name="shizuku_download_link">
+Manager herunterladen
+</string>
+    <string name="shizuku_download_shizuku">
 Shizuku herunterladen
+</string>
+    <string name="shizuku_download_shevery">
+Shevery herunterladen
 </string>
     <string name="shizuku_tv_download_title">
-Shizuku herunterladen
+Shizuku / Shevery herunterladen
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku ist auf diesem Gerät nicht installiert.\n
+Erweiterter Manager (Shizuku oder Shevery) ist auf diesem Gerät nicht installiert.\n
 \n
-Bitte besuche die folgende URL auf deinem Telefon oder Computer, um die neueste APK herunterzuladen, und lade sie dann seitlich auf diesen Fernseher:\n
+Bitte besuchen Sie eine der folgenden URLs auf Ihrem Telefon oder Computer, um die neueste APK herunterzuladen, und laden Sie sie dann seitlich auf diesen Fernseher:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-Link kopieren
+Links kopieren
 </string>
     <string name="shizuku_link_copied">
-Link in die Zwischenablage kopiert
+Links in die Zwischenablage kopiert
 </string>
     <string name="shizuku_auth_title">
-Shizuku autorisieren
+Erhöhten Zugriff autorisieren
 </string>
     <string name="shizuku_auth_msg">
-UFM benötigt die Shizuku-Autorisierung, um erweiterte Dateioperationen durchzuführen. Bitte erteile die Berechtigung im folgenden Systemdialog.
+UFM benötigt eine Autorisierung für erweiterte Dateioperationen. Bitte erteilen Sie die Berechtigung im folgenden Systemdialog.
 </string>
     <string name="shizuku_btn_authorize">
 Autorisieren
 </string>
     <string name="shizuku_btn_start_service">
-Shizuku aktivieren
+Erhöhten Zugriff aktivieren
 </string>
     <string name="shizuku_starting_service">
-Shizuku-Dienst wird gestartet...
+Erweiterten Dienst starten...
 </string>
     <string name="shizuku_starting_msg">
-Versuche, Shizuku-Dienst über Broadcast-Intent zu starten. Bitte warten…
+Versuche, den erweiterten Dienst per Broadcast-Intent zu starten. Bitte warten…
 </string>
     <string name="shizuku_start_failed">
-Shizuku konnte nicht gestartet werden. Bitte stelle sicher, dass das drahtlose Debugging aktiviert ist, oder starte es manuell.
+Fehler beim Starten des Dienstes. Bitte stellen Sie sicher, dass Wireless Debugging aktiviert ist, oder starten Sie ihn manuell.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku ist aktiviert und aktiv
+Erhöhter Zugriff ist aktiviert und aktiv
 </string>
     <string name="shizuku_adb_not_connected">
-ADB ist nicht verbunden. Verbinde über ADB-Terminal, um Shizuku automatisch zu aktivieren.
+ADB ist nicht verbunden. Verbinden Sie sich über das ADB-Terminal, um den erhöhten Zugriff automatisch zu aktivieren.
 </string>
     <string name="shizuku_manager_open_error">
-Shizuku-Manager konnte nicht geöffnet werden. Bitte installiere zuerst die App.
+Manager konnte nicht geöffnet werden. Bitte installieren Sie zuerst Shizuku oder Shevery.
 </string>
 
     <!-- Media Player errors -->

@@ -7122,46 +7122,46 @@ Erreur réseau. Veuillez vérifier votre connexion et réessayer.
 L\\\'autorisation a été refusée ou annulée.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Accès élevé
 </string>
     <string name="shizuku_subtitle">
-Gestionnaire Shizuku
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 Disque USB (Restreint)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV restreint l\\\'accès USB direct — utilisez Shizuku
+Fire TV restreint l\'accès USB direct — utilisez Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-La politique de sécurité (SELinux) de cet appareil bloque l\\\'accès direct aux disques USB montés dans /mnt/media_rw/. Pour accéder au stockage USB, installez et autorisez Shizuku, qui fournit les privilèges élevés nécessaires pour contourner cette restriction.
+La politique de sécurité (SELinux) de cet appareil bloque l\'accès direct aux clés USB montées sur /mnt/media_rw/. Pour accéder au stockage USB, installez et autorisez Shizuku ou Shevery, qui fournissent les privilèges élevés nécessaires pour contourner cette restriction.
 </string>
     <string name="opening_shizuku">
-Ouverture de Shizuku…
+Ouverture du gestionnaire élevé…
 </string>
     <string name="shizuku_status_label">
 État du service
 </string>
     <string name="shizuku_installed">
-Shizuku est installé
+Le gestionnaire élevé (Shizuku / Shevery) est installé
 </string>
     <string name="shizuku_not_installed">
-Shizuku n\\\'est pas installé
+Le gestionnaire élevé n\'est pas installé
 </string>
     <string name="shizuku_description">
-Shizuku permet aux applications d\\\'utiliser directement les API système, permettant des fonctionnalités avancées comme la gestion de fichiers en arrière-plan et l\\\'exécution de commandes système sans nécessiter de root sur la plupart des versions Android.
+Shizuku et Shevery permettent aux applications d\'utiliser directement les API système, offrant des fonctionnalités avancées comme la gestion de fichiers en arrière-plan et l\'exécution de commandes système sans nécessiter de root sur la plupart des versions Android.
 </string>
     <string name="shizuku_service_status">
 État du service
 </string>
     <string name="shizuku_service_running">
-Le service Shizuku est en cours d\\\'exécution
+Le service élevé est en cours d\'exécution
 </string>
     <string name="shizuku_service_not_running">
-Le service Shizuku n\\\'est pas en cours d\\\'exécution
+Le service élevé n\'est pas en cours d\'exécution
 </string>
     <string name="shizuku_btn_enable">
 Activer le service
@@ -7173,59 +7173,69 @@ Autorisé
 Non autorisé
 </string>
     <string name="shizuku_installed_msg">
-Shizuku est installé et sera disponible.
+Le gestionnaire élevé est installé et sera disponible pour être utilisé.
 </string>
     <string name="shizuku_download_hint">
-Vous pouvez télécharger la dernière version de Shizuku depuis son dépôt GitHub officiel.
+Vous pouvez télécharger la dernière version de Shizuku ou Shevery depuis leurs dépôts GitHub officiels.
 </string>
     <string name="shizuku_download_link">
+Télécharger le gestionnaire
+</string>
+    <string name="shizuku_download_shizuku">
 Télécharger Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+Télécharger Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Télécharger Shizuku
+Télécharger Shizuku / Shevery
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku n\\\'est pas installé sur cet appareil.\n
+Le gestionnaire élevé (Shizuku ou Shevery) n\'est pas installé sur cet appareil.\n
 \n
-Veuillez visiter l\\\'URL suivante sur votre téléphone ou ordinateur pour télécharger le dernier APK, puis installez-le sur cette TV :\n
+Veuillez visiter l\'une des URLs suivantes sur votre téléphone ou ordinateur pour télécharger le dernier APK, puis installez-le sur ce téléviseur :\n
 \n
-%s
+Shizuku :\n
+%1$s\n
+\n
+Shevery :\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-Copier le lien
+Copier les liens
 </string>
     <string name="shizuku_link_copied">
-Lien copié dans le presse-papiers
+Liens copiés dans le presse-papiers
 </string>
     <string name="shizuku_auth_title">
-Autoriser Shizuku
+Autoriser l\'accès élevé
 </string>
     <string name="shizuku_auth_msg">
-UFM nécessite l\\\'autorisation de Shizuku pour effectuer des opérations avancées sur les fichiers. Veuillez accorder l\\\'autorisation dans la boîte de dialogue système suivante.
+UFM nécessite une autorisation pour effectuer des opérations avancées sur les fichiers. Veuillez accorder la permission dans la boîte de dialogue système suivante.
 </string>
     <string name="shizuku_btn_authorize">
 Autoriser
 </string>
     <string name="shizuku_btn_start_service">
-Activer Shizuku
+Activer l\'accès élevé
 </string>
     <string name="shizuku_starting_service">
-Démarrage du service Shizuku...
+Démarrage du service élevé...
 </string>
     <string name="shizuku_starting_msg">
-Tentative de démarrage du service Shizuku via une intention broadcast. Veuillez patienter…
+Tentative de démarrage du service élevé via un intent de diffusion. Veuillez patienter…
 </string>
     <string name="shizuku_start_failed">
-Échec du démarrage de Shizuku. Veuillez vous assurer que le débogage sans fil est activé ou démarrez-le manuellement.
+Échec du démarrage du service. Veuillez vous assurer que le débogage sans fil est activé ou démarrez-le manuellement.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku est activé et actif
+L\'accès élevé est activé et actif
 </string>
     <string name="shizuku_adb_not_connected">
-ADB n\\\'est pas connecté. Connectez-vous via le terminal ADB pour activer Shizuku automatiquement.
+ADB n\'est pas connecté. Connectez-vous via le terminal ADB pour activer automatiquement l\'accès élevé.
 </string>
     <string name="shizuku_manager_open_error">
-Impossible d\\\'ouvrir le gestionnaire Shizuku. Veuillez d\\\'abord installer l\\\'application.
+Impossible d\'ouvrir le gestionnaire. Veuillez d\'abord installer Shizuku ou Shevery.
 </string>
 
     <!-- Media Player errors -->

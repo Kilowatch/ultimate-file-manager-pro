@@ -7122,46 +7122,46 @@ Erro de rede. Verifique sua conexão e tente novamente.
 A autorização foi negada ou cancelada.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Acesso Elevado
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 Unidade USB (Restrita)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV restringe o acesso direto a USB — use o Shizuku
+A Fire TV restringe o acesso direto a USB — use Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-A política de segurança deste dispositivo (SELinux) bloqueia o acesso direto a unidades USB montadas em /mnt/media_rw/. Para acessar o armazenamento USB, instale e autorize o Shizuku, que fornece os privilégios elevados necessários para contornar essa restrição.
+A política de segurança deste dispositivo (SELinux) bloqueia o acesso direto a unidades USB montadas em /mnt/media_rw/. Para acessar o armazenamento USB, instale e autorize o Shizuku ou Shevery, que fornece os privilégios elevados necessários para contornar essa restrição.
 </string>
     <string name="opening_shizuku">
-Abrindo Shizuku…
+Abrindo Gerenciador Elevado…
 </string>
     <string name="shizuku_status_label">
 Status do serviço
 </string>
     <string name="shizuku_installed">
-Shizuku está instalado
+Gerenciador Elevado (Shizuku / Shevery) está instalado
 </string>
     <string name="shizuku_not_installed">
-Shizuku não está instalado
+Gerenciador Elevado não está instalado
 </string>
     <string name="shizuku_description">
-Shizuku permite que aplicativos usem APIs de nível de sistema diretamente, possibilitando recursos avançados como gerenciamento de arquivos em segundo plano e execução de comandos do sistema sem exigir root na maioria das versões do Android.
+Shizuku e Shevery permitem que aplicativos usem APIs de nível de sistema diretamente, habilitando recursos avançados como gerenciamento de arquivos em segundo plano e execução de comandos do sistema sem exigir root na maioria das versões do Android.
 </string>
     <string name="shizuku_service_status">
 Status do serviço
 </string>
     <string name="shizuku_service_running">
-O serviço Shizuku está em execução
+Serviço elevado está em execução
 </string>
     <string name="shizuku_service_not_running">
-O serviço Shizuku não está em execução
+Serviço elevado não está em execução
 </string>
     <string name="shizuku_btn_enable">
 Ativar serviço
@@ -7173,59 +7173,69 @@ Autorizado
 Não autorizado
 </string>
     <string name="shizuku_installed_msg">
-Shizuku está instalado e estará disponível para uso.
+O Gerenciador Elevado está instalado e estará disponível para uso.
 </string>
     <string name="shizuku_download_hint">
-Você pode baixar a versão mais recente do Shizuku em seu repositório oficial do GitHub.
+Você pode baixar a versão mais recente do Shizuku ou Shevery nos repositórios oficiais do GitHub.
 </string>
     <string name="shizuku_download_link">
+Gerenciador de Download
+</string>
+    <string name="shizuku_download_shizuku">
 Baixar Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+Baixar Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Baixar Shizuku
+Baixar Shizuku / Shevery
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku não está instalado neste dispositivo.\n
+O Gerenciador Elevado (Shizuku ou Shevery) não está instalado neste dispositivo.\n
 \n
-Visite o seguinte URL em seu telefone ou computador para baixar o APK mais recente e, em seguida, faça o sideload para esta TV:\n
+Visite um dos seguintes URLs em seu telefone ou computador para baixar o APK mais recente e faça sideload para esta TV:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-Copiar link
+Copiar Links
 </string>
     <string name="shizuku_link_copied">
-Link copiado para a área de transferência
+Links copiados para a área de transferência
 </string>
     <string name="shizuku_auth_title">
-Autorizar Shizuku
+Autorizar Acesso Elevado
 </string>
     <string name="shizuku_auth_msg">
-O UFM requer autorização do Shizuku para realizar operações avançadas de arquivos. Conceda permissão na seguinte caixa de diálogo do sistema.
+O UFM requer autorização para realizar operações avançadas de arquivos. Conceda permissão no diálogo do sistema a seguir.
 </string>
     <string name="shizuku_btn_authorize">
 Autorizar
 </string>
     <string name="shizuku_btn_start_service">
-Ativar Shizuku
+Ativar Acesso Elevado
 </string>
     <string name="shizuku_starting_service">
-Iniciando o serviço Shizuku...
+Iniciando serviço elevado...
 </string>
     <string name="shizuku_starting_msg">
-Tentando iniciar o serviço Shizuku via intent de broadcast. Aguarde…
+Tentando iniciar o serviço elevado via intent de broadcast. Aguarde…
 </string>
     <string name="shizuku_start_failed">
-Falha ao iniciar o Shizuku. Verifique se a depuração sem fio está ativada ou inicie manualmente.
+Falha ao iniciar o serviço. Certifique-se de que a Depuração Sem Fio está ativada ou inicie manualmente.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku está ativado e ativo
+O Acesso Elevado está ativado e ativo
 </string>
     <string name="shizuku_adb_not_connected">
-ADB não está conectado. Conecte via terminal ADB para ativar o Shizuku automaticamente.
+O ADB não está conectado. Conecte-se via Terminal ADB para ativar o Acesso Elevado automaticamente.
 </string>
     <string name="shizuku_manager_open_error">
-Não foi possível abrir o gerenciador do Shizuku. Instale o aplicativo primeiro.
+Não foi possível abrir o gerenciador. Instale o Shizuku ou Shevery primeiro.
 </string>
 
     <!-- Media Player errors -->

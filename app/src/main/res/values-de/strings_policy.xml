@@ -174,67 +174,67 @@ Durch die Nutzung von Ultimate File Manager Pro bestätigen Sie, dass Sie diese 
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-Dateibrowser – Dateien überall auf Ihrem Gerät durchsuchen, kopieren, verschieben, umbenennen und löschen.
+Datei-Browser – durchsuchen, kopieren, verschieben, umbenennen und löschen Sie Dateien überall auf Ihrem Gerät.
 </item>
         <item>
-Verschlüsselter Tresor – vertrauliche Dateien mit AES-256-GCM-Verschlüsselung und Ihrer eigenen PIN sperren.
+Verschlüsselter Tresor – sperren Sie vertrauliche Dateien mit AES-256-GCM-Verschlüsselung und Ihrer eigenen PIN.
 </item>
         <item>
-Dateiserver – einen FTP- oder sicheren SFTP-Server direkt auf Ihrem Gerät hosten, um Dateien in Ihrem lokalen Netzwerk zu teilen.
+Dateiserver – hosten Sie einen FTP- oder sicheren SFTP-Server direkt auf Ihrem Gerät, um Dateien in Ihrem lokalen Netzwerk zu teilen.
 </item>
         <item>
-Fernverwaltung – Dateien über Ihr lokales WLAN mit einem integrierten HTTP-Server verwalten, der das Hochladen, Herunterladen und Installieren von APKs aus der Ferne unterstützt.
+Fernverwaltung – verwalten Sie Dateien über Ihr lokales WLAN mit einem integrierten HTTP-Server, der das Hochladen, Herunterladen und Installieren von APKs aus der Ferne unterstützt.
 </item>
         <item>
-Netzwerkfreigaben – Mit SMB-, FTP- und NFS-Servern in Ihrem lokalen Netzwerk verbinden, um entfernte Dateien zu durchsuchen, herunterzuladen und zu verwalten.
+Netzwerkfreigaben – verbinden Sie sich mit SMB-, FTP- und NFS-Servern in Ihrem lokalen Netzwerk, um entfernte Dateien zu durchsuchen, herunterzuladen und zu verwalten.
 </item>
         <item>
-Ordnersynchronisation – Lokale Telefonordner automatisch nach einem von Ihnen gewählten Zeitplan (Intervall oder bestimmte Uhrzeit täglich, wöchentlich oder monatlich) auf eine SMB- oder FTP-Netzwerkfreigabe sichern.
+Ordnersynchronisation – sichern Sie lokale Telefonordner automatisch auf einer SMB- oder FTP-Netzwerkfreigabe nach einem von Ihnen gewählten Zeitplan (Intervall oder bestimmte Uhrzeit täglich, wöchentlich oder monatlich).
 </item>
         <item>
-Gerätekopplung – Mobiltelefon und Android TV über lokales WLAN koppeln, um Dateien zu übertragen und zu installieren.
+Gerätekopplung – koppeln Sie Ihr Mobiltelefon und Android TV über lokales WLAN, um Dateien zu übertragen und zu installieren.
 </item>
         <item>
-ADB-Terminal – Über ADB (Android Debug Bridge) im Entwicklermodus per lokalem WLAN mit Android-Geräten verbinden für direkten Shell-Zugriff und erweiterte Fehlerbehebung.
+ADB-Terminal – verbinden Sie sich mit Android-Geräten im Entwicklermodus über Ihr lokales WLAN mit ADB (Android Debug Bridge) für direkten Shell-Zugriff und erweiterte Fehlerbehebung.
 </item>
         <item>
-Integrierte Viewer – Textdateien, PDFs, animierte Bilder (APNG, GIF, animiertes WebP, SVG und mehr), Archive und andere Formate direkt in der App anzeigen.
+Integrierte Viewer – betrachten Sie Textdateien, PDFs, animierte Bilder (APNG, GIF, animiertes WebP, SVG und mehr), Archive und andere Formate direkt in der App.
 </item>
         <item>
-Erweiterte ZIP-Unterstützung – Passwortgeschützte und AES-verschlüsselte ZIP-Archive erstellen und extrahieren.
+Erweiterte ZIP-Unterstützung – erstellen und extrahieren Sie passwortgeschützte und AES-verschlüsselte ZIP-Archive.
 </item>
         <item>
-Fernbildschirmaufnahmen – Bildschirm Ihres gekoppelten Android TV über lokales WLAN per ADB erfassen und direkt im Telefonspeicher speichern.
+Remote-Screenshots – erfassen Sie den Bildschirm Ihres gekoppelten Android TV über lokales WLAN via ADB und speichern Sie ihn direkt im Speicher Ihres Telefons.
 </item>
         <item>
-7Z-Archivunterstützung – 7Z-Archive mit LZMA/LZMA2-Komprimierung extrahieren.
+7Z-Archivunterstützung – extrahieren Sie 7Z-Archive mit LZMA/LZMA2-Kompression.
 </item>
         <item>
-Dateisuche – Dateien und Ordner schnell im Gerätespeicher finden.
+Dateisuche – finden Sie schnell Dateien und Ordner im gesamten Gerätespeicher.
 </item>
         <item>
-Speicheranalyse – Eine visuelle Aufschlüsselung dessen sehen, was Ihren Speicherplatz belegt.
+Speicheranalysator – sehen Sie eine visuelle Aufschlüsselung, was Ihren Speicherplatz belegt.
 </item>
         <item>
-App-Manager – Alle auf Ihrem Gerät installierten Apps anzeigen und verwalten, mit Entblähungsempfehlungen für vorinstallierte Apps.
+App-Manager – sehen und verwalten Sie alle auf Ihrem Gerät installierten Apps mit Debloat-Empfehlungen für vorinstallierte Apps.
 </item>
         <item>
-APK-Installer – Android-Apps und Split-APKs (XAPK) direkt aus lokal gespeicherten Dateien installieren.
+APK-Installer – installieren Sie Android-Apps und aufgeteilte APKs (XAPK) direkt aus lokal gespeicherten Dateien.
 </item>
         <item>
-Erweiterter Zugriff (Shizuku &amp; ADB) – root-ähnlichen Zugriff erhalten, um Systemdateien und eingeschränkte Verzeichnisse zu verwalten, ohne Ihr Gerät tatsächlich zu rooten.
+Erweiterter Zugriff (Shizuku, Shevery &amp; ADB) – erhalten Sie root-ähnlichen Zugriff, um Systemdateien und eingeschränkte Verzeichnisse zu verwalten, ohne Ihr Gerät tatsächlich zu rooten.
 </item>
         <item>
-Speicherindexer – Einen lokalen Index von Dateimetadaten für sofortige Suche und blitzschnelles Durchsuchen erstellen.
+Speicherindexierer – erstellen Sie einen lokalen Index der Dateimetadaten für sofortige Suche und blitzschnelles Durchsuchen.
 </item>
         <item>
-Speicherzugriffsrahmen – Andere Apps können über den Dokumentenanbieter von UFM auf Ihre Dateien zugreifen.
+Storage Access Framework – andere Apps können über UFMs Dokumentenanbieter auf Ihre Dateien zugreifen.
 </item>
         <item>
-Trinkgeldglas – Optionale einmalige Käufe zur Unterstützung des Entwicklers; die App ist immer kostenlos ohne Trinkgeld.
+Trinkgeldglas – optionale einmalige Käufe zur Unterstützung des Entwicklers; die App ist ohne Trinkgeld immer kostenlos.
 </item>
         <item>
-UFM Media Player – Audio- und Videodateien abspielen mit Hintergrundwiedergabe, Benachrichtigungssteuerung, Bild-im-Bild-Modus und Playlist-Verwaltung.
+UFM Media Player – spielen Sie Audio- und Videodateien mit Hintergrundwiedergabe, Benachrichtigungssteuerung, Bild-in-Bild-Modus und Playlist-Verwaltung.
 </item>
     </string-array>
 
@@ -253,7 +253,7 @@ APK-Dateien
 Dateiserver-Sicherheit
 </item>
         <item>
-Anmeldeinformationen für Netzwerkfreigaben
+Anmeldedaten für Netzwerkfreigaben
 </item>
         <item>
 Ordnersynchronisation
@@ -265,13 +265,13 @@ Entfernen von System-Apps
 ADB-Kopplung
 </item>
         <item>
-Shizuku &amp; erweiterter Zugriff
+Shizuku, Shevery &amp; erweiterter Zugriff
 </item>
         <item>
-TV-Bildschirmaufnahmen
+TV-Screenshots
 </item>
         <item>
-Indexer-Genauigkeit
+Genauigkeit des Indexierers
 </item>
         <item>
 Fehler &amp; Störungen
@@ -282,50 +282,50 @@ Unsere Haftung
     </string-array>
     <string-array name="tc_risk_details">
         <item>
-Wir können keinen Datenverlust ausschließen. Erstellen Sie immer Sicherungskopien wichtiger Dateien.
+Wir können keinen vollständigen Datenverlust garantieren. Erstellen Sie immer Sicherungen von Dateien, die Ihnen wichtig sind.
 </item>
         <item>
-Wenn Sie Ihre PIN und Ihren Wiederherstellungscode vergessen, können Ihre verschlüsselten Dateien von niemandem wiederhergestellt werden.
+Wenn Sie Ihre PIN und den Wiederherstellungscode vergessen, können Ihre verschlüsselten Dateien von niemandem wiederhergestellt werden.
 </item>
         <item>
 Die Installation von APKs aus unbekannten Quellen birgt Sicherheitsrisiken. Sie übernehmen die volle Verantwortung für alle APK-Dateien, die Sie installieren.
 </item>
         <item>
-Beim Hosten eines Dateiservers übertragen FTP-Verbindungen Daten und Anmeldeinformationen im Klartext. Verwenden Sie immer SFTP, wenn Sie sichere, verschlüsselte Übertragungen benötigen.
+Beim Hosten eines Dateiservers übertragen FTP-Verbindungen Daten und Anmeldedaten im Klartext. Verwenden Sie immer SFTP, wenn Sie sichere, verschlüsselte Übertragungen benötigen.
 </item>
         <item>
-Ihre Anmeldeinformationen für Netzwerkfreigaben (Host, Benutzername, Passwort) werden lokal auf Ihrem Gerät gespeichert. Sie sind dafür verantwortlich, Ihr Gerät sicher zu halten.
+Ihre Anmeldedaten für Netzwerkfreigaben (Host, Benutzername, Passwort) werden lokal auf Ihrem Gerät gespeichert. Sie sind dafür verantwortlich, Ihr Gerät sicher zu halten.
 </item>
         <item>
-Synchronisationsvorgänge laufen im Hintergrund und können Akku und Daten verbrauchen. Überprüfen Sie vor dem Aktivieren der Synchronisation immer den entfernten Pfad – das Synchronisieren in einen falschen Ordner kann Dateien auf Ihrer Netzwerkfreigabe überschreiben.
+Synchronisationsvorgänge laufen im Hintergrund und können Akku und Daten verbrauchen. Überprüfen Sie immer Ihren entfernten Pfad, bevor Sie die Synchronisation aktivieren – das Synchronisieren mit einem falschen Ordner kann Dateien auf Ihrer Netzwerkfreigabe überschreiben.
 </item>
         <item>
-Das Entfernen von System-Apps basierend auf Entblähungsempfehlungen kann die Gerätestabilität beeinträchtigen. Gehen Sie vorsichtig vor.
+Das Entfernen von System-Apps basierend auf Debloat-Empfehlungen kann die Gerätestabilität beeinträchtigen. Seien Sie vorsichtig.
 </item>
         <item>
-ADB-Kopplung erfordert den Austausch von Zertifikaten zwischen Ihrem Gerät und dem Zielgerät über Ihr lokales WLAN. Verbinden Sie sich nur mit Geräten, die Ihnen gehören oder auf die Sie Zugriff haben. Jeder in Ihrem Netzwerk, der Ihre Kopplungs-PIN abfängt, kann auf Ihr Gerät zugreifen – halten Sie diese PIN geheim.
+Die ADB-Kopplung erfordert den Austausch von Zertifikaten zwischen Ihrem Gerät und dem Zielgerät über Ihr lokales WLAN. Verbinden Sie sich nur mit Geräten, die Ihnen gehören oder auf die Sie zugreifen dürfen. Jeder in Ihrem Netzwerk, der Ihre Kopplungs-PIN abfängt, kann auf Ihr Gerät zugreifen – halten Sie diese PIN geheim.
 </item>
         <item>
-Die Verwendung von Shizuku oder ADB für erweiterten Zugriff ermöglicht der App, systemgeschützte Dateien zu ändern. Missbrauch dieser Funktionen könnte die Gerätestabilität oder -sicherheit beeinträchtigen. Verwenden Sie sie mit Vorsicht und gewähren Sie nur dieser App Zugriff.
+Die Verwendung von Shizuku, Shevery oder ADB für erweiterten Zugriff ermöglicht es der App, systemgeschützte Dateien zu ändern. Missbrauch dieser Funktionen kann die Gerätestabilität oder -sicherheit beeinträchtigen. Verwenden Sie diese mit Vorsicht und gewähren Sie nur dieser App Zugriff.
 </item>
         <item>
-Bildschirmaufnahmen gekoppelter TVs werden über ADB in Ihrem lokalen Netzwerk erfasst und direkt auf Ihrem Telefonspeicher gespeichert. Wir übertragen, betrachten oder laden Ihre Bildschirmaufnahmen nicht hoch. Stellen Sie sicher, dass Sie nur Bildschirme von Geräten erfassen, die Ihnen gehören oder auf die Sie Zugriff haben.
+Screenshots von gekoppelten Fernsehern werden über ADB in Ihrem lokalen Netzwerk erfasst und direkt im Speicher Ihres Telefons gespeichert. Wir übertragen, betrachten oder laden Ihre Screenshots nicht hoch. Stellen Sie sicher, dass Sie nur Screenshots von Geräten erfassen, die Ihnen gehören oder auf die Sie zugreifen dürfen.
 </item>
         <item>
-Der Index spiegelt den Zustand Ihres Speichers zum Zeitpunkt der Überprüfung wider. Möglicherweise müssen Sie den Index aktualisieren, wenn Dateien von anderen Apps geändert werden.
+Der Index spiegelt den Zustand Ihres Speichers zum Zeitpunkt des Scannens wider. Möglicherweise müssen Sie den Index aktualisieren, wenn Dateien von anderen Apps geändert werden.
 </item>
         <item>
 Keine Software ist perfekt. Wir können nicht versprechen, dass die App immer fehlerfrei oder ununterbrochen läuft.
 </item>
         <item>
-Unsere Gesamthaftung ist auf den Gesamtbetrag begrenzt, den Sie für In-App-Käufe in den 30 Tagen vor einem Anspruch gezahlt haben. Wir haften nicht für Datenverlust, Geräteschäden oder entgangene Gewinne, die durch kostenlose Funktionen entstehen.
+Unsere Gesamthaftung ist auf den Gesamtbetrag begrenzt, den Sie für In-App-Käufe in den 30 Tagen vor einem Anspruch gezahlt haben. Wir haften nicht für Datenverlust, Geräteschäden oder entgangene Gewinne, die aus kostenlosen Funktionen entstehen.
 </item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Erstellen Sie regelmäßig Sicherungskopien wichtiger Dateien, bevor Sie Massenvorgänge durchführen.
+Erstellen Sie regelmäßig Sicherungen wichtiger Dateien, bevor Sie Massenvorgänge durchführen.
 </item>
         <item>
 Bewahren Sie Ihre Tresor-PIN und Ihren Wiederherstellungscode an einem sicheren Ort auf – wir können sie nicht für Sie abrufen.
@@ -334,37 +334,37 @@ Bewahren Sie Ihre Tresor-PIN und Ihren Wiederherstellungscode an einem sicheren 
 Halten Sie Ihre PIN geheim. Jeder, der sie kennt, kann auf Ihren Tresor zugreifen.
 </item>
         <item>
-Bewahren Sie Ihre Anmeldeinformationen für Netzwerkfreigaben sicher auf – sie werden lokal auf Ihrem Gerät gespeichert.
+Bewahren Sie Ihre Anmeldedaten für Netzwerkfreigaben sicher auf – sie werden lokal auf Ihrem Gerät gespeichert.
 </item>
         <item>
-Überprüfen Sie die entfernten Pfade Ihrer Ordnersynchronisation sorgfältig – das Synchronisieren in einen falschen Netzwerkordner kann vorhandene Dateien überschreiben.
+Überprüfen Sie Ihre Ordnersynchronisations-Pfade sorgfältig – das Synchronisieren mit einem falschen Netzwerkordner kann vorhandene Dateien überschreiben.
 </item>
         <item>
-Seien Sie vorsichtig beim Entfernen von System-Apps basierend auf Entblähungsempfehlungen.
+Seien Sie vorsichtig beim Entfernen von System-Apps basierend auf Debloat-Empfehlungen.
 </item>
         <item>
-Verbinden Sie sich nur über das ADB-Terminal mit Geräten, die Ihnen gehören oder für die Sie ausdrückliche Zugriffsberechtigung haben. Verwenden Sie das ADB-Terminal nicht, um unbefugten Zugriff auf ein Gerät zu erhalten.
+Verbinden Sie sich nur über ADB-Terminal mit Geräten, die Ihnen gehören oder für die Sie ausdrückliche Zugriffsberechtigung haben. Verwenden Sie ADB-Terminal nicht, um unbefugten Zugriff auf ein Gerät zu erlangen.
 </item>
         <item>
-Halten Sie alle ADB- oder Shizuku-Kopplungs-PINs geheim – teilen Sie sie nur mit Personen, denen Sie vertrauen, dass sie Zugriff auf Ihr Gerät haben.
+Halten Sie alle ADB-, Shizuku- oder Shevery-Kopplungs-PINs geheim – teilen Sie sie nur mit Personen, denen Sie vertrauen, dass sie Zugriff auf Ihr Gerät haben.
 </item>
         <item>
-Sichern Sie Ihren Shizuku-Manager – die Gewährung von erweitertem Zugriff auf UFM über Shizuku gibt ihm Macht über eingeschränkte Dateien. Gewähren Sie diesen Zugriff nur, wenn Sie der App vertrauen.
+Sichern Sie Ihren Shizuku- oder Shevery-Manager – die Gewährung von erweitertem Zugriff für UFM über Shizuku oder Shevery gibt ihm Kontrolle über eingeschränkte Dateien. Gewähren Sie diesen Zugriff nur, wenn Sie der App vertrauen.
 </item>
         <item>
 Verwenden Sie die App nur für rechtmäßige Zwecke. Speichern, teilen oder verbreiten Sie keine illegalen Inhalte.
 </item>
         <item>
-Verwenden Sie die Fernverwaltung nicht, um ohne Erlaubnis auf ein Gerät einer anderen Person zuzugreifen.
+Verwenden Sie die Fernverwaltung nicht, um ohne Erlaubnis auf das Gerät einer anderen Person zuzugreifen.
 </item>
         <item>
 Versuchen Sie nicht, die App zurückzuentwickeln, zu dekompilieren oder zu manipulieren.
 </item>
         <item>
-Verwalten Sie Ihre indizierten Datensätze verantwortungsbewusst – Sie können Datensätze löschen oder bestimmte Laufwerke jederzeit über Einstellungen -> Speicherindexer ignorieren.
+Verwalten Sie Ihre indizierten Datensätze verantwortungsvoll – Sie können jederzeit Datensätze löschen oder bestimmte Laufwerke ignorieren über Einstellungen -> Speicherindexierer.
 </item>
         <item>
-Überprüfen Sie die Authentizität und Sicherheit aller APK-Dateien vor der Installation.
+Überprüfen Sie die Authentizität und Sicherheit aller APK-Dateien, bevor Sie sie installieren.
 </item>
     </string-array>
 
@@ -401,13 +401,13 @@ Abrechnung
 ADB Debug Bridge
 </item>
         <item>
-Erweiterter Zugriff (Shizuku)
+Erweiterter Zugriff (Shizuku &amp; Shevery)
 </item>
         <item>
 Autostart
 </item>
         <item>
-Akku-Optimierung
+Akkuoptimierung
 </item>
         <item>
 Vordergrunddienst
@@ -416,7 +416,7 @@ Vordergrunddienst
 Wake Lock
 </item>
         <item>
-Speicherindexer
+Speicherindexierer
 </item>
         <item>
 Bluetooth
@@ -427,52 +427,52 @@ Vibrieren
     </string-array>
     <string-array name="tc_permission_details">
         <item>
-Unverzichtbar zum Durchsuchen, Kopieren, Verschieben und Löschen von Dateien auf Ihrem gesamten Speicher.
+Wesentlich zum Durchsuchen, Kopieren, Verschieben und Löschen von Dateien auf Ihrem gesamten Speicher.
 </item>
         <item>
 Erforderlich zum Organisieren und Verwalten Ihrer Fotos, Videos und Audiodateien.
 </item>
         <item>
-Wird verwendet, um Sie zu benachrichtigen, wenn Dateivorgänge abgeschlossen sind oder der Speicherplatz knapp wird.
+Wird verwendet, um Sie zu benachrichtigen, wenn Dateivorgänge abgeschlossen sind oder der Speicher knapp wird.
 </item>
         <item>
-Ermöglicht Fernzugriff auf Dateien, Netzwerkfreigaben (SMB/FTP/SFTP/SCP/NFS), Ordnersynchronisation, Gerätekopplung und ADB-Terminalzugriff in Ihrem lokalen Netzwerk. Die Netzwerkerkennung scannt Geräte in Ihrem lokalen Subnetz (bis zu 254 IPs) auf den ADB-Ports 5555, 5037 und 5038, um ADB-fähige Geräte zu finden.
+Ermöglicht die Fernverwaltung von Dateien, den Zugriff auf Netzwerkfreigaben (SMB/FTP/SFTP/SCP/NFS), Ordnersynchronisation, Gerätekopplung und ADB-Terminalzugriff in Ihrem lokalen Netzwerk. Die Netzwerkerkennung scannt Geräte in Ihrem lokalen Subnetz (bis zu 254 IPs) auf den ADB-Ports 5555, 5037 und 5038, um ADB-fähige Geräte zu finden.
 </item>
         <item>
-Wird für die lokale Netzwerkgeräteerkennung (NSD/mDNS) beim Koppeln von Geräten verwendet.
+Wird für die Geräteerkennung im lokalen Netzwerk (NSD/mDNS) beim Koppeln von Geräten verwendet.
 </item>
         <item>
-Erkennt VPN-Verbindungen während der Fernverwaltung und des Zugriffs auf Netzwerkfreigaben.
+Erkennt VPN-Verbindungen während der Fernverwaltung und dem Zugriff auf Netzwerkfreigaben.
 </item>
         <item>
-Ermöglicht dem App-Manager die Auflistung aller auf Ihrem Gerät installierten Apps. Zugriff auf folgende Daten: App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel sowie ob es sich um eine System- oder eine benutzerinstallierte App handelt. Diese Informationen werden ausschließlich auf dem Gerät verwendet, um den App-Manager anzuzeigen, den Speicher pro App zu berechnen und Paketnamen mit einer öffentlich verfügbaren Entblähungs-Referenzliste abzugleichen, die lokal heruntergeladen und zwischengespeichert wird. Es werden keine Daten installierter Apps an KiloWatch-Server oder Dritte übertragen.
+Ermöglicht dem App-Manager, alle auf Ihrem Gerät installierten Apps aufzulisten. Die abgerufenen Daten umfassen: App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel sowie ob es sich um eine System- oder eine benutzerinstallierte App handelt. Diese Informationen werden ausschließlich auf dem Gerät verwendet, um den App-Manager anzuzeigen, den Speicher pro App zu berechnen und Paketnamen mit einer öffentlich verfügbaren Debloat-Referenzliste abzugleichen, die lokal heruntergeladen und zwischengespeichert wird. Es werden niemals Daten über installierte Anwendungen an KiloWatch-Server oder Dritte übertragen.
 </item>
         <item>
-Erforderlich zur Installation von APK-Dateien, die Sie aus dem lokalen Speicher ausführen möchten.
+Erforderlich, um APK-Dateien zu installieren, die Sie vom lokalen Speicher aus ausführen möchten.
 </item>
         <item>
 Verarbeitet optionale Trinkgeldglas-Käufe über Google Play.
 </item>
         <item>
-Ermöglicht eine sichere Verbindung zu Android-Geräten für erweiterten Shell-Zugriff. Generiert ein eindeutiges RSA-Zertifikat auf Ihrem Gerät für die Kopplung; es werden keine Zertifikate an externe Server übertragen.
+Ermöglicht die sichere Verbindung zu Android-Geräten für erweiterten Shell-Zugriff. Erzeugt ein eindeutiges RSA-Zertifikat auf Ihrem Gerät zur Kopplung; es werden keine Zertifikate an externe Server übertragen.
 </item>
         <item>
-Ermöglicht der App die Nutzung der Shizuku-API (einschließlich sicherer Einstellungen) zur Verwaltung von Dateien in eingeschränkten Systemverzeichnissen ohne Rooting.
+Ermöglicht der App die Nutzung der Shizuku- / Shevery-API (einschließlich Secure Settings) zur Verwaltung von Dateien in eingeschränkten Systemverzeichnissen ohne Rooten.
 </item>
         <item>
-Ermöglicht den automatischen Start von Shizuku-Diensten beim Hochfahren Ihres Geräts, um sofortige Verfügbarkeit zu gewährleisten.
+Ermöglicht, dass Shizuku- und Shevery-Dienste beim Hochfahren Ihres Geräts automatisch starten, um sofortige Verfügbarkeit zu gewährleisten.
 </item>
         <item>
-Ermöglicht Ihnen, Shizuku-Dienste im Hintergrund aktiv zu halten, um eine zuverlässige Leistung zu gewährleisten.
+Ermöglicht Ihnen, sich dafür zu entscheiden, Shizuku- und Shevery-Dienste im Hintergrund aktiv zu halten, um eine zuverlässige Leistung zu gewährleisten.
 </item>
         <item>
-Erforderlich, um die Ordnersynchronisation und Dateiübertragungen als Vordergrunddienst auszuführen, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden.
+Erforderlich, um Ordnersynchronisation und Dateiübertragungen als Vordergrunddienst auszuführen, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden.
 </item>
         <item>
-Hält CPU und WLAN bei großen Dateiübertragungen aktiv, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden.
+Hält CPU und WLAN während großer Dateiübertragungen aktiv, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden.
 </item>
         <item>
-Verwendet Speicherberechtigungen zum Scannen und Indexieren von Dateimetadaten für die Leistung – verwaltet über Einstellungen -> Speicherindexer.
+Verwendet Speicherberechtigungen, um Dateimetadaten für die Leistung zu scannen und zu indizieren – verwaltet über Einstellungen -> Speicherindexierer.
 </item>
         <item>
 Verbindet sich mit Ihrem gekoppelten Android TV, um als Bluetooth-Tastatur und -Maus für die Fernbedienung zu fungieren.
@@ -485,13 +485,13 @@ Bietet haptisches Feedback beim Drücken von Tasten auf der TV-Fernbedienung.
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD – Leichter HTTP-Server, der die Fernverwaltung ermöglicht. (BSD-3-Clause)
+NanoHTTPD – leichter HTTP-Server, der die Fernverwaltung betreibt. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) – SMB2/SMB3-Clientbibliothek für Netzwerkfreigaben und Ordnersynchronisation. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) – SMB2/SMB3-Clientbibliothek zum Durchsuchen von Netzwerkfreigaben und Ordnersynchronisation. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) – SMB2/SMB3 Java-Implementierung für den Zugriff auf Netzwerkfreigaben. (Apache-2.0)
+smbj (hierynomus/smbj) – SMB2/SMB3-Java-Implementierung für den Zugriff auf Netzwerkfreigaben. (Apache-2.0)
 </item>
         <item>
 EMC ECS NFS Client (com.emc.ecs:nfs-client) – NFS v3-Clientbibliothek für den Zugriff auf Netzwerkfreigaben. (Apache-2.0)
@@ -500,19 +500,19 @@ EMC ECS NFS Client (com.emc.ecs:nfs-client) – NFS v3-Clientbibliothek für den
 libnfs (sahlberg/libnfs) – native NFS-Clientbibliothek mit Unterstützung für NFSv2, NFSv3 und NFSv4. (LGPL-2.1 / BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) – umfassende SSHD-Kern-, SFTP- und SCP-Clientbibliothek für sicheren Netzwerkzugriff und Hosting. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) – umfassende SSHD-Kern-, SFTP- und SCP-Clientbibliothek für sicheren Netzwerkfreigabezugriff und -hosting. (Apache-2.0)
 </item>
         <item>
 Apache FtpServer (org.apache.ftpserver) – 100% reiner Java-FTP-Server. (Apache-2.0)
 </item>
         <item>
-Apache POI – Dokumentverarbeitungsbibliothek zum Anzeigen von Office-Dateien. (Apache-2.0)
+Apache POI – Dokumentenverarbeitungsbibliothek zum Betrachten von Office-Dateien. (Apache-2.0)
 </item>
         <item>
 Firebase Analytics – Googles Analyseplattform, die uns hilft, die App-Nutzung zu verstehen. (Apache-2.0)
 </item>
         <item>
-AndroidX-Bibliotheken (einschließlich Leanback für Android TV) – Googles Jetpack-Komponenten für moderne Android-Entwicklung. (Apache-2.0)
+AndroidX-Bibliotheken (inkl. Leanback für Android TV) – Googles Jetpack-Komponenten für moderne Android-Entwicklung. (Apache-2.0)
 </item>
         <item>
 Material Design Components – Googles UI-Bibliothek für eine saubere, konsistente Oberfläche. (Apache-2.0)
@@ -527,37 +527,37 @@ zip4j (net.lingala.zip4j) – erweiterte ZIP-Bibliothek für passwortgeschützte
 Apache Commons Compress – Bibliothek zum Lesen und Schreiben verschiedener Archivformate (7z, zip, tar, etc.). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) – Implementierung der XZ- und LZMA-Komprimierung. (Public Domain)
+XZ for Java (org.tukaani.xz) – Implementierung der XZ- und LZMA-Kompression. (Public Domain)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) – Android Debug Bridge-Bibliothek, die sichere Verbindungen zu ADB-fähigen Geräten für remote Shell-Zugriff und zertifikatsbasierte Kopplung ermöglicht. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) – Android Debug Bridge-Bibliothek, die sichere Verbindungen zu ADB-fähigen Geräten für entfernten Shell-Zugriff und zertifikatsbasierte Kopplung ermöglicht. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) – umfassende SSHD-Kern-, SFTP- und SCP-Clientbibliothek für sicheren Netzwerkzugriff. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) – umfassende SSHD-Kern-, SFTP- und SCP-Clientbibliothek für sicheren Netzwerkfreigabezugriff. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) – Implementierung von EdDSA (Edwards-Kurven-Digital-Signature-Algorithm) für Ed25519-SSH-Schlüssel. (CC0-1.0)
+EdDSA for Java (net.i2p.crypto:eddsa) – Implementierung von EdDSA (Edwards-Kurven-Digitalsignaturalgorithmus) für Ed25519-SSH-Schlüssel. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) – Logging-Bindung für Android, verwendet von der SSHD-Bibliothek. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) – Logging-Bindung für Android, die von der SSHD-Bibliothek verwendet wird. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) – Kryptographie-Bibliothek für RSA/EdDSA-Schlüsselpaargenerierung und X.509-Zertifikatserstellung; Version 1.83. (MIT-ähnliche Lizenz)
+BouncyCastle (org.bouncycastle) – Kryptographie-Bibliothek zur Generierung von RSA/EdDSA-Schlüsselpaaren und Erstellung von X.509-Zertifikaten; Version 1.83. (MIT-ähnliche Lizenz)
 </item>
         <item>
 Google Play Billing Library – verarbeitet optionale In-App-Trinkgeldkäufe; unterliegt der Datenschutzerklärung von Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library – ermöglicht die In-App-Bewertungs- und Rezensionsfunktion der App. (Apache-2.0)
+Google Play Review Library – unterstützt die In-App-Bewertungs- und Rezensionsfunktion der App. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) – Bildladebibliothek, die das Rendern animierter Bilder (APNG, GIF, animiertes WebP, SVG) im integrierten Bildbetrachter ermöglicht. (Apache-2.0)
+Coil (io.coil-kt.coil3) – Bildladebibliothek, die die animierte Bilddarstellung (APNG, GIF, animiertes WebP, SVG) im integrierten Bildbetrachter ermöglicht. (Apache-2.0)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) – Kernbibliothek zum Dekodieren und Rendern animierter PNG-Dateien auf Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) – Kernbibliothek zum Decodieren und Rendern animierter PNG-Dateien auf Android. (Apache-2.0)
 </item>
         <item>
-Shizuku API (dev.rikka.shizuku:api &amp; provider) – Bibliothek und Anbieter, die erweiterten Dateisystemzugriff über die Shizuku Manager-App ermöglichen. (Apache-2.0)
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) – Bibliotheken, die erweiterten Dateisystemzugriff über Shizuku- oder Shevery-Manager-Apps ermöglichen. (Apache-2.0)
 </item>
         <item>
 ViewPager2 – Android-Bibliothek zum Blättern zwischen Fragmenten und Layouts. (Apache-2.0)
@@ -566,28 +566,28 @@ ViewPager2 – Android-Bibliothek zum Blättern zwischen Fragmenten und Layouts.
 Lottie (com.airbnb.android:lottie) v6.3.0 – Animationsbibliothek zum nativen Rendern von Adobe After Effects-Animationen auf Android, verwendet für flüssige UI-Animationen in der gesamten App. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) – leichtes Web-Framework, das den lokalen Dateiserver antreibt. (Apache-2.0)
+Ktor (io.ktor) – leichtes Web-Framework, das den lokalen Dateiserver betreibt. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) – Bibliothek zum nativen Rendern und Anzeigen von PDF-Dokumenten. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) – Bibliothek zum nativen Rendern und Betrachten von PDF-Dokumenten. (Apache-2.0)
 </item>
         <item>
 ExoPlayer / Media3 (androidx.media3) – erweiterter Mediaplayer für robuste Video- und Audiowiedergabe. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) – übernimmt die OneDrive-API-Authentifizierung nativ. (MIT)
+Microsoft Authentication Library (MSAL) – behandelt die OneDrive-API-Authentifizierung nativ. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) – robuster HTTP- und HTTP/2-Client für Cloud-Speicher-Netzwerkanfragen. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) – robuster HTTP- und HTTP/2-Client für Netzwerkanfragen an Cloud-Speicher. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) – JSON-Verarbeitungsbibliothek für die Cloud-Speicherintegration. (Apache-2.0)
+Gson (com.google.code.gson) – JSON-Verarbeitungsbibliothek, die für die Cloud-Speicher-Integration verwendet wird. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) – Chrome Custom Tabs-Unterstützung für die Google Drive-API-Authentifizierung. (Apache-2.0)
+AndroidX Browser (androidx.browser) – Unterstützung für Chrome Custom Tabs zur Google Drive-API-Authentifizierung. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) – Bibliothek zur Barcode-Bildverarbeitung. (Apache-2.0)
+ZXing (com.google.zxing:core) – Barcode-Bildverarbeitungsbibliothek. (Apache-2.0)
 </item>
         <item>
 Amazon Appstore SDK – verarbeitet optionale In-App-Trinkgeldkäufe auf Amazon-Geräten. (Proprietär)
@@ -938,25 +938,25 @@ Dateiserver-Profile
 Anmeldedaten für Netzwerkfreigaben
 </item>
         <item>
-Informationen zu gekoppelten Geräten
+Informationen zum gekoppelten Gerät
 </item>
         <item>
 ADB-Authentifizierungsschlüssel
 </item>
         <item>
-Shizuku-Autorisierungsstatus
+Shizuku / Shevery Autorisierungsstatus
 </item>
         <item>
 TV-Screenshots
 </item>
         <item>
-Sync-Profile
+Synchronisationsprofile
 </item>
         <item>
 Cloud-Speicher-Tokens (Google Drive, OneDrive, Dropbox)
 </item>
         <item>
-S3 / S3-kompatible Speicher-Anmeldedaten (AWS S3, MinIO, IDrive E2, usw.)
+S3 / S3-kompatible Speicher-Anmeldedaten (AWS S3, MinIO, IDrive E2, etc.)
 </item>
         <item>
 Indizierte Dateimetadaten (SQLite/Room)
@@ -965,7 +965,7 @@ Indizierte Dateimetadaten (SQLite/Room)
 Sprachauswahl (Cookie)
 </item>
         <item>
-Media-Wiedergabestatus
+Wiedergabestatus
 </item>
     </string-array>
     <string-array name="pp_local_data_details">
@@ -973,10 +973,10 @@ Media-Wiedergabestatus
 Sicherer Zugriff auf verschlüsselte Dateien · Android SharedPreferences
 </item>
         <item>
-Kontowiederherstellung bei vergessener PIN · Android SharedPreferences
+Kontowiederherstellung bei vergessenem PIN · Android SharedPreferences
 </item>
         <item>
-Liste Ihrer verschlüsselten Ordner und Dateien · Privater App-Speicher
+Liste Ihrer verschlüsselten Ordner und Dateien · App-privater Speicher
 </item>
         <item>
 AES-256-GCM-Verschlüsselung für den Tresor · Android Keystore (hardwaregestützt)
@@ -985,40 +985,40 @@ AES-256-GCM-Verschlüsselung für den Tresor · Android Keystore (hardwaregestü
 Design, Sortiereinstellungen, Ansichtspräferenzen · Android SharedPreferences
 </item>
         <item>
-Konfigurationen (Benutzername, Verzeichnis, gehashtes Passwort) für den gehosteten Dateiserver · Privater App-Speicher
+Konfigurationen (Benutzername, Verzeichnis, gehashtes Passwort) für den gehosteten Dateiserver · App-privater Speicher
 </item>
         <item>
-Verbindung zu Ihren SMB/FTP-Freigaben (Host, Benutzername, Passwort) · Privater App-Speicher
+Verbindung zu Ihren SMB/FTP-Freigaben (Host, Benutzername, Passwort) · App-privater Speicher
 </item>
         <item>
-Gerätename, -ID und IP für Gerätekopplung · Privater App-Speicher
+Gerätename, ID und IP für Gerätekopplung · App-privater Speicher
 </item>
         <item>
-RSA-Schlüssel und Zertifikate für sichere ADB-Verbindungen · Privater App-Speicher
+RSA-Schlüssel und Zertifikate für sichere ADB-Verbindungen · App-privater Speicher
 </item>
         <item>
-Status der erhöhten Zugriffsberechtigung von der Shizuku Manager App · Privater App-Speicher
+Status der erhöhten Zugriffsberechtigung von der Shizuku- oder Shevery-Manager-App · App-privater Speicher
 </item>
         <item>
-Screenshots, die über ADB von einem gekoppelten TV aufgenommen wurden · Lokaler Bilder/Screenshots-Ordner Ihres Telefons
+Screenshots, die über ADB von einem gekoppelten Fernseher aufgenommen wurden · Lokaler Ordner „Bilder/Screenshots“ auf Ihrem Telefon
 </item>
         <item>
-Lokale Ordner-URI und entfernter Pfad für jedes Sync-Profil · Privater App-Speicher
+Lokaler Ordner-URI und entfernter Pfad für jedes Sync-Profil · App-privater Speicher
 </item>
         <item>
-OAuth-Tokens für den Zugriff auf Google Drive, OneDrive und Dropbox · Privater App-Speicher
+OAuth-Tokens für den Zugriff auf Google Drive, OneDrive und Dropbox · App-privater Speicher
 </item>
         <item>
-Access Key ID und Secret Access Key für die Verbindung zu S3-Buckets · Privater App-Speicher
+Access Key ID und Secret Access Key für die Verbindung zu S3-Buckets · App-privater Speicher
 </item>
         <item>
-Dateimetadaten (Namen, Größen, Daten) für schnelles Durchsuchen und Suchen, gespeichert in einer lokalen SQLite/Room-Datenbank – kann über Einstellungen -> Speicherindexer verwaltet werden · Privater App-Speicher
+Dateimetadaten (Namen, Größen, Daten) für schnelles Durchsuchen und Suchen, gespeichert in einer lokalen SQLite/Room-Datenbank – verwaltbar über Einstellungen → Speicher-Indexer · App-privater Speicher
 </item>
         <item>
 Aktuelle Warteschlange, Wiedergabeposition und Player-Einstellungen zum Fortsetzen an der Stelle, an der Sie aufgehört haben · Android SharedPreferences
 </item>
         <item>
-Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der Sitzung und über Browser-Neustarts hinweg · Web-Browser-Speicher
+Ein Cookie (ufm_lang) merkt sich Ihre Sprachauswahl während der Sitzung und über Browser-Neustarts hinweg · Webbrowser-Speicher
 </item>
     </string-array>
 
@@ -1074,22 +1074,22 @@ Alle Google-Kontodaten, die über das hinausgehen, was Sie explizit im Dateibrow
     <!-- How we use data (Section 3) -->
     <string-array name="pp_use_local">
         <item>
-Authentifizieren Sie den Zugriff auf den verschlüsselten Tresor
+Zugriff auf den verschlüsselten Tresor authentifizieren
 </item>
         <item>
-Verschlüsseln und entschlüsseln Sie Ihre privaten Dateien
+Ihre privaten Dateien verschlüsseln und entschlüsseln
 </item>
         <item>
-Merken Sie sich Ihre Präferenzen und Einstellungen
+Ihre Einstellungen und Voreinstellungen speichern
 </item>
         <item>
-Verwenden Sie erhöhten Zugriff (Shizuku/ADB) zum Verwalten von systemgeschützten Dateien in eingeschränkten Verzeichnissen
+Erhöhten Zugriff (Shizuku/Shevery/ADB) zum Verwalten systemgeschützter Dateien in eingeschränkten Verzeichnissen verwenden
 </item>
         <item>
-Erstellen und verwalten Sie die Dateiindizierung für schnelles Durchsuchen und Suchen (verwaltbar über Einstellungen -> Speicherindexer)
+Dateiindizierung für schnelles Durchsuchen und Suchen erstellen und verwalten (verwaltbar über Einstellungen → Speicher-Indexer)
 </item>
         <item>
-Bereitstellung der Kern-App-Funktionalität
+Bereitstellung der Kernfunktionen der App
 </item>
     </string-array>
     <string-array name="pp_use_analytics">
@@ -1167,7 +1167,7 @@ Ermöglicht lokale Netzwerkgeräteerkennung (NSD/mDNS) für Gerätekopplung
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1193,25 +1193,25 @@ WAKE_LOCK
 Benachrichtigt Sie, wenn Dateivorgänge abgeschlossen sind oder der Speicherplatz knapp wird
 </item>
         <item>
-Ermöglicht die Kommunikation mit dem Shizuku Manager für erhöhten Dateizugriff
+Ermöglicht die Kommunikation mit dem Shizuku- oder Shevery-Manager für erweiterten Dateizugriff
 </item>
         <item>
-Ermöglicht den automatischen Start der Shizuku-Dienste beim Booten für sofortige Verfügbarkeit
+Ermöglicht den automatischen Start von Shizuku- oder Shevery-Diensten beim Hochfahren für sofortige Verfügbarkeit
 </item>
         <item>
-Ermöglicht Ihnen, Shizuku im Hintergrund aktiv zu halten, um eine zuverlässige Leistung zu gewährleisten
+Ermöglicht das Aktivieren des Hintergrundbetriebs von Shizuku oder Shevery für zuverlässige Leistung
 </item>
         <item>
 Ermöglicht die Installation von APK-Dateien Ihrer Wahl
 </item>
         <item>
-Erforderlich für die App Manager und Debloater-Funktionen. Liest: App-Name, Paket-ID, Version, APK-Größe, Installations- und Update-Zeitstempel sowie System- vs. Benutzer-App-Kennzeichnung – vollständig auf dem Gerät verarbeitet. Die Registerkarte „Debloater\" lädt eine öffentlich zugängliche Debloat-Referenzliste herunter und gleicht sie lokal mit installierten Paketnamen ab. Es werden niemals installierte Anwendungsdaten nach außen übertragen.
+Wird vom App-Manager und der Debloater-Funktion benötigt. Liest: App-Name, Paket-ID, Version, APK-Größe, Installations- und Aktualisierungszeitstempel sowie System- vs. Benutzer-App-Kennzeichnung – vollständig auf dem Gerät verarbeitet. Die Debloater-Registerkarte lädt eine öffentlich verfügbare Debloat-Referenzliste herunter und gleicht sie lokal mit installierten Paketnamen ab. Es werden niemals installierte App-Daten nach außen übertragen.
 </item>
         <item>
-Führt Ordner-Sync, Dateiübertragungen und Medienwiedergabe als Vordergrunddienst aus, damit sie zuverlässig abgeschlossen werden und auch bei ausgeschaltetem Bildschirm oder Nutzung anderer Apps weiterlaufen
+Führt Ordnersynchronisation, Dateiübertragungen und Medienwiedergabe als Vordergrunddienst aus, damit sie zuverlässig abgeschlossen werden und auch dann fortgesetzt werden, wenn der Bildschirm ausgeschaltet ist oder Sie andere Apps verwenden
 </item>
         <item>
-Hält CPU und Wi-Fi während großer Dateiübertragungen und Medienwiedergabe aktiv, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden
+Hält CPU und WLAN bei großen Dateiübertragungen und Medienwiedergabe aktiv, damit sie auch bei ausgeschaltetem Bildschirm zuverlässig abgeschlossen werden
 </item>
     </string-array>
 

@@ -188,6 +188,9 @@ class LicensesActivity : AppCompatActivity() {
             if (list.none { it.name.contains("ffmpeg", ignoreCase = true) }) {
                 list.add(LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"))
             }
+            if (list.none { it.name.contains("shizuku", ignoreCase = true) || it.name.contains("shevery", ignoreCase = true) }) {
+                list.add(LibInfo("Shizuku & Shevery API (dev.rikka.shizuku:api)", "13.1.5", "Apache-2.0", "https://github.com/HmnDev-Tech/shevery"))
+            }
 
             list.sortedBy { it.name.lowercase() }
         } catch (e: Exception) {
@@ -218,6 +221,7 @@ class LicensesActivity : AppCompatActivity() {
         LibInfo(getString(R.string.apng4android_comgithubpenfeizhou), "3.0.0", "Apache-2.0", "https://github.com/penfeizhou/APNG4Android"),
         LibInfo(getString(R.string.add_online_storage_rclone), "1.75.0", "MIT", "https://github.com/rclone/rclone"),
         LibInfo(getString(R.string.ffmpeg_lgpl_build), "8.1.2", "LGPL-2.1", "https://ffmpeg.org"),
+        LibInfo("Shizuku & Shevery API (dev.rikka.shizuku:api)", "13.1.5", "Apache-2.0", "https://github.com/HmnDev-Tech/shevery"),
     )
 
     // ── View builders ─────────────────────────────────────────────────────────

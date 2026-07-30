@@ -7122,46 +7122,46 @@ Box 인증
 인증이 거부되었거나 취소되었습니다.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+고급 접근 권한
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB 드라이브(제한됨)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV가 직접 USB 액세스를 제한합니다 — Shizuku 사용
+Fire TV는 직접 USB 접근을 제한합니다 — Shizuku / Shevery를 사용하세요
 </string>
     <string name="shizuku_usb_access_desc">
-이 기기의 보안 정책(SELinux)은 /mnt/media_rw/에 마운트된 USB 드라이브에 대한 직접 액세스를 차단합니다. USB 저장소에 액세스하려면 Shizuku를 설치하고 권한을 부여하세요. Shizuku는 이 제한을 우회하는 데 필요한 상승된 권한을 제공합니다.
+이 기기의 보안 정책(SELinux)은 /mnt/media_rw/에 마운트된 USB 드라이브에 대한 직접 접근을 차단합니다. USB 저장소에 접근하려면 Shizuku 또는 Shevery를 설치하고 권한을 부여하세요. 이 도구들은 이 제한을 우회하는 데 필요한 상승된 권한을 제공합니다.
 </string>
     <string name="opening_shizuku">
-Shizuku 여는 중…
+고급 관리자 열기…
 </string>
     <string name="shizuku_status_label">
 서비스 상태
 </string>
     <string name="shizuku_installed">
-Shizuku 설치됨
+고급 관리자(Shizuku / Shevery)가 설치되었습니다
 </string>
     <string name="shizuku_not_installed">
-Shizuku 설치되지 않음
+고급 관리자가 설치되지 않았습니다
 </string>
     <string name="shizuku_description">
-Shizuku를 사용하면 앱이 시스템 수준 API를 직접 사용할 수 있어 대부분의 Android 버전에서 루트 없이 백그라운드 파일 관리 및 시스템 명령 실행과 같은 고급 기능을 사용할 수 있습니다.
+Shizuku와 Shevery는 앱이 시스템 수준 API를 직접 사용할 수 있게 하여, 대부분의 Android 버전에서 루트 권한 없이 백그라운드 파일 관리 및 시스템 명령 실행과 같은 고급 기능을 가능하게 합니다.
 </string>
     <string name="shizuku_service_status">
 서비스 상태
 </string>
     <string name="shizuku_service_running">
-Shizuku 서비스 실행 중
+고급 서비스가 실행 중입니다
 </string>
     <string name="shizuku_service_not_running">
-Shizuku 서비스 실행 중 아님
+고급 서비스가 실행 중이 아닙니다
 </string>
     <string name="shizuku_btn_enable">
 서비스 활성화
@@ -7173,59 +7173,69 @@ Shizuku 서비스 실행 중 아님
 권한 부여되지 않음
 </string>
     <string name="shizuku_installed_msg">
-Shizuku가 설치되어 사용 가능합니다.
+고급 관리자가 설치되었으며 사용할 수 있습니다.
 </string>
     <string name="shizuku_download_hint">
-Shizuku 최신 버전은 공식 GitHub 저장소에서 다운로드할 수 있습니다.
+Shizuku 또는 Shevery의 최신 버전을 공식 GitHub 저장소에서 다운로드할 수 있습니다.
 </string>
     <string name="shizuku_download_link">
-Shizuku 다운로드
+다운로드 관리자
+</string>
+    <string name="shizuku_download_shizuku">
+다운로드 Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+다운로드 Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Shizuku 다운로드
+Shizuku / Shevery 다운로드
 </string>
     <string name="shizuku_tv_download_msg">
-이 기기에 Shizuku가 설치되지 않았습니다.\n
+이 기기에 고급 관리자(Shizuku 또는 Shevery)가 설치되지 않았습니다.\n
 \n
-휴대폰 또는 컴퓨터에서 다음 URL로 이동하여 최신 APK를 다운로드한 후 이 TV에 사이드로드하세요:\n
+휴대폰이나 컴퓨터에서 다음 URL 중 하나를 방문하여 최신 APK를 다운로드한 후, 이 TV에 사이드로드하세요:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
 링크 복사
 </string>
     <string name="shizuku_link_copied">
-링크가 클립보드에 복사됨
+링크가 클립보드에 복사되었습니다
 </string>
     <string name="shizuku_auth_title">
-Shizuku 권한 부여
+고급 접근 권한 승인
 </string>
     <string name="shizuku_auth_msg">
-UFM이 고급 파일 작업을 수행하려면 Shizuku 권한이 필요합니다. 다음 시스템 대화상자에서 권한을 허용해 주세요.
+UFM이 고급 파일 작업을 수행하려면 권한 부여가 필요합니다. 다음 시스템 대화상자에서 권한을 허용해 주세요.
 </string>
     <string name="shizuku_btn_authorize">
 권한 부여
 </string>
     <string name="shizuku_btn_start_service">
-Shizuku 활성화
+고급 접근 권한 활성화
 </string>
     <string name="shizuku_starting_service">
-Shizuku 서비스 시작 중...
+고급 서비스 시작 중...
 </string>
     <string name="shizuku_starting_msg">
-브로드캐스트 인텐트를 통해 Shizuku 서비스를 시작하는 중입니다. 기다려 주세요…
+브로드캐스트 인텐트를 통해 고급 서비스를 시작하는 중입니다. 기다려 주십시오…
 </string>
     <string name="shizuku_start_failed">
-Shizuku를 시작하지 못했습니다. 무선 디버깅이 활성화되어 있는지 확인하거나 수동으로 시작하세요.
+서비스 시작에 실패했습니다. 무선 디버깅이 활성화되어 있는지 확인하거나 수동으로 시작하세요.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku가 활성화되어 실행 중입니다.
+고급 접근 권한이 활성화되어 작동 중입니다
 </string>
     <string name="shizuku_adb_not_connected">
-ADB가 연결되지 않았습니다. ADB 터미널을 통해 연결하면 Shizuku가 자동으로 활성화됩니다.
+ADB가 연결되지 않았습니다. ADB 터미널을 통해 연결하여 고급 접근 권한을 자동으로 활성화하세요.
 </string>
     <string name="shizuku_manager_open_error">
-Shizuku 관리자를 열 수 없습니다. 먼저 앱을 설치하세요.
+관리자를 열 수 없습니다. Shizuku 또는 Shevery를 먼저 설치하세요.
 </string>
 
     <!-- Media Player errors -->

@@ -7122,46 +7122,46 @@ Ağ hatası. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.
 Yetkilendirme reddedildi veya iptal edildi.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Yükseltilmiş Erişim
 </string>
     <string name="shizuku_subtitle">
-Shizuku Yöneticisi
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB Sürücü (Kısıtlı)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV doğrudan USB erişimini kısıtlıyor — Shizuku kullanın
+Fire TV doğrudan USB erişimini kısıtlar — Shizuku / Shevery kullanın
 </string>
     <string name="shizuku_usb_access_desc">
-Bu cihazın güvenlik politikası (SELinux), /mnt/media_rw/ konumuna takılı USB sürücülere doğrudan erişimi engelliyor. USB depolamaya erişmek için, bu kısıtlamayı aşmak için gereken yükseltilmiş ayrıcalıkları sağlayan Shizuku\'yu yükleyin ve yetkilendirin.
+Bu cihazın güvenlik politikası (SELinux), /mnt/media_rw/ yoluna bağlanan USB sürücülerine doğrudan erişimi engeller. USB depolamaya erişmek için, bu kısıtlamayı aşmak için gereken yükseltilmiş ayrıcalıkları sağlayan Shizuku veya Shevery\\\'yi kurun ve yetkilendirin.
 </string>
     <string name="opening_shizuku">
-Shizuku açılıyor…
+Yükseltilmiş Yönetici açılıyor…
 </string>
     <string name="shizuku_status_label">
 Hizmet Durumu
 </string>
     <string name="shizuku_installed">
-Shizuku yüklü
+Yükseltilmiş Yönetici (Shizuku / Shevery) kurulu
 </string>
     <string name="shizuku_not_installed">
-Shizuku yüklü değil
+Yükseltilmiş Yönetici kurulu değil
 </string>
     <string name="shizuku_description">
-Shizuku, uygulamaların sistem düzeyindeki API\'leri doğrudan kullanmasına izin verir ve çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutlarını çalıştırma gibi gelişmiş özellikleri etkinleştirir.
+Shizuku ve Shevery, uygulamaların doğrudan sistem düzeyindeki API\\\'leri kullanmasına izin verir; böylece çoğu Android sürümünde root gerektirmeden arka planda dosya yönetimi ve sistem komutları yürütme gibi gelişmiş özellikler sağlar.
 </string>
     <string name="shizuku_service_status">
 Hizmet Durumu
 </string>
     <string name="shizuku_service_running">
-Shizuku hizmeti çalışıyor
+Yükseltilmiş hizmet çalışıyor
 </string>
     <string name="shizuku_service_not_running">
-Shizuku hizmeti çalışmıyor
+Yükseltilmiş hizmet çalışmıyor
 </string>
     <string name="shizuku_btn_enable">
 Hizmeti Etkinleştir
@@ -7173,59 +7173,69 @@ Yetkili
 Yetkisiz
 </string>
     <string name="shizuku_installed_msg">
-Shizuku yüklü ve kullanıma hazır.
+Yükseltilmiş Yönetici kurulu ve kullanıma hazır olacak.
 </string>
     <string name="shizuku_download_hint">
-Shizuku\'nun en son sürümünü resmi GitHub deposundan indirebilirsiniz.
+Shizuku veya Shevery\\\'nin en son sürümünü resmi GitHub depolarından indirebilirsiniz.
 </string>
     <string name="shizuku_download_link">
+Yönetici İndir
+</string>
+    <string name="shizuku_download_shizuku">
 Shizuku\'yu İndir
+</string>
+    <string name="shizuku_download_shevery">
+Shevery\'yi İndir
 </string>
     <string name="shizuku_tv_download_title">
-Shizuku\'yu İndir
+Shizuku / Shevery İndir
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku bu cihaza yüklü değil.\n
+Bu cihazda Yükseltilmiş Yönetici (Shizuku veya Shevery) kurulu değil.\n
 \n
-Lütfen telefonunuzda veya bilgisayarınızda aşağıdaki URL\'yi ziyaret ederek en son APK\'yı indirin ve ardından bu TV\'ye yan yükleyin:\n
+En son APK\\\'yı indirmek için telefonunuzda veya bilgisayarınızda aşağıdaki URL\\\'lerden birini ziyaret edin, ardından bu TV\\\'ye yandan yükleyin:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-Bağlantıyı Kopyala
+Bağlantıları Kopyala
 </string>
     <string name="shizuku_link_copied">
-Bağlantı panoya kopyalandı
+Bağlantılar panoya kopyalandı
 </string>
     <string name="shizuku_auth_title">
-Shizuku\'yu Yetkilendir
+Yükseltilmiş Erişimi Yetkilendir
 </string>
     <string name="shizuku_auth_msg">
-UFM, gelişmiş dosya işlemleri gerçekleştirmek için Shizuku yetkilendirmesi gerektiriyor. Lütfen aşağıdaki sistem iletişim kutusunda izin verin.
+UFM, gelişmiş dosya işlemleri gerçekleştirmek için yetkilendirme gerektirir. Lütfen aşağıdaki sistem iletişim kutusunda izin verin.
 </string>
     <string name="shizuku_btn_authorize">
 Yetkilendir
 </string>
     <string name="shizuku_btn_start_service">
-Shizuku\'yu Etkinleştir
+Yükseltilmiş Erişimi Etkinleştir
 </string>
     <string name="shizuku_starting_service">
-Shizuku hizmeti başlatılıyor...
+Yükseltilmiş hizmet başlatılıyor...
 </string>
     <string name="shizuku_starting_msg">
-Broadcast intent aracılığıyla Shizuku hizmeti başlatılmaya çalışılıyor. Lütfen bekleyin…
+Yayın amacı ile Yükseltilmiş hizmet başlatılmaya çalışılıyor. Lütfen bekleyin…
 </string>
     <string name="shizuku_start_failed">
-Shizuku başlatılamadı. Lütfen Kablosuz Hata Ayıklama\'nın etkin olduğundan emin olun veya manuel olarak başlatın.
+Hizmet başlatılamadı. Lütfen Kablosuz Hata Ayıklama\\\'nın etkin olduğundan emin olun veya manuel olarak başlatın.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku etkin ve aktif
+Yükseltilmiş Erişim etkin ve aktif
 </string>
     <string name="shizuku_adb_not_connected">
-ADB bağlı değil. Shizuku\'yu otomatik olarak etkinleştirmek için ADB Terminali üzerinden bağlanın.
+ADB bağlı değil. Yükseltilmiş Erişimi otomatik olarak etkinleştirmek için ADB Terminali üzerinden bağlanın.
 </string>
     <string name="shizuku_manager_open_error">
-Shizuku yöneticisi açılamadı. Lütfen önce uygulamayı yükleyin.
+Yönetici açılamadı. Lütfen önce Shizuku veya Shevery\\\'yi kurun.
 </string>
 
     <!-- Media Player errors -->

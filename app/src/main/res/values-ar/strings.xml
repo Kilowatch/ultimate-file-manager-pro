@@ -7122,46 +7122,46 @@ Box — انتهت الجلسة
 تم رفض التفويض أو إلغاؤه.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+وصول موسع
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+شيزوكو / شيفري
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 محرك USB (مقيد)
 </string>
     <string name="shizuku_usb_access_subtitle">
-تقييد Fire TV الوصول المباشر إلى USB — استخدم Shizuku
+يقيد Fire TV الوصول المباشر إلى USB — استخدم شيزوكو / شيفري
 </string>
     <string name="shizuku_usb_access_desc">
-تقييد سياسة الأمان (SELinux) لهذا الجهاز الوصول المباشر إلى محركات أقراص USB المثبتة في /mnt/media_rw/. للوصول إلى وحدة تخزين USB، قم بتثبيت Shizuku وتفويضه، والذي يوفر الصلاحيات المرتفعة اللازمة لتجاوز هذا التقييد.
+سياسة الأمان لهذا الجهاز (SELinux) تمنع الوصول المباشر إلى أقراص USB المثبتة في /mnt/media_rw/. للوصول إلى تخزين USB، قم بتثبيت وتفويض شيزوكو أو شيفري، اللذين يوفران الصلاحيات الموسعة اللازمة لتجاوز هذا القيد.
 </string>
     <string name="opening_shizuku">
-جارٍ فتح Shizuku...
+جارٍ فتح المدير الموسع…
 </string>
     <string name="shizuku_status_label">
 حالة الخدمة
 </string>
     <string name="shizuku_installed">
-Shizuku مثبت
+المدير الموسع (شيزوكو / شيفري) مثبت
 </string>
     <string name="shizuku_not_installed">
-Shizuku غير مثبت
+المدير الموسع غير مثبت
 </string>
     <string name="shizuku_description">
-يتيح Shizuku للتطبيقات استخدام واجهات برمجة التطبيقات على مستوى النظام مباشرة، مما يتيح ميزات متقدمة مثل إدارة الملفات في الخلفية وتنفيذ أوامر النظام دون الحاجة إلى صلاحيات الجذر على معظم إصدارات Android.
+يسمح شيزوكو وشيفري للتطبيقات باستخدام واجهات برمجة التطبيقات على مستوى النظام مباشرة، مما يتيح ميزات متقدمة مثل إدارة الملفات في الخلفية وتنفيذ أوامر النظام دون الحاجة إلى صلاحيات الجذر على معظم إصدارات أندرويد.
 </string>
     <string name="shizuku_service_status">
 حالة الخدمة
 </string>
     <string name="shizuku_service_running">
-خدمة Shizuku قيد التشغيل
+الخدمة الموسعة قيد التشغيل
 </string>
     <string name="shizuku_service_not_running">
-خدمة Shizuku غير قيد التشغيل
+الخدمة الموسعة غير قيد التشغيل
 </string>
     <string name="shizuku_btn_enable">
 تمكين الخدمة
@@ -7173,59 +7173,69 @@ Shizuku غير مثبت
 غير مفوض
 </string>
     <string name="shizuku_installed_msg">
-Shizuku مثبت وسيكون متاحًا للاستخدام.
+المدير الموسع مثبت وسيكون متاحًا للاستخدام.
 </string>
     <string name="shizuku_download_hint">
-يمكنك تنزيل أحدث إصدار من Shizuku من مستودع GitHub الرسمي الخاص به.
+يمكنك تنزيل أحدث إصدار من شيزوكو أو شيفري من مستودعاتهما الرسمية على GitHub.
 </string>
     <string name="shizuku_download_link">
+تنزيل المدير
+</string>
+    <string name="shizuku_download_shizuku">
 تنزيل Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+تنزيل Shevery
 </string>
     <string name="shizuku_tv_download_title">
-تنزيل Shizuku
+تنزيل شيزوكو / شيفري
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku غير مثبت على هذا الجهاز.\n
+المدير الموسع (شيزوكو أو شيفري) غير مثبت على هذا الجهاز.\n
 \n
-يرجى زيارة عنوان URL التالي على هاتفك أو جهاز الكمبيوتر لتنزيل أحدث ملف APK، ثم تثبيته على هذا التلفاز:\n
+يرجى زيارة أحد الروابط التالية على هاتفك أو جهاز الكمبيوتر لتنزيل أحدث APK، ثم تحميله جانبيًا إلى هذا التلفزيون:\n
 \n
-%s
+شيزوكو:\n
+%1$s\n
+\n
+شيفري:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-نسخ الرابط
+نسخ الروابط
 </string>
     <string name="shizuku_link_copied">
-تم نسخ الرابط إلى الحافظة
+تم نسخ الروابط إلى الحافظة
 </string>
     <string name="shizuku_auth_title">
-تفويض Shizuku
+تفويض الوصول الموسع
 </string>
     <string name="shizuku_auth_msg">
-يتطلب UFM تفويض Shizuku لإجراء عمليات متقدمة على الملفات. يرجى منح الإذن في مربع الحوار التالي.
+يتطلب UFM التفويض لإجراء عمليات الملفات المتقدمة. يرجى منح الإذن في مربع الحوار التالي للنظام.
 </string>
     <string name="shizuku_btn_authorize">
 تفويض
 </string>
     <string name="shizuku_btn_start_service">
-تمكين Shizuku
+تمكين الوصول الموسع
 </string>
     <string name="shizuku_starting_service">
-جارٍ بدء خدمة Shizuku...
+جارٍ بدء الخدمة الموسعة...
 </string>
     <string name="shizuku_starting_msg">
-محاولة بدء خدمة Shizuku عبر intent البث. يرجى الانتظار...
+محاولة بدء الخدمة الموسعة عبر نية البث. يرجى الانتظار...
 </string>
     <string name="shizuku_start_failed">
-فشل بدء تشغيل Shizuku. يرجى التأكد من تمكين تصحيح الأخطاء اللاسلكي أو تشغيله يدويًا.
+فشل بدء الخدمة. يرجى التأكد من تمكين التصحيح اللاسلكي أو بدء الخدمة يدويًا.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku ممكّن ونشط
+الوصول الموسع مفعل ونشط
 </string>
     <string name="shizuku_adb_not_connected">
-ADB غير متصل. اتصل عبر محطة ADB لتمكين Shizuku تلقائيًا.
+ADB غير متصل. اتصل عبر محطة ADB لتمكين الوصول الموسع تلقائيًا.
 </string>
     <string name="shizuku_manager_open_error">
-تعذر فتح مدير Shizuku. يرجى تثبيت التطبيق أولاً.
+تعذر فتح المدير. يرجى تثبيت شيزوكو أو شيفري أولاً.
 </string>
 
     <!-- Media Player errors -->

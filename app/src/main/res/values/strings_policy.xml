@@ -95,7 +95,7 @@
         <item>Storage Analyser — see a visual breakdown of what\'s using your storage space.</item>
         <item>App Manager — view and manage all apps installed on your device, with debloat recommendations for pre-installed apps.</item>
         <item>APK Installer — install Android apps and split APKs (XAPK) directly from files saved locally.</item>
-        <item>Elevated Access (Shizuku &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.</item>
+        <item>Elevated Access (Shizuku, Shevery &amp; ADB) — gain root-like access to manage system files and restricted directories without actually rooting your device.</item>
         <item>Storage Indexer — create a local index of file metadata for instant searching and blazing fast browsing.</item>
         <item>Storage Access Framework — other apps can access your files through UFM\'s document provider.</item>
         <item>Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.</item>
@@ -112,7 +112,7 @@
         <item>Folder Sync</item>
         <item>System App Removal</item>
         <item>ADB Pairing</item>
-        <item>Shizuku &amp; Elevated Access</item>
+        <item>Shizuku, Shevery &amp; Elevated Access</item>
         <item>TV Screenshots</item>
         <item>Indexer Accuracy</item>
         <item>Bugs &amp; Errors</item>
@@ -127,7 +127,7 @@
         <item>Sync operations run in the background and may consume battery and data. Always verify your remote path before enabling sync — syncing to an incorrect folder may overwrite files on your network share.</item>
         <item>Removing system apps based on debloat recommendations may affect device stability. Proceed with caution.</item>
         <item>ADB pairing requires exchanging certificates between your device and the target device over your local Wi-Fi. Only connect to devices you own or have permission to access. Anyone on your network who captures your pairing PIN can access your device — keep this PIN private.</item>
-        <item>Using Shizuku or ADB for elevated access allows the app to modify system-protected files. Misuse of these features could affect device stability or security. Use with caution and only grant access to this app.</item>
+        <item>Using Shizuku, Shevery, or ADB for elevated access allows the app to modify system-protected files. Misuse of these features could affect device stability or security. Use with caution and only grant access to this app.</item>
         <item>Screenshots of paired TVs are captured via ADB over your local network and saved directly to your phone\'s storage. We do not transmit, view, or upload your screenshots. Ensure you only capture screens on devices you own or have permission to access.</item>
         <item>The index reflects the state of your storage at the time of scanning. You may need to refresh the index if files are changed by other apps.</item>
         <item>No software is perfect. We can\'t promise the app will always be error-free or uninterrupted.</item>
@@ -143,8 +143,8 @@
         <item>Review your Folder Sync remote paths carefully — syncing to an incorrect network folder may overwrite existing files.</item>
         <item>Exercise caution when removing system apps based on debloat recommendations.</item>
         <item>Only connect via ADB Terminal to devices you own or have explicit permission to access. Do not use ADB Terminal to gain unauthorized access to any device.</item>
-        <item>Keep any ADB or Shizuku pairing PINs private — share these only with people you trust to have access to your device.</item>
-        <item>Secure your Shizuku Manager — granting UFM elevated access via Shizuku gives it power over restricted files. Only grant this access if you trust the app.</item>
+        <item>Keep any ADB, Shizuku, or Shevery pairing PINs private — share these only with people you trust to have access to your device.</item>
+        <item>Secure your Shizuku or Shevery Manager — granting UFM elevated access via Shizuku or Shevery gives it power over restricted files. Only grant this access if you trust the app.</item>
         <item>Only use the app for lawful purposes. Don\'t store, share, or distribute illegal content.</item>
         <item>Don\'t use Remote Management to access another person\'s device without their permission.</item>
         <item>Don\'t attempt to reverse-engineer, decompile, or tamper with the app.</item>
@@ -164,7 +164,7 @@
         <item>Install Packages</item>
         <item>Billing</item>
         <item>ADB Debug Bridge</item>
-        <item>Elevated Access (Shizuku)</item>
+        <item>Elevated Access (Shizuku &amp; Shevery)</item>
         <item>Boot Start</item>
         <item>Battery Optimization</item>
         <item>Foreground Service</item>
@@ -184,9 +184,9 @@
         <item>Required to install APK files you choose to run from local storage.</item>
         <item>Processes optional Tip Jar purchases via Google Play.</item>
         <item>Allows secure connection to Android devices for advanced shell access. Generates a unique RSA certificate on your device for pairing; no certificates are transmitted to external servers.</item>
-        <item>Allows the app to use the Shizuku API (including Secure Settings) for managing files in restricted system directories without rooting.</item>
-        <item>Allows Shizuku services to start automatically when your device boots up to ensure immediate availability.</item>
-        <item>Allows you to opt-in to keeping Shizuku services active in the background for reliable performance.</item>
+        <item>Allows the app to use the Shizuku / Shevery API (including Secure Settings) for managing files in restricted system directories without rooting.</item>
+        <item>Allows Shizuku and Shevery services to start automatically when your device boots up to ensure immediate availability.</item>
+        <item>Allows you to opt-in to keeping Shizuku and Shevery services active in the background for reliable performance.</item>
         <item>Required to run Folder Sync and file transfers as a foreground service so they complete reliably even when the screen is off.</item>
         <item>Keeps the CPU and Wi-Fi active during large file transfers so they complete reliably even when the screen turns off.</item>
         <item>Uses storage permissions to scan and index file metadata for performance — managed via Settings -> Storage Indexer.</item>
@@ -220,7 +220,7 @@
         <item>Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)</item>
         <item>Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, SVG) in the built-in image viewer. (Apache-2.0)</item>
         <item>APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)</item>
-        <item>Shizuku API (dev.rikka.shizuku:api &amp; provider) — library and provider enabling elevated file system access via the Shizuku Manager app. (Apache-2.0)</item>
+        <item>Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — libraries enabling elevated file system access via Shizuku or Shevery Manager apps. (Apache-2.0)</item>
         <item>ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)</item>
         <item>Lottie (com.airbnb.android:lottie) v6.3.0 — animation library for rendering Adobe After Effects animations natively on Android, used for smooth UI animations throughout the app. (Apache-2.0)</item>
         <item>Ktor (io.ktor) — lightweight web framework used to power the local File Server. (Apache-2.0)</item>
@@ -379,7 +379,7 @@
         <item>Network Share Credentials</item>
         <item>Paired Device Info</item>
         <item>ADB Authentication Keys</item>
-        <item>Shizuku Authorization State</item>
+        <item>Shizuku / Shevery Authorization State</item>
         <item>TV Screenshots</item>
         <item>Sync Profiles</item>
         <item>Cloud Storage Tokens (Google Drive, OneDrive, Dropbox)</item>
@@ -398,7 +398,7 @@
         <item>Connecting to your SMB/FTP shares (host, username, password) · App private storage</item>
         <item>Device name, ID, and IP for device pairing · App private storage</item>
         <item>RSA keys and certificates generated for secure ADB connections · App private storage</item>
-        <item>Status of the elevated access grant from the Shizuku Manager app · App private storage</item>
+        <item>Status of the elevated access grant from the Shizuku or Shevery Manager app · App private storage</item>
         <item>Screenshots captured from a paired TV via ADB · Your phone\'s local Pictures/Screenshots folder</item>
         <item>Local folder URI and remote path for each sync profile · App private storage</item>
         <item>OAuth tokens for accessing Google Drive, OneDrive, and Dropbox · App private storage</item>
@@ -436,7 +436,7 @@
         <item>Authenticate access to the Encrypted Vault</item>
         <item>Encrypt and decrypt your private files</item>
         <item>Remember your preferences and settings</item>
-        <item>Use elevated access (Shizuku/ADB) for managing system-protected files in restricted directories</item>
+        <item>Use elevated access (Shizuku/Shevery/ADB) for managing system-protected files in restricted directories</item>
         <item>Create and maintain file indexing for fast browsing and search (manageable via Settings -> Storage Indexer)</item>
         <item>Provide core app functionality</item>
     </string-array>
@@ -476,7 +476,7 @@
     <!-- Other permissions (Section 4) -->
     <string-array name="pp_other_perm_labels">
         <item>POST_NOTIFICATIONS</item>
-        <item>moe.shizuku.manager.permission.API_V23</item>
+        <item>moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23</item>
         <item>RECEIVE_BOOT_COMPLETED</item>
         <item>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</item>
         <item>REQUEST_INSTALL_PACKAGES</item>
@@ -486,9 +486,9 @@
     </string-array>
     <string-array name="pp_other_perm_details">
         <item>Alerts you when file operations finish or storage is low</item>
-        <item>Allows communication with the Shizuku Manager for elevated file access</item>
-        <item>Allows Shizuku services to start automatically on boot for immediate availability</item>
-        <item>Allows you to opt-in to keeping Shizuku active in the background for reliable performance</item>
+        <item>Allows communication with the Shizuku or Shevery Manager for elevated file access</item>
+        <item>Allows Shizuku or Shevery services to start automatically on boot for immediate availability</item>
+        <item>Allows you to opt-in to keeping Shizuku or Shevery active in the background for reliable performance</item>
         <item>Allows installation of APK files you choose</item>
         <item>Required by the App Manager and Debloater features. Reads: app name, package ID, version, APK size, install and update timestamps, and system vs. user-app flag — processed entirely on-device. The Debloater tab downloads a publicly available debloat reference list and cross-references it locally against installed package names. No installed application data is ever transmitted externally.</item>
         <item>Runs Folder Sync, file transfers, and media playback as a foreground service so they complete reliably and continue playing even when the screen is off or you\'re using other apps</item>

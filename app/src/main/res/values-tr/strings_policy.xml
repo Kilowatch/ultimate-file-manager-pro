@@ -174,61 +174,61 @@ Ultimate File Manager Pro\'yu kullanarak bu Şartlar ve Koşulları okuduğunuzu
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-Dosya Tarayıcı — cihazınızın herhangi bir yerinde dosyaları görüntüleyin, kopyalayın, taşıyın, yeniden adlandırın ve silin.
+Dosya Tarayıcı — cihazınızdaki her yerde dosyalara göz atın, kopyalayın, taşıyın, yeniden adlandırın ve silin.
 </item>
         <item>
 Şifreli Kasa — hassas dosyaları kendi PIN\'inizle AES-256-GCM şifrelemesiyle kilitleyin.
 </item>
         <item>
-Dosya Sunucusu — yerel ağınızda dosya paylaşmak için cihazınızda doğrudan bir FTP veya güvenli SFTP sunucusu barındırın.
+Dosya Sunucusu — dosyaları yerel ağınızda paylaşmak için cihazınızda doğrudan bir FTP veya güvenli SFTP sunucusu barındırın.
 </item>
         <item>
-Uzaktan Yönetim — yerel Wi-Fi üzerinden, uzaktan APK yükleme, indirme ve kurulumu destekleyen yerleşik bir HTTP sunucusu aracılığıyla dosyaları yönetin.
+Uzaktan Yönetim — APK\'ları uzaktan yükleme, indirme ve yükleme desteği sunan yerleşik bir HTTP sunucusu aracılığıyla yerel Wi-Fi üzerinden dosyaları yönetin.
 </item>
         <item>
-Ağ Paylaşımları — yerel ağınızdaki SMB, FTP ve NFS sunucularına bağlanarak uzak dosyaları görüntüleyin, indirin ve yönetin.
+Ağ Paylaşımları — yerel ağınızdaki SMB, FTP ve NFS sunucularına bağlanarak uzaktaki dosyalara göz atın, indirin ve yönetin.
 </item>
         <item>
-Klasör Senkronizasyonu — seçtiğiniz bir programa (günlük, haftalık veya aylık aralık veya belirli saat) göre yerel telefon klasörlerini otomatik olarak bir SMB veya FTP ağ paylaşımına yedekleyin.
+Klasör Senkronizasyonu — seçtiğiniz bir zamanlamaya (aralık veya günlük, haftalık ya da aylık belirli saat) göre yerel telefon klasörlerini otomatik olarak bir SMB veya FTP ağ paylaşımına yedekleyin.
 </item>
         <item>
-Cihaz Eşleme — dosya aktarmak ve yüklemek için mobil telefonunuzu ve Android TV\'nizi yerel Wi-Fi üzerinden eşleştirin.
+Cihaz Eşleme — mobil telefonunuzu ve Android TV\'nizi yerel Wi-Fi üzerinden eşleştirerek dosya aktarımı ve yüklemesi yapın.
 </item>
         <item>
-ADB Terminali — doğrudan kabuk erişimi ve gelişmiş sorun giderme için ADB (Android Debug Bridge) kullanarak yerel Wi-Fi üzerinden Geliştirici Modundaki Android cihazlara bağlanın.
+ADB Terminali — Geliştirici Modundaki Android cihazlara ADB (Android Debug Bridge) kullanarak yerel Wi-Fi üzerinden bağlanın ve doğrudan kabuk erişimi ile gelişmiş sorun giderme yapın.
 </item>
         <item>
-Yerleşik Görüntüleyiciler — metin dosyalarını, PDF\'leri, animasyonlu görüntüleri (APNG, GIF, animasyonlu WebP, SVG ve daha fazlası), arşivleri ve diğer formatları doğrudan uygulama içinde görüntüleyin.
+Yerleşik Görüntüleyiciler — metin dosyaları, PDF\'ler, canlandırılmış resimler (APNG, GIF, animasyonlu WebP, SVG ve daha fazlası), arşivler ve diğer biçimleri uygulama içinde doğrudan görüntüleyin.
 </item>
         <item>
 Gelişmiş ZIP Desteği — parola korumalı ve AES şifreli ZIP arşivleri oluşturun ve çıkarın.
 </item>
         <item>
-Uzaktan Ekran Görüntüleri — ADB aracılığıyla yerel Wi-Fi üzerinden eşleştirilmiş Android TV\'nizin ekranını yakalayın ve doğrudan telefonunuzun deposuna kaydedin.
+Uzaktan Ekran Görüntüleri — eşleştirilmiş Android TV\'nizin ekranını ADB aracılığıyla yerel Wi-Fi üzerinden yakalayın ve doğrudan telefonunuzun depolamasına kaydedin.
 </item>
         <item>
 7Z Arşiv Desteği — LZMA/LZMA2 sıkıştırmalı 7Z arşivlerini çıkarın.
 </item>
         <item>
-Dosya Arama — cihaz depolama alanınızda dosya ve klasörleri hızla bulun.
+Dosya Arama — cihaz depolamanızda dosya ve klasörleri hızlıca bulun.
 </item>
         <item>
-Depolama Analizörü — depolama alanınızı neyin kullandığının görsel bir dökümünü görün.
+Depolama Analizörü — depolama alanınızı neyin kullandığını görsel olarak görün.
 </item>
         <item>
-Uygulama Yöneticisi — cihazınıza yüklenmiş tüm uygulamaları görüntüleyin ve yönetin, ön yüklü uygulamalar için debloat önerileriyle.
+Uygulama Yöneticisi — cihazınızda yüklü tüm uygulamaları görüntüleyin ve yönetin, ön yüklü uygulamalar için bloatware kaldırma önerileri.
 </item>
         <item>
-APK Yükleyici — Android uygulamalarını ve bölünmüş APK\'ları (XAPK) doğrudan yerel olarak kaydedilmiş dosyalardan yükleyin.
+APK Yükleyici — Android uygulamalarını ve bölünmüş APK\'ları (XAPK) yerel olarak kaydedilmiş dosyalardan doğrudan yükleyin.
 </item>
         <item>
-Yükseltilmiş Erişim (Shizuku ve ADB) — cihazınızı rootlamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim elde edin.
+Yükseltilmiş Erişim (Shizuku, Shevery ve ADB) — cihazınızı rootlamadan sistem dosyalarını ve kısıtlı dizinleri yönetmek için root benzeri erişim kazanın.
 </item>
         <item>
-Depolama Dizinleyici — anında arama ve çok hızlı gezinme için dosya meta verilerinin yerel bir dizinini oluşturun.
+Depolama Dizinleyici — anında arama ve çok hızlı tarama için dosya meta verilerinin yerel bir dizinini oluşturun.
 </item>
         <item>
-Depolama Erişim Çerçevesi — diğer uygulamalar UFM\'nin belge sağlayıcısı aracılığıyla dosyalarınıza erişebilir.
+Depolama Erişim Çerçevesi — diğer uygulamalar dosyalarınıza UFM\'nin belge sağlayıcısı aracılığıyla erişebilir.
 </item>
         <item>
 Bahşiş Kavanozu — geliştiriciyi desteklemek için isteğe bağlı tek seferlik satın almalar; uygulama bahşişsiz her zaman ücretsizdir.
@@ -265,7 +265,7 @@ Sistem Uygulaması Kaldırma
 ADB Eşleme
 </item>
         <item>
-Shizuku ve Yükseltilmiş Erişim
+Shizuku, Shevery ve Yükseltilmiş Erişim
 </item>
         <item>
 TV Ekran Görüntüleri
@@ -282,53 +282,53 @@ Sorumluluğumuz
     </string-array>
     <string-array name="tc_risk_details">
         <item>
-Sıfır veri kaybını garanti edemeyiz. Sizin için önemli olan dosyaların her zaman yedeklerini alın.
+Sıfır veri kaybını garanti edemeyiz. Önem verdiğiniz dosyaların her zaman yedeklerini bulundurun.
 </item>
         <item>
 PIN\'inizi ve Kurtarma Kodunuzu unutursanız, şifrelenmiş dosyalarınız hiç kimse tarafından kurtarılamaz.
 </item>
         <item>
-Bilinmeyen kaynaklardan APK yüklemek güvenlik riskleri taşır. Yüklediğiniz tüm APK dosyalarının tam sorumluluğunu üstlenirsiniz.
+Bilinmeyen kaynaklardan APK yüklemek güvenlik riskleri taşır. Yüklediğiniz tüm APK dosyalarının sorumluluğunu tamamen siz üstlenirsiniz.
 </item>
         <item>
-Bir Dosya Sunucusu barındırırken, FTP bağlantıları verileri ve kimlik bilgilerini düz metin olarak iletir. Güvenli, şifreli aktarımlar gerekiyorsa her zaman SFTP kullanın.
+Bir Dosya Sunucusu barındırırken, FTP bağlantıları veri ve kimlik bilgilerini düz metin olarak iletir. Güvenli, şifreli aktarımlar gerekiyorsa her zaman SFTP kullanın.
 </item>
         <item>
 Ağ paylaşımı kimlik bilgileriniz (sunucu, kullanıcı adı, parola) cihazınızda yerel olarak saklanır. Cihazınızı güvende tutmak sizin sorumluluğunuzdadır.
 </item>
         <item>
-Senkronizasyon işlemleri arka planda çalışır ve pil ve veri tüketebilir. Senkronizasyonu etkinleştirmeden önce uzak yolunuzu her zaman doğrulayın — yanlış bir klasöre senkronizasyon, ağ paylaşımınızdaki dosyaların üzerine yazabilir.
+Senkronizasyon işlemleri arka planda çalışır ve pil ve veri tüketebilir. Senkronizasyonu etkinleştirmeden önce uzak yolunuzu her zaman doğrulayın — yanlış bir klasöre senkronizasyon yapmak ağ paylaşımınızdaki dosyaların üzerine yazabilir.
 </item>
         <item>
-Debloat önerilerine göre sistem uygulamalarını kaldırmak cihaz kararlılığını etkileyebilir. Dikkatli ilerleyin.
+Bloatware kaldırma önerilerine dayanarak sistem uygulamalarını kaldırmak cihaz kararlılığını etkileyebilir. Dikkatli ilerleyin.
 </item>
         <item>
-ADB eşleme, cihazınız ile hedef cihaz arasında yerel Wi-Fi üzerinden sertifika alışverişi gerektirir. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlara bağlanın. Ağınızdaki eşleme PIN\'inizi ele geçiren herkes cihazınıza erişebilir — bu PIN\'i gizli tutun.
+ADB eşleme, cihazınız ile hedef cihaz arasında yerel Wi-Fi üzerinden sertifika değişimi gerektirir. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlara bağlanın. Ağınızdaki eşleme PIN\'inizi ele geçiren herkes cihazınıza erişebilir — bu PIN\'i gizli tutun.
 </item>
         <item>
-Yükseltilmiş erişim için Shizuku veya ADB kullanmak, uygulamanın sistem tarafından korunan dosyaları değiştirmesine olanak tanır. Bu özelliklerin yanlış kullanımı cihaz kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve erişimi yalnızca bu uygulamaya verin.
+Shizuku, Shevery veya ADB\'yi yükseltilmiş erişim için kullanmak, uygulamanın sistem korumalı dosyaları değiştirmesine izin verir. Bu özelliklerin yanlış kullanımı cihaz kararlılığını veya güvenliğini etkileyebilir. Dikkatli kullanın ve erişimi yalnızca bu uygulamaya verin.
 </item>
         <item>
-Eşleştirilmiş TV\'lerin ekran görüntüleri, yerel ağınız üzerinden ADB ile yakalanır ve doğrudan telefonunuzun deposuna kaydedilir. Ekran görüntülerinizi iletmez, görüntülemez veya yüklemez. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlarda ekran görüntüsü aldığınızdan emin olun.
+Eşleştirilmiş TV\'lerin ekran görüntüleri, ADB aracılığıyla yerel ağınız üzerinden yakalanır ve doğrudan telefonunuzun depolamasına kaydedilir. Ekran görüntülerinizi iletmeyiz, görüntülemeyiz veya yüklemeyiz. Yalnızca sahibi olduğunuz veya erişim izniniz olan cihazlarda ekran yakaladığınızdan emin olun.
 </item>
         <item>
 Dizin, tarama anındaki depolama durumunuzu yansıtır. Dosyalar diğer uygulamalar tarafından değiştirilirse dizini yenilemeniz gerekebilir.
 </item>
         <item>
-Hiçbir yazılım mükemmel değildir. Uygulamanın her zaman hatasız veya kesintisiz olacağını vaat edemeyiz.
+Hiçbir yazılım mükemmel değildir. Uygulamanın her zaman hatasız veya kesintisiz olacağını garanti edemeyiz.
 </item>
         <item>
-Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın alımlar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.
+Toplam sorumluluğumuz, herhangi bir talepten önceki 30 gün içinde uygulama içi satın almalar için ödediğiniz toplam tutarla sınırlıdır. Ücretsiz özelliklerden kaynaklanan veri kaybı, cihaz hasarı veya kar kaybından sorumlu değiliz.
 </item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Toplu işlemler yapmadan önce önemli dosyaların düzenli yedeklerini alın.
+Toplu işlemler yapmadan önce önemli dosyalarınızın düzenli yedeklerini alın.
 </item>
         <item>
-Kasa PIN\'inizi ve Kurtarma Kodunuzu güvenli bir yerde saklayın — bunları sizin için alamayız.
+Kasa PIN\'inizi ve Kurtarma Kodunuzu güvenli bir yerde saklayın — sizin için onları kurtaramayız.
 </item>
         <item>
 PIN\'inizi gizli tutun. Bilen herkes Kasanıza erişebilir.
@@ -337,34 +337,34 @@ PIN\'inizi gizli tutun. Bilen herkes Kasanıza erişebilir.
 Ağ paylaşımı kimlik bilgilerinizi güvende tutun — cihazınızda yerel olarak saklanırlar.
 </item>
         <item>
-Klasör Senkronizasyonu uzak yollarınızı dikkatlice gözden geçirin — yanlış bir ağ klasörüne senkronizasyon mevcut dosyaların üzerine yazabilir.
+Klasör Senkronizasyonu uzak yollarınızı dikkatlice gözden geçirin — yanlış bir ağ klasörüne senkronizasyon yapmak mevcut dosyaların üzerine yazabilir.
 </item>
         <item>
-Debloat önerilerine göre sistem uygulamalarını kaldırırken dikkatli olun.
+Bloatware kaldırma önerilerine dayanarak sistem uygulamalarını kaldırırken dikkatli olun.
 </item>
         <item>
-ADB Terminali aracılığıyla yalnızca sahibi olduğunuz veya açık erişim izniniz olan cihazlara bağlanın. Herhangi bir cihaza yetkisiz erişim sağlamak için ADB Terminali\'ni kullanmayın.
+ADB Terminali aracılığıyla yalnızca sahibi olduğunuz veya açık erişim izniniz olan cihazlara bağlanın. Herhangi bir cihaza yetkisiz erişim sağlamak için ADB Terminali kullanmayın.
 </item>
         <item>
-Herhangi bir ADB veya Shizuku eşleme PIN\'ini gizli tutun — bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.
+Tüm ADB, Shizuku veya Shevery eşleme PIN\'lerini gizli tutun — bunları yalnızca cihazınıza erişmesine güvendiğiniz kişilerle paylaşın.
 </item>
         <item>
-Shizuku Yöneticinizi güvende tutun — UFM\'ye Shizuku aracılığıyla yükseltilmiş erişim vermek, kısıtlı dosyalar üzerinde yetki verir. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
+Shizuku veya Shevery Yöneticinizi güvende tutun — UFM\'ye Shizuku veya Shevery aracılığıyla yükseltilmiş erişim vermek, kısıtlı dosyalar üzerinde güç sağlar. Bu erişimi yalnızca uygulamaya güveniyorsanız verin.
 </item>
         <item>
-Uygulamayı yalnızca yasal amaçlar için kullanın. Yasa dışı içerik depolamayın, paylaşmayın veya dağıtmayın.
+Uygulamayı yalnızca yasal amaçlar için kullanın. Yasadışı içerik depolamayın, paylaşmayın veya dağıtmayın.
 </item>
         <item>
-Uzaktan Yönetimi, izinleri olmadan başka bir kişinin cihazına erişmek için kullanmayın.
+Başka bir kişinin cihazına izni olmadan erişmek için Uzaktan Yönetim\'i kullanmayın.
 </item>
         <item>
-Uygulamayı tersine mühendislik, derleme veya kurcalama girişiminde bulunmayın.
+Uygulamayı tersine mühendislik, derleme çözme veya kurcalamaya çalışmayın.
 </item>
         <item>
-Dizinlenmiş kayıtlarınızı sorumlu bir şekilde yönetin — kayıtları silebilir veya Ayarlar -> Depolama Dizinleyici aracılığıyla istediğiniz zaman belirli sürücüleri yok sayabilirsiniz.
+Dizinlenmiş kayıtlarınızı sorumlu bir şekilde yönetin — kayıtları istediğiniz zaman Ayarlar -> Depolama Dizinleyici aracılığıyla silebilir veya belirli sürücüleri yok sayabilirsiniz.
 </item>
         <item>
-Herhangi bir APK dosyasını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
+APK dosyalarını yüklemeden önce orijinalliğini ve güvenliğini doğrulayın.
 </item>
     </string-array>
 
@@ -395,13 +395,13 @@ Paket Sorgulama
 Paket Yükleme
 </item>
         <item>
-Faturalama
+Faturalandırma
 </item>
         <item>
 ADB Hata Ayıklama Köprüsü
 </item>
         <item>
-Yükseltilmiş Erişim (Shizuku)
+Yükseltilmiş Erişim (Shizuku ve Shevery)
 </item>
         <item>
 Başlangıçta Başlat
@@ -413,7 +413,7 @@ Pil Optimizasyonu
 Ön Planda Hizmet
 </item>
         <item>
-Uyanık Tutma Kilidi
+Uyku Kilidi
 </item>
         <item>
 Depolama Dizinleyici
@@ -427,7 +427,7 @@ Titreşim
     </string-array>
     <string-array name="tc_permission_details">
         <item>
-Tüm depolama alanınızda dosyaları görüntülemek, kopyalamak, taşımak ve silmek için gereklidir.
+Tüm depolama alanınızda dosyalara göz atmak, kopyalamak, taşımak ve silmek için gereklidir.
 </item>
         <item>
 Fotoğraflarınızı, videolarınızı ve ses dosyalarınızı düzenlemek ve yönetmek için gereklidir.
@@ -436,59 +436,59 @@ Fotoğraflarınızı, videolarınızı ve ses dosyalarınızı düzenlemek ve y�
 Dosya işlemleri tamamlandığında veya depolama alanı azaldığında sizi uyarmak için kullanılır.
 </item>
         <item>
-Uzaktan dosya yönetimi, ağ paylaşımı erişimi (SMB/FTP/SFTP/SCP/NFS), klasör senkronizasyonu, cihaz eşleme ve yerel ağınızda ADB terminal erişimini sağlar. Ağ keşfi, ADB özellikli cihazları bulmak için yerel alt ağınızdaki (254 IP\'ye kadar) cihazları ADB portları 5555, 5037 ve 5038\'de tarar.
+Uzaktan dosya yönetimi, ağ paylaşımı erişimi (SMB/FTP/SFTP/SCP/NFS), klasör senkronizasyonu, cihaz eşleme ve yerel ağınızda ADB terminal erişimini sağlar. Ağ keşfi, ADB özellikli cihazları bulmak için yerel alt ağınızdaki cihazları (254 IP\'ye kadar) ADB bağlantı noktaları 5555, 5037 ve 5038\'de tarar.
 </item>
         <item>
-Cihazları eşleştirirken yerel ağ cihaz keşfi (NSD/mDNS) için kullanılır.
+Cihaz eşleme sırasında yerel ağ cihaz keşfi (NSD/mDNS) için kullanılır.
 </item>
         <item>
 Uzaktan Yönetim ve ağ paylaşımı erişimi sırasında VPN bağlantılarını algılar.
 </item>
         <item>
-Uygulama Yöneticisi\'nin cihazınıza yüklenmiş tüm uygulamaları listelemesini sağlar. Erişilen veriler şunları içerir: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve her uygulamanın sistem mi yoksa kullanıcı tarafından mı yüklendiği. Bu bilgiler yalnızca cihaz üzerinde Uygulama Yöneticisi\'ni görüntülemek, uygulama başına depolama alanını hesaplamak ve paket adlarını yerel olarak indirilip önbelleğe alınan halka açık bir debloat referans listesiyle karşılaştırmak için kullanılır. Hiçbir yüklü uygulama verisi KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
+Uygulama Yöneticisi\'nin cihazınızda yüklü tüm uygulamaları numaralandırmasını sağlar. Erişilen veriler: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve her uygulamanın sistem veya kullanıcı tarafından yüklenmiş bir uygulama olup olmadığı. Bu bilgiler, Uygulama Yöneticisi\'ni görüntülemek, uygulama başına depolamayı hesaplamak ve paket adlarını yerel olarak indirilip önbelleğe alınan herkese açık bir bloatware referans listesiyle karşılaştırmak için yalnızca cihaz içinde kullanılır. Hiçbir yüklü uygulama verisi KiloWatch sunucularına veya herhangi bir üçüncü tarafa iletilmez.
 </item>
         <item>
 Yerel depolamadan çalıştırmayı seçtiğiniz APK dosyalarını yüklemek için gereklidir.
 </item>
         <item>
-Google Play aracılığıyla isteğe bağlı Bahşiş Kavanozu satın alımlarını işler.
+İsteğe bağlı Bahşiş Kavanozu satın almalarını Google Play üzerinden işler.
 </item>
         <item>
-Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleme için cihazınızda benzersiz bir RSA sertifikası oluşturur; hiçbir sertifika harici sunuculara iletilmez.
+Gelişmiş kabuk erişimi için Android cihazlara güvenli bağlantı sağlar. Eşleme için cihazınızda benzersiz bir RSA sertifikası oluşturur; harici sunuculara hiçbir sertifika iletilmez.
 </item>
         <item>
-Uygulamanın, rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Shizuku API\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
+Uygulamanın, cihazı rootlamadan kısıtlı sistem dizinlerindeki dosyaları yönetmek için Shizuku / Shevery API\'sini (Güvenli Ayarlar dahil) kullanmasına izin verir.
 </item>
         <item>
-Shizuku hizmetlerinin, anında kullanılabilirliği sağlamak için cihazınız başladığında otomatik olarak başlamasına izin verir.
+Shizuku ve Shevery hizmetlerinin cihazınız önyüklendiğinde otomatik olarak başlamasını sağlayarak anında kullanılabilirlik sağlar.
 </item>
         <item>
-Güvenilir performans için Shizuku hizmetlerini arka planda aktif tutmayı tercih etmenize izin verir.
+Kararlı performans için Shizuku ve Shevery hizmetlerini arka planda etkin tutmayı tercih etmenizi sağlar.
 </item>
         <item>
-Klasör Senkronizasyonu ve dosya aktarımlarını ön planda bir hizmet olarak çalıştırmak için gereklidir, böylece ekran kapalıyken bile güvenilir bir şekilde tamamlanırlar.
+Klasör Senkronizasyonu ve dosya aktarımlarının, ekran kapalıyken bile güvenilir bir şekilde tamamlanması için ön planda hizmet olarak çalıştırılması gerekir.
 </item>
         <item>
-Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapandığında bile güvenilir bir şekilde tamamlanırlar.
+Büyük dosya aktarımları sırasında CPU ve Wi-Fi\'yi etkin tutarak ekran kapandığında bile aktarımların güvenilir bir şekilde tamamlanmasını sağlar.
 </item>
         <item>
 Performans için dosya meta verilerini taramak ve dizinlemek üzere depolama izinlerini kullanır — Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilir.
 </item>
         <item>
-Uzaktan kontrol için Bluetooth klavye ve fare olarak hareket etmek üzere eşleştirilmiş Android TV\'nize bağlanır.
+Eşleştirilmiş Android TV\'nize bağlanarak uzaktan kumanda için Bluetooth klavye ve fare olarak çalışır.
 </item>
         <item>
-TV Kumandasındaki düğmelere basıldığında dokunsal geri bildirim sağlar.
+TV Uzaktan Kumandası\'ndaki düğmelere basıldığında dokunsal geri bildirim sağlar.
 </item>
     </string-array>
 
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — Uzaktan Yönetimi güçlendiren hafif HTTP sunucusu. (BSD-3-Clause)
+NanoHTTPD — Uzaktan Yönetimi sağlayan hafif HTTP sunucusu. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ağ paylaşımı gezinme ve Klasör Senkronizasyonu için SMB2/SMB3 istemci kütüphanesi. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — ağ paylaşımı taraması ve Klasör Senkronizasyonu için SMB2/SMB3 istemci kütüphanesi. (LGPL-2.1)
 </item>
         <item>
 smbj (hierynomus/smbj) — ağ paylaşımı erişimi için kullanılan SMB2/SMB3 Java uygulaması. (Apache-2.0)
@@ -515,58 +515,58 @@ Firebase Analytics — uygulama kullanımını anlamamıza yardımcı olan Googl
 AndroidX Kütüphaneleri (Android TV için Leanback dahil) — modern Android geliştirme için Google\'ın Jetpack bileşenleri. (Apache-2.0)
 </item>
         <item>
-Material Design Bileşenleri — temiz ve tutarlı bir arayüz için Google\'ın UI kütüphanesi. (Apache-2.0)
+Material Design Bileşenleri — temiz, tutarlı bir arayüz için Google\'ın UI kütüphanesi. (Apache-2.0)
 </item>
         <item>
-Room Kalıcılık Kütüphanesi — yerel meta veri indeksleme için SQLite soyutlama katmanı. (Apache-2.0)
+Room Kalıcılık Kütüphanesi — yerel meta veri dizinleme için SQLite soyutlama katmanı. (Apache-2.0)
 </item>
         <item>
 zip4j (net.lingala.zip4j) — parola korumalı ve AES şifreli arşivler için gelişmiş ZIP kütüphanesi. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — çeşitli arşiv formatlarını (7z, zip, tar, vb.) okumak ve yazmak için kütüphane. (Apache-2.0)
+Apache Commons Compress — çeşitli arşiv biçimlerini (7z, zip, tar vb.) okumak ve yazmak için kütüphane. (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — XZ ve LZMA sıkıştırma uygulaması. (Kamu Malı)
+Java için XZ (org.tukaani.xz) — XZ ve LZMA sıkıştırmasının uygulaması. (Kamu Malı)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — uzaktan kabuk erişimi ve sertifika tabanlı eşleme için ADB özellikli cihazlara güvenli bağlantılar sağlayan Android Debug Bridge kütüphanesi. (Apache-2.0)
+libadb-android (com.github.MuntashirAkon) — ADB özellikli cihazlara güvenli bağlantılar, uzaktan kabuk erişimi ve sertifika tabanlı eşleme sağlayan Android Debug Bridge kütüphanesi. (Apache-2.0)
 </item>
         <item>
 Apache MINA SSHD (org.apache.sshd) — güvenli ağ paylaşımı erişimi için kapsamlı SSHD çekirdeği, SFTP ve SCP istemci kütüphanesi. (Apache-2.0)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH anahtarları için EdDSA (Edwards eğrisi Dijital İmza Algoritması) uygulaması. (CC0-1.0)
+Java için EdDSA (net.i2p.crypto:eddsa) — Ed25519 SSH anahtarları için EdDSA (Edwards-eğrisi Dijital İmza Algoritması) uygulaması. (CC0-1.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD kütüphanesi tarafından kullanılan Android için günlük bağlantısı. (MIT)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD kütüphanesi tarafından kullanılan Android için günlük bağlama. (MIT)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — RSA/EdDSA anahtar çifti oluşturma ve X.509 sertifikası oluşturma için kriptografi kütüphanesi; sürüm 1.83. (MIT tarzı Lisans)
+BouncyCastle (org.bouncycastle) — RSA/EdDSA anahtar çifti oluşturma ve X.509 sertifika oluşturma için kriptografi kütüphanesi; sürüm 1.83. (MIT benzeri Lisans)
 </item>
         <item>
-Google Play Faturalama Kütüphanesi — isteğe bağlı uygulama içi bahşiş satın alımlarını işler; Google Play Gizlilik Politikası\'na tabidir. (Apache-2.0)
+Google Play Faturalandırma Kütüphanesi — isteğe bağlı uygulama içi bahşiş satın almalarını işler; Google Play\'in Gizlilik Politikası\'na tabidir. (Apache-2.0)
 </item>
         <item>
 Google Play İnceleme Kütüphanesi — uygulamanın uygulama içi derecelendirme ve inceleme işlevselliğini sağlar. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — yerleşik resim görüntüleyicide animasyonlu resim oluşturmayı (APNG, GIF, animasyonlu WebP, SVG) güçlendiren resim yükleme kütüphanesi. (Apache-2.0)
+Coil (io.coil-kt.coil3) — yerleşik resim görüntüleyicide animasyonlu resim oluşturmayı (APNG, GIF, animasyonlu WebP, SVG) sağlayan resim yükleme kütüphanesi. (Apache-2.0)
 </item>
         <item>
 APNG4Android (com.github.penfeizhou.android.animation) — Android\'de animasyonlu PNG dosyalarını kod çözme ve oluşturma için temel kütüphane. (Apache-2.0)
 </item>
         <item>
-Shizuku API (dev.rikka.shizuku:api ve sağlayıcı) — Shizuku Yöneticisi uygulaması aracılığıyla yükseltilmiş dosya sistemi erişimi sağlayan kütüphane ve sağlayıcı. (Apache-2.0)
+Shizuku ve Shevery API\'si (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — Shizuku veya Shevery Yönetici uygulamaları aracılığıyla yükseltilmiş dosya sistemi erişimi sağlayan kütüphaneler. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — parçalar ve düzenler arasında kaydırmak için Android kütüphanesi. (Apache-2.0)
+ViewPager2 — parçalar ve düzenler arasında kaydırma için Android kütüphanesi. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — Adobe After Effects animasyonlarını Android\'de yerel olarak oluşturmak için animasyon kütüphanesi, uygulama genelinde yumuşak UI animasyonları için kullanılır. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — Android\'de Adobe After Effects animasyonlarını yerel olarak oluşturmak için animasyon kütüphanesi, uygulama genelinde akıcı UI animasyonları için kullanılır. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — yerel Dosya Sunucusunu güçlendirmek için kullanılan hafif web çerçevesi. (Apache-2.0)
+Ktor (io.ktor) — yerel Dosya Sunucusunu çalıştırmak için kullanılan hafif web çerçevesi. (Apache-2.0)
 </item>
         <item>
 PDFBox-Android (com.tom-roush:pdfbox-android) — PDF belgelerini yerel olarak oluşturmak ve görüntülemek için kütüphane. (Apache-2.0)
@@ -587,10 +587,10 @@ Gson (com.google.code.gson) — bulut depolama entegrasyonu için kullanılan JS
 AndroidX Browser (androidx.browser) — Google Drive API kimlik doğrulaması için Chrome Özel Sekmeler desteği. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — barkod görüntü işleme kütüphanesi. (Apache-2.0)
+ZXing (com.google.zxing:core) — barkod resim işleme kütüphanesi. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Özel Mülk)
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın almalarını işler. (Özel Mülk)
 </item>
     </string-array>
 
@@ -944,7 +944,7 @@ Eşleştirilmiş Cihaz Bilgisi
 ADB Kimlik Doğrulama Anahtarları
 </item>
         <item>
-Shizuku Yetkilendirme Durumu
+Shizuku / Shevery Yetkilendirme Durumu
 </item>
         <item>
 TV Ekran Görüntüleri
@@ -953,13 +953,13 @@ TV Ekran Görüntüleri
 Senkronizasyon Profilleri
 </item>
         <item>
-Bulut Depolama Tokenleri (Google Drive, OneDrive, Dropbox)
+Bulut Depolama Token\'ları (Google Drive, OneDrive, Dropbox)
 </item>
         <item>
 S3 / S3 Uyumlu Depolama Kimlik Bilgileri (AWS S3, MinIO, IDrive E2, vb.)
 </item>
         <item>
-Dizinlenmiş Dosya Metaverisi (SQLite/Room)
+Dizinlenmiş Dosya Meta Verileri (SQLite/Room)
 </item>
         <item>
 Dil Seçimi (Çerez)
@@ -976,7 +976,7 @@ Medya Oynatma Durumu
 PIN unutulursa hesap kurtarma · Android SharedPreferences
 </item>
         <item>
-Şifrelenmiş klasör ve dosyalarınızın listesi · Uygulama özel depolaması
+Şifrelenmiş klasörlerinizin ve dosyalarınızın listesi · Uygulama özel depolama alanı
 </item>
         <item>
 Kasa için AES-256-GCM şifrelemesi · Android Keystore (donanım destekli)
@@ -985,40 +985,40 @@ Kasa için AES-256-GCM şifrelemesi · Android Keystore (donanım destekli)
 Tema, sıralama ayarları, görünüm tercihleri · Android SharedPreferences
 </item>
         <item>
-Barındırılan Dosya Sunucusu için yapılandırmalar (kullanıcı adı, dizin, hashlenmiş şifre) · Uygulama özel depolaması
+Barındırılan Dosya Sunucusu için yapılandırmalar (kullanıcı adı, dizin, hashlenmiş parola) · Uygulama özel depolama alanı
 </item>
         <item>
-SMB/FTP paylaşımlarınıza bağlanma (sunucu, kullanıcı adı, şifre) · Uygulama özel depolaması
+SMB/FTP paylaşımlarınıza bağlanma (sunucu, kullanıcı adı, parola) · Uygulama özel depolama alanı
 </item>
         <item>
-Cihaz eşleştirme için cihaz adı, kimlik ve IP · Uygulama özel depolaması
+Cihaz eşleştirme için cihaz adı, kimlik ve IP · Uygulama özel depolama alanı
 </item>
         <item>
-Güvenli ADB bağlantıları için oluşturulan RSA anahtarları ve sertifikalar · Uygulama özel depolaması
+Güvenli ADB bağlantıları için oluşturulan RSA anahtarları ve sertifikalar · Uygulama özel depolama alanı
 </item>
         <item>
-Shizuku Manager uygulamasından yükseltilmiş erişim izninin durumu · Uygulama özel depolaması
+Shizuku veya Shevery Manager uygulamasından yükseltilmiş erişim izninin durumu · Uygulama özel depolama alanı
 </item>
         <item>
-ADB aracılığıyla eşleştirilmiş bir TV\'den yakalanan ekran görüntüleri · Telefonunuzun yerel Resimler/Ekran Görüntüleri klasörü
+Eşleştirilmiş bir TV\'den ADB ile alınan ekran görüntüleri · Telefonunuzun yerel Resimler/Ekran Görüntüleri klasörü
 </item>
         <item>
-Her senkronizasyon profili için yerel klasör URI\'si ve uzak yol · Uygulama özel depolaması
+Her senkronizasyon profili için yerel klasör URI\'si ve uzak yol · Uygulama özel depolama alanı
 </item>
         <item>
-Google Drive, OneDrive ve Dropbox\'a erişmek için OAuth tokenları · Uygulama özel depolaması
+Google Drive, OneDrive ve Dropbox\'a erişmek için OAuth belirteçleri · Uygulama özel depolama alanı
 </item>
         <item>
-S3 bucket\'larına bağlanmak için Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı · Uygulama özel depolaması
+S3 kovalarına bağlanmak için Erişim Anahtarı Kimliği ve Gizli Erişim Anahtarı · Uygulama özel depolama alanı
 </item>
         <item>
-Hızlı gezinme ve arama için yerel bir SQLite/Room veritabanında depolanan dosya metaverileri (adlar, boyutlar, tarihler) — Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilebilir · Uygulama özel depolaması
+Hızlı gezinti ve arama için dosya meta verileri (adlar, boyutlar, tarihler) yerel bir SQLite/Room veritabanında saklanır — Ayarlar -> Depolama Dizinleyicisi üzerinden yönetilebilir · Uygulama özel depolama alanı
 </item>
         <item>
-Kaldığınız yerden devam etmek için geçerli sıra, oynatma konumu ve oynatıcı ayarları · Android SharedPreferences
+Kaldığınız yerden devam etmek için mevcut sıra, oynatma konumu ve oynatıcı ayarları · Android SharedPreferences
 </item>
         <item>
-Bir çerez (ufm_lang), dil seçiminizi oturum boyunca ve tarayıcı yeniden başlatmaları arasında hatırlar · Web tarayıcı depolaması
+Bir çerez (ufm_lang), oturum boyunca ve tarayıcı yeniden başlatmalarında dil seçiminizi hatırlar · Web tarayıcı depolama alanı
 </item>
     </string-array>
 
@@ -1083,13 +1083,13 @@ Dosya tarayıcısında açıkça talep ettiğinizin ötesinde herhangi bir Googl
 Tercihlerinizi ve ayarlarınızı hatırla
 </item>
         <item>
-Kısıtlı dizinlerde sistem tarafından korunan dosyaları yönetmek için yükseltilmiş erişim (Shizuku/ADB) kullan
+Kısıtlı dizinlerdeki sistem korumalı dosyaları yönetmek için yükseltilmiş erişim (Shizuku/Shevery/ADB) kullan
 </item>
         <item>
-Hızlı gezinme ve arama için dosya dizinlemesi oluştur ve sürdür (Ayarlar -> Depolama Dizinleyici aracılığıyla yönetilebilir)
+Hızlı gezinti ve arama için dosya dizin oluşturma ve bakımını yap (Ayarlar -> Depolama Dizinleyicisi üzerinden yönetilebilir)
 </item>
         <item>
-Temel uygulama işlevselliğini sağla
+Temel uygulama işlevselliği sağla
 </item>
     </string-array>
     <string-array name="pp_use_analytics">
@@ -1167,7 +1167,7 @@ Cihaz eşleştirme için yerel ağ cihaz keşfini (NSD/mDNS) etkinleştirir
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1193,22 +1193,22 @@ WAKE_LOCK
 Dosya işlemleri tamamlandığında veya depolama alanı düşük olduğunda sizi uyarır
 </item>
         <item>
-Yükseltilmiş dosya erişimi için Shizuku Manager ile iletişime izin verir
+Yükseltilmiş dosya erişimi için Shizuku veya Shevery Manager ile iletişime izin verir
 </item>
         <item>
-Shizuku hizmetlerinin anında kullanılabilirlik için önyüklemede otomatik olarak başlamasına izin verir
+Shizuku veya Shevery hizmetlerinin anında kullanılabilirlik için önyüklemede otomatik olarak başlamasına izin verir
 </item>
         <item>
-Güvenilir performans için Shizuku\'yu arka planda tutmayı kabul etmenize izin verir
+Güvenilir performans için Shizuku veya Shevery\'yi arka planda aktif tutmayı tercih etmenize izin verir
 </item>
         <item>
 Seçtiğiniz APK dosyalarının yüklenmesine izin verir
 </item>
         <item>
-Uygulama Yöneticisi ve Debloat özellikleri tarafından gereklidir. Okur: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ile sistem vs. kullanıcı uygulama bayrağı — tamamen cihazda işlenir. Debloat sekmesi, herkese açık bir debloat referans listesini indirir ve yüklü paket adlarıyla yerel olarak karşılaştırır. Hiçbir yüklü uygulama verisi harici olarak iletilmez.
+Uygulama Yöneticisi ve Debloater özellikleri tarafından gereklidir. Okur: uygulama adı, paket kimliği, sürüm, APK boyutu, yükleme ve güncelleme zaman damgaları ve sistem vs. kullanıcı uygulaması bayrağı — tamamen cihaz üzerinde işlenir. Debloater sekmesi, herkese açık bir debloat referans listesini indirir ve yüklenen paket adlarına karşı yerel olarak çapraz referans yapar. Hiçbir yüklenen uygulama verisi asla harici olarak iletilmez.
 </item>
         <item>
-Klasör Senkronizasyonu, dosya aktarımları ve medya oynatmayı ön planda hizmet olarak çalıştırır, böylece ekran kapalıyken veya başka uygulamalar kullanırken bile güvenilir bir şekilde tamamlanır ve oynatmaya devam eder
+Klasör Senkronizasyonu, dosya aktarımları ve medya oynatmayı bir ön plan hizmeti olarak çalıştırır, böylece ekran kapalıyken veya başka uygulamalar kullanırken bile güvenilir bir şekilde tamamlanır ve oynatmaya devam eder
 </item>
         <item>
 Büyük dosya aktarımları ve medya oynatma sırasında CPU ve Wi-Fi\'yi aktif tutar, böylece ekran kapandığında bile güvenilir bir şekilde tamamlanır

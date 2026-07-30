@@ -7122,46 +7122,46 @@ Error de red. Comprueba tu conexión e inténtalo de nuevo.
 La autorización fue denegada o cancelada.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Acceso Elevado
 </string>
     <string name="shizuku_subtitle">
-Administrador de Shizuku
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 Unidad USB (restringido)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV restringe el acceso USB directo — usa Shizuku
+Fire TV restringe el acceso USB directo: usa Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-La política de seguridad de este dispositivo (SELinux) bloquea el acceso directo a las unidades USB montadas en /mnt/media_rw/. Para acceder al almacenamiento USB, instala y autoriza Shizuku, que proporciona los privilegios elevados necesarios para eludir esta restricción.
+La política de seguridad de este dispositivo (SELinux) bloquea el acceso directo a las unidades USB montadas en /mnt/media_rw/. Para acceder al almacenamiento USB, instala y autoriza Shizuku o Shevery, que proporcionan los privilegios elevados necesarios para evitar esta restricción.
 </string>
     <string name="opening_shizuku">
-Abriendo Shizuku…
+Abriendo Gestor de Elevación…
 </string>
     <string name="shizuku_status_label">
 Estado del servicio
 </string>
     <string name="shizuku_installed">
-Shizuku está instalado
+El Gestor de Elevación (Shizuku / Shevery) está instalado
 </string>
     <string name="shizuku_not_installed">
-Shizuku no está instalado
+El Gestor de Elevación no está instalado
 </string>
     <string name="shizuku_description">
-Shizuku permite a las aplicaciones usar APIs a nivel de sistema directamente, habilitando funciones avanzadas como la gestión de archivos en segundo plano y la ejecución de comandos del sistema sin necesidad de root en la mayoría de las versiones de Android.
+Shizuku y Shevery permiten que las aplicaciones usen APIs del sistema directamente, habilitando funciones avanzadas como la gestión de archivos en segundo plano y la ejecución de comandos del sistema sin necesidad de root en la mayoría de las versiones de Android.
 </string>
     <string name="shizuku_service_status">
 Estado del servicio
 </string>
     <string name="shizuku_service_running">
-El servicio de Shizuku está en ejecución
+El servicio de elevación está en ejecución
 </string>
     <string name="shizuku_service_not_running">
-El servicio de Shizuku no está en ejecución
+El servicio de elevación no está en ejecución
 </string>
     <string name="shizuku_btn_enable">
 Habilitar servicio
@@ -7173,59 +7173,69 @@ Autorizado
 No autorizado
 </string>
     <string name="shizuku_installed_msg">
-Shizuku está instalado y estará disponible para su uso.
+El Gestor de Elevación está instalado y estará disponible para su uso.
 </string>
     <string name="shizuku_download_hint">
-Puedes descargar la última versión de Shizuku desde su repositorio oficial de GitHub.
+Puedes descargar la última versión de Shizuku o Shevery desde sus repositorios oficiales de GitHub.
 </string>
     <string name="shizuku_download_link">
+Descargar Gestor
+</string>
+    <string name="shizuku_download_shizuku">
 Descargar Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+Descargar Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Descargar Shizuku
+Descargar Shizuku / Shevery
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku no está instalado en este dispositivo.\n
+El Gestor de Elevación (Shizuku o Shevery) no está instalado en este dispositivo.\n
 \n
-Visita la siguiente URL en tu teléfono o computadora para descargar el APK más reciente, luego instálalo en esta TV:\n
+Visita una de las siguientes URL en tu teléfono o computadora para descargar el APK más reciente y luego cárgalo en este televisor:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
-Copiar enlace
+Copiar enlaces
 </string>
     <string name="shizuku_link_copied">
-Enlace copiado al portapapeles
+Enlaces copiados al portapapeles
 </string>
     <string name="shizuku_auth_title">
-Autorizar Shizuku
+Autorizar Acceso Elevado
 </string>
     <string name="shizuku_auth_msg">
-UFM requiere autorización de Shizuku para realizar operaciones avanzadas de archivos. Por favor, concede permiso en el siguiente diálogo del sistema.
+UFM requiere autorización para realizar operaciones avanzadas de archivos. Por favor, concede permiso en el siguiente diálogo del sistema.
 </string>
     <string name="shizuku_btn_authorize">
 Autorizar
 </string>
     <string name="shizuku_btn_start_service">
-Habilitar Shizuku
+Habilitar Acceso Elevado
 </string>
     <string name="shizuku_starting_service">
-Iniciando servicio de Shizuku...
+Iniciando servicio de elevación...
 </string>
     <string name="shizuku_starting_msg">
-Intentando iniciar el servicio de Shizuku mediante intent de difusión. Espera…
+Intentando iniciar el servicio de elevación mediante intent de difusión. Por favor, espera…
 </string>
     <string name="shizuku_start_failed">
-Error al iniciar Shizuku. Asegúrate de que la depuración inalámbrica esté habilitada o inícialo manualmente.
+Error al iniciar el servicio. Asegúrate de que la depuración inalámbrica esté habilitada o inícialo manualmente.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku está habilitado y activo
+El Acceso Elevado está habilitado y activo
 </string>
     <string name="shizuku_adb_not_connected">
-ADB no está conectado. Conéctate mediante terminal ADB para habilitar Shizuku automáticamente.
+ADB no está conectado. Conéctate a través del Terminal ADB para habilitar el Acceso Elevado automáticamente.
 </string>
     <string name="shizuku_manager_open_error">
-No se pudo abrir el administrador de Shizuku. Primero instala la aplicación.
+No se pudo abrir el gestor. Instala Shizuku o Shevery primero.
 </string>
 
     <!-- Media Player errors -->

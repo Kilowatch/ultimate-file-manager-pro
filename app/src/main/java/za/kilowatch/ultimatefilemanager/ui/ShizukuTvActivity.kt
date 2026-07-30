@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.databinding.ActivityShizukuTvBinding
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
+import za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,11 +46,15 @@ class ShizukuTvActivity : AppCompatActivity() {
         updateShizukuStatus()
 
         binding.btnShizukuDownload.setOnClickListener {
-            showDownloadDialog()
+            showDownloadDialog("Shizuku")
+        }
+
+        binding.btnSheveryDownload.setOnClickListener {
+            showDownloadDialog("Shevery")
         }
 
         binding.btnShizukuEnable.setOnClickListener {
-            if (Shizuku.pingBinder()) {
+            if (ShizukuShellWrapper.tryBindShevery(this)) {
                 if (Shizuku.checkSelfPermission() != PackageManager.PERMISSION_GRANTED) {
                     showAuthDialog()
                 }
@@ -70,15 +75,30 @@ class ShizukuTvActivity : AppCompatActivity() {
 
         dialog.show()
 
-        val intent = android.content.Intent("moe.shizuku.privileged.api.START")
-        intent.component = android.content.ComponentName("moe.shizuku.privileged.api", "moe.shizuku.manager.receiver.ManualStartReceiver")
-        sendBroadcast(intent)
+        if (ShizukuShellWrapper.isSheveryInstalled(this)) {
+            try {
+                val intent = android.content.Intent("com.hamondev.shevery.START")
+                intent.component = android.content.ComponentName("com.hamondev.shevery", "com.hamondev.shevery.receiver.ManualStartReceiver")
+                sendBroadcast(intent)
+            } catch (e: Exception) {
+                try {
+                    val launchIntent = packageManager.getLaunchIntentForPackage(ShizukuShellWrapper.SHEVERY_PACKAGE)
+                    if (launchIntent != null) startActivity(launchIntent)
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
+            }
+        } else {
+            val intent = android.content.Intent("moe.shizuku.privileged.api.START")
+            intent.component = android.content.ComponentName("moe.shizuku.privileged.api", "moe.shizuku.manager.receiver.ManualStartReceiver")
+            sendBroadcast(intent)
+        }
         
         lifecycleScope.launch {
             delay(3000)
             dialog.dismiss()
             updateShizukuStatus()
-            if (!Shizuku.pingBinder()) {
+            if (!ShizukuShellWrapper.tryBindShevery(this@ShizukuTvActivity)) {
                 android.widget.Toast.makeText(this@ShizukuTvActivity, R.string.shizuku_start_failed, android.widget.Toast.LENGTH_LONG).show()
             }
         }
@@ -107,15 +127,26 @@ class ShizukuTvActivity : AppCompatActivity() {
         btnAuth.requestFocus()
     }
 
-    private fun showDownloadDialog() {
-        val url = "https://github.com/thedjchi/Shizuku/releases/latest"
+    private fun showDownloadDialog(manager: String = "All") {
+        val shizukuUrl = "https://github.com/thedjchi/Shizuku/releases/latest"
+        val sheveryUrl = "https://github.com/HmnDev-Tech/shevery/releases/latest"
         
         val dialogView = layoutInflater.inflate(R.layout.dialog_shizuku_download_tv, null)
         val txtMsg = dialogView.findViewById<android.widget.TextView>(R.id.txtDialogMsg)
         val btnCopy = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCopyLink)
         val btnClose = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnClose)
 
-        txtMsg.text = getString(R.string.shizuku_tv_download_msg, url)
+        val targetUrl = when (manager) {
+            "Shizuku" -> shizukuUrl
+            "Shevery" -> sheveryUrl
+            else -> "Shizuku: $shizukuUrl\nShevery: $sheveryUrl"
+        }
+
+        txtMsg.text = when (manager) {
+            "Shizuku" -> "Download Shizuku:\n\n$shizukuUrl"
+            "Shevery" -> "Download Shevery:\n\n$sheveryUrl"
+            else -> getString(R.string.shizuku_tv_download_msg, shizukuUrl, sheveryUrl)
+        }
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
@@ -123,7 +154,7 @@ class ShizukuTvActivity : AppCompatActivity() {
 
         btnCopy.setOnClickListener {
             val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-            val clip = android.content.ClipData.newPlainText("Shizuku Link", url)
+            val clip = android.content.ClipData.newPlainText("$manager Link", targetUrl)
             clipboard.setPrimaryClip(clip)
             android.widget.Toast.makeText(this, R.string.shizuku_link_copied, android.widget.Toast.LENGTH_SHORT).show()
         }
@@ -152,7 +183,8 @@ class ShizukuTvActivity : AppCompatActivity() {
         statusAnimator = null
         binding.txtShizukuStatus.alpha = 1f
 
-        if (isShizukuInstalled()) {
+        val isInstalled = isElevatedManagerInstalled()
+        if (isInstalled) {
             binding.txtShizukuStatus.text = getString(R.string.shizuku_installed)
             binding.txtShizukuStatus.setTextColor(getColor(R.color.shizuku_status_ok))
             binding.txtShizukuDescription.text = getString(R.string.shizuku_installed_msg)
@@ -160,12 +192,14 @@ class ShizukuTvActivity : AppCompatActivity() {
             
             binding.txtShizukuDownloadHint.visibility = View.GONE
             binding.btnShizukuDownload.visibility = View.GONE
+            binding.btnSheveryDownload.visibility = View.GONE
 
             // Service Status
             binding.txtShizukuServiceStatusLabel.visibility = View.VISIBLE
             binding.txtShizukuServiceStatus.visibility = View.VISIBLE
 
-            if (Shizuku.pingBinder()) {
+            val isBound = ShizukuShellWrapper.tryBindShevery(this)
+            if (isBound) {
                 if (Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED) {
                     binding.txtShizukuServiceStatus.text = getString(R.string.shizuku_authorized)
                     binding.txtShizukuServiceStatus.setTextColor(getColor(R.color.shizuku_status_ok))
@@ -198,6 +232,7 @@ class ShizukuTvActivity : AppCompatActivity() {
             
             binding.txtShizukuDownloadHint.visibility = View.VISIBLE
             binding.btnShizukuDownload.visibility = View.VISIBLE
+            binding.btnSheveryDownload.visibility = View.VISIBLE
 
             binding.txtShizukuServiceStatusLabel.visibility = View.GONE
             binding.txtShizukuServiceStatus.visibility = View.GONE
@@ -205,12 +240,7 @@ class ShizukuTvActivity : AppCompatActivity() {
         }
     }
 
-    private fun isShizukuInstalled(): Boolean {
-        return try {
-            packageManager.getPackageInfo("moe.shizuku.privileged.api", 0)
-            true
-        } catch (e: Exception) {
-            false
-        }
+    private fun isElevatedManagerInstalled(): Boolean {
+        return za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isElevatedManagerInstalled(this)
     }
 }

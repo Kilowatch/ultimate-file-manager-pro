@@ -7,8 +7,66 @@ import java.io.InputStreamReader
 
 object ShizukuShellWrapper {
 
-    fun isAuthorized(): Boolean {
+    const val SHIZUKU_PACKAGE = "moe.shizuku.privileged.api"
+    const val SHEVERY_PACKAGE = "com.hamondev.shevery"
+
+    fun isShizukuInstalled(context: android.content.Context): Boolean {
         return try {
+            context.packageManager.getPackageInfo(SHIZUKU_PACKAGE, 0)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun isSheveryInstalled(context: android.content.Context): Boolean {
+        return try {
+            context.packageManager.getPackageInfo(SHEVERY_PACKAGE, 0)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun isElevatedManagerInstalled(context: android.content.Context): Boolean {
+        return isShizukuInstalled(context) || isSheveryInstalled(context)
+    }
+
+    fun tryBindShevery(context: android.content.Context? = null): Boolean {
+        if (Shizuku.pingBinder()) return true
+        val ctx = context ?: try {
+            za.kilowatch.ultimatefilemanager.UfmApplication.instance
+        } catch (e: Exception) {
+            null
+        } ?: return false
+
+        return try {
+            val uri = android.net.Uri.parse("content://$SHEVERY_PACKAGE.shizukuprovider")
+            val reply = ctx.contentResolver.call(uri, "sendBinder", null, null)
+            val binder = reply?.getBinder("moe.shizuku.privileged.api.intent.extra.BINDER")
+                ?: reply?.getBinder("binder")
+            if (binder != null) {
+                try {
+                    val method = Shizuku::class.java.getDeclaredMethod("setProviderBinder", android.os.IBinder::class.java)
+                    method.isAccessible = true
+                    method.invoke(null, binder)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                Shizuku.pingBinder()
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun isAuthorized(context: android.content.Context? = null): Boolean {
+        return try {
+            if (!Shizuku.pingBinder()) {
+                tryBindShevery(context)
+            }
             Shizuku.pingBinder() && Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
         } catch (e: Exception) {
             false
@@ -30,7 +88,7 @@ object ShizukuShellWrapper {
     }
 
     /**
-     * Executes a shell command via Shizuku.
+     * Executes a shell command via Shizuku or Shevery.
      * Returns a pair of (exitCode, stdout_lines)
      */
     fun runCommand(cmd: String): Pair<Int, List<String>> {

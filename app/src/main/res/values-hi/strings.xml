@@ -7122,46 +7122,46 @@ Box को अधिकृत करें
 प्राधिकरण अस्वीकार या रद्द कर दिया गया।
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+उन्नत पहुंच
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB ड्राइव (प्रतिबंधित)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV सीधी USB पहुंच को प्रतिबंधित करता है — Shizuku का उपयोग करें
+Fire TV सीधे USB पहुंच को प्रतिबंधित करता है — Shizuku / Shevery का उपयोग करें
 </string>
     <string name="shizuku_usb_access_desc">
-इस डिवाइस की सुरक्षा नीति (SELinux) /mnt/media_rw/ पर माउंट किए गए USB ड्राइव्स तक सीधी पहुंच को अवरुद्ध करती है। USB स्टोरेज तक पहुंचने के लिए, Shizuku को इंस्टॉल और अधिकृत करें, जो इस प्रतिबंध को बायपास करने के लिए आवश्यक उन्नत विशेषाधिकार प्रदान करता है।
+इस डिवाइस की सुरक्षा नीति (SELinux) /mnt/media_rw/ पर माउंट की गई USB ड्राइव तक सीधी पहुंच को अवरुद्ध करती है। USB स्टोरेज तक पहुंचने के लिए, Shizuku या Shevery को स्थापित करें और अधिकृत करें, जो इस प्रतिबंध को दरकिनार करने के लिए आवश्यक उन्नत विशेषाधिकार प्रदान करता है।
 </string>
     <string name="opening_shizuku">
-Shizuku खोला जा रहा है…
+उन्नत प्रबंधक खोला जा रहा है…
 </string>
     <string name="shizuku_status_label">
 सेवा स्थिति
 </string>
     <string name="shizuku_installed">
-Shizuku इंस्टॉल है
+उन्नत प्रबंधक (Shizuku / Shevery) स्थापित है
 </string>
     <string name="shizuku_not_installed">
-Shizuku इंस्टॉल नहीं है
+उन्नत प्रबंधक स्थापित नहीं है
 </string>
     <string name="shizuku_description">
-Shizuku ऐप्स को सीधे सिस्टम-स्तरीय API का उपयोग करने की अनुमति देता है, जो अधिकांश Android संस्करणों पर रूट की आवश्यकता के बिना बैकग्राउंड फ़ाइल प्रबंधन और सिस्टम कमांड निष्पादन जैसी उन्नत सुविधाओं को सक्षम करता है।
+Shizuku और Shevery एप्लिकेशन को सीधे सिस्टम-स्तरीय API का उपयोग करने की अनुमति देते हैं, जिससे अधिकांश Android संस्करणों पर रूट की आवश्यकता के बिना बैकग्राउंड फ़ाइल प्रबंधन और सिस्टम कमांड निष्पादन जैसी उन्नत सुविधाएँ सक्षम होती हैं।
 </string>
     <string name="shizuku_service_status">
 सेवा स्थिति
 </string>
     <string name="shizuku_service_running">
-Shizuku सेवा चल रही है
+उन्नत सेवा चल रही है
 </string>
     <string name="shizuku_service_not_running">
-Shizuku सेवा नहीं चल रही है
+उन्नत सेवा नहीं चल रही है
 </string>
     <string name="shizuku_btn_enable">
 सेवा सक्षम करें
@@ -7173,59 +7173,69 @@ Shizuku सेवा नहीं चल रही है
 अधिकृत नहीं
 </string>
     <string name="shizuku_installed_msg">
-Shizuku इंस्टॉल है और उपयोग के लिए उपलब्ध होगा।
+उन्नत प्रबंधक स्थापित है और उपयोग के लिए उपलब्ध होगा।
 </string>
     <string name="shizuku_download_hint">
-आप Shizuku का नवीनतम संस्करण इसके आधिकारिक GitHub रिपॉजिटरी से डाउनलोड कर सकते हैं।
+आप Shizuku या Shevery का नवीनतम संस्करण उनके आधिकारिक GitHub रिपॉजिटरी से डाउनलोड कर सकते हैं।
 </string>
     <string name="shizuku_download_link">
+डाउनलोड प्रबंधक
+</string>
+    <string name="shizuku_download_shizuku">
 Shizuku डाउनलोड करें
+</string>
+    <string name="shizuku_download_shevery">
+Shevery डाउनलोड करें
 </string>
     <string name="shizuku_tv_download_title">
-Shizuku डाउनलोड करें
+Shizuku / Shevery डाउनलोड करें
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku इस डिवाइस पर इंस्टॉल नहीं है।\n
+इस डिवाइस पर उन्नत प्रबंधक (Shizuku या Shevery) स्थापित नहीं है।\n
 \n
-कृपया नवीनतम APK डाउनलोड करने के लिए अपने फ़ोन या कंप्यूटर पर निम्न URL पर जाएं, फिर इसे इस TV पर साइडलोड करें:\n
+कृपया नवीनतम APK डाउनलोड करने के लिए अपने फ़ोन या कंप्यूटर पर निम्नलिखित URL में से किसी एक पर जाएँ, फिर इसे इस TV पर साइडलोड करें:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
 लिंक कॉपी करें
 </string>
     <string name="shizuku_link_copied">
-लिंक क्लिपबोर्ड पर कॉपी किया गया
+लिंक क्लिपबोर्ड पर कॉपी हो गए
 </string>
     <string name="shizuku_auth_title">
-Shizuku को अधिकृत करें
+उन्नत पहुंच को अधिकृत करें
 </string>
     <string name="shizuku_auth_msg">
-UFM को उन्नत फ़ाइल संचालन करने के लिए Shizuku प्राधिकरण की आवश्यकता है। कृपया निम्नलिखित सिस्टम डायलॉग में अनुमति दें।
+UFM को उन्नत फ़ाइल संचालन करने के लिए प्राधिकरण की आवश्यकता है। कृपया निम्नलिखित सिस्टम डायलॉग में अनुमति दें।
 </string>
     <string name="shizuku_btn_authorize">
 अधिकृत करें
 </string>
     <string name="shizuku_btn_start_service">
-Shizuku सक्षम करें
+उन्नत पहुंच सक्षम करें
 </string>
     <string name="shizuku_starting_service">
-Shizuku सेवा प्रारंभ हो रही है...
+उन्नत सेवा प्रारंभ की जा रही है…
 </string>
     <string name="shizuku_starting_msg">
-ब्रॉडकास्ट इंटेंट के माध्यम से Shizuku सेवा प्रारंभ करने का प्रयास। कृपया प्रतीक्षा करें…
+ब्रॉडकास्ट इंटेंट के माध्यम से उन्नत सेवा प्रारंभ करने का प्रयास किया जा रहा है। कृपया प्रतीक्षा करें…
 </string>
     <string name="shizuku_start_failed">
-Shizuku प्रारंभ करने में विफल। कृपया सुनिश्चित करें कि वायरलेस डिबगिंग सक्षम है या इसे मैन्युअल रूप से प्रारंभ करें।
+सेवा प्रारंभ करने में विफल। कृपया सुनिश्चित करें कि वायरलेस डीबगिंग सक्षम है या इसे मैन्युअल रूप से प्रारंभ करें।
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku सक्षम और सक्रिय है
+उन्नत पहुंच सक्षम और सक्रिय है
 </string>
     <string name="shizuku_adb_not_connected">
-ADB कनेक्ट नहीं है। Shizuku को स्वचालित रूप से सक्षम करने के लिए ADB टर्मिनल के माध्यम से कनेक्ट करें।
+ADB कनेक्ट नहीं है। उन्नत पहुंच को स्वचालित रूप से सक्षम करने के लिए ADB टर्मिनल के माध्यम से कनेक्ट करें।
 </string>
     <string name="shizuku_manager_open_error">
-Shizuku मैनेजर नहीं खोल सका। कृपया पहले ऐप इंस्टॉल करें।
+प्रबंधक नहीं खोला जा सका। कृपया पहले Shizuku या Shevery स्थापित करें।
 </string>
 
     <!-- Media Player errors -->

@@ -7122,46 +7122,46 @@ Box — сеанс завершено
 Авторизацію відхилено або скасовано.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Розширений доступ
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB-накопичувач (обмежений)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV обмежує прямий доступ до USB — використовуйте Shizuku
+Fire TV обмежує прямий доступ до USB — використовуйте Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-Політика безпеки цього пристрою (SELinux) блокує прямий доступ до USB-накопичувачів, підключених до /mnt/media_rw/. Щоб отримати доступ до USB-сховища, встановіть та авторизуйте Shizuku, який надає підвищені привілеї для обходу цього обмеження.
+Політика безпеки цього пристрою (SELinux) блокує прямий доступ до USB-накопичувачів, змонтованих у /mnt/media_rw/. Щоб отримати доступ до USB-накопичувача, встановіть та авторизуйте Shizuku або Shevery, які надають необхідні розширені права для обходу цього обмеження.
 </string>
     <string name="opening_shizuku">
-Відкриття Shizuku…
+Відкриття розширеного менеджера…
 </string>
     <string name="shizuku_status_label">
 Стан служби
 </string>
     <string name="shizuku_installed">
-Shizuku встановлено
+Розширений менеджер (Shizuku / Shevery) встановлено
 </string>
     <string name="shizuku_not_installed">
-Shizuku не встановлено
+Розширений менеджер не встановлено
 </string>
     <string name="shizuku_description">
-Shizuku дозволяє додаткам безпосередньо використовувати системні API, що забезпечує розширені функції, такі як фонове керування файлами та виконання системних команд без root на більшості версій Android.
+Shizuku та Shevery дозволяють додаткам використовувати системні API безпосередньо, що дає змогу використовувати розширені функції, такі як фонове керування файлами та виконання системних команд, без необхідності root на більшості версій Android.
 </string>
     <string name="shizuku_service_status">
 Стан служби
 </string>
     <string name="shizuku_service_running">
-Служба Shizuku працює
+Розширений сервіс працює
 </string>
     <string name="shizuku_service_not_running">
-Служба Shizuku не працює
+Розширений сервіс не працює
 </string>
     <string name="shizuku_btn_enable">
 Увімкнути службу
@@ -7173,23 +7173,33 @@ Shizuku дозволяє додаткам безпосередньо викор�
 Не авторизовано
 </string>
     <string name="shizuku_installed_msg">
-Shizuku встановлено та буде доступний для використання.
+Розширений менеджер встановлено і буде доступний для використання.
 </string>
     <string name="shizuku_download_hint">
-Ви можете завантажити останню версію Shizuku з офіційного репозиторію GitHub.
+Ви можете завантажити останню версію Shizuku або Shevery з їхніх офіційних репозиторіїв GitHub.
 </string>
     <string name="shizuku_download_link">
+Менеджер завантажень
+</string>
+    <string name="shizuku_download_shizuku">
 Завантажити Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+Завантажити Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Завантажити Shizuku
+Завантажити Shizuku / Shevery
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku не встановлено на цьому пристрої.\n
+Розширений менеджер (Shizuku або Shevery) не встановлено на цьому пристрої.\n
 \n
-Будь ласка, відвідайте наступну URL-адресу на телефоні або комп\\\'ютері, щоб завантажити останній APK, а потім завантажте його на цей телевізор:\n
+Відвідайте одне з наведених посилань на телефоні або комп\'ютері, щоб завантажити останню версію APK, а потім встановіть його на цей телевізор:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
 Копіювати посилання
@@ -7198,34 +7208,34 @@ Shizuku не встановлено на цьому пристрої.\n
 Посилання скопійовано в буфер обміну
 </string>
     <string name="shizuku_auth_title">
-Авторизувати Shizuku
+Авторизувати розширений доступ
 </string>
     <string name="shizuku_auth_msg">
-UFM вимагає авторизації Shizuku для виконання розширених операцій з файлами. Будь ласка, надайте дозвіл у наступному системному діалозі.
+UFM вимагає авторизації для виконання розширених операцій з файлами. Надайте дозвіл у наступному системному діалозі.
 </string>
     <string name="shizuku_btn_authorize">
 Авторизувати
 </string>
     <string name="shizuku_btn_start_service">
-Увімкнути Shizuku
+Увімкнути розширений доступ
 </string>
     <string name="shizuku_starting_service">
-Запуск служби Shizuku...
+Запуск розширеного сервісу...
 </string>
     <string name="shizuku_starting_msg">
-Спроба запустити службу Shizuku через широкомовний намір. Зачекайте…
+Спроба запустити розширений сервіс через broadcast intent. Зачекайте...
 </string>
     <string name="shizuku_start_failed">
-Не вдалося запустити Shizuku. Переконайтеся, що бездротове налагодження увімкнено, або запустіть вручну.
+Не вдалося запустити сервіс. Переконайтеся, що безпроводове налагодження ввімкнено, або запустіть його вручну.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku увімкнено та працює
+Розширений доступ увімкнено та активний
 </string>
     <string name="shizuku_adb_not_connected">
-ADB не підключено. Підключіться через термінал ADB, щоб увімкнути Shizuku автоматично.
+ADB не підключено. Підключіться через ADB Terminal, щоб автоматично ввімкнути розширений доступ.
 </string>
     <string name="shizuku_manager_open_error">
-Не вдалося відкрити менеджер Shizuku. Спочатку встановіть додаток.
+Не вдалося відкрити менеджер. Спочатку встановіть Shizuku або Shevery.
 </string>
 
     <!-- Media Player errors -->

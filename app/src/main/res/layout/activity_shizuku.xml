@@ -172,23 +172,54 @@
                     android:visibility="gone"
                     android:text="@string/shizuku_download_hint" />
 
-                <TextView
-                    android:id="@+id/btnShizukuDownload"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/ufm_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    android:text="@string/shizuku_download_link"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnShizukuDownload"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:text="@string/shizuku_download_shizuku"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/ufm_primary"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_direction_download"
+                        app:iconTint="@color/white"
+                        app:iconGravity="textStart"
+                        app:iconPadding="6dp"
+                        app:elevation="2dp"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSheveryDownload"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="0dp"
+                        android:layout_height="52dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:text="@string/shizuku_download_shevery"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:textAllCaps="false"
+                        app:backgroundTint="#0284C7"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_direction_download"
+                        app:iconTint="@color/white"
+                        app:iconGravity="textStart"
+                        app:iconPadding="6dp"
+                        app:elevation="2dp"
+                        android:visibility="gone" />
+                </LinearLayout>
 
             </LinearLayout>
 

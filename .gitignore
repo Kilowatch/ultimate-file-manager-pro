@@ -19,6 +19,7 @@ app/.cxx/
 *.aab
 *.dex
 *.class
+.agents/
 
 # ── Android Studio / IntelliJ IDEA ───────────────────────────
 /.idea/caches/

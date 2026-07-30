@@ -174,67 +174,67 @@ Dengan menggunakan Ultimate File Manager Pro, Anda menegaskan bahwa Anda telah m
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-File Browser — jelajahi, salin, pindahkan, ubah nama, dan hapus file di mana saja di perangkat Anda.
+Penjelajah Berkas — jelajahi, salin, pindahkan, ubah nama, dan hapus berkas di mana saja di perangkat Anda.
 </item>
         <item>
-Encrypted Vault — kunci file sensitif dengan enkripsi AES-256-GCM menggunakan PIN Anda sendiri.
+Brankas Terenkripsi — kunci berkas sensitif di balik enkripsi AES-256-GCM dengan PIN Anda sendiri.
 </item>
         <item>
-File Server — host server FTP atau SFTP aman langsung di perangkat Anda untuk berbagi file di jaringan lokal Anda.
+Server Berkas — host server FTP atau SFTP aman langsung di perangkat Anda untuk berbagi berkas di jaringan lokal.
 </item>
         <item>
-Remote Management — kelola file melalui Wi-Fi lokal Anda melalui server HTTP bawaan yang mendukung unggah, unduh, dan instal APK dari jarak jauh.
+Manajemen Jarak Jauh — kelola berkas melalui Wi-Fi lokal via server HTTP bawaan yang mendukung unggah, unduh, dan instal APK jarak jauh.
 </item>
         <item>
-Network Shares — terhubung ke server SMB, FTP, dan NFS di jaringan lokal Anda untuk menjelajah, mengunduh, dan mengelola file jarak jauh.
+Berbagi Jaringan — hubungkan ke server SMB, FTP, dan NFS di jaringan lokal untuk menjelajahi, mengunduh, dan mengelola berkas jarak jauh.
 </item>
         <item>
-Folder Sync — cadangkan folder ponsel lokal secara otomatis ke share jaringan SMB atau FTP sesuai jadwal yang Anda pilih (interval atau waktu tertentu setiap hari, mingguan, atau bulanan).
+Sinkronisasi Folder — cadangkan folder telepon lokal secara otomatis ke berbagi jaringan SMB atau FTP sesuai jadwal yang Anda pilih (interval atau waktu tertentu harian, mingguan, atau bulanan).
 </item>
         <item>
-Device Pairing — pasangkan ponsel Anda dengan Android TV melalui Wi-Fi lokal untuk mentransfer dan menginstal file.
+Pemasangan Perangkat — pasangkan ponsel dan Android TV Anda melalui Wi-Fi lokal untuk mentransfer dan menginstal berkas.
 </item>
         <item>
-ADB Terminal — hubungkan ke perangkat Android dalam Mode Pengembang melalui Wi-Fi lokal menggunakan ADB (Android Debug Bridge) untuk akses shell langsung dan pemecahan masalah lanjutan.
+Terminal ADB — hubungkan ke perangkat Android dalam Mode Pengembang melalui Wi-Fi lokal menggunakan ADB (Android Debug Bridge) untuk akses shell langsung dan pemecahan masalah tingkat lanjut.
 </item>
         <item>
-Pemirsa Bawaan — lihat file teks, PDF, gambar animasi (APNG, GIF, WebP animasi, SVG, dan lainnya), arsip, dan format lainnya langsung di dalam aplikasi.
+Penampil Bawaan — lihat berkas teks, PDF, gambar animasi (APNG, GIF, WebP animasi, SVG dan lainnya), arsip, dan format lainnya langsung di dalam aplikasi.
 </item>
         <item>
-Dukungan ZIP Lanjutan — buat dan ekstrak arsip ZIP yang dilindungi kata sandi dan dienkripsi AES.
+Dukungan ZIP Lanjutan — buat dan ekstrak arsip ZIP yang dilindungi kata sandi dan terenkripsi AES.
 </item>
         <item>
-Remote Screenshots — ambil layar Android TV yang dipasangkan melalui Wi-Fi lokal via ADB dan simpan langsung ke penyimpanan ponsel Anda.
+Tangkapan Layar Jarak Jauh — ambil tangkapan layar Android TV yang dipasangkan melalui Wi-Fi lokal via ADB dan simpan langsung ke penyimpanan ponsel Anda.
 </item>
         <item>
 Dukungan Arsip 7Z — ekstrak arsip 7Z dengan kompresi LZMA/LZMA2.
 </item>
         <item>
-File Search — temukan file dan folder dengan cepat di seluruh penyimpanan perangkat Anda.
+Pencarian Berkas — temukan berkas dan folder dengan cepat di seluruh penyimpanan perangkat.
 </item>
         <item>
-Storage Analyser — lihat rincian visual tentang apa yang menggunakan ruang penyimpanan Anda.
+Analis Penyimpanan — lihat rincian visual tentang apa yang menggunakan ruang penyimpanan Anda.
 </item>
         <item>
-App Manager — lihat dan kelola semua aplikasi yang terinstal di perangkat Anda, dengan rekomendasi debloat untuk aplikasi pra-instal.
+Manajer Aplikasi — lihat dan kelola semua aplikasi yang terinstal di perangkat Anda, dengan rekomendasi debloat untuk aplikasi pra-instal.
 </item>
         <item>
-APK Installer — instal aplikasi Android dan APK split (XAPK) langsung dari file yang disimpan secara lokal.
+Pemasang APK — instal aplikasi Android dan APK terpisah (XAPK) langsung dari berkas yang disimpan secara lokal.
 </item>
         <item>
-Elevated Access (Shizuku &amp; ADB) — dapatkan akses seperti root untuk mengelola file sistem dan direktori terbatas tanpa benar-benar me-root perangkat Anda.
+Akses Ditinggikan (Shizuku, Shevery &amp; ADB) — dapatkan akses seperti root untuk mengelola berkas sistem dan direktori terbatas tanpa benar-benar me-root perangkat Anda.
 </item>
         <item>
-Storage Indexer — buat indeks lokal metadata file untuk pencarian instan dan penjelajahan yang sangat cepat.
+Pengindeks Penyimpanan — buat indeks lokal metadata berkas untuk pencarian instan dan penjelajahan yang sangat cepat.
 </item>
         <item>
-Storage Access Framework — aplikasi lain dapat mengakses file Anda melalui penyedia dokumen UFM.
+Kerangka Akses Penyimpanan — aplikasi lain dapat mengakses berkas Anda melalui penyedia dokumen UFM.
 </item>
         <item>
 Tip Jar — pembelian satu kali opsional untuk mendukung pengembang; aplikasi selalu gratis tanpa memberi tip.
 </item>
         <item>
-UFM Media Player — mainkan file audio dan video dengan pemutaran latar belakang, kontrol notifikasi, mode Picture-in-Picture, dan manajemen daftar putar.
+Pemutar Media UFM — putar berkas audio dan video dengan pemutaran latar belakang, kontrol notifikasi, mode Picture-in-Picture, dan manajemen daftar putar.
 </item>
     </string-array>
 
@@ -244,19 +244,19 @@ UFM Media Player — mainkan file audio dan video dengan pemutaran latar belakan
 Kehilangan Data
 </item>
         <item>
-PIN Vault
+PIN Brankas
 </item>
         <item>
-File APK
+Berkas APK
 </item>
         <item>
-Keamanan File Server
+Keamanan Server Berkas
 </item>
         <item>
-Kredensial Share Jaringan
+Kredensial Berbagi Jaringan
 </item>
         <item>
-Folder Sync
+Sinkronisasi Folder
 </item>
         <item>
 Penghapusan Aplikasi Sistem
@@ -265,13 +265,13 @@ Penghapusan Aplikasi Sistem
 Pemasangan ADB
 </item>
         <item>
-Shizuku &amp; Akses Tinggi
+Shizuku, Shevery &amp; Akses Ditinggikan
 </item>
         <item>
 Tangkapan Layar TV
 </item>
         <item>
-Akurasi Indexer
+Akurasi Pengindeks
 </item>
         <item>
 Bug &amp; Kesalahan
@@ -282,96 +282,96 @@ Tanggung Jawab Kami
     </string-array>
     <string-array name="tc_risk_details">
         <item>
-Kami tidak dapat menjamin nol kehilangan data. Selalu buat cadangan file yang penting bagi Anda.
+Kami tidak dapat menjamin tidak ada kehilangan data. Selalu buat cadangan berkas yang penting bagi Anda.
 </item>
         <item>
-Jika Anda lupa PIN dan Kode Pemulihan, file terenkripsi Anda tidak dapat dipulihkan — oleh siapa pun.
+Jika Anda lupa PIN dan Kode Pemulihan, berkas terenkripsi Anda tidak dapat dipulihkan — oleh siapa pun.
 </item>
         <item>
-Menginstal APK dari sumber tidak dikenal membawa risiko keamanan. Anda bertanggung jawab penuh atas file APK yang Anda instal.
+Memasang APK dari sumber tidak dikenal membawa risiko keamanan. Anda bertanggung jawab penuh atas berkas APK yang Anda instal.
 </item>
         <item>
-Saat menghosting File Server, koneksi FTP mentransmisikan data dan kredensial dalam teks biasa. Selalu gunakan SFTP jika Anda memerlukan transfer aman dan terenkripsi.
+Saat menjadi host Server Berkas, koneksi FTP mentransmisikan data dan kredensial dalam teks biasa. Selalu gunakan SFTP jika Anda memerlukan transfer aman dan terenkripsi.
 </item>
         <item>
-Kredensial share jaringan Anda (host, nama pengguna, kata sandi) disimpan secara lokal di perangkat Anda. Anda bertanggung jawab untuk menjaga keamanan perangkat Anda.
+Kredensial berbagi jaringan Anda (host, nama pengguna, kata sandi) disimpan secara lokal di perangkat Anda. Anda bertanggung jawab menjaga keamanan perangkat Anda.
 </item>
         <item>
-Operasi sinkronisasi berjalan di latar belakang dan dapat menghabiskan baterai dan data. Selalu verifikasi jalur jarak jauh Anda sebelum mengaktifkan sinkronisasi — menyinkronkan ke folder yang salah dapat menimpa file di share jaringan Anda.
+Operasi sinkronisasi berjalan di latar belakang dan dapat menghabiskan baterai dan data. Selalu verifikasi jalur jarak jauh Anda sebelum mengaktifkan sinkronisasi — menyinkronkan ke folder yang salah dapat menimpa berkas di berbagi jaringan Anda.
 </item>
         <item>
-Menghapus aplikasi sistem berdasarkan rekomendasi debloat dapat mempengaruhi stabilitas perangkat. Lakukan dengan hati-hati.
+Menghapus aplikasi sistem berdasarkan rekomendasi debloat dapat memengaruhi stabilitas perangkat. Lakukan dengan hati-hati.
 </item>
         <item>
-Pemasangan ADB memerlukan pertukaran sertifikat antara perangkat Anda dan perangkat target melalui Wi-Fi lokal Anda. Hanya terhubung ke perangkat yang Anda miliki atau memiliki izin untuk mengakses. Siapa pun di jaringan Anda yang menangkap PIN pemasangan Anda dapat mengakses perangkat Anda — jaga kerahasiaan PIN ini.
+Pemasangan ADB memerlukan pertukaran sertifikat antara perangkat Anda dan perangkat target melalui Wi-Fi lokal. Hanya hubungkan ke perangkat yang Anda miliki atau memiliki izin untuk mengakses. Siapa pun di jaringan Anda yang menangkap PIN pemasangan Anda dapat mengakses perangkat Anda — jaga kerahasiaan PIN ini.
 </item>
         <item>
-Menggunakan Shizuku atau ADB untuk akses yang ditinggikan memungkinkan aplikasi memodifikasi file yang dilindungi sistem. Penyalahgunaan fitur ini dapat mempengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.
+Menggunakan Shizuku, Shevery, atau ADB untuk akses ditinggikan memungkinkan aplikasi memodifikasi berkas yang dilindungi sistem. Penyalahgunaan fitur-fitur ini dapat memengaruhi stabilitas atau keamanan perangkat. Gunakan dengan hati-hati dan hanya berikan akses ke aplikasi ini.
 </item>
         <item>
-Tangkapan layar TV yang dipasangkan ditangkap melalui ADB di jaringan lokal Anda dan disimpan langsung ke penyimpanan ponsel Anda. Kami tidak mentransmisikan, melihat, atau mengunggah tangkapan layar Anda. Pastikan Anda hanya menangkap layar pada perangkat yang Anda miliki atau memiliki izin untuk mengakses.
+Tangkapan layar TV yang dipasangkan diambil melalui ADB di jaringan lokal Anda dan disimpan langsung ke penyimpanan ponsel Anda. Kami tidak mentransmisikan, melihat, atau mengunggah tangkapan layar Anda. Pastikan Anda hanya mengambil tangkapan layar pada perangkat yang Anda miliki atau memiliki izin untuk mengakses.
 </item>
         <item>
-Indeks mencerminkan status penyimpanan Anda saat pemindaian. Anda mungkin perlu menyegarkan indeks jika file diubah oleh aplikasi lain.
+Indeks mencerminkan status penyimpanan Anda pada saat pemindaian. Anda mungkin perlu menyegarkan indeks jika berkas diubah oleh aplikasi lain.
 </item>
         <item>
-Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjamin aplikasi akan selalu bebas dari kesalahan atau tanpa gangguan.
+Tidak ada perangkat lunak yang sempurna. Kami tidak dapat menjamin aplikasi akan selalu bebas kesalahan atau tidak terputus.
 </item>
         <item>
-Total tanggung jawab kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau kehilangan keuntungan yang timbul dari fitur gratis.
+Total tanggung jawab kami dibatasi pada jumlah total yang Anda bayarkan untuk pembelian dalam aplikasi dalam 30 hari sebelum klaim. Kami tidak bertanggung jawab atas kehilangan data, kerusakan perangkat, atau kerugian keuntungan yang timbul dari fitur gratis.
 </item>
     </string-array>
 
     <!-- Responsibilities list (Section 4) -->
     <string-array name="tc_responsibilities">
         <item>
-Buat cadangan rutin file penting sebelum melakukan operasi massal.
+Buat cadangan rutin berkas penting sebelum melakukan operasi massal.
 </item>
         <item>
-Simpan PIN Vault dan Kode Pemulihan Anda di tempat yang aman — kami tidak dapat mengambilnya untuk Anda.
+Simpan PIN Brankas dan Kode Pemulihan Anda di tempat yang aman — kami tidak dapat mengambilnya untuk Anda.
 </item>
         <item>
-Jaga kerahasiaan PIN Anda. Siapa pun yang mengetahuinya dapat mengakses Vault Anda.
+Jaga kerahasiaan PIN Anda. Siapa pun yang mengetahuinya dapat mengakses Brankas Anda.
 </item>
         <item>
-Jaga keamanan kredensial share jaringan Anda — kredensial tersebut disimpan secara lokal di perangkat Anda.
+Jaga keamanan kredensial berbagi jaringan Anda — kredensial disimpan secara lokal di perangkat Anda.
 </item>
         <item>
-Tinjau jalur jarak jauh Folder Sync Anda dengan hati-hati — menyinkronkan ke folder jaringan yang salah dapat menimpa file yang ada.
+Tinjau jalur jarak jauh Sinkronisasi Folder Anda dengan cermat — menyinkronkan ke folder jaringan yang salah dapat menimpa berkas yang ada.
 </item>
         <item>
 Berhati-hatilah saat menghapus aplikasi sistem berdasarkan rekomendasi debloat.
 </item>
         <item>
-Hanya terhubung melalui ADB Terminal ke perangkat yang Anda miliki atau memiliki izin eksplisit untuk mengakses. Jangan gunakan ADB Terminal untuk mendapatkan akses tidak sah ke perangkat apa pun.
+Hanya hubungkan melalui Terminal ADB ke perangkat yang Anda miliki atau memiliki izin eksplisit untuk mengakses. Jangan gunakan Terminal ADB untuk mendapatkan akses tidak sah ke perangkat apa pun.
 </item>
         <item>
-Jaga kerahasiaan PIN pemasangan ADB atau Shizuku — bagikan ini hanya dengan orang yang Anda percaya memiliki akses ke perangkat Anda.
+Jaga kerahasiaan PIN pemasangan ADB, Shizuku, atau Shevery — bagikan hanya dengan orang yang Anda percayai memiliki akses ke perangkat Anda.
 </item>
         <item>
-Amankan Shizuku Manager Anda — memberikan akses tinggi UFM melalui Shizuku memberinya kekuasaan atas file yang dibatasi. Hanya berikan akses ini jika Anda mempercayai aplikasi.
+Amankan Shizuku atau Shevery Manager Anda — memberikan akses ditinggikan ke UFM melalui Shizuku atau Shevery memberinya kekuasaan atas berkas terbatas. Hanya berikan akses ini jika Anda mempercayai aplikasi.
 </item>
         <item>
-Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, berbagi, atau mendistribusikan konten ilegal.
+Hanya gunakan aplikasi untuk tujuan yang sah. Jangan menyimpan, membagikan, atau mendistribusikan konten ilegal.
 </item>
         <item>
-Jangan gunakan Remote Management untuk mengakses perangkat orang lain tanpa izin mereka.
+Jangan gunakan Manajemen Jarak Jauh untuk mengakses perangkat orang lain tanpa izin mereka.
 </item>
         <item>
-Jangan mencoba merekayasa balik, mendekompilasi, atau merusak aplikasi.
+Jangan mencoba melakukan rekayasa balik, mendekompilasi, atau mengutak-atik aplikasi.
 </item>
         <item>
-Kelola catatan yang diindeks secara bertanggung jawab — Anda dapat menghapus catatan atau mengabaikan drive tertentu kapan saja melalui Pengaturan -> Storage Indexer.
+Kelola catatan terindeks Anda secara bertanggung jawab — Anda dapat menghapus catatan atau mengabaikan drive tertentu kapan saja melalui Pengaturan -> Pengindeks Penyimpanan.
 </item>
         <item>
-Verifikasi keaslian dan keamanan file APK sebelum menginstalnya.
+Verifikasi keaslian dan keamanan berkas APK sebelum menginstalnya.
 </item>
     </string-array>
 
     <!-- Permissions table (Section 5) — label|detail pairs -->
     <string-array name="tc_permission_labels">
         <item>
-Akses Semua File
+Akses Semua Berkas
 </item>
         <item>
 Akses Media
@@ -395,16 +395,16 @@ Kueri Paket
 Instal Paket
 </item>
         <item>
-Penagihan
+Tagihan
 </item>
         <item>
 ADB Debug Bridge
 </item>
         <item>
-Akses Tinggi (Shizuku)
+Akses Ditinggikan (Shizuku &amp; Shevery)
 </item>
         <item>
-Mulai Boot
+Mulai Saat Boot
 </item>
         <item>
 Optimasi Baterai
@@ -416,7 +416,7 @@ Layanan Latar Depan
 Wake Lock
 </item>
         <item>
-Storage Indexer
+Pengindeks Penyimpanan
 </item>
         <item>
 Bluetooth
@@ -427,52 +427,52 @@ Getar
     </string-array>
     <string-array name="tc_permission_details">
         <item>
-Penting untuk menjelajah, menyalin, memindahkan, dan menghapus file di seluruh penyimpanan Anda.
+Penting untuk menjelajahi, menyalin, memindahkan, dan menghapus berkas di seluruh penyimpanan Anda.
 </item>
         <item>
-Diperlukan untuk mengatur dan mengelola foto, video, dan file audio Anda.
+Diperlukan untuk mengatur dan mengelola foto, video, dan berkas audio Anda.
 </item>
         <item>
-Digunakan untuk memberi tahu Anda saat operasi file selesai atau saat penyimpanan hampir habis.
+Digunakan untuk memberi tahu Anda saat operasi berkas selesai atau saat penyimpanan hampir penuh.
 </item>
         <item>
-Mendukung manajemen file jarak jauh, akses share jaringan (SMB/FTP/SFTP/SCP/NFS), sinkronisasi folder, pemasangan perangkat, dan akses terminal ADB di jaringan lokal Anda. Penemuan jaringan memindai perangkat di subnet lokal Anda (hingga 254 IP) pada port ADB 5555, 5037, dan 5038 untuk menemukan perangkat yang mendukung ADB.
+Mendukung manajemen berkas jarak jauh, akses berbagi jaringan (SMB/FTP/SFTP/SCP/NFS), sinkronisasi folder, pemasangan perangkat, dan akses terminal ADB di jaringan lokal Anda. Penemuan jaringan memindai perangkat di subnet lokal Anda (hingga 254 IP) pada port ADB 5555, 5037, dan 5038 untuk menemukan perangkat yang mendukung ADB.
 </item>
         <item>
 Digunakan untuk penemuan perangkat jaringan lokal (NSD/mDNS) saat memasangkan perangkat.
 </item>
         <item>
-Mendeteksi koneksi VPN selama Remote Management dan akses share jaringan.
+Mendeteksi koneksi VPN selama Manajemen Jarak Jauh dan akses berbagi jaringan.
 </item>
         <item>
-Memungkinkan App Manager mendaftar semua aplikasi yang terinstal di perangkat Anda. Data yang diakses meliputi: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, serta apakah setiap aplikasi adalah aplikasi sistem atau yang diinstal pengguna. Informasi ini digunakan secara eksklusif di perangkat untuk menampilkan App Manager, menghitung penyimpanan per aplikasi, dan mencocokkan nama paket dengan daftar referensi debloat yang tersedia untuk umum yang diunduh dan di-cache secara lokal. Tidak ada data aplikasi yang diinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
+Memungkinkan Manajer Aplikasi mendaftar semua aplikasi yang terinstal di perangkat Anda. Data yang diakses meliputi: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu instalasi dan pembaruan, serta apakah setiap aplikasi adalah aplikasi sistem atau yang diinstal pengguna. Informasi ini digunakan secara eksklusif di perangkat untuk menampilkan Manajer Aplikasi, menghitung penyimpanan per aplikasi, dan mencocokkan nama paket dengan daftar referensi debloat yang tersedia untuk umum yang diunduh dan di-cache secara lokal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan ke server KiloWatch atau pihak ketiga mana pun.
 </item>
         <item>
-Diperlukan untuk menginstal file APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.
+Diperlukan untuk menginstal berkas APK yang Anda pilih untuk dijalankan dari penyimpanan lokal.
 </item>
         <item>
 Memproses pembelian Tip Jar opsional melalui Google Play.
 </item>
         <item>
-Memungkinkan koneksi aman ke perangkat Android untuk akses shell lanjutan. Menghasilkan sertifikat RSA unik di perangkat Anda untuk pemasangan; tidak ada sertifikat yang dikirimkan ke server eksternal.
+Memungkinkan koneksi aman ke perangkat Android untuk akses shell tingkat lanjut. Menghasilkan sertifikat RSA unik di perangkat Anda untuk pemasangan; tidak ada sertifikat yang dikirimkan ke server eksternal.
 </item>
         <item>
-Memungkinkan aplikasi menggunakan API Shizuku (termasuk Secure Settings) untuk mengelola file di direktori sistem terbatas tanpa rooting.
+Memungkinkan aplikasi menggunakan API Shizuku / Shevery (termasuk Secure Settings) untuk mengelola berkas di direktori sistem terbatas tanpa root.
 </item>
         <item>
-Memungkinkan layanan Shizuku dimulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.
+Memungkinkan layanan Shizuku dan Shevery mulai secara otomatis saat perangkat Anda boot untuk memastikan ketersediaan segera.
 </item>
         <item>
-Memungkinkan Anda memilih untuk menjaga layanan Shizuku tetap aktif di latar belakang untuk kinerja yang andal.
+Memungkinkan Anda memilih untuk menjaga layanan Shizuku dan Shevery tetap aktif di latar belakang untuk kinerja yang andal.
 </item>
         <item>
-Diperlukan untuk menjalankan Folder Sync dan transfer file sebagai layanan latar depan sehingga selesai dengan andal bahkan saat layar mati.
+Diperlukan untuk menjalankan Sinkronisasi Folder dan transfer berkas sebagai layanan latar depan sehingga selesai dengan andal bahkan saat layar mati.
 </item>
         <item>
-Menjaga CPU dan Wi-Fi tetap aktif selama transfer file besar sehingga selesai dengan andal bahkan saat layar mati.
+Menjaga CPU dan Wi-Fi tetap aktif selama transfer berkas besar sehingga selesai dengan andal bahkan saat layar mati.
 </item>
         <item>
-Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata file untuk kinerja — dikelola melalui Pengaturan -> Storage Indexer.
+Menggunakan izin penyimpanan untuk memindai dan mengindeks metadata berkas untuk kinerja — dikelola melalui Pengaturan -> Pengindeks Penyimpanan.
 </item>
         <item>
 Terhubung ke Android TV yang dipasangkan untuk bertindak sebagai keyboard dan mouse Bluetooth untuk kendali jarak jauh.
@@ -485,34 +485,34 @@ Memberikan umpan balik haptik saat menekan tombol pada Remote TV.
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — server HTTP ringan yang mendukung Remote Management. (BSD-3-Clause)
+NanoHTTPD — server HTTP ringan yang mendukung Manajemen Jarak Jauh. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — pustaka klien SMB2/SMB3 untuk penjelajahan share jaringan dan Folder Sync. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — pustaka klien SMB2/SMB3 untuk penjelajahan berbagi jaringan dan Sinkronisasi Folder. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — implementasi Java SMB2/SMB3 yang digunakan untuk akses share jaringan. (Apache-2.0)
+smbj (hierynomus/smbj) — implementasi Java SMB2/SMB3 yang digunakan untuk akses berbagi jaringan. (Apache-2.0)
 </item>
         <item>
-EMC ECS NFS Client (com.emc.ecs:nfs-client) — pustaka klien NFS v3 untuk akses share jaringan. (Apache-2.0)
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — pustaka klien NFS v3 untuk akses berbagi jaringan. (Apache-2.0)
 </item>
         <item>
 libnfs (sahlberg/libnfs) — pustaka klien NFS asli yang mendukung NFSv2, NFSv3, dan NFSv4. (LGPL-2.1 / BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses dan hosting share jaringan aman. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses dan hosting berbagi jaringan yang aman. (Apache-2.0)
 </item>
         <item>
 Apache FtpServer (org.apache.ftpserver) — server FTP 100% Java murni. (Apache-2.0)
 </item>
         <item>
-Apache POI — pustaka pemrosesan dokumen untuk melihat file kantor. (Apache-2.0)
+Apache POI — pustaka pemrosesan dokumen untuk melihat berkas kantor. (Apache-2.0)
 </item>
         <item>
 Firebase Analytics — platform analitik Google yang membantu kami memahami penggunaan aplikasi. (Apache-2.0)
 </item>
         <item>
-Pustaka AndroidX (termasuk Leanback untuk Android TV) — komponen Jetpack Google untuk pengembangan Android modern. (Apache-2.0)
+AndroidX Libraries (termasuk Leanback untuk Android TV) — komponen Jetpack Google untuk pengembangan Android modern. (Apache-2.0)
 </item>
         <item>
 Material Design Components — pustaka UI Google untuk antarmuka yang bersih dan konsisten. (Apache-2.0)
@@ -521,22 +521,22 @@ Material Design Components — pustaka UI Google untuk antarmuka yang bersih dan
 Room Persistence Library — lapisan abstraksi SQLite untuk pengindeksan metadata lokal. (Apache-2.0)
 </item>
         <item>
-zip4j (net.lingala.zip4j) — pustaka ZIP canggih untuk arsip yang dilindungi kata sandi dan dienkripsi AES. (Apache-2.0)
+zip4j (net.lingala.zip4j) — pustaka ZIP lanjutan untuk arsip yang dilindungi kata sandi dan terenkripsi AES. (Apache-2.0)
 </item>
         <item>
 Apache Commons Compress — pustaka untuk membaca dan menulis berbagai format arsip (7z, zip, tar, dll). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — implementasi kompresi XZ dan LZMA. (Domain Publik)
+XZ for Java (org.tukaani.xz) — implementasi kompresi XZ dan LZMA. (Public Domain)
 </item>
         <item>
 libadb-android (com.github.MuntashirAkon) — pustaka Android Debug Bridge yang memungkinkan koneksi aman ke perangkat yang mendukung ADB untuk akses shell jarak jauh dan pemasangan berbasis sertifikat. (Apache-2.0)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses share jaringan aman. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — pustaka klien SSHD inti, SFTP, dan SCP yang komprehensif untuk akses berbagi jaringan yang aman. (Apache-2.0)
 </item>
         <item>
-EdDSA untuk Java (net.i2p.crypto:eddsa) — implementasi EdDSA (Edwards-curve Digital Signature Algorithm) untuk kunci SSH Ed25519. (CC0-1.0)
+EdDSA for Java (net.i2p.crypto:eddsa) — implementasi EdDSA (Edwards-curve Digital Signature Algorithm) untuk kunci SSH Ed25519. (CC0-1.0)
 </item>
         <item>
 SLF4J Android (uk.uuid.slf4j:slf4j-android) — pengikatan pencatatan untuk Android yang digunakan oleh pustaka SSHD. (MIT)
@@ -548,49 +548,49 @@ BouncyCastle (org.bouncycastle) — pustaka kriptografi untuk pembuatan pasangan
 Google Play Billing Library — memproses pembelian tip dalam aplikasi opsional; diatur oleh Kebijakan Privasi Google Play. (Apache-2.0)
 </item>
         <item>
-Google Play Review Library — mendukung fungsionalitas peringkat dan ulasan dalam aplikasi. (Apache-2.0)
+Google Play Review Library — mendukung fungsionalitas penilaian dan ulasan dalam aplikasi. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, SVG) di pemirsa gambar bawaan. (Apache-2.0)
+Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, SVG) di penampil gambar bawaan. (Apache-2.0)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk memecahkan kode dan merender file PNG animasi di Android. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk mendekode dan merender berkas PNG animasi di Android. (Apache-2.0)
 </item>
         <item>
-Shizuku API (dev.rikka.shizuku:api &amp; provider) — pustaka dan penyedia yang memungkinkan akses sistem file yang ditinggikan melalui aplikasi Shizuku Manager. (Apache-2.0)
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — pustaka yang memungkinkan akses sistem berkas ditinggikan melalui aplikasi Shizuku atau Shevery Manager. (Apache-2.0)
 </item>
         <item>
 ViewPager2 — pustaka Android untuk menggeser antar fragmen dan tata letak. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — pustaka animasi untuk merender animasi Adobe After Effects secara native di Android, digunakan untuk animasi UI yang halus di seluruh aplikasi. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — pustaka animasi untuk merender animasi Adobe After Effects secara asli di Android, digunakan untuk animasi UI yang halus di seluruh aplikasi. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — kerangka kerja web ringan yang digunakan untuk mendukung File Server lokal. (Apache-2.0)
+Ktor (io.ktor) — kerangka web ringan yang digunakan untuk mendukung Server Berkas lokal. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — pustaka untuk merender dan melihat dokumen PDF secara native. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — pustaka untuk merender dan melihat dokumen PDF secara asli. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — pemutar media canggih untuk pemutaran video dan audio yang andal. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — pemutar media canggih untuk pemutaran video dan audio yang kuat. (Apache-2.0)
 </item>
         <item>
-Microsoft Authentication Library (MSAL) — menangani otentikasi API OneDrive secara native. (MIT)
+Microsoft Authentication Library (MSAL) — menangani autentikasi API OneDrive secara asli. (MIT)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — klien HTTP &amp; HTTP/2 yang andal untuk permintaan jaringan penyimpanan cloud. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — klien HTTP &amp; HTTP/2 yang kuat untuk permintaan jaringan penyimpanan cloud. (Apache-2.0)
 </item>
         <item>
 Gson (com.google.code.gson) — pustaka pemrosesan JSON yang digunakan untuk integrasi penyimpanan cloud. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — dukungan Chrome Custom Tabs untuk otentikasi API Google Drive. (Apache-2.0)
+AndroidX Browser (androidx.browser) — dukungan Chrome Custom Tabs untuk autentikasi API Google Drive. (Apache-2.0)
 </item>
         <item>
 ZXing (com.google.zxing:core) — pustaka pemrosesan gambar barcode. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Milik)
+Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Proprietary)
 </item>
     </string-array>
 
@@ -917,13 +917,13 @@ Dengan menggunakan Ultimate File Manager Pro, Anda menegaskan bahwa Anda telah m
     <!-- Local storage table (Section 2) -->
     <string-array name="pp_local_data_labels">
         <item>
-PIN Vault (hash)
+PIN Brankas (di-hash)
 </item>
         <item>
-Kode Pemulihan (hash)
+Kode Pemulihan (di-hash)
 </item>
         <item>
-Metadata Vault
+Metadata Brankas
 </item>
         <item>
 Kunci Enkripsi
@@ -944,7 +944,7 @@ Info Perangkat yang Dipasangkan
 Kunci Autentikasi ADB
 </item>
         <item>
-Status Otorisasi Shizuku
+Status Otorisasi Shizuku / Shevery
 </item>
         <item>
 Tangkapan Layar TV
@@ -970,37 +970,37 @@ Status Pemutaran Media
     </string-array>
     <string-array name="pp_local_data_details">
         <item>
-Akses aman ke berkas terenkripsi · Android SharedPreferences
+Akses aman ke file terenkripsi · Android SharedPreferences
 </item>
         <item>
 Pemulihan akun jika PIN lupa · Android SharedPreferences
 </item>
         <item>
-Daftar folder &amp; berkas terenkripsi Anda · Penyimpanan pribadi aplikasi
+Daftar folder &amp; file terenkripsi Anda · Penyimpanan pribadi aplikasi
 </item>
         <item>
 Enkripsi AES-256-GCM untuk Vault · Android Keystore (didukung perangkat keras)
 </item>
         <item>
-Tema, pengaturan urutan, preferensi tampilan · Android SharedPreferences
+Pengaturan tema, urutan, tampilan · Android SharedPreferences
 </item>
         <item>
-Konfigurasi (nama pengguna, direktori, kata sandi hash) untuk Server Berkas yang dihosting · Penyimpanan pribadi aplikasi
+Konfigurasi (nama pengguna, direktori, kata sandi hash) untuk File Server yang dihosting · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Menghubungkan ke berbagi SMB/FTP Anda (host, nama pengguna, kata sandi) · Penyimpanan pribadi aplikasi
+Menghubungkan ke share SMB/FTP Anda (host, nama pengguna, kata sandi) · Penyimpanan pribadi aplikasi
 </item>
         <item>
 Nama perangkat, ID, dan IP untuk pemasangan perangkat · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Kunci RSA dan sertifikat yang dihasilkan untuk koneksi ADB yang aman · Penyimpanan pribadi aplikasi
+Kunci RSA dan sertifikat yang dibuat untuk koneksi ADB yang aman · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Status pemberian akses tinggi dari aplikasi Shizuku Manager · Penyimpanan pribadi aplikasi
+Status izin akses tinggi dari aplikasi Shizuku atau Shevery Manager · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Tangkapan layar yang ditangkap dari TV yang dipasangkan melalui ADB · Folder Pictures/Screenshots lokal ponsel Anda
+Tangkapan layar yang diambil dari TV yang dipasangkan melalui ADB · Folder Pictures/Screenshots lokal ponsel Anda
 </item>
         <item>
 URI folder lokal dan jalur jarak jauh untuk setiap profil sinkronisasi · Penyimpanan pribadi aplikasi
@@ -1009,16 +1009,16 @@ URI folder lokal dan jalur jarak jauh untuk setiap profil sinkronisasi · Penyim
 Token OAuth untuk mengakses Google Drive, OneDrive, dan Dropbox · Penyimpanan pribadi aplikasi
 </item>
         <item>
-ID Kunci Akses dan Kunci Akses Rahasia untuk menghubungkan ke bucket S3 · Penyimpanan pribadi aplikasi
+Access Key ID dan Secret Access Key untuk menghubungkan ke bucket S3 · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Metadata berkas (nama, ukuran, tanggal) untuk penjelajahan dan pencarian cepat yang disimpan dalam database SQLite/Room lokal — dapat dikelola melalui Pengaturan -> Pengindeks Penyimpanan · Penyimpanan pribadi aplikasi
+Metadata file (nama, ukuran, tanggal) untuk penelusuran cepat dan pencarian yang disimpan di database SQLite/Room lokal — dapat dikelola melalui Pengaturan -> Indeks Penyimpanan · Penyimpanan pribadi aplikasi
 </item>
         <item>
-Antrean saat ini, posisi pemutaran, dan pengaturan pemutar untuk melanjutkan dari tempat Anda berhenti · Android SharedPreferences
+Antrean saat ini, posisi pemutaran, dan pengaturan pemutar untuk melanjutkan dari posisi terakhir · Android SharedPreferences
 </item>
         <item>
-Cookie (ufm_lang) mengingat pilihan bahasa Anda sepanjang sesi dan di seluruh restart browser · Penyimpanan browser web
+Cookie (ufm_lang) mengingat pilihan bahasa Anda selama sesi dan saat memulai ulang browser · Penyimpanan peramban web
 </item>
     </string-array>
 
@@ -1077,19 +1077,19 @@ Data akun Google apa pun di luar yang Anda minta secara eksplisit di penjelajah 
 Otentikasi akses ke Vault Terenkripsi
 </item>
         <item>
-Enkripsi dan dekripsi berkas pribadi Anda
+Enkripsi dan dekripsi file pribadi Anda
 </item>
         <item>
 Ingat preferensi dan pengaturan Anda
 </item>
         <item>
-Gunakan akses tinggi (Shizuku/ADB) untuk mengelola berkas yang dilindungi sistem di direktori terbatas
+Gunakan akses tinggi (Shizuku/Shevery/ADB) untuk mengelola file yang dilindungi sistem di direktori terbatas
 </item>
         <item>
-Buat dan rawat pengindeksan berkas untuk penjelajahan dan pencarian cepat (dapat dikelola melalui Pengaturan -> Pengindeks Penyimpanan)
+Buat dan rawat indeks file untuk penelusuran dan pencarian cepat (dapat dikelola melalui Pengaturan -> Indeks Penyimpanan)
 </item>
         <item>
-Menyediakan fungsionalitas inti aplikasi
+Menyediakan fungsi inti aplikasi
 </item>
     </string-array>
     <string-array name="pp_use_analytics">
@@ -1167,7 +1167,7 @@ Memungkinkan penemuan perangkat jaringan lokal (NSD/mDNS) untuk pemasangan peran
 POST_NOTIFICATIONS
 </item>
         <item>
-moe.shizuku.manager.permission.API_V23
+moe.shizuku.manager.permission.API_V23 / com.hamondev.shevery.permission.API_V23
 </item>
         <item>
 RECEIVE_BOOT_COMPLETED
@@ -1190,28 +1190,28 @@ WAKE_LOCK
     </string-array>
     <string-array name="pp_other_perm_details">
         <item>
-Memberi tahu Anda saat operasi berkas selesai atau penyimpanan hampir penuh
+Memberi tahu Anda saat operasi file selesai atau penyimpanan hampir penuh
 </item>
         <item>
-Memungkinkan komunikasi dengan Shizuku Manager untuk akses berkas tinggi
+Memungkinkan komunikasi dengan Shizuku atau Shevery Manager untuk akses file tinggi
 </item>
         <item>
-Memungkinkan layanan Shizuku mulai otomatis saat boot untuk ketersediaan segera
+Memungkinkan layanan Shizuku atau Shevery dimulai otomatis saat boot untuk ketersediaan segera
 </item>
         <item>
-Memungkinkan Anda memilih untuk menjaga Shizuku tetap aktif di latar belakang untuk kinerja yang andal
+Memungkinkan Anda memilih untuk menjaga Shizuku atau Shevery tetap aktif di latar belakang untuk kinerja yang andal
 </item>
         <item>
 Memungkinkan pemasangan file APK yang Anda pilih
 </item>
         <item>
-Diperlukan oleh fitur Manajer Aplikasi dan Debloater. Membaca: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu pemasangan dan pembaruan, serta bendera sistem vs. aplikasi pengguna — diproses sepenuhnya di perangkat. Tab Debloater mengunduh daftar referensi debloat yang tersedia untuk umum dan mencocokkannya secara lokal dengan nama paket yang terinstal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan secara eksternal.
+Diperlukan oleh fitur App Manager dan Debloater. Membaca: nama aplikasi, ID paket, versi, ukuran APK, stempel waktu pemasangan dan pembaruan, serta tanda aplikasi sistem vs. pengguna — diproses sepenuhnya di perangkat. Tab Debloater mengunduh daftar referensi debloat yang tersedia untuk umum dan mencocokkannya secara lokal dengan nama paket yang terinstal. Tidak ada data aplikasi yang terinstal yang pernah dikirimkan secara eksternal.
 </item>
         <item>
-Menjalankan Sinkronisasi Folder, transfer berkas, dan pemutaran media sebagai layanan latar depan sehingga selesai dengan andal dan terus diputar meskipun layar mati atau Anda menggunakan aplikasi lain
+Menjalankan Sinkronisasi Folder, transfer file, dan pemutaran media sebagai layanan latar depan sehingga selesai dengan andal dan terus diputar meskipun layar mati atau Anda menggunakan aplikasi lain
 </item>
         <item>
-Menjaga CPU dan Wi-Fi tetap aktif selama transfer berkas besar dan pemutaran media sehingga selesai dengan andal meskipun layar mati
+Menjaga CPU dan Wi-Fi tetap aktif selama transfer file besar dan pemutaran media sehingga selesai dengan andal meskipun layar mati
 </item>
     </string-array>
 

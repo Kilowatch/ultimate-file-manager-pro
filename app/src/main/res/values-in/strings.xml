@@ -7122,46 +7122,46 @@ Kesalahan jaringan. Periksa koneksi Anda dan coba lagi.
 Otorisasi ditolak atau dibatalkan.
 </string>
 
-    <!-- Shizuku Manager -->
+    <!-- Shizuku & Shevery Elevated Access Manager -->
     <string name="shizuku_title">
-Shizuku
+Akses Istimewa
 </string>
     <string name="shizuku_subtitle">
-Shizuku Manager
+Shizuku / Shevery
 </string>
     <!-- USB Access Guidance for Fire TV / FireOS (SELinux restricted) -->
     <string name="shizuku_usb_access_title">
 USB Drive (Dibatasi)
 </string>
     <string name="shizuku_usb_access_subtitle">
-Fire TV membatasi akses USB langsung — gunakan Shizuku
+Fire TV membatasi akses USB langsung — gunakan Shizuku / Shevery
 </string>
     <string name="shizuku_usb_access_desc">
-Kebijakan keamanan perangkat ini (SELinux) memblokir akses langsung ke drive USB yang dipasang di /mnt/media_rw/. Untuk mengakses penyimpanan USB, instal dan otorisasi Shizuku, yang menyediakan hak istimewa yang ditingkatkan yang diperlukan untuk melewati pembatasan ini.
+Kebijakan keamanan perangkat ini (SELinux) memblokir akses langsung ke drive USB yang dipasang di /mnt/media_rw/. Untuk mengakses penyimpanan USB, instal dan otorisasi Shizuku atau Shevery, yang menyediakan hak istimewa yang diperlukan untuk melewati batasan ini.
 </string>
     <string name="opening_shizuku">
-Membuka Shizuku…
+Membuka Manajer Istimewa…
 </string>
     <string name="shizuku_status_label">
 Status Layanan
 </string>
     <string name="shizuku_installed">
-Shizuku sudah terinstal
+Manajer Istimewa (Shizuku / Shevery) sudah terinstal
 </string>
     <string name="shizuku_not_installed">
-Shizuku belum terinstal
+Manajer Istimewa belum terinstal
 </string>
     <string name="shizuku_description">
-Shizuku memungkinkan aplikasi menggunakan API tingkat sistem secara langsung, memungkinkan fitur lanjutan seperti manajemen file latar belakang dan eksekusi perintah sistem tanpa memerlukan root di sebagian besar versi Android.
+Shizuku dan Shevery memungkinkan aplikasi menggunakan API tingkat sistem secara langsung, memungkinkan fitur lanjutan seperti manajemen file latar belakang dan eksekusi perintah sistem tanpa memerlukan root pada sebagian besar versi Android.
 </string>
     <string name="shizuku_service_status">
 Status Layanan
 </string>
     <string name="shizuku_service_running">
-Layanan Shizuku sedang berjalan
+Layanan istimewa sedang berjalan
 </string>
     <string name="shizuku_service_not_running">
-Layanan Shizuku tidak berjalan
+Layanan istimewa tidak berjalan
 </string>
     <string name="shizuku_btn_enable">
 Aktifkan Layanan
@@ -7173,23 +7173,33 @@ Diizinkan
 Tidak Diizinkan
 </string>
     <string name="shizuku_installed_msg">
-Shizuku sudah terinstal dan akan tersedia untuk digunakan.
+Manajer Istimewa sudah terinstal dan akan siap digunakan.
 </string>
     <string name="shizuku_download_hint">
-Anda dapat mengunduh versi terbaru Shizuku dari repositori GitHub resminya.
+Anda dapat mengunduh versi terbaru Shizuku atau Shevery dari repositori GitHub resmi mereka.
 </string>
     <string name="shizuku_download_link">
+Unduh Manajer
+</string>
+    <string name="shizuku_download_shizuku">
 Unduh Shizuku
+</string>
+    <string name="shizuku_download_shevery">
+Unduh Shevery
 </string>
     <string name="shizuku_tv_download_title">
-Unduh Shizuku
+Unduh Shizuku / Shevery
 </string>
     <string name="shizuku_tv_download_msg">
-Shizuku tidak terinstal di perangkat ini.\n
+Manajer Istimewa (Shizuku atau Shevery) tidak terinstal di perangkat ini.\n
 \n
-Silakan kunjungi URL berikut di ponsel atau komputer Anda untuk mengunduh APK terbaru, lalu sideload ke TV ini:\n
+Silakan kunjungi salah satu URL berikut di ponsel atau komputer Anda untuk mengunduh APK terbaru, lalu sideload ke TV ini:\n
 \n
-%s
+Shizuku:\n
+%1$s\n
+\n
+Shevery:\n
+%2$s
 </string>
     <string name="shizuku_copy_link">
 Salin Tautan
@@ -7198,34 +7208,34 @@ Salin Tautan
 Tautan disalin ke papan klip
 </string>
     <string name="shizuku_auth_title">
-Otorisasi Shizuku
+Otorisasi Akses Istimewa
 </string>
     <string name="shizuku_auth_msg">
-UFM memerlukan otorisasi Shizuku untuk melakukan operasi file lanjutan. Harap berikan izin di dialog sistem berikut.
+UFM memerlukan otorisasi untuk melakukan operasi file lanjutan. Harap berikan izin di dialog sistem berikut.
 </string>
     <string name="shizuku_btn_authorize">
 Otorisasi
 </string>
     <string name="shizuku_btn_start_service">
-Aktifkan Shizuku
+Aktifkan Akses Istimewa
 </string>
     <string name="shizuku_starting_service">
-Memulai layanan Shizuku...
+Memulai layanan istimewa...
 </string>
     <string name="shizuku_starting_msg">
-Mencoba memulai layanan Shizuku melalui intent siaran. Harap tunggu…
+Mencoba memulai layanan istimewa melalui intent siaran. Harap tunggu…
 </string>
     <string name="shizuku_start_failed">
-Gagal memulai Shizuku. Pastikan Debug Nirkabel diaktifkan atau mulai secara manual.
+Gagal memulai layanan. Pastikan Debugging Nirkabel diaktifkan atau mulai secara manual.
 </string>
     <string name="shizuku_enabled_and_active">
-Shizuku diaktifkan dan aktif
+Akses Istimewa diaktifkan dan aktif
 </string>
     <string name="shizuku_adb_not_connected">
-ADB tidak terhubung. Hubungkan melalui Terminal ADB untuk mengaktifkan Shizuku secara otomatis.
+ADB tidak terhubung. Hubungkan melalui Terminal ADB untuk mengaktifkan Akses Istimewa secara otomatis.
 </string>
     <string name="shizuku_manager_open_error">
-Tidak dapat membuka manajer Shizuku. Harap instal aplikasi terlebih dahulu.
+Tidak dapat membuka manajer. Harap instal Shizuku atau Shevery terlebih dahulu.
 </string>
 
     <!-- Media Player errors -->
