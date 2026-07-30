@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added mobile-only feature to set selected image files directly as home screen or lock screen wallpaper with confirmation dialogs, supported across local, network, and cloud storage files.
 
+### Changed
+- Updated `UFM-Windows` license declaration, badge, and contribution guidelines to GPL-3.0 to align with the main FOSS repository.
+
 ### Fixed
 - Fixed grid view item size inconsistency between portrait and landscape modes on mobile devices.
 - Fixed folder navigation transition animations being bypassed in non-indexed local folders, network activities, and network fragments when enabled in settings.

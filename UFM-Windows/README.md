@@ -1,4 +1,4 @@
-﻿# Ultimate File Manager Pro Companion
+# Ultimate File Manager Pro Companion
 
 > **Official Windows desktop companion for [Ultimate File Manager Pro (UFM)](https://github.com/Kilowatch/ultimate-file-manager-pro)** — a high-performance dual-pane file transfer, APK/XAPK sideloading, and live device management utility operating over secure local network channels.
 
@@ -6,7 +6,7 @@
 ![Tauri](https://img.shields.io/badge/built%20with-Tauri%202-24C8DB?logo=tauri)
 ![Rust](https://img.shields.io/badge/backend-Rust-orange?logo=rust)
 ![React](https://img.shields.io/badge/frontend-React%2019-61DAFB?logo=react)
-![License](https://img.shields.io/badge/license-proprietary-red)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 ---
 
@@ -155,11 +155,10 @@ UFM-Windows/
 
 ## Contributions
 
-Ultimate File Manager Pro is proprietary software. For bugs, features, and pull requests, please contact **support@kilowatch.co.za** or create a ticket on the main repository.
+Contributions are welcome! For bugs, feature requests, and pull requests, please open an issue or pull request on the [main repository](https://github.com/Kilowatch/ultimate-file-manager-pro).
 
 ---
 
 ## License
 
-Proprietary — © Kilowatch. All rights reserved.
-See the [main repository](https://github.com/Kilowatch/ultimate-file-manager-pro) for licensing terms.
+Ultimate File Manager Pro Companion is licensed under the **GNU General Public License v3.0**. See the root [LICENSE](../LICENSE) file for complete details.
