@@ -209,63 +209,164 @@ object WebDavShareClient {
 
     fun getFileSizeSync(share: NetworkShare, remotePath: String): Long {
         if (RCloneShareClient.isRCloneShare(share)) return RCloneShareClient.getFileSizeSync(share, remotePath)
-        val url     = resolveUrl(share, remotePath)
-        val request = buildRequest("HEAD", url, share).head().build()
-        client.newCall(request).execute().use { response ->
-            return response.header("Content-Length")?.toLongOrNull() ?: 0L
+        val url = resolveUrl(share, remotePath)
+
+        // 1. Try HEAD request
+        runCatching {
+            val request = buildRequest("HEAD", url, share).head().build()
+            client.newCall(request).execute().use { response ->
+                if (response.isSuccessful) {
+                    val len = response.header("Content-Length")?.toLongOrNull()
+                    if (len != null && len > 0) return len
+                }
+            }
         }
+
+        // 2. Fallback: PROPFIND Depth:0 request targeting single file
+        runCatching {
+            val request = buildRequest("PROPFIND", url, share)
+                .addHeader("Depth", "0")
+                .addHeader("Content-Type", "application/xml")
+                .method("PROPFIND", PROPFIND_BODY.toRequestBody("application/xml".toMediaType()))
+                .build()
+            client.newCall(request).execute().use { response ->
+                if (response.code == 207) {
+                    val body = response.body?.string() ?: ""
+                    val shareRootPath = try {
+                        java.net.URI(share.host.trimEnd('/')).path.trimEnd('/')
+                    } catch (_: Exception) { "" }
+                    val parsed = parsePropfindResponse(body, url, shareRootPath)
+                    if (parsed.isNotEmpty() && parsed[0].size > 0) {
+                        return parsed[0].size
+                    }
+                }
+            }
+        }
+
+        // 3. Fallback: GET Range: bytes=0-0 to extract total size from Content-Range header
+        runCatching {
+            val request = buildRequest("GET", url, share)
+                .addHeader("Range", "bytes=0-0")
+                .build()
+            client.newCall(request).execute().use { response ->
+                val contentRange = response.header("Content-Range")
+                if (contentRange != null && contentRange.contains("/")) {
+                    val totalStr = contentRange.substringAfterLast('/')
+                    val total = totalStr.toLongOrNull()
+                    if (total != null && total > 0) return total
+                }
+                val len = response.header("Content-Length")?.toLongOrNull()
+                if (len != null && len > 0) return len
+            }
+        }
+
+        return 0L
     }
 
     /**
      * Opens a seekable, random-access handle to a remote WebDAV file.
      *
-     * Uses HTTP Range headers to read arbitrary byte ranges — identical pattern
-     * to [S3ShareClient.openRandomAccessFile]. Each read() call performs a fresh
-     * HTTP GET with a Range header; no persistent connection is held open.
+     * Maintains an active HTTP stream as long as sequential reads advance continuously.
+     * If a seek or discontinuity occurs (currentPos != offset), the existing stream
+     * is closed and a new HTTP GET Range stream is established.
      *
      * @param share      The WebDAV share configuration.
      * @param remotePath The remote file path.
-     * @return An [IRandomAccessFile] backed by stateless HTTP Range requests.
+     * @param knownSize  Optional known size of the file in bytes (if available).
+     * @return An [IRandomAccessFile] backed by persistent HTTP Range streaming.
      */
-    fun openRandomAccessFile(share: NetworkShare, remotePath: String): IRandomAccessFile {
+    fun openRandomAccessFile(share: NetworkShare, remotePath: String, knownSize: Long = -1L): IRandomAccessFile {
         if (RCloneShareClient.isRCloneShare(share)) return RCloneShareClient.openRandomAccessFile(share, remotePath)
-        val fileSize = getFileSizeSync(share, remotePath)
+        val fileSize = if (knownSize > 0) knownSize else getFileSizeSync(share, remotePath)
         return object : IRandomAccessFile {
-            override val size: Long = fileSize
+            override val size: Long = if (fileSize > 0) fileSize else Long.MAX_VALUE
 
-            override fun read(offset: Long, buffer: ByteArray, length: Int): Int {
+            private var currentResponse: okhttp3.Response? = null
+            private var currentInputStream: InputStream? = null
+            private var currentPos: Long = -1L
+            private val lock = Any()
+
+            override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(lock) {
                 if (offset >= size) return -1
-                val rangeHeader = "bytes=$offset-${offset + length - 1}"
-                val response = openInputStreamForStreamingSync(share, remotePath, rangeHeader)
-                if (!response.isSuccessful) {
-                    response.close()
-                    throw IOException("WebDAV RAF read failed: ${response.code}")
-                }
-                val body = response.body ?: throw IOException("WebDAV RAF read failed: empty body (${response.code})")
-                return body.byteStream().use { input ->
-                    // If server ignored Range (200 instead of 206), skip to the requested offset
+                if (length <= 0) return 0
+
+                // If offset does not match current stream position, open (or seek) stream
+                if (currentInputStream == null || currentPos != offset) {
+                    closeCurrentStream()
+                    val rangeHeader = "bytes=$offset-"
+                    val response = try {
+                        openInputStreamForStreamingSync(share, remotePath, rangeHeader)
+                    } catch (e: Exception) {
+                        GoRoLog.e(TAG, "Failed to open stream at offset $offset for $remotePath", e)
+                        return -1
+                    }
+                    if (!response.isSuccessful && response.code != 206) {
+                        response.close()
+                        GoRoLog.e(TAG, "Stream failed with code ${response.code} at offset $offset")
+                        return -1
+                    }
+                    val body = response.body
+                    currentResponse = response
+                    val input = body.byteStream()
+                    currentInputStream = input
+                    currentPos = offset
+
+                    // If server ignored Range (200 instead of 206) and returned full body starting at 0:
                     if (response.code == 200 && offset > 0) {
                         var remaining = offset
+                        val skipBuf = ByteArray(8192)
                         while (remaining > 0) {
-                            val skipped = input.skip(remaining)
+                            val toRead = minOf(remaining, skipBuf.size.toLong()).toInt()
+                            val skipped = try { input.read(skipBuf, 0, toRead) } catch (_: Exception) { -1 }
                             if (skipped <= 0) break
                             remaining -= skipped
                         }
                     }
-                    var totalRead = 0
-                    while (totalRead < length) {
-                        val read = input.read(buffer, totalRead, length - totalRead)
-                        if (read == -1) break
-                        totalRead += read
+                }
+
+                val input = currentInputStream ?: return -1
+                val bytesToRead = minOf(length.toLong(), size - offset).toInt()
+                if (bytesToRead <= 0) return -1
+
+                var totalRead = 0
+                while (totalRead < bytesToRead) {
+                    val read = try {
+                        input.read(buffer, totalRead, bytesToRead - totalRead)
+                    } catch (e: Exception) {
+                        GoRoLog.e(TAG, "Stream read error at ${currentPos + totalRead}", e)
+                        closeCurrentStream()
+                        return if (totalRead > 0) {
+                            currentPos += totalRead
+                            totalRead
+                        } else -1
                     }
-                    if (totalRead == 0) -1 else totalRead
+                    if (read <= 0) break
+                    totalRead += read
+                }
+
+                if (totalRead > 0) {
+                    currentPos += totalRead
+                    return totalRead
+                } else {
+                    closeCurrentStream()
+                    return -1
                 }
             }
 
             override fun write(offset: Long, buffer: ByteArray, length: Int): Int =
                 throw IOException("Random writes not supported on WebDAV")
 
-            override fun close() { /* stateless HTTP — nothing to close */ }
+            override fun close() = synchronized(lock) {
+                closeCurrentStream()
+            }
+
+            private fun closeCurrentStream() {
+                runCatching { currentInputStream?.close() }
+                runCatching { currentResponse?.close() }
+                currentInputStream = null
+                currentResponse = null
+                currentPos = -1L
+            }
         }
     }
 
@@ -426,7 +527,7 @@ object WebDavShareClient {
 
             var eventType = parser.eventType
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                val tagName = parser.name?.substringAfterLast(':') ?: ""
+                val tagName = parser.name?.substringAfterLast(':')?.lowercase() ?: ""
                 when (eventType) {
                     XmlPullParser.START_TAG -> {
                         currentTag = tagName

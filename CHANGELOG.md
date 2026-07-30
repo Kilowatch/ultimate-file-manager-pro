@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `NetworkOnMainThreadException` crash during SSDP discovery and UDP multicast packet transmission by offloading all `DatagramSocket.send` calls in `DlnaSsdpEngine` to a dedicated background executor.
 - Fixed potential `NullPointerException` on Ethernet-only Android TV devices (such as UGOOS AM8) when initializing local network pairing by safely retrieving `WifiManager` with fallback handling when Wi-Fi hardware is unavailable.
 - Fixed an ANR (App Freeze) in VaultActivity during PIN verification, PIN creation, PIN migration, and recovery code verification by offloading 260,000-iteration PBKDF2 key derivation off the main thread to background coroutines.
+- Fixed WebDAV media file playback failing with a "Source Error" in both internal UFM player and external players (VLC, MPV). Fixed XML parser tag case-sensitivity for camelCase tags like `<d:getContentLength>` from Nextcloud, ownCloud, Apache, and IIS servers; added multi-stage size resolution (`HEAD` -> `PROPFIND` Depth:0 -> `GET Range: bytes=0-0`); and prevented zero-byte file size capping from causing instant EOF at offset 0.
 
 ## [1.7.6] — 2026-07-27
 

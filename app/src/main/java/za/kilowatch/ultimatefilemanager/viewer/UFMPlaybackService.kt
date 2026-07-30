@@ -386,7 +386,7 @@ class UFMPlaybackService : Service() {
                 // Strip server-mode prefix to avoid duplicated path segments (e.g. "MM/MM/file.mp4")
             val cleanPath = stripSharePrefix(share, item.path)
             val dataSourceFactory = DataSource.Factory {
-                UfmMedia3DataSource(share, cleanPath)
+                UfmMedia3DataSource(share, cleanPath, item.fileSize)
             }
             androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${item.path.replace(" ", "%20")}")))
@@ -901,7 +901,7 @@ class UFMPlaybackService : Service() {
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
                 ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
                 ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
-                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
+                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path, initialFileSize)
                 ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
                 ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
                 ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)

@@ -1549,7 +1549,8 @@ private fun getMimeForSubtitleExtension(ext: String): String {
 
 class UfmMedia3DataSource(
     private val share: NetworkShare,
-    private val path: String
+    private val path: String,
+    private val knownSize: Long = -1L
 ) : DataSource {
 
     private var randomAccess: IRandomAccessFile? = null
@@ -1576,7 +1577,7 @@ class UfmMedia3DataSource(
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
                 ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, path)
                 ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, path)
-                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path)
+                ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, path, knownSize)
                 ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, path)
                 ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, path)
                 ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, path)

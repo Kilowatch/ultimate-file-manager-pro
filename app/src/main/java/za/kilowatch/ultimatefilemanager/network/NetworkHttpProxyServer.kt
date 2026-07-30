@@ -51,10 +51,7 @@ object NetworkHttpProxyServer {
         val authToken: String = generateAuthToken(),
         val createdAt: Long = System.currentTimeMillis(),
         @Volatile var lastAccessMs: Long = System.currentTimeMillis()
-    ) {
-        var handle: IRandomAccessFile? = null
-        val handleLock = Any()
-    }
+    )
 
     private fun generateAuthToken(): String {
         val bytes = ByteArray(16)
@@ -96,7 +93,6 @@ object NetworkHttpProxyServer {
         runCatching { serverSocket?.close() }
         serverSocket = null
         port = 0
-        sessions.values.forEach { runCatching { it.handle?.close() } }
         sessions.clear()
         GoRoLog.d(TAG, "HTTP proxy stopped")
     }
@@ -128,8 +124,7 @@ object NetworkHttpProxyServer {
 
     /** Remove a session immediately (call when the player activity is destroyed). */
     fun unregister(uuid: String) {
-        val session = sessions.remove(uuid)
-        runCatching { session?.handle?.close() }
+        sessions.remove(uuid)
         GoRoLog.d(TAG, "Unregistered session $uuid")
     }
 
@@ -201,31 +196,25 @@ object NetworkHttpProxyServer {
                 return
             }
 
-            // Retrieve or initialize the shared stream handle for this session
-            var currentHandle = session.handle
-            if (currentHandle == null) {
-                synchronized(session.handleLock) {
-                    if (session.handle == null) {
-                        try {
-                            session.handle = openHandleForSession(session)
-                        } catch (e: Exception) {
-                            GoRoLog.e(TAG, "Failed to open handle for ${session.path}", e)
-                        }
-                    }
-                    currentHandle = session.handle
-                }
+            // Open a dedicated stream handle for this client connection
+            val clientHandle = try {
+                openHandleForSession(session)
+            } catch (e: Exception) {
+                GoRoLog.e(TAG, "Failed to open handle for ${session.path}", e)
+                null
             }
 
-            if (currentHandle == null) {
+            if (clientHandle == null) {
                 send500(out)
                 return
             }
 
             try {
-                streamResponse(out, currentHandle!!, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
+                streamResponse(out, clientHandle, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
             } catch (e: Exception) {
-                // If the stream is broken, we DO NOT close the handle here.
-                // The client may have just aborted the stream to seek.
+                // Client aborted or socket closed
+            } finally {
+                runCatching { clientHandle.close() }
             }
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Client handler error", e)
@@ -274,14 +263,6 @@ object NetworkHttpProxyServer {
                 bytesRead = handle.read(position, buffer, toRead)
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "NAS read failed at offset $position", e)
-                // The underlying SMB/SFTP socket died. Nullify the session handle 
-                // so the next HTTP request recreates it!
-                synchronized(session.handleLock) {
-                    if (session.handle === handle) {
-                        runCatching { session.handle?.close() }
-                        session.handle = null
-                    }
-                }
                 break // Abort streaming this chunk
             }
 
@@ -392,7 +373,7 @@ object NetworkHttpProxyServer {
                 session.share, session.path
             )
             ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(session.share, session.path)
-            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(session.share, session.path)
+            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(session.share, session.path, session.fileSize)
             else -> null // FTP/TV: not supported via proxy
         }
     }
