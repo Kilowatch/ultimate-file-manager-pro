@@ -257,12 +257,14 @@ class VaultActivity : AppCompatActivity() {
             showRecoveryCode = true,
             onRecoveryCode = { showRecoveryFlow() }
         ) { pin ->
-            if (verifyPbkdf2(pin, stored)) {
-                isUnlocked = true
-                showUnlockedUi()
-            } else {
-                showSnackbar(getString(R.string.vault_pin_invalid))
-                unlockVault()
+            scope.launch {
+                if (verifyPbkdf2(pin, stored)) {
+                    isUnlocked = true
+                    showUnlockedUi()
+                } else {
+                    showSnackbar(getString(R.string.vault_pin_invalid))
+                    unlockVault()
+                }
             }
         }
     }
@@ -285,9 +287,11 @@ class VaultActivity : AppCompatActivity() {
             val enteredHash = md.digest(pin.toByteArray(Charsets.UTF_8))
                 .joinToString("") { "%02x".format(it) }
             if (enteredHash == legacyHash) {
-                migratePin(pin)
-                isUnlocked = true
-                showUnlockedUi()
+                scope.launch {
+                    migratePin(pin)
+                    isUnlocked = true
+                    showUnlockedUi()
+                }
             } else {
                 showSnackbar(getString(R.string.vault_pin_invalid))
                 unlockVault()
@@ -305,14 +309,16 @@ class VaultActivity : AppCompatActivity() {
             confirmText = getString(R.string.vault_verify_pin_title),
             onCancel = {}
         ) { pin ->
-            if (!verifyPbkdf2(pin, stored)) {
-                showSnackbar(getString(R.string.vault_pin_invalid))
-                changePinFlow()
-                return@showPinDialog
-            }
+            scope.launch {
+                if (!verifyPbkdf2(pin, stored)) {
+                    showSnackbar(getString(R.string.vault_pin_invalid))
+                    changePinFlow()
+                    return@launch
+                }
 
-            showSetPinFlow(generateRecoveryCode = false) {
-                showSnackbar(getString(R.string.vault_pin_saved))
+                showSetPinFlow(generateRecoveryCode = false) {
+                    showSnackbar(getString(R.string.vault_pin_saved))
+                }
             }
         }
     }
@@ -382,12 +388,14 @@ class VaultActivity : AppCompatActivity() {
                     backgroundTintList = yellowCsl; setTextColor(black)
                     setOnClickListener {
                         warningDialog.dismiss()
-                        // Save PIN with PBKDF2
-                        savePinHash(pbkdf2(pin))
-                        onConfirmed?.invoke()
+                        scope.launch {
+                            // Save PIN with PBKDF2 off main thread
+                            savePinHash(pbkdf2(pin))
+                            onConfirmed?.invoke()
 
-                        if (generateRecoveryCode) {
-                            showNewRecoveryCode(bgColor, white, black, yellow, yellowCsl, glassCsl)
+                            if (generateRecoveryCode) {
+                                showNewRecoveryCode(bgColor, white, black, yellow, yellowCsl, glassCsl)
+                            }
                         }
                     }
                 }
@@ -404,72 +412,74 @@ class VaultActivity : AppCompatActivity() {
         yellowCsl: android.content.res.ColorStateList,
         glassCsl: android.content.res.ColorStateList
     ) {
-        // Generate 16-char alphanumeric code
-        val code = (1..16).map { RECOVERY_CHARS.random() }.joinToString("")
-        // Store PBKDF2 hash
-        saveRecoveryHash(pbkdf2(code))
+        scope.launch {
+            // Generate 16-char alphanumeric code & store PBKDF2 hash on background thread
+            val code = (1..16).map { RECOVERY_CHARS.random() }.joinToString("")
+            val hash = pbkdf2(code)
+            saveRecoveryHash(hash)
 
-        // Build a premium one-time display dialog
-        val ctx = this
-        val dialogView = layoutInflater.inflate(R.layout.dialog_recovery_code_display, null)
-        val txtCode   = dialogView.findViewById<android.widget.TextView>(R.id.txtCode)
-        val txtBody   = dialogView.findViewById<android.widget.TextView>(R.id.txtRecoveryBody)
-        val btnCopy   = dialogView.findViewById<android.widget.Button>(R.id.btnCopyCode)
+            // Build a premium one-time display dialog
+            val ctx = this@VaultActivity
+            val dialogView = layoutInflater.inflate(R.layout.dialog_recovery_code_display, null)
+            val txtCode   = dialogView.findViewById<android.widget.TextView>(R.id.txtCode)
+            val txtBody   = dialogView.findViewById<android.widget.TextView>(R.id.txtRecoveryBody)
+            val btnCopy   = dialogView.findViewById<android.widget.Button>(R.id.btnCopyCode)
 
-        txtCode.text = code
-        txtBody.text = getString(R.string.vault_recovery_code_body)
-        btnCopy.text = getString(R.string.vault_recovery_code_copy)
-        btnCopy.backgroundTintList = glassCsl
-        btnCopy.setTextColor(white)
-        btnCopy.setOnFocusChangeListener { _, hasFocus ->
-            btnCopy.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
-            btnCopy.setTextColor(if (hasFocus) black else white)
-        }
-        btnCopy.setOnClickListener {
-            val cm = getSystemService(android.content.ClipboardManager::class.java)
-            cm.setPrimaryClip(android.content.ClipData.newPlainText(
-                getString(R.string.recovery_code), code
-            ))
+            txtCode.text = code
+            txtBody.text = getString(R.string.vault_recovery_code_body)
+            btnCopy.text = getString(R.string.vault_recovery_code_copy)
+            btnCopy.backgroundTintList = glassCsl
+            btnCopy.setTextColor(white)
+            btnCopy.setOnFocusChangeListener { _, hasFocus ->
+                btnCopy.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                btnCopy.setTextColor(if (hasFocus) black else white)
+            }
+            btnCopy.setOnClickListener {
+                val cm = getSystemService(android.content.ClipboardManager::class.java)
+                cm.setPrimaryClip(android.content.ClipData.newPlainText(
+                    getString(R.string.recovery_code), code
+                ))
 
-            // Cancel previous timer if re-copying
-            clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
+                // Cancel previous timer if re-copying
+                clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
 
-            // Ensure handler is initialised
-            if (clipboardClearHandler == null) {
-                clipboardClearHandler = android.os.Handler(mainLooper)
+                // Ensure handler is initialised
+                if (clipboardClearHandler == null) {
+                    clipboardClearHandler = android.os.Handler(mainLooper)
+                }
+
+                // Schedule auto-clear in 60s
+                val runnable = Runnable {
+                    cm.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
+                    if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear fired")
+                }
+                clipboardClearRunnable = runnable
+                clipboardClearHandler?.postDelayed(runnable, 60_000L)
+
+                if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear scheduled in 60s")
+                showSnackbar(getString(R.string.vault_recovery_code_copied_autoclear))
             }
 
-            // Schedule auto-clear in 60s
-            val runnable = Runnable {
-                cm.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
-                if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear fired")
+            val codeDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
+                ctx,
+                com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+            )
+                .setView(dialogView)
+                .setPositiveButton(getString(R.string.vault_recovery_code_done), null)
+                .setCancelable(false)
+                .create()
+
+            codeDialog.setOnDismissListener {
+                clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
+                clipboardClearRunnable = null
             }
-            clipboardClearRunnable = runnable
-            clipboardClearHandler?.postDelayed(runnable, 60_000L)
-
-            if (BuildConfig.DEBUG) Log.i(TAG, "LOW-4: Clipboard auto-clear scheduled in 60s")
-            showSnackbar(getString(R.string.vault_recovery_code_copied_autoclear))
-        }
-
-        val codeDialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(
-            ctx,
-            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
-        )
-            .setView(dialogView)
-            .setPositiveButton(getString(R.string.vault_recovery_code_done), null)
-            .setCancelable(false)
-            .create()
-
-        codeDialog.setOnDismissListener {
-            clipboardClearRunnable?.let { clipboardClearHandler?.removeCallbacks(it) }
-            clipboardClearRunnable = null
-        }
-        codeDialog.show()
-        codeDialog.window?.setBackgroundDrawable(
-            android.graphics.drawable.ColorDrawable(bgColor)
-        )
-        codeDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
-            backgroundTintList = yellowCsl; setTextColor(black)
+            codeDialog.show()
+            codeDialog.window?.setBackgroundDrawable(
+                android.graphics.drawable.ColorDrawable(bgColor)
+            )
+            codeDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.apply {
+                backgroundTintList = yellowCsl; setTextColor(black)
+            }
         }
     }
 
@@ -532,31 +542,33 @@ class VaultActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                val isValid = if (isLegacyHash(storedHash)) {
-                    // Legacy SHA-256 recovery code — verify then migrate
-                    val md = java.security.MessageDigest.getInstance("SHA-256")
-                    val enteredHash = md.digest(entered.toByteArray(Charsets.UTF_8))
-                        .joinToString("") { "%02x".format(it) }
-                    if (enteredHash == storedHash) {
-                        if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 recovery code hash detected — migrating to PBKDF2")
-                        migrateRecoveryCode(entered)
-                        true
-                    } else false
-                } else {
-                    // PBKDF2 recovery code — verify directly
-                    verifyPbkdf2(entered, storedHash)
-                }
+                scope.launch {
+                    val isValid = if (isLegacyHash(storedHash)) {
+                        // Legacy SHA-256 recovery code — verify then migrate
+                        val md = java.security.MessageDigest.getInstance("SHA-256")
+                        val enteredHash = md.digest(entered.toByteArray(Charsets.UTF_8))
+                            .joinToString("") { "%02x".format(it) }
+                        if (enteredHash == storedHash) {
+                            if (BuildConfig.DEBUG) Log.i(TAG, "Legacy SHA-256 recovery code hash detected — migrating to PBKDF2")
+                            migrateRecoveryCode(entered)
+                            true
+                        } else false
+                    } else {
+                        // PBKDF2 recovery code — verify directly
+                        verifyPbkdf2(entered, storedHash)
+                    }
 
-                if (!isValid) {
-                    txtErr.text = getString(R.string.vault_recovery_invalid)
-                    txtErr.visibility = android.view.View.VISIBLE
-                    return@setOnClickListener
-                }
-                entryDialog.dismiss()
-                // Correct — let user set a new PIN (and generate new recovery code)
-                showSetPinFlow(generateRecoveryCode = true) {
-                    isUnlocked = true
-                    showUnlockedUi()
+                    if (!isValid) {
+                        txtErr.text = getString(R.string.vault_recovery_invalid)
+                        txtErr.visibility = android.view.View.VISIBLE
+                        return@launch
+                    }
+                    entryDialog.dismiss()
+                    // Correct — let user set a new PIN (and generate new recovery code)
+                    showSetPinFlow(generateRecoveryCode = true) {
+                        isUnlocked = true
+                        showUnlockedUi()
+                    }
                 }
             }
         }
@@ -567,27 +579,27 @@ class VaultActivity : AppCompatActivity() {
 
     /** PBKDF2-HMAC-SHA256 hash with a random 16-byte salt.
      *  Returns the hash string in format: iterations:salt_hex:hash_hex */
-    private fun pbkdf2(password: String): String {
+    private suspend fun pbkdf2(password: String): String = withContext(Dispatchers.Default) {
         val salt = ByteArray(SALT_SIZE).apply { SecureRandom().nextBytes(this) }
         val spec = PBEKeySpec(password.toCharArray(), salt, PBKDF2_ITERATIONS, PBKDF2_KEY_LENGTH)
         val key = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM).generateSecret(spec).encoded
         val saltHex = salt.joinToString("") { "%02x".format(it) }
         val hashHex = key.joinToString("") { "%02x".format(it) }
-        return "$PBKDF2_ITERATIONS:$saltHex:$hashHex"
+        "$PBKDF2_ITERATIONS:$saltHex:$hashHex"
     }
 
     /** Verify a password against a PBKDF2 hash stored in iterations:salt_hex:hash_hex format. */
-    private fun verifyPbkdf2(password: String, stored: String): Boolean {
-        if (isLegacyHash(stored)) return false
+    private suspend fun verifyPbkdf2(password: String, stored: String): Boolean = withContext(Dispatchers.Default) {
+        if (isLegacyHash(stored)) return@withContext false
         val parts = stored.split(":")
-        if (parts.size != 3) return false
-        val iterations = parts[0].toIntOrNull() ?: return false
-        val salt = parts[1].hexToByteArray() ?: return false
+        if (parts.size != 3) return@withContext false
+        val iterations = parts[0].toIntOrNull() ?: return@withContext false
+        val salt = parts[1].hexToByteArray() ?: return@withContext false
         val expectedHash = parts[2]
         val spec = PBEKeySpec(password.toCharArray(), salt, iterations, PBKDF2_KEY_LENGTH)
         val key = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM).generateSecret(spec).encoded
         val computedHash = key.joinToString("") { "%02x".format(it) }
-        return java.security.MessageDigest.isEqual(
+        java.security.MessageDigest.isEqual(
             computedHash.toByteArray(Charsets.UTF_8),
             expectedHash.toByteArray(Charsets.UTF_8)
         )
@@ -746,7 +758,7 @@ class VaultActivity : AppCompatActivity() {
 
     /** Migrate the user's PIN from legacy SHA-256 to PBKDF2.
      *  Saves to encrypted prefs, then deletes the old plain-text vault_prefs file. */
-    private fun migratePin(pin: String) {
+    private suspend fun migratePin(pin: String) {
         if (encryptedPrefs == null) return
         val hash = pbkdf2(pin)
         savePinHash(hash)
@@ -758,7 +770,7 @@ class VaultActivity : AppCompatActivity() {
 
     /** Migrate the recovery code hash from legacy SHA-256 to PBKDF2.
      *  Called from showRecoveryFlow() when the plaintext code is available. */
-    private fun migrateRecoveryCode(code: String) {
+    private suspend fun migrateRecoveryCode(code: String) {
         if (encryptedPrefs == null) return
         saveRecoveryHash(pbkdf2(code))
         if (BuildConfig.DEBUG) Log.i(TAG, "Recovery code migration complete")

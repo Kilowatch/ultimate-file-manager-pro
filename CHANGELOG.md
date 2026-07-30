@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed `IllegalArgumentException` crash (`Authenticator combination is unsupported on API 29: BIOMETRIC_STRONG | DEVICE_CREDENTIAL`) when initiating settings transfer authentication on Android 10 (API 29) devices.
 - Fixed false-positive ANR (App Freeze) reports when waking from device deep sleep or Doze mode by switching `AnrWatchdogThread` to use `SystemClock.uptimeMillis()` and filtering idle `nativePollOnce` looper stack states.
 - Fixed `NetworkOnMainThreadException` crash during SSDP discovery and UDP multicast packet transmission by offloading all `DatagramSocket.send` calls in `DlnaSsdpEngine` to a dedicated background executor.
+- Fixed potential `NullPointerException` on Ethernet-only Android TV devices (such as UGOOS AM8) when initializing local network pairing by safely retrieving `WifiManager` with fallback handling when Wi-Fi hardware is unavailable.
+- Fixed an ANR (App Freeze) in VaultActivity during PIN verification, PIN creation, PIN migration, and recovery code verification by offloading 260,000-iteration PBKDF2 key derivation off the main thread to background coroutines.
 
 ## [1.7.6] — 2026-07-27
 

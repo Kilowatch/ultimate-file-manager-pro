@@ -447,10 +447,15 @@ class PairingServer(
             var multicastLock: WifiManager.MulticastLock? = null
             try {
                 // Acquire MulticastLock to ensure we receive UDP broadcasts reliably in background
-                val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                multicastLock = wm.createMulticastLock("UFMPairingLock")
-                multicastLock.setReferenceCounted(true)
-                multicastLock.acquire()
+                val wm = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+                if (wm != null) {
+                    multicastLock = wm.createMulticastLock("UFMPairingLock")
+                    multicastLock?.setReferenceCounted(true)
+                    multicastLock?.acquire()
+                    Log.d("PairingServer", "MulticastLock acquired")
+                } else {
+                    Log.w("PairingServer", "WifiManager unavailable — MulticastLock not acquired (TV/Ethernet-only device)")
+                }
                 val ds = DatagramSocket(null)
                 ds.reuseAddress = true
                 ds.bind(java.net.InetSocketAddress(PairingDiscovery.DISCOVERY_PORT))
