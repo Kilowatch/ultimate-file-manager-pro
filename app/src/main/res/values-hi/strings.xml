@@ -8316,6 +8316,9 @@ WiFi रिमोट डिस्कनेक्ट हुआ
     <string name="edit_mode_disabled">
 संपादन मोड अक्षम
 </string>
+    <string name="text_edit_file_too_large">
+संपादित करने के लिए फ़ाइल बहुत बड़ी है। अधिकतम आकार %1$d KB है।
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

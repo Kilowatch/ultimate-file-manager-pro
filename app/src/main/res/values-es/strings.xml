@@ -8328,6 +8328,9 @@ Modo de edición activado
     <string name="edit_mode_disabled">
 Modo de edición desactivado
 </string>
+    <string name="text_edit_file_too_large">
+Archivo demasiado grande para editar. El tamaño máximo es %1$d KB.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

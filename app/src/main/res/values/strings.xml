@@ -2915,6 +2915,7 @@
     <string name="office_save_warning">This is an Office document. Content will be saved without formatting.</string>
     <string name="edit_mode_enabled">Edit mode enabled</string>
     <string name="edit_mode_disabled">Edit mode disabled</string>
+    <string name="text_edit_file_too_large">File too large to edit. Maximum size is %1$d KB.</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">Toggle drawing mode</string>

@@ -8316,6 +8316,9 @@ Bearbeitungsmodus aktiviert
     <string name="edit_mode_disabled">
 Bearbeitungsmodus deaktiviert
 </string>
+    <string name="text_edit_file_too_large">
+Die Datei ist zu groß zum Bearbeiten. Die maximale Größe beträgt %1$d KB.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

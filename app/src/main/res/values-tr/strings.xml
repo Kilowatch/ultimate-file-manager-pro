@@ -8316,6 +8316,9 @@ Düzenleme modu etkin
     <string name="edit_mode_disabled">
 Düzenleme modu devre dışı
 </string>
+    <string name="text_edit_file_too_large">
+Dosya düzenlenemeyecek kadar büyük. Maksimum boyut %1$d KB.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

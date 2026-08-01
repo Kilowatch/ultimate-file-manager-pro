@@ -8316,6 +8316,9 @@ WiFi-пульт відключено
     <string name="edit_mode_disabled">
 Режим редагування вимкнено
 </string>
+    <string name="text_edit_file_too_large">
+Файл занадто великий для редагування. Максимальний розмір — %1$d КБ.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

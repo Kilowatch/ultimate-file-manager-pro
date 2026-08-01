@@ -270,9 +270,24 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     private fun toggleEditMode() {
+        // Refuse to enter edit mode for very large documents. A single wrap-content
+        // EditText holding the whole file forces TextView.onMeasure to walk every glyph
+        // on the main thread (Layout.getDesiredWidthWithLimit -> TextLine.metrics ->
+        // Paint.getRunAdvance); on low-end Android TV boxes (e.g. ZTE OTT Xview+ AV1,
+        // SDK 30) that exceeds the ANR watchdog's 5s budget and freezes the app. Viewing
+        // stays available via pagination; only editing is capped.
+        val fullText = if (!isEditMode) allChunks.joinToString("\n") else ""
+        if (!isEditMode && fullText.toByteArray(Charsets.UTF_8).size > EDIT_MAX_BYTES) {
+            Toast.makeText(
+                this,
+                getString(R.string.text_edit_file_too_large, EDIT_MAX_BYTES / 1024),
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
         isEditMode = !isEditMode
         if (isEditMode) {
-            val fullText = allChunks.joinToString("\n")
             txtContent.setText(fullText)
             txtContent.textSize = textSize
             // ── Restore EditText editing capabilities (mobile and TV) ─────
@@ -1271,7 +1286,17 @@ class TextViewerActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val PAGE_BYTE_SIZE = 64 * 1024
+        // Pages are deliberately small: the content EditText has wrap_content width, so
+        // every layout pass re-measures the whole page's glyphs on the main thread
+        // (TextView.onMeasure -> Layout.getDesiredWidthWithLimit -> TextLine.metrics).
+        // 64 KB pages exceeded the ANR watchdog's 5s budget on low-end TV boxes
+        // (ZTE OTT Xview+ AV1, SDK 30); 16 KB keeps a page measurement well under it.
+        private const val PAGE_BYTE_SIZE = 16 * 1024
+
+        // Documents larger than this (UTF-8 bytes) cannot be opened in edit mode:
+        // setText() of the whole document on the main thread re-lays-out every glyph,
+        // freezing the app for >5s on slow devices. Viewing stays paginated.
+        private const val EDIT_MAX_BYTES = 128 * 1024
 
         private val OFFICE_WORD_LEGACY = setOf("doc", "dot")
         private val OFFICE_WORD_OOXML = setOf("docx", "docm", "dotx", "dotm")

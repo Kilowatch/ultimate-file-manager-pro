@@ -8316,6 +8316,9 @@ Bluetooth متوقف
     <string name="edit_mode_disabled">
 تم تعطيل وضع التحرير
 </string>
+    <string name="text_edit_file_too_large">
+الملف كبير جدًا بحيث لا يمكن تعديله. الحد الأقصى للحجم هو %1$d كيلوبايت.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

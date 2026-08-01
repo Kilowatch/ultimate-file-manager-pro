@@ -8316,6 +8316,9 @@ WiFi 리모컨 연결 해제됨
     <string name="edit_mode_disabled">
 편집 모드 비활성화됨
 </string>
+    <string name="text_edit_file_too_large">
+파일이 너무 커서 편집할 수 없습니다. 최대 크기는 %1$d KB입니다.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

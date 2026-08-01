@@ -8316,6 +8316,9 @@ Mode edit diaktifkan
     <string name="edit_mode_disabled">
 Mode edit dinonaktifkan
 </string>
+    <string name="text_edit_file_too_large">
+File terlalu besar untuk diedit. Ukuran maksimum adalah %1$d KB.
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">

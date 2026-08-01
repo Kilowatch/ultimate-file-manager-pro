@@ -8316,6 +8316,9 @@ WiFiリモコンが切断されました
     <string name="edit_mode_disabled">
 編集モードが無効になりました
 </string>
+    <string name="text_edit_file_too_large">
+ファイルが大きすぎて編集できません。最大サイズは %1$d KB です。
+</string>
 
     <!-- Image Viewer Editor -->
     <string name="btn_draw_toggle">
