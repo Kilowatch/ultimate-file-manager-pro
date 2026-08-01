@@ -15,6 +15,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.view.View
+import android.view.WindowManager
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageButton
@@ -303,6 +304,13 @@ class UFMPlayerActivity : AppCompatActivity() {
                     bufferingLayout.visibility = View.GONE
                 }
                 updatePlayPauseIcon()
+                if (isPlaying) {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    playerView.keepScreenOn = true
+                } else {
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    playerView.keepScreenOn = false
+                }
                 // Update PiP actions if in PiP mode
                 if (isPiP) updatePiPActions(isPlaying)
                 if (isPlaying) {
@@ -447,6 +455,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         if (currentIndex == -1) currentIndex = 0
 
         initViews()
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -475,6 +484,10 @@ class UFMPlayerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         isPiP = false
+        if (playbackService?.isPlaying == true) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            playerView.keepScreenOn = true
+        }
         // Re-attach player surface when returning from PiP
         if (!bound) {
             bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)

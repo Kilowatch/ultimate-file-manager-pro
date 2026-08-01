@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -414,6 +415,8 @@ class TwinWindowPlayerFragment : Fragment() {
             override fun onIsPlayingChanged(playing: Boolean) {
                 updatePlayPauseIcon()
                 if (playing) {
+                    activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    playerView.keepScreenOn = true
                     val showOnRepeat = SideBySideVideoPreferenceManager.isShowControlsOnRepeat(requireContext())
                     if (isRepeatingPlayback && !showOnRepeat) {
                         isRepeatingPlayback = false
@@ -425,6 +428,8 @@ class TwinWindowPlayerFragment : Fragment() {
                         resetHideTimer()
                     }
                 } else {
+                    activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    playerView.keepScreenOn = false
                     handler.removeCallbacks(hideControlsRunnable)
                 }
             }
