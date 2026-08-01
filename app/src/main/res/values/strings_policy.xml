@@ -288,6 +288,9 @@
     <string name="pp_s2_billing_body">When you make an optional Tip Jar purchase, Google Play processes the transaction. We never see your card or bank details. We temporarily receive a purchase token and the product ID — both handled on-device only and never stored on our servers.</string>
     <string name="pp_s2_billing_note">Anonymous purchase tokens from Google Play Billing are temporarily processed on-device to confirm your tip — they are never stored by us and are not linked to your identity.</string>
 
+    <string name="pp_s2_crash_heading">Crash &amp; ANR Reporting (Diagnostics)</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">What We Never Collect</string>
 
     <string name="pp_s3_local_heading">Local Data Is Used To</string>
@@ -416,7 +419,7 @@
     </string-array>
     <string-array name="pp_analytics_details">
         <item>Device model, OS version, screen size</item>
-        <item>Features used, session length, crash reports</item>
+        <item>Features used, session length</item>
         <item>Country/region based on IP — not your precise location</item>
     </string-array>
 

@@ -215,6 +215,10 @@ object PolicyViewBuilder {
                 context.getString(R.string.pp_s2_billing_note), AlertStyle.INFO))
 
             addView(spacer(context, 16))
+            addView(subHeading(context, context.getString(R.string.pp_s2_crash_heading)))
+            addView(bodyText(context, context.getString(R.string.pp_s2_crash_body)))
+
+            addView(spacer(context, 16))
             addView(subHeading(context, context.getString(R.string.pp_s2_nocollect_heading)))
             context.resources.getStringArray(R.array.pp_never_collect).forEach { item ->
                 addView(checkRow(context, item, CheckStyle.CROSS))

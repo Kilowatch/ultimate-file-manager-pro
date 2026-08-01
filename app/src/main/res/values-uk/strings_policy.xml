@@ -720,6 +720,13 @@ Ultimate File Manager Pro — це незалежний додаток для An
 Анонімні токени покупок від Google Play Billing тимчасово обробляються на пристрої для підтвердження вашого чайового — вони ніколи не зберігаються нами та не пов\'язуються з вашою особистістю.
 </string>
 
+    <string name="pp_s2_crash_heading">
+UFM може збирати діагностичну інформацію, коли він аварійно завершується або зависає, щоб ми могли виправити проблему. Це включає версію застосунку, версію Android, модель і виробника пристрою, тип винятку та його повідомлення, а також стек викликів. Він ніколи не містить ваших файлів, імен, адрес електронної пошти чи інформації про обліковий запис.\n
+\n
+Нічого не надсилається автоматично: після збою або зависання з’являється запит, чи бажаєте ви надіслати звіт до KiloWatch (kilowatch.co.za). Якщо вибрати «Ні, дякую», звіт буде видалено локально. Ви можете будь-коли вимкнути виявлення збоїв і зависань у розділі Налаштування → Звіти про збої та ANR; вимкнення також видаляє всі відкладені звіти.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Що ми ніколи не збираємо
 </string>
@@ -1039,10 +1046,10 @@ ID ключа доступу та секретний ключ доступу д�
 Модель пристрою, версія ОС, розмір екрана
 </item>
         <item>
-Використані функції, тривалість сесії, звіти про збої
+Використані функції, тривалість сесії
 </item>
         <item>
-Країна/регіон на основі IP – не ваше точне місцезнаходження
+Країна/регіон на основі IP-адреси — не ваше точне місцезнаходження
 </item>
     </string-array>
 

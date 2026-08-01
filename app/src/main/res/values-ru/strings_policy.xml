@@ -720,6 +720,15 @@ Ultimate File Manager Pro является независимым приложе
 Анонимные токены покупок от Google Play Billing временно обрабатываются на устройстве для подтверждения вашего чаевого — они никогда не сохраняются нами и не связаны с вашей личностью.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Отчеты о сбоях и ANR (Диагностика)\n
+\n
+UFM может собирать диагностическую информацию при сбое или зависании, чтобы мы могли устранить проблему. Эта информация включает версию приложения, версию Android, модель и производителя устройства, тип и сообщение исключения, а также стек вызовов. Она никогда не включает ваши файлы, имена, адреса электронной почты или данные учетной записи.\n
+\n
+Ничего не отправляется автоматически: после сбоя или зависания появляется запрос, хотите ли вы отправить отчет в KiloWatch (kilowatch.co.za). Выбор «Нет, спасибо» удаляет его локально. Вы можете отключить обнаружение сбоев и зависаний в любое время через Настройки → Отчеты о сбоях и ANR; отключение также удаляет все неотправленные отчеты.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Что мы никогда не собираем
 </string>
@@ -1039,10 +1048,10 @@ Cookie (ufm_lang) запоминает ваш выбор языка в тече�
 Модель устройства, версия ОС, размер экрана
 </item>
         <item>
-Используемые функции, продолжительность сеанса, отчёты об ошибках
+Используемые функции, продолжительность сеанса
 </item>
         <item>
-Страна/регион на основе IP — не ваше точное местоположение
+Страна/регион на основе IP-адреса — не ваше точное местоположение
 </item>
     </string-array>
 

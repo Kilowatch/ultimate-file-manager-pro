@@ -720,6 +720,15 @@ Google Play Faturalama (Yalnızca İsteğe Bağlı Bahşişler) ile İşlenir
 Google Play Faturalama\'dan gelen anonim satın alma belirteçleri, bahşişinizi onaylamak için geçici olarak cihazda işlenir — bunlar tarafımızdan asla saklanmaz ve kimliğinizle ilişkilendirilmez.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Çökme ve ANR Raporlama (Tanılama)\n
+\n
+UFM, çöktüğünde veya donduğunda teşhis bilgilerini yakalayabilir, böylece sorunu düzeltebiliriz. Bu bilgiler; uygulama sürümü, Android sürümü, cihaz modeli ve üreticisi, istisna türü ve mesajı ile yığın izini içerir. Dosyalarınızı, adlarınızı, e-posta adreslerinizi veya hesap bilgilerinizi asla içermez.\n
+\n
+Hiçbir şey otomatik olarak gönderilmez: bir çökme veya donma sonrasında, raporu KiloWatch\\\'a (kilowatch.co.za) göndermek isteyip istemediğinizi soran bir iletişim kutusu belirir. \\\'Hayır, teşekkürler\\\' seçeneği raporu yerel olarak siler. Çökme ve donma algılamayı istediğiniz zaman Ayarlar → Çökme ve ANR Raporlama üzerinden devre dışı bırakabilirsiniz; devre dışı bırakmak bekleyen raporları da siler.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Asla Toplamadığımız Bilgiler
 </string>
@@ -1039,10 +1048,10 @@ Genel Konum
 Cihaz modeli, işletim sistemi sürümü, ekran boyutu
 </item>
         <item>
-Kullanılan özellikler, oturum süresi, çökme raporları
+Kullanılan özellikler, oturum süresi
 </item>
         <item>
-IP\'ye dayalı ülke/bölge — kesin konumunuz değil
+IP adresine göre ülke/bölge — kesin konumunuz değil
 </item>
     </string-array>
 

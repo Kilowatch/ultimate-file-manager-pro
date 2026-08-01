@@ -720,6 +720,13 @@ Google Play 결제를 통해 처리(선택적 팁만 해당)
 Google Play 결제의 익명 구매 토큰은 팁 확인을 위해 기기에서 일시적으로 처리되며, 당사에 저장되지 않고 귀하의 신원과 연결되지 않습니다.
 </string>
 
+    <string name="pp_s2_crash_heading">
+충돌 및 ANR 보고(진단) UFM은 충돌하거나 멈출 때 진단 정보를 수집하여 문제를 해결할 수 있습니다. 여기에는 앱 버전, Android 버전, 기기 모델 및 제조업체, 예외 유형 및 메시지, 스택 추적이 포함됩니다. 파일, 이름, 이메일 주소 또는 계정 정보는 절대 포함되지 않습니다.\n
+\n
+아무 것도 자동으로 전송되지 않습니다. 충돌 또는 멈춤 후에는 보고서를 KiloWatch(kilowatch.co.za)에 보낼지 묻는 메시지가 표시됩니다. \\\'아니요\\\'를 선택하면 로컬에서 삭제됩니다. 설정 → 충돌 및 ANR 보고를 통해 언제든지 충돌 및 멈춤 감지를 비활성화할 수 있습니다. 비활성화하면 보류 중인 보고서도 삭제됩니다.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 수집하지 않는 정보
 </string>
@@ -1039,10 +1046,10 @@ S3 버킷 연결을 위한 액세스 키 ID 및 시크릿 액세스 키 · 앱 �
 기기 모델, OS 버전, 화면 크기
 </item>
         <item>
-사용된 기능, 세션 길이, 충돌 보고서
+사용한 기능, 세션 길이
 </item>
         <item>
-IP 기반 국가/지역 — 정확한 위치가 아님
+IP 기반 국가/지역 — 정확한 위치는 아님
 </item>
     </string-array>
 

@@ -720,6 +720,15 @@ Cuando realizas una compra opcional de propina, Google Play procesa la transacci
 Los tokens de compra anónimos de Google Play Billing se procesan temporalmente en el dispositivo para confirmar tu propina; nunca los almacenamos y no están vinculados a tu identidad.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Informe de fallos y ANR (Diagnóstico)\n
+\n
+UFM puede capturar información de diagnóstico cuando falla o se congela para que podamos solucionar el problema. Esto incluye la versión de la aplicación, la versión de Android, el modelo y fabricante del dispositivo, el tipo y mensaje de excepción, y la traza de pila. Nunca incluye tus archivos, nombres, direcciones de correo electrónico ni información de la cuenta.\n
+\n
+No se envía nada automáticamente: después de un bloqueo o congelación, se muestra una ventana preguntando si deseas enviar el informe a KiloWatch (kilowatch.co.za). Al elegir \\\'No, gracias\\\' se elimina localmente. Puedes desactivar la detección de fallos y congelaciones en cualquier momento a través de Ajustes → Informe de fallos y ANR; al desactivarla también se eliminan los informes pendientes.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Lo que nunca recopilamos
 </string>
@@ -1039,10 +1048,10 @@ Ubicación general
 Modelo del dispositivo, versión del SO, tamaño de pantalla
 </item>
         <item>
-Funciones usadas, duración de la sesión, informes de fallos
+Funciones utilizadas, duración de la sesión
 </item>
         <item>
-País/región basado en IP — no tu ubicación precisa
+País/región según la IP, no tu ubicación exacta
 </item>
     </string-array>
 

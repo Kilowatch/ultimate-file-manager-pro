@@ -385,21 +385,29 @@ object CrashReportManager {
                     //    `mainHandler.postDelayed(this, 1_000L)`. When the main looper is
                     //    stalled for >5 s and then becomes responsive again, the first message
                     //    it dispatches is the overdue ticker, so a sample taken in that window
-                    //    shows `Message.obtain` -> `Handler.postDelayed` -> the ticker — the
-                    //    watchdog's own heartbeat, not app business logic. It can never be the
-                    //    cause of a 5 s freeze: `Message.obtain`/`postDelayed` are fast, and the
-                    //    ticker does no other work. We detect this by (a) the stack shape (top
-                    //    frame `android.os.Message.obtain` with a `Handler.postDelayed` below it)
-                    //    and (b) `lastTickTimestamp` having JUST been updated (< 1 s ago) — i.e.
-                    //    the ticker ran, so the main looper is responsive again. Genuine busy
-                    //    loops that starve the ticker keep `lastTickTimestamp` stale, so they
-                    //    still fail this test and are reported as real freezes.
+                    //    shows the ticker's own `run()` mid re-post — the watchdog's own
+                    //    heartbeat, not app business logic. It can never be the cause of a 5 s
+                    //    freeze: `postDelayed`/`Message.obtain` are fast, and the ticker does no
+                    //    other work. Depending on the sampling instant, the main thread can be
+                    //    caught anywhere inside that `postDelayed` call — at `Message.obtain`
+                    //    (deepest, the previously-fixed shape) or at `Handler.postDelayed`
+                    //    itself. In every shape the direct caller of the `Handler.postDelayed`
+                    //    frame is the ticker's `run()` method, and that `run()` was dispatched
+                    //    by the handler (`Handler.handleCallback` just below it). We detect this
+                    //    by (a) that stack shape and (b) `lastTickTimestamp` having JUST been
+                    //    updated (< 1 s ago) — i.e. the ticker ran, so the main looper is
+                    //    responsive again. Genuine busy loops that starve the ticker keep
+                    //    `lastTickTimestamp` stale, so they still fail this test and are
+                    //    reported as real freezes.
                     val tickerJustRan = SystemClock.uptimeMillis() - lastTickTimestamp < 1_000L
+                    val postDelayedFrameIdx = mainStackTrace.indexOfFirst {
+                        it.className == "android.os.Handler" && it.methodName == "postDelayed"
+                    }
                     val isWatchdogHeartbeatSample =
                         tickerJustRan &&
-                        topFrame?.className == "android.os.Message" &&
-                        topFrame?.methodName == "obtain" &&
-                        mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "postDelayed" }
+                        postDelayedFrameIdx >= 0 &&
+                        mainStackTrace.getOrNull(postDelayedFrameIdx + 1)?.methodName == "run" &&
+                        mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "handleCallback" }
 
                     // 5. The system is instantiating a Service on the main thread (e.g. a
                     //    WorkManager job firing via JobScheduler ->

@@ -720,6 +720,15 @@ Google Play बिलिंग के माध्यम से संसाध�
 Google Play बिलिंग से गुमनाम खरीद टोकन आपकी टिप की पुष्टि करने के लिए अस्थायी रूप से डिवाइस पर संसाधित होते हैं — वे हमारे द्वारा कभी संग्रहीत नहीं किए जाते और आपकी पहचान से लिंक नहीं होते।
 </string>
 
+    <string name="pp_s2_crash_heading">
+क्रैश और ANR रिपोर्टिंग (डायग्नोस्टिक्स)\n
+\n
+UFM क्रैश या फ्रीज़ होने पर डायग्नोस्टिक जानकारी एकत्र कर सकता है ताकि हम समस्या का समाधान कर सकें। इसमें ऐप संस्करण, Android संस्करण, डिवाइस मॉडल और निर्माता, अपवाद का प्रकार और संदेश, तथा स्टैक ट्रेस शामिल है। इसमें आपकी फ़ाइलें, नाम, ईमेल पते या खाता जानकारी कभी शामिल नहीं होती।\n
+\n
+कुछ भी स्वचालित रूप से नहीं भेजा जाता: क्रैश या फ्रीज़ के बाद, एक प्रॉम्प्ट पूछता है कि क्या आप रिपोर्ट KiloWatch (kilowatch.co.za) को भेजना चाहते हैं। \\\'नहीं, धन्यवाद\\\' चुनने पर इसे स्थानीय रूप से हटा दिया जाता है। आप किसी भी समय सेटिंग्स → क्रैश और ANR रिपोर्टिंग के माध्यम से क्रैश और फ्रीज़ डिटेक्शन बंद कर सकते हैं; इसे बंद करने से किसी भी लंबित रिपोर्ट को भी हटा दिया जाता है।
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 हम कभी क्या एकत्र नहीं करते
 </string>
@@ -1039,10 +1048,10 @@ S3 बकेट से कनेक्ट करने के लिए एक�
 डिवाइस मॉडल, OS संस्करण, स्क्रीन आकार
 </item>
         <item>
-उपयोग की गई सुविधाएँ, सत्र की लंबाई, क्रैश रिपोर्ट
+उपयोग की गई सुविधाएँ, सत्र अवधि
 </item>
         <item>
-IP के आधार पर देश/क्षेत्र — आपका सटीक स्थान नहीं
+आईपी के आधार पर देश/क्षेत्र — आपकी सटीक स्थिति नहीं
 </item>
     </string-array>
 

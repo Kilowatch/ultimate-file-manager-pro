@@ -720,6 +720,15 @@ Saat Anda melakukan pembelian Tip Jar opsional, Google Play memproses transaksi.
 Token pembelian anonim dari Google Play Billing diproses sementara di perangkat untuk mengonfirmasi tip Anda — token tersebut tidak pernah disimpan oleh kami dan tidak dikaitkan dengan identitas Anda.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Pelaporan Crash &amp; ANR (Diagnostik)\n
+\n
+UFM dapat menangkap informasi diagnostik saat aplikasi crash atau membeku sehingga kami dapat memperbaiki masalahnya. Ini mencakup versi aplikasi, versi Android, model dan pabrikan perangkat, jenis dan pesan exception, serta stack trace. Ini tidak pernah menyertakan file, nama, alamat email, atau informasi akun Anda.\n
+\n
+Tidak ada yang dikirim secara otomatis: setelah crash atau membeku, sebuah prompt akan menanyakan apakah Anda ingin mengirim laporan ke KiloWatch (kilowatch.co.za). Memilih \\\'No Thanks\\\' akan menghapus laporan tersebut secara lokal. Anda dapat menonaktifkan deteksi crash dan membeku kapan saja melalui Setelan → Pelaporan Crash &amp; ANR; menonaktifkannya juga akan menghapus laporan yang tertunda.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Yang Tidak Pernah Kami Kumpulkan
 </string>
@@ -1039,7 +1048,7 @@ Lokasi Umum
 Model perangkat, versi OS, ukuran layar
 </item>
         <item>
-Fitur yang digunakan, durasi sesi, laporan kerusakan
+Fitur yang digunakan, durasi sesi
 </item>
         <item>
 Negara/wilayah berdasarkan IP — bukan lokasi pasti Anda

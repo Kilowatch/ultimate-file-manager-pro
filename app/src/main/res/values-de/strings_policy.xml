@@ -720,6 +720,15 @@ Wenn Sie einen optionalen Trinkgeldkauf tätigen, wickelt Google Play die Transa
 Anonyme Kauf-Token von Google Play Billing werden vorübergehend auf dem Gerät verarbeitet, um Ihr Trinkgeld zu bestätigen – sie werden von uns nie gespeichert und sind nicht mit Ihrer Identität verknüpft.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Absturz- &amp; ANR-Berichterstattung (Diagnose)
+</string>
+    <string name="pp_s2_crash_body">
+UFM kann Diagnoseinformationen erfassen, wenn es abstürzt oder einfriert, damit wir das Problem beheben können. Dazu gehören die App-Version, die Android-Version, Gerätemodell und -hersteller, der Ausnahmetyp und die Ausnahmemeldung sowie der Stack-Trace. Es enthält niemals Ihre Dateien, Namen, E-Mail-Adressen oder Kontoinformationen.
+
+Es wird nichts automatisch gesendet: Nach einem Absturz oder Einfrieren werden Sie in einer Eingabeaufforderung gefragt, ob Sie den Bericht an KiloWatch (kilowatch.co.za) senden möchten. Wenn Sie „Nein danke“ wählen, wird er lokal gelöscht. Sie können die Absturz- und Einfriererkennung jederzeit über Einstellungen → Absturz- &amp; ANR-Berichterstattung deaktivieren. Durch das Deaktivieren werden auch ausstehende Berichte gelöscht.
+</string>
+
     <string name="pp_s2_nocollect_heading">
 Was wir nie sammeln
 </string>
@@ -1039,10 +1048,10 @@ Allgemeiner Standort
 Gerätemodell, OS-Version, Bildschirmgröße
 </item>
         <item>
-Verwendete Funktionen, Sitzungslänge, Absturzberichte
+Verwendete Funktionen, Sitzungsdauer
 </item>
         <item>
-Land/Region basierend auf IP – nicht Ihr genauer Standort
+Land/Region basierend auf der IP — nicht Ihr genauer Standort
 </item>
     </string-array>
 

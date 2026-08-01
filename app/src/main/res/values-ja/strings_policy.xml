@@ -720,6 +720,13 @@ Google Play請求による処理（任意のチップのみ）
 Google Play請求からの匿名購入トークンは、チップを確認するためにデバイス上で一時的に処理されます。当社が保存することはなく、個人の身元と関連付けられることもありません。
 </string>
 
+    <string name="pp_s2_crash_heading">
+クラッシュとANRレポート（診断） UFMは、クラッシュやフリーズの際に診断情報を取得して、問題の修正に役立てることができます。この情報には、アプリのバージョン、Androidのバージョン、デバイスのモデルとメーカー、例外の種類とメッセージ、スタックトレースが含まれます。あなたのファイル、名前、メールアドレス、アカウント情報は一切含まれません。\n
+\n
+自動的に送信されることはありません。クラッシュやフリーズが発生すると、レポートをKiloWatch（kilowatch.co.za）に送信するかどうかを確認するプロンプトが表示されます。「No Thanks」を選択すると、レポートはローカルで削除されます。クラッシュおよびフリーズの検出は、いつでも設定 → クラッシュとANRレポートから無効にできます。無効にすると、保留中のレポートも削除されます。
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 収集しない情報
 </string>
@@ -1036,13 +1043,13 @@ Cookie（ufm_lang）により、セッション間およびブラウザ再起動
     </string-array>
     <string-array name="pp_analytics_details">
         <item>
-デバイスモデル、OSバージョン、画面サイズ
+端末モデル、OSバージョン、画面サイズ
 </item>
         <item>
-使用された機能、セッション時間、クラッシュレポート
+利用した機能、セッション時間
 </item>
         <item>
-IPに基づく国/地域 - 正確な位置情報ではありません
+IPアドレスに基づく国/地域 — 正確な位置情報ではありません
 </item>
     </string-array>
 

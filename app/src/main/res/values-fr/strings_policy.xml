@@ -720,6 +720,15 @@ Lorsque vous effectuez un achat facultatif dans le Tip Jar, Google Play traite l
 Les jetons d\'achat anonymes de Google Play Billing sont temporairement traités sur l\'appareil pour confirmer votre pourboire — ils ne sont jamais stockés par nous et ne sont pas liés à votre identité.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Signalement des crashs et ANR (Diagnostics)\n
+\n
+UFM peut capturer des informations de diagnostic lorsqu\\\'il plante ou se fige afin que nous puissions résoudre le problème. Cela inclut la version de l\\\'application, la version d\\\'Android, le modèle et le fabricant de l\\\'appareil, le type et le message d\\\'exception, ainsi que la trace de pile. Cela n\\\'inclut jamais vos fichiers, noms, adresses e-mail ou informations de compte.\n
+\n
+Rien n\\\'est envoyé automatiquement : après un plantage ou un gel, une invite demande si vous souhaitez envoyer le rapport à KiloWatch (kilowatch.co.za). Choisir « Non merci » le supprime localement. Vous pouvez désactiver la détection des crashs et des gels à tout moment via Paramètres → Signalement des crashs et ANR ; la désactiver supprime également les rapports en attente.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 Ce que nous ne collectons jamais
 </string>
@@ -1036,13 +1045,13 @@ Localisation générale
     </string-array>
     <string-array name="pp_analytics_details">
         <item>
-Modèle de l\'appareil, version de l\'OS, taille d\'écran
+Modèle de l\'appareil, version du système d\'exploitation, taille de l\'écran
 </item>
         <item>
-Fonctionnalités utilisées, durée de session, rapports d\'erreur
+Fonctionnalités utilisées, durée de session
 </item>
         <item>
-Pays/région basé sur l\'IP — pas votre localisation précise
+Pays/région basé sur l\'adresse IP — pas votre position exacte
 </item>
     </string-array>
 

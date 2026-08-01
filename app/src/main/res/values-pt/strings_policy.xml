@@ -720,6 +720,15 @@ Quando você faz uma compra opcional na Caixinha de Gorjetas, o Google Play proc
 Tokens de compra anônimos do Google Play Faturamento são processados temporariamente no dispositivo para confirmar sua gorjeta — nunca são armazenados por nós e não estão vinculados à sua identidade.
 </string>
 
+    <string name="pp_s2_crash_heading">
+Relatório de Falhas e ANR (Diagnóstico)
+</string>
+    <string name="pp_s2_crash_body">
+O UFM pode capturar informações de diagnóstico quando ele falha ou trava, para que possamos corrigir o problema. Isso inclui a versão do aplicativo, a versão do Android, o modelo e o fabricante do dispositivo, o tipo e a mensagem da exceção e o stack trace. Ele nunca inclui seus arquivos, nomes, endereços de e-mail ou informações de conta.\n
+\n
+Nada é enviado automaticamente: após uma falha ou travamento, uma caixa de diálogo pergunta se você deseja enviar o relatório para a KiloWatch (kilowatch.co.za). Ao escolher \\\'Não, obrigado\\\', o relatório é excluído localmente. Você pode desativar a detecção de falhas e travamentos a qualquer momento em Configurações → Relatório de Falhas e ANR; desativá-la também exclui todos os relatórios pendentes.
+</string>
+
     <string name="pp_s2_nocollect_heading">
 O que nunca coletamos
 </string>
@@ -1039,10 +1048,10 @@ Localização Geral
 Modelo do dispositivo, versão do SO, tamanho da tela
 </item>
         <item>
-Recursos usados, duração da sessão, relatórios de falha
+Recursos usados, duração da sessão
 </item>
         <item>
-País/região baseado no IP — não sua localização precisa
+País/região com base no IP — não sua localização precisa
 </item>
     </string-array>
 

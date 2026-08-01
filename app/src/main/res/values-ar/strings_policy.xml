@@ -720,6 +720,13 @@ Ultimate File Manager Pro هو تطبيق Android مستقل وليس تابعً
 يتم معالجة رموز الشراء المجهولة من Google Play Billing مؤقتًا على الجهاز لتأكيد نصيحتك — لا يتم تخزينها من قبلنا ولا ترتبط بهويتك.
 </string>
 
+    <string name="pp_s2_crash_heading">
+الإبلاغ عن الأعطال وعدم استجابة التطبيق (التشخيصات) يمكن لـ UFM جمع معلومات التشخيص عندما يتعطل أو يتجمد حتى نتمكن من إصلاح المشكلة. يتضمن ذلك إصدار التطبيق، وإصدار أندرويد، وطراز الجهاز والشركة المصنعة، ونوع الاستثناء ورسالته، وتتبع المكدس. لا يتضمن أبدًا ملفاتك أو أسمائك أو عناوين بريدك الإلكتروني أو معلومات حسابك.\n
+\n
+لا يتم إرسال أي شيء تلقائيًا: بعد حدوث عطل أو تجمد، يظهر طلب يسأل عما إذا كنت ترغب في إرسال التقرير إلى KiloWatch (kilowatch.co.za). اختيار \"لا شكرًا\" يحذفه محليًا. يمكنك تعطيل كشف الأعطال والتجمد في أي وقت عبر الإعدادات → الإبلاغ عن الأعطال وعدم استجابة التطبيق؛ يؤدي تعطيله أيضًا إلى حذف أي تقارير معلقة.
+</string>
+    <string name="pp_s2_crash_body">UFM can capture diagnostic information when it crashes or freezes so we can fix the issue. This includes the app version, Android version, device model and manufacturer, the exception type and message, and the stack trace. It never includes your files, names, email addresses, or account information.\n\nNothing is sent automatically: after a crash or freeze, a prompt asks whether you would like to send the report to KiloWatch (kilowatch.co.za). Choosing \'No Thanks\' deletes it locally. You can disable crash and freeze detection at any time via Settings → Crash &amp; ANR Reporting; disabling it also deletes any pending reports.</string>
+
     <string name="pp_s2_nocollect_heading">
 ما لا نجمعه أبدًا
 </string>
@@ -1039,10 +1046,10 @@ Remote File Server: عرض قائمة التطبيقات المثبتة والب
 طراز الجهاز، إصدار نظام التشغيل، حجم الشاشة
 </item>
         <item>
-الميزات المستخدمة، مدة الجلسة، تقارير الأعطال
+الميزات المستخدمة، مدة الجلسة
 </item>
         <item>
-الدولة/المنطقة بناءً على عنوان IP — وليس موقعك الدقيق
+البلد/المنطقة بناءً على عنوان IP — وليس موقعك الدقيق
 </item>
     </string-array>
 
