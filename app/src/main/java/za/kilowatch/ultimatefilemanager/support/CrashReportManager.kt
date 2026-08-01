@@ -456,7 +456,37 @@ object CrashReportManager {
                         mainStackTrace.any { it.className == "android.animation.StateListAnimator" && (it.methodName == "setState" || it.methodName == "start") } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall) {
+                    // 7. The main thread is blocked laying out RecyclerView rows while
+                    //    handling a TV D-pad focus-navigation key event. When focus search
+                    //    fails inside the currently visible rows, LinearLayoutManager.
+                    //    onFocusSearchFailed fills the list in the search direction to find
+                    //    the next focusable row, and every row it attaches runs the
+                    //    framework's window-attach + drawable-state refresh on the main
+                    //    thread (addView -> dispatchAttachedToWindow -> refreshDrawableState
+                    //    -> <View>.drawableStateChanged). On low-end Android TV devices
+                    //    (e.g. onn 4K Streaming Box, SDK 34) that synchronous layout of
+                    //    many rows can exceed the 5 s watchdog threshold while the user
+                    //    simply presses a D-pad arrow. The stack has zero UFM frames — the
+                    //    top frame is a framework/library view lifecycle callback
+                    //    (drawableStateChanged / refreshDrawableState), and the work is all
+                    //    inside AndroidX RecyclerView's focus-search layout machinery plus
+                    //    framework view attach, so the app cannot act on it. A genuine
+                    //    freeze keeps an app frame (`za.kilowatch.ultimatefilemanager.*`)
+                    //    on the stack, or is caught inside app bind code whose top frame is
+                    //    not a drawable-state lifecycle callback, and still fails this test.
+                    val isRecyclerViewFocusSearchStall =
+                        (topFrame?.methodName == "drawableStateChanged" ||
+                         topFrame?.methodName == "refreshDrawableState") &&
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.RecyclerView" && it.methodName == "focusSearch"
+                        } &&
+                        mainStackTrace.any { it.className == "androidx.recyclerview.widget.LinearLayoutManager" } &&
+                        mainStackTrace.any {
+                            it.className.startsWith("android.view.View") && it.methodName == "dispatchAttachedToWindow"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
