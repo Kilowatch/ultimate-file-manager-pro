@@ -34,15 +34,22 @@ object CrashReportManager {
     private const val REPORT_DIR = "crash_reports"
     private const val WATCHDOG_INTERVAL_MS = 5_000L
     private const val WATCHDOG_TIMEOUT_MS  = 5_000L
-    // Class-name prefixes identifying the Android platform / Java runtime. A main-thread
-    // stack made up entirely of these frames means the thread is executing framework code
-    // only — no app and no bundled-library frames — so a block there is a system-side wait
-    // the app cannot fix (e.g. a synchronous call to the system server during activity
-    // launch). R8 obfuscates app/library classes to short names, which never match these
-    // prefixes, so any real app-code frame still fails the pure-platform test below.
+    // Class-name prefixes identifying the Android platform / Java runtime / Google Play
+    // infrastructure. A main-thread stack made up entirely of these frames means the thread
+    // is executing framework or Google Play library code only — no app business-logic frames —
+    // so a block there is a system-side wait the app cannot fix (e.g. a synchronous call to
+    // the system server during activity launch, or Google Play's injected licensing
+    // (PairIP `com.pairip.licensecheck`) service-disconnect handler). R8 obfuscates app classes
+    // and app-owned bundled libraries (Media3, OkHttp, …) to short names, which never match
+    // these prefixes, so any real app-code frame still fails the pure-platform test below.
+    // Google Play's own libraries are listed explicitly because they ship protected / with
+    // keep-rules and retain their full `com.google.*` / `com.pairip.*` class names in release
+    // builds — a stack that is entirely Google Play frames is still a library-side wait the
+    // app cannot act on.
     private val PLATFORM_PREFIXES = listOf(
         "android.", "com.android.", "java.", "javax.", "dalvik.",
-        "libcore.", "jdk.", "sun.", "org.apache.", "org.json"
+        "libcore.", "jdk.", "sun.", "org.apache.", "org.json",
+        "com.google.", "com.pairip."
     )
 
     private const val PREFS_NAME = "crash_report_prefs"
