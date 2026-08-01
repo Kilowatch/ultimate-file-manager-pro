@@ -34,6 +34,7 @@ object CrashReportManager {
     private const val REPORT_DIR = "crash_reports"
     private const val WATCHDOG_INTERVAL_MS = 5_000L
     private const val WATCHDOG_TIMEOUT_MS  = 5_000L
+    private const val APP_PACKAGE_PREFIX   = "za.kilowatch.ultimatefilemanager"
 
     private const val PREFS_NAME = "crash_report_prefs"
     private const val KEY_ENABLED = "crash_reporting_enabled"
@@ -319,12 +320,23 @@ object CrashReportManager {
                 if (blockedDuration >= WATCHDOG_TIMEOUT_MS) {
                     val mainThread = Looper.getMainLooper().thread
                     val mainStackTrace = mainThread.stackTrace
+                    val topFrame = mainStackTrace.firstOrNull()
 
-                    // If top frame is nativePollOnce, main thread is idling in looper, NOT blocked!
-                    val isIdleInLooper = mainStackTrace.firstOrNull()?.methodName == "nativePollOnce"
+                    // The main thread is NOT blocked (false positive) when:
+                    //  1. It is idling in the looper — top frame is nativePollOnce, a normal
+                    //     wait for the next message (e.g. when coming back from deep sleep/Doze).
+                    //  2. It is blocked on a synchronous binder call to the system server with
+                    //     no app frames on the stack (e.g. ActivityThread.createBaseContextForActivity
+                    //     -> ActivityClient.getDisplayId during activity launch). That is a
+                    //     system-side wait the app cannot control; app code has not even run.
+                    val isIdleInLooper = topFrame?.methodName == "nativePollOnce"
+                    val isSystemBinderWait = topFrame != null &&
+                        topFrame.className == "android.os.BinderProxy" &&
+                        (topFrame.methodName == "transactNative" || topFrame.methodName == "transact") &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE_PREFIX) }
 
-                    if (isIdleInLooper) {
-                        // Reset lastTickTimestamp so false positive is cleared when coming back from sleep/doze
+                    if (isIdleInLooper || isSystemBinderWait) {
+                        // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
                         val sb = StringBuilder()

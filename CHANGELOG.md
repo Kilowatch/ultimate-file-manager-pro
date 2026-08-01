@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a crash (NullPointerException in `PdfViewerActivity.onCreate`) when opening PDF files on Android TV devices. The TV layout has no `HorizontalScrollView` wrapper, so `findViewById(R.id.pdfHScrollView)` returned null and the non-null assignment crashed. The view is now treated as nullable and all horizontal-scroll operations are guarded, so the TV PDF viewer opens and scrolls correctly.
 - Fixed an ANR (App Freeze) at `HardwareRenderer.nSetStopped` during activity stop traversals by removing explicit hardware layer types on RecyclerView containers during transitions and automatically canceling view animators on window detachment.
 - Fixed an ANR (App Freeze) during view animation end callbacks (`AnimatorListener.onAnimationEnd`) by offloading adapter list updates, layout transition scheduling, and text scrolling steps to the main thread message queue.
+- Fixed a false-positive ANR (App Freeze) report when the main thread is blocked on a synchronous binder call to the Android system server with no app frames on the stack (e.g. `ActivityThread.createBaseContextForActivity` → `ActivityClient.getDisplayId` during activity launch). The `AnrWatchdogThread` now treats a pure-framework stack whose top frame is `BinderProxy.transact`/`transactNative` as a system-side wait and resets its heartbeat instead of writing a report, in addition to the existing idle-looper (`nativePollOnce`) filter.
 
 ## [1.7.7] — 2026-07-29
 
