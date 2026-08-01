@@ -391,23 +391,50 @@ object CrashReportManager {
                     //    other work. Depending on the sampling instant, the main thread can be
                     //    caught anywhere inside that `postDelayed` call — at `Message.obtain`
                     //    (deepest, the previously-fixed shape) or at `Handler.postDelayed`
-                    //    itself. In every shape the direct caller of the `Handler.postDelayed`
-                    //    frame is the ticker's `run()` method, and that `run()` was dispatched
-                    //    by the handler (`Handler.handleCallback` just below it). We detect this
-                    //    by (a) that stack shape and (b) `lastTickTimestamp` having JUST been
-                    //    updated (< 1 s ago) — i.e. the ticker ran, so the main looper is
-                    //    responsive again. Genuine busy loops that starve the ticker keep
-                    //    `lastTickTimestamp` stale, so they still fail this test and are
-                    //    reported as real freezes.
+                    //    itself — or just outside it, between the `lastTickTimestamp` assignment
+                    //    and the re-post call, or right after the re-post returned. In the
+                    //    postDelayed shapes the direct caller of the `Handler.postDelayed`
+                    //    frame is the ticker's `run()` method; in the just-outside shapes the
+                    //    ticker's `run()` is the top frame and sits directly on
+                    //    `Handler.handleCallback` with no `postDelayed` frame on the stack at
+                    //    all. Both variants share the same detection key: `lastTickTimestamp`
+                    //    having JUST been updated (< 1 s ago) — i.e. the ticker ran, so the
+                    //    main looper is responsive again. Genuine busy loops that starve the
+                    //    ticker keep `lastTickTimestamp` stale, so they still fail this test
+                    //    and are reported as real freezes.
                     val tickerJustRan = SystemClock.uptimeMillis() - lastTickTimestamp < 1_000L
                     val postDelayedFrameIdx = mainStackTrace.indexOfFirst {
                         it.className == "android.os.Handler" && it.methodName == "postDelayed"
                     }
-                    val isWatchdogHeartbeatSample =
+                    // Shape A — sampled inside the ticker's re-post: a `Handler.postDelayed`
+                    // frame whose direct caller is the ticker's `run()` method, dispatched by
+                    // `Handler.handleCallback`.
+                    val isTickerRePostSample =
                         tickerJustRan &&
                         postDelayedFrameIdx >= 0 &&
                         mainStackTrace.getOrNull(postDelayedFrameIdx + 1)?.methodName == "run" &&
                         mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "handleCallback" }
+                    // Shape B — sampled just before the ticker calls `postDelayed` (after it
+                    // has already updated `lastTickTimestamp`) or just after `postDelayed`
+                    // returned: the ticker's own `run()` is the top frame, dispatched directly
+                    // by `Handler.handleCallback`, and there is no `postDelayed` frame on the
+                    // stack at all. The `run()` frame is required to be a non-platform class —
+                    // R8 obfuscates app/library Runnables to short names that never start with
+                    // `android.`/`java.` — and `tickerJustRan` proves the ticker executed
+                    // within the last second, so the sampled `run()` is the watchdog's own
+                    // heartbeat, not >5 s of app business logic (which would keep the ticker
+                    // from running and leave `lastTickTimestamp` stale, failing the gate).
+                    val tickerTopClassName = mainStackTrace.getOrNull(0)?.className ?: ""
+                    val isTickerRunSample =
+                        tickerJustRan &&
+                        postDelayedFrameIdx < 0 &&
+                        mainStackTrace.getOrNull(0)?.methodName == "run" &&
+                        !tickerTopClassName.startsWith("android.") &&
+                        !tickerTopClassName.startsWith("java.") &&
+                        mainStackTrace.getOrNull(1)?.className == "android.os.Handler" &&
+                        mainStackTrace.getOrNull(1)?.methodName == "handleCallback"
+
+                    val isWatchdogHeartbeatSample = isTickerRePostSample || isTickerRunSample
 
                     // 5. The system is instantiating a Service on the main thread (e.g. a
                     //    WorkManager job firing via JobScheduler ->
