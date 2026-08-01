@@ -52,6 +52,11 @@ object CrashReportManager {
         "com.google.", "com.pairip."
     )
 
+    // App package prefix — any frame from the app's own classes means genuine app
+    // business logic is on the stack, so a main-thread block is never a system-side
+    // wait and must still be reported.
+    private const val APP_PACKAGE = "za.kilowatch.ultimatefilemanager"
+
     private const val PREFS_NAME = "crash_report_prefs"
     private const val KEY_ENABLED = "crash_reporting_enabled"
     private const val KEY_VERSION_CODE = "recorded_version_code"
@@ -396,7 +401,26 @@ object CrashReportManager {
                         topFrame?.methodName == "obtain" &&
                         mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "postDelayed" }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || isWatchdogHeartbeatSample) {
+                    // 5. The system is instantiating a Service on the main thread (e.g. a
+                    //    WorkManager job firing via JobScheduler ->
+                    //    androidx.work.impl.background.systemjob.SystemJobService) and the
+                    //    bundled library's static class initializer (`<clinit>`) is slow on a
+                    //    low-end device. Service creation is always framework-driven —
+                    //    ActivityThread.handleCreateService -> AppComponentFactory.
+                    //    instantiateService -> Class.newInstance -> <clinit> — and the block
+                    //    sits inside library class loading / static-init with no app frame
+                    //    executing, so the app cannot act on it. A genuine freeze that
+                    //    originates in app code keeps an app frame
+                    //    (`za.kilowatch.ultimatefilemanager.*`) on the stack and still fails
+                    //    this test.
+                    val isServiceClassInitStall =
+                        topFrame?.methodName == "<clinit>" &&
+                        mainStackTrace.any { it.className == "java.lang.Class" && it.methodName == "newInstance" } &&
+                        (mainStackTrace.any { it.className == "android.app.AppComponentFactory" && it.methodName == "instantiateService" } ||
+                         mainStackTrace.any { it.className == "android.app.ActivityThread" && it.methodName == "handleCreateService" }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || isWatchdogHeartbeatSample || isServiceClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
