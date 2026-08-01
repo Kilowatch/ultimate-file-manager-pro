@@ -48,7 +48,10 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 class PdfViewerActivity : AppCompatActivity() {
 
     private lateinit var recyclerPages: RecyclerView
-    private lateinit var pdfHScrollView: HorizontalScrollView
+    // Nullable: the TV layout (activity_pdf_viewer_tv.xml) has no HorizontalScrollView
+    // wrapper — it uses a scrollContainer FrameLayout directly. Only the mobile layout
+    // provides pdfHScrollView, so it must be treated as absent on TV.
+    private var pdfHScrollView: HorizontalScrollView? = null
     private lateinit var progressBar: ProgressBar
     private lateinit var txtTitle: TextView
     private lateinit var txtPageInfo: TextView
@@ -111,7 +114,7 @@ class PdfViewerActivity : AppCompatActivity() {
             private var startFocusY = 0f
 
             override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-                pdfHScrollView.requestDisallowInterceptTouchEvent(true)
+                pdfHScrollView?.requestDisallowInterceptTouchEvent(true)
                 recyclerPages.requestDisallowInterceptTouchEvent(true)
 
                 val focusX = detector.focusX
@@ -169,12 +172,15 @@ class PdfViewerActivity : AppCompatActivity() {
                 val focusY = detector.focusY
 
                 val scrollLoc = IntArray(2)
-                pdfHScrollView.getLocationInWindow(scrollLoc)
+                val hScroll = pdfHScrollView
+                hScroll?.getLocationInWindow(scrollLoc)
 
                 recyclerPages.post {
-                    // 1. Adjust horizontal scroll
-                    val newScrollX = (pivotX * gestureScale - (focusX - scrollLoc[0])).toInt()
-                    pdfHScrollView.scrollTo(maxOf(0, newScrollX), 0)
+                    // 1. Adjust horizontal scroll (mobile layout only; TV has no HorizontalScrollView)
+                    if (hScroll != null) {
+                        val newScrollX = (pivotX * gestureScale - (focusX - scrollLoc[0])).toInt()
+                        hScroll.scrollTo(maxOf(0, newScrollX), 0)
+                    }
 
                     // 2. Adjust vertical scroll via scrollToPositionWithOffset
                     if (childPosition != RecyclerView.NO_POSITION) {
