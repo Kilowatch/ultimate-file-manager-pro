@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - The Settings "Usage Analytics" toggle now also signals your consent choice to Google's systems via the Firebase Consent API (`setConsent` with `analytics_storage` GRANTED/DENIED), in addition to controlling collection. This aligns the analytics opt-out with Google's EU User Consent Policy. The toggle stays enabled by default and no new prompts or dialogs are added — the user experience is unchanged. The Privacy Policy and toggle subtitles were updated to present the toggle as the consent control, and the policy "Last Updated" date advanced to August 2026.
+- Added a dedicated "Crash & ANR Reporting (Diagnostics)" section to the in-app Privacy Policy covering what diagnostic data is captured when the app crashes or freezes (app version, Android version, device model and manufacturer, exception type/message, and stack trace), that nothing is sent automatically — a prompt asks before each report is sent to KiloWatch — and that the feature can be disabled via Settings → Crash & ANR Reporting. Removed the misleading "crash reports" reference from the Firebase analytics data table so crash reporting is no longer implied to flow through Google. The in-app Privacy Policy, the website Privacy Policy and Terms pages (including their August 2026 "Last Updated" date) were updated to match.
 
 ## [1.7.7] — 2026-07-29
 
