@@ -286,6 +286,7 @@ object TransferConflictHelper {
         }
         // Restore original modification date
         try { actualDest.setLastModified(src.lastModified()) } catch (_: Exception) {}
+        MediaScannerNotifier.scanFile(file = actualDest)
         return actualDest
     }
 
@@ -514,6 +515,7 @@ object TransferConflictHelper {
             if (tempFile != actualDest) tempFile.delete()
             throw e
         }
+        MediaScannerNotifier.scanFile(file = actualDest)
         return actualDest
     }
 
