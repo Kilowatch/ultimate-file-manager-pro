@@ -249,8 +249,18 @@ object SmbSessionPool {
             else      -> 2L // pooled metadata — fast failover on stale connections
         }
 
+        // Transport timeout matches socket timeout: dedicated streaming connections
+        // need a generous window so a slow NAS seek/read doesn't trigger spurious
+        // retries that flood the server with fresh connections. Pooled metadata
+        // connections keep a tight 2 s timeout for fast failover on stale sessions.
+        val transportTimeoutSec = when {
+            forWrite  -> 60L
+            dedicated -> 30L  // matches soTimeout — no more spurious read failures
+            else      -> 2L   // pooled — fail fast on stale sessions
+        }
+
         val builder = SmbConfig.builder()
-            .withTimeout(if (forWrite) 60L else 2L, TimeUnit.SECONDS)
+            .withTimeout(transportTimeoutSec, TimeUnit.SECONDS)
             .withSoTimeout(soTimeoutSec, TimeUnit.SECONDS)
             .withSocketFactory(KeepAliveSocketFactory(5000))
             // smbj 0.14.0 may require signing by default, which causes
