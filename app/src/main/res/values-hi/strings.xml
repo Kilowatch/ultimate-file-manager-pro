@@ -1343,10 +1343,10 @@ USB और स्थानीय स्टोरेज ड्राइव का
 उपयोग विश्लेषण
 </string>
     <string name="settings_analytics_subtitle_on">
-सक्षम — ऐप को बेहतर बनाने में हमारी मदद करता है
+सक्षम — आपकी सहमति से विश्लेषण एकत्र किए जाते हैं
 </string>
     <string name="settings_analytics_subtitle_off">
-अक्षम — कोई डेटा एकत्र नहीं किया जाता
+अक्षम — कोई डेटा एकत्र नहीं किया जाता; सहमति वापस ले ली गई है
 </string>
 
     <!-- Cache Copying Toggle -->

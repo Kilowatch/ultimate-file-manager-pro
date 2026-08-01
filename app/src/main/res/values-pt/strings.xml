@@ -1343,10 +1343,10 @@ Servidor de Arquivos
 Analytics de Uso
 </string>
     <string name="settings_analytics_subtitle_on">
-Ativado — nos ajuda a melhorar o aplicativo
+Ativado — coleta de dados analíticos com seu consentimento
 </string>
     <string name="settings_analytics_subtitle_off">
-Desativado — nenhum dado é coletado
+Desativado — nenhum dado coletado; consentimento revogado
 </string>
 
     <!-- Cache Copying Toggle -->

@@ -1343,10 +1343,10 @@ AMOLED أسود
 تحليلات الاستخدام
 </string>
     <string name="settings_analytics_subtitle_on">
-مفعل — يساعدنا على تحسين التطبيق
+مفعّل — يتم جمع البيانات التحليلية بموافقتك
 </string>
     <string name="settings_analytics_subtitle_off">
-معطل — لا يتم جمع أي بيانات
+معطّل — لا يتم جمع أي بيانات؛ تم سحب الموافقة
 </string>
 
     <!-- Cache Copying Toggle -->

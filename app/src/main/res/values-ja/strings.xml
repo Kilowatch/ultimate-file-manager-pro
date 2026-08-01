@@ -1343,10 +1343,10 @@ USBおよびローカルストレージドライブの名前を変更
 使用状況分析
 </string>
     <string name="settings_analytics_subtitle_on">
-有効 — アプリ改善に役立ちます
+有効 — 同意を得て分析データを収集します
 </string>
     <string name="settings_analytics_subtitle_off">
-無効 — データは収集されません
+無効 — データは収集されず、同意は撤回されています
 </string>
 
     <!-- Cache Copying Toggle -->

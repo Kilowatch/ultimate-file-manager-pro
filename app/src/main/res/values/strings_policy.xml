@@ -6,7 +6,7 @@
     ═══════════════════════════════════════════════════════════ -->
     <string name="policy_app_name">Ultimate File Manager Pro</string>
     <string name="policy_company">KiloWatch</string>
-    <string name="policy_last_updated">Last Updated: July 2026</string>
+    <string name="policy_last_updated">Last Updated: August 2026</string>
     <string name="policy_play_store_url">https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager</string>
     <string name="policy_contact_email">support@kilowatch.co.za</string>
 
@@ -247,7 +247,7 @@
          PRIVACY POLICY
     ═══════════════════════════════════════════════════════════ -->
     <string name="pp_screen_title">Privacy Policy</string>
-    <string name="pp_summary">Your files stay on your device — we never see them. We only collect anonymous usage analytics via Firebase to make the app better. No ads, no data selling, no funny business.</string>
+    <string name="pp_summary">Your files stay on your device — we never see them. With your consent, we collect anonymous usage analytics via Firebase to make the app better. No ads, no data selling, no funny business.</string>
 
     <!-- Section titles -->
     <string name="pp_s1_title">1. Introduction</string>
@@ -282,7 +282,7 @@
     <string name="pp_s2_local_alert">We have no access to your PIN, recovery code, encryption keys, or any files stored in your Vault — ever.</string>
 
     <string name="pp_s2_analytics_heading">Collected via Firebase Analytics (Anonymous)</string>
-    <string name="pp_s2_analytics_body">We use Google Firebase Analytics to collect anonymous data to improve the app. Analytics data is never linked to your personal identity. You can opt out at any time using the Usage Analytics toggle in the app\'s Settings, or via your Android device settings.</string>
+    <string name="pp_s2_analytics_body">We use Google Firebase Analytics to collect anonymous usage data to improve the app. Analytics data is never linked to your personal identity. The Usage Analytics toggle in the app\'s Settings (or your Android device settings) is the consent control: it is on by default, and switching it off withdraws your consent and stops collection at any time. For users in the European Economic Area, the United Kingdom, and Switzerland, this follows the EU User Consent Policy and applicable data-protection law.</string>
 
     <string name="pp_s2_billing_heading">Processed via Google Play Billing (Optional Tips Only)</string>
     <string name="pp_s2_billing_body">When you make an optional Tip Jar purchase, Google Play processes the transaction. We never see your card or bank details. We temporarily receive a purchase token and the product ID — both handled on-device only and never stored on our servers.</string>
@@ -619,7 +619,7 @@
         <item>Disconnect your Google Drive, OneDrive, or Dropbox account at any time to revoke access and delete stored OAuth tokens.</item>
         <item>Remove your S3 / S3-Compatible storage profiles at any time via Settings to delete the stored access credentials.</item>
         <item>Export your files using the share or copy features.</item>
-        <item>Opt out of Firebase Analytics at any time via Settings → Usage Analytics within the app; alternatively, use your Android device settings.</item>
+        <item>Grant or withdraw consent to Firebase Analytics at any time via Settings → Usage Analytics within the app; alternatively, use your Android device settings.</item>
     </string-array>
 
     <!-- Delete steps (Section 8) -->

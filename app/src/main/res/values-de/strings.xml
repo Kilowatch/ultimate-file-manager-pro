@@ -1343,10 +1343,10 @@ Dateiserver
 Nutzungsanalyse
 </string>
     <string name="settings_analytics_subtitle_on">
-Aktiviert – hilft uns, die App zu verbessern
+Aktiviert — Analysedaten werden mit Ihrer Zustimmung erfasst
 </string>
     <string name="settings_analytics_subtitle_off">
-Deaktiviert – es werden keine Daten erfasst
+Deaktiviert — keine Daten erfasst; Zustimmung widerrufen
 </string>
 
     <!-- Cache Copying Toggle -->

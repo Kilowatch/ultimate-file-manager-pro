@@ -1343,10 +1343,10 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
 사용 분석
 </string>
     <string name="settings_analytics_subtitle_on">
-활성화됨 — 앱 개선에 도움이 됩니다
+사용 설정됨 — 동의 하에 분석 데이터 수집
 </string>
     <string name="settings_analytics_subtitle_off">
-비활성화됨 — 데이터가 수집되지 않습니다
+사용 안 함 — 데이터 수집 없음, 동의 철회됨
 </string>
 
     <!-- Cache Copying Toggle -->

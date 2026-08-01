@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Zuletzt aktualisiert: Juli 2026
+Zuletzt aktualisiert: August 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Datenschutzrichtlinie
 </string>
     <string name="pp_summary">
-Ihre Dateien bleiben auf Ihrem Gerät – wir sehen sie nie. Wir sammeln nur anonyme Nutzungsanalysen über Firebase, um die App zu verbessern. Keine Werbung, kein Verkauf von Daten, keine krummen Geschäfte.
+Ihre Dateien bleiben auf Ihrem Gerät — wir sehen sie nie. Mit Ihrer Zustimmung sammeln wir anonyme Nutzungsanalysen über Firebase, um die App zu verbessern. Keine Werbung, kein Datenverkauf, keine Spielereien.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Wir haben niemals Zugriff auf Ihre PIN, den Wiederherstellungscode, Verschlüsse
 Erfasst über Firebase Analytics (anonym)
 </string>
     <string name="pp_s2_analytics_body">
-Wir verwenden Google Firebase Analytics, um anonyme Daten zur Verbesserung der App zu sammeln. Analytische Daten werden niemals mit Ihrer persönlichen Identität verknüpft. Sie können jederzeit über den Schalter „Nutzungsanalyse“ in den Einstellungen der App oder über die Android-Geräteeinstellungen widersprechen.
+Wir verwenden Google Firebase Analytics, um anonyme Nutzungsdaten zu sammeln und die App zu verbessern. Analysedaten werden niemals mit Ihrer persönlichen Identität verknüpft. Der Schalter „Nutzungsanalyse“ in den Einstellungen der App (oder in den Einstellungen Ihres Android-Geräts) dient als Einwilligungskontrolle: Er ist standardmäßig aktiviert, und das Ausschalten widerruft Ihre Einwilligung und stoppt die Erfassung jederzeit. Für Nutzer im Europäischen Wirtschaftsraum, im Vereinigten Königreich und in der Schweiz entspricht dies der EU-Einwilligungspolitik und den geltenden Datenschutzbestimmungen.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Bis du das S3-Profil in den Einstellungen entfernst oder bis zur Deinstallation 
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-Greife direkt über die App auf deine lokal gespeicherten Daten zu.
+Greifen Sie direkt über die App auf Ihre lokal gespeicherten Daten zu.
 </item>
         <item>
-Lösche Tresor-Daten, indem du Elemente aus dem Tresor entfernst.
+Löschen Sie Vault-Daten, indem Sie Elemente aus dem Vault entfernen.
 </item>
         <item>
-Verwalte und lösche indizierte Dateimetadaten über Einstellungen -> Speicherindex.
+Verwalten und löschen Sie indizierte Dateimetadaten über Einstellungen -> Storage Indexer.
 </item>
         <item>
-Trenne jederzeit die Verbindung zu deinem Google Drive-, OneDrive- oder Dropbox-Konto, um den Zugriff zu widerrufen und gespeicherte OAuth-Tokens zu löschen.
+Trennen Sie jederzeit die Verbindung zu Ihrem Google Drive-, OneDrive- oder Dropbox-Konto, um den Zugriff zu widerrufen und gespeicherte OAuth-Tokens zu löschen.
 </item>
         <item>
-Entferne jederzeit deine S3-/S3-kompatiblen Speicherprofile über Einstellungen, um die gespeicherten Zugangsdaten zu löschen.
+Entfernen Sie Ihre S3-/S3-kompatiblen Speicherprofile jederzeit über die Einstellungen, um die gespeicherten Zugriffsdaten zu löschen.
 </item>
         <item>
-Exportiere deine Dateien über die Freigabe- oder Kopierfunktionen.
+Exportieren Sie Ihre Dateien über die Freigabe- oder Kopierfunktionen.
 </item>
         <item>
-Optiere jederzeit über Einstellungen -> Nutzungsanalyse in der App von Firebase Analytics ab; alternativ verwende die Android-Geräteeinstellungen.
+Erteilen oder widerrufen Sie Ihre Einwilligung zu Firebase Analytics jederzeit über Einstellungen → Nutzungsanalyse innerhalb der App; alternativ über die Einstellungen Ihres Android-Geräts.
 </item>
     </string-array>
 

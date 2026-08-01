@@ -1343,10 +1343,10 @@ AMOLED чорний
 Аналітика використання
 </string>
     <string name="settings_analytics_subtitle_on">
-Увімкнено — допомагає нам покращувати додаток
+Увімкнено — аналітика збирається за вашою згодою
 </string>
     <string name="settings_analytics_subtitle_off">
-Вимкнено — дані не збираються
+Вимкнено — дані не збираються; згоду відкликано
 </string>
 
     <!-- Cache Copying Toggle -->

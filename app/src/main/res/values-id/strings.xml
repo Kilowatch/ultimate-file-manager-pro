@@ -1343,10 +1343,10 @@ Server File
 Analitik Penggunaan
 </string>
     <string name="settings_analytics_subtitle_on">
-Diaktifkan — membantu kami meningkatkan aplikasi
+Aktif — analitik dikumpulkan dengan persetujuan Anda
 </string>
     <string name="settings_analytics_subtitle_off">
-Dinonaktifkan — tidak ada data yang dikumpulkan
+Nonaktif — tidak ada data yang dikumpulkan; persetujuan dicabut
 </string>
 
     <!-- Cache Copying Toggle -->

@@ -1343,10 +1343,10 @@ Dosya Sunucusu
 Kullanım Analitiği
 </string>
     <string name="settings_analytics_subtitle_on">
-Etkin — uygulamayı geliştirmemize yardımcı olur
+Etkin — onayınızla analitik veriler toplanır
 </string>
     <string name="settings_analytics_subtitle_off">
-Devre dışı — hiçbir veri toplanmaz
+Devre dışı — hiçbir veri toplanmaz; onay geri çekildi
 </string>
 
     <!-- Cache Copying Toggle -->

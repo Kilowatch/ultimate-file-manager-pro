@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-마지막 업데이트: 2026년 7월
+마지막 업데이트: 2026년 8월
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 개인정보처리방침
 </string>
     <string name="pp_summary">
-귀하의 파일은 귀하의 기기에 남아 있으며, 당사는 절대 볼 수 없습니다. 당사는 앱 개선을 위해 Firebase를 통해 익명 사용 분석 데이터만 수집합니다. 광고 없음, 데이터 판매 없음, 꼼수 없음.
+파일은 항상 기기에만 보관되며, 당사는 이를 볼 수 없습니다. 동의를 바탕으로 Firebase를 통해 익명 사용 통계를 수집하여 앱을 개선합니다. 광고 없음, 데이터 판매 없음, 어떤 부당한 행위도 없습니다.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Ultimate File Manager Pro는 독립적인 Android 애플리케이션이며, Wind
 Firebase Analytics를 통해 수집(익명)
 </string>
     <string name="pp_s2_analytics_body">
-당사는 앱 개선을 위해 Google Firebase Analytics를 사용하여 익명 데이터를 수집합니다. 분석 데이터는 귀하의 개인 식별 정보와 연결되지 않습니다. 앱 설정의 사용 분석 토글 또는 Android 기기 설정을 통해 언제든지 옵트아웃할 수 있습니다.
+당사는 앱 개선을 위해 Google Firebase Analytics를 사용하여 익명 사용 데이터를 수집합니다. 분석 데이터는 귀하의 개인 정보와 연결되지 않습니다. 앱 설정(또는 Android 기기 설정)의 사용 분석 토글은 동의 제어장치입니다. 기본적으로 켜져 있으며, 끄면 언제든지 동의가 철회되고 수집이 중단됩니다. 유럽 경제 지역, 영국, 스위스 사용자의 경우 이는 EU 사용자 동의 정책 및 관련 데이터 보호 법률을 따릅니다.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Firebase 분석 데이터
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-앱을 통해 로컬에 저장된 데이터에 직접 액세스합니다.
+앱을 통해 로컬에 저장된 데이터에 직접 접근하세요.
 </item>
         <item>
-볼트에서 항목을 제거하여 볼트 데이터를 삭제합니다.
+볼트에서 항목을 제거하여 볼트 데이터를 삭제하세요.
 </item>
         <item>
-설정 -> 저장소 인덱서를 통해 인덱싱된 파일 메타데이터를 관리 및 삭제합니다.
+설정 -> 스토리지 인덱서를 통해 색인된 파일 메타데이터를 관리하고 삭제하세요.
 </item>
         <item>
-언제든지 Google Drive, OneDrive 또는 Dropbox 계정 연결을 해제하여 액세스를 취소하고 저장된 OAuth 토큰을 삭제합니다.
+언제든지 Google Drive, OneDrive 또는 Dropbox 계정 연결을 해제하여 접근 권한을 취소하고 저장된 OAuth 토큰을 삭제하세요.
 </item>
         <item>
-언제든지 설정을 통해 S3 / S3 호환 저장소 프로필을 제거하여 저장된 액세스 자격 증명을 삭제합니다.
+언제든지 설정을 통해 S3 / S3 호환 스토리지 프로필을 제거하여 저장된 액세스 자격 증명을 삭제하세요.
 </item>
         <item>
-공유 또는 복사 기능을 사용하여 파일을 내보냅니다.
+공유 또는 복사 기능을 사용하여 파일을 내보내세요.
 </item>
         <item>
-앱 내 설정 → 사용 분석을 통해 언제든지 Firebase Analytics를 거부할 수 있습니다. 또는 Android 기기 설정을 사용하세요.
+앱 내 설정 → 사용량 분석을 통해 언제든지 Firebase Analytics에 대한 동의를 부여하거나 철회할 수 있습니다. 또는 Android 기기 설정을 사용하세요.
 </item>
     </string-array>
 

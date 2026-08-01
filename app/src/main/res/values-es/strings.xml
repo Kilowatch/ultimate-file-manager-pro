@@ -1343,10 +1343,10 @@ Servidor de archivos
 Analíticas de uso
 </string>
     <string name="settings_analytics_subtitle_on">
-Habilitado: nos ayuda a mejorar la aplicación
+Activado — se recopilan datos analíticos con tu consentimiento
 </string>
     <string name="settings_analytics_subtitle_off">
-Deshabilitado: no se recopilan datos
+Desactivado — no se recopilan datos; se retiró el consentimiento
 </string>
 
     <!-- Cache Copying Toggle -->

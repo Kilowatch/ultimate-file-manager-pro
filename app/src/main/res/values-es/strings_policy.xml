@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Última actualización: julio de 2026
+Última actualización: agosto de 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Política de privacidad
 </string>
     <string name="pp_summary">
-Tus archivos permanecen en tu dispositivo: nunca los vemos. Solo recopilamos análisis de uso anónimos a través de Firebase para mejorar la aplicación. Sin anuncios, sin venta de datos, sin juegos sucios.
+Tus archivos permanecen en tu dispositivo: nunca los vemos. Con tu consentimiento, recopilamos estadísticas de uso anónimas a través de Firebase para mejorar la aplicación. Sin anuncios, sin venta de datos, sin malas prácticas.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Nunca tenemos acceso a tu PIN, código de recuperación, claves de cifrado ni a 
 Recopilado a través de Firebase Analytics (anónimo)
 </string>
     <string name="pp_s2_analytics_body">
-Usamos Google Firebase Analytics para recopilar datos anónimos y mejorar la aplicación. Los datos de análisis nunca se vinculan a tu identidad personal. Puedes optar por no participar en cualquier momento usando el interruptor de Análisis de uso en los Ajustes de la aplicación o a través de los ajustes de tu dispositivo Android.
+Usamos Google Firebase Analytics para recopilar datos de uso anónimos con el fin de mejorar la aplicación. Los datos de análisis nunca se vinculan a tu identidad personal. El interruptor de estadísticas de uso en los ajustes de la aplicación (o en los ajustes de tu dispositivo Android) es el control de consentimiento: está activado por defecto, y desactivarlo retira tu consentimiento y detiene la recopilación en cualquier momento. Para los usuarios del Espacio Económico Europeo, el Reino Unido y Suiza, esto sigue la Política de consentimiento del usuario de la UE y la legislación aplicable de protección de datos.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Hasta que elimines el perfil de S3 en Ajustes, o hasta que desinstales la aplica
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-Accede a tus datos almacenados localmente directamente a través de la aplicación.
+Accede directamente a tus datos almacenados localmente a través de la aplicación.
 </item>
         <item>
-Elimina datos de la Bóveda quitando elementos de la Bóveda.
+Elimina los datos de la Bóveda quitando elementos de la Bóveda.
 </item>
         <item>
-Gestiona y elimina metadatos de archivos indexados mediante Ajustes > Indexador de almacenamiento.
+Administra y elimina los metadatos de archivos indexados mediante Ajustes -> Indexador de almacenamiento.
 </item>
         <item>
-Desconecta tu cuenta de Google Drive, OneDrive o Dropbox en cualquier momento para revocar el acceso y eliminar los tokens de OAuth almacenados.
+Desconecta tu cuenta de Google Drive, OneDrive o Dropbox en cualquier momento para revocar el acceso y eliminar los tokens OAuth almacenados.
 </item>
         <item>
-Elimina tus perfiles de almacenamiento S3 / Compatible con S3 en cualquier momento mediante Ajustes para borrar las credenciales de acceso almacenadas.
+Elimina tus perfiles de almacenamiento S3 / S3-Compatible en cualquier momento a través de Ajustes para borrar las credenciales de acceso almacenadas.
 </item>
         <item>
-Exporta tus archivos usando las funciones de compartir o copiar.
+Exporta tus archivos mediante las funciones de compartir o copiar.
 </item>
         <item>
-Puedes optar por no participar en Firebase Analytics en cualquier momento mediante Ajustes > Análisis de uso dentro de la aplicación; alternativamente, usa la configuración de tu dispositivo Android.
+Otorga o retira tu consentimiento a Firebase Analytics en cualquier momento a través de Ajustes → Analíticas de uso dentro de la aplicación; alternativamente, usa los ajustes de tu dispositivo Android.
 </item>
     </string-array>
 

@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Son Güncelleme: Temmuz 2026
+Son Güncelleme: Ağustos 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Gizlilik Politikası
 </string>
     <string name="pp_summary">
-Dosyalarınız cihazınızda kalır — onları asla görmeyiz. Uygulamayı iyileştirmek için yalnızca Firebase aracılığıyla anonim kullanım analizleri toplarız. Reklam yok, veri satışı yok, gizli iş yok.
+Dosyalarınız cihazınızda kalır — biz onları asla görmeyiz. Rızanızla, uygulamayı geliştirmek için Firebase üzerinden anonim kullanım analizleri topluyoruz. Reklam yok, veri satışı yok, art niyet yok.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ PIN\'inize, kurtarma kodunuza, şifreleme anahtarlarınıza veya Kasanızda sakl
 Firebase Analytics (Anonim) ile Toplanır
 </string>
     <string name="pp_s2_analytics_body">
-Uygulamayı iyileştirmek için anonim veri toplamak amacıyla Google Firebase Analytics kullanıyoruz. Analiz verileri asla kişisel kimliğinizle ilişkilendirilmez. İstediğiniz zaman uygulamanın Ayarlar bölümündeki Kullanım Analizi anahtarı veya Android cihaz ayarlarınız aracılığıyla bu özelliği devre dışı bırakabilirsiniz.
+Uygulamayı geliştirmek için Google Firebase Analytics kullanarak anonim kullanım verileri topluyoruz. Analiz verileri asla kişisel kimliğinizle ilişkilendirilmez. Uygulama Ayarlarındaki (veya Android cihaz ayarlarınızdaki) Kullanım Analizi anahtarı onay kontrolüdür: varsayılan olarak açıktır; kapatmak, onayınızı geri çeker ve toplamayı istediğiniz zaman durdurur. Avrupa Ekonomik Alanı, Birleşik Krallık ve İsviçre\\\'deki kullanıcılar için bu, AB Kullanıcı Onay Politikası\\\'na ve geçerli veri koruma yasalarına uygundur.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Ayarlar\\\'da S3 profilini kaldırana kadar veya uygulama kaldırılana kadar
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-Yerel olarak depolanan verilerinize doğrudan uygulama üzerinden erişin.
+Yerel olarak saklanan verilerinize uygulama üzerinden doğrudan erişin.
 </item>
         <item>
-Kasa verilerini, Kasada\\\'ki öğeleri kaldırarak silin.
+Kasa verilerini, kasadaki öğeleri kaldırarak silin.
 </item>
         <item>
-Dizinlenmiş dosya meta verilerini Ayarlar -> Depolama Dizinleyicisi aracılığıyla yönetin ve silin.
+Dizine eklenen dosya meta verilerini Ayarlar -> Depolama Dizinleyicisi üzerinden yönetin ve silin.
 </item>
         <item>
-Google Drive, OneDrive veya Dropbox hesabınızın bağlantısını istediğiniz zaman keserek erişimi iptal edin ve depolanan OAuth belirteçlerini silin.
+Google Drive, OneDrive veya Dropbox hesabınızın bağlantısını istediğiniz zaman keserek erişimi iptal edin ve saklanan OAuth belirteçlerini silin.
 </item>
         <item>
-S3 / S3 uyumlu depolama profillerinizi istediğiniz zaman Ayarlar üzerinden kaldırarak depolanan erişim kimlik bilgilerini silin.
+Saklanan erişim kimlik bilgilerini silmek için S3 / S3 uyumlu depolama profillerinizi istediğiniz zaman Ayarlar üzerinden kaldırın.
 </item>
         <item>
 Dosyalarınızı paylaşma veya kopyalama özelliklerini kullanarak dışa aktarın.
 </item>
         <item>
-Firebase Analytics\\\'i istediğiniz zaman uygulama içindeki Ayarlar → Kullanım Analizi üzerinden devre dışı bırakın; alternatif olarak Android cihaz ayarlarınızı kullanın.
+Uygulama içindeki Ayarlar → Kullanım Analitiği üzerinden Firebase Analytics\'e istediğiniz zaman onay verebilir veya onayı geri çekebilirsiniz; alternatif olarak Android cihaz ayarlarınızı kullanın.
 </item>
     </string-array>
 

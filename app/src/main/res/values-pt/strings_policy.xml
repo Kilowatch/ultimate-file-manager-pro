@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Última atualização: julho de 2026
+Última atualização: agosto de 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Política de Privacidade
 </string>
     <string name="pp_summary">
-Seus arquivos permanecem no seu dispositivo — nunca os vemos. Coletamos apenas análises de uso anônimas via Firebase para melhorar o aplicativo. Sem anúncios, sem venda de dados, sem jogos sujos.
+Seus arquivos permanecem no seu dispositivo — nunca os vemos. Com o seu consentimento, coletamos análises anônimas de uso via Firebase para melhorar o aplicativo. Sem anúncios, sem venda de dados, sem brincadeiras.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Nunca temos acesso ao seu PIN, código de recuperação, chaves de criptografia 
 Coletado via Firebase Analytics (Anônimo)
 </string>
     <string name="pp_s2_analytics_body">
-Usamos o Google Firebase Analytics para coletar dados anônimos para melhorar o aplicativo. Os dados de análise nunca são vinculados à sua identidade pessoal. Você pode optar por não participar a qualquer momento usando a opção de Análise de Uso nas Configurações do aplicativo, ou através das configurações do seu dispositivo Android.
+Usamos o Google Firebase Analytics para coletar dados anônimos de uso, a fim de melhorar o aplicativo. Os dados de análise nunca são vinculados à sua identidade pessoal. O interruptor de Análise de Uso nas Configurações do aplicativo (ou nas configurações do dispositivo Android) é o controle de consentimento: ele vem ativado por padrão e desativá-lo retira o seu consentimento e interrompe a coleta a qualquer momento. Para usuários no Espaço Econômico Europeu, no Reino Unido e na Suíça, isso segue a Política de Consentimento do Usuário da UE e a lei de proteção de dados aplicável.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1496,13 +1496,13 @@ Gerencie e exclua metadados de arquivos indexados via Configurações -> Indexad
 Desconecte sua conta do Google Drive, OneDrive ou Dropbox a qualquer momento para revogar o acesso e excluir os tokens OAuth armazenados.
 </item>
         <item>
-Remova seus perfis de armazenamento S3 / compatível com S3 a qualquer momento pelas Configurações para excluir as credenciais de acesso armazenadas.
+Remova seus perfis de armazenamento S3 / compatível com S3 a qualquer momento via Configurações para excluir as credenciais de acesso armazenadas.
 </item>
         <item>
-Exporte seus arquivos usando os recursos de compartilhamento ou cópia.
+Exporte seus arquivos usando os recursos de compartilhar ou copiar.
 </item>
         <item>
-Desative o Firebase Analytics a qualquer momento via Configurações → Análise de Uso no aplicativo; alternativamente, use as configurações do seu dispositivo Android.
+Conceda ou retire o consentimento ao Firebase Analytics a qualquer momento via Configurações → Analytics de Uso no aplicativo; alternativamente, use as configurações do seu dispositivo Android.
 </item>
     </string-array>
 

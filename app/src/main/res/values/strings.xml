@@ -473,8 +473,8 @@
 
     <!-- Analytics Toggle -->
     <string name="settings_analytics_title">Usage Analytics</string>
-    <string name="settings_analytics_subtitle_on">Enabled — helps us improve the app</string>
-    <string name="settings_analytics_subtitle_off">Disabled — no data is collected</string>
+    <string name="settings_analytics_subtitle_on">Enabled — analytics collected with your consent</string>
+    <string name="settings_analytics_subtitle_off">Disabled — no data collected; consent withdrawn</string>
 
     <!-- Cache Copying Toggle -->
     <string name="settings_cache_copy_title">Cache Copying</string>

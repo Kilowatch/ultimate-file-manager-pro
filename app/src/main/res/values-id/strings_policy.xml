@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Terakhir Diperbarui: Juli 2026
+Terakhir diperbarui: Agustus 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Kebijakan Privasi
 </string>
     <string name="pp_summary">
-File Anda tetap di perangkat Anda — kami tidak pernah melihatnya. Kami hanya mengumpulkan analitik penggunaan anonim melalui Firebase untuk meningkatkan aplikasi. Tidak ada iklan, tidak ada penjualan data, tidak ada urusan yang mencurigakan.
+File Anda tetap berada di perangkat Anda — kami tidak pernah melihatnya. Dengan persetujuan Anda, kami mengumpulkan analitik penggunaan anonim melalui Firebase untuk membuat aplikasi menjadi lebih baik. Tanpa iklan, tanpa penjualan data, tanpa hal yang mencurigakan.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Kami tidak pernah memiliki akses ke PIN, kode pemulihan, kunci enkripsi, atau fi
 Dikumpulkan melalui Firebase Analytics (Anonim)
 </string>
     <string name="pp_s2_analytics_body">
-Kami menggunakan Google Firebase Analytics untuk mengumpulkan data anonim guna meningkatkan aplikasi. Data analitik tidak pernah dikaitkan dengan identitas pribadi Anda. Anda dapat menyisih kapan saja menggunakan sakelar Usage Analytics di Pengaturan aplikasi, atau melalui pengaturan perangkat Android Anda.
+Kami menggunakan Google Firebase Analytics untuk mengumpulkan data penggunaan anonim untuk meningkatkan aplikasi. Data analitik tidak pernah dikaitkan dengan identitas pribadi Anda. Sakelar Analitik Penggunaan di Pengaturan aplikasi (atau pengaturan perangkat Android Anda) adalah kontrol persetujuan: secara default aktif, dan mematikannya akan mencabut persetujuan Anda serta menghentikan pengumpulan kapan saja. Bagi pengguna di Wilayah Ekonomi Eropa, Inggris Raya, dan Swiss, hal ini mengikuti Kebijakan Persetujuan Pengguna UE dan hukum perlindungan data yang berlaku.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Sampai Anda menghapus profil S3 di Pengaturan, atau sampai pencopotan pemasangan
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-Akses data yang disimpan secara lokal langsung melalui aplikasi.
+Akses data yang tersimpan secara lokal langsung melalui aplikasi.
 </item>
         <item>
 Hapus data Vault dengan menghapus item dari Vault.
 </item>
         <item>
-Kelola dan hapus metadata file yang terindeks melalui Pengaturan -> Indeks Penyimpanan.
+Kelola dan hapus metadata file yang diindeks melalui Pengaturan -> Pengindeks Penyimpanan.
 </item>
         <item>
-Putuskan akun Google Drive, OneDrive, atau Dropbox Anda kapan saja untuk mencabut akses dan menghapus token OAuth yang tersimpan.
+Putuskan koneksi akun Google Drive, OneDrive, atau Dropbox Anda kapan saja untuk mencabut akses dan menghapus token OAuth yang tersimpan.
 </item>
         <item>
-Hapus profil penyimpanan S3 / kompatibel dengan S3 Anda kapan saja melalui Pengaturan untuk menghapus kredensial akses yang tersimpan.
+Hapus profil penyimpanan S3 / S3-Kompatibel Anda kapan saja melalui Pengaturan untuk menghapus kredensial akses yang tersimpan.
 </item>
         <item>
 Ekspor file Anda menggunakan fitur bagikan atau salin.
 </item>
         <item>
-Nonaktifkan Firebase Analytics kapan saja melalui Pengaturan → Analitik Penggunaan di dalam aplikasi; atau, gunakan pengaturan perangkat Android Anda.
+Berikan atau tarik persetujuan untuk Firebase Analytics kapan saja melalui Pengaturan → Analitik Penggunaan di dalam aplikasi; atau gunakan pengaturan perangkat Android Anda.
 </item>
     </string-array>
 

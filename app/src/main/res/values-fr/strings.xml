@@ -1343,10 +1343,10 @@ Serveur de fichiers
 Analytique d\\\'utilisation
 </string>
     <string name="settings_analytics_subtitle_on">
-Activée — nous aide à améliorer l\\\'application
+Activé — données d\\\'analyse collectées avec votre consentement
 </string>
     <string name="settings_analytics_subtitle_off">
-Désactivée — aucune donnée n\\\'est collectée
+Désactivé — aucune donnée collectée ; consentement retiré
 </string>
 
     <!-- Cache Copying Toggle -->

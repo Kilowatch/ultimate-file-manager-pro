@@ -5,6 +5,8 @@ import android.os.Process
 import android.util.Log
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.FirebaseAnalytics.ConsentStatus
+import com.google.firebase.analytics.FirebaseAnalytics.ConsentType
 import java.util.concurrent.Executors
 
 /**
@@ -58,7 +60,9 @@ object Analytics {
                     collectionEnabled = AnalyticsPrefs.isEnabled(context)
                 }
                 FirebaseApp.initializeApp(context)
-                FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(collectionEnabled ?: true)
+                val analytics = FirebaseAnalytics.getInstance(context)
+                analytics.setAnalyticsCollectionEnabled(collectionEnabled ?: true)
+                applyConsent(analytics, collectionEnabled ?: true)
                 initialized = true
                 Log.d(TAG, "Firebase initialized on ${Thread.currentThread().name} (collection=$collectionEnabled).")
             } catch (e: Exception) {
@@ -73,12 +77,32 @@ object Analytics {
             try {
                 AnalyticsPrefs.setEnabled(context, enabled)
                 if (initialized) {
-                    FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(enabled)
+                    val analytics = FirebaseAnalytics.getInstance(context)
+                    analytics.setAnalyticsCollectionEnabled(enabled)
+                    applyConsent(analytics, enabled)
                 }
                 Log.d(TAG, "Analytics collection set to $enabled (initialized=$initialized).")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to set analytics collection state", e)
             }
+        }
+    }
+
+    /**
+     * Signals the user's consent state to Google's systems via the Firebase Consent API.
+     *
+     * UFM has no ads, so only [ConsentType.ANALYTICS_STORAGE] is signalled — `ad_storage` /
+     * `ad_user_data` / `ad_personalization` are intentionally left unset to avoid implying
+     * advertising consent. This mirrors [setAnalyticsCollectionEnabled]: the toggle ON maps to
+     * GRANTED, OFF maps to DENIED. Per Google's EU User Consent Policy, this consent state is
+     * what Google's measurement stack records for EEA/UK/Swiss users.
+     */
+    private fun applyConsent(analytics: FirebaseAnalytics, enabled: Boolean) {
+        try {
+            val status = if (enabled) ConsentStatus.GRANTED else ConsentStatus.DENIED
+            analytics.setConsent(mapOf(ConsentType.ANALYTICS_STORAGE to status))
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to set consent state", e)
         }
     }
 }

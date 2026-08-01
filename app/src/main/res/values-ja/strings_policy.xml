@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-最終更新日: 2026年7月
+最終更新: 2026年8月
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 プライバシーポリシー
 </string>
     <string name="pp_summary">
-お客様のファイルはデバイス上に留まり、当社が閲覧することはありません。当社はアプリ改善のためにFirebaseを介して匿名の使用状況分析のみを収集します。広告なし、データ販売なし、不正行為は一切ありません。
+お客様のファイルはデバイス上に保持され、当社が閲覧することはありません。お客様の同意に基づき、アプリ改善のためにFirebaseを通じて匿名の利用統計を収集します。広告なし、データ販売なし、不審な行為も一切ありません。
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Ultimate File Manager Proは独立したAndroidアプリケーションであり
 Firebase Analyticsによる収集（匿名）
 </string>
     <string name="pp_s2_analytics_body">
-当社はGoogle Firebase Analyticsを使用して匿名データを収集し、アプリを改善しています。分析データは個人の身元と関連付けられることはありません。アプリの設定内の使用状況分析トグル、またはAndroidデバイスの設定からいつでもオプトアウトできます。
+当社はGoogle Firebase Analyticsを使用して、匿名の利用データを収集し、アプリの改善に役立てています。分析データがお客様の個人情報に結び付けられることは一切ありません。アプリの設定（またはAndroidデバイスの設定）にある「利用統計」トグルが同意の管理手段となります。初期設定ではオンになっており、オフに切り替えると同意を撤回し、いつでも収集を停止します。欧州経済地域、英国、スイスのユーザーについては、EUユーザー同意ポリシーおよび適用されるデータ保護法に準拠します。
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1484,25 +1484,25 @@ Firebase Analytics データ
     <!-- Your rights (Section 9) -->
     <string-array name="pp_rights">
         <item>
-アプリを通じてローカルに保存されたデータに直接アクセスします。
+アプリからローカルに保存されたデータに直接アクセスできます。
 </item>
         <item>
-Vaultからアイテムを削除してVaultデータを削除します。
+Vaultからアイテムを削除することで、Vaultデータを削除します。
 </item>
         <item>
-設定 → ストレージインデクサーからインデックス化されたファイルのメタデータを管理および削除します。
+設定 → ストレージインデクサーから、インデックス化されたファイルのメタデータを管理・削除できます。
 </item>
         <item>
-いつでもGoogle Drive、OneDrive、またはDropboxアカウントの接続を解除して、アクセスを取り消し、保存されたOAuthトークンを削除します。
+Google Drive、OneDrive、またはDropboxアカウントの接続をいつでも解除して、アクセスを無効にし、保存されたOAuthトークンを削除できます。
 </item>
         <item>
-設定からいつでもS3 / S3互換ストレージプロファイルを削除して、保存されたアクセス資格情報を削除します。
+設定からいつでもS3 / S3互換ストレージプロファイルを削除して、保存されたアクセス認証情報を削除できます。
 </item>
         <item>
-共有またはコピー機能を使用してファイルをエクスポートします。
+共有機能またはコピー機能を使用してファイルをエクスポートできます。
 </item>
         <item>
-アプリ内の設定 → 使用状況分析からいつでもFirebase Analyticsをオプトアウトできます。または、Androidデバイスの設定を使用してください。
+アプリ内の設定 → 使用状況分析から、いつでもFirebase Analyticsへの同意を付与または撤回できます。または、Androidデバイスの設定を使用してください。
 </item>
     </string-array>
 

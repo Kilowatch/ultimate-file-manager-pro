@@ -11,7 +11,7 @@ Ultimate File Manager Pro
 KiloWatch
 </string>
     <string name="policy_last_updated">
-Dernière mise à jour : juillet 2026
+Dernière mise à jour : août 2026
 </string>
     <string name="policy_play_store_url">
 https://play.google.com/store/apps/details?id=za.kilowatch.ultimatefilemanager
@@ -614,7 +614,7 @@ support@kilowatch.co.za
 Politique de confidentialité
 </string>
     <string name="pp_summary">
-Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Nous collectons uniquement des analyses d\'utilisation anonymes via Firebase pour améliorer l\'application. Pas de publicité, pas de vente de données, pas d\'activités douteuses.
+Vos fichiers restent sur votre appareil — nous ne les voyons jamais. Avec votre consentement, nous collectons des statistiques d\\\'utilisation anonymes via Firebase pour améliorer l\\\'application. Pas de publicités, pas de vente de données, pas de pratiques douteuses.
 </string>
 
     <!-- Section titles -->
@@ -707,7 +707,7 @@ Nous n\'avons jamais accès à votre code PIN, code de récupération, clés de 
 Collecté via Firebase Analytics (anonyme)
 </string>
     <string name="pp_s2_analytics_body">
-Nous utilisons Google Firebase Analytics pour collecter des données anonymes afin d\'améliorer l\'application. Les données d\'analyse ne sont jamais liées à votre identité personnelle. Vous pouvez vous désinscrire à tout moment en utilisant le bouton d\'analyse d\'utilisation dans les paramètres de l\'application, ou via les paramètres de votre appareil Android.
+Nous utilisons Google Firebase Analytics pour collecter des données d\\\'utilisation anonymes afin d\\\'améliorer l\\\'application. Les données d\\\'analyse ne sont jamais liées à votre identité personnelle. L\\\'interrupteur « Usage Analytics » dans les paramètres de l\\\'application (ou les paramètres de votre appareil Android) constitue le contrôle du consentement : il est activé par défaut, et le désactiver retire votre consentement et arrête la collecte à tout moment. Pour les utilisateurs de l\\\'Espace économique européen, du Royaume-Uni et de la Suisse, cela est conforme à la politique de consentement des utilisateurs de l\\\'UE et à la législation applicable en matière de protection des données.
 </string>
 
     <string name="pp_s2_billing_heading">
@@ -1487,7 +1487,7 @@ Jusqu\\\'à ce que vous supprimiez le profil S3 dans Paramètres, ou jusqu\\\'à
 Accédez directement à vos données stockées localement via l\\\'application.
 </item>
         <item>
-Supprimez les données du coffre en retirant des éléments du coffre.
+Supprimez les données du coffre-fort en retirant des éléments du coffre-fort.
 </item>
         <item>
 Gérez et supprimez les métadonnées de fichiers indexées via Paramètres -> Indexeur de stockage.
@@ -1496,13 +1496,13 @@ Gérez et supprimez les métadonnées de fichiers indexées via Paramètres -> I
 Déconnectez votre compte Google Drive, OneDrive ou Dropbox à tout moment pour révoquer l\\\'accès et supprimer les jetons OAuth stockés.
 </item>
         <item>
-Supprimez vos profils de stockage S3 / compatible S3 à tout moment via Paramètres pour effacer les identifiants d\\\'accès stockés.
+Supprimez vos profils de stockage S3 / compatibles S3 à tout moment via Paramètres pour effacer les identifiants d\\\'accès stockés.
 </item>
         <item>
-Exportez vos fichiers à l\\\'aide des fonctions de partage ou de copie.
+Exportez vos fichiers à l\\\'aide des fonctionnalités de partage ou de copie.
 </item>
         <item>
-Désactivez Firebase Analytics à tout moment via Paramètres → Analytics d\\\'utilisation dans l\\\'application ; ou utilisez les paramètres de votre appareil Android.
+Accordez ou retirez votre consentement à Firebase Analytics à tout moment via Paramètres → Analyse d\\\'utilisation dans l\\\'application ; vous pouvez également utiliser les paramètres de votre appareil Android.
 </item>
     </string-array>
 
