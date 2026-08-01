@@ -6,6 +6,21 @@ object FFmpegThumbnailHelper {
     private const val TAG = "FFmpegThumbnailHelper"
     private var isLoaded = false
 
+    /**
+     * Global cap on concurrent native FFmpeg frame extractions.
+     *
+     * Every video thumbnail bind on local storage (FileAdapter, SafPickerActivity,
+     * UfmDocumentsProvider) used to start its own unbounded FFmpeg decode on
+     * Dispatchers.IO. On low-end devices (e.g. Google Chromecast) a fast fling
+     * through a video-heavy folder spawned several simultaneous native decodes,
+     * saturating all CPU cores and starving the main thread (its XML-drawable
+     * asset load blocked >5000ms -> ANR). The semaphore bounds native decode
+     * concurrency so the UI thread always keeps CPU headroom. The network
+     * thumbnail path is additionally capped by its own semaphore in
+     * NetworkThumbnailCacheManager, so this is the tighter global limit.
+     */
+    private val extractionSemaphore = java.util.concurrent.Semaphore(2)
+
     init {
         try {
             System.loadLibrary("ffmpeg_jni")
@@ -31,41 +46,55 @@ object FFmpegThumbnailHelper {
             return null
         }
 
-        // Try the requested percentage
-        var bitmap = tryExtractAtPercent(videoPath, timePercent, width, height)
+        // Acquire a global extraction permit before running native FFmpeg decode so that at
+        // most [extractionSemaphore] decodes run at once. On low-end devices this keeps the
+        // main thread responsive while video thumbnails are being generated.
+        try {
+            extractionSemaphore.acquire()
+        } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            return null
+        }
 
-        // If the frame is black, retry at different percentage options to avoid empty/black thumbnails
-        if (bitmap != null && checkIsBlackBitmap(bitmap)) {
-            za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: extracted frame at $timePercent% was completely black. Retrying at alternative times...")
-            bitmap.recycle()
-            bitmap = null
+        try {
+            // Try the requested percentage
+            var bitmap = tryExtractAtPercent(videoPath, timePercent, width, height)
 
-            // Try alternatives: 15%, 20%, 5%, 30%
-            val alternatives = listOf(15, 20, 5, 30)
-            for (altPercent in alternatives) {
-                if (altPercent == timePercent) continue
-                za.kilowatch.ultimatefilemanager.util.GoRoLog.i(TAG, "extractVideoFrame: Retrying frame extraction at $altPercent%")
-                val altBitmap = tryExtractAtPercent(videoPath, altPercent, width, height)
-                if (altBitmap != null) {
-                    if (!checkIsBlackBitmap(altBitmap)) {
-                        za.kilowatch.ultimatefilemanager.util.GoRoLog.i(TAG, "extractVideoFrame: Successfully extracted non-black frame at $altPercent%")
-                        bitmap = altBitmap
-                        break
-                    } else {
-                        za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: frame at $altPercent% was also black. Continuing retry...")
-                        altBitmap.recycle()
+            // If the frame is black, retry at different percentage options to avoid empty/black thumbnails
+            if (bitmap != null && checkIsBlackBitmap(bitmap)) {
+                za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: extracted frame at $timePercent% was completely black. Retrying at alternative times...")
+                bitmap.recycle()
+                bitmap = null
+
+                // Try alternatives: 15%, 20%, 5%, 30%
+                val alternatives = listOf(15, 20, 5, 30)
+                for (altPercent in alternatives) {
+                    if (altPercent == timePercent) continue
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.i(TAG, "extractVideoFrame: Retrying frame extraction at $altPercent%")
+                    val altBitmap = tryExtractAtPercent(videoPath, altPercent, width, height)
+                    if (altBitmap != null) {
+                        if (!checkIsBlackBitmap(altBitmap)) {
+                            za.kilowatch.ultimatefilemanager.util.GoRoLog.i(TAG, "extractVideoFrame: Successfully extracted non-black frame at $altPercent%")
+                            bitmap = altBitmap
+                            break
+                        } else {
+                            za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: frame at $altPercent% was also black. Continuing retry...")
+                            altBitmap.recycle()
+                        }
                     }
+                }
+
+                // If all retries failed or returned black, fall back to the first successful extract (e.g. 10%)
+                if (bitmap == null) {
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: All alternative percent attempts returned black. Falling back to default time percent $timePercent%")
+                    bitmap = tryExtractAtPercent(videoPath, timePercent, width, height)
                 }
             }
 
-            // If all retries failed or returned black, fall back to the first successful extract (e.g. 10%)
-            if (bitmap == null) {
-                za.kilowatch.ultimatefilemanager.util.GoRoLog.w(TAG, "extractVideoFrame: All alternative percent attempts returned black. Falling back to default time percent $timePercent%")
-                bitmap = tryExtractAtPercent(videoPath, timePercent, width, height)
-            }
+            return bitmap
+        } finally {
+            extractionSemaphore.release()
         }
-
-        return bitmap
     }
 
     private fun tryExtractAtPercent(videoPath: String, timePercent: Int, width: Int, height: Int): Bitmap? {
