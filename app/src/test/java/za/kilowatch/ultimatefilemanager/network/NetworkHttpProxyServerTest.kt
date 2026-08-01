@@ -2,9 +2,9 @@ package za.kilowatch.ultimatefilemanager.network
 
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertSame
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -13,10 +13,10 @@ import org.robolectric.RobolectricTestRunner
 import java.io.IOException
 
 /**
- * Unit tests for the HTTP proxy's pinned-handle + bounded-retry logic
- * ([NetworkHttpProxyServer.getOrCreateHandle] / [NetworkHttpProxyServer.readChunkWithRetry])
- * and range normalization. Uses the [NetworkHttpProxyServer.handleFactory] seam so no
- * real sockets or network clients are needed.
+ * Unit tests for the HTTP proxy's per-request handle + bounded-retry logic
+ * ([NetworkHttpProxyServer.readChunkWithRetry]) and range normalization.
+ * Uses the [NetworkHttpProxyServer.handleFactory] seam so no real sockets or
+ * network clients are needed.
  */
 @RunWith(RobolectricTestRunner::class)
 class NetworkHttpProxyServerTest {
@@ -65,10 +65,8 @@ class NetworkHttpProxyServerTest {
 
     @After
     fun tearDown() {
-        // Restore the real handle factory and release the pinned handle so state
-        // doesn't leak between tests.
+        // Restore the real handle factory so state doesn't leak between tests.
         NetworkHttpProxyServer.handleFactory = NetworkHttpProxyServer::openHandleForSession
-        session.closeHandle()
     }
 
     // ── readChunkWithRetry ─────────────────────────────────────────────────────
@@ -76,14 +74,14 @@ class NetworkHttpProxyServerTest {
     @Test
     fun readSucceedsOnFirstAttempt() {
         val fake = FakeRandomAccessFile(size = 1000L, readResult = 256)
-        NetworkHttpProxyServer.handleFactory = { fake }
         val buffer = ByteArray(256)
 
-        val result = NetworkHttpProxyServer.readChunkWithRetry(session, 0L, buffer, 256)
+        val result = NetworkHttpProxyServer.readChunkWithRetry(session, fake, 0L, buffer, 256)
 
-        assertEquals(256, result)
+        assertEquals(256, result.bytesRead)
         assertEquals(1, fake.readCalls)
-        assertFalse(session.handleInvalid)
+        // No handle replacement needed on success
+        assertNull(result.newHandle)
     }
 
     @Test
@@ -97,73 +95,52 @@ class NetworkHttpProxyServerTest {
         }
         val buffer = ByteArray(256)
 
-        val result = NetworkHttpProxyServer.readChunkWithRetry(session, 100L, buffer, 256)
+        val result = NetworkHttpProxyServer.readChunkWithRetry(session, failing, 100L, buffer, 256)
 
-        assertEquals(256, result)
+        assertEquals(256, result.bytesRead)
         assertTrue("a fresh handle must be opened after the failed read", factoryCalls >= 2)
         assertTrue("the failed handle must be closed", failing.closeCalls >= 1)
-        assertFalse(session.handleInvalid)
+        // A new handle was opened — it should be returned as the replacement
+        assertNotNull("new handle must be returned after replacement", result.newHandle)
+        assertNotSame(failing, result.newHandle)
     }
 
     @Test
-    fun readBudgetExhaustionReturnsMinusOneAndMarksSessionInvalid() {
+    fun readBudgetExhaustionReturnsMinusOne() {
         val alwaysFails = FakeRandomAccessFile(size = 1000L, failReadsRemaining = Int.MAX_VALUE)
         NetworkHttpProxyServer.handleFactory = { alwaysFails }
         val buffer = ByteArray(256)
 
-        val result = NetworkHttpProxyServer.readChunkWithRetry(session, 0L, buffer, 256)
+        val result = NetworkHttpProxyServer.readChunkWithRetry(session, alwaysFails, 0L, buffer, 256)
 
-        assertEquals(-1, result)
-        assertTrue(session.handleInvalid)
-    }
-
-    // ── getOrCreateHandle ─────────────────────────────────────────────────────
-
-    @Test
-    fun handleIsPinnedAndReusedAcrossCalls() {
-        var factoryCalls = 0
-        NetworkHttpProxyServer.handleFactory = {
-            factoryCalls++
-            FakeRandomAccessFile(size = 1000L, readResult = 64)
-        }
-
-        val h1 = NetworkHttpProxyServer.getOrCreateHandle(session)
-        val h2 = NetworkHttpProxyServer.getOrCreateHandle(session)
-
-        assertSame(h1, h2)
-        assertEquals(1, factoryCalls)
+        assertEquals(-1, result.bytesRead)
+        // The failed handle should have been closed during retries
+        assertTrue(alwaysFails.closeCalls >= 1)
     }
 
     @Test
-    fun forceReopenCreatesFreshHandle() {
-        var factoryCalls = 0
-        NetworkHttpProxyServer.handleFactory = {
-            factoryCalls++
-            FakeRandomAccessFile(size = 1000L, readResult = 64)
-        }
+    fun noHandleReplacementWhenReadSucceedsOnRetryWithSameHandle() {
+        // First read succeeds — same handle, no replacement needed
+        val fake = FakeRandomAccessFile(size = 1000L, readResult = 256)
+        val buffer = ByteArray(256)
 
-        val h1 = NetworkHttpProxyServer.getOrCreateHandle(session)
-        val h2 = NetworkHttpProxyServer.getOrCreateHandle(session, forceReopen = true)
+        val result = NetworkHttpProxyServer.readChunkWithRetry(session, fake, 0L, buffer, 256)
 
-        assertNotSame(h1, h2)
-        assertEquals(2, factoryCalls)
+        // newHandle should be null because the original handle was reused successfully
+        assertNull(result.newHandle)
+        assertEquals(256, result.bytesRead)
     }
 
     @Test
-    fun invalidHandleIsReopenedOnNextAccess() {
-        var factoryCalls = 0
-        NetworkHttpProxyServer.handleFactory = {
-            factoryCalls++
-            FakeRandomAccessFile(size = 1000L, readResult = 64)
-        }
+    fun factoryReturnsNullOnRetryReturnsMinusOne() {
+        // First read fails, then the factory returns null (cannot open new handle)
+        val failing = FakeRandomAccessFile(size = 1000L, readResult = 256, failReadsRemaining = 1)
+        NetworkHttpProxyServer.handleFactory = { null } // retry factory returns null
+        val buffer = ByteArray(256)
 
-        val h1 = NetworkHttpProxyServer.getOrCreateHandle(session)
-        session.handleInvalid = true
-        val h2 = NetworkHttpProxyServer.getOrCreateHandle(session)
+        val result = NetworkHttpProxyServer.readChunkWithRetry(session, failing, 0L, buffer, 256)
 
-        assertNotSame(h1, h2)
-        assertEquals(2, factoryCalls)
-        assertFalse(session.handleInvalid)
+        assertEquals(-1, result.bytesRead)
     }
 
     // ── parseRange normalization ──────────────────────────────────────────────

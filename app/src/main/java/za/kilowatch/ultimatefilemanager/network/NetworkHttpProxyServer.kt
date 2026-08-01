@@ -9,6 +9,7 @@ import java.net.Socket
 import java.security.SecureRandom
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.Executors
 import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.SynchronousQueue
@@ -25,6 +26,11 @@ import java.util.concurrent.TimeUnit
  *                                  IRandomAccessFile.read(offset)
  *                                          │
  *                              SMB / SFTP / Cloud network
+ *
+ * Each HTTP request opens its own dedicated [IRandomAccessFile] handle and closes it when
+ * the request completes or the client disconnects. Handles are never shared between
+ * concurrent requests — this eliminates the race condition that occurred when a retry's
+ * force-reopen closed a handle that another thread was still using.
  *
  * Usage:
  *   val url = NetworkHttpProxyServer.register(share, "/Movies/film.mkv", "video/x-matroska")
@@ -55,11 +61,10 @@ object NetworkHttpProxyServer {
     /**
      * A registered stream that an external player can open.
      *
-     * The session owns the pinned streaming [handle]: it is opened lazily on the
-     * first HTTP request and kept alive for the session's lifetime, so seeks
-     * across requests reuse one dedicated connection instead of paying a fresh
-     * handshake each time. The handle is only released on session eviction,
-     * [unregister], or proxy [stop].
+     * Each HTTP request to this session opens its own dedicated streaming handle
+     * and closes it when the request ends. Handles are never shared between
+     * concurrent requests, so seeking (which opens a new HTTP connection) never
+     * races with a previous read on the same handle.
      */
     class Session(
         val share: NetworkShare,
@@ -71,27 +76,6 @@ object NetworkHttpProxyServer {
     ) {
         /** Last time any HTTP request touched this session (used for idle eviction). */
         @Volatile var lastAccessMs: Long = System.currentTimeMillis()
-
-        /** The pinned streaming handle for this session. Opened lazily, owned here. */
-        @Volatile var handle: IRandomAccessFile? = null
-
-        /** Set after a fatal read error so the next request reopens a fresh handle. */
-        @Volatile var handleInvalid: Boolean = false
-
-        /** Serializes lazy open/reopen of [handle] (double-checked locking). */
-        val createLock = Any()
-
-        /** Serializes individual [IRandomAccessFile.read] calls on the shared handle. */
-        val readLock = Any()
-
-        /** Close the pinned handle and reset its state. Safe to call repeatedly. */
-        fun closeHandle() {
-            synchronized(createLock) {
-                runCatching { handle?.close() }
-                handle = null
-                handleInvalid = false
-            }
-        }
     }
 
     private fun generateAuthToken(): String {
@@ -143,7 +127,6 @@ object NetworkHttpProxyServer {
         runCatching { serverSocket?.close() }
         serverSocket = null
         port = 0
-        sessions.values.forEach { it.closeHandle() }
         sessions.clear()
         GoRoLog.d(TAG, "HTTP proxy stopped")
     }
@@ -167,7 +150,7 @@ object NetworkHttpProxyServer {
         val session = Session(share, path, mimeType, fileSize)
         sessions[uuid] = session
         GoRoLog.d(TAG, "Registered session $uuid → ${share.host}$path (size=$fileSize)")
-        
+
         // Append the file name so external players like VLC can determine the container format from the extension
         val fileName = android.net.Uri.encode(path.substringAfterLast('/'))
         return "http://127.0.0.1:$port/$uuid/$fileName?auth=${session.authToken}"
@@ -175,8 +158,7 @@ object NetworkHttpProxyServer {
 
     /** Remove a session immediately (call when the player activity is destroyed). */
     fun unregister(uuid: String) {
-        val session = sessions.remove(uuid)
-        session?.closeHandle()
+        sessions.remove(uuid)
         GoRoLog.d(TAG, "Unregistered session $uuid")
     }
 
@@ -202,6 +184,9 @@ object NetworkHttpProxyServer {
     // ── Request handler ───────────────────────────────────────────────────────
 
     private fun handleClient(socket: Socket) {
+        // AtomicReference so streamResponse can update the handle after a retry
+        // replaces it, guaranteeing finally always closes the current handle.
+        val handleRef = AtomicReference<IRandomAccessFile?>(null)
         try {
             socket.soTimeout = 30_000
             val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
@@ -254,39 +239,50 @@ object NetworkHttpProxyServer {
                 return
             }
 
-            // Resolve the session's pinned streaming handle (opened lazily, kept
-            // alive for the session's lifetime — never closed per request).
-            val clientHandle = try {
-                getOrCreateHandle(session)
+            // Open a fresh, dedicated handle for THIS request. Each HTTP request
+            // owns its handle exclusively — no sharing with concurrent requests.
+            val initialHandle = try {
+                handleFactory(session)
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "Failed to open handle for ${session.path}", e)
                 null
             }
 
-            if (clientHandle == null) {
+            if (initialHandle == null) {
                 send500(out)
                 return
             }
+            handleRef.set(initialHandle)
 
-            try {
-                streamResponse(out, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
-            } catch (e: Exception) {
-                // Client aborted or socket closed
-            }
-            // NOTE: the handle is pinned to the session and must NOT be closed here.
-            // It is released on session eviction, unregister, or proxy stop.
+            streamResponse(out, session, handleRef, initialHandle, fileSize, isRangeRequest, rangeStart, rangeEnd)
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Client handler error", e)
         } finally {
+            runCatching { handleRef.get()?.close() }
             runCatching { socket.close() }
         }
     }
 
     // ── Streaming ─────────────────────────────────────────────────────────────
 
+    /**
+     * Result of a chunk read from [readChunkWithRetry].
+     *
+     * @param bytesRead number of bytes read, or -1 if the read budget was exhausted.
+     * @param newHandle if non-null, the old handle was closed and replaced with this
+     *   fresh one after a transient read failure; the caller must use this handle for
+     *   subsequent reads.
+     */
+    internal data class ReadResult(
+        val bytesRead: Int,
+        val newHandle: IRandomAccessFile? = null
+    )
+
     private fun streamResponse(
         out: OutputStream,
         session: Session,
+        handleRef: AtomicReference<IRandomAccessFile?>,
+        initialHandle: IRandomAccessFile,
         fileSize: Long,
         isRangeRequest: Boolean,
         rangeStart: Long,
@@ -312,21 +308,32 @@ object NetworkHttpProxyServer {
         val buffer = ByteArray(CHUNK_SIZE)
         var position = rangeStart
         var remaining = contentLength
+        var handle = initialHandle
 
         while (remaining > 0) {
             val toRead = minOf(CHUNK_SIZE.toLong(), remaining).toInt()
 
-            // Concurrent player connections (separate audio/video tracks, read-ahead)
-            // share the session's single pinned handle. Reads are offset-based so they
-            // interleave safely, but each read call must be serialized on the handle —
-            // it happens under readLock. Socket writes stay OUTSIDE the lock so a slow
-            // client never holds the shared handle.
-            val bytesRead = readChunkWithRetry(session, position, buffer, toRead)
+            val result = readChunkWithRetry(session, handle, position, buffer, toRead)
 
-            if (bytesRead <= 0) break
-            out.write(buffer, 0, bytesRead)
-            position += bytesRead
-            remaining -= bytesRead
+            // If retry opened a fresh handle, adopt it for subsequent chunks
+            // and update the AtomicReference so the finally block closes it.
+            if (result.newHandle != null) {
+                handle = result.newHandle
+                handleRef.set(handle)
+            }
+
+            if (result.bytesRead <= 0) break
+
+            try {
+                out.write(buffer, 0, result.bytesRead)
+            } catch (e: Exception) {
+                // Client disconnected — stop streaming immediately.
+                // The handle will be closed by handleClient's finally block.
+                break
+            }
+
+            position += result.bytesRead
+            remaining -= result.bytesRead
         }
         out.flush()
     }
@@ -334,24 +341,30 @@ object NetworkHttpProxyServer {
     /**
      * Read one chunk at [offset], retrying transient failures before giving up.
      *
-     * On a read error the current handle is discarded (SMB's `SmbRandomAccess` already
-     * closes its connection on error) and a fresh dedicated one is opened for the same
-     * offset, so a one-off blip — NAS disk spin-up, a reset Wi-Fi packet — recovers
-     * instead of aborting the whole response. Returns the bytes read, or -1 once the
-     * retry budget is exhausted.
+     * On a read error the current handle is discarded and a fresh one is opened
+     * for the same offset, so a one-off blip — NAS disk spin-up, a reset Wi-Fi
+     * packet — recovers instead of aborting the whole response.
+     *
+     * @param session  used to open a fresh handle on retry.
+     * @param handle   the current handle for this request (owned exclusively by
+     *                 this request — no concurrency concerns).
+     * @return [ReadResult] with bytes read (or -1 on exhaustion) and an optional
+     *         replacement handle if the original was closed and replaced.
      */
-    internal fun readChunkWithRetry(session: Session, offset: Long, buffer: ByteArray, length: Int): Int {
+    internal fun readChunkWithRetry(
+        session: Session,
+        handle: IRandomAccessFile,
+        offset: Long,
+        buffer: ByteArray,
+        length: Int
+    ): ReadResult {
+        var currentHandle = handle
         var attempts = 0
         while (attempts < MAX_READ_ATTEMPTS) {
             attempts++
             try {
-                // Attempt 1 reuses the pinned handle; later attempts force a fresh one,
-                // because a failed read means the handle (and its connection) is suspect.
-                val handle = getOrCreateHandle(session, forceReopen = attempts > 1)
-                if (handle == null) return -1
-                // Lock scope = the read call only, so a slow client or a retry backoff
-                // never blocks a concurrent request's chunk read.
-                return synchronized(session.readLock) { handle.read(offset, buffer, length) }
+                val bytesRead = currentHandle.read(offset, buffer, length)
+                return ReadResult(bytesRead, if (currentHandle !== handle) currentHandle else null)
             } catch (e: Exception) {
                 if (attempts >= MAX_READ_ATTEMPTS) {
                     GoRoLog.e(TAG, "NAS read failed at offset $offset after $MAX_READ_ATTEMPTS attempts", e)
@@ -359,14 +372,24 @@ object NetworkHttpProxyServer {
                     GoRoLog.w(TAG, "NAS read failed at offset $offset (attempt $attempts/$MAX_READ_ATTEMPTS)", null)
                 }
                 if (attempts < MAX_READ_ATTEMPTS) {
+                    // Close the suspect handle and open a fresh one.
+                    runCatching { currentHandle.close() }
                     try { Thread.sleep(READ_RETRY_BACKOFF_MS) } catch (_: InterruptedException) { break }
+                    val fresh = try {
+                        handleFactory(session)
+                    } catch (ex: Exception) {
+                        GoRoLog.e(TAG, "Failed to open retry handle for ${session.path}", ex)
+                        null
+                    }
+                    if (fresh == null) {
+                        return ReadResult(-1)
+                    }
+                    currentHandle = fresh
                 }
             }
         }
-        // Budget exhausted — mark the session invalid so the next request reopens it,
-        // and signal the streaming loop to abort (clean truncated-response error).
-        session.handleInvalid = true
-        return -1
+        // Budget exhausted — return failure; the caller will clean up the handle.
+        return ReadResult(-1)
     }
 
     private fun sendHeadResponse(
@@ -460,55 +483,16 @@ object NetworkHttpProxyServer {
     }
 
     /**
-     * Handle-factory seam for the pinned streaming handle. Defaults to the real
+     * Handle-factory seam for creating streaming handles. Defaults to the real
      * [openHandleForSession]; tests override it to inject a fake [IRandomAccessFile]
-     * so the retry/reopen logic is unit-testable without sockets.
+     * so the retry logic is unit-testable without sockets.
      */
     internal var handleFactory: (Session) -> IRandomAccessFile? = ::openHandleForSession
 
     /**
-     * Returns the session's pinned streaming handle, opening a fresh dedicated one
-     * if needed. Each session owns one handle for its whole lifetime, so seeks on
-     * different HTTP requests reuse the same connection instead of paying a fresh
-     * handshake per request.
-     *
-     * SMB/SFTP/SCP handles are opened as *dedicated* connections — never pooled —
-     * because pooled SMB sessions carry a short socket timeout that breaks slow
-     * seeks (external players close or hang when the stream aborts mid-response).
-     *
-     * @param forceReopen close the current handle (if any) and open a new one.
-     * @return the handle, or null if opening failed (the caller responds 500).
-     */
-    internal fun getOrCreateHandle(session: Session, forceReopen: Boolean = false): IRandomAccessFile? {
-        val current = session.handle
-        if (current != null && !session.handleInvalid && !forceReopen) return current
-
-        synchronized(session.createLock) {
-            // Double-checked: another thread may have opened/repaired it while we waited.
-            val current2 = session.handle
-            if (current2 != null && !session.handleInvalid && !forceReopen) return current2
-
-            if (forceReopen || session.handleInvalid) {
-                runCatching { session.handle?.close() }
-                session.handle = null
-                session.handleInvalid = false
-            }
-
-            val handle = handleFactory(session)
-            if (handle != null) {
-                session.handle = handle
-            } else {
-                // Failed to open — stay marked invalid so the next request retries.
-                session.handleInvalid = true
-            }
-            return handle
-        }
-    }
-
-    /**
-     * Open a fresh streaming handle for the given session. Each session's handle is
-     * dedicated (not pooled) so long-lived, seekable streaming never hits the pooled
-     * connections' short socket timeout.
+     * Open a fresh streaming handle for the given session. Each handle is a
+     * dedicated (non-pooled) connection so long-lived, seekable streaming never
+     * hits the pooled connections' short socket timeout.
      */
     internal fun openHandleForSession(session: Session): IRandomAccessFile? {
         return when (session.share.type) {
@@ -533,8 +517,6 @@ object NetworkHttpProxyServer {
         }
     }
 
-
-
     // ── Session eviction ──────────────────────────────────────────────────────
 
     private fun scheduleSessionEviction() {
@@ -542,8 +524,7 @@ object NetworkHttpProxyServer {
         scheduler.scheduleAtFixedRate({
             val now = System.currentTimeMillis()
             val expired = sessions.entries.filter { now - it.value.lastAccessMs > SESSION_TTL_MS }
-            expired.forEach { (uuid, session) ->
-                session.closeHandle()
+            expired.forEach { (uuid, _) ->
                 sessions.remove(uuid)
                 GoRoLog.d(TAG, "Evicted idle session $uuid")
             }
