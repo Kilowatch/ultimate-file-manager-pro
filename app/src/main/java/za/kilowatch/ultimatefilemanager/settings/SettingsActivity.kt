@@ -105,9 +105,6 @@ class SettingsActivity : AppCompatActivity() {
 
 
     companion object {
-        private const val PREFS_ANALYTICS = "analytics_prefs"
-        private const val KEY_ANALYTICS_ENABLED = "analytics_enabled"
-
         fun start(context: android.content.Context) =
             context.startActivity(Intent(context, SettingsActivity::class.java))
     }
@@ -189,13 +186,12 @@ class SettingsActivity : AppCompatActivity() {
         switchAnalytics = findViewById(R.id.switchAnalytics)
         txtAnalyticsSubtitle = findViewById(R.id.txtAnalyticsSubtitle)
 
-        val prefs = getSharedPreferences(PREFS_ANALYTICS, Context.MODE_PRIVATE)
-        val analyticsEnabled = prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
+        val analyticsEnabled = za.kilowatch.ultimatefilemanager.util.AnalyticsPrefs.isEnabled(this)
         switchAnalytics.isChecked = analyticsEnabled
         updateAnalyticsSubtitle(analyticsEnabled)
 
         // Tapping the whole card or just the switch both toggle it
-        cardAnalytics.setOnClickListener { toggleAnalytics(prefs) }
+        cardAnalytics.setOnClickListener { toggleAnalytics() }
         switchAnalytics.setOnCheckedChangeListener(null) // avoid double-fire; card handles it
 
         // Crash & ANR Reporting toggle
@@ -747,8 +743,7 @@ class SettingsActivity : AppCompatActivity() {
 
         // Refresh analytics subtitle (in case something changed externally)
         if (::switchAnalytics.isInitialized) {
-            val prefs = getSharedPreferences(PREFS_ANALYTICS, Context.MODE_PRIVATE)
-            val enabled = prefs.getBoolean(KEY_ANALYTICS_ENABLED, true)
+            val enabled = za.kilowatch.ultimatefilemanager.util.AnalyticsPrefs.isEnabled(this)
             switchAnalytics.isChecked = enabled
             updateAnalyticsSubtitle(enabled)
         }
@@ -972,10 +967,10 @@ class SettingsActivity : AppCompatActivity() {
         outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
-    private fun toggleAnalytics(prefs: android.content.SharedPreferences) {
+    private fun toggleAnalytics() {
         val newValue = !switchAnalytics.isChecked
         switchAnalytics.isChecked = newValue
-        prefs.edit().putBoolean(KEY_ANALYTICS_ENABLED, newValue).apply()
+        za.kilowatch.ultimatefilemanager.util.AnalyticsPrefs.setEnabled(this, newValue)
         za.kilowatch.ultimatefilemanager.util.Analytics.setAnalyticsEnabled(this, newValue)
         updateAnalyticsSubtitle(newValue)
     }

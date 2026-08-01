@@ -9945,6 +9945,9 @@ Aún no se agregaron etiquetas
     <string name="backup_pref_file_tags">
 Etiquetas de archivo
 </string>
+    <string name="backup_pref_analytics">
+Análisis de uso
+</string>
     <string name="settings_file_tags_title">
 Etiquetas de archivo
 </string>

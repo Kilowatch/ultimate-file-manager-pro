@@ -9933,6 +9933,9 @@ UFMプレーヤー設定
     <string name="backup_pref_file_tags">
 ファイルタグ
 </string>
+    <string name="backup_pref_analytics">
+利用状況分析
+</string>
     <string name="settings_file_tags_title">
 ファイルタグ
 </string>

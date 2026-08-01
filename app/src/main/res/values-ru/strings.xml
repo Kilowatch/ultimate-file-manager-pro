@@ -9933,6 +9933,9 @@ URL сервера
     <string name="backup_pref_file_tags">
 Теги файлов
 </string>
+    <string name="backup_pref_analytics">
+Аналитика использования
+</string>
     <string name="settings_file_tags_title">
 Теги файлов
 </string>

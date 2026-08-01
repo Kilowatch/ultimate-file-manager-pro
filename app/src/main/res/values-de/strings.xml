@@ -9933,6 +9933,9 @@ Noch keine Tags hinzugefügt
     <string name="backup_pref_file_tags">
 Datei-Tags
 </string>
+    <string name="backup_pref_analytics">
+Nutzungsanalyse
+</string>
     <string name="settings_file_tags_title">
 Datei-Tags
 </string>

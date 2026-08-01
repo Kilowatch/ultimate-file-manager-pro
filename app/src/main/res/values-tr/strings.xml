@@ -9933,6 +9933,9 @@ Henüz etiket eklenmemiş
     <string name="backup_pref_file_tags">
 Dosya Etiketleri
 </string>
+    <string name="backup_pref_analytics">
+Kullanım Analitiği
+</string>
     <string name="settings_file_tags_title">
 Dosya Etiketleri
 </string>

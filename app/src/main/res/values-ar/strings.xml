@@ -9933,6 +9933,9 @@ Box
     <string name="backup_pref_file_tags">
 علامات الملفات
 </string>
+    <string name="backup_pref_analytics">
+تحليلات الاستخدام
+</string>
     <string name="settings_file_tags_title">
 علامات الملفات
 </string>

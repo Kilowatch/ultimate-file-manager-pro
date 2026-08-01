@@ -9933,6 +9933,9 @@ UFM प्लेयर सेटिंग्स
     <string name="backup_pref_file_tags">
 फ़ाइल टैग
 </string>
+    <string name="backup_pref_analytics">
+उपयोग विश्लेषण
+</string>
     <string name="settings_file_tags_title">
 फ़ाइल टैग
 </string>

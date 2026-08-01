@@ -7,12 +7,15 @@
 
     <application>
         <!--
-             Prevent Firebase from auto-initialising via FirebaseInitProvider during
-             super.onCreate(). UfmApplication registers BouncyCastle synchronously
-             before super.onCreate() and then calls FirebaseApp.initializeApp() manually,
-             ensuring the security provider list is stable before any Firebase HTTPS
-             thread starts. Without this, the BC insertion race causes an NPE in
-             OpenSSLSocketFactoryImpl.createSocket() on Firebase's ThreadPoolExecutor.
+             FirebaseInitProvider is removed so Firebase can never auto-initialise during
+             the ContentProvider phase (before UfmApplication.onCreate, on the main
+             thread). UfmApplication registers BouncyCastle synchronously first, then the
+             google-flavor Analytics.init() initialises Firebase on a dedicated background
+             thread — so the security provider list is stable before any Firebase HTTPS
+             thread starts (avoiding the BC insertion race / NPE in
+             OpenSSLSocketFactoryImpl.createSocket()), and no Firebase work ever runs on
+             the main thread (avoiding the >5000 ms "Main thread blocked" ANR on
+             low-end Android TV devices).
         -->
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"

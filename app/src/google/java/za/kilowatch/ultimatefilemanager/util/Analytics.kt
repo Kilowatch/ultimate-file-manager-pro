@@ -1,33 +1,84 @@
 package za.kilowatch.ultimatefilemanager.util
 
 import android.content.Context
+import android.os.Process
 import android.util.Log
+import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
+import java.util.concurrent.Executors
 
 /**
- * Google Play-specific Analytics implementation.
+ * Google Play-specific Analytics implementation routing to Firebase Analytics.
  *
- * Firebase Analytics initialization is intentionally disabled. UFM's own
- * CrashReportManager handles crash/ANR reporting, and the app never logs custom
- * analytics events, so the Firebase Measurement component provided no in-app value
- * while its internal runnable (R8-merged `com.google.android.gms.internal.play_billing.zzcw`
- * / `com.google.android.gms.measurement.internal.*`) blocked the main looper for
- * >5000 ms on low-end Android TV devices (e.g. onn 4K Pro), producing a genuine
- * "Main thread blocked" ANR. Without `FirebaseApp.initializeApp()` the Measurement
- * component never starts (the manifest already removes FirebaseInitProvider), so no
- * Firebase work runs on the main thread at all.
+ * Firebase is initialised on a dedicated background thread so the Firebase Measurement
+ * component can never block the main looper (the >5000 ms "Main thread blocked" ANR seen
+ * on low-end Android TV devices such as the onn 4K Pro, where the Measurement bootstrap
+ * stalled the main thread at startup). The manifest removes FirebaseInitProvider, so
+ * Firebase does not auto-start during the ContentProvider phase; all initialisation
+ * happens here, off the main thread, after UfmApplication has registered BouncyCastle
+ * synchronously on the main thread (so the security-provider list is stable before any
+ * Firebase HTTPS thread starts).
  *
- * The Settings "Usage Analytics" toggle still saves its preference but has no effect;
- * the firebase-analytics dependency is retained only so this can be re-enabled without
- * a build-system change if a real analytics pipeline is added later.
+ * All Firebase calls are routed through a single-thread executor, so:
+ *  - `FirebaseApp.initializeApp()` and `FirebaseAnalytics.getInstance()` never run on the
+ *    caller's thread — including the Settings "Usage Analytics" toggle, which runs on the
+ *    UI thread;
+ *  - initialisation and enable-state changes are serialised, so a user toggling
+ *    "Usage Analytics" before background init completes still gets their choice applied
+ *    (`collectionEnabled` is read by the init task after init succeeds).
+ *
+ * The Settings "Usage Analytics" toggle genuinely controls collection via
+ * `setAnalyticsCollectionEnabled(...)`; the state is persisted through [AnalyticsPrefs].
  */
 object Analytics {
     private const val TAG = "UfmAnalytics"
 
+    private val executor = Executors.newSingleThreadExecutor { task ->
+        Thread(
+            {
+                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)
+                task.run()
+            },
+            "ufm-firebase"
+        ).apply { isDaemon = true }
+    }
+
+    /** Latest user intent for collection; applied by the init task even if set mid-init. */
+    @Volatile
+    private var collectionEnabled: Boolean? = null
+
+    /** True once FirebaseApp and the Measurement component have been started. */
+    @Volatile
+    private var initialized = false
+
     fun init(context: Context) {
-        Log.d(TAG, "Analytics init is a no-op — Firebase Measurement disabled to avoid main-thread ANR on low-end devices.")
+        executor.execute {
+            try {
+                if (collectionEnabled == null) {
+                    collectionEnabled = AnalyticsPrefs.isEnabled(context)
+                }
+                FirebaseApp.initializeApp(context)
+                FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(collectionEnabled ?: true)
+                initialized = true
+                Log.d(TAG, "Firebase initialized on ${Thread.currentThread().name} (collection=$collectionEnabled).")
+            } catch (e: Exception) {
+                Log.e(TAG, "Firebase initialization failed", e)
+            }
+        }
     }
 
     fun setAnalyticsEnabled(context: Context, enabled: Boolean) {
-        Log.d(TAG, "Analytics enabled state set to $enabled (no-op — Firebase Measurement disabled).")
+        collectionEnabled = enabled
+        executor.execute {
+            try {
+                AnalyticsPrefs.setEnabled(context, enabled)
+                if (initialized) {
+                    FirebaseAnalytics.getInstance(context).setAnalyticsCollectionEnabled(enabled)
+                }
+                Log.d(TAG, "Analytics collection set to $enabled (initialized=$initialized).")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to set analytics collection state", e)
+            }
+        }
     }
 }

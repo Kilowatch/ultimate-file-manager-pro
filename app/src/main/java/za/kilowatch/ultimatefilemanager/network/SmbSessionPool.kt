@@ -235,17 +235,18 @@ object SmbSessionPool {
             .build()
 
     private fun buildConfig(protocol: String, forWrite: Boolean, dedicated: Boolean = false): SmbConfig {
-        // Pooled connections use a finite socket timeout (120 s) — long enough that
-        // a user browsing files won't see the connection die between folder taps,
-        // but still finite so a truly hung server doesn't block forever.
-        // Dedicated connections (video playback, large file transfers, thumbnail
-        // extraction) may have arbitrarily long idle periods (pausing, buffering)
-        // so they keep soTimeout at 0 — cancellation is handled via the UI cancel
-        // button which closes the underlying TCP socket directly.
+        // Pooled metadata connections use a short socket timeout (2 s) so stale
+        // sessions fail over fast. Dedicated connections (video playback, large
+        // file transfers, thumbnail extraction) get a generous but FINITE timeout
+        // (30 s): SO_TIMEOUT only fires during an active socket read, so long idle
+        // periods (pausing, buffering) are unaffected, while a genuinely hung
+        // server read is bounded instead of blocking its thread forever. Transfer
+        // cancellation is still handled via the UI cancel button, which closes the
+        // underlying TCP socket directly.
         val soTimeoutSec = when {
             forWrite  -> 60L
-            dedicated -> 0L // streaming / long-lived — no socket timeout
-            else      -> 2L // pooled metadata — 2s timeout for fast failover on stale connections
+            dedicated -> 30L // streaming / long-lived reads — bounded so a hung server can't block forever
+            else      -> 2L // pooled metadata — fast failover on stale connections
         }
 
         val builder = SmbConfig.builder()

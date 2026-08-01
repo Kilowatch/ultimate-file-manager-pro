@@ -46,8 +46,9 @@ class UfmApplication : Application() {
         //      ThreadPoolExecutor worker).
         //
         // FirebaseInitProvider is removed from the manifest (tools:node="remove") so
-        // Firebase does NOT auto-start inside super.onCreate(). We call
-        // FirebaseApp.initializeApp() manually below, after the provider list is stable.
+        // Firebase does NOT auto-start inside super.onCreate(). Analytics.init() below
+        // initialises Firebase on a dedicated background thread, after the provider list
+        // is stable, so no Firebase work ever runs on the main thread.
         try { Security.removeProvider("BC") } catch (_: Exception) {}
         try { Security.addProvider(BouncyCastleProvider()) } catch (_: Exception) {}
 
@@ -57,9 +58,10 @@ class UfmApplication : Application() {
 
         super.onCreate()
 
-        // Manually initialise Firebase now that the security provider list is fully
-        // stable. FirebaseInitProvider was removed from the manifest to prevent it
-        // from firing during super.onCreate() before the lines above ran.
+        // Initialise Firebase Analytics asynchronously on a background thread (see the
+        // google-flavor Analytics object). FirebaseInitProvider was removed from the
+        // manifest to prevent it from firing during super.onCreate() before the security
+        // provider setup above ran.
         za.kilowatch.ultimatefilemanager.util.Analytics.init(this)
         instance = this
         Log.d(TAG, "Starting global UfmApplication...")

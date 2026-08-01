@@ -10,6 +10,9 @@ import java.security.SecureRandom
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.SynchronousQueue
+import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,17 +44,55 @@ object NetworkHttpProxyServer {
     /** Maximum bytes to stream in one HTTP response chunk. */
     private const val CHUNK_SIZE = 256 * 1024 // 256 KB
 
+    /** Max attempts for a single chunk read before the stream is declared dead. */
+    private const val MAX_READ_ATTEMPTS = 3
+
+    /** Backoff between chunk-read retries (ms). */
+    private const val READ_RETRY_BACKOFF_MS = 150L
+
     // ── Session registry ──────────────────────────────────────────────────────
 
-    data class Session(
+    /**
+     * A registered stream that an external player can open.
+     *
+     * The session owns the pinned streaming [handle]: it is opened lazily on the
+     * first HTTP request and kept alive for the session's lifetime, so seeks
+     * across requests reuse one dedicated connection instead of paying a fresh
+     * handshake each time. The handle is only released on session eviction,
+     * [unregister], or proxy [stop].
+     */
+    class Session(
         val share: NetworkShare,
         val path: String,
         val mimeType: String,
         val fileSize: Long,
         val authToken: String = generateAuthToken(),
-        val createdAt: Long = System.currentTimeMillis(),
+        val createdAt: Long = System.currentTimeMillis()
+    ) {
+        /** Last time any HTTP request touched this session (used for idle eviction). */
         @Volatile var lastAccessMs: Long = System.currentTimeMillis()
-    )
+
+        /** The pinned streaming handle for this session. Opened lazily, owned here. */
+        @Volatile var handle: IRandomAccessFile? = null
+
+        /** Set after a fatal read error so the next request reopens a fresh handle. */
+        @Volatile var handleInvalid: Boolean = false
+
+        /** Serializes lazy open/reopen of [handle] (double-checked locking). */
+        val createLock = Any()
+
+        /** Serializes individual [IRandomAccessFile.read] calls on the shared handle. */
+        val readLock = Any()
+
+        /** Close the pinned handle and reset its state. Safe to call repeatedly. */
+        fun closeHandle() {
+            synchronized(createLock) {
+                runCatching { handle?.close() }
+                handle = null
+                handleInvalid = false
+            }
+        }
+    }
 
     private fun generateAuthToken(): String {
         val bytes = ByteArray(16)
@@ -65,7 +106,16 @@ object NetworkHttpProxyServer {
 
     @Volatile private var serverSocket: ServerSocket? = null
     @Volatile private var port: Int = 0
-    private val executor = Executors.newCachedThreadPool()
+
+    /**
+     * Bounded cached-style thread pool for client connections. Threads spawn on demand
+     * and die after 60 s idle, but the pool is capped at 32 so a connection storm
+     * (pathological players, leaked sockets) cannot exhaust threads. Excess connections
+     * are rejected in [acceptLoop] and closed.
+     */
+    private val executor = ThreadPoolExecutor(
+        0, 32, 60L, TimeUnit.SECONDS, SynchronousQueue()
+    )
 
     /**
      * Start the HTTP proxy server on a random available port.
@@ -93,6 +143,7 @@ object NetworkHttpProxyServer {
         runCatching { serverSocket?.close() }
         serverSocket = null
         port = 0
+        sessions.values.forEach { it.closeHandle() }
         sessions.clear()
         GoRoLog.d(TAG, "HTTP proxy stopped")
     }
@@ -124,7 +175,8 @@ object NetworkHttpProxyServer {
 
     /** Remove a session immediately (call when the player activity is destroyed). */
     fun unregister(uuid: String) {
-        sessions.remove(uuid)
+        val session = sessions.remove(uuid)
+        session?.closeHandle()
         GoRoLog.d(TAG, "Unregistered session $uuid")
     }
 
@@ -134,7 +186,13 @@ object NetworkHttpProxyServer {
         while (!ss.isClosed) {
             try {
                 val client = ss.accept()
-                executor.submit { handleClient(client) }
+                try {
+                    executor.submit { handleClient(client) }
+                } catch (e: RejectedExecutionException) {
+                    // Executor saturated — drop this connection rather than leak a thread.
+                    runCatching { client.close() }
+                    GoRoLog.w(TAG, "Proxy executor saturated; closing new connection", null)
+                }
             } catch (e: Exception) {
                 if (!ss.isClosed) GoRoLog.e(TAG, "Accept error", e)
             }
@@ -196,9 +254,10 @@ object NetworkHttpProxyServer {
                 return
             }
 
-            // Open a dedicated stream handle for this client connection
+            // Resolve the session's pinned streaming handle (opened lazily, kept
+            // alive for the session's lifetime — never closed per request).
             val clientHandle = try {
-                openHandleForSession(session)
+                getOrCreateHandle(session)
             } catch (e: Exception) {
                 GoRoLog.e(TAG, "Failed to open handle for ${session.path}", e)
                 null
@@ -210,12 +269,12 @@ object NetworkHttpProxyServer {
             }
 
             try {
-                streamResponse(out, clientHandle, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
+                streamResponse(out, session, fileSize, isRangeRequest, rangeStart, rangeEnd)
             } catch (e: Exception) {
                 // Client aborted or socket closed
-            } finally {
-                runCatching { clientHandle.close() }
             }
+            // NOTE: the handle is pinned to the session and must NOT be closed here.
+            // It is released on session eviction, unregister, or proxy stop.
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Client handler error", e)
         } finally {
@@ -227,7 +286,6 @@ object NetworkHttpProxyServer {
 
     private fun streamResponse(
         out: OutputStream,
-        handle: IRandomAccessFile,
         session: Session,
         fileSize: Long,
         isRangeRequest: Boolean,
@@ -257,14 +315,13 @@ object NetworkHttpProxyServer {
 
         while (remaining > 0) {
             val toRead = minOf(CHUNK_SIZE.toLong(), remaining).toInt()
-            
-            val bytesRead: Int
-            try {
-                bytesRead = handle.read(position, buffer, toRead)
-            } catch (e: Exception) {
-                GoRoLog.e(TAG, "NAS read failed at offset $position", e)
-                break // Abort streaming this chunk
-            }
+
+            // Concurrent player connections (separate audio/video tracks, read-ahead)
+            // share the session's single pinned handle. Reads are offset-based so they
+            // interleave safely, but each read call must be serialized on the handle —
+            // it happens under readLock. Socket writes stay OUTSIDE the lock so a slow
+            // client never holds the shared handle.
+            val bytesRead = readChunkWithRetry(session, position, buffer, toRead)
 
             if (bytesRead <= 0) break
             out.write(buffer, 0, bytesRead)
@@ -272,6 +329,44 @@ object NetworkHttpProxyServer {
             remaining -= bytesRead
         }
         out.flush()
+    }
+
+    /**
+     * Read one chunk at [offset], retrying transient failures before giving up.
+     *
+     * On a read error the current handle is discarded (SMB's `SmbRandomAccess` already
+     * closes its connection on error) and a fresh dedicated one is opened for the same
+     * offset, so a one-off blip — NAS disk spin-up, a reset Wi-Fi packet — recovers
+     * instead of aborting the whole response. Returns the bytes read, or -1 once the
+     * retry budget is exhausted.
+     */
+    internal fun readChunkWithRetry(session: Session, offset: Long, buffer: ByteArray, length: Int): Int {
+        var attempts = 0
+        while (attempts < MAX_READ_ATTEMPTS) {
+            attempts++
+            try {
+                // Attempt 1 reuses the pinned handle; later attempts force a fresh one,
+                // because a failed read means the handle (and its connection) is suspect.
+                val handle = getOrCreateHandle(session, forceReopen = attempts > 1)
+                if (handle == null) return -1
+                // Lock scope = the read call only, so a slow client or a retry backoff
+                // never blocks a concurrent request's chunk read.
+                return synchronized(session.readLock) { handle.read(offset, buffer, length) }
+            } catch (e: Exception) {
+                if (attempts >= MAX_READ_ATTEMPTS) {
+                    GoRoLog.e(TAG, "NAS read failed at offset $offset after $MAX_READ_ATTEMPTS attempts", e)
+                } else {
+                    GoRoLog.w(TAG, "NAS read failed at offset $offset (attempt $attempts/$MAX_READ_ATTEMPTS)", null)
+                }
+                if (attempts < MAX_READ_ATTEMPTS) {
+                    try { Thread.sleep(READ_RETRY_BACKOFF_MS) } catch (_: InterruptedException) { break }
+                }
+            }
+        }
+        // Budget exhausted — mark the session invalid so the next request reopens it,
+        // and signal the streaming loop to abort (clean truncated-response error).
+        session.handleInvalid = true
+        return -1
     }
 
     private fun sendHeadResponse(
@@ -320,13 +415,13 @@ object NetworkHttpProxyServer {
      * Parse the Range header into (start, end) byte positions (inclusive).
      * Returns (0, fileSize-1) if no Range header is present.
      */
-    private fun parseRange(rangeHeader: String?, fileSize: Long): Pair<Long, Long> {
+    internal fun parseRange(rangeHeader: String?, fileSize: Long): Pair<Long, Long> {
         if (rangeHeader == null || fileSize <= 0) return Pair(0L, maxOf(0L, fileSize - 1))
         return try {
             val value = rangeHeader.removePrefix("bytes=").trim()
             val dashIdx = value.indexOf('-')
-            
-            when {
+
+            val (rawStart, rawEnd) = when {
                 // "bytes=-500" -> Last 500 bytes of the file
                 dashIdx == 0 -> {
                     val suffixLength = value.substring(1).toLong()
@@ -336,31 +431,91 @@ object NetworkHttpProxyServer {
                 // "bytes=500-" -> From byte 500 to the end
                 dashIdx == value.length - 1 -> {
                     val start = value.substring(0, dashIdx).toLong()
-                    Pair(start.coerceIn(0, maxOf(0, fileSize - 1)), maxOf(0, fileSize - 1))
+                    Pair(start, fileSize - 1)
                 }
                 // "bytes=500-1000" -> Exact range
                 dashIdx > 0 -> {
                     val start = value.substring(0, dashIdx).toLong()
                     val end = value.substring(dashIdx + 1).toLong()
-                    Pair(start.coerceIn(0, maxOf(0, fileSize - 1)), end.coerceIn(0, maxOf(0, fileSize - 1)))
+                    Pair(start, end)
                 }
-                else -> Pair(0L, maxOf(0L, fileSize - 1))
+                else -> Pair(0L, fileSize - 1)
             }
+            normalizeRange(rawStart, rawEnd, fileSize)
         } catch (e: Exception) {
             Pair(0L, maxOf(0L, fileSize - 1))
         }
     }
 
     /**
-     * Open a fresh IRandomAccessFile for the given session.
-     * Each HTTP request gets its own handle so seeks are isolated.
+     * Clamp a byte range to the file and guarantee start <= end, so the response's
+     * Content-Length is always >= 1 — a reversed or out-of-bounds range must never
+     * produce a negative Content-Length.
      */
-    private fun openHandleForSession(session: Session): IRandomAccessFile? {
+    private fun normalizeRange(rawStart: Long, rawEnd: Long, fileSize: Long): Pair<Long, Long> {
+        val last = maxOf(0L, fileSize - 1)
+        val start = rawStart.coerceIn(0L, last)
+        val end = rawEnd.coerceIn(start, last)
+        return Pair(start, end)
+    }
+
+    /**
+     * Handle-factory seam for the pinned streaming handle. Defaults to the real
+     * [openHandleForSession]; tests override it to inject a fake [IRandomAccessFile]
+     * so the retry/reopen logic is unit-testable without sockets.
+     */
+    internal var handleFactory: (Session) -> IRandomAccessFile? = ::openHandleForSession
+
+    /**
+     * Returns the session's pinned streaming handle, opening a fresh dedicated one
+     * if needed. Each session owns one handle for its whole lifetime, so seeks on
+     * different HTTP requests reuse the same connection instead of paying a fresh
+     * handshake per request.
+     *
+     * SMB/SFTP/SCP handles are opened as *dedicated* connections — never pooled —
+     * because pooled SMB sessions carry a short socket timeout that breaks slow
+     * seeks (external players close or hang when the stream aborts mid-response).
+     *
+     * @param forceReopen close the current handle (if any) and open a new one.
+     * @return the handle, or null if opening failed (the caller responds 500).
+     */
+    internal fun getOrCreateHandle(session: Session, forceReopen: Boolean = false): IRandomAccessFile? {
+        val current = session.handle
+        if (current != null && !session.handleInvalid && !forceReopen) return current
+
+        synchronized(session.createLock) {
+            // Double-checked: another thread may have opened/repaired it while we waited.
+            val current2 = session.handle
+            if (current2 != null && !session.handleInvalid && !forceReopen) return current2
+
+            if (forceReopen || session.handleInvalid) {
+                runCatching { session.handle?.close() }
+                session.handle = null
+                session.handleInvalid = false
+            }
+
+            val handle = handleFactory(session)
+            if (handle != null) {
+                session.handle = handle
+            } else {
+                // Failed to open — stay marked invalid so the next request retries.
+                session.handleInvalid = true
+            }
+            return handle
+        }
+    }
+
+    /**
+     * Open a fresh streaming handle for the given session. Each session's handle is
+     * dedicated (not pooled) so long-lived, seekable streaming never hits the pooled
+     * connections' short socket timeout.
+     */
+    internal fun openHandleForSession(session: Session): IRandomAccessFile? {
         return when (session.share.type) {
             ShareType.SMB ->
-                SmbShareClient.openRandomAccessFile(session.share, session.path, isWrite = false, dedicated = false)
+                SmbShareClient.openRandomAccessFile(session.share, session.path, isWrite = false, dedicated = true)
             ShareType.SFTP, ShareType.SCP ->
-                SshShareClient.openRandomAccessFile(session.share, session.path, dedicated = false)
+                SshShareClient.openRandomAccessFile(session.share, session.path, dedicated = true)
             ShareType.GOOGLE_DRIVE ->
                 GoogleDriveShareClient.openRandomAccessFile(session.share, session.path)
             ShareType.ONEDRIVE ->
@@ -387,7 +542,8 @@ object NetworkHttpProxyServer {
         scheduler.scheduleAtFixedRate({
             val now = System.currentTimeMillis()
             val expired = sessions.entries.filter { now - it.value.lastAccessMs > SESSION_TTL_MS }
-            expired.forEach { (uuid, _) ->
+            expired.forEach { (uuid, session) ->
+                session.closeHandle()
                 sessions.remove(uuid)
                 GoRoLog.d(TAG, "Evicted idle session $uuid")
             }
