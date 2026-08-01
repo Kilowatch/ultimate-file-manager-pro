@@ -486,7 +486,34 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall) {
+                    // 8. The main thread is blocked on a synchronous binder call to the
+                    //    system server while unbinding a service connection — e.g.
+                    //    Handler.dispatchMessage -> <app Handler>.handleMessage -> ...
+                    //    -> ContextWrapper.unbindService -> ContextImpl.unbindService ->
+                    //    (a device-injected system-service hook proxy, e.g.
+                    //    com.vlite.sdk, that wraps the call in a dynamic Proxy) ->
+                    //    IActivityManager$Stub$Proxy.unbindService -> BinderProxy.
+                    //    transact -> transactNative. The app merely invoked the
+                    //    one-line framework API; the >5 s block is the system server's
+                    //    response latency to the service-connection teardown, which the
+                    //    app cannot act on. Unlike the pure-platform binder filter above
+                    //    (which requires ZERO app frames), this shape legitimately
+                    //    carries app call-path frames (the Handler message that decided
+                    //    to unbind) and a device hook's frames, but the currently
+                    //    executing frame is the binder transact into the system server,
+                    //    so the wait is still system-side. Genuine freezes that run app
+                    //    business logic have an app frame as the current frame (the top
+                    //    frame is not BinderProxy.transact) and are still reported.
+                    val isServiceConnectionBinderStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        (mainStackTrace.any {
+                            it.className == "android.app.IActivityManager\$Stub\$Proxy" && it.methodName == "unbindService"
+                        } || mainStackTrace.any {
+                            it.className == "android.app.ContextImpl" && it.methodName == "unbindService"
+                        })
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
