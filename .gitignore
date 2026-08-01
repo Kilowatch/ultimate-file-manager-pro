@@ -20,6 +20,9 @@ app/.cxx/
 *.dex
 *.class
 .agents/
+Fix/
+autofix/
+email_bugfix_monitor.py
 
 # ── Android Studio / IntelliJ IDEA ───────────────────────────
 /.idea/caches/
