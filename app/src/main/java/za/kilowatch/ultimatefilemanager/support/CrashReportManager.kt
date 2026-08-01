@@ -34,7 +34,16 @@ object CrashReportManager {
     private const val REPORT_DIR = "crash_reports"
     private const val WATCHDOG_INTERVAL_MS = 5_000L
     private const val WATCHDOG_TIMEOUT_MS  = 5_000L
-    private const val APP_PACKAGE_PREFIX   = "za.kilowatch.ultimatefilemanager"
+    // Class-name prefixes identifying the Android platform / Java runtime. A main-thread
+    // stack made up entirely of these frames means the thread is executing framework code
+    // only — no app and no bundled-library frames — so a block there is a system-side wait
+    // the app cannot fix (e.g. a synchronous call to the system server during activity
+    // launch). R8 obfuscates app/library classes to short names, which never match these
+    // prefixes, so any real app-code frame still fails the pure-platform test below.
+    private val PLATFORM_PREFIXES = listOf(
+        "android.", "com.android.", "java.", "javax.", "dalvik.",
+        "libcore.", "jdk.", "sun.", "org.apache.", "org.json"
+    )
 
     private const val PREFS_NAME = "crash_report_prefs"
     private const val KEY_ENABLED = "crash_reporting_enabled"
@@ -322,20 +331,25 @@ object CrashReportManager {
                     val mainStackTrace = mainThread.stackTrace
                     val topFrame = mainStackTrace.firstOrNull()
 
-                    // The main thread is NOT blocked (false positive) when:
+                    // The main thread is NOT blocked (false positive) when its entire stack
+                    // is framework/platform code with no app or bundled-library frames:
                     //  1. It is idling in the looper — top frame is nativePollOnce, a normal
                     //     wait for the next message (e.g. when coming back from deep sleep/Doze).
-                    //  2. It is blocked on a synchronous binder call to the system server with
-                    //     no app frames on the stack (e.g. ActivityThread.createBaseContextForActivity
-                    //     -> ActivityClient.getDisplayId during activity launch). That is a
-                    //     system-side wait the app cannot control; app code has not even run.
+                    //  2. It is waiting on the system server during a framework-driven
+                    //     operation, e.g. ActivityThread.createBaseContextForActivity ->
+                    //       - ActivityClient.getDisplayId (BinderProxy.transact), or
+                    //       - SystemProperties.get (native_get into the property service).
+                    //     App code has not even started running; the wait is system-side and
+                    //     the app cannot control it. R8 keeps platform class names, so a stack
+                    //     containing any obfuscated app/library frame fails this test and is
+                    //     still reported as a real freeze.
                     val isIdleInLooper = topFrame?.methodName == "nativePollOnce"
-                    val isSystemBinderWait = topFrame != null &&
-                        topFrame.className == "android.os.BinderProxy" &&
-                        (topFrame.methodName == "transactNative" || topFrame.methodName == "transact") &&
-                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE_PREFIX) }
+                    val isPureFrameworkStack = mainStackTrace.isNotEmpty() &&
+                        mainStackTrace.none { frame ->
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) }
+                        }
 
-                    if (isIdleInLooper || isSystemBinderWait) {
+                    if (isIdleInLooper || isPureFrameworkStack) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
