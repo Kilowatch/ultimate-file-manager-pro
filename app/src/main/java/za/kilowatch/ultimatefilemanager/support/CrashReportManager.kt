@@ -379,62 +379,33 @@ object CrashReportManager {
                         mainStackTrace.any { it.className == "android.app.Dialog" && it.methodName == "show" } &&
                         mainStackTrace.any { it.className == "android.content.res.Resources" && it.methodName == "getLayout" }
 
-                    // 4. The watchdog's OWN heartbeat ticker can appear as the sampled main
-                    //    thread stack. The ticker is a self-reposting Runnable that only sets
-                    //    `lastTickTimestamp` and re-posts itself via
-                    //    `mainHandler.postDelayed(this, 1_000L)`. When the main looper is
-                    //    stalled for >5 s and then becomes responsive again, the first message
-                    //    it dispatches is the overdue ticker, so a sample taken in that window
-                    //    shows the ticker's own `run()` mid re-post — the watchdog's own
-                    //    heartbeat, not app business logic. It can never be the cause of a 5 s
-                    //    freeze: `postDelayed`/`Message.obtain` are fast, and the ticker does no
-                    //    other work. Depending on the sampling instant, the main thread can be
-                    //    caught anywhere inside that `postDelayed` call — at `Message.obtain`
-                    //    (deepest, the previously-fixed shape) or at `Handler.postDelayed`
-                    //    itself — or just outside it, between the `lastTickTimestamp` assignment
-                    //    and the re-post call, or right after the re-post returned. In the
-                    //    postDelayed shapes the direct caller of the `Handler.postDelayed`
-                    //    frame is the ticker's `run()` method; in the just-outside shapes the
-                    //    ticker's `run()` is the top frame and sits directly on
-                    //    `Handler.handleCallback` with no `postDelayed` frame on the stack at
-                    //    all. Both variants share the same detection key: `lastTickTimestamp`
-                    //    having JUST been updated (< 1 s ago) — i.e. the ticker ran, so the
-                    //    main looper is responsive again. Genuine busy loops that starve the
-                    //    ticker keep `lastTickTimestamp` stale, so they still fail this test
-                    //    and are reported as real freezes.
+                    // 4. The watchdog's OWN heartbeat ticker is the discriminator between a
+                    //    false positive and a genuine freeze. The ticker is a self-reposting
+                    //    Runnable posted to the main looper that only sets `lastTickTimestamp`
+                    //    and re-posts itself via `mainHandler.postDelayed(this, 1_000L)`. If
+                    //    `tickerJustRan` is true, the main looper processed the ticker within
+                    //    the last second, so it is demonstrably responsive NOW — the stack
+                    //    sampled at this instant cannot represent a >5 s block.
+                    //
+                    //    That happens through a sampling race: the watchdog wakes, computes
+                    //    `blockedDuration` from a `lastTickTimestamp` that is stale because the
+                    //    looper was genuinely stalled, then samples the main thread AFTER it
+                    //    recovered and began draining its queued backlog. The sampled frame is
+                    //    then fast post-stall work, not the original blocker — e.g. constructing
+                    //    a Coil `ImageRequest` while filling a Storage Analyzer category list
+                    //    (reported from a Vestel Cosmos TV, app 1.7.7), whose top frame
+                    //    (`kotlin.collections.EmptyMap.size`) returns 0 in a single instruction
+                    //    and physically cannot hold the main thread for 5 s.
+                    //
+                    //    The earlier heartbeat self-sample fix documented two specific stack
+                    //    shapes — the ticker caught mid `postDelayed` and its bare `run()`
+                    //    sitting on `Handler.handleCallback`. Both are subsumed by this general
+                    //    gate: `tickerJustRan` is true in exactly those samples, and the main
+                    //    looper is responsive in them. Genuine freezes keep the ticker starved,
+                    //    so `tickerJustRan` stays false (the watchdog only checks every 1 s, so
+                    //    by the time `blockedDuration` reaches 5 s any prior tick is >4 s old)
+                    //    and they still fail this gate and are reported.
                     val tickerJustRan = SystemClock.uptimeMillis() - lastTickTimestamp < 1_000L
-                    val postDelayedFrameIdx = mainStackTrace.indexOfFirst {
-                        it.className == "android.os.Handler" && it.methodName == "postDelayed"
-                    }
-                    // Shape A — sampled inside the ticker's re-post: a `Handler.postDelayed`
-                    // frame whose direct caller is the ticker's `run()` method, dispatched by
-                    // `Handler.handleCallback`.
-                    val isTickerRePostSample =
-                        tickerJustRan &&
-                        postDelayedFrameIdx >= 0 &&
-                        mainStackTrace.getOrNull(postDelayedFrameIdx + 1)?.methodName == "run" &&
-                        mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "handleCallback" }
-                    // Shape B — sampled just before the ticker calls `postDelayed` (after it
-                    // has already updated `lastTickTimestamp`) or just after `postDelayed`
-                    // returned: the ticker's own `run()` is the top frame, dispatched directly
-                    // by `Handler.handleCallback`, and there is no `postDelayed` frame on the
-                    // stack at all. The `run()` frame is required to be a non-platform class —
-                    // R8 obfuscates app/library Runnables to short names that never start with
-                    // `android.`/`java.` — and `tickerJustRan` proves the ticker executed
-                    // within the last second, so the sampled `run()` is the watchdog's own
-                    // heartbeat, not >5 s of app business logic (which would keep the ticker
-                    // from running and leave `lastTickTimestamp` stale, failing the gate).
-                    val tickerTopClassName = mainStackTrace.getOrNull(0)?.className ?: ""
-                    val isTickerRunSample =
-                        tickerJustRan &&
-                        postDelayedFrameIdx < 0 &&
-                        mainStackTrace.getOrNull(0)?.methodName == "run" &&
-                        !tickerTopClassName.startsWith("android.") &&
-                        !tickerTopClassName.startsWith("java.") &&
-                        mainStackTrace.getOrNull(1)?.className == "android.os.Handler" &&
-                        mainStackTrace.getOrNull(1)?.methodName == "handleCallback"
-
-                    val isWatchdogHeartbeatSample = isTickerRePostSample || isTickerRunSample
 
                     // 5. The system is instantiating a Service on the main thread (e.g. a
                     //    WorkManager job firing via JobScheduler ->
@@ -455,7 +426,7 @@ object CrashReportManager {
                          mainStackTrace.any { it.className == "android.app.ActivityThread" && it.methodName == "handleCreateService" }) &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || isWatchdogHeartbeatSample || isServiceClassInitStall) {
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
