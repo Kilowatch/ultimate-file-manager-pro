@@ -480,6 +480,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+
+
         <!-- Shizuku Provider (Mandatory for receiving the binder) -->
         <provider
             android:name="rikka.shizuku.ShizukuProvider"

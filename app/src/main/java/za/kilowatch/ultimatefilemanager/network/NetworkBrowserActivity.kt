@@ -559,6 +559,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         applyLeftHandedFabSettings()
         android.util.Log.w("UFM_COPY", ">>> onResume called, isTransferring=$isTransferring")
         if (isTransferring) return  // Don't interfere with active transfers
+        za.kilowatch.ultimatefilemanager.util.TransferService.stop(this)
         updatePasteFab()
         applyToolbarIconVisibility()
         
@@ -5160,6 +5161,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                   za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext)
                                   
                     val supportsProxy = isMedia && (share.type == ShareType.SMB ||
+                        share.type == ShareType.FTP ||
                         share.type == ShareType.SFTP ||
                         share.type == ShareType.SCP ||
                         share.type == ShareType.GOOGLE_DRIVE ||
@@ -5172,9 +5174,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
                     if (supportsProxy) {
                         val proxyUrl = NetworkHttpProxyServer.register(share, file.path, mime, file.size)
+                        val mediaTypeLabel = if (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)) "video" else "audio"
+                        val streamTitle = "Streaming $mediaTypeLabel file"
+                        val streamText  = "Streaming ${file.name} to external player"
+                        za.kilowatch.ultimatefilemanager.util.TransferService.start(this@NetworkBrowserActivity, streamTitle, streamText)
                         android.util.Log.d("NetworkBrowser", "Streaming via HTTP proxy for: ${file.name}")
 
-                        // ── Subtitle support: register all companion subtitles in the proxy ──
+                        // ── Subtitle support ──
                         val isExternalVideo = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext)
                         val proxySubtitleUris: List<android.net.Uri> = if (isExternalVideo && forceExternal) {
                             SubtitleIntentHelper.findNetworkSubtitles(file.name, currentFiles).map { subFile ->

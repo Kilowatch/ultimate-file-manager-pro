@@ -236,33 +236,41 @@ object SmbSessionPool {
 
     private fun buildConfig(protocol: String, forWrite: Boolean, dedicated: Boolean = false): SmbConfig {
         // Pooled metadata connections use a short socket timeout (2 s) so stale
-        // sessions fail over fast. Dedicated connections (video playback, large
-        // file transfers, thumbnail extraction) get a generous but FINITE timeout
-        // (30 s): SO_TIMEOUT only fires during an active socket read, so long idle
-        // periods (pausing, buffering) are unaffected, while a genuinely hung
-        // server read is bounded instead of blocking its thread forever. Transfer
-        // cancellation is still handled via the UI cancel button, which closes the
-        // underlying TCP socket directly.
+        // sessions fail over fast.
+        //
+        // Dedicated connections (video playback via the HTTP proxy, long-lived reads)
+        // get NO socket timeout (0 = infinite). This is critical: smbj's PacketReader
+        // thread blocks in a socket read waiting for the next response packet. When an
+        // external player (VLC) buffers and pauses SMB reads for a while, that blocked
+        // read would hit a finite SO_TIMEOUT and smbj would tear down the whole SMB
+        // session — which is exactly why "net session" was dropping mid-playback. The
+        // internal player never idles long enough to trigger it (ExoPlayer reads
+        // continuously), which is why it worked. The proxy's own HTTP socket still has
+        // a 30 s soTimeout that bounds each request, and TCP keepalive detects a truly
+        // dead server. Write streams keep a 60 s timeout so a hung upload fails fast.
         val soTimeoutSec = when {
             forWrite  -> 60L
-            dedicated -> 30L // streaming / long-lived reads — bounded so a hung server can't block forever
-            else      -> 2L // pooled metadata — fast failover on stale connections
+            dedicated -> 0L // infinite — buffering/pausing must never kill the stream
+            else      -> 30L // pooled metadata — 30s timeout prevents idle packet reader teardowns
         }
 
-        // Transport timeout matches socket timeout: dedicated streaming connections
-        // need a generous window so a slow NAS seek/read doesn't trigger spurious
-        // retries that flood the server with fresh connections. Pooled metadata
-        // connections keep a tight 2 s timeout for fast failover on stale sessions.
+        // Transport timeout for dedicated streaming connections: use a large value
+        // (2 min) rather than 0 — smbj's internal request timeout may treat 0 as
+        // "already expired". The blocking socket read is what matters for the idle
+        // buffering case, and that is governed by SO_TIMEOUT above (0 = infinite),
+        // not this value. A paused/buffering player issues no outstanding request,
+        // so a 2-min request timeout never fires while idle. Pooled metadata
+        // connections keep a generous 30 s timeout.
         val transportTimeoutSec = when {
             forWrite  -> 60L
-            dedicated -> 30L  // matches soTimeout — no more spurious read failures
-            else      -> 2L   // pooled — fail fast on stale sessions
+            dedicated -> 120L // generous — never fires during idle buffering
+            else      -> 30L  // pooled — generous request timeout
         }
 
         val builder = SmbConfig.builder()
             .withTimeout(transportTimeoutSec, TimeUnit.SECONDS)
             .withSoTimeout(soTimeoutSec, TimeUnit.SECONDS)
-            .withSocketFactory(KeepAliveSocketFactory(5000))
+            .withSocketFactory(KeepAliveSocketFactory(15000))
             // smbj 0.14.0 may require signing by default, which causes
             // STATUS_ACCESS_DENIED on NAS devices / servers that don't support
             // SMB signing.  Disable signing to match the 0.13.0 behaviour.
@@ -271,10 +279,13 @@ object SmbSessionPool {
             // adds heavy CPU overhead on Android, especially when BouncyCastle handles
             // the AES-CCM/GCM operations instead of hardware-accelerated Conscrypt.
             .withEncryptData(false)
-            // Larger read/write buffer sizes improve throughput for all operations
-            // (default is 64KB; 1MB significantly reduces round-trips on Wi-Fi).
-            .withReadBufferSize(1024 * 1024)
-            .withWriteBufferSize(1024 * 1024)
+            // Read buffer size. The HTTP proxy reads in 256KB chunks, so a 1MB buffer
+            // buys nothing but forces a Large-MTU SMB negotiation that some Windows
+            // servers reject — causing a mid-stream "Software caused connection abort"
+            // (Kodi issue #26791 documents the exact same failure). 256KB is the safe
+            // sweet spot: full throughput on LAN, no server-side reset.
+            .withReadBufferSize(256 * 1024)
+            .withWriteBufferSize(256 * 1024)
 
         when (protocol) {
             "SMB2" -> builder.withDialects(

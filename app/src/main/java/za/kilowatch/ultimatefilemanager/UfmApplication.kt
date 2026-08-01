@@ -7,6 +7,7 @@ import com.google.android.material.color.DynamicColors
 import za.kilowatch.ultimatefilemanager.network.AdbManager
 import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
+
 import za.kilowatch.ultimatefilemanager.network.PairingServer
 import za.kilowatch.ultimatefilemanager.network.SmbSessionPool
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -223,8 +224,7 @@ class UfmApplication : Application() {
             }
         }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
 
-        // Start the local HTTP proxy server for seekable network file streaming to external players.
-        // Uses port 0 (OS-assigned random port) to avoid conflicts.
+        // HTTP proxy for external player streaming (VLC requires HTTP, not content:// pipes)
         Thread {
             try {
                 NetworkHttpProxyServer.start()

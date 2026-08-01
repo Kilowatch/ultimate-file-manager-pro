@@ -124,7 +124,8 @@ object SmbShareClient {
         remotePath: String,
         isWrite: Boolean = false,
         dedicated: Boolean = true,
-        onConnectionReady: ((AutoCloseable) -> Unit)? = null
+        onConnectionReady: ((AutoCloseable) -> Unit)? = null,
+        suppressInvalidateOnReadError: Boolean = false
     ): SmbRandomAccess {
         // Random-access handles are long-lived (e.g. game running for hours) so
         // always use a dedicated connection rather than holding the pool entry.
@@ -152,15 +153,16 @@ object SmbShareClient {
             val fileInfo = file.fileInformation
             val fileSize = fileInfo.standardInformation.endOfFile
             SmbRandomAccess(
-                file, 
-                fileSize, 
+                file,
+                fileSize,
                 onClose = {
                     runCatching { file.close() }
                     pooled.release()
                 },
                 onInvalidate = {
                     pooled.invalidate()
-                }
+                },
+                suppressInvalidateOnReadError = suppressInvalidateOnReadError
             )
         } catch (e: Exception) {
             pooled.invalidate()
@@ -173,13 +175,20 @@ object SmbShareClient {
         private val file: com.hierynomus.smbj.share.File,
         override var size: Long,
         private val onClose: () -> Unit,
-        private val onInvalidate: () -> Unit
+        private val onInvalidate: () -> Unit,
+        private val suppressInvalidateOnReadError: Boolean = false
     ) : IRandomAccessFile {
         /**
          * Reads up to [length] bytes starting at [offset] into [buffer].
          * ProxyFileDescriptorCallback REQUIRES returning the exact requested size unless EOF.
          * smbj reads might be shorter than requested (e.g. max SMB read size 64KB),
          * so we loop until fulfilled.
+         *
+         * When [suppressInvalidateOnReadError] is true, a transient read failure does NOT
+         * close the underlying SMB connection. This is used by the HTTP proxy's pinned
+         * streaming handle: an external player (VLC) that aborts a request on seek must not
+         * destroy the session that other concurrent requests still need. The proxy decides
+         * when the handle is truly dead and closes it itself.
          */
         override fun read(offset: Long, buffer: ByteArray, length: Int): Int = synchronized(this) {
             if (offset >= size) return -1
@@ -196,7 +205,9 @@ object SmbShareClient {
                     toRead -= bytesRead
                 }
             } catch (e: Exception) {
-                onInvalidate()
+                if (!suppressInvalidateOnReadError) {
+                    onInvalidate()
+                }
                 throw e
             }
             return if (totalRead == 0) -1 else totalRead
@@ -514,17 +525,29 @@ object SmbShareClient {
     }
 
     private fun splitSharePath(basePath: String, subPath: String): Pair<String, String> {
-        val clean = basePath.trimStart('/')
-        if (clean.isBlank()) {
+        val cleanBase = basePath.trimStart('/')
+        if (cleanBase.isBlank()) {
             throw IllegalArgumentException(
                 "splitSharePath: basePath is empty — server-mode SMB share used without remotePath override. " +
                 "share.remotePath='$basePath' subPath='$subPath'"
             )
         }
-        val parts = clean.split("/", limit = 2)
+        val parts = cleanBase.split("/", limit = 2)
         val shareName = parts.getOrElse(0) { "" }
         val inner = parts.getOrElse(1) { "" }
-        val combined = listOf(inner, subPath.trimStart('/')).filter { it.isNotBlank() }.joinToString("\\")
+
+        var cleanSub = subPath.trimStart('/')
+        if (cleanSub.equals(shareName, ignoreCase = true)) {
+            cleanSub = ""
+        } else if (cleanSub.startsWith("$shareName/", ignoreCase = true)) {
+            cleanSub = cleanSub.substring(shareName.length + 1).trimStart('/')
+        } else if (cleanSub.equals(cleanBase, ignoreCase = true)) {
+            cleanSub = ""
+        } else if (cleanSub.startsWith("$cleanBase/", ignoreCase = true)) {
+            cleanSub = cleanSub.substring(cleanBase.length + 1).trimStart('/')
+        }
+
+        val combined = listOf(inner, cleanSub).filter { it.isNotBlank() }.joinToString("\\")
         return shareName to combined
     }
 

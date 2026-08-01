@@ -54,6 +54,7 @@ import za.kilowatch.ultimatefilemanager.network.DropboxShareClient
 import za.kilowatch.ultimatefilemanager.network.FtpShareClient
 import za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient
 import za.kilowatch.ultimatefilemanager.network.IRandomAccessFile
+import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
 import za.kilowatch.ultimatefilemanager.network.NetworkShare
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.NfsShareClient
@@ -75,7 +76,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.lifecycle.lifecycleScope
 import za.kilowatch.ultimatefilemanager.network.NetworkFile
-import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
+
 import za.kilowatch.ultimatefilemanager.network.SubtitleIntentHelper
 
 /**
@@ -1567,11 +1568,13 @@ class UfmMedia3DataSource(
 
     override fun addTransferListener(transferListener: TransferListener) {}
 
-    override fun open(dataSpec: DataSpec): Long {
-        currentUri = dataSpec.uri
-        opened = true
-        try {
-            randomAccess = when (share.type) {
+    /**
+     * Open a fresh random-access handle for the given share/path.
+     * Used by [open] and by the read-failure retry in [read].
+     */
+    private fun openHandle(share: NetworkShare, path: String, fallbackSize: Long): IRandomAccessFile? {
+        return try {
+            val ra = when (share.type) {
                 ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, path)
                 ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, path)
                 ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, path)
@@ -1584,6 +1587,21 @@ class UfmMedia3DataSource(
                 ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, path)
                 else -> throw IllegalStateException("Unsupported share type: ${share.type}")
             }
+            // If the fresh handle reports a size, trust it; otherwise keep the known size.
+            if (ra.size > 0) fileLength = ra.size
+            ra
+        } catch (e: Exception) {
+            GoRoLog.e("UFMPlayer", "openHandle failed for $path", e)
+            null
+        }
+    }
+
+    override fun open(dataSpec: DataSpec): Long {
+        currentUri = dataSpec.uri
+        opened = true
+        try {
+            randomAccess = openHandle(share, path, knownSize)
+            if (randomAccess == null) return -1L
             fileLength = randomAccess?.size ?: -1L
             streamPosition = dataSpec.position
             val remaining = if (dataSpec.length != -1L) {
@@ -1619,7 +1637,8 @@ class UfmMedia3DataSource(
             }
 
             val fetchSize = minOf(CACHE_SIZE, buffer.size)
-            val actualFetchSize = minOf(fetchSize, if (fileLength > 0) (fileLength - streamPosition).toInt() else fetchSize)
+            val remainingInFile = if (fileLength > 0) (fileLength - streamPosition).coerceAtLeast(0L) else Long.MAX_VALUE
+            val actualFetchSize = minOf(fetchSize.toLong(), remainingInFile).coerceAtMost(CACHE_SIZE.toLong()).toInt()
             if (actualFetchSize <= 0) return C.RESULT_END_OF_INPUT
 
             val read = ra.read(streamPosition, cacheBuffer, actualFetchSize)
@@ -1636,8 +1655,42 @@ class UfmMedia3DataSource(
             }
             return toCopy
         } catch (e: Exception) {
-            GoRoLog.e("UFMPlayer", "UfmMedia3DataSource read failed", e)
-            return C.RESULT_END_OF_INPUT
+            // A read failure (e.g. SMB2 credit exhaustion or a NAS connection reset) must NOT
+            // be reported as EOF — that makes ExoPlayer think the file ended and throw
+            // "Source error / UnrecognizedInputFormatException". Reopen the handle on a fresh
+            // connection (fresh credits) and retry once, exactly like the internal player's
+            // resilience model. Only report EOF if the reopen also fails.
+            GoRoLog.w("UFMPlayer", "UfmMedia3DataSource read failed at $streamPosition — reopening handle", e)
+            try { randomAccess?.close() } catch (_: Exception) {}
+            randomAccess = null
+            return try {
+                randomAccess = openHandle(share, path, fileLength)
+                if (randomAccess == null) {
+                    GoRoLog.e("UFMPlayer", "UfmMedia3DataSource reopen failed", null)
+                    return C.RESULT_END_OF_INPUT
+                }
+                // Repopulate the cache exactly like the success path so subsequent reads work.
+                val newRa = randomAccess!!
+                val retryRemaining = if (fileLength > 0) (fileLength - streamPosition).coerceAtLeast(0L) else Long.MAX_VALUE
+                val retryFetchSize = minOf(minOf(CACHE_SIZE, buffer.size).toLong(), retryRemaining).coerceAtMost(CACHE_SIZE.toLong()).toInt()
+                val n = newRa.read(streamPosition, cacheBuffer, retryFetchSize)
+                if (n <= 0) {
+                    C.RESULT_END_OF_INPUT
+                } else {
+                    cacheStartPos = streamPosition
+                    cacheEndPos = streamPosition + n
+                    val toCopy = minOf(length, n, buffer.size - offset)
+                    if (toCopy > 0) {
+                        System.arraycopy(cacheBuffer, 0, buffer, offset, toCopy)
+                        streamPosition += toCopy
+                        bytesRemaining -= toCopy
+                    }
+                    toCopy
+                }
+            } catch (e2: Exception) {
+                GoRoLog.e("UFMPlayer", "UfmMedia3DataSource reopen+read failed", e2)
+                C.RESULT_END_OF_INPUT
+            }
         }
     }
 

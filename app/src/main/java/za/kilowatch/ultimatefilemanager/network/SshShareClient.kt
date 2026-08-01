@@ -230,7 +230,12 @@ object SshShareClient {
         }
     }
 
-    fun openRandomAccessFile(share: NetworkShare, path: String, dedicated: Boolean = true): IRandomAccessFile {
+    fun openRandomAccessFile(
+        share: NetworkShare,
+        path: String,
+        dedicated: Boolean = true,
+        suppressInvalidateOnReadError: Boolean = false
+    ): IRandomAccessFile {
         val pooled = SshSessionPool.borrow(share, dedicated = dedicated)
         return try {
             val sftp = SftpClientFactory.instance().createSftpClient(pooled.session)
@@ -251,7 +256,12 @@ object SshShareClient {
                             currentOffset += rd
                         }
                     } catch (e: Exception) {
-                        pooled.invalidate()
+                        // When suppressInvalidateOnReadError is set (HTTP proxy pinned handle),
+                        // a transient read failure must NOT destroy the shared SSH session that
+                        // concurrent requests still need. The proxy manages the lifecycle.
+                        if (!suppressInvalidateOnReadError) {
+                            pooled.invalidate()
+                        }
                         throw e
                     }
                     return if (totalRead == 0) -1 else totalRead

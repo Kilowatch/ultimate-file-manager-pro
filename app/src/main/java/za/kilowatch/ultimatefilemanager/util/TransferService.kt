@@ -27,8 +27,14 @@ class TransferService : Service() {
         private const val CHANNEL_ID = "ufm_transfer_channel"
         private const val NOTIFICATION_ID = 9901
 
-        fun start(context: Context) {
-            val intent = Intent(context, TransferService::class.java)
+        const val EXTRA_TITLE = "extra_title"
+        const val EXTRA_TEXT = "extra_text"
+
+        fun start(context: Context, title: String? = null, text: String? = null) {
+            val intent = Intent(context, TransferService::class.java).apply {
+                if (title != null) putExtra(EXTRA_TITLE, title)
+                if (text != null) putExtra(EXTRA_TEXT, text)
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
             } else {
@@ -49,9 +55,12 @@ class TransferService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val title = intent?.getStringExtra(EXTRA_TITLE) ?: getString(R.string.ufm_file_transfer)
+        val text  = intent?.getStringExtra(EXTRA_TEXT)  ?: getString(R.string.transferring_files_1)
+
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(getString(R.string.ufm_file_transfer))
-            .setContentText(getString(R.string.transferring_files_1))
+            .setContentTitle(title)
+            .setContentText(text)
             .setSmallIcon(R.drawable.ic_network)
             .setOngoing(true)
             .setSilent(true)
