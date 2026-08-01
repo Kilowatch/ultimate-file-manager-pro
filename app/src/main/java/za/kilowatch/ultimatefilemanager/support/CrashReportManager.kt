@@ -374,7 +374,29 @@ object CrashReportManager {
                         mainStackTrace.any { it.className == "android.app.Dialog" && it.methodName == "show" } &&
                         mainStackTrace.any { it.className == "android.content.res.Resources" && it.methodName == "getLayout" }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall) {
+                    // 4. The watchdog's OWN heartbeat ticker can appear as the sampled main
+                    //    thread stack. The ticker is a self-reposting Runnable that only sets
+                    //    `lastTickTimestamp` and re-posts itself via
+                    //    `mainHandler.postDelayed(this, 1_000L)`. When the main looper is
+                    //    stalled for >5 s and then becomes responsive again, the first message
+                    //    it dispatches is the overdue ticker, so a sample taken in that window
+                    //    shows `Message.obtain` -> `Handler.postDelayed` -> the ticker — the
+                    //    watchdog's own heartbeat, not app business logic. It can never be the
+                    //    cause of a 5 s freeze: `Message.obtain`/`postDelayed` are fast, and the
+                    //    ticker does no other work. We detect this by (a) the stack shape (top
+                    //    frame `android.os.Message.obtain` with a `Handler.postDelayed` below it)
+                    //    and (b) `lastTickTimestamp` having JUST been updated (< 1 s ago) — i.e.
+                    //    the ticker ran, so the main looper is responsive again. Genuine busy
+                    //    loops that starve the ticker keep `lastTickTimestamp` stale, so they
+                    //    still fail this test and are reported as real freezes.
+                    val tickerJustRan = SystemClock.uptimeMillis() - lastTickTimestamp < 1_000L
+                    val isWatchdogHeartbeatSample =
+                        tickerJustRan &&
+                        topFrame?.className == "android.os.Message" &&
+                        topFrame?.methodName == "obtain" &&
+                        mainStackTrace.any { it.className == "android.os.Handler" && it.methodName == "postDelayed" }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || isWatchdogHeartbeatSample) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
