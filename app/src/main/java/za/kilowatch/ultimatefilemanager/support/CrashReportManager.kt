@@ -349,7 +349,25 @@ object CrashReportManager {
                             PLATFORM_PREFIXES.none { frame.className.startsWith(it) }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack) {
+                    // 3. It is blocked reading a compiled layout XML from the APK while
+                    //    showing a dialog — e.g. Dialog.show() -> AlertDialog.onCreate ->
+                    //    setContentView -> LayoutInflater.inflate/parseInclude ->
+                    //    Resources.getLayout -> AssetManager.nativeOpenXmlAsset. This is a
+                    //    framework disk/I/O resource read (cold resource cache, slow or busy
+                    //    storage), not app business logic: no app frame is executing code,
+                    //    and other threads are idle (no CPU saturation). Genuine freezes that
+                    //    also surface inside nativeOpenXmlAsset — e.g. unbounded FFmpeg
+                    //    thumbnail decoding, which reaches the read via Resources.loadDrawable
+                    //    during RecyclerView adapter inflation — have no Dialog.show frame and
+                    //    no Resources.getLayout frame, so they still fail this test and are
+                    //    reported.
+                    val isDialogLayoutResourceStall =
+                        topFrame?.className == "android.content.res.AssetManager" &&
+                        (topFrame?.methodName == "nativeOpenXmlAsset" || topFrame?.methodName == "openXmlBlockAsset") &&
+                        mainStackTrace.any { it.className == "android.app.Dialog" && it.methodName == "show" } &&
+                        mainStackTrace.any { it.className == "android.content.res.Resources" && it.methodName == "getLayout" }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
