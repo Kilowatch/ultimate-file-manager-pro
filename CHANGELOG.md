@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.9] — 2026-08-01
+
+### Fixed
+- Fixed a false-positive ANR (App Freeze) report when the main thread is blocked resolving the property getter of a MaterialButton's default state-list-animator via reflection while the button is attached to a window — e.g. `MaterialButton.refreshDrawableState` → `drawableStateChanged` → `StateListAnimator.setState` → `ObjectAnimator.initAnimation` → `PropertyValuesHolder.getPropertyFunction` → `Class.getMethod` → `getPublicMethodRecursive` → `getDeclaredMethodInternal` — on low-end Android TV devices (e.g. Xiaomi MIBOX4, SDK 31). The default button elevation animation resolves the `translationZ` getter the first time, forcing the framework to walk and verify the whole `TextView` class hierarchy; on slow or busy devices that one-time reflection cost exceeds the 5 s watchdog threshold. The blocking work is entirely framework reflection — the only non-platform frame is the view's own `drawableStateChanged` lifecycle callback that the framework invokes to start its own default animation, not app business logic — so the `AnrWatchdogThread` now treats a stack whose top frame is `Class.getMethod`/`getPublicMethodRecursive`/`getDeclaredMethodInternal` under `PropertyValuesHolder.getPropertyFunction` + `ObjectAnimator.initAnimation` + `StateListAnimator.setState`/`start`, with no `za.kilowatch.ultimatefilemanager` frames, as a system-side wait and resets its heartbeat instead of writing a report. Genuine freezes keep an app frame on the stack (or reach the reflection without a `StateListAnimator` frame) and are still reported.
+
 ## [1.7.8] — 2026-07-30
 
 ### Fixed

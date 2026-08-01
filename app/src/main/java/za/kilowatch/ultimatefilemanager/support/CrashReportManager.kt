@@ -426,7 +426,37 @@ object CrashReportManager {
                          mainStackTrace.any { it.className == "android.app.ActivityThread" && it.methodName == "handleCreateService" }) &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall) {
+                    // 6. The main thread is resolving the property getter of the framework's
+                    //    default button state-list-animator via reflection the first time a
+                    //    MaterialButton is attached to a window — e.g. MaterialButton.
+                    //    refreshDrawableState -> View.refreshDrawableState -> drawableStateChanged
+                    //    -> StateListAnimator.setState -> AnimatorSet.start -> ObjectAnimator.
+                    //    initAnimation -> PropertyValuesHolder.setupSetterAndGetter ->
+                    //    getPropertyFunction -> Class.getMethod -> getPublicMethodRecursive ->
+                    //    getDeclaredMethodInternal. The default state-list-animator animates
+                    //    elevation (translationZ), and resolving that property the first time
+                    //    forces the framework to walk/verify the whole TextView class hierarchy;
+                    //    on low-end Android TV devices (e.g. Xiaomi MIBOX4, SDK 31) that
+                    //    one-time reflection cost exceeds the 5 s watchdog threshold during
+                    //    window attach. The blocking work is entirely framework reflection —
+                    //    the only non-platform frame is the view's own drawableStateChanged
+                    //    lifecycle callback that the framework invokes to start its OWN default
+                    //    animation, not app business logic — so the app cannot act on it. A
+                    //    genuine freeze keeps an app frame
+                    //    (`za.kilowatch.ultimatefilemanager.*`) on the stack (or reaches the
+                    //    reflection from app code without a StateListAnimator frame) and still
+                    //    fails this test.
+                    val isAnimationReflectionStall =
+                        topFrame?.className == "java.lang.Class" &&
+                        (topFrame?.methodName == "getDeclaredMethodInternal" ||
+                         topFrame?.methodName == "getPublicMethodRecursive" ||
+                         topFrame?.methodName == "getMethod") &&
+                        mainStackTrace.any { it.className == "android.animation.PropertyValuesHolder" && it.methodName == "getPropertyFunction" } &&
+                        mainStackTrace.any { it.className == "android.animation.ObjectAnimator" && it.methodName == "initAnimation" } &&
+                        mainStackTrace.any { it.className == "android.animation.StateListAnimator" && (it.methodName == "setState" || it.methodName == "start") } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
