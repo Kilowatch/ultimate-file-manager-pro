@@ -122,6 +122,21 @@ interface FileIndexDao {
     @Query("SELECT COUNT(*) FROM file_index WHERE folderPath = :folderPath")
     suspend fun getFileCountInFolder(folderPath: String): Int
 
+    @Query("""
+        SELECT SUM(size)
+        FROM file_index
+        WHERE isDirectory = 0
+          AND (:storageId = '' OR storageId = :storageId)
+          AND isHidden = 0
+          AND filename NOT LIKE '.%'
+          AND (
+              folderPath = :folderPath COLLATE NOCASE
+              OR folderPath = :folderPath || '/' COLLATE NOCASE
+              OR folderPath LIKE :folderPath || '/%' COLLATE NOCASE
+          )
+    """)
+    suspend fun getFolderTotalSize(storageId: String, folderPath: String): Long?
+
     @Query("SELECT path FROM file_index WHERE folderPath = :folderPath")
     suspend fun getIndexedPathsInFolder(folderPath: String): List<String>
 

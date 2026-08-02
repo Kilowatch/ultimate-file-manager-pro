@@ -104,6 +104,7 @@ class FileAdapter(
     private var showAllAsIndexed = false
     private var searchBasePath: String? = null
     private val childCountCache = mutableMapOf<String, Int>()
+    private val folderSizeCache = mutableMapOf<String, Long>()
     private var childCountJob: Job? = null
     
     var focusedPath: String? = null
@@ -182,13 +183,18 @@ class FileAdapter(
         exitSelectionMode()
         notifyDataSetChanged()
 
-        // Pre-compute directory child counts off the main thread
+        // Pre-compute directory child counts and total folder sizes off the main thread
         childCountJob?.cancel()
         val dirs = newFiles.filter { it.isDirectory }
         if (dirs.isNotEmpty()) {
+            val ctx = attachedContext
             @OptIn(DelicateCoroutinesApi::class)
             childCountJob = GlobalScope.launch(Dispatchers.IO) {
                 val counts = mutableMapOf<String, Int>()
+                val sizes = mutableMapOf<String, Long>()
+                val dao = ctx?.let { za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase.getInstance(it).fileIndexDao() }
+                val indexingRepo = try { za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository } catch (_: Exception) { null }
+
                 for (dir in dirs) {
                     if (!isActive) return@launch
                     val children = dir.list()
@@ -197,10 +203,23 @@ class FileAdapter(
                         File(dir, subName).absolutePath !in hiddenPaths
                     } ?: 0
                     counts[dir.absolutePath] = visibleCount
+
+                    if (dao != null && indexingRepo != null) {
+                        val path = dir.absolutePath
+                        val (storageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(path)
+                        val isIndexed = showAllAsIndexed || path in indexedPaths || (storageId.isNotEmpty() && indexingRepo.isStorageFullyIndexed(storageId))
+                        if (isIndexed) {
+                            val totalSize = dao.getFolderTotalSize(storageId, path)
+                            if (totalSize != null) {
+                                sizes[path] = totalSize
+                            }
+                        }
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     if (!isActive) return@withContext
                     childCountCache.putAll(counts)
+                    folderSizeCache.putAll(sizes)
                     notifyDataSetChanged()
                 }
             }
@@ -593,7 +612,18 @@ class FileAdapter(
                 if (!isGrid) {
                     val childCount = childCountCache[file.absolutePath] ?: 0
                     val itemsText = "$childCount item${if (childCount != 1) "s" else ""}"
-                    val baseInfo = "$itemsText · ${formatDate(context, file.lastModified())}"
+                    val (storageId, _, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.absolutePath)
+                    val isIndexed = showAllAsIndexed || file.absolutePath in indexedPaths || (storageId.isNotEmpty() && za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.isStorageFullyIndexed(storageId))
+                    val folderSize = folderSizeCache[file.absolutePath]
+                    val sizeText = if (isIndexed && folderSize != null) {
+                        Formatter.formatFileSize(context, folderSize)
+                    } else null
+
+                    val baseInfo = if (sizeText != null) {
+                        "$itemsText · $sizeText · ${formatDate(context, file.lastModified())}"
+                    } else {
+                        "$itemsText · ${formatDate(context, file.lastModified())}"
+                    }
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseInfo" else baseInfo
                     txtInfo.text = if (relativePath != null) "$relativePath\n$detailedInfo" else detailedInfo
