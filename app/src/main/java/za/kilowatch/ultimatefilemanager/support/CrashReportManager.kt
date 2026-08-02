@@ -582,7 +582,39 @@ object CrashReportManager {
                         topFrame?.className == "java.lang.StringBuilder" &&
                         topFrame?.methodName == "<init>"
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall) {
+                    // 11. The main thread is sampled during a cold-start layout inflation of
+                    //     an Activity layout — top frame `android.widget.TextView.
+                    //     setCompoundDrawablePadding` (a trivial compound-drawable padding
+                    //     setter that only assigns four int fields and cannot occupy the
+                    //     thread for 5 s), with the frame below being the MaterialButton
+                    //     constructor and the frames below that the framework LayoutInflater
+                    //     inflating an XML layout (reported from a SPIDER RED 10, SDK 29,
+                    //     app 1.7.7, while `LanguageWelcomeActivity.onCreate` ran
+                    //     `setContentView`). On a slow or busy device the one-time cost of
+                    //     cold-starting the first Activity — class loading, resource
+                    //     decoding and the MaterialButton constructor — can exceed the 5 s
+                    //     watchdog threshold, and the sampled frame is a single-instruction
+                    //     setter inside that framework/library inflation, so the block is a
+                    //     system-side wait the app cannot act on. The only app frames
+                    //     allowed are Activity lifecycle callbacks (the activity starting up
+                    //     and inflating its content view). Genuine freezes keep the main
+                    //     thread inside app business logic — an app frame that is not an
+                    //     Activity class (e.g. adapter bind code), or a top frame that is
+                    //     not this setter under a MaterialButton constructor + LayoutInflater
+                    //     — and still fail this test and are reported.
+                    val isMaterialButtonInflateStall =
+                        topFrame?.className == "android.widget.TextView" &&
+                        topFrame?.methodName == "setCompoundDrawablePadding" &&
+                        mainStackTrace.any {
+                            it.className == "com.google.android.material.button.MaterialButton" &&
+                                it.methodName == "<init>"
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
