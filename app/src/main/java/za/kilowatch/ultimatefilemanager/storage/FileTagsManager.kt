@@ -13,23 +13,94 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import za.kilowatch.ultimatefilemanager.R
+import java.util.concurrent.Executors
 
 
 object FileTagsManager {
     private const val TAG = "FileTagsManager"
     private const val PREFS_NAME = "ufm_file_tags"
 
+    // In-memory mirror of the ufm_file_tags map, updated synchronously so a read immediately after
+    // a write sees the new value even though disk persistence is async. Disk persistence runs on a
+    // dedicated single-thread writer using commit() (NOT apply()): apply() posts the write to
+    // android.app.QueuedWork, and the framework then calls QueuedWork.waitToFinish() on the main
+    // thread during Activity.onPause()/onStop(), blocking it for the full fsync() duration — an
+    // unbounded per-path ufm_file_tags file (one key per tagged file) makes that flush exceed 5 s
+    // on slow devices. commit() never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore KDoc for the same rationale.
+    @Volatile
+    private var cachedEntries: Map<String, String>? = null
+
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-file-tags-writer").apply { isDaemon = true }
+    }
+
+    /** Current tag map — lazy-loaded from prefs once, then kept in sync in memory. */
+    private fun entries(context: Context): Map<String, String> {
+        cachedEntries?.let { return it }
+        synchronized(this) {
+            cachedEntries?.let { return it }
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val map = prefs.all.mapNotNull { (k, v) -> if (v is String) k to v else null }.toMap()
+            cachedEntries = map
+            return map
+        }
+    }
+
+    /**
+     * Drop the in-memory tag map so the next read reloads from disk. Called after a settings
+     * restore (which rewrites `ufm_file_tags` directly via [android.content.SharedPreferences]),
+     * so the cache cannot serve stale pre-restore data.
+     */
+    fun invalidateCache() {
+        cachedEntries = null
+    }
+
+    /** Persist the full tag map to disk on the writer thread via commit(). */
+    private fun persist(context: Context, snapshot: Map<String, String>) {
+        val appContext = context.applicationContext
+        val payload = snapshot.toMap()
+        ioWriter.execute {
+            try {
+                val prefs = appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                prefs.edit().apply {
+                    clear()
+                    payload.forEach { (k, v) -> putString(k, v) }
+                }.commit()
+            } catch (e: Exception) {
+                GoRoLog.e(TAG, "Failed to persist tags: ${e.message}")
+            }
+        }
+    }
+
+    /** Writes tag metadata into a local image's EXIF on the calling thread. */
+    private fun writeExifTags(filePath: String, sanitized: Set<String>) {
+        val file = File(filePath)
+        if (file.exists() && file.isFile) {
+            val ext = file.extension.lowercase()
+            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif")) {
+                try {
+                    val exifInterface = ExifInterface(filePath)
+                    // Standard Windows/Samsung keywords (semicolon-delimited)
+                    exifInterface.setAttribute("XPKeywords", sanitized.joinToString(";"))
+                    // Custom prefix in UserComment
+                    exifInterface.setAttribute(ExifInterface.TAG_USER_COMMENT, "tags:" + sanitized.joinToString(","))
+                    exifInterface.saveAttributes()
+                } catch (e: Exception) {
+                    GoRoLog.e(TAG, "Error writing EXIF tags to $filePath: ${e.message}")
+                }
+            }
+        }
+    }
+
     /**
      * Get all unique tags ever created across all files in UFM.
      */
     fun getAllCreatedTags(context: Context): Set<String> {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val allTags = mutableSetOf<String>()
         try {
-            for (value in prefs.all.values) {
-                if (value is String) {
-                    allTags.addAll(sanitizeAndSplit(value))
-                }
+            for (value in entries(context).values) {
+                allTags.addAll(sanitizeAndSplit(value))
             }
         } catch (e: Exception) {
             GoRoLog.e(TAG, "Error getting all created tags: ${e.message}")
@@ -46,9 +117,8 @@ object FileTagsManager {
         val tags = mutableSetOf<String>()
         val file = File(filePath)
 
-        // 1. Read from local SharedPreferences mapping
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val savedTags = prefs.getString(filePath, null)
+        // 1. Read from the in-memory tag map (immediately consistent after a save)
+        val savedTags = entries(context)[filePath]
         if (!savedTags.isNullOrEmpty()) {
             tags.addAll(sanitizeAndSplit(savedTags))
         }
@@ -105,32 +175,20 @@ object FileTagsManager {
      */
     fun saveTags(context: Context, filePath: String, tags: Set<String>) {
         val sanitized = tags.map { sanitizeTag(it) }.filter { it.isNotEmpty() }.toSet()
-        val file = File(filePath)
 
-        // 1. Save to SharedPreferences mapping
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        // 1. Update the in-memory tag map synchronously, then persist to disk asynchronously via
+        //    commit() on the dedicated writer thread (see class KDoc — never QueuedWork).
+        val updated = entries(context).toMutableMap()
         if (sanitized.isEmpty()) {
-            prefs.edit().remove(filePath).apply()
+            updated.remove(filePath)
         } else {
-            prefs.edit().putString(filePath, sanitized.joinToString(",")).apply()
+            updated[filePath] = sanitized.joinToString(",")
         }
+        cachedEntries = updated
+        persist(context, updated)
 
         // 2. Save to EXIF for local images
-        if (file.exists() && file.isFile) {
-            val ext = file.extension.lowercase()
-            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif")) {
-                try {
-                    val exifInterface = ExifInterface(filePath)
-                    // Standard Windows/Samsung keywords (semicolon-delimited)
-                    exifInterface.setAttribute("XPKeywords", sanitized.joinToString(";"))
-                    // Custom prefix in UserComment
-                    exifInterface.setAttribute(ExifInterface.TAG_USER_COMMENT, "tags:" + sanitized.joinToString(","))
-                    exifInterface.saveAttributes()
-                } catch (e: Exception) {
-                    GoRoLog.e(TAG, "Error writing EXIF tags to $filePath: ${e.message}")
-                }
-            }
-        }
+        writeExifTags(filePath, sanitized)
     }
 
     /**
@@ -138,74 +196,89 @@ object FileTagsManager {
      * Cleans it from SharedPreferences and updates EXIF of any local images that contain it.
      */
     fun deleteGlobalTag(context: Context, tagToDelete: String) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val allEntries = prefs.all
         val tagToClean = tagToDelete.trim().trimStart('#').filter { it.isLetterOrDigit() }
         if (tagToClean.isEmpty()) return
 
-        for ((filePath, value) in allEntries) {
-            if (value is String) {
-                val tags = sanitizeAndSplit(value).toMutableList()
-                if (tags.remove(tagToClean)) {
-                    saveTags(context, filePath, tags.toSet())
+        // Batch the whole cleanup into ONE cache update + ONE background commit() (the previous
+        // per-entry saveTags loop queued one full-file apply() rewrite per matching file).
+        val current = entries(context)
+        val updated = current.toMutableMap()
+        var changed = false
+        for ((filePath, value) in current) {
+            val tags = sanitizeAndSplit(value).toMutableList()
+            if (tags.remove(tagToClean)) {
+                if (tags.isEmpty()) {
+                    updated.remove(filePath)
+                } else {
+                    updated[filePath] = tags.joinToString(",")
                 }
+                changed = true
+                writeExifTags(filePath, tags.toSet())
             }
+        }
+        if (changed) {
+            cachedEntries = updated
+            persist(context, updated)
         }
     }
 
     /**
      * Handles updating tag paths when a file or directory is moved or renamed.
+     *
+     * Called once per file inside copy/move loops that already run on a background thread. The
+     * update is applied to the in-memory map synchronously and persisted with a single commit() on
+     * the writer thread — the previous editor.apply() queued a full-file rewrite to QueuedWork per
+     * file, and a large folder move would pile dozens/hundreds of rewrites onto the queued-work
+     * looper that the main thread then waits on at the next Activity.onStop().
      */
     fun onPathMoved(context: Context, oldPath: String, newPath: String) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val allEntries = prefs.all
-        val editor = prefs.edit()
+        val current = entries(context)
+        val updated = current.toMutableMap()
         var changed = false
 
-        for ((key, value) in allEntries) {
-            if (value is String) {
-                if (key == oldPath) {
-                    editor.remove(oldPath)
-                    editor.putString(newPath, value)
-                    changed = true
-                } else if (key.startsWith("$oldPath/")) {
-                    val subPath = key.substring(oldPath.length)
-                    val newKey = newPath + subPath
-                    editor.remove(key)
-                    editor.putString(newKey, value)
-                    changed = true
-                }
+        for ((key, value) in current) {
+            if (key == oldPath) {
+                updated.remove(oldPath)
+                updated[newPath] = value
+                changed = true
+            } else if (key.startsWith("$oldPath/")) {
+                val subPath = key.substring(oldPath.length)
+                val newKey = newPath + subPath
+                updated.remove(key)
+                updated[newKey] = value
+                changed = true
             }
         }
         if (changed) {
-            editor.apply()
+            cachedEntries = updated
+            persist(context, updated)
         }
     }
 
     /**
      * Handles duplicating tag paths when a file or directory is copied.
+     *
+     * Same background-commit() rationale as [onPathMoved].
      */
     fun onPathCopied(context: Context, oldPath: String, newPath: String) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val allEntries = prefs.all
-        val editor = prefs.edit()
+        val current = entries(context)
+        val updated = current.toMutableMap()
         var changed = false
 
-        for ((key, value) in allEntries) {
-            if (value is String) {
-                if (key == oldPath) {
-                    editor.putString(newPath, value)
-                    changed = true
-                } else if (key.startsWith("$oldPath/")) {
-                    val subPath = key.substring(oldPath.length)
-                    val newKey = newPath + subPath
-                    editor.putString(newKey, value)
-                    changed = true
-                }
+        for ((key, value) in current) {
+            if (key == oldPath) {
+                updated[newPath] = value
+                changed = true
+            } else if (key.startsWith("$oldPath/")) {
+                val subPath = key.substring(oldPath.length)
+                val newKey = newPath + subPath
+                updated[newKey] = value
+                changed = true
             }
         }
         if (changed) {
-            editor.apply()
+            cachedEntries = updated
+            persist(context, updated)
         }
     }
 
@@ -284,8 +357,21 @@ object FileTagsManager {
             .setPositiveButton("Done") { _, _ ->
                 val textInput = edtInput.text?.toString() ?: ""
                 val newTags = sanitizeAndSplit(textInput).toSet()
+                // Batch all files into ONE cache update + ONE background commit() instead of one
+                // apply() per file — a per-file apply() loop would queue N full-file rewrites to
+                // QueuedWork, which the main thread then waits on at the next Activity.onStop().
+                val updated = entries(context).toMutableMap()
                 for (path in filePaths) {
-                    saveTags(context, path, newTags)
+                    if (newTags.isEmpty()) {
+                        updated.remove(path)
+                    } else {
+                        updated[path] = newTags.joinToString(",")
+                    }
+                }
+                cachedEntries = updated
+                persist(context, updated)
+                for (path in filePaths) {
+                    writeExifTags(path, newTags)
                 }
                 onSaved()
             }

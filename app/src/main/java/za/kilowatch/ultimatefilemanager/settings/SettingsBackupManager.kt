@@ -692,6 +692,9 @@ object SettingsBackupManager {
                         }
                         editor.commit()
                     }
+                    // FileTagsManager keeps an in-memory mirror of ufm_file_tags; drop it so the
+                    // next read reloads the restored file instead of serving stale pre-restore data.
+                    za.kilowatch.ultimatefilemanager.storage.FileTagsManager.invalidateCache()
                 }
 
                 val sharesArr = root.optJSONArray("network_shares")

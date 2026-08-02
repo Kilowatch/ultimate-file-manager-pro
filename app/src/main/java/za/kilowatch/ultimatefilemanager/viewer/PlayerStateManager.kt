@@ -3,6 +3,7 @@ package za.kilowatch.ultimatefilemanager.viewer
 import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.Executors
 
 /**
  * Serializable snapshot of the playback state for process-death recovery.
@@ -29,6 +30,17 @@ object PlayerStateManager {
     private const val KEY_STATE = "state_json"
 
     private const val MAX_STALENESS_MS = 30 * 60 * 1000L // 30 minutes
+
+    // Dedicated single-thread writer so disk persistence is serialized and never runs on the main
+    // thread. We use commit() (NOT apply()): apply() posts the write to android.app.QueuedWork, and
+    // the framework then calls QueuedWork.waitToFinish() on the main thread during
+    // Activity.onPause()/onStop(), blocking it for the full fsync() duration — the serialized
+    // playback queue can be hundreds of KB to MB, so that flush exceeds 5 s on slow devices.
+    // commit() is synchronous but never touches QueuedWork, so the main thread is never blocked.
+    // See SecureTokenStore KDoc for the same rationale.
+    private val ioWriter = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "ufm-player-state-writer").apply { isDaemon = true }
+    }
 
     // ── Save ────────────────────────────────────────────────────────
 
@@ -70,10 +82,14 @@ object PlayerStateManager {
             put("queue", queueArray)
         }
 
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(KEY_STATE, json.toString())
-            .apply()
+        val appContext = context.applicationContext
+        val payload = json.toString()
+        ioWriter.execute {
+            appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_STATE, payload)
+                .commit()
+        }
     }
 
     // ── Restore ─────────────────────────────────────────────────────
@@ -137,9 +153,12 @@ object PlayerStateManager {
 
     /** Call when the user explicitly stops playback. */
     fun clearState(context: Context) {
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit()
-            .remove(KEY_STATE)
-            .apply()
+        val appContext = context.applicationContext
+        ioWriter.execute {
+            appContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .remove(KEY_STATE)
+                .commit()
+        }
     }
 }
