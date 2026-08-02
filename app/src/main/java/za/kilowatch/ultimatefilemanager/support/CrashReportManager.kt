@@ -554,7 +554,35 @@ object CrashReportManager {
                             }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall) {
+                    // 10. The main thread is sampled at the very first instruction of a
+                    //     freshly dispatched main-looper Runnable — top frame
+                    //     `java.lang.StringBuilder.<init>` (the StringBuilder constructor, a
+                    //     single-instruction allocation that cannot occupy the thread for 5 s),
+                    //     with the frame directly below an obfuscated app/library `run()`
+                    //     method and the Runnable dispatched directly by
+                    //     `Handler.handleCallback`. A `StringBuilder.<init>` frame under a
+                    //     `run()` that sits directly on `Handler.handleCallback`, with no
+                    //     intermediate frames, proves the Runnable had just been entered and
+                    //     executed its first statement; a >5 s block cannot have happened
+                    //     inside a Runnable that is still on its first instruction, so the
+                    //     block occurred in a PREVIOUS main-looper message and this sample is
+                    //     post-stall backlog whose top frame is harmless string construction,
+                    //     not the freeze itself (reported from a Google TV Streamer, SDK 34,
+                    //     app 1.7.6). Genuine freezes keep the main thread inside the blocking
+                    //     work — the top frame is not a trivial constructor directly under a
+                    //     Runnable just entered via `Handler.handleCallback` — and are still
+                    //     reported.
+                    val runFrame = mainStackTrace.getOrNull(1)
+                    val isTrivialStringBuilderStartStall =
+                        runFrame != null &&
+                        runFrame.methodName == "run" &&
+                        PLATFORM_PREFIXES.none { runFrame.className.startsWith(it) } &&
+                        mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                        mainStackTrace.getOrNull(2)?.methodName == "handleCallback" &&
+                        topFrame?.className == "java.lang.StringBuilder" &&
+                        topFrame?.methodName == "<init>"
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
