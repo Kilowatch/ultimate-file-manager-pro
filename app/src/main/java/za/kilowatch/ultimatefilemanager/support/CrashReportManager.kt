@@ -513,7 +513,48 @@ object CrashReportManager {
                             it.className == "android.app.ContextImpl" && it.methodName == "unbindService"
                         })
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall) {
+                    // 9. The main thread is blocked inside the AndroidX Activity lifecycle
+                    //    dispatch while an Activity is starting — e.g. StorageBrowserActivity.
+                    //    onStart -> AppCompatActivity.onStart -> FragmentActivity.onStart ->
+                    //    (FragmentManager / LifecycleRegistry / AppCompatDelegate dispatch).
+                    //    The app's own `onStart` is a framework-invoked lifecycle callback
+                    //    that contains no business logic (in this app it just calls
+                    //    super.onStart() and registers a broadcast receiver); the actual
+                    //    block is entirely inside the bundled library's lifecycle machinery
+                    //    (activity super-chain dispatch, fragment state moves,
+                    //    LifecycleRegistry ON_START dispatch, AppCompatDelegate applyDayNight
+                    //    -> updateResourcesConfiguration), which the app cannot act on — the
+                    //    same class of system-side wait as the pure-framework filter above,
+                    //    except the stack legitimately carries the activity's own onStart
+                    //    frame. A genuine freeze keeps app business frames on the stack:
+                    //    either more than one app frame, or the activity's onStart frame
+                    //    directly calling into the blocking code with no intermediate library
+                    //    onStart frame (meaning the block happens after super.onStart()
+                    //    returned, i.e. inside the app's own post-super work). Both shapes
+                    //    still fail this test and are reported.
+                    val isActivityOnStartLifecycleStall =
+                        topFrame != null &&
+                        !topFrame.className.startsWith(APP_PACKAGE) &&
+                        PLATFORM_PREFIXES.none { topFrame.className.startsWith(it) } &&
+                        mainStackTrace.count { it.className.startsWith(APP_PACKAGE) } == 1 &&
+                        run {
+                            val appOnStartIdx = mainStackTrace.indexOfFirst {
+                                it.className.startsWith(APP_PACKAGE) &&
+                                it.className.endsWith("Activity") &&
+                                it.methodName == "onStart"
+                            }
+                            appOnStartIdx > 0 &&
+                            appOnStartIdx < mainStackTrace.lastIndex &&
+                            // A library/obfuscated onStart frame sits between the activity's
+                            // own onStart and the blocking top frame — i.e. the block is inside
+                            // the library super-chain, not app code running after
+                            // super.onStart() returned.
+                            mainStackTrace.take(appOnStartIdx).any {
+                                it.methodName == "onStart" && !it.className.startsWith(APP_PACKAGE)
+                            }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
