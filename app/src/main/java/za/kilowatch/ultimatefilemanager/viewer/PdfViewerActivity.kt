@@ -378,9 +378,28 @@ class PdfViewerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        closePdfRenderer()      // waits for any in-flight render to finish first
-        renderScope.cancel()    // then cancel the scope so no new renders start
+        // Mark the renderer closed immediately and cancel the render scope so
+        // queued/in-flight renders bail out as soon as they next check the flag.
+        // Do NOT wait for the render mutex synchronously here: an in-flight
+        // page.render() holds that mutex for the whole native page render, which
+        // can exceed 5 s on a slow device, and closePdfRenderer() runs via
+        // runBlocking — parking the main looper in LockSupport.parkNanos until
+        // the render finished (ANR, reported from Sercomm XstreamIPTV2-SM, SDK 34).
+        // The native close now runs on a daemon thread, which acquires the mutex
+        // as soon as the in-flight render (if any) releases it.
+        rendererClosed = true
+        renderScope.cancel()
         decryptedTempFile?.delete()
+        Thread {
+            runBlocking {
+                renderMutex.withLock {
+                    try { pdfRenderer?.close() } catch (_: Exception) {}
+                    try { fileDescriptor?.close() } catch (_: Exception) {}
+                    pdfRenderer = null
+                    fileDescriptor = null
+                }
+            }
+        }.apply { name = "ufm-pdf-close"; isDaemon = true; start() }
     }
 
     /**
