@@ -721,6 +721,23 @@
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
 
+        <!-- TV Remote Control (declared in main so every variant — including TV builds,
+             where these classes live in the shared main source set — can resolve the
+             explicit-intent launch from the main menu / Bluetooth & ADB remote services.
+             Previously only in the mobile source-set manifest, which caused
+             ActivityNotFoundException on tv* builds. -->
+        <activity
+            android:name=".network.TvRemoteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:label="@string/tv_remote_title" />
+
+        <activity
+            android:name=".network.TvSetupGuideActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:label="@string/tv_remote_title" />
+
         <!-- Transfer Settings (Mobile → TV) -->
         <activity
             android:name=".network.TransferSettingsActivity"

@@ -23,19 +23,6 @@
 
     <application>
 
-        <!-- TV Remote Control -->
-        <activity
-            android:name=".network.TvRemoteActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:label="@string/tv_remote_title" />
-
-        <activity
-            android:name=".network.TvSetupGuideActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:label="@string/tv_remote_title" />
-
         <!-- Bluetooth HID Foreground Service — keeps HID registration alive independently
              of TvRemoteActivity lifecycle, preventing connection drops on MiBox etc. -->
         <service
