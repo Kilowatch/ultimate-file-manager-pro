@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:src="@drawable/ic_terminal"
-        app:tint="@color/ufm_primary" />
+        app:tint="?attr/colorPrimary" />
 
     <!-- Title & Step-by-step -->
     <TextView

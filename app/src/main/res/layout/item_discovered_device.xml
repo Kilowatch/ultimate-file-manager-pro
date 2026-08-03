@@ -33,7 +33,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_tv"
-                app:tint="@color/ufm_primary"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@null" />
         </FrameLayout>
 

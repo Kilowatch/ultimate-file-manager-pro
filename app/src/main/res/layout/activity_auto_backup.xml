@@ -328,7 +328,7 @@
                             android:text="@string/auto_backup_schedule_daily"
                             android:textColor="@color/mobile_card_text_primary"
                             android:textSize="14sp"
-                            android:buttonTint="#FF0284C7" />
+                            android:buttonTint="?attr/colorPrimary" />
 
                         <RadioButton
                             android:id="@+id/rbWeekly"
@@ -339,7 +339,7 @@
                             android:textColor="@color/mobile_card_text_primary"
                             android:textSize="14sp"
                             android:checked="true"
-                            android:buttonTint="#FF0284C7" />
+                            android:buttonTint="?attr/colorPrimary" />
 
                         <RadioButton
                             android:id="@+id/rbMonthly"
@@ -349,7 +349,7 @@
                             android:text="@string/auto_backup_schedule_monthly"
                             android:textColor="@color/mobile_card_text_primary"
                             android:textSize="14sp"
-                            android:buttonTint="#FF0284C7" />
+                            android:buttonTint="?attr/colorPrimary" />
                     </RadioGroup>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -513,7 +513,7 @@
                         android:textColor="@android:color/white"
                         android:visibility="gone"
                         app:cornerRadius="12dp"
-                        app:backgroundTint="@color/ufm_primary" />
+                        app:backgroundTint="?attr/colorPrimary" />
 
                     <!-- Reset to Default button -->
                     <com.google.android.material.button.MaterialButton
@@ -523,7 +523,7 @@
                         android:text="@string/auto_backup_reset_default"
                         android:visibility="gone"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
-                        android:textColor="@color/ufm_primary" />
+                        android:textColor="?attr/colorPrimary" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -550,7 +550,7 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/white"
                 app:cornerRadius="16dp"
-                app:backgroundTint="@color/ufm_primary" />
+                app:backgroundTint="?attr/colorPrimary" />
 
             <!-- Progress Bar (hidden by default) -->
             <ProgressBar

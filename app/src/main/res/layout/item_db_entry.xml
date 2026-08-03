@@ -51,7 +51,7 @@
                 android:id="@+id/txtSize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/ufm_accent"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="11sp"
                 android:fontFamily="sans-serif-medium"
                 tools:text="1.2 GB" />

@@ -34,7 +34,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -82,7 +83,7 @@
                 android:layout_height="56dp"
                 android:text="@string/adb_scan_devices"
                 style="@style/Widget.MaterialComponents.Button"
-                app:backgroundTint="@color/ufm_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 android:layout_marginBottom="20dp"
                 app:cornerRadius="16dp" />
 
@@ -232,7 +233,7 @@
                             android:layout_height="52dp"
                             android:text="@string/connect_without_pin"
                             style="@style/Widget.MaterialComponents.Button"
-                            app:backgroundTint="@color/ufm_primary"
+                            app:backgroundTint="?attr/colorPrimary"
                             android:layout_marginBottom="12dp"
                             app:cornerRadius="12dp" />
 
@@ -309,7 +310,7 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/pair_and_connect"
                         style="@style/Widget.MaterialComponents.Button"
-                        app:backgroundTint="@color/ufm_primary"
+                        app:backgroundTint="?attr/colorPrimary"
                         app:cornerRadius="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

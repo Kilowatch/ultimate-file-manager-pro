@@ -891,8 +891,8 @@ class SlideShowActivity : AppCompatActivity() {
         view.alpha = if (isActive) 1.0f else (if (isTv) 0.5f else 0.4f)
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        if (event?.action == KeyEvent.ACTION_DOWN) {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) {
             resetHideTimer()
         }
         return super.dispatchKeyEvent(event)

@@ -38,7 +38,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -399,7 +400,7 @@
                 android:layout_marginBottom="12dp"
                 android:text="@string/compress_image_btn_compress"
                 android:textSize="16sp"
-                app:backgroundTint="@color/ufm_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="16dp" />
 
             <View

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:hint="Field"
-        app:boxStrokeColor="@color/ufm_primary"
+        app:boxStrokeColor="?attr/colorPrimary"
         app:endIconMode="none">
 
         <com.google.android.material.textfield.TextInputEditText

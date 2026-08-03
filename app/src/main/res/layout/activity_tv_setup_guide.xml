@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_continue"
-            app:backgroundTint="@color/ufm_accent"
+            app:backgroundTint="?attr/colorSecondary"
             android:textColor="@android:color/white" />
     </LinearLayout>
 

@@ -53,7 +53,7 @@
             android:id="@+id/loadingSpinner"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:indeterminateTint="@color/ufm_primary" />
+            android:indeterminateTint="?attr/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                 android:layout_weight="1"
                 android:layout_marginHorizontal="6dp"
                 android:splitTrack="false"
-                app:tickMarkTint="@color/ufm_primary" />
+                app:tickMarkTint="?attr/colorPrimary" />
 
             <TextView
                 android:id="@+id/txtRemaining"

@@ -39,7 +39,8 @@
             android:layout_width="1.5dp"
             android:layout_height="28dp"
             android:layout_marginHorizontal="6dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <!-- Spacer pushes icons to the right -->
         <View
@@ -131,7 +132,8 @@
             android:layout_width="1.5dp"
             android:layout_height="28dp"
             android:layout_marginHorizontal="6dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <!-- View Toggle -->
         <ImageView
@@ -218,7 +220,8 @@
             android:layout_width="1.5dp"
             android:layout_height="24dp"
             android:layout_marginHorizontal="6dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <EditText
             android:id="@+id/edtSearch"
@@ -260,7 +263,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/ufm_primary"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/barrier_header"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -273,7 +276,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#1A0284C7"
+        android:background="?attr/colorPrimaryContainer"
         android:elevation="6dp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/barrier_header"
@@ -363,7 +366,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:text="@string/action_select_all"
-                    android:textColor="#FF0284C7"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="11sp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
@@ -372,9 +375,9 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minHeight="0dp"
-                    app:backgroundTint="#1A0284C7"
+                    app:backgroundTint="?attr/colorPrimaryContainer"
                     app:icon="@drawable/ic_check"
-                    app:iconTint="#FF0284C7"
+                    app:iconTint="?attr/colorPrimary"
                     app:iconSize="14dp"
                     app:iconPadding="4dp"
                     app:cornerRadius="14dp" />
@@ -387,7 +390,7 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:text="@string/action_compress"
-                    android:textColor="@color/ufm_primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="11sp"
                     android:paddingVertical="0dp"
                     android:paddingHorizontal="10dp"
@@ -396,7 +399,7 @@
                     android:minHeight="0dp"
                     app:backgroundTint="#1A00897B"
                     app:icon="@drawable/ic_compress"
-                    app:iconTint="@color/ufm_primary"
+                    app:iconTint="?attr/colorPrimary"
                     app:iconSize="14dp"
                     app:iconPadding="4dp"
                     app:cornerRadius="14dp" />
@@ -523,7 +526,7 @@
         app:icon="@drawable/ic_check"
         app:iconTint="@color/white"
         app:iconSize="18dp"
-        app:backgroundTint="#FF0284C7"
+        app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/fabTools"
         app:layout_constraintStart_toStartOf="parent"
@@ -541,7 +544,7 @@
         app:icon="@drawable/ic_paste"
         app:iconTint="@color/white"
         app:iconSize="18dp"
-        app:backgroundTint="#FF0284C7"
+        app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -559,7 +562,7 @@
         app:icon="@drawable/ic_settings"
         app:iconTint="@color/white"
         app:iconSize="18dp"
-        app:backgroundTint="#FF0284C7"
+        app:backgroundTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -308,7 +308,7 @@ class TextViewerActivity : AppCompatActivity() {
             txtLineNumbers.visibility = View.GONE
             txtContent.background = android.graphics.drawable.GradientDrawable().apply {
                 shape = android.graphics.drawable.GradientDrawable.RECTANGLE
-                setStroke(2, android.graphics.Color.parseColor("#FF0284C7"))
+                setStroke(2, za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this@TextViewerActivity))
                 setColor(0x15FFFFFF.toInt())
                 cornerRadius = 4f
             }

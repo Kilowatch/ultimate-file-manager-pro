@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:indeterminate="true"
-        android:indeterminateTint="#FF0284C7"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 

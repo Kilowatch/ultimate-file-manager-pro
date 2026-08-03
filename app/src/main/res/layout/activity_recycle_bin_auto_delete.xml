@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="30"
-                        android:textColor="@color/ufm_primary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="48sp"
                         android:fontFamily="sans-serif-black"
                         android:letterSpacing="-0.02" />
@@ -151,8 +151,8 @@
                         android:layout_height="wrap_content"
                         android:max="30"
                         android:progress="30"
-                        android:progressTint="@color/ufm_primary"
-                        android:thumbTint="@color/ufm_primary"
+                        android:progressTint="?attr/colorPrimary"
+                        android:thumbTint="?attr/colorPrimary"
                         android:layout_marginTop="4dp"
                         android:layout_marginBottom="8dp" />
 

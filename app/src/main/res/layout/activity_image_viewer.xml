@@ -175,7 +175,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:indeterminate="true"
-        android:indeterminateTint="#FF0284C7"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

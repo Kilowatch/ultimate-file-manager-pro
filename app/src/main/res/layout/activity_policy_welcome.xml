@@ -40,7 +40,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -97,7 +98,7 @@
             android:layout_width="36dp"
             android:layout_height="3dp"
             android:layout_marginTop="12dp"
-            android:background="#FF0284C7" />
+            android:background="?attr/colorPrimary" />
     </LinearLayout>
 
     <!-- Content Area (The Policy Cards) -->
@@ -144,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/required"
-                        android:textColor="#FF0284C7"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="13sp"
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
@@ -190,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/required"
-                        android:textColor="#FF0284C7"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="13sp"
                         android:layout_marginTop="4dp" />
                 </LinearLayout>
@@ -238,7 +239,7 @@
             android:enabled="false"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            app:backgroundTint="#FF0284C7"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="24dp" />
     </LinearLayout>
 

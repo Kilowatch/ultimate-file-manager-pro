@@ -4,6 +4,9 @@ import android.app.Application
 import android.content.ComponentCallbacks2
 import android.util.Log
 import com.google.android.material.color.DynamicColors
+import com.google.android.material.color.DynamicColorsOptions
+import za.kilowatch.ultimatefilemanager.settings.MaterialYouPrefs
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.network.AdbManager
 import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
@@ -35,6 +38,12 @@ class UfmApplication : Application() {
 
     private val TAG = "UfmApplication"
     private var pairingServer: PairingServer? = null
+
+    // Live activities, tracked so a global theme/colour preference change
+    // (e.g. toggling Material You) can recreate the WHOLE app — dynamic colors are
+    // applied per-activity at creation time, so every activity must re-create to
+    // pick up the new palette, not just the current screen.
+    private val aliveActivities = java.util.concurrent.CopyOnWriteArraySet<android.app.Activity>()
 
     override fun onCreate() {
         // ── Security provider setup ───────────────────────────────────────────────────
@@ -80,8 +89,18 @@ class UfmApplication : Application() {
         }
 
         // Apply Material You Dynamic Colors — adapts the app's color scheme to the
-        // user's wallpaper on Android 12+ (API 31+). Safe no-op on older versions.
-        DynamicColors.applyToActivitiesIfAvailable(this)
+        // user's wallpaper on Android 12+ (API 31+), gated to non-TV devices with
+        // the Material You preference enabled. The precondition is evaluated per
+        // activity-create, so toggling the setting + recreate() re-evaluates it.
+        // TV always keeps the fixed brand palette (Theme.UltimateFileManager.Tv).
+        DynamicColors.applyToActivitiesIfAvailable(
+            this,
+            DynamicColorsOptions.Builder()
+                .setPrecondition { activity, _ ->
+                    MaterialYouPrefs.isEnabled(activity) && !DeviceUtils.isTvDevice(activity)
+                }
+                .build()
+        )
 
         // Fix SSHD home folder on Android
         PathUtils.setUserHomeFolderResolver { filesDir.toPath() }
@@ -92,6 +111,7 @@ class UfmApplication : Application() {
             // Activity.onCreate() stack (including setContentView) has unwound, so
             // the view hierarchy is guaranteed to exist when it runs.
             override fun onActivityCreated(activity: android.app.Activity, savedInstanceState: android.os.Bundle?) {
+                aliveActivities.add(activity)
                 val themeHelper = za.kilowatch.ultimatefilemanager.settings.ThemeHelper
                 if (themeHelper.isAmoled(activity)) {
                     android.os.Handler(android.os.Looper.getMainLooper()).post {
@@ -166,7 +186,7 @@ class UfmApplication : Application() {
             override fun onActivityPaused(activity: android.app.Activity) {}
             override fun onActivityStopped(activity: android.app.Activity) {}
             override fun onActivitySaveInstanceState(activity: android.app.Activity, outState: android.os.Bundle) {}
-            override fun onActivityDestroyed(activity: android.app.Activity) {}
+            override fun onActivityDestroyed(activity: android.app.Activity) { aliveActivities.remove(activity) }
         })
         
         // Offload heavy startup tasks (Indexing, Cache Purge, Hidden Files) to a background thread.
@@ -352,5 +372,24 @@ class UfmApplication : Application() {
      */
     fun stopPairingMode() {
         pairingServer?.stopPairingMode()
+    }
+
+    /**
+     * Recreate every live activity so a global colour/theme preference change
+     * (e.g. toggling Material You) applies app-wide — dynamic colors are applied
+     * per-activity at creation time, so each activity must re-create to pick up
+     * the new palette. Runs on the main looper to avoid mid-lifecycle re-entrancy.
+     */
+    fun recreateAllActivities() {
+        val snapshot = aliveActivities.toTypedArray()
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        for (activity in snapshot) {
+            if (activity.isFinishing || activity.isDestroyed) continue
+            handler.post {
+                if (!activity.isFinishing && !activity.isDestroyed) {
+                    activity.recreate()
+                }
+            }
+        }
     }
 }

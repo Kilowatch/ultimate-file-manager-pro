@@ -19,7 +19,7 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_network"
-            app:tint="@color/ufm_primary"
+            app:tint="?attr/colorPrimary"
             android:layout_marginEnd="12dp"
             android:contentDescription="@null" />
 
@@ -67,7 +67,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_tv"
-                app:tint="@color/ufm_primary"
+                app:tint="?attr/colorPrimary"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@null" />
 
@@ -121,7 +121,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_phone"
-                app:tint="@color/ufm_primary"
+                app:tint="?attr/colorPrimary"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@null" />
 

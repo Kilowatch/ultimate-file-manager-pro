@@ -36,7 +36,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -146,7 +147,7 @@
                     android:layout_marginTop="12dp"
                     android:text="@string/shizuku_btn_enable"
                     android:textColor="@color/white"
-                    app:backgroundTint="@color/ufm_primary"
+                    app:backgroundTint="?attr/colorPrimary"
                     android:visibility="gone" />
 
                 <TextView
@@ -190,7 +191,7 @@
                         android:textSize="13sp"
                         android:fontFamily="sans-serif-bold"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/ufm_primary"
+                        app:backgroundTint="?attr/colorPrimary"
                         app:cornerRadius="12dp"
                         app:icon="@drawable/ic_direction_download"
                         app:iconTint="@color/white"
@@ -211,7 +212,7 @@
                         android:textSize="13sp"
                         android:fontFamily="sans-serif-bold"
                         android:textAllCaps="false"
-                        app:backgroundTint="#0284C7"
+                        app:backgroundTint="?attr/colorPrimary"
                         app:cornerRadius="12dp"
                         app:icon="@drawable/ic_direction_download"
                         app:iconTint="@color/white"

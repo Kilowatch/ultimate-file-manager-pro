@@ -105,7 +105,7 @@ class NotepadActivity : AppCompatActivity() {
 
         val border = android.graphics.drawable.GradientDrawable().apply {
             shape = android.graphics.drawable.GradientDrawable.RECTANGLE
-            setStroke(1, android.graphics.Color.parseColor("#330284C7"))
+            setStroke(1, za.kilowatch.ultimatefilemanager.util.ThemeColors.withAlpha(za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this@NotepadActivity), 0x33))
             setColor(0x0DFFFFFF.toInt())
             cornerRadius = 4f
         }

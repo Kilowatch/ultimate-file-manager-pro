@@ -33,7 +33,7 @@
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@color/ufm_surface_variant"
+        android:background="?attr/colorSurfaceVariant"
         android:padding="8dp"
         android:layout_marginBottom="16dp">
 
@@ -156,7 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_icon_color_custom"
-                        android:textColor="@color/ufm_accent"
+                        android:textColor="?attr/colorSecondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -239,7 +239,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_icon_color_custom"
-                        android:textColor="@color/ufm_accent"
+                        android:textColor="?attr/colorSecondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -322,7 +322,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/default_icon_color_custom"
-                        android:textColor="@color/ufm_accent"
+                        android:textColor="?attr/colorSecondary"
                         android:textSize="13sp"
                         android:clickable="true"
                         android:focusable="true" />

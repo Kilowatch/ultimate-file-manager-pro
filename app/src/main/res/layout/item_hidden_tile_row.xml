@@ -21,7 +21,7 @@
         android:padding="7dp"
         android:background="@drawable/bg_icon_circle"
         android:contentDescription="@null"
-        app:tint="@color/ufm_primary" />
+        app:tint="?attr/colorPrimary" />
 
     <!-- Tile label -->
     <TextView
@@ -43,9 +43,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/manage_tiles_restore"
-        android:textColor="@color/ufm_primary"
-        app:chipBackgroundColor="@color/ufm_surface_variant"
-        app:chipStrokeColor="@color/ufm_primary"
+        android:textColor="?attr/colorPrimary"
+        app:chipBackgroundColor="?attr/colorSurfaceVariant"
+        app:chipStrokeColor="?attr/colorPrimary"
         app:chipStrokeWidth="1dp"
         android:clickable="true"
         android:focusable="true" />

@@ -95,7 +95,7 @@
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/network_dialog_success_cancel"
-                android:textColor="@color/ufm_primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp" />
 
             <!-- Save & Exit -->

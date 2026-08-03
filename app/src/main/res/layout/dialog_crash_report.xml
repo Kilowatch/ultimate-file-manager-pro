@@ -75,7 +75,7 @@
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:fontFamily="sans-serif-medium"
-            app:backgroundTint="@color/ufm_primary"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="14dp"
             app:elevation="0dp" />
     </LinearLayout>

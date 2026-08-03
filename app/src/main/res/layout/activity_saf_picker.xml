@@ -130,7 +130,7 @@
             android:layout_height="56dp"
             android:text="@string/select_this_folder"
             android:textColor="@color/white"
-            app:backgroundTint="#FF0284C7"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="16dp"
             android:fontFamily="sans-serif-black"
             android:letterSpacing="0.05" />

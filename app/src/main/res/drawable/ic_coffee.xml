@@ -9,7 +9,7 @@
     <!-- Cup body -->
     <path
         android:fillColor="@android:color/transparent"
-        android:strokeColor="@color/ufm_text_primary"
+        android:strokeColor="?attr/colorOnSurface"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
@@ -18,7 +18,7 @@
     <!-- Handle -->
     <path
         android:fillColor="@android:color/transparent"
-        android:strokeColor="@color/ufm_text_primary"
+        android:strokeColor="?attr/colorOnSurface"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:pathData="M19,11 C21,11 21,14 19,14" />
@@ -26,7 +26,7 @@
     <!-- Saucer -->
     <path
         android:fillColor="@android:color/transparent"
-        android:strokeColor="@color/ufm_text_primary"
+        android:strokeColor="?attr/colorOnSurface"
         android:strokeWidth="1.8"
         android:strokeLineCap="round"
         android:pathData="M4,21 L20,21" />
@@ -34,7 +34,7 @@
     <!-- Steam line 1 -->
     <path
         android:fillColor="@android:color/transparent"
-        android:strokeColor="@color/ufm_text_primary"
+        android:strokeColor="?attr/colorOnSurface"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:pathData="M9,5 C9,3.5 10,3.5 10,2" />
@@ -42,7 +42,7 @@
     <!-- Steam line 2 -->
     <path
         android:fillColor="@android:color/transparent"
-        android:strokeColor="@color/ufm_text_primary"
+        android:strokeColor="?attr/colorOnSurface"
         android:strokeWidth="1.5"
         android:strokeLineCap="round"
         android:pathData="M13,5 C13,3.5 14,3.5 14,2" />

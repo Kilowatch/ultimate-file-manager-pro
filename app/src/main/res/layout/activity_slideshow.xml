@@ -234,7 +234,7 @@
                 android:layout_weight="1"
                 android:layout_marginHorizontal="8dp"
                 android:splitTrack="false"
-                app:tickMarkTint="@color/ufm_primary" />
+                app:tickMarkTint="?attr/colorPrimary" />
 
             <TextView
                 android:id="@+id/txtRemaining"
@@ -276,7 +276,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:src="@drawable/ic_pause"
-                app:backgroundTint="@color/ufm_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:tint="@android:color/white"
                 app:elevation="4dp" />
 

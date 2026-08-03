@@ -38,7 +38,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -191,8 +192,8 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="@dimen/margin_md"
-                app:boxStrokeColor="@color/ufm_accent"
-                app:hintTextColor="@color/ufm_text_hint"
+                app:boxStrokeColor="?attr/colorSecondary"
+                app:hintTextColor="?attr/colorOnSurfaceVariant"
                         android:hint="@string/smart_sort_default_folder">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -1202,10 +1203,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/smart_sort_add_rule"
-                    android:textColor="@color/ufm_accent"
+                    android:textColor="?attr/colorSecondary"
                     android:layout_marginTop="@dimen/margin_sm"
                     app:icon="@drawable/ic_add"
-                    app:iconTint="@color/ufm_accent"
+                    app:iconTint="?attr/colorSecondary"
                     android:layout_marginBottom="@dimen/margin_md" />
 
                 <TextView
@@ -1350,7 +1351,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/margin_sm"
             android:text="@string/smart_sort_preview"
-            android:textColor="@color/ufm_accent" />
+            android:textColor="?attr/colorSecondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartSort"
@@ -1368,7 +1369,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/margin_sm"
             android:text="@string/smart_sort_history"
-            android:textColor="@color/ufm_text_hint"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp" />
     </LinearLayout>
 

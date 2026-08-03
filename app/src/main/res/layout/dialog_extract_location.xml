@@ -29,7 +29,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="12dp"
         android:src="@drawable/ic_folder"
-        android:tint="@color/ufm_primary"
+        android:tint="?attr/colorPrimary"
         android:contentDescription="@null" />
 
     <!-- Title -->
@@ -76,7 +76,7 @@
             android:text="@string/extract_set_location"
             android:textColor="@android:color/white"
             app:cornerRadius="12dp"
-            android:backgroundTint="@color/ufm_primary"
+            android:backgroundTint="?attr/colorPrimary"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton

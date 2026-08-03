@@ -77,7 +77,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_move"
-            app:tint="@color/ufm_primary"
+            app:tint="?attr/colorPrimary"
             android:contentDescription="@string/action_move_out" />
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/action_move_out"
-            android:textColor="@color/ufm_primary"
+            android:textColor="?attr/colorPrimary"
             android:textSize="16sp"
             android:fontFamily="sans-serif-medium" />
     </LinearLayout>

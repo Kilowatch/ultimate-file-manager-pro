@@ -1232,6 +1232,12 @@ Preto puro — economiza bateria em telas OLED
     <string name="theme_applied">
 Tema aplicado
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+Use as cores do seu papel de parede para um visual personalizado
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

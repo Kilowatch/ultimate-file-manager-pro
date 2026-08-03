@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="@color/ufm_surface_variant"
+    app:cardBackgroundColor="?attr/colorSurfaceVariant"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 

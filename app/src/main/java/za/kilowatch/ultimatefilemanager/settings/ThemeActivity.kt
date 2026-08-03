@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -104,6 +105,29 @@ class ThemeActivity : AppCompatActivity() {
             setupTvCardFocus(cardAmoled)
             setupTvCardFocus(cardSystem)
         }
+
+        // Material You (dynamic color) toggle — mobile only and Android 12+ only.
+        // Hidden entirely on TV (fixed brand palette) and on pre-Android-12 devices.
+        if (!isTv) {
+            val cardMy = findViewById<com.google.android.material.card.MaterialCardView?>(R.id.cardMaterialYou)
+            val switchMy = findViewById<com.google.android.material.materialswitch.MaterialSwitch?>(R.id.switchMaterialYou)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                cardMy?.visibility = View.GONE
+            } else if (cardMy != null && switchMy != null) {
+                switchMy.isChecked = MaterialYouPrefs.isEnabled(this)
+                // Tapping anywhere on the row flips the switch (the switch itself is
+                // also directly tappable).
+                cardMy.setOnClickListener { switchMy.toggle() }
+                switchMy.setOnCheckedChangeListener { _, isChecked ->
+                    MaterialYouPrefs.setEnabled(this, isChecked)
+                    // Icon tints depend on whether dynamic color is active.
+                    DefaultIconColorManager.invalidateCache()
+                    // Recreate EVERY live activity so the wallpaper palette (or brand
+                    // palette) applies app-wide, not just to this screen.
+                    za.kilowatch.ultimatefilemanager.UfmApplication.instance.recreateAllActivities()
+                }
+            }
+        }
     }
 
     /**
@@ -164,6 +188,8 @@ class ThemeActivity : AppCompatActivity() {
 
         updateSelection(theme)
         ThemeHelper.saveAndApply(this, theme)
+        // Icon tint resolution is cached per theme mode — refresh it on mode change.
+        DefaultIconColorManager.invalidateCache()
 
         // Dark (1) and AMOLED (3) both use MODE_NIGHT_YES.
         // Switching between them won't trigger recreation by AppCompatDelegate,

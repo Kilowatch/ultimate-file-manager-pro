@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Night theme inherits from base - already dark by default -->
     <style name="Theme.UltimateFileManager" parent="Base.Theme.UltimateFileManager" />
+    <style name="Theme.UltimateFileManager.Tv" parent="Base.Theme.UltimateFileManager.Tv" />
 
     <!-- Player theme: Always black background to avoid glitches and bleed-through -->
     <style name="Theme.UFM.Player" parent="Theme.Material3.DayNight.NoActionBar">

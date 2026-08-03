@@ -46,7 +46,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <!-- Title + Path -->
         <LinearLayout
@@ -121,7 +122,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <!-- View Toggle -->
         <ImageView
@@ -232,7 +234,8 @@
             android:layout_width="1.5dp"
             android:layout_height="32dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <EditText
             android:id="@+id/edtSearch"
@@ -541,7 +544,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/action_select_all"
-                    android:textColor="#FF0284C7"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:focusable="true"
                     android:focusableInTouchMode="false"
@@ -550,9 +553,9 @@
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minHeight="0dp"
-                    app:backgroundTint="#1A0284C7"
+                    app:backgroundTint="?attr/colorPrimaryContainer"
                     app:icon="@drawable/ic_check"
-                    app:iconTint="#FF0284C7"
+                    app:iconTint="?attr/colorPrimary"
                     app:iconSize="16dp"
                     app:iconPadding="6dp"
                     app:cornerRadius="16dp" />
@@ -565,16 +568,16 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/action_compress"
-                    android:textColor="@color/ufm_primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:paddingVertical="0dp"
                     android:paddingHorizontal="12dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:minHeight="0dp"
-                    app:backgroundTint="#1A00897B"
+                    app:backgroundTint="?attr/colorPrimaryContainer"
                     app:icon="@drawable/ic_compress"
-                    app:iconTint="@color/ufm_primary"
+                    app:iconTint="?attr/colorPrimary"
                     app:iconSize="16dp"
                     app:iconPadding="6dp"
                     app:cornerRadius="16dp" />

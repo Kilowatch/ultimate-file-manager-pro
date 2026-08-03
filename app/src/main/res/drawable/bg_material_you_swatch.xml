@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Material You swatch preview — a multi-hue gradient suggesting
+     wallpaper-derived dynamic colour. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:angle="135"
+        android:startColor="#FFC9A0"
+        android:centerColor="#4DD9C8"
+        android:endColor="#ADC9E3"
+        android:type="linear" />
+</shape>

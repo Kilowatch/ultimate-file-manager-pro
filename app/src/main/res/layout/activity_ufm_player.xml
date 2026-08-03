@@ -102,7 +102,7 @@
             android:id="@+id/loadingSpinner"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:indeterminateTint="@color/ufm_primary" />
+            android:indeterminateTint="?attr/colorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -177,8 +177,8 @@
                 android:layout_weight="1"
                 android:layout_marginHorizontal="8dp"
                 android:splitTrack="false"
-                android:progressTint="@color/ufm_primary"
-                android:thumbTint="@color/ufm_primary" />
+                android:progressTint="?attr/colorPrimary"
+                android:thumbTint="?attr/colorPrimary" />
 
             <TextView
                 android:id="@+id/txtRemaining"
@@ -233,7 +233,7 @@
                 android:layout_marginHorizontal="6dp"
                 android:src="@drawable/ic_pause"
                 android:contentDescription="@string/play_pause"
-                app:backgroundTint="@color/ufm_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:tint="@android:color/white"
                 app:elevation="4dp"
                 app:fabSize="mini" />

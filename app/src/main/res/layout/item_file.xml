@@ -105,8 +105,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="1dp"
                 android:max="100"
-                android:progressTint="@color/ufm_primary"
-                android:progressBackgroundTint="@color/ufm_surface_variant"
+                android:progressTint="?attr/colorPrimary"
+                android:progressBackgroundTint="?attr/colorSurfaceVariant"
                 android:visibility="gone"
                 tools:visibility="visible"
                 tools:progress="65" />

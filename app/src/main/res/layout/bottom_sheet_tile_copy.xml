@@ -29,7 +29,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_palette"
-            app:tint="@color/ufm_primary"
+            app:tint="?attr/colorPrimary"
             android:contentDescription="@null" />
 
         <TextView
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tile_copy_select_all"
-            android:textColor="@color/ufm_primary" />
+            android:textColor="?attr/colorPrimary" />
 
     </LinearLayout>
 

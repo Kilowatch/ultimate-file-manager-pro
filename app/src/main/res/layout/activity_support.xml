@@ -373,7 +373,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="200"
                     app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="@color/ufm_primary"
+                    app:boxStrokeColor="?attr/colorPrimary"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
@@ -401,7 +401,7 @@
                     app:counterEnabled="true"
                     app:counterMaxLength="5000"
                     app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="@color/ufm_primary"
+                    app:boxStrokeColor="?attr/colorPrimary"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
@@ -429,7 +429,7 @@
                     android:visibility="gone"
                     android:hint="@string/support_steps"
                     app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="@color/ufm_primary"
+                    app:boxStrokeColor="?attr/colorPrimary"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
@@ -457,7 +457,7 @@
                     android:visibility="gone"
                     android:hint="@string/support_use_case"
                     app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="@color/ufm_primary"
+                    app:boxStrokeColor="?attr/colorPrimary"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
@@ -484,7 +484,7 @@
                     android:layout_marginBottom="20dp"
                     android:hint="@string/support_email"
                     app:hintTextColor="@color/mobile_text_secondary"
-                    app:boxStrokeColor="@color/ufm_primary"
+                    app:boxStrokeColor="?attr/colorPrimary"
                     app:boxCornerRadiusTopStart="14dp"
                     app:boxCornerRadiusTopEnd="14dp"
                     app:boxCornerRadiusBottomStart="14dp"
@@ -526,7 +526,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_add"
-                        app:tint="@color/ufm_primary" />
+                        app:tint="?attr/colorPrimary" />
 
                     <TextView
                         android:id="@+id/txtAttachment"
@@ -563,7 +563,7 @@
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"
                     app:cornerRadius="14dp"
-                    app:backgroundTint="@color/ufm_primary" />
+                    app:backgroundTint="?attr/colorPrimary" />
 
                 <!-- Honeypot field -->
                 <com.google.android.material.textfield.TextInputEditText

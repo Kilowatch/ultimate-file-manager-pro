@@ -211,7 +211,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -256,7 +256,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -301,7 +301,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -346,7 +346,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -391,7 +391,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -436,7 +436,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -481,7 +481,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -526,7 +526,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp" />
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -594,7 +594,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Tiny" />
                         <LinearLayout
@@ -640,7 +640,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Small" />
                         <LinearLayout
@@ -686,7 +686,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Medium" />
                         <LinearLayout
@@ -732,7 +732,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Large" />
                         <LinearLayout
@@ -778,7 +778,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Huge" />
                         <LinearLayout
@@ -847,7 +847,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Today" />
                         <LinearLayout
@@ -893,7 +893,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM This Week" />
                         <LinearLayout
@@ -939,7 +939,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM This Month" />
                         <LinearLayout
@@ -985,7 +985,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM This Year" />
                         <LinearLayout
@@ -1031,7 +1031,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
-                            android:textColor="@color/ufm_text_hint"
+                            android:textColor="?attr/colorOnSurfaceVariant"
                             android:paddingStart="24dp"
                             android:text="UFM Older" />
                         <LinearLayout
@@ -1078,8 +1078,8 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="@dimen/margin_md"
-                app:boxStrokeColor="@color/ufm_accent"
-                app:hintTextColor="@color/ufm_text_hint">
+                app:boxStrokeColor="?attr/colorSecondary"
+                app:hintTextColor="?attr/colorOnSurfaceVariant">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtPrefix"
@@ -1104,9 +1104,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/smart_sort_add_rule"
-                    android:textColor="@color/ufm_accent"
+                    android:textColor="?attr/colorSecondary"
                     app:icon="@drawable/ic_add"
-                    app:iconTint="@color/ufm_accent"
+                    app:iconTint="?attr/colorSecondary"
                     android:layout_marginBottom="@dimen/margin_md" />
 
                 <TextView
@@ -1114,7 +1114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/smart_sort_no_rules"
-                    android:textColor="@color/ufm_text_hint"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="13sp"
                     android:paddingStart="8dp" />
 
@@ -1275,9 +1275,9 @@
                     android:layout_height="48dp"
                     android:layout_marginTop="@dimen/margin_sm"
                     android:text="@string/smart_sort_undo"
-                    android:textColor="@color/ufm_accent"
+                    android:textColor="?attr/colorSecondary"
                     app:icon="@drawable/ic_undo"
-                    app:iconTint="@color/ufm_accent" />
+                    app:iconTint="?attr/colorSecondary" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -1297,7 +1297,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/margin_sm"
             android:text="@string/smart_sort_preview"
-            android:textColor="@color/ufm_accent" />
+            android:textColor="?attr/colorSecondary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartSort"
@@ -1315,7 +1315,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/margin_sm"
             android:text="@string/smart_sort_history"
-            android:textColor="@color/ufm_text_hint"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

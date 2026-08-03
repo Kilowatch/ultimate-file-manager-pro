@@ -1232,6 +1232,12 @@ AMOLED 블랙
     <string name="theme_applied">
 테마가 적용되었습니다
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+배경화면의 색상을 사용하여 나만의 스타일을 만드세요.
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

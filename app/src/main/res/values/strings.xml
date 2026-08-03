@@ -429,6 +429,8 @@
     <string name="theme_amoled">AMOLED Black</string>
     <string name="theme_amoled_desc">Pure black — saves battery on OLED screens</string>
     <string name="theme_applied">Theme applied</string>
+    <string name="material_you_title">Material You</string>
+    <string name="material_you_summary">Use your wallpaper\'s colours for a personalised look</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">Settings</string>

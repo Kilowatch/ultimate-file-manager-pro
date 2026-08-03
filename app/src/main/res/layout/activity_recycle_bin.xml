@@ -105,7 +105,7 @@
             android:layout_marginEnd="6dp"
             android:text="@string/recycle_bin_restore"
             android:textColor="@color/white"
-            app:backgroundTint="@color/ufm_primary"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="12dp"
             android:fontFamily="sans-serif-medium" />
 

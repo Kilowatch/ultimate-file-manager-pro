@@ -1232,6 +1232,12 @@ Tam siyah — OLED ekranlarda pil tasarrufu sağlar
     <string name="theme_applied">
 Tema uygulandı
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+Kişiselleştirilmiş bir görünüm için duvar kağıdınızın renklerini kullanın
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

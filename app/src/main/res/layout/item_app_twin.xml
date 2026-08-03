@@ -68,7 +68,7 @@
         android:id="@+id/selectionOverlay"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#330284C7"
+        android:background="?attr/colorPrimaryContainer"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

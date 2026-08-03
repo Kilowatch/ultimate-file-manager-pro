@@ -7,7 +7,7 @@
             <solid android:color="#1A00897B" />
             <stroke
                 android:width="2dp"
-                android:color="@color/ufm_primary" />
+                android:color="?attr/colorPrimary" />
             <corners android:radius="12dp" />
         </shape>
     </item>

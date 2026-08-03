@@ -130,7 +130,7 @@
                     android:id="@+id/rbSystemDefault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -184,7 +184,7 @@
                     android:id="@+id/rbEnglish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -238,7 +238,7 @@
                     android:id="@+id/rbGerman"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -292,7 +292,7 @@
                     android:id="@+id/rbJapanese"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -346,7 +346,7 @@
                     android:id="@+id/rbArabic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -400,7 +400,7 @@
                     android:id="@+id/rbSpanish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -454,7 +454,7 @@
                     android:id="@+id/rbFrench"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -508,7 +508,7 @@
                     android:id="@+id/rbHindi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -562,7 +562,7 @@
                     android:id="@+id/rbIndonesian"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -616,7 +616,7 @@
                     android:id="@+id/rbKorean"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -670,7 +670,7 @@
                     android:id="@+id/rbPortuguese"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -724,7 +724,7 @@
                     android:id="@+id/rbRussian"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -777,7 +777,7 @@
                     android:id="@+id/rbTurkish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -831,7 +831,7 @@
                     android:id="@+id/rbUkrainian"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -125,7 +125,7 @@
                         android:layout_height="18dp"
                         android:layout_marginEnd="8dp"
                         android:indeterminate="true"
-                        android:indeterminateTint="@color/ufm_primary" />
+                        android:indeterminateTint="?attr/colorPrimary" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -182,8 +182,8 @@
                                 android:layout_weight="1"
                                 android:layout_marginEnd="12dp"
                                 app:boxBackgroundColor="@android:color/transparent"
-                                app:boxStrokeColor="@color/ufm_primary"
-                                app:hintTextColor="@color/ufm_primary">
+                                app:boxStrokeColor="?attr/colorPrimary"
+                                app:hintTextColor="?attr/colorPrimary">
 
                                 <EditText
                                     android:id="@+id/edtCustomPort"
@@ -218,7 +218,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1.5dp"
-                    app:strokeColor="@color/ufm_primary">
+                    app:strokeColor="?attr/colorPrimary">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -300,7 +300,7 @@
                             android:background="@drawable/bg_url_box"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="12dp"
-                            android:textColor="@color/ufm_primary"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textIsSelectable="true"

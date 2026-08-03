@@ -19,7 +19,7 @@
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:src="@drawable/ic_share"
-            app:tint="@color/ufm_primary"
+            app:tint="?attr/colorPrimary"
             android:layout_marginEnd="12dp"
             android:contentDescription="@null" />
 
@@ -111,7 +111,7 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeWidth="2.5dp"
-        app:strokeColor="@color/ufm_primary"
+        app:strokeColor="?attr/colorPrimary"
         app:rippleColor="@color/mobile_glass_ripple">
 
         <LinearLayout
@@ -125,7 +125,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:src="@drawable/ic_copy"
-                app:tint="@color/ufm_primary"
+                app:tint="?attr/colorPrimary"
                 android:layout_marginEnd="16dp"
                 android:contentDescription="@null" />
 

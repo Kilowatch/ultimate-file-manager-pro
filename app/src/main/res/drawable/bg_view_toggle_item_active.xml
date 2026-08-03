@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#0084FF" /> <!-- Accent blue selection highlight -->
+    <solid android:color="?attr/colorPrimary" /> <!-- Accent blue selection highlight (adapts; = #0084FF when Material You off) -->
     <corners android:radius="9dp" />
 </shape>

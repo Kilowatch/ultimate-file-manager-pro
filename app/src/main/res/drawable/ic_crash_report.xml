@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
     ic_crash_report
     Phone silhouette with a lightning bolt inside the screen area.
@@ -14,7 +14,7 @@
 
     <!-- Phone body with home-button dot and screen cutout (evenOdd) -->
     <path
-        android:fillColor="@color/ufm_text_primary"
+        android:fillColor="?attr/colorOnSurface"
         android:fillType="evenOdd"
         android:pathData="
 M7,1 L17,1
@@ -33,7 +33,7 @@ M11.5,20 C11.5,19.72 11.72,19.5 12,19.5 C12.28,19.5 12.5,19.72 12.5,20 C12.5,20.
 
     <!-- Lightning bolt inside the screen — crash / ANR metaphor -->
     <path
-        android:fillColor="@color/ufm_text_primary"
+        android:fillColor="?attr/colorOnSurface"
         android:pathData="M13.5,6 L10,12.5 L12.5,12.5 L10.5,17 L15,10 L12.5,10Z" />
 
 </vector>

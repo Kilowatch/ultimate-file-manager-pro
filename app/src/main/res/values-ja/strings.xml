@@ -1232,6 +1232,12 @@ AMOLEDブラック
     <string name="theme_applied">
 テーマを適用しました
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+壁紙の色を使って、自分好みの外観にします
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

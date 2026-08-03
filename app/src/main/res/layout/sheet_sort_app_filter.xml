@@ -22,7 +22,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/ufm_surface_variant"
+        android:background="?attr/colorSurfaceVariant"
         android:layout_marginBottom="@dimen/margin_md" />
 
     <!-- Sort By Section -->
@@ -111,7 +111,7 @@
         android:text="@string/apply"
         android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:backgroundTint="#FF0284C7"
+        app:backgroundTint="?attr/colorPrimary"
         app:cornerRadius="12dp"
         android:layout_marginTop="@dimen/margin_md" />
 

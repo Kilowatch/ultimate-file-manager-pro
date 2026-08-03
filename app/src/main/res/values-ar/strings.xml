@@ -1232,6 +1232,12 @@ AMOLED أسود
     <string name="theme_applied">
 تم تطبيق السمة
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+استخدم ألوان خلفية الشاشة للحصول على مظهر مخصص
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Helper to read/write and apply the theme preference.
@@ -35,6 +36,13 @@ object ThemeHelper {
     fun applyTheme(context: Context) {
         val mode = getSavedTheme(context)
         applyMode(mode)
+        // TV keeps the frozen pre-redesign Material 3 theme so the Expressive
+        // migration does not change TV visuals. The TV flavor manifest already
+        // applies Theme.UltimateFileManager.Tv; this guard covers the case where
+        // the mobile flavor is sideloaded onto a TV device.
+        if (context is Activity && DeviceUtils.isTvDevice(context)) {
+            context.setTheme(za.kilowatch.ultimatefilemanager.R.style.Theme_UltimateFileManager_Tv)
+        }
         if (mode == THEME_AMOLED && context is Activity) {
             context.theme.applyStyle(
                 za.kilowatch.ultimatefilemanager.R.style.ThemeOverlay_UFM_Amoled,

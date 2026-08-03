@@ -28,7 +28,7 @@
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_search"
-            app:tint="@color/ufm_accent" />
+            app:tint="?attr/colorSecondary" />
     </FrameLayout>
 
     <TextView
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/indexed_0_files"
-        android:textColor="@color/ufm_accent"
+        android:textColor="?attr/colorSecondary"
         android:textSize="15sp"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium" />
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/run_in_background"
-            app:backgroundTint="@color/ufm_accent"
+            app:backgroundTint="?attr/colorSecondary"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
     </LinearLayout>

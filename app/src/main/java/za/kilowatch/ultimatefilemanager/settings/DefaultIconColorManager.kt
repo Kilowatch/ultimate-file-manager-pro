@@ -1,7 +1,10 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Resolves the correct default icon tint color for the current theme.
@@ -38,6 +41,8 @@ object DefaultIconColorManager {
     private var cachedLight: Int? = null
     private var cachedDark: Int? = null
     private var cachedAmoled: Int? = null
+    private var cachedDynamic: Int? = null          // Material You default (colorPrimary)
+    private var cachedDynamicTheme: Int = Int.MIN_VALUE   // theme mode it was resolved for
 
     // ── Public API ──────────────────────────────────────────────────────────
 
@@ -114,13 +119,15 @@ object DefaultIconColorManager {
         cachedLight = null
         cachedDark = null
         cachedAmoled = null
+        cachedDynamic = null
+        cachedDynamicTheme = Int.MIN_VALUE
     }
 
     // ── Internal helpers ────────────────────────────────────────────────────
 
     /**
      * Resolve the correct color for the current theme.
-     * Order: user custom > built-in default > AMOLED special handling.
+     * Order: user custom > Material You dynamic default > built-in default.
      */
     private fun resolve(context: Context): Int {
         val theme = ThemeHelper.getSavedTheme(context)
@@ -128,7 +135,22 @@ object DefaultIconColorManager {
         // 1. Check user custom color (loads + caches from prefs)
         getCustomColor(context, theme)?.let { return it }
 
-        // 2. Fall back to built-in default
+        // 2. Material You: default icon tint follows the active dynamic palette
+        //    (colorPrimary). Mobile/Android 12+ only — TV always keeps the fixed
+        //    per-mode defaults, and the value is cached per theme mode so it
+        //    survives light/dark/AMOLED switches without per-item resolution.
+        if (MaterialYouPrefs.isEnabled(context) &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            !DeviceUtils.isTvDevice(context)
+        ) {
+            if (cachedDynamic == null || cachedDynamicTheme != theme) {
+                cachedDynamic = ThemeColors.primary(context)
+                cachedDynamicTheme = theme
+            }
+            return cachedDynamic!!
+        }
+
+        // 3. Fall back to built-in default
         return when (theme) {
             ThemeHelper.THEME_LIGHT  -> DEFAULT_LIGHT
             ThemeHelper.THEME_DARK   -> DEFAULT_DARK

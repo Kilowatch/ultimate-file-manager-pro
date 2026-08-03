@@ -116,7 +116,7 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:stateListAnimator="@null"
-                app:backgroundTint="@color/ufm_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="12dp"
                 app:elevation="0dp"
                 app:icon="@drawable/ic_star"

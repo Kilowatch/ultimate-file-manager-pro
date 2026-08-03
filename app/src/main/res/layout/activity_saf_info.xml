@@ -88,7 +88,7 @@
                 app:cardBackgroundColor="#2200897B"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/ufm_primary"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp">
                 <TextView
                     android:layout_width="match_parent"

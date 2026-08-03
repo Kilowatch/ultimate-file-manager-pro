@@ -79,14 +79,14 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:src="@drawable/ic_network"
-                    app:tint="@color/ufm_primary"
+                    app:tint="?attr/colorPrimary"
                     android:contentDescription="@null" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/folder_sort_network_badge"
-                    android:textColor="@color/ufm_primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="11sp"
                     android:layout_marginStart="4dp" />
             </LinearLayout>

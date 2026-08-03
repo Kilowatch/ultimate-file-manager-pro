@@ -1232,6 +1232,12 @@ Reines Schwarz – spart Akku auf OLED-Bildschirmen
     <string name="theme_applied">
 Design angewendet
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+Nutze die Farben deines Hintergrundbilds für einen persönlichen Look.
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

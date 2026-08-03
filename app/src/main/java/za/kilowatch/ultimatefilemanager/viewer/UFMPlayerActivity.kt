@@ -871,7 +871,7 @@ class UFMPlayerActivity : AppCompatActivity() {
         finish()
     }
 
-    override fun dispatchKeyEvent(event: android.view.KeyEvent?): Boolean {
+    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
         resetHideTimer()
         return super.dispatchKeyEvent(event)
     }

@@ -2239,7 +2239,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                         val card = child.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardStorage)
                         if (item.id == bestId) {
                             card?.strokeWidth = (4 * density).toInt()
-                            card?.strokeColor = android.graphics.Color.parseColor("#FF4081")
+                            card?.strokeColor = za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this@StorageBrowserActivity)
                         } else {
                             card?.strokeWidth = 0
                             card?.strokeColor = android.graphics.Color.TRANSPARENT
@@ -4132,7 +4132,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
             } else {
                 gridBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else android.graphics.Color.parseColor("#8A9EB5")
+                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else za.kilowatch.ultimatefilemanager.util.ThemeColors.onSurfaceVariant(this@StorageBrowserActivity)
                 gridBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
             }
         }
@@ -4143,7 +4143,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 listBtn.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.white))
             } else {
                 listBtn.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else android.graphics.Color.parseColor("#8A9EB5")
+                val inactiveTint = if (isTv) getColor(R.color.tv_text_secondary) else za.kilowatch.ultimatefilemanager.util.ThemeColors.onSurfaceVariant(this@StorageBrowserActivity)
                 listBtn.imageTintList = android.content.res.ColorStateList.valueOf(inactiveTint)
             }
         }

@@ -136,7 +136,7 @@
                     android:id="@+id/rbPercent0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -205,7 +205,7 @@
                     android:id="@+id/rbPercent10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -274,7 +274,7 @@
                     android:id="@+id/rbPercent25"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -343,7 +343,7 @@
                     android:id="@+id/rbPercent50"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -411,7 +411,7 @@
                     android:id="@+id/rbPercent75"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

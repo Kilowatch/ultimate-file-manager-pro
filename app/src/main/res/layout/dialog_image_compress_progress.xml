@@ -23,7 +23,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_compress_image"
-            app:tint="@color/ufm_primary"
+            app:tint="?attr/colorPrimary"
             android:contentDescription="@null" />
     </FrameLayout>
 

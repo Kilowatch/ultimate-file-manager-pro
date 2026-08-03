@@ -35,7 +35,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -91,7 +92,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_sync_advanced"
-            app:tint="@color/ufm_text_hint" />
+            app:tint="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,7 +122,7 @@
         android:text="@string/add_profile"
         android:icon="@drawable/ic_add"
         app:iconTint="@android:color/white"
-        app:backgroundTint="@color/ufm_primary"
+        app:backgroundTint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

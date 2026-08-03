@@ -293,7 +293,7 @@
                         android:hint="@string/network_field_name"
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="@color/ufm_primary">
+                        app:boxStrokeColor="?attr/colorPrimary">
                         <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
                             android:id="@+id/etName"
                             android:layout_width="match_parent"
@@ -310,10 +310,10 @@
                         android:layout_height="48dp"
                         android:layout_marginBottom="8dp"
                         android:text="@string/dlna_scan_network"
-                        android:textColor="@color/ufm_primary"
+                        android:textColor="?attr/colorPrimary"
                         android:visibility="gone"
                         app:icon="@drawable/ic_dlna"
-                        app:iconTint="@color/ufm_primary"
+                        app:iconTint="?attr/colorPrimary"
                         app:iconGravity="textStart"
                         app:cornerRadius="12dp"
                         app:strokeColor="@color/mobile_glass_stroke" />
@@ -410,7 +410,7 @@
                             android:hint="@string/network_field_host"
                             android:textColorHint="@color/mobile_text_primary"
                             app:hintTextColor="@color/mobile_text_primary"
-                            app:boxStrokeColor="@color/ufm_primary">
+                            app:boxStrokeColor="?attr/colorPrimary">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etHost"
                                 android:textColor="@color/mobile_text_primary"
@@ -451,7 +451,7 @@
                         android:hint="@string/network_field_port"
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="@color/ufm_primary">
+                        app:boxStrokeColor="?attr/colorPrimary">
                         <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
                             android:id="@+id/etPort"
                             android:layout_width="match_parent"
@@ -483,7 +483,7 @@
                         android:hint="@string/network_field_username"
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="@color/ufm_primary">
+                        app:boxStrokeColor="?attr/colorPrimary">
                         <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
                             android:id="@+id/etUsername"
                             android:layout_width="match_parent"
@@ -502,7 +502,7 @@
                         app:endIconMode="password_toggle"
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="@color/ufm_primary">
+                        app:boxStrokeColor="?attr/colorPrimary">
                         <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
                             android:id="@+id/etPassword"
                             android:layout_width="match_parent"
@@ -570,7 +570,7 @@
                         android:hint="@string/network_field_domain"
                         android:textColorHint="@color/mobile_text_primary"
                         app:hintTextColor="@color/mobile_text_primary"
-                        app:boxStrokeColor="@color/ufm_primary">
+                        app:boxStrokeColor="?attr/colorPrimary">
                         <com.google.android.material.textfield.TextInputEditText android:textColor="@color/mobile_text_primary" android:textColorHint="@color/mobile_text_primary"
                             android:id="@+id/etDomain"
                             android:layout_width="match_parent"
@@ -594,7 +594,7 @@
                             android:hint="@string/network_field_path"
                             android:textColorHint="@color/mobile_text_primary"
                             app:hintTextColor="@color/mobile_text_primary"
-                            app:boxStrokeColor="@color/ufm_primary">
+                            app:boxStrokeColor="?attr/colorPrimary">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPath"
                                 android:textColor="@color/mobile_text_primary"
@@ -626,7 +626,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="@string/network_btn_show_ssh_auth"
-                android:textColor="@color/ufm_primary"
+                android:textColor="?attr/colorPrimary"
                 android:visibility="gone" />
 
             <!-- SSH Authentication card -->
@@ -671,7 +671,7 @@
                             android:hint="@string/network_field_private_key"
                             android:textColorHint="@color/mobile_text_primary"
                             app:hintTextColor="@color/mobile_text_primary"
-                            app:boxStrokeColor="@color/ufm_primary">
+                            app:boxStrokeColor="?attr/colorPrimary">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPrivateKey"
                                 android:layout_width="match_parent"
@@ -689,7 +689,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:text="@string/network_btn_pick_key"
-                            android:textColor="@color/ufm_primary" />
+                            android:textColor="?attr/colorPrimary" />
                     </LinearLayout>
 
                     <com.google.android.material.checkbox.MaterialCheckBox
@@ -698,7 +698,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/network_label_use_keychain"
                         android:textColor="@color/mobile_card_text_primary"
-                        app:buttonTint="@color/ufm_primary" />
+                        app:buttonTint="?attr/colorPrimary" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -851,7 +851,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nfs_debug_log_copy"
-                    android:textColor="@color/ufm_primary" />
+                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
             <!-- Test Connection -->

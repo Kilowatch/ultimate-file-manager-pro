@@ -19,7 +19,7 @@
         android:layout_gravity="top"
         android:max="1000"
         android:progress="0"
-        android:progressTint="@color/ufm_primary"
+        android:progressTint="?attr/colorPrimary"
         android:backgroundTint="@android:color/transparent" />
 
     <LinearLayout

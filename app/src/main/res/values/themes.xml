@@ -1,9 +1,51 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. colorPrimary/colorSurface etc. define the
-         fallback palette for Android < 12.  On API 31+ Dynamic Colors will
-         overlay these with wallpaper-extracted values automatically.
-         Note: colorAccent is a legacy MDC-1 alias — use colorSecondary in M3. -->
-    <style name="Base.Theme.UltimateFileManager" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Base application theme (MOBILE). Material 3 Expressive styling with the
+         ORIGINAL UFM brand palette (@color/ufm_*). colorPrimary/colorSurface etc.
+         define the fallback palette for Android < 12 and for when Material You is
+         disabled. On API 31+ with Material You enabled, DynamicColors overlays
+         these with wallpaper-extracted values automatically.
+         Note: colorAccent is a legacy MDC-1 alias — use colorSecondary in M3.
+         Tertiary / error / surface-container / outline roles are intentionally NOT
+         set here — the original app left them at Material 3 defaults. -->
+    <style name="Base.Theme.UltimateFileManager" parent="Theme.Material3Expressive.DayNight.NoActionBar">
+        <!-- Primary — the original vivid brand blue (#0084FF) -->
+        <item name="colorPrimary">@color/ufm_primary_blue</item>
+        <item name="colorOnPrimary">@color/ufm_on_primary</item>
+        <item name="colorPrimaryContainer">@color/ufm_primary_blue_light</item>
+        <item name="colorOnPrimaryContainer">@color/ufm_primary_blue_dark</item>
+
+        <!-- Secondary (replaces deprecated colorAccent in M3) -->
+        <item name="colorSecondary">@color/ufm_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/ufm_accent_light</item>
+        <item name="colorOnSecondaryContainer">@color/ufm_accent_dark</item>
+
+        <!-- Surfaces -->
+        <item name="colorSurface">@color/ufm_surface</item>
+        <item name="colorOnSurface">@color/ufm_text_primary</item>
+        <item name="colorSurfaceVariant">@color/ufm_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/ufm_text_secondary</item>
+        <item name="android:colorBackground">@color/ufm_background</item>
+        <item name="android:windowBackground">@color/ufm_background</item>
+
+        <!-- Text -->
+        <item name="android:textColorPrimary">@color/ufm_text_primary</item>
+        <item name="android:textColorSecondary">@color/ufm_text_secondary</item>
+        <item name="android:textColorHint">@color/ufm_text_hint</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/ufm_background</item>
+        <item name="android:navigationBarColor">@color/ufm_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:windowAnimationStyle">@style/UFM.WindowAnimation</item>
+    </style>
+
+    <!-- Base application theme (TV). Deliberately frozen at the pre-redesign
+         Material 3 palette and colour mapping so TV builds render byte-identical
+         to before the Expressive migration. Dynamic colors are never applied on
+         TV, so these @color/ufm_* values are the TV's permanent palette. -->
+    <style name="Base.Theme.UltimateFileManager.Tv" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary -->
         <item name="colorPrimary">@color/ufm_primary</item>
         <item name="colorPrimaryDark">@color/ufm_primary_dark</item>
@@ -44,6 +86,7 @@
     </style>
 
     <style name="Theme.UltimateFileManager" parent="Base.Theme.UltimateFileManager" />
+    <style name="Theme.UltimateFileManager.Tv" parent="Base.Theme.UltimateFileManager.Tv" />
 
     <!-- Permission Card Style -->
     <style name="PermissionCard">

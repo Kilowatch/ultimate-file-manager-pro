@@ -5,5 +5,5 @@
     android:text="&gt;"
     android:textSize="14sp"
     android:fontFamily="sans-serif-black"
-    android:textColor="#800284C7"
+    android:textColor="?attr/colorPrimary"
     android:paddingHorizontal="4dp" />

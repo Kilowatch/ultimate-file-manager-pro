@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added total folder size display (including subfolders, excluding hidden files) for indexed storage drives on both Mobile and TV.
+- Material You support — a new toggle in the Appearance screen personalises the app with your wallpaper's colours (Android 12+, mobile). When off, the app keeps its original blue colour scheme.
+- Adaptive file/folder icon tinting that follows the active palette.
+
+### Changed
+- Upgraded Material Components to 1.14.0 and adopted Material 3 Expressive on mobile — modern component shapes, emphasised typography, adaptive colour roles.
+- Replaced hardcoded colours with Material 3 role tokens so every mobile screen adapts to the active theme.
+- TV is unaffected: fixed brand palette, pre-existing visuals preserved.
 
 ### Fixed
 - Fixed a false-positive ANR (App Freeze) report when the main thread is blocked resolving the property getter of a MaterialButton's default state-list-animator via reflection while the button is attached to a window — e.g. `MaterialButton.refreshDrawableState` → `drawableStateChanged` → `StateListAnimator.setState` → `ObjectAnimator.initAnimation` → `PropertyValuesHolder.getPropertyFunction` → `Class.getMethod` → `getPublicMethodRecursive` → `getDeclaredMethodInternal` — on low-end Android TV devices (e.g. Xiaomi MIBOX4, SDK 31). The default button elevation animation resolves the `translationZ` getter the first time, forcing the framework to walk and verify the whole `TextView` class hierarchy; on slow or busy devices that one-time reflection cost exceeds the 5 s watchdog threshold. The blocking work is entirely framework reflection — the only non-platform frame is the view's own `drawableStateChanged` lifecycle callback that the framework invokes to start its own default animation, not app business logic — so the `AnrWatchdogThread` now treats a stack whose top frame is `Class.getMethod`/`getPublicMethodRecursive`/`getDeclaredMethodInternal` under `PropertyValuesHolder.getPropertyFunction` + `ObjectAnimator.initAnimation` + `StateListAnimator.setState`/`start`, with no `za.kilowatch.ultimatefilemanager` frames, as a system-side wait and resets its heartbeat instead of writing a report. Genuine freezes keep an app frame on the stack (or reach the reflection without a `StateListAnimator` frame) and are still reported.

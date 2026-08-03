@@ -4775,7 +4775,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 label = getString(R.string.ufm_viewer),
                 desc = getString(R.string.open_with_builtin_viewer),
                 icon = "📂",
-                gradientColors = intArrayOf(android.graphics.Color.parseColor("#0284C7"), android.graphics.Color.parseColor("#0369A1")),
+                gradientColors = intArrayOf(za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this), android.graphics.Color.parseColor("#0369A1")),
                 isFocusedYellow = isTv
             ) {
                 if (checkbox.isChecked) {

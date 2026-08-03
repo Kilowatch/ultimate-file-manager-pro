@@ -38,7 +38,7 @@
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_record_screen"
-                app:tint="@color/ufm_primary"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@null" />
         </FrameLayout>
 
@@ -84,7 +84,7 @@
             android:layout_marginBottom="20dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="@color/ufm_surface_variant"
+            app:cardBackgroundColor="?attr/colorSurfaceVariant"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
@@ -104,7 +104,7 @@
                     android:src="@drawable/ic_mic"
                     android:background="@drawable/bg_icon_circle"
                     android:padding="8dp"
-                    app:tint="@color/ufm_primary"
+                    app:tint="?attr/colorPrimary"
                     android:layout_marginEnd="14dp"
                     android:contentDescription="@null" />
 
@@ -137,7 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
-                    app:thumbTint="@color/ufm_primary"
+                    app:thumbTint="?attr/colorPrimary"
                     app:trackTint="@color/ufm_primary_light" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -229,7 +229,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/ufm_surface_variant"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
@@ -300,7 +300,7 @@
             android:layout_height="48dp"
             android:text="@string/record_screen_exit"
             app:cornerRadius="24dp"
-            android:backgroundTint="@color/ufm_surface_variant"
+            android:backgroundTint="?attr/colorSurfaceVariant"
             android:textColor="@color/ufm_text_primary"
             app:strokeWidth="1dp"
             app:strokeColor="?attr/colorOutlineVariant"
@@ -313,7 +313,7 @@
             android:layout_weight="1"
             android:text="@string/record_screen_start"
             app:cornerRadius="24dp"
-            android:backgroundTint="@color/ufm_primary"
+            android:backgroundTint="?attr/colorPrimary"
             android:textColor="@color/white"
             android:fontFamily="sans-serif-medium" />
     </LinearLayout>

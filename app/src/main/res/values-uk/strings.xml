@@ -1232,6 +1232,12 @@ AMOLED чорний
     <string name="theme_applied">
 Тему застосовано
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+Використовуйте кольори ваших шпалер для персоналізованого вигляду
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

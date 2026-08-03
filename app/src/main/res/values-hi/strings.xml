@@ -1232,6 +1232,12 @@ AMOLED काला
     <string name="theme_applied">
 थीम लागू की गई
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+अपने वॉलपेपर के रंगों का उपयोग करके एक व्यक्तिगत लुक पाएं
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

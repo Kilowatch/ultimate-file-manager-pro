@@ -144,7 +144,7 @@
                     android:id="@+id/rbSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -214,7 +214,7 @@
                     android:id="@+id/rbNormal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -283,7 +283,7 @@
                     android:id="@+id/rbLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:buttonTint="#FF0284C7"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

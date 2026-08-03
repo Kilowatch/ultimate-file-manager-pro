@@ -28,7 +28,7 @@
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_file_pdf"
-            app:tint="@color/ufm_accent" />
+            app:tint="?attr/colorSecondary" />
     </FrameLayout>
 
     <!-- Title -->

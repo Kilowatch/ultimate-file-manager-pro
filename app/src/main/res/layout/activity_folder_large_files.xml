@@ -92,7 +92,7 @@
             android:layout_marginEnd="10dp"
             android:src="@drawable/ic_folder_large_files"
             android:contentDescription="@null"
-            app:tint="@color/ufm_accent_light" />
+            app:tint="?attr/colorSecondaryContainer" />
 
         <TextView
             android:id="@+id/txtScopeDescription"

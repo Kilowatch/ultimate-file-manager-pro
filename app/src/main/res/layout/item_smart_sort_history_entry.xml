@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/margin_sm"
-    app:cardBackgroundColor="@color/ufm_surface_variant"
+    app:cardBackgroundColor="?attr/colorSurfaceVariant"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp">
 
@@ -40,7 +40,7 @@
             android:id="@+id/txtHistorySummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/ufm_text_hint"
+            android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="12sp"
             android:layout_marginTop="2dp"
             tools:text="Moved: 120, Skipped: 3, Failed: 0" />
@@ -59,11 +59,11 @@
                 android:layout_weight="1"
                 android:layout_marginEnd="@dimen/margin_sm"
                 android:text="@string/smart_sort_undo"
-                android:textColor="@color/ufm_accent"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="13sp"
                 app:icon="@drawable/ic_refresh"
                 app:iconSize="16dp"
-                app:iconTint="@color/ufm_accent" />
+                app:iconTint="?attr/colorSecondary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnHistoryDelete"

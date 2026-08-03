@@ -1232,6 +1232,12 @@ AMOLED чёрный
     <string name="theme_applied">
 Тема применена
 </string>
+    <string name="material_you_title">
+Material You
+</string>
+    <string name="material_you_summary">
+Используйте цвета обоев для персонализированного вида
+</string>
 
     <!-- Font Size / Settings Tile -->
     <string name="font_size_title">

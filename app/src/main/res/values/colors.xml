@@ -12,6 +12,12 @@
     <color name="ufm_primary_light">#FF4DB6AC</color>
     <color name="ufm_accent">#FF1565C0</color>
     <color name="ufm_accent_light">#FF42A5F5</color>
+    <color name="ufm_accent_dark">#FF0D47A1</color>
+    <!-- Original brand blue (#0084FF, the list/grid toggle highlight) -->
+    <color name="ufm_primary_blue">#FF0084FF</color>
+    <color name="ufm_on_primary">#FFFFFFFF</color>
+    <color name="ufm_primary_blue_light">#FFCFE8FF</color>
+    <color name="ufm_primary_blue_dark">#FF0369A1</color>
     <color name="ufm_active_blue">#FF1565C0</color>
 
     <!-- Backgrounds (Light) -->

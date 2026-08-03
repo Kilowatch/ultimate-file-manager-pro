@@ -202,7 +202,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="12dp"
                                     android:hint="@string/rclone_field_storage_name"
-                                    app:boxStrokeColor="@color/ufm_primary">
+                                    app:boxStrokeColor="?attr/colorPrimary">
 
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/etStorageName"
@@ -244,7 +244,7 @@
                                         android:layout_marginBottom="8dp"
                                         android:text="@string/rclone_btn_test"
                                         app:cornerRadius="12dp"
-                                        android:backgroundTint="@color/ufm_primary"
+                                        android:backgroundTint="?attr/colorPrimary"
                                         android:textColor="@android:color/white" />
 
                                     <com.google.android.material.button.MaterialButton
@@ -254,7 +254,7 @@
                                         android:layout_height="48dp"
                                         android:text="@string/rclone_btn_save"
                                         app:cornerRadius="12dp"
-                                        android:backgroundTint="@color/ufm_primary"
+                                        android:backgroundTint="?attr/colorPrimary"
                                         android:textColor="@android:color/white"
                                         android:enabled="false" />
 

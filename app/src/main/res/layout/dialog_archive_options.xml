@@ -73,7 +73,7 @@
                     android:layout_weight="1"
                     android:text="@string/zip"
                     android:checked="true"
-                    android:buttonTint="@color/ufm_primary"
+                    android:buttonTint="?attr/colorPrimary"
                     android:textColor="@color/ufm_text_primary" />
 
                 <RadioButton
@@ -82,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/s_7z"
-                    android:buttonTint="@color/ufm_primary"
+                    android:buttonTint="?attr/colorPrimary"
                     android:textColor="@color/ufm_text_primary" />
             </RadioGroup>
 
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/compress_password_protect"
                 android:textColor="@color/ufm_text_primary"
-                app:thumbTint="@color/ufm_primary"
+                app:thumbTint="?attr/colorPrimary"
                 app:trackTint="@color/ufm_primary_light"
                 android:layout_marginBottom="12dp" />
 
@@ -158,7 +158,7 @@
             android:text="@string/compress_btn_start"
             android:textColor="@android:color/white"
             app:cornerRadius="12dp"
-            android:backgroundTint="@color/ufm_primary"
+            android:backgroundTint="?attr/colorPrimary"
             android:layout_marginBottom="6dp" />
 
         <com.google.android.material.button.MaterialButton

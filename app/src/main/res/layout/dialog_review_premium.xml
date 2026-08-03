@@ -36,7 +36,7 @@
         android:layout_marginTop="28dp"
         android:text="@string/rate_the_app"
         app:cornerRadius="16dp"
-        android:backgroundTint="@color/ufm_primary"
+        android:backgroundTint="?attr/colorPrimary"
         android:textColor="@color/white"
         android:textAllCaps="false"
         android:textSize="16sp" />
@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="24dp"
-        android:background="@color/ufm_surface_variant" />
+        android:background="?attr/colorSurfaceVariant" />
 
     <TextView
         android:id="@+id/btnTipLink"

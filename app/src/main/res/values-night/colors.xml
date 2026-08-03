@@ -6,6 +6,12 @@
     <color name="ufm_primary_light">#FF80CBC4</color>
     <color name="ufm_accent">#FF42A5F5</color>
     <color name="ufm_accent_light">#FF90CAF9</color>
+    <color name="ufm_accent_dark">#FF0D47A1</color>
+    <!-- Original brand blue — lighter tone for dark backgrounds -->
+    <color name="ufm_primary_blue">#FF4DA3FF</color>
+    <color name="ufm_on_primary">#FF00345F</color>
+    <color name="ufm_primary_blue_light">#FF00325C</color>
+    <color name="ufm_primary_blue_dark">#FFCFE8FF</color>
 
     <!-- Backgrounds (Dark) -->
     <color name="ufm_background">#FF121212</color>

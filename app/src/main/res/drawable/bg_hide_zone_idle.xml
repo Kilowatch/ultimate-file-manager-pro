@@ -4,7 +4,7 @@
     android:shape="rectangle">
     <stroke
         android:width="2dp"
-        android:color="#FF0284C7"
+        android:color="?attr/colorPrimary"
         android:dashWidth="8dp"
         android:dashGap="4dp" />
     <solid android:color="#FFF5F5F5" /> <!-- Solid off-white background -->

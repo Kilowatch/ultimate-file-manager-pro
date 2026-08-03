@@ -13,7 +13,7 @@
         android:layout_height="64dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_cloud"
-        android:tint="@color/ufm_accent"
+        android:tint="?attr/colorSecondary"
         android:layout_marginBottom="@dimen/margin_md" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:textSize="14sp"
         android:textAlignment="center"
         android:autoLink="web"
-        android:textColorLink="@color/ufm_accent"
+        android:textColorLink="?attr/colorSecondary"
         android:linksClickable="true" />
 
     <LinearLayout
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_ok"
-            app:backgroundTint="@color/ufm_accent"
+            app:backgroundTint="?attr/colorSecondary"
             android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

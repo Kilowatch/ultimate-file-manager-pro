@@ -46,7 +46,8 @@
             android:layout_width="1.5dp"
             android:layout_height="36dp"
             android:layout_marginHorizontal="14dp"
-            android:background="#990284C7" />
+            android:background="?attr/colorPrimary"
+            android:alpha="0.6" />
 
         <!-- Title + Subtitle -->
         <LinearLayout
@@ -103,7 +104,7 @@
         app:iconTint="@color/white"
         app:iconGravity="textStart"
         app:iconPadding="8dp"
-        app:backgroundTint="#FF0284C7"
+        app:backgroundTint="?attr/colorPrimary"
         app:cornerRadius="26dp"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintStart_toStartOf="parent"

@@ -39,7 +39,7 @@
         android:src="@drawable/ic_play"
         android:importantForAccessibility="no"
         android:visibility="gone"
-        app:tint="@color/ufm_primary" />
+        app:tint="?attr/colorPrimary" />
 
     <!-- Title -->
     <TextView
