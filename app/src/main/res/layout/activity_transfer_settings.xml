@@ -79,6 +79,6 @@
         android:textSize="15sp"
         android:backgroundTint="@color/tv_button_focused_yellow"
         android:textColor="@color/tv_button_focused_yellow_text"
-        style="@style/Widget.Material3.Button" />
+        style="@style/Widget.Material3Expressive.Button" />
 
 </LinearLayout>

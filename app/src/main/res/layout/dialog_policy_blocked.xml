@@ -91,7 +91,7 @@
         <!-- OK button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPolicyOk"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:text="@string/btn_ok"

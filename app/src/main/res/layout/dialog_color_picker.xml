@@ -139,7 +139,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tile_color_cancel"
@@ -147,7 +147,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelect"
-            style="@style/Widget.Material3.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tile_color_done" />

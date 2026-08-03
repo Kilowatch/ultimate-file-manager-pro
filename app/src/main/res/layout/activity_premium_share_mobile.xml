@@ -202,7 +202,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/connect"
-                                style="@style/Widget.Material3.Button.TonalButton" />
+                                style="@style/Widget.Material3Expressive.Button.TonalButton" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

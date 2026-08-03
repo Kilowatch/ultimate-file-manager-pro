@@ -141,7 +141,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShizukuEnable"
-                    style="@style/Widget.MaterialComponents.Button"
+                    style="@style/Widget.Material3Expressive.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -181,7 +181,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnShizukuDownload"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Widget.Material3Expressive.Button"
                         android:layout_width="0dp"
                         android:layout_height="52dp"
                         android:layout_weight="1"
@@ -202,7 +202,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSheveryDownload"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Widget.Material3Expressive.Button"
                         android:layout_width="0dp"
                         android:layout_height="52dp"
                         android:layout_weight="1"

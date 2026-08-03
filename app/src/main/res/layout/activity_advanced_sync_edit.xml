@@ -97,7 +97,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/chipDirectionUpload"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="64dp"
                     android:layout_weight="1"
@@ -120,7 +120,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/chipDirectionDownload"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="64dp"
                     android:layout_weight="1"
@@ -144,7 +144,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipDirectionTwoway"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="8dp"
@@ -228,7 +228,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectLocal"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:text="@string/select_folder"
@@ -279,7 +279,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnBrowseRemote"
-                        style="@style/Widget.Material3.Button.TextButton"
+                        style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
                         android:text="@string/browse_remote"
@@ -306,7 +306,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/chipInterval"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
@@ -323,7 +323,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/chipScheduled"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="44dp"
                     android:layout_weight="1"
@@ -341,7 +341,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chipManual"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:layout_marginTop="8dp"
@@ -550,7 +550,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipConflictSkip"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
@@ -567,7 +567,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipConflictNewest"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
@@ -591,7 +591,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipConflictKeepLocal"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
@@ -608,7 +608,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipConflictKeepRemote"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="44dp"
                         android:layout_weight="1"
@@ -699,7 +699,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipFilterAll"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -717,7 +717,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipFilterOnly"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -735,7 +735,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/chipFilterSkip"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -946,7 +946,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/chipSizeMinMB"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="56dp"
                             android:layout_height="40dp"
                             android:text="@string/size_unit_mb"
@@ -960,7 +960,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/chipSizeMinGB"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="56dp"
                             android:layout_height="40dp"
                             android:text="@string/size_unit_gb"
@@ -1016,7 +1016,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/chipSizeMaxMB"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="56dp"
                             android:layout_height="40dp"
                             android:text="@string/size_unit_mb"
@@ -1030,7 +1030,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/chipSizeMaxGB"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="56dp"
                             android:layout_height="40dp"
                             android:text="@string/size_unit_gb"
@@ -1120,7 +1120,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delete_1"

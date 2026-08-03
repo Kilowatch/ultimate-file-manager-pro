@@ -76,7 +76,7 @@
             android:layout_height="40dp"
             android:text="@string/extract_all"
             android:textSize="12sp"
-            style="@style/Widget.Material3.Button.TonalButton" />
+            style="@style/Widget.Material3Expressive.Button.TonalButton" />
     </LinearLayout>
 
     <!-- Loading progress -->

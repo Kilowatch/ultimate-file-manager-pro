@@ -99,7 +99,7 @@
         <!-- Select All / Deselect All toggle -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnToggleSelectAll"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tile_copy_select_all"
@@ -134,7 +134,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplySelected"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -142,7 +142,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApplyAll"
-            style="@style/Widget.Material3.Button.TonalButton"
+            style="@style/Widget.Material3Expressive.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tile_copy_apply_all" />

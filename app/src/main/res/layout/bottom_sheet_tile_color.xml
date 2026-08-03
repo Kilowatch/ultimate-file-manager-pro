@@ -49,7 +49,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDone"
-                style="@style/Widget.Material3.Button.TextButton"
+                style="@style/Widget.Material3Expressive.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tile_color_done"
@@ -296,7 +296,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCustomIconColor"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_color_custom"
@@ -395,7 +395,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCustomTileBg"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_color_custom"
@@ -494,7 +494,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCustomRing"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_color_custom"
@@ -593,7 +593,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCustomIconBg"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_color_custom"
@@ -692,7 +692,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCustomLabel"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_color_custom"
@@ -794,7 +794,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBrowseIcon"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_icon_browse"
@@ -807,7 +807,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnResetIcon"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tile_icon_reset_default"
@@ -827,7 +827,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReset"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -835,7 +835,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnExport"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -843,7 +843,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCopyTo"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tile_color_copy_to" />

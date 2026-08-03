@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/cancel"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:textColor="@color/ufm_text_secondary" />
 
     </LinearLayout>

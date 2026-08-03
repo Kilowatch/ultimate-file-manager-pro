@@ -217,7 +217,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPickAuthorizedKeys"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/authorized_keys_pick"
@@ -252,7 +252,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSelectLocation"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/select_default_location"

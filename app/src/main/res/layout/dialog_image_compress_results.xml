@@ -32,7 +32,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClose"
-        style="@style/Widget.Material3.Button"
+        style="@style/Widget.Material3Expressive.Button"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/close"

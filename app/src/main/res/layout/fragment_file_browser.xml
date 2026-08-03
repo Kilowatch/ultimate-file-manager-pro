@@ -530,7 +530,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSelectAll"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/action_select_all"
@@ -552,7 +552,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCompress"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:layout_marginStart="8dp"
@@ -574,7 +574,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDelete"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/action_delete"
@@ -624,7 +624,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillSelectAll"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_select_all"
@@ -633,7 +633,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillCopy"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -644,7 +644,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillMove"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -654,7 +654,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillDelete"
-                style="@style/Widget.Material3.Button.TonalButton"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/action_delete"

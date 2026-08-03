@@ -45,7 +45,7 @@
             android:layout_height="44dp"
             android:text="@android:string/cancel"
             app:cornerRadius="12dp"
-            style="@style/Widget.Material3.Button.TextButton" />
+            style="@style/Widget.Material3Expressive.Button.TextButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirmSave"

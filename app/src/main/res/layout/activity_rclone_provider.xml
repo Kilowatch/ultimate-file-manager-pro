@@ -238,7 +238,7 @@
 
                                     <com.google.android.material.button.MaterialButton
                                         android:id="@+id/btnTest"
-                                        style="@style/Widget.MaterialComponents.Button"
+                                        style="@style/Widget.Material3Expressive.Button"
                                         android:layout_width="match_parent"
                                         android:layout_height="48dp"
                                         android:layout_marginBottom="8dp"
@@ -249,7 +249,7 @@
 
                                     <com.google.android.material.button.MaterialButton
                                         android:id="@+id/btnSave"
-                                        style="@style/Widget.MaterialComponents.Button"
+                                        style="@style/Widget.Material3Expressive.Button"
                                         android:layout_width="match_parent"
                                         android:layout_height="48dp"
                                         android:text="@string/rclone_btn_save"

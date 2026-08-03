@@ -57,7 +57,7 @@
         <!-- Secondary Button (Cancel / Retry) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDialogNegative"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
@@ -70,7 +70,7 @@
         <!-- Primary Action Button (OK / Confirm) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDialogPositive"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"

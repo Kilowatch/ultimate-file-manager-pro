@@ -353,7 +353,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDone"
-            style="@style/Widget.Material3.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/default_icon_color_done" />

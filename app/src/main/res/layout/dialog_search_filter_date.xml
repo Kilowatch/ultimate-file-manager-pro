@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/btnDateCancel"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
@@ -53,7 +53,7 @@
 
         <Button
             android:id="@+id/btnDateApply"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

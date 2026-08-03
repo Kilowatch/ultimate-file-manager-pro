@@ -47,7 +47,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearAll"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_margin="@dimen/margin_md"

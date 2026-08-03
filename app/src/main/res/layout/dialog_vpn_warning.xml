@@ -71,7 +71,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVpnContinue"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/vpn_warning_continue"
@@ -83,7 +83,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnVpnClose"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/vpn_warning_close"

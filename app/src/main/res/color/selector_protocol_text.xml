@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile protocol/profile-type selector text — pairs with selector_protocol_bg.
+     Checked text follows colorOnPrimary (white in light, dark in night). -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow_text" />
-    <item android:state_checked="true" android:color="@color/tv_button_focused_yellow_text" />
+    <item android:state_checked="true" android:color="?attr/colorOnPrimary" />
+    <item android:state_focused="true" android:color="@color/mobile_card_text_primary" />
     <item android:color="@color/mobile_card_text_primary" />
 </selector>

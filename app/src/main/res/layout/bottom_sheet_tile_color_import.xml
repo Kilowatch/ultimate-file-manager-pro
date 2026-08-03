@@ -151,7 +151,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:text="@string/tile_color_import_apply"
-            style="@style/Widget.Material3.Button" />
+            style="@style/Widget.Material3Expressive.Button" />
     </LinearLayout>
 
 </LinearLayout>

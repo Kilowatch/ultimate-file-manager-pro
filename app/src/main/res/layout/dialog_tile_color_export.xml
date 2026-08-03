@@ -83,6 +83,6 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="@string/tile_color_export_copy"
-        style="@style/Widget.Material3.Button" />
+        style="@style/Widget.Material3Expressive.Button" />
 
 </LinearLayout>

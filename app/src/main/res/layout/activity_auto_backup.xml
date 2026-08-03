@@ -522,7 +522,7 @@
                         android:layout_height="44dp"
                         android:text="@string/auto_backup_reset_default"
                         android:visibility="gone"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:textColor="?attr/colorPrimary" />
 
                 </LinearLayout>

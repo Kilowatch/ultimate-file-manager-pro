@@ -90,7 +90,7 @@
             <!-- Cancel -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSuccessCancel"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3Expressive.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginEnd="8dp"
@@ -101,7 +101,7 @@
             <!-- Save & Exit -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSuccessSave"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:text="@string/network_dialog_success_save"

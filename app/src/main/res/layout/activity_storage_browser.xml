@@ -57,9 +57,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/storage_title"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium.Emphasized"
                     android:textColor="@color/mobile_text_primary"
-                    android:fontFamily="sans-serif-black"
                     android:letterSpacing="0.01" />
 
             </LinearLayout>

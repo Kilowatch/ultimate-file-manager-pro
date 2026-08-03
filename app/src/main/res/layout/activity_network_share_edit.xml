@@ -105,7 +105,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSmb"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -131,7 +131,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipFtp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -156,7 +156,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSftp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -188,7 +188,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipScp"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -213,7 +213,7 @@
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipNfs"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -238,7 +238,7 @@
 
                                 <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipDlna"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -305,7 +305,7 @@
                     <!-- DLNA Device Picker (visible only when DLNA type selected) -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectDlnaDevice"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginBottom="8dp"
@@ -348,7 +348,7 @@
                             android:orientation="horizontal">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSmbShare"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -371,7 +371,7 @@
                                 android:paddingEnd="4dp" />
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/chipSmbServer"
-                                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="64dp"
                                 android:layout_weight="1"
@@ -621,7 +621,7 @@
             <!-- SSH Auth Toggle -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnToggleSshAuth"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.Material3Expressive.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -684,7 +684,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnPickKey"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
@@ -847,7 +847,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCopyDebugLog"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    style="@style/Widget.Material3Expressive.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nfs_debug_log_copy"
@@ -857,7 +857,7 @@
             <!-- Test Connection -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTest"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginBottom="10dp"
@@ -867,7 +867,7 @@
             <!-- Save -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginBottom="24dp"

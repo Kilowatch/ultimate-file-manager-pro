@@ -108,7 +108,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRateUs"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="@string/rate_us_button_play"

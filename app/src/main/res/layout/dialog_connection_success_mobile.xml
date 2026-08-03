@@ -67,7 +67,7 @@
         <!-- Save & Exit — primary action on top -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSuccessSave"
-            style="@style/Widget.MaterialComponents.Button"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginBottom="10dp"
@@ -85,7 +85,7 @@
         <!-- Keep Editing — secondary action below -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSuccessCancel"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:text="@string/network_dialog_success_cancel"

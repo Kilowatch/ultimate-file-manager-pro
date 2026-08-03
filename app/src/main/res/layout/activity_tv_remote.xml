@@ -90,7 +90,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/bt_remote_card_action_connect"
                 android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                 app:strokeColor="?attr/colorPrimary" />
 
             <!-- ═══ NAV ROW: Back | Home (above D-pad, matching Google TV layout) ═══ -->
@@ -277,7 +277,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDpadOk"
-                            style="@style/Widget.MaterialComponents.Button"
+                            style="@style/Widget.Material3Expressive.Button"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
                             android:layout_gravity="center"
@@ -476,7 +476,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnKbBackspace"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -486,7 +486,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnKbClear"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -495,7 +495,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnKbEnter"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

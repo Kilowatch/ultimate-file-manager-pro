@@ -2,7 +2,7 @@
 <com.google.android.material.button.MaterialButton
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:layout_marginVertical="2dp"

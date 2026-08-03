@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="@string/adb_scan_devices"
-                style="@style/Widget.MaterialComponents.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 app:backgroundTint="?attr/colorPrimary"
                 android:layout_marginBottom="20dp"
                 app:cornerRadius="16dp" />
@@ -232,7 +232,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
                             android:text="@string/connect_without_pin"
-                            style="@style/Widget.MaterialComponents.Button"
+                            style="@style/Widget.Material3Expressive.Button"
                             app:backgroundTint="?attr/colorPrimary"
                             android:layout_marginBottom="12dp"
                             app:cornerRadius="12dp" />
@@ -242,7 +242,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
                             android:text="@string/use_pin_pairing"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:textColor="@color/mobile_text_primary"
                             app:strokeColor="@color/mobile_glass_stroke"
                             app:cornerRadius="12dp" />
@@ -309,7 +309,7 @@
                         android:layout_height="52dp"
                         android:layout_marginTop="16dp"
                         android:text="@string/pair_and_connect"
-                        style="@style/Widget.MaterialComponents.Button"
+                        style="@style/Widget.Material3Expressive.Button"
                         app:backgroundTint="?attr/colorPrimary"
                         app:cornerRadius="12dp" />
                 </LinearLayout>

@@ -61,8 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-black"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium.Emphasized"
                 android:letterSpacing="0.01"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -540,7 +539,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSelectAll"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/action_select_all"
@@ -562,7 +561,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCompress"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:layout_marginStart="8dp"
@@ -584,7 +583,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDelete"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
                     android:text="@string/action_delete"

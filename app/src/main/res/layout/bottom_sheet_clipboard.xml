@@ -48,7 +48,7 @@
         <!-- Clear all button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnClearClipboard"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear_all"
@@ -84,7 +84,7 @@
     <!-- Paste Here Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPasteHere"
-        style="@style/Widget.Material3.Button"
+        style="@style/Widget.Material3Expressive.Button"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginHorizontal="16dp"

@@ -346,7 +346,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatPhotosFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -392,7 +392,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatVideosFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -438,7 +438,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatAudioFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -484,7 +484,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatDocumentsFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -530,7 +530,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatArchivesFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -576,7 +576,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatAppsFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -622,7 +622,7 @@
                             android:paddingStart="8dp">
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnCatEbooksFolder"
-                                style="@style/Widget.Material3.Button.TonalButton"
+                                style="@style/Widget.Material3Expressive.Button.TonalButton"
                                 android:layout_width="0dp"
                                   android:layout_weight="1"
                                 android:layout_height="wrap_content"
@@ -681,7 +681,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSizeTinyFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -728,7 +728,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSizeSmallFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -775,7 +775,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSizeMediumFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -822,7 +822,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSizeLargeFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -869,7 +869,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnSizeHugeFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -927,7 +927,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDateTodayFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -974,7 +974,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDateWeekFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -1021,7 +1021,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDateMonthFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -1068,7 +1068,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDateYearFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -1115,7 +1115,7 @@
                         android:paddingStart="8dp">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDateOlderFolder"
-                            style="@style/Widget.Material3.Button.TonalButton"
+                            style="@style/Widget.Material3Expressive.Button.TonalButton"
                             android:layout_width="0dp"
                                   android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -1163,7 +1163,7 @@
                     android:paddingStart="8dp">
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnOtherFolder"
-                        style="@style/Widget.Material3.Button.TonalButton"
+                        style="@style/Widget.Material3Expressive.Button.TonalButton"
                         android:layout_width="0dp"
                                   android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -1199,7 +1199,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddRule"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/smart_sort_add_rule"
@@ -1345,7 +1345,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPreview"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -1364,7 +1364,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnTvHistory"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/margin_sm"

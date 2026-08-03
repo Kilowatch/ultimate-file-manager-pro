@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="4dp"
             android:text="@string/bt_remote_keyboard_backspace"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             app:strokeColor="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:layout_marginHorizontal="4dp"
             android:text="@string/bt_remote_keyboard_tab"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             app:strokeColor="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
@@ -68,7 +68,7 @@
             android:layout_weight="1"
             android:layout_marginHorizontal="4dp"
             android:text="@string/bt_remote_keyboard_enter"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             app:strokeColor="?attr/colorPrimary" />
 
         <com.google.android.material.button.MaterialButton
@@ -78,7 +78,7 @@
             android:layout_weight="1"
             android:layout_marginStart="4dp"
             android:text="@string/bt_remote_keyboard_clear"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             app:strokeColor="?attr/colorError" />
 
     </LinearLayout>
@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/bt_remote_keyboard_select_all"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
             app:strokeColor="?attr/colorPrimary" />
 
     </LinearLayout>

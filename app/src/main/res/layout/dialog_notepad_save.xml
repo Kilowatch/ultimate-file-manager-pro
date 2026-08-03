@@ -49,7 +49,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/notepad_select_folder"
         app:cornerRadius="12dp"
-        style="@style/Widget.Material3.Button.OutlinedButton" />
+        style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_height="44dp"
             android:text="@android:string/cancel"
             app:cornerRadius="12dp"
-            style="@style/Widget.Material3.Button.TextButton" />
+            style="@style/Widget.Material3Expressive.Button.TextButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConfirmSave"

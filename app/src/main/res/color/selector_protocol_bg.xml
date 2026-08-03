@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile protocol/profile-type selector — adapts to the active palette.
+     Checked = primary (blue brand or wallpaper under Material You),
+     focused = soft container highlight. TV has its own yellow selector. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_focused="true" android:color="@color/tv_button_focused_yellow" />
-    <item android:state_checked="true" android:color="@color/tv_button_focused_yellow" />
+    <item android:state_checked="true" android:color="?attr/colorPrimary" />
+    <item android:state_focused="true" android:color="?attr/colorPrimaryContainer" />
     <item android:color="@color/mobile_glass_white_10" />
 </selector>

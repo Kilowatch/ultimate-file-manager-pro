@@ -93,7 +93,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGotIt"
-        style="@style/Widget.MaterialComponents.Button"
+        style="@style/Widget.Material3Expressive.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

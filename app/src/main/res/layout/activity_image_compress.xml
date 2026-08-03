@@ -383,7 +383,7 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnChangeOutput"
-                            style="@style/Widget.Material3.Button.TextButton"
+                            style="@style/Widget.Material3Expressive.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/change" />
@@ -394,7 +394,7 @@
             <!-- Compress Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCompress"
-                style="@style/Widget.Material3.Button"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="12dp"
