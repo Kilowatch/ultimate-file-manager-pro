@@ -318,9 +318,25 @@ class UfmApplication : Application() {
         if (level == ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
             // Process is about to be killed — cleanly close pooled SMB connections
             // so Windows doesn't hold orphaned sessions until its own idle timeout.
-            Log.d(TAG, "TRIM_MEMORY_COMPLETE: closing SMB session pool")
-            SmbSessionPool.closeAll()
-            NetworkHttpProxyServer.stop()
+            //
+            // Done on a background thread: onTrimMemory runs on the main thread,
+            // and closing pooled SMB sessions performs blocking network I/O (each
+            // session.close() can wait up to the SMB socket timeout for its LOGOFF/
+            // close round-trip), while NetworkHttpProxyServer.stop() closes the
+            // server socket and every streaming handle under each session's readLock.
+            // Doing this synchronously froze the UI for >5 s on low-end boxes
+            // (Xiaomi MIBOX4, SDK 28) and tripped the ANR watchdog. The teardown is
+            // best-effort courtesy cleanup (the server has its own idle timeout), so
+            // a daemon thread that may not finish before the process dies is fine.
+            Log.d(TAG, "TRIM_MEMORY_COMPLETE: closing SMB session pool (background)")
+            Thread {
+                try {
+                    SmbSessionPool.closeAll()
+                    NetworkHttpProxyServer.stop()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to clean up for TRIM_MEMORY_COMPLETE", e)
+                }
+            }.apply { name = "ufm-memory-trim"; isDaemon = true; start() }
         }
     }
 
