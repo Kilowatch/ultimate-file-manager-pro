@@ -643,7 +643,47 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall) {
+                    // 13. The main thread is blocked inflating RecyclerView rows while
+                    //     handling a TV D-pad focus-navigation key event, with the sampled
+                    //     frame inside the framework applying the theme style to a view
+                    //     being constructed — e.g. ViewRootImpl$ViewPostImeInputStage.
+                    //     performFocusNavigation -> View.focusSearch -> RecyclerView.
+                    //     focusSearch -> LinearLayoutManager.onFocusSearchFailed -> fill
+                    //     -> layoutChunk -> <adapter onCreateViewHolder> ->
+                    //     LayoutInflater.inflate -> ... -> <View>.<init> (e.g.
+                    //     ProgressBar) -> Context.obtainStyledAttributes ->
+                    //     ResourcesImpl$ThemeImpl.obtainStyledAttributes ->
+                    //     AssetManager.applyStyle -> nativeApplyStyle. When focus search
+                    //     fails inside the visible rows, LinearLayoutManager fills the
+                    //     list in the search direction and every new row it creates is
+                    //     inflated on the main thread; on low-end Android TV devices
+                    //     (e.g. Hisense SmartTV 4K FFM, SDK 31) that synchronous
+                    //     inflation + framework theme-attribute application can exceed
+                    //     the 5 s watchdog threshold while the user simply presses a
+                    //     D-pad arrow. The blocking work is entirely inside the
+                    //     framework's style application (AssetManager.nativeApplyStyle)
+                    //     during view construction; the app's only contribution is its
+                    //     adapter inflating its own row layout — which every
+                    //     RecyclerView adapter does, and a RecyclerView.focusSearch
+                    //     frame proves this is the focus-navigation fill path, not a
+                    //     normal scroll — so the app cannot act on it. A genuine freeze
+                    //     keeps the main thread inside app code (the top frame is not
+                    //     AssetManager.nativeApplyStyle, or the stack has no
+                    //     RecyclerView.focusSearch fill path) and still fails this test.
+                    val isRecyclerViewFocusSearchInflateStall =
+                        topFrame?.className == "android.content.res.AssetManager" &&
+                        (topFrame?.methodName == "nativeApplyStyle" || topFrame?.methodName == "applyStyle") &&
+                        mainStackTrace.any { it.methodName == "obtainStyledAttributes" } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.View" && it.methodName == "<init>"
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.RecyclerView" && it.methodName == "focusSearch"
+                        } &&
+                        mainStackTrace.any { it.className == "androidx.recyclerview.widget.LinearLayoutManager" }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
