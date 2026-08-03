@@ -614,7 +614,36 @@ object CrashReportManager {
                             appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall) {
+                    // 12. The main thread is blocked on a synchronous IPC call to the
+                    //     system's autofill service while a view enters the window — e.g.
+                    //     View.layout -> View.notifyEnterOrExitForAutoFillIfNeeded ->
+                    //     AutofillManager.notifyViewEntered -> notifyViewEnteredLocked ->
+                    //     tryAddServiceClientIfNeededLocked -> SyncResultReceiver.getIntResult
+                    //     -> SyncResultReceiver.waitResult -> CountDownLatch.await. When a
+                    //     view (e.g. inside a dialog) is laid out, the framework
+                    //     synchronously asks the system autofill service whether it should be
+                    //     autofilled; on a slow or busy Android TV (e.g. TCL Smart TV, SDK 34)
+                    //     that binder round-trip can exceed the 5 s watchdog threshold. The
+                    //     stack has zero UFM frames — the only non-platform frames are
+                    //     bundled-library (AndroidX) view-layout frames such as
+                    //     `AlertDialogLayout.onLayout` — so the wait is entirely system-side
+                    //     and the app cannot act on it. Genuine freezes keep an app frame
+                    //     (`za.kilowatch.ultimatefilemanager.*`) on the stack and still fail
+                    //     this test.
+                    val isAutofillSyncResultStall =
+                        mainStackTrace.any {
+                            it.className == "com.android.internal.util.SyncResultReceiver" &&
+                            (it.methodName == "waitResult" || it.methodName == "getIntResult")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.autofill.AutofillManager" &&
+                            (it.methodName == "notifyViewEntered" ||
+                             it.methodName == "notifyViewEnteredLocked" ||
+                             it.methodName == "tryAddServiceClientIfNeededLocked")
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
