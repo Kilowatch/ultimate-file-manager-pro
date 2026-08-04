@@ -11,6 +11,18 @@
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="false" />
+    <!-- Prevent TvRemoteActivity / TvSetupGuideActivity (declared in the shared main
+         manifest with screenOrientation="portrait" so they resolve on TV builds) from
+         implying android.hardware.screen.portrait is REQUIRED. Android TV devices are
+         landscape-only and do not declare portrait support, so a required portrait
+         feature excludes ~99% of Android TV devices from the Play listing. The app runs
+         fine either way — this only restores device coverage. -->
+    <uses-feature
+        android:name="android.hardware.screen.portrait"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
     <application
         xmlns:tools="http://schemas.android.com/tools"
         android:icon="@mipmap/ic_launcher_tv"
