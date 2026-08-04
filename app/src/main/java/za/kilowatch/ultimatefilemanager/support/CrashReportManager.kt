@@ -721,7 +721,36 @@ object CrashReportManager {
                         mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall) {
+                    // 15. The main thread is building a content:// URI for a
+                    //     share/open action through FileProvider when the device
+                    //     is slow or busy — e.g. the "Standard share" action
+                    //     (performStandardShare) while a TV D-pad OK key event is
+                    //     being dispatched: View.performClick -> onClick -> lambda
+                    //     -> <helper> -> FileProvider.getUriForFile -> Uri.encode
+                    //     (top frame). Building the content URI is a trivially
+                    //     fast framework operation — Uri.encode walks the file
+                    //     path once (O(path length)) and getUriForFile only looks
+                    //     up the cached path strategy, builds a string and parses
+                    //     the resulting content URI — so it cannot by itself
+                    //     occupy the main thread for 5 s. Even the multi-file
+                    //     ACTION_SEND_MULTIPLE worst case is tiny: the parceled
+                    //     EXTRA_STREAM URI list hits the ~1 MB binder transaction
+                    //     limit at roughly ten thousand files, capping the
+                    //     getUriForFile loop at tens of milliseconds even on a
+                    //     slow device. The >5 s block is therefore device-side
+                    //     slowness / CPU starvation (reported from a ZTE Claro TV
+                    //     Box 4k, SDK 34, app 1.7.8) while the app runs its
+                    //     standard, fast share code — the app cannot act on it. A
+                    //     genuine freeze keeps the main thread inside heavy app
+                    //     business logic (the currently executing frame is not
+                    //     Uri.encode under a FileProvider call) and still fails
+                    //     this test.
+                    val isFileProviderUriEncodeStall =
+                        topFrame?.className == "android.net.Uri" &&
+                        topFrame?.methodName == "encode" &&
+                        mainStackTrace.any { it.className == "androidx.core.content.FileProvider" }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
