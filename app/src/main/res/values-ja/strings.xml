@@ -10243,6 +10243,9 @@ OK
     <string name="support_file_already_attached">
 ファイルは既に添付されています
 </string>
+    <string name="support_remember_email">
+メールアドレスを記憶する
+</string>
 
     <!-- ── Crash / ANR Report ──────────────────────────────────── -->
     <string name="crash_report_crash_title">

@@ -481,7 +481,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="8dp"
                     android:hint="@string/support_email"
                     app:hintTextColor="@color/mobile_text_secondary"
                     app:boxStrokeColor="?attr/colorPrimary"
@@ -500,6 +500,17 @@
                         android:textColor="@color/mobile_text_primary"
                         android:textColorHint="@color/mobile_text_secondary" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Remember email checkbox (optional) -->
+                <CheckBox
+                    android:id="@+id/chkRememberEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/support_remember_email"
+                    android:textColor="@color/mobile_text_primary"
+                    android:buttonTint="?attr/colorPrimary"
+                    android:checked="false" />
 
                 <!-- Dynamic Container for attached files (Up to 5) -->
                 <LinearLayout

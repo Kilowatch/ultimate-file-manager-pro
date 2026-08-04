@@ -3614,6 +3614,7 @@
     <string name="support_proceed">Proceed</string>
     <string name="support_max_attachments_reached">Maximum %d attachments allowed</string>
     <string name="support_file_already_attached">File is already attached</string>
+    <string name="support_remember_email">Remember my email address</string>
 
     <!-- ── Crash / ANR Report ──────────────────────────────────── -->
     <string name="crash_report_crash_title">Crash Detected</string>

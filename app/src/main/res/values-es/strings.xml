@@ -10255,6 +10255,9 @@ Máximo de %d archivos adjuntos permitidos
     <string name="support_file_already_attached">
 El archivo ya está adjunto
 </string>
+    <string name="support_remember_email">
+Recordar mi correo electrónico
+</string>
 
     <!-- ── Crash / ANR Report ──────────────────────────────────── -->
     <string name="crash_report_crash_title">

@@ -449,6 +449,39 @@
                         android:textColorHint="@color/tv_text_hint" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Remember email toggle row (TV: focusable row toggles the checkbox) -->
+                <LinearLayout
+                    android:id="@+id/layoutRememberEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:background="@drawable/selector_tv_button"
+                    android:contentDescription="@string/support_remember_email"
+                    android:padding="10dp">
+
+                    <CheckBox
+                        android:id="@+id/chkRememberEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:checked="false" />
+
+                    <TextView
+                        android:id="@+id/txtRememberEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/support_remember_email"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
                 <!-- Dynamic Container for attached files (Up to 5) -->
                 <LinearLayout
                     android:id="@+id/layoutAttachmentContainer"

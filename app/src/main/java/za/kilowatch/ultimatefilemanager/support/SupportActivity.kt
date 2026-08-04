@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -49,6 +50,10 @@ class SupportActivity : AppCompatActivity() {
     private var isTv = false
     private var currentType = "" // "bug", "feature", or "general"
     private val selectedFilePaths = mutableListOf<String>()
+    // Suppresses redundant prefs writes while applyRememberedEmail() sets state programmatically
+    private var isApplyingRememberState = false
+    // Remembered email as of the last form open — avoids re-reading prefs on every back press
+    private var rememberedEmailValue = ""
 
     // OkHttp client for API calls
     private val httpClient = OkHttpClient.Builder()
@@ -168,6 +173,33 @@ class SupportActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Remember-email checkbox — persists the preference immediately on toggle (FR-11)
+        val chkRememberEmail = findViewById<CheckBox>(R.id.chkRememberEmail)
+        chkRememberEmail.setOnCheckedChangeListener { _, checked ->
+            if (!isApplyingRememberState) {
+                SupportEmailPrefs.setEnabled(this, checked)
+            }
+        }
+
+        if (isTv) {
+            val rememberRow = findViewById<LinearLayout>(R.id.layoutRememberEmail)
+            val txtRemember = findViewById<TextView>(R.id.txtRememberEmail)
+            rememberRow.setOnClickListener { chkRememberEmail.isChecked = !chkRememberEmail.isChecked }
+            val yellowCsl = android.content.res.ColorStateList.valueOf(
+                getColor(R.color.tv_button_focused_yellow_text)
+            )
+            val defaultCsl = android.content.res.ColorStateList.valueOf(
+                getColor(R.color.tv_text_primary)
+            )
+            rememberRow.setOnFocusChangeListener { _, hasFocus ->
+                rememberRow.setBackgroundResource(
+                    if (hasFocus) R.drawable.selector_tv_button_yellow
+                    else R.drawable.selector_tv_button
+                )
+                txtRemember.setTextColor(if (hasFocus) yellowCsl else defaultCsl)
+            }
+        }
     }
 
     private fun setupTvBackButton(btnBack: ImageView) {
@@ -222,6 +254,7 @@ class SupportActivity : AppCompatActivity() {
 
         clearErrors()
         updateAttachmentViews()
+        applyRememberedEmail()
 
         if (isTv) {
             findViewById<TextInputEditText>(R.id.edtSubject).requestFocus()
@@ -254,6 +287,23 @@ class SupportActivity : AppCompatActivity() {
     private fun clearErrors() {
         findViewById<TextInputLayout>(R.id.inputSubject).error = null
         findViewById<TextInputLayout>(R.id.inputMessage).error = null
+        findViewById<TextInputLayout>(R.id.inputEmail).error = null
+    }
+
+    /**
+     * Applies the remembered-email state every time a form opens (FR-02):
+     * - enabled + email stored → pre-fill the field, box checked
+     * - enabled + no email yet → box checked, empty field
+     * - disabled              → box unchecked, no pre-fill (background value lingers untouched)
+     */
+    private fun applyRememberedEmail() {
+        val email = SupportEmailPrefs.getEmail(this)
+        val prefill = SupportEmailPrefs.isEmailRemembered(this)
+        rememberedEmailValue = email
+        isApplyingRememberState = true
+        findViewById<CheckBox>(R.id.chkRememberEmail).isChecked = SupportEmailPrefs.isEnabled(this)
+        findViewById<TextInputEditText>(R.id.edtEmail).setText(if (prefill) email else "")
+        isApplyingRememberState = false
     }
 
     // ─── Attachment ─────────────────────────────────────────────
@@ -486,7 +536,10 @@ class SupportActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     showLoading(false)
                     when (response.code) {
-                        200 -> showSuccessDialog()
+                        200 -> {
+                            persistRememberedEmail(email)
+                            showSuccessDialog()
+                        }
                         429 -> showRateLimitedDialog()
                         else -> showErrorDialog()
                     }
@@ -497,6 +550,20 @@ class SupportActivity : AppCompatActivity() {
                     showErrorDialog()
                 }
             }
+        }
+    }
+
+    /**
+     * Applies the remembered-email persistence on a successful send (HTTP 200):
+     * - checked + non-empty email → save the email (FR-03/FR-05)
+     * - unchecked                 → purge the stored email (FR-04)
+     * - checked + empty email     → no-op; stored email retained as-is (spec edge case)
+     */
+    private fun persistRememberedEmail(email: String) {
+        val checked = findViewById<CheckBox>(R.id.chkRememberEmail).isChecked
+        when {
+            checked && email.isNotEmpty() -> SupportEmailPrefs.saveEmail(this, email)
+            !checked -> SupportEmailPrefs.purge(this)
         }
     }
 
@@ -654,7 +721,9 @@ class SupportActivity : AppCompatActivity() {
         val subject = findViewById<TextInputEditText>(R.id.edtSubject).text?.toString()?.trim() ?: ""
         val message = findViewById<TextInputEditText>(R.id.edtMessage).text?.toString()?.trim() ?: ""
         val email = findViewById<TextInputEditText>(R.id.edtEmail).text?.toString()?.trim() ?: ""
-        return subject.isNotEmpty() || message.isNotEmpty() || email.isNotEmpty() || selectedFilePaths.isNotEmpty()
+        // A pristine pre-filled remembered email is not "unsaved" (FR-10)
+        val emailChanged = email.isNotEmpty() && email != rememberedEmailValue
+        return subject.isNotEmpty() || message.isNotEmpty() || emailChanged || selectedFilePaths.isNotEmpty()
     }
 
     // ─── Helpers ────────────────────────────────────────────────

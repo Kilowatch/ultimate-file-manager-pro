@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added total folder size display (including subfolders, excluding hidden files) for indexed storage drives on both Mobile and TV.
 - Material You support — a new toggle in the Appearance screen personalises the app with your wallpaper's colours (Android 12+, mobile). When off, the app keeps its original blue colour scheme.
 - Adaptive file/folder icon tinting that follows the active palette.
+- The Help & Support form now remembers your email address. A "Remember my email address" checkbox below the email field pre-fills your last used email on future messages — on both Mobile and TV. The email is saved only after a message is sent successfully and is never included in config backups.
 
 ### Changed
 - Upgraded Material Components to 1.14.0 and adopted Material 3 Expressive on mobile — modern component shapes, emphasised typography, adaptive colour roles.
