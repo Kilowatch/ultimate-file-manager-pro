@@ -683,7 +683,45 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.any { it.className == "androidx.recyclerview.widget.LinearLayoutManager" }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall) {
+                    // 14. The main thread is blocked reading a drawable's string-pool
+                    //     data from the APK while a view constructor loads an
+                    //     (animated) vector drawable during layout inflation — e.g.
+                    //     LayoutInflater -> ... -> MaterialCheckBox.<init> ->
+                    //     Resources.getDrawable -> AnimatedVectorDrawable.inflate ->
+                    //     VectorDrawable.inflate -> VectorDrawable$VFullPath.
+                    //     updateStateFromTypedArray -> TypedArray.getString ->
+                    //     AssetManager.getPooledStringForCookie ->
+                    //     ApkAssets.getStringFromPool -> StringBlock.getSequence ->
+                    //     StringBlock.nativeGetString (top frame, a native resource-
+                    //     string read). This is a framework resource decode / cold
+                    //     resource-cache cost on a slow or busy device (reported from
+                    //     a ZTE Claro TV Box 4k, SDK 34, app 1.7.8) that the app
+                    //     cannot act on: the stack has zero UFM frames, and the only
+                    //     non-platform frames are the Material view constructor and
+                    //     AndroidX layout/fragment machinery. A genuine freeze keeps
+                    //     the main thread inside app business logic (an app frame on
+                    //     the stack, or a top frame that is not the string-pool read
+                    //     under a checkbox constructor + LayoutInflater) and still
+                    //     fails this test.
+                    val isVectorDrawableStringPoolStall =
+                        topFrame?.className == "android.content.res.StringBlock" &&
+                        (topFrame?.methodName == "nativeGetString" || topFrame?.methodName == "getSequence") &&
+                        mainStackTrace.any {
+                            it.className == "com.google.android.material.checkbox.MaterialCheckBox" &&
+                                it.methodName == "<init>"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.graphics.drawable.AnimatedVectorDrawable" &&
+                                it.methodName == "inflate"
+                        } &&
+                        mainStackTrace.any {
+                            it.className.startsWith("android.graphics.drawable.VectorDrawable") &&
+                                it.methodName == "inflate"
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
