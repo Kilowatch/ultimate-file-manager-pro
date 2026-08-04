@@ -51,6 +51,7 @@ object SyntaxColorScheme {
             put(SyntaxTokenType.TAG_ATTR,         ContextCompat.getColor(context, R.color.syntax_tag_attr))
             put(SyntaxTokenType.ATTR_VALUE,       ContextCompat.getColor(context, R.color.syntax_attr_value))
             put(SyntaxTokenType.PROPERTY_KEY,     ContextCompat.getColor(context, R.color.syntax_property_key))
+            put(SyntaxTokenType.PROPERTY_VALUE,   ContextCompat.getColor(context, R.color.syntax_property_value))
             put(SyntaxTokenType.VARIABLE,         ContextCompat.getColor(context, R.color.syntax_variable))
             put(SyntaxTokenType.PREPROCESSOR,     ContextCompat.getColor(context, R.color.syntax_preprocessor))
             put(SyntaxTokenType.MARKDOWN_HEADER,  ContextCompat.getColor(context, R.color.syntax_markdown_header))

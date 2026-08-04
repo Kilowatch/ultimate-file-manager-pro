@@ -4904,9 +4904,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val capturedUploadShare = share
         val capturedUploadPath = file.path
         val ext = file.name.substringAfterLast('.', "").lowercase()
+        val isDotConfig = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isDotConfigFile(file.name)
         val saveTarget = java.io.File(cacheDir, file.name)
         if (saveTarget.exists()) saveTarget.delete()
-        if (!forceExternal && (ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.TEXT_EXTENSIONS || ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.DAT_EXTENSIONS)) {
+        if (!forceExternal && (ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.TEXT_EXTENSIONS || ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.DAT_EXTENSIONS || isDotConfig)) {
             za.kilowatch.ultimatefilemanager.viewer.NetworkSaveBridge.onFileSaved = { savedFile ->
                 lifecycleScope.launch(Dispatchers.IO) {
                     try {
@@ -4939,7 +4940,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val isNetworkOpenCacheEnabled = za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager.isEnabled(this@NetworkBrowserActivity)
-                val isInternalViewer = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.canOpenInternally(ext) && !forceExternal
+                val isInternalViewer = (za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.canOpenInternally(ext) || isDotConfig) && !forceExternal
 
                 if (isNetworkOpenCacheEnabled || isInternalViewer) {
                     // Sweep stale cache files (older than 30 minutes) before writing new ones
@@ -4992,7 +4993,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         if (!forceExternal) {
                             val ext = file.name.substringAfterLast('.', "").lowercase()
                             val isTextViewable = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.TEXT_EXTENSIONS ||
-                                ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.DAT_EXTENSIONS
+                                ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.DAT_EXTENSIONS ||
+                                isDotConfig
                             if (isTextViewable) {
                                 // Launch text viewer directly with the ORIGINAL filename (not the cache filename)
                                 val intent = android.content.Intent(this@NetworkBrowserActivity, za.kilowatch.ultimatefilemanager.viewer.TextViewerActivity::class.java).apply {

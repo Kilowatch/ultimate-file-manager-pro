@@ -174,6 +174,7 @@
     <color name="syntax_tag_attr">#FFC084FC</color>         <!-- violet -->
     <color name="syntax_attr_value">#FF34D399</color>       <!-- emerald -->
     <color name="syntax_property_key">#FF60A5FA</color>     <!-- blue -->
+    <color name="syntax_property_value">#FF2DD4BF</color>   <!-- teal -->
     <color name="syntax_variable">#FFFBBF24</color>         <!-- amber -->
     <color name="syntax_preprocessor">#FF9CA3AF</color>     <!-- gray -->
     <color name="syntax_markdown_header">#FFF87171</color>  <!-- red -->

@@ -23,7 +23,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.PrecomputedTextCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.TextViewCompat
 import androidx.lifecycle.lifecycleScope
 
@@ -32,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.EditorInsets
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -80,6 +80,7 @@ class TextViewerActivity : AppCompatActivity() {
     private var currentText = ""
     private var isOfficeFile = false
     private var isTv = false
+    private var imeWasVisible = false
 
     // ── Syntax highlighting fields ─────────────────────────────────────
     private var currentLanguage: LanguageDef? = null
@@ -131,8 +132,16 @@ class TextViewerActivity : AppCompatActivity() {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
+            val imeVisible = EditorInsets.apply(
+                v, insets,
+                resources.getDimensionPixelSize(R.dimen.editor_keyboard_gap)
+            )
+            // When the soft keyboard first appears, scroll the cursor into view
+            // so the active line never sits behind the keyboard.
+            if (imeVisible && !imeWasVisible) {
+                scrollToCursor()
+            }
+            imeWasVisible = imeVisible
             insets
         }
 
@@ -250,6 +259,36 @@ class TextViewerActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Brings the cursor into view when the soft keyboard appears, so the line
+     * being edited stays visible above the keyboard.
+     */
+    private fun scrollToCursor() {
+        if (!::txtContent.isInitialized) return
+        val sel = txtContent.selectionStart
+        if (sel < 0) return
+        txtContent.post {
+            txtContent.bringPointIntoView(sel)
+            // Belt-and-suspenders: bringPointIntoView can fail to scroll the
+            // outer vertical ScrollView through the nested scroll containers, so
+            // if the cursor line is still out of view, scroll the ScrollView
+            // directly so the active line sits just above the keyboard.
+            val layout = txtContent.layout ?: return@post
+            val line = layout.getLineForOffset(sel)
+            val cursorTop = txtContent.top + txtContent.paddingTop + layout.getLineTop(line)
+            val cursorBottom = txtContent.top + txtContent.paddingTop + layout.getLineBottom(line)
+            val visibleTop = scrollView.scrollY
+            val visibleBottom = scrollView.scrollY + scrollView.height
+            if (cursorBottom > visibleBottom || cursorTop < visibleTop) {
+                val gap = resources.getDimensionPixelSize(R.dimen.editor_keyboard_gap)
+                scrollView.smoothScrollTo(
+                    scrollView.scrollX,
+                    (cursorBottom - scrollView.height + gap).coerceAtLeast(0)
+                )
+            }
+        }
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(ev)
         return super.dispatchTouchEvent(ev)
@@ -267,6 +306,13 @@ class TextViewerActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Reset the IME-open transition flag so a keyboard shown after returning
+        // to the foreground still triggers the cursor scroll.
+        imeWasVisible = false
     }
 
     private fun toggleEditMode() {
@@ -366,6 +412,10 @@ class TextViewerActivity : AppCompatActivity() {
                 Toast.makeText(this, R.string.edit_mode_enabled, Toast.LENGTH_SHORT).show()
             }
         } else {
+            // ── Hide the soft keyboard so it doesn't linger over the viewer ──
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(txtContent.windowToken, 0)
+
             // ── Clean up TextWatcher when leaving edit mode ───────────
             highlightingTextWatcher?.let { txtContent.removeTextChangedListener(it) }
             highlightingTextWatcher = null

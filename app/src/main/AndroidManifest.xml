@@ -760,7 +760,8 @@
 
         <activity
             android:name=".viewer.TextViewerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".viewer.PdfViewerActivity"

@@ -16,7 +16,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +29,7 @@ import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.EditorInsets
 import za.kilowatch.ultimatefilemanager.util.PdfConverter
 import java.io.File
 
@@ -52,6 +52,7 @@ class NotepadActivity : AppCompatActivity() {
     private var autoSaveJob: Job? = null
     private var fileName = "Notepad.txt"
     private var isTv = false
+    private var imeWasVisible = false
     private var selectedFolderPath: String? = null
     private var pendingFormat: String? = null
     private var pendingFileName: String? = null
@@ -84,8 +85,16 @@ class NotepadActivity : AppCompatActivity() {
         )
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(sb.left, sb.top, sb.right, sb.bottom)
+            val imeVisible = EditorInsets.apply(
+                v, insets,
+                resources.getDimensionPixelSize(R.dimen.editor_keyboard_gap)
+            )
+            // When the soft keyboard first appears, scroll the cursor into view
+            // so the active line never sits behind the keyboard.
+            if (imeVisible && !imeWasVisible) {
+                scrollToCursor()
+            }
+            imeWasVisible = imeVisible
             insets
         }
 
@@ -152,6 +161,17 @@ class NotepadActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Brings the cursor into view when the soft keyboard appears, so the line
+     * being edited stays visible above the keyboard.
+     */
+    private fun scrollToCursor() {
+        if (!::editText.isInitialized) return
+        editText.post {
+            editText.bringPointIntoView(editText.selectionStart.coerceAtLeast(0))
+        }
+    }
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         scaleDetector.onTouchEvent(ev)
         return super.dispatchTouchEvent(ev)
@@ -173,6 +193,9 @@ class NotepadActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        // Reset the IME-open transition flag so a keyboard shown after returning
+        // to the foreground still triggers the cursor scroll.
+        imeWasVisible = false
         if (isModified && currentFile != null) {
             autoSave()
         }

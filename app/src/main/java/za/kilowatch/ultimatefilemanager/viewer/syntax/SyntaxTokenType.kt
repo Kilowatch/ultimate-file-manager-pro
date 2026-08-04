@@ -54,6 +54,9 @@ enum class SyntaxTokenType {
     /** Key in key-value pairs (key: value, key=value) — YAML, Properties, TOML */
     PROPERTY_KEY,
 
+    /** Value portion of a key=value pair (key=value) — Properties, dotenv */
+    PROPERTY_VALUE,
+
     /** Variable references ($var, ${var}) — Shell, PHP, Perl, Ruby */
     VARIABLE,
 

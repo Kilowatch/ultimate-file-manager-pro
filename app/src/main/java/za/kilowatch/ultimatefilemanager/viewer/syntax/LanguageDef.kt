@@ -47,5 +47,7 @@ data class LanguageDef(
     val multiStringDelimiters: List<String> = emptyList(),
     val isMarkup: Boolean = false,
     val isYaml: Boolean = false,
-    val isProperties: Boolean = false
+    val isProperties: Boolean = false,
+    /** If true, use [PropertiesLexer] instead of the general [CodeLexer] (dotenv-style KEY=VALUE files). */
+    val isDotenv: Boolean = false
 )

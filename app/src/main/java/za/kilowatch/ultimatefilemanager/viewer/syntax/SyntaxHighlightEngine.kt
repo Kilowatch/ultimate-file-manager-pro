@@ -109,9 +109,10 @@ object SyntaxHighlightEngine {
      */
     internal fun tokenize(text: String, language: LanguageDef): List<TokenSpan> {
         return when {
-            language.isYaml   -> YamlLexer.tokenize(text, language)
-            language.isMarkup -> MarkupLexer.tokenize(text, language)
-            else              -> CodeLexer.tokenize(text, language)
+            language.isYaml     -> YamlLexer.tokenize(text, language)
+            language.isMarkup   -> MarkupLexer.tokenize(text, language)
+            language.isDotenv   -> PropertiesLexer.tokenize(text, language)
+            else                -> CodeLexer.tokenize(text, language)
         }
     }
 

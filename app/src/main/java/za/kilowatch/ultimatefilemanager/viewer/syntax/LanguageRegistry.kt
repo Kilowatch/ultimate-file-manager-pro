@@ -58,6 +58,15 @@ object LanguageRegistry {
         isProperties = true
     )
 
+    val Env = LanguageDef(
+        name = "Dotenv",
+        keywords = emptySet(),
+        booleanLiterals = setOf("true", "false", "null"),
+        lineComments = listOf("#"),
+        stringDelimiters = listOf("\"", "'"),
+        isDotenv = true
+    )
+
     // ── Markup languages ───────────────────────────────────────────────
 
     val XML = LanguageDef(
@@ -1742,8 +1751,19 @@ object LanguageRegistry {
     }
 
     /**
+     * Extensionless dot-config dotfiles that use `KEY=VALUE` syntax
+     * (e.g. `.env`, `.npmrc`, `.pylintrc`) → [Env] for dotenv highlighting.
+     * Keys are lowercased names with the leading dot stripped.
+     */
+    private val DOTENV_DOTFILES = setOf(
+        "env", "npmrc", "pylintrc", "curlrc", "wgetrc",
+        "gemrc", "s3cfg", "editorconfig"
+    )
+
+    /**
      * Detects the programming language for [fileName] by checking its
-     * extension first, then falling back to an exact filename match.
+     * extension first, then falling back to an exact filename match, then to
+     * dot-config dotfiles (e.g. `.env`, `.npmrc`).
      *
      * @return The matching [LanguageDef], or `null` for unknown/plain-text files.
      */
@@ -1756,7 +1776,15 @@ object LanguageRegistry {
             EXTENSION_MAP[ext]?.let { return it }
         }
         // Fall back to exact filename match (e.g. "Dockerfile")
-        return FILENAME_MAP[lower]
+        FILENAME_MAP[lower]?.let { return it }
+        // Dot-config dotfiles (e.g. .env, .env.local, .npmrc)
+        if (lower.startsWith(".")) {
+            val core = lower.substring(1)
+            if (core.startsWith("env.") || core in DOTENV_DOTFILES) {
+                return Env
+            }
+        }
+        return null
     }
 
     /**

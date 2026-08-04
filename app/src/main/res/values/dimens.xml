@@ -63,4 +63,7 @@
     <dimen name="mob_section_title_size">28sp</dimen>
     <dimen name="mob_file_item_height">64dp</dimen>
     <dimen name="notepad_min_editor_width">280dp</dimen>
+
+    <!-- Editor soft-keyboard gap -->
+    <dimen name="editor_keyboard_gap">16dp</dimen>
 </resources>

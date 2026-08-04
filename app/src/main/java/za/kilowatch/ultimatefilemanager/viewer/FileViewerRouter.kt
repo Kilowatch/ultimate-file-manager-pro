@@ -133,6 +133,21 @@ object FileViewerRouter {
     fun canOpenInternally(extension: String): Boolean =
         extension.lowercase() in ALL_SUPPORTED
 
+    /**
+     * True when [name] is a dot-config dotfile that should be treated as text:
+     * a filename starting with "." that either has no further dot (an
+     * extensionless dotfile like `.htaccess`, `.gitignore`) or belongs to the
+     * `.env.*` family (e.g. `.env.local`, `.env.production`).
+     *
+     * Case-insensitive and matched on the full filename — NOT the extension —
+     * because `.env` resolves to extension "env" and `.env.local` to "local".
+     */
+    fun isDotConfigFile(name: String): Boolean {
+        val lower = name.lowercase()
+        return lower.length > 1 && lower.startsWith(".") &&
+            (!lower.substring(1).contains('.') || lower.startsWith(".env."))
+    }
+
     fun isAudio(extension: String): Boolean = extension.lowercase() in AUDIO_EXTENSIONS
     fun isVideo(extension: String): Boolean = extension.lowercase() in VIDEO_EXTENSIONS
 
@@ -146,7 +161,7 @@ object FileViewerRouter {
      */
     fun openFile(context: Context, file: File, transitionView: android.view.View? = null, isNetwork: Boolean = false): Boolean {
         val ext = file.extension.lowercase()
-        if (ext !in ALL_SUPPORTED) return false
+        if (ext !in ALL_SUPPORTED && !isDotConfigFile(file.name)) return false
 
         // Check for saved default preference (local vs network context)
         val defaultAction = DefaultOpenManager.getDefaultAction(context, ext, isNetwork = isNetwork)
@@ -225,13 +240,19 @@ object FileViewerRouter {
                 }
             }
             in SPREADSHEET_EXTENSIONS -> Intent(context, SpreadsheetViewerActivity::class.java)
-            in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS -> 
-                Intent(context, TextViewerActivity::class.java)
-            in PACKAGE_EXTENSIONS -> 
+            in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS ->
+                textViewerIntent(context)
+            in PACKAGE_EXTENSIONS ->
                 Intent(context, za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity::class.java).apply {
                     data = Uri.fromFile(file)
                 }
-            else -> return
+            // Dot-config dotfiles (e.g. .env, .htaccess) have a misleading or
+            // empty extension, so route them to the text viewer by filename.
+            else -> if (isDotConfigFile(file.name)) {
+                textViewerIntent(context)
+            } else {
+                return
+            }
         }
         intent.putExtra(EXTRA_FILE_PATH, file.absolutePath)
         intent.putExtra(EXTRA_FILE_NAME, file.name)
@@ -249,6 +270,10 @@ object FileViewerRouter {
         }
         context.startActivity(intent)
     }
+
+    /** Intent for the built-in plain-text / code viewer. */
+    private fun textViewerIntent(context: Context): Intent =
+        Intent(context, TextViewerActivity::class.java)
 
     /**
      * Opens the file in UFMPlayerActivity (ExoPlayer) with a playlist built from the
