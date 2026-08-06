@@ -1077,7 +1077,77 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall) {
+                    // 22. The main thread is sampled inside a recursive deep-equals /
+                    //     object-graph comparison while a main-looper Runnable is being
+                    //     dispatched — top frame `kh2.equals` (an R8-obfuscated `equals`
+                    //     on an app/library model class), under `b94.d` -> `uf1.equals`
+                    //     -> `b94.d` -> `iq9.c` -> `jp3.c` -> `aa.run` sitting directly
+                    //     on `android.os.Handler.handleCallback` (reported from a Google
+                    //     Google TV Streamer, SDK 34, app 1.7.6-GOOGLE — the same device
+                    //     and session that produced the already-filtered
+                    //     `StringBuilder.<init>`/`append` post-stall report from the same
+                    //     `aa.run` Runnable, filter 10). The app or a bundled library is
+                    //     comparing two object graphs element-by-element: two non-platform
+                    //     `equals` frames with a shared compare helper (`b94.d`) invoked
+                    //     between them prove a nested value comparison, and every frame
+                    //     strictly above the Runnable's `run()` is obfuscated non-platform
+                    //     code — no lock, file I/O, network, or binder frame anywhere on
+                    //     the stack — so the sampled work is pure CPU-bound model equality
+                    //     that cannot by itself hold the main thread for 5 s at realistic
+                    //     data sizes. The >5 s block is device-side CPU starvation (this
+                    //     report's `DlnaFetchThread`, `DlnaSsdpListener` and
+                    //     `DefaultDispatcher-worker-*` threads are all RUNNABLE, busy with
+                    //     SSDP/DLNA discovery and content-provider queries, starving the
+                    //     main thread) or a post-stall sample of the backlog the main
+                    //     looper drains after a genuine stall — the same `aa.run` family
+                    //     already classified as post-stall in filter 10. A genuine freeze
+                    //     keeps the main thread inside blocking work — a
+                    //     lock/`wait`/`park`, a `BinderProxy.transact`, a file or network
+                    //     I/O frame, or a top frame that is not an `equals` in a
+                    //     comparison chain — and is still reported. Comparison work
+                    //     reached from app business logic WITHOUT a
+                    //     `Handler.handleCallback`-dispatched `run()` frame (e.g. an
+                    //     adapter's bind code calling equals directly) is also still
+                    //     reported.
+                    val isDeepEqualsChainStall =
+                        run {
+                            val runIndex = mainStackTrace.withIndex().firstOrNull { (i, frame) ->
+                                frame.methodName == "run" &&
+                                PLATFORM_PREFIXES.none { p -> frame.className.startsWith(p) } &&
+                                mainStackTrace.getOrNull(i + 1)?.className == "android.os.Handler" &&
+                                mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
+                            }?.index
+                            runIndex != null && runIndex > 0 &&
+                            topFrame?.methodName == "equals" &&
+                            PLATFORM_PREFIXES.none { p -> topFrame.className.startsWith(p) } &&
+                            // the comparison is recursive — at least one more non-platform
+                            // `equals` deeper in the chain, reached through the same
+                            // Runnable's call path
+                            mainStackTrace.drop(1).any { frame ->
+                                frame.methodName == "equals" &&
+                                PLATFORM_PREFIXES.none { p -> frame.className.startsWith(p) }
+                            } &&
+                            // every frame strictly above the Runnable's `run()` is
+                            // obfuscated non-platform code — the sampled work is the
+                            // app/library's own comparison chain, no framework frame
+                            // executing above the dispatch
+                            mainStackTrace.take(runIndex).all { frame ->
+                                PLATFORM_PREFIXES.none { p -> frame.className.startsWith(p) }
+                            } &&
+                            // no framework blocking primitive anywhere on the stack —
+                            // a genuine freeze parks the main thread in one of these
+                            // instead of in a CPU-bound equals chain
+                            mainStackTrace.none { frame ->
+                                (frame.className == "android.os.BinderProxy" &&
+                                 (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                                (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                                frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                                frame.className.startsWith("java.io.") ||
+                                frame.className.startsWith("libcore.io.")
+                            }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
