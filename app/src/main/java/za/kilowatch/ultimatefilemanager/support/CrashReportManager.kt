@@ -1352,7 +1352,53 @@ object CrashReportManager {
                         }) &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall) {
+                    // 26. The main thread is sampled inside the super-constructor chain
+                    //     of an Activity while the framework cold-starts that Activity —
+                    //     e.g. ActivityThread.performLaunchActivity ->
+                    //     Instrumentation.newActivity -> Class.newInstance ->
+                    //     LanguageWelcomeActivity.<init> -> AppCompatActivity.<init> ->
+                    //     FragmentActivity.<init> -> ComponentActivity.<init> ->
+                    //     <obfuscated lifecycle helper>.a -> <obfuscated lifecycle
+                    //     owner>.getLifecycle (top frame, a trivial field-returning
+                    //     getter) (reported from a SEI Robotics Movix Pro, SDK 28,
+                    //     app 1.8.0-GOOGLE). The currently executing frame is
+                    //     `getLifecycle()`, which just returns the lifecycle-owner's
+                    //     registry field and cannot by itself occupy the main thread
+                    //     for 5 s; the only app frame is the launching Activity's own
+                    //     `<init>` (its constructor body has not even run — `super()`
+                    //     is still in progress), so the >5 s block is the one-time
+                    //     framework-driven cold-start cost (class loading, resource
+                    //     decode) on a low-end device, which the app cannot act on.
+                    //     The `AnrWatchdogThread` now treats a main-thread stack whose
+                    //     top frame is `getLifecycle`, with a `Class.newInstance`
+                    //     frame and a framework Activity-launch frame
+                    //     (`AppComponentFactory.instantiateActivity`/
+                    //     `Instrumentation.newActivity`/`ActivityThread.
+                    //     performLaunchActivity`), where every app frame is an Activity
+                    //     `<init>` constructor, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep
+                    //     the main thread inside app business logic — the top frame is
+                    //     not `getLifecycle`, or the Activity's own constructor (or a
+                    //     helper it constructs) is executing blocking work — and are
+                    //     still reported.
+                    val isActivityConstructorLifecycleStall =
+                        topFrame?.methodName == "getLifecycle" &&
+                        mainStackTrace.any {
+                            it.className == "java.lang.Class" && it.methodName == "newInstance"
+                        } &&
+                        (mainStackTrace.any {
+                            it.className == "android.app.AppComponentFactory" && it.methodName == "instantiateActivity"
+                        } || mainStackTrace.any {
+                            it.className == "android.app.Instrumentation" && it.methodName == "newActivity"
+                        } || mainStackTrace.any {
+                            it.className == "android.app.ActivityThread" && it.methodName == "performLaunchActivity"
+                        }) &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() &&
+                                appFrames.all { it.methodName == "<init>" && it.className.endsWith("Activity") }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
