@@ -2,10 +2,12 @@ package za.kilowatch.ultimatefilemanager.smartsort
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 import za.kilowatch.ultimatefilemanager.network.*
+
+/** Chunk size used when streaming a Smart Sort file move so large files never load fully into memory. */
+private const val STREAM_BUFFER_BYTES = 256 * 1024
 
 data class SmartSortFileEntry(
     val name: String,
@@ -21,7 +23,7 @@ interface SmartSortStorage {
     suspend fun mkdirs(path: String): Boolean
     suspend fun rename(from: String, to: String): Boolean
     suspend fun exists(path: String): Boolean
-    suspend fun writeBytes(path: String, data: ByteArray): Boolean
+    suspend fun writeStream(path: String, input: java.io.InputStream, size: Long): Boolean
     suspend fun delete(path: String): Boolean
 }
 
@@ -61,9 +63,9 @@ class LocalSmartSortStorage : SmartSortStorage {
         File(path).exists()
     }
 
-    override suspend fun writeBytes(path: String, data: ByteArray): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun writeStream(path: String, input: java.io.InputStream, size: Long): Boolean = withContext(Dispatchers.IO) {
         try {
-            File(path).writeBytes(data)
+            File(path).outputStream().use { out -> input.copyTo(out, bufferSize = STREAM_BUFFER_BYTES) }
             true
         } catch (_: Exception) { false }
     }
@@ -303,49 +305,22 @@ class SmartSortEngine {
         SmartSortResult(movedCount, 0, failedCount, failedFiles, null)
     }
 
-    private suspend fun downloadFromNetwork(storage: NetworkSmartSortStorage, path: String): ByteArray? = withContext(Dispatchers.IO) {
+    private suspend fun openNetworkInputStream(storage: NetworkSmartSortStorage, path: String): java.io.InputStream? = withContext(Dispatchers.IO) {
+        val (effectiveShare, cleanPath) = storage.getEffectiveShareAndPath(path)
         try {
-            val baos = java.io.ByteArrayOutputStream()
-            val (effectiveShare, cleanPath) = storage.getEffectiveShareAndPath(path)
             when (storage.sharesType()) {
-                ShareType.SMB -> {
-                    SmbShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.FTP -> {
-                    FtpShareClient.openInputStream(effectiveShare, cleanPath)?.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.SFTP, ShareType.SCP -> {
-                    SshShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.WEBDAV -> {
-                    WebDavShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.WEBDAV -> {
-                    WebDavShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.NFS -> {
-                    NfsShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.GOOGLE_DRIVE -> {
-                    GoogleDriveShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.ONEDRIVE -> {
-                    OnedriveShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.DROPBOX -> {
-                    DropboxShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> {
-                    S3ShareClient.openInputStream(effectiveShare, cleanPath).first.use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.TV -> {
-                    TvShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
-                }
-                ShareType.DLNA -> {
-                    DlnaShareClient.openInputStream(effectiveShare, cleanPath).use { inp -> inp.copyTo(baos) }
-                }
+                ShareType.SMB -> SmbShareClient.openInputStream(effectiveShare, cleanPath)
+                ShareType.FTP -> FtpShareClient.openInputStream(effectiveShare, cleanPath)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(effectiveShare, cleanPath)
+                ShareType.WEBDAV -> WebDavShareClient.openInputStream(effectiveShare, cleanPath).first
+                ShareType.NFS -> NfsShareClient.openInputStream(effectiveShare, cleanPath)
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(effectiveShare, cleanPath).first
+                ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(effectiveShare, cleanPath).first
+                ShareType.DROPBOX -> DropboxShareClient.openInputStream(effectiveShare, cleanPath).first
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(effectiveShare, cleanPath).first
+                ShareType.TV -> TvShareClient.openInputStream(effectiveShare, cleanPath)
+                ShareType.DLNA -> DlnaShareClient.openInputStream(effectiveShare, cleanPath)
             }
-            baos.toByteArray()
         } catch (_: Exception) { null }
     }
 
@@ -475,21 +450,38 @@ class SmartSortEngine {
         if (srcStorage::class == dstStorage::class) {
             if (srcStorage.rename(srcPath, dstPath)) return true
         }
-        val data = when (srcStorage) {
-            is LocalSmartSortStorage -> try { File(srcPath).readBytes() } catch (_: Exception) { null }
-            is NetworkSmartSortStorage -> downloadFromNetwork(srcStorage, srcPath)
-            else -> null
-        }
-        if (data != null && dstStorage.writeBytes(dstPath, data)) {
-            // Zero-byte guard: verify destination has data before deleting source
-            val destSize = getSmartSortDestSize(dstStorage, dstPath)
-            if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                    destSize, data.size.toLong(), File(srcPath).name)) {
-                srcStorage.delete(srcPath)
-                return true
+        val srcSize = getSmartSortDestSize(srcStorage, srcPath)
+        // Block the move only when the source size cannot be determined at all —
+        // an unknown size means the zero-byte guard cannot safely verify the copy.
+        // Empty files (size 0) are still moved.
+        if (srcSize < 0L) return false
+        return try {
+            val copied = when (srcStorage) {
+                is LocalSmartSortStorage -> {
+                    val srcFile = File(srcPath)
+                    if (!srcFile.isFile) return false
+                    srcFile.inputStream().use { input ->
+                        dstStorage.writeStream(dstPath, input, srcFile.length())
+                    }
+                }
+                is NetworkSmartSortStorage -> {
+                    val input = openNetworkInputStream(srcStorage, srcPath)
+                    if (input == null) false
+                    else input.use { dstStorage.writeStream(dstPath, it, srcSize) }
+                }
+                else -> false
             }
-        }
-        return false
+            if (copied) {
+                // Zero-byte guard: verify destination has data before deleting source
+                val destSize = getSmartSortDestSize(dstStorage, dstPath)
+                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                        destSize, srcSize, File(srcPath).name)) {
+                    srcStorage.delete(srcPath)
+                    return true
+                }
+            }
+            false
+        } catch (_: Exception) { false }
     }
 
     /**

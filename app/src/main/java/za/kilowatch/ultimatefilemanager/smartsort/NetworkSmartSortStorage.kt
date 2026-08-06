@@ -3,7 +3,9 @@ package za.kilowatch.ultimatefilemanager.smartsort
 import za.kilowatch.ultimatefilemanager.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayInputStream
+
+/** Chunk size used when streaming a Smart Sort file move so large files never load fully into memory. */
+private const val STREAM_BUFFER_BYTES = 256 * 1024
 
 class NetworkSmartSortStorage(
     private val share: NetworkShare
@@ -109,30 +111,29 @@ class NetworkSmartSortStorage(
         }
     }
 
-    override suspend fun writeBytes(path: String, data: ByteArray): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun writeStream(path: String, input: java.io.InputStream, size: Long): Boolean = withContext(Dispatchers.IO) {
         if (isUnsupported) return@withContext false
         val (effectiveShare, cleanPath) = getEffectiveShareAndPath(path)
         val noProgress: (Long) -> Unit = {}
         try {
             when (share.type) {
-                ShareType.FTP -> { FtpShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong()); true }
-                ShareType.ONEDRIVE -> { OnedriveShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong()); true }
-                ShareType.TV -> { TvShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong()); true }
-                ShareType.GOOGLE_DRIVE -> { GoogleDriveShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong()); true }
-                ShareType.DROPBOX -> { DropboxShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
-                ShareType.WEBDAV -> { WebDavShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
-                ShareType.WEBDAV -> { WebDavShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
-                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.uploadStream(effectiveShare, cleanPath, ByteArrayInputStream(data), data.size.toLong(), noProgress); true }
+                ShareType.FTP -> { FtpShareClient.uploadStream(effectiveShare, cleanPath, input, size); true }
+                ShareType.ONEDRIVE -> { OnedriveShareClient.uploadStream(effectiveShare, cleanPath, input, size); true }
+                ShareType.TV -> { TvShareClient.uploadStream(effectiveShare, cleanPath, input, size); true }
+                ShareType.GOOGLE_DRIVE -> { GoogleDriveShareClient.uploadStream(effectiveShare, cleanPath, input, size); true }
+                ShareType.DROPBOX -> { DropboxShareClient.uploadStream(effectiveShare, cleanPath, input, size, noProgress); true }
+                ShareType.WEBDAV -> { WebDavShareClient.uploadStream(effectiveShare, cleanPath, input, size, noProgress); true }
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> { S3ShareClient.uploadStream(effectiveShare, cleanPath, input, size, noProgress); true }
                 ShareType.SMB -> {
-                    SmbShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> out.write(data) }
+                    SmbShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> input.copyTo(out, bufferSize = STREAM_BUFFER_BYTES) }
                     true
                 }
                 ShareType.SFTP, ShareType.SCP -> {
-                    SshShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> out.write(data) }
+                    SshShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> input.copyTo(out, bufferSize = STREAM_BUFFER_BYTES) }
                     true
                 }
                 ShareType.NFS -> {
-                    NfsShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> out.write(data) }
+                    NfsShareClient.openOutputStream(effectiveShare, cleanPath).use { out -> input.copyTo(out, bufferSize = STREAM_BUFFER_BYTES) }
                     true
                 }
                 ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
