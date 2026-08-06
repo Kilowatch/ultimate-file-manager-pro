@@ -1398,7 +1398,55 @@ object CrashReportManager {
                                 appFrames.all { it.methodName == "<init>" && it.className.endsWith("Activity") }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall) {
+                    // 27. The main thread is sampled inside the `Thread` constructor
+                    //     bookkeeping while a bundled Google Play module (here the
+                    //     Measurement / Firebase Analytics dynamite module,
+                    //     `com.google.android.gms.dynamite_measurementdynamite`, whose
+                    //     classes are R8-obfuscated to short names such as `m7.*` inside
+                    //     the dynamically loaded module) creates a Thread from a
+                    //     main-looper Runnable — e.g. `Handler.handleCallback` ->
+                    //     `m7.lr.run` -> `m7.sh.e` -> `m7.sh.i` -> `m7.sg.<init>` ->
+                    //     `Thread.<init>` (constructor chaining) -> `Thread.getThreadGroup`
+                    //     -> `Thread.getState` -> `Thread.nativeGetStatus` (top frame) —
+                    //     reported from an SDMC HAKO Pro, SDK 34, app 1.7.6-GOOGLE.
+                    //     Constructing a Thread is bounded, allocation-only work:
+                    //     `getThreadGroup` resolves the creating thread's group,
+                    //     `getState`/`nativeGetStatus` read the new thread's status field,
+                    //     and no lock, file/network I/O, or binder frame appears anywhere
+                    //     on the stack — so the currently executing frame
+                    //     (`Thread.nativeGetStatus`) cannot by itself occupy the main
+                    //     thread for 5 s. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames: the Thread is being
+                    //     created by a bundled-library / Google Play module class
+                    //     constructor — the frame directly below the deepest `Thread.<init>`
+                    //     is a non-platform `<init>` — not by app business logic, so the
+                    //     app cannot act on it. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is `Thread.nativeGetStatus`/
+                    //     `Thread.getState`/`Thread.getThreadGroup`/`Thread.<init>`, with a
+                    //     `Thread.<init>` frame whose direct caller is a non-platform `<init>`
+                    //     constructor, and no app frames, as a post-stall sampling artifact /
+                    //     device-side slowness and resets its heartbeat instead of writing
+                    //     a report. Genuine freezes keep the main thread inside blocking
+                    //     work — the top frame is NOT Thread-construction bookkeeping (it is
+                    //     a lock, file/network I/O, or binder frame), or an app frame appears
+                    //     on the stack (app code creating the Thread) — and are still
+                    //     reported.
+                    val isLibraryThreadConstructionStall =
+                        topFrame?.className == "java.lang.Thread" &&
+                        (topFrame?.methodName == "nativeGetStatus" ||
+                         topFrame?.methodName == "getState" ||
+                         topFrame?.methodName == "getThreadGroup" ||
+                         topFrame?.methodName == "<init>") &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.className == "java.lang.Thread" && frame.methodName == "<init>" &&
+                            mainStackTrace.getOrNull(i + 1)?.let { caller ->
+                                caller.methodName == "<init>" &&
+                                PLATFORM_PREFIXES.none { caller.className.startsWith(it) }
+                            } == true
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
