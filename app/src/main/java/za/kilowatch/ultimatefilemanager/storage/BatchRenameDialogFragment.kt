@@ -66,11 +66,21 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "BatchRenameDialog"
+        private const val ARG_ITEMS_CACHE_KEY = "items_cache_key"
 
         fun newInstance(items: List<BatchRenameItem>): BatchRenameDialogFragment {
             val fragment = BatchRenameDialogFragment()
+            // The full items list can be large (thousands of files, each carrying
+            // a path and network-share context). Passing it through fragment
+            // arguments re-serializes it into the host Activity's saved-state
+            // parcel on every activity stop, which exceeds the Binder limit and
+            // crashes with TransactionTooLargeException at activityStopped.
+            // Only a small cache key travels via arguments; the list stays in
+            // the in-memory BatchRenameItemsCache (see PlaylistCache for the
+            // same pattern used by the media player).
+            val cacheKey = BatchRenameItemsCache.put(items)
             fragment.arguments = Bundle().apply {
-                putParcelableArray("items", items.toTypedArray())
+                putString(ARG_ITEMS_CACHE_KEY, cacheKey)
             }
             return fragment
         }
@@ -87,17 +97,29 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
             setStyle(STYLE_NORMAL, R.style.TransparentBottomSheetDialog)
         }
 
-        @Suppress("DEPRECATION")
-        val items: List<BatchRenameItem> = arguments?.getParcelableArray("items")
-            ?.filterIsInstance<BatchRenameItem>() ?: emptyList()
+        val cacheKey = arguments?.getString(ARG_ITEMS_CACHE_KEY)
+        val items: List<BatchRenameItem> = cacheKey?.let { BatchRenameItemsCache.peek(it) } ?: emptyList()
 
         if (items.isEmpty()) {
+            // Process was restarted (in-memory cache gone) or the dialog was
+            // never handed a list — close instead of crashing.
             dismiss()
             return
         }
 
         viewModel = ViewModelProvider(this, BatchRenameViewModel.Factory(items))
             .get(BatchRenameViewModel::class.java)
+    }
+
+    override fun onDestroy() {
+        // Release the cache entry once the dialog is truly finished. During a
+        // configuration change the fragment is destroyed and immediately
+        // re-created, and the re-created dialog still needs to peek the items,
+        // so keep the entry alive while the Activity is changing configuration.
+        if (!requireActivity().isChangingConfigurations) {
+            arguments?.getString(ARG_ITEMS_CACHE_KEY)?.let { BatchRenameItemsCache.remove(it) }
+        }
+        super.onDestroy()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
