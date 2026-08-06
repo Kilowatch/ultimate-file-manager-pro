@@ -410,17 +410,22 @@ object CrashReportManager {
                     // 5. The system is instantiating a Service on the main thread (e.g. a
                     //    WorkManager job firing via JobScheduler ->
                     //    androidx.work.impl.background.systemjob.SystemJobService) and the
-                    //    bundled library's static class initializer (`<clinit>`) is slow on a
+                    //    bundled library's one-time class-instantiation cost — static class
+                    //    initializer (`<clinit>`) or constructor (`<init>`) — is slow on a
                     //    low-end device. Service creation is always framework-driven —
                     //    ActivityThread.handleCreateService -> AppComponentFactory.
-                    //    instantiateService -> Class.newInstance -> <clinit> — and the block
-                    //    sits inside library class loading / static-init with no app frame
-                    //    executing, so the app cannot act on it. A genuine freeze that
-                    //    originates in app code keeps an app frame
-                    //    (`za.kilowatch.ultimatefilemanager.*`) on the stack and still fails
-                    //    this test.
+                    //    instantiateService -> Class.newInstance -> <clinit>/<init> — and the
+                    //    block sits inside library class loading / static-init / construction
+                    //    with no app frame executing, so the app cannot act on it. The
+                    //    watchdog can sample either frame of the same instantiation: the
+                    //    earlier report caught `<clinit>`; a later one (reported from a TCL
+                    //    Smart TV Pro, SDK 34, app 1.7.6) caught `SystemJobService.<init>`.
+                    //    Both are the same one-time cost. A genuine freeze that originates in
+                    //    app code keeps an app frame (`za.kilowatch.ultimatefilemanager.*`) on
+                    //    the stack — including an app Service's own `<init>`, whose class
+                    //    name starts with the app package — and still fails this test.
                     val isServiceClassInitStall =
-                        topFrame?.methodName == "<clinit>" &&
+                        (topFrame?.methodName == "<clinit>" || topFrame?.methodName == "<init>") &&
                         mainStackTrace.any { it.className == "java.lang.Class" && it.methodName == "newInstance" } &&
                         (mainStackTrace.any { it.className == "android.app.AppComponentFactory" && it.methodName == "instantiateService" } ||
                          mainStackTrace.any { it.className == "android.app.ActivityThread" && it.methodName == "handleCreateService" }) &&
