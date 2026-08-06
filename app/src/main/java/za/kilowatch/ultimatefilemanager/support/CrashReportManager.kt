@@ -1202,7 +1202,50 @@ object CrashReportManager {
                             it.className == "android.app.IActivityTaskManager\$Stub\$Proxy" && it.methodName == "startActivity"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall) {
+                    // 24. The main thread is sampled inside a trivial view lookup
+                    //     while an Activity's own `onCreate` runs during a
+                    //     framework-driven cold-start Activity launch — e.g. the UFM
+                    //     SAF document picker `SafPickerActivity.onCreate` ->
+                    //     `setupViews()` -> `<obfuscated helper>.findViewById` (top
+                    //     frame), under `Activity.performCreate` ->
+                    //     `Instrumentation.callActivityOnCreate` ->
+                    //     `ActivityThread.performLaunchActivity` (reported from an
+                    //     onn onn. Streaming Device 4K pro, SDK 34, app 1.7.7). The
+                    //     stack has exactly ONE app frame — the Activity's own
+                    //     `onCreate` lifecycle callback that the framework invoked —
+                    //     and the currently executing frame is `findViewById`, an
+                    //     O(view-tree depth) lookup that cannot by itself occupy the
+                    //     main thread for 5 s; the app's `onCreate` merely inflates
+                    //     its content view and resolves a handful of view references
+                    //     before its (bounded, in-memory) list build. The >5 s block
+                    //     is therefore the framework-driven launch itself — cold-start
+                    //     class loading, layout inflation and resource decode on a
+                    //     low-end device, with the report's own background threads
+                    //     (SSDP/DLNA discovery, SQLite, Netty event loops) RUNNABLE
+                    //     and starving the main thread — which the app cannot act on,
+                    //     the same class as the Activity-onStart and MaterialButton-
+                    //     inflation filters above. A genuine freeze keeps the main
+                    //     thread inside app business logic — a top frame that is not
+                    //     `findViewById`, more than one app frame, or the Activity's
+                    //     `onCreate` itself executing the blocking work (its frame is
+                    //     the current/top frame, or it calls directly into a lock,
+                    //     I/O, or binder) — and is still reported.
+                    val isActivityOnCreateViewLookupStall =
+                        topFrame?.methodName == "findViewById" &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate")
+                        } &&
+                        mainStackTrace.count { it.className.startsWith(APP_PACKAGE) } == 1 &&
+                        run {
+                            val appIdx = mainStackTrace.indexOfFirst { it.className.startsWith(APP_PACKAGE) }
+                            appIdx > 0 &&
+                            appIdx < mainStackTrace.lastIndex &&
+                            mainStackTrace[appIdx].className.endsWith("Activity") &&
+                            mainStackTrace[appIdx].methodName == "onCreate"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
