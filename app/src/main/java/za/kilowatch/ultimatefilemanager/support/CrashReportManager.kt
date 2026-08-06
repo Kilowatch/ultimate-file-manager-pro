@@ -1269,9 +1269,13 @@ object CrashReportManager {
 
                     // 25. The main thread is sampled inside the framework's
                     //     text-measurement span query while an editable TextView
-                    //     measures itself during a normal frame — top frame
-                    //     `android.text.SpannableStringBuilder.sort` (the span-index
-                    //     sort that `getSpans` runs after collecting a line's spans),
+                    //     measures itself during a normal frame — the currently
+                    //     executing frame is one of `android.text.SpannableStringBuilder.sort`
+                    //     (the span-index sort that `getSpans` runs after collecting
+                    //     a line's spans), `SpannableStringBuilder.getSpansRec` (the
+                    //     bounded recursive collection itself, sampled one or more
+                    //     frames earlier inside the same `getSpans` call), or
+                    //     `SpannableStringBuilder.getSpans` (the entry point) —
                     //     reached via `SpannableStringBuilder.getSpans` -> the
                     //     emoji-aware spanned wrapper's `getSpans` (an R8-obfuscated
                     //     bundled-library frame, e.g. `androidx.emoji2.text.
@@ -1286,7 +1290,14 @@ object CrashReportManager {
                     //     the same device and session that produced the already-
                     //     filtered `nDrawTextRun`, `MeasuredText`,
                     //     `SpannableStringBuilder.removeSpan`, `IdentityHashMap.get`
-                    //     and `View.invalidate` reports). This is the MEASURE-path
+                    //     and `View.invalidate` reports). The `getSpansRec`-top shape
+                    //     was reported from the same TECNO TECNO KJ5, SDK 33, app
+                    //     1.7.8-FOSS device and session, sampled one instruction
+                    //     deeper inside the same `getSpans` call — `getSpansRec`'s
+                    //     recursion depth is bounded by the fixed number of span
+                    //     buckets and the whole collection is bounded by the queried
+                    //     line's span count, so it cannot by itself occupy the main
+                    //     thread for 5 s. This is the MEASURE-path
                     //     counterpart of the filtered nDrawTextRun draw path: the
                     //     framework's own line measurement queries the line's spans
                     //     via `SpanSet.init`, and `getSpans` sorts the collected span
@@ -1311,7 +1322,9 @@ object CrashReportManager {
                     //     path — and still fails this test.
                     val isTextMeasureSpanQueryStall =
                         topFrame?.className == "android.text.SpannableStringBuilder" &&
-                        topFrame?.methodName == "sort" &&
+                        (topFrame?.methodName == "sort" ||
+                         topFrame?.methodName == "getSpansRec" ||
+                         topFrame?.methodName == "getSpans") &&
                         mainStackTrace.any {
                             it.className == "android.text.SpannableStringBuilder" &&
                             it.methodName == "getSpans"
