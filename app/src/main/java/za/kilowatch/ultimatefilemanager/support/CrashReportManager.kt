@@ -763,7 +763,41 @@ object CrashReportManager {
                         topFrame?.methodName == "encode" &&
                         mainStackTrace.any { it.className == "androidx.core.content.FileProvider" }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall) {
+                    // 16. The main thread is sampled inside a framework
+                    //     SpannableStringBuilder span bookkeeping operation — top
+                    //     frame `android.text.SpannableStringBuilder.
+                    //     restoreInvariants`/`removeSpan` — while a main-looper
+                    //     Runnable is being dispatched: a non-platform `run()` frame
+                    //     with `Handler.handleCallback` directly below it (reported
+                    //     from a TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS). Removing a
+                    //     single span walks the builder's span array, shifts the
+                    //     entries and re-establishes the sorted-order invariant —
+                    //     work bounded by the number of spans the app places on the
+                    //     text (search highlights are scoped to the currently loaded
+                    //     text page; syntax highlighting is capped at the edit-mode
+                    //     size limit), so it cannot by itself occupy the main thread
+                    //     for 5 s. The >5 s block is therefore device-side
+                    //     slowness / CPU starvation or a post-stall sample of the
+                    //     backlog the main looper drains after a genuine stall. A
+                    //     genuine freeze that keeps the main thread inside heavy app
+                    //     span work reaches the builder from app business logic
+                    //     WITHOUT a `Handler.handleCallback` message-dispatch frame on
+                    //     the stack (the app calls setSpan/removeSpan directly, e.g.
+                    //     from the search-highlight path or adapter bind code, not
+                    //     from a Runnable just dispatched by the main Handler) and is
+                    //     still reported.
+                    val isSpannableSpanRemovalStall =
+                        topFrame?.className == "android.text.SpannableStringBuilder" &&
+                        (topFrame?.methodName == "removeSpan" ||
+                         topFrame?.methodName == "restoreInvariants") &&
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.methodName == "run" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            mainStackTrace.getOrNull(i + 1)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
