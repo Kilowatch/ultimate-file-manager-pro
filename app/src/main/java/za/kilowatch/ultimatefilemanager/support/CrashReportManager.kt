@@ -786,6 +786,12 @@ object CrashReportManager {
                     //     Runnable dispatch. `View.invalidate` only marks the view
                     //     dirty (an O(1) flag set), so the whole chain is the same
                     //     bounded framework bookkeeping as the removeSpan-top shape.
+                    //     A later report from the same device and session sampled the
+                    //     identical chain one instruction deeper again — top frame
+                    //     `java.util.IdentityHashMap.get`, the insertion-order-map
+                    //     lookup/update inside `restoreInvariants`' bounded span-order
+                    //     walk — the same span-removal operation, just caught at a
+                    //     deeper O(1) map call (Shape 3).
                     //     The >5 s block is therefore device-side
                     //     slowness / CPU starvation or a post-stall sample of the
                     //     backlog the main looper drains after a genuine stall. A
@@ -832,6 +838,28 @@ object CrashReportManager {
                                  (it.methodName == "removeSpan" ||
                                   it.methodName == "restoreInvariants" ||
                                   it.methodName == "sendSpanRemoved")
+                             }) ||
+                            // Shape 3 — sampled one instruction deeper inside the
+                            // same bounded span-removal bookkeeping: `restoreInvariants`
+                            // re-establishes the sorted-order invariant by walking the
+                            // span array and querying/updating its insertion-order map,
+                            // so the sample can catch the `IdentityHashMap.get`/`put`
+                            // call inside that walk (top frame) instead of the
+                            // `removeSpan`/`restoreInvariants` frame itself (reported
+                            // from the same TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS
+                            // device and session). `IdentityHashMap.get`/`put` is an
+                            // O(1) map lookup/insert per span in the walk — the whole
+                            // walk stays bounded by the span count, so it cannot by
+                            // itself occupy the main thread for 5 s.
+                            (topFrame?.className == "java.util.IdentityHashMap" &&
+                             (topFrame?.methodName == "get" || topFrame?.methodName == "put") &&
+                             mainStackTrace.any {
+                                 it.className == "android.text.SpannableStringBuilder" &&
+                                 it.methodName == "restoreInvariants"
+                             } &&
+                             mainStackTrace.any {
+                                 it.className == "android.text.SpannableStringBuilder" &&
+                                 it.methodName == "removeSpan"
                              })
                         )
 
