@@ -1037,7 +1037,47 @@ object CrashReportManager {
                             it.className == "android.os.Handler" && it.methodName == "postDelayed"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall) {
+                    // 21. The main thread is sampled inside a device-vendor (OEM)
+                    //     HubSDK system-service lookup that the vendor ROM injects
+                    //     into the frame-rendering pipeline — e.g. TECNO/Transsion's
+                    //     `com.transsion.hubcore.view.TranChoreographerImpl.
+                    //     skippedFrames` (a Choreographer hook the ROM installs in
+                    //     every app's frame loop) -> `com.transsion.hubsdk.
+                    //     trancare.trancareassist.TranTrancareAssistManager.getService`
+                    //     -> `com.transsion.hubsdk.TranServiceManager.getServiceIBinder`
+                    //     -> `android.os.ServiceManager.getService` ->
+                    //     `IServiceManager$Stub$Proxy.checkService` ->
+                    //     `BinderProxy.transact` -> `transactNative` (top frame),
+                    //     reported from a TECNO TECNO KL7, SDK 34, app 1.7.8-GOOGLE.
+                    //     The main thread is inside `Choreographer.doFrame`, and the
+                    //     vendor's skipped-frame handler performs a synchronous
+                    //     binder round-trip to the system server's ServiceManager to
+                    //     fetch its own system service. The >5 s block is the system
+                    //     server's response latency to that vendor-initiated lookup,
+                    //     which the app cannot act on — the stack has zero UFM
+                    //     frames, and the vendor SDK's class names (`com.transsion.*`,
+                    //     injected by the TECNO ROM, not part of this app) are not
+                    //     platform-prefixed, so `isPureFrameworkStack` is false even
+                    //     though the wait is the same system-side class. A genuine
+                    //     freeze keeps the main thread inside app business logic (an
+                    //     app frame on the stack, or a top frame that is not
+                    //     `BinderProxy.transact`/`transactNative`) and still fails
+                    //     this test.
+                    val isVendorSdkServiceLookupStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        mainStackTrace.any {
+                            it.className.startsWith("com.transsion.hubsdk") ||
+                            it.className.startsWith("com.transsion.hubcore")
+                        } &&
+                        mainStackTrace.any {
+                            it.className.startsWith("android.os.ServiceManager") ||
+                            (it.className == "android.os.IServiceManager\$Stub\$Proxy" &&
+                             (it.methodName == "checkService" || it.methodName == "getService"))
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
