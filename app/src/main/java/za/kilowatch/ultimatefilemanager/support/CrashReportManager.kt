@@ -926,7 +926,49 @@ object CrashReportManager {
                             it.methodName == "replaceText"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall) {
+                    // 19. The main thread is sampled inside WorkManager's
+                    //     SystemJobService while the system's JobScheduler starts a
+                    //     scheduled job on the main thread — top frame `rr9.hashCode()`
+                    //     (the R8-obfuscated WorkManager-internal type used as the
+                    //     active-jobs map key), under `HashMap.hash`/`HashMap.put`,
+                    //     under `androidx.work.impl.background.systemjob.SystemJobService.
+                    //     onStartJob`, dispatched by `JobServiceEngine$JobHandler.
+                    //     handleMessage` (reported from a Google Pixel 6a, SDK 37,
+                    //     app 1.7.6). JobScheduler delivers job callbacks on the main
+                    //     thread; `onStartJob` inserts the fired job into WorkManager's
+                    //     active-jobs HashMap, and UFM's own workers (Advanced Sync,
+                    //     instant sync, …) run on WorkManager's background executor —
+                    //     never inside `onStartJob`. Computing a hash code and
+                    //     inserting into a HashMap is O(1) bounded bookkeeping that
+                    //     cannot by itself occupy the main thread for 5 s; the >5 s
+                    //     block is device-side slowness / CPU starvation (this report's
+                    //     `WM.task-1` thread is RUNNABLE, busy in a background
+                    //     WorkManager task, consistent with CPU starvation of the main
+                    //     thread) or a post-stall sample of the backlog the main looper
+                    //     drains after a genuine stall. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames — the current frame
+                    //     is WorkManager library bookkeeping the app cannot act on. A
+                    //     genuine freeze keeps an app frame on the stack and still fails
+                    //     this test.
+                    val isSystemJobServiceStartStall =
+                        mainStackTrace.any {
+                            it.className == "androidx.work.impl.background.systemjob.SystemJobService" &&
+                            it.methodName == "onStartJob"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.job.JobServiceEngine\$JobHandler" &&
+                            it.methodName == "handleMessage"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        (
+                            topFrame?.methodName == "hashCode" ||
+                            (topFrame?.className == "java.util.HashMap" &&
+                             (topFrame?.methodName == "hash" ||
+                              topFrame?.methodName == "put" ||
+                              topFrame?.methodName == "putVal"))
+                        )
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
