@@ -968,7 +968,48 @@ object CrashReportManager {
                               topFrame?.methodName == "putVal"))
                         )
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall) {
+                    // 20. The main thread is sampled at the entry of a freshly
+                    //     dispatched main-looper Runnable — top frame `ne2.run`
+                    //     (a non-platform, R8-obfuscated `run()` method) sitting
+                    //     directly on `android.os.Handler.handleCallback`
+                    //     (reported from a TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS
+                    //     — the same device and session that produced the
+                    //     already-filtered `MeasuredText`, `nDrawTextRun`,
+                    //     `SpannableStringBuilder.removeSpan` and `View.invalidate`
+                    //     reports). The sampled Runnable was just entered — its
+                    //     `run()` is the TOP frame with `Handler.handleCallback`
+                    //     directly below it and no deeper frames, so the main
+                    //     looper is demonstrably processing messages at sample
+                    //     time, which a thread parked inside a >5 s block cannot
+                    //     do. The >5 s block therefore occurred in a PREVIOUS
+                    //     main-looper message and this sample is the post-stall
+                    //     backlog the looper drains after recovery — the same
+                    //     family as the `StringBuilder.<init>`/`append` post-stall
+                    //     artifacts (filter 10), just sampled one frame earlier at
+                    //     the Runnable's own entry. This differs from the
+                    //     watchdog-heartbeat self-sample (`tickerJustRan`, filter
+                    //     4): there the watchdog catches ITS OWN 1-second ticker
+                    //     with a fresh timestamp; here `ne2` is a different
+                    //     main-looper Runnable with a stale timestamp, so
+                    //     `tickerJustRan` is false. A genuine freeze keeps the
+                    //     main thread inside the blocking work — the top frame is
+                    //     NOT a bare `run()` entry directly on
+                    //     `Handler.handleCallback` (it is a deeper blocking frame
+                    //     such as a lock, file I/O, or binder call) — and is
+                    //     still reported.
+                    val isBareRunTopPostStallStall =
+                        topFrame?.methodName == "run" &&
+                        PLATFORM_PREFIXES.none { topFrame.className.startsWith(it) } &&
+                        mainStackTrace.getOrNull(1)?.className == "android.os.Handler" &&
+                        mainStackTrace.getOrNull(1)?.methodName == "handleCallback" &&
+                        // Exclude the watchdog-heartbeat re-post shape (which
+                        // carries a Handler.postDelayed frame and is already
+                        // handled by `tickerJustRan`).
+                        mainStackTrace.none {
+                            it.className == "android.os.Handler" && it.methodName == "postDelayed"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
