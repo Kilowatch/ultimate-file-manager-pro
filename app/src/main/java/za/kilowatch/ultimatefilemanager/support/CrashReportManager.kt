@@ -791,7 +791,11 @@ object CrashReportManager {
                     //     `java.util.IdentityHashMap.get`, the insertion-order-map
                     //     lookup/update inside `restoreInvariants`' bounded span-order
                     //     walk — the same span-removal operation, just caught at a
-                    //     deeper O(1) map call (Shape 3).
+                    //     deeper O(1) map call (Shape 3); the latest report samples the
+                    //     same operation deeper still, inside the recursive `calcMax`
+                    //     max-walk that `restoreInvariants` runs to re-establish the
+                    //     span-order invariant — the same bounded bookkeeping, caught
+                    //     at the recursion itself (Shape 4).
                     //     The >5 s block is therefore device-side
                     //     slowness / CPU starvation or a post-stall sample of the
                     //     backlog the main looper drains after a genuine stall. A
@@ -853,6 +857,29 @@ object CrashReportManager {
                             // itself occupy the main thread for 5 s.
                             (topFrame?.className == "java.util.IdentityHashMap" &&
                              (topFrame?.methodName == "get" || topFrame?.methodName == "put") &&
+                             mainStackTrace.any {
+                                 it.className == "android.text.SpannableStringBuilder" &&
+                                 it.methodName == "restoreInvariants"
+                             } &&
+                             mainStackTrace.any {
+                                 it.className == "android.text.SpannableStringBuilder" &&
+                                 it.methodName == "removeSpan"
+                             }) ||
+                            // Shape 4 — sampled even deeper inside the same bounded
+                            // span-removal bookkeeping: `restoreInvariants` re-establishes
+                            // the sorted-order invariant by recursively recomputing each
+                            // span bucket's maximum (the `calcMax` recursion over the
+                            // fixed bucket tree), so the sample can catch that recursion
+                            // (top frame `SpannableStringBuilder.calcMax`) instead of the
+                            // `removeSpan`/`restoreInvariants` frame itself or the
+                            // `IdentityHashMap.get`/`put` call inside the walk (reported
+                            // from the same TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS device
+                            // and session). `calcMax`'s recursion depth is bounded by the
+                            // fixed number of span buckets and the total walk stays
+                            // bounded by the span count — bounded framework bookkeeping,
+                            // so it cannot by itself occupy the main thread for 5 s.
+                            (topFrame?.className == "android.text.SpannableStringBuilder" &&
+                             topFrame?.methodName == "calcMax" &&
                              mainStackTrace.any {
                                  it.className == "android.text.SpannableStringBuilder" &&
                                  it.methodName == "restoreInvariants"
