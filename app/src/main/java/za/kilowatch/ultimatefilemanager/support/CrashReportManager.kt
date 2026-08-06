@@ -568,10 +568,18 @@ object CrashReportManager {
                     //     block occurred in a PREVIOUS main-looper message and this sample is
                     //     post-stall backlog whose top frame is harmless string construction,
                     //     not the freeze itself (reported from a Google TV Streamer, SDK 34,
-                    //     app 1.7.6). Genuine freezes keep the main thread inside the blocking
-                    //     work — the top frame is not a trivial constructor directly under a
-                    //     Runnable just entered via `Handler.handleCallback` — and are still
-                    //     reported.
+                    //     app 1.7.6). A later report of the same family sampled the Runnable
+                    //     one instruction further in, at `java.lang.StringBuilder.append`
+                    //     (reported from an Innopia MundoGoTV, SDK 34, app 1.7.7): a single
+                    //     `append` of an already-resolved string is an O(n) buffer copy that
+                    //     cannot by itself occupy the thread for 5 s, and it sits directly
+                    //     under the same freshly dispatched `run()` (the direct caller of the
+                    //     append is the Runnable itself, with `Handler.handleCallback` one
+                    //     frame below it), so it is the same post-stall artifact just one
+                    //     frame further in. Genuine freezes keep the main thread inside the
+                    //     blocking work — the top frame is not a trivial StringBuilder
+                    //     `<init>`/`append` directly under a Runnable just entered via
+                    //     `Handler.handleCallback` — and are still reported.
                     val runFrame = mainStackTrace.getOrNull(1)
                     val isTrivialStringBuilderStartStall =
                         runFrame != null &&
@@ -580,7 +588,7 @@ object CrashReportManager {
                         mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
                         mainStackTrace.getOrNull(2)?.methodName == "handleCallback" &&
                         topFrame?.className == "java.lang.StringBuilder" &&
-                        topFrame?.methodName == "<init>"
+                        (topFrame?.methodName == "<init>" || topFrame?.methodName == "append")
 
                     // 11. The main thread is sampled during a cold-start layout inflation of
                     //     an Activity layout — top frame `android.widget.TextView.

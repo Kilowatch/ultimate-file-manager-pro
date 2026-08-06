@@ -5,7 +5,10 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8.0] — 2026-08-04
+## [1.8.1] — 2026-08-06
+
+### Fixed
+- Fixed a false-positive ANR (App Freeze) report when the ANR watchdog samples the main thread at `java.lang.StringBuilder.append` — one instruction past the already-filtered `StringBuilder.<init>` — directly under an obfuscated app/library `run()` dispatched by `Handler.handleCallback` (reported from an Innopia MundoGoTV, SDK 34, app 1.7.7). A single `append` of an already-resolved string is an O(n) buffer copy that cannot by itself occupy the thread for 5 s, and the frame sits directly under a Runnable just entered via the main Handler (the direct caller of the append is the Runnable itself, with `Handler.handleCallback` one frame below it), so it is the same post-stall sampling artifact as the constructor variant: the >5 s block occurred in a PREVIOUS main-looper message and this sample is post-stall backlog whose top frame is harmless string construction, not the freeze itself. The `AnrWatchdogThread` now treats a main-thread stack whose top frame is `StringBuilder.append` — in addition to the existing `StringBuilder.<init>` — whose second frame is a non-platform `run()`, and whose third frame is `Handler.handleCallback`, as a post-stall sampling artifact and resets its heartbeat instead of writing a report. Genuine freezes keep the main thread inside the blocking work — the top frame is not a trivial StringBuilder `<init>`/`append` directly under a Runnable just entered via `Handler.handleCallback` — and are still reported.
 
 ## [1.7.9] — 2026-08-01
 
