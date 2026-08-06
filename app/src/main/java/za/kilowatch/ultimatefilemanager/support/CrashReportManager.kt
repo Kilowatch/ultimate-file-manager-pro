@@ -1267,7 +1267,79 @@ object CrashReportManager {
                             mainStackTrace[appIdx].methodName == "onCreate"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall) {
+                    // 25. The main thread is sampled inside the framework's
+                    //     text-measurement span query while an editable TextView
+                    //     measures itself during a normal frame — top frame
+                    //     `android.text.SpannableStringBuilder.sort` (the span-index
+                    //     sort that `getSpans` runs after collecting a line's spans),
+                    //     reached via `SpannableStringBuilder.getSpans` -> the
+                    //     emoji-aware spanned wrapper's `getSpans` (an R8-obfuscated
+                    //     bundled-library frame, e.g. `androidx.emoji2.text.
+                    //     SpannableBuilder`, that delegates span queries to the inner
+                    //     builder) -> `SpanSet.init` -> the `TextLine` measure chain
+                    //     (`handleRun`/`measureRun`/`measure`/`metrics`) ->
+                    //     `Layout.getLineMax`/`getLineExtent` ->
+                    //     `TextView.desired`/`onMeasure`, dispatched from a
+                    //     frame-draw measure pass (`Choreographer.doFrame` /
+                    //     `ViewRootImpl.performMeasure`/`performTraversals`)
+                    //     (reported from a TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS —
+                    //     the same device and session that produced the already-
+                    //     filtered `nDrawTextRun`, `MeasuredText`,
+                    //     `SpannableStringBuilder.removeSpan`, `IdentityHashMap.get`
+                    //     and `View.invalidate` reports). This is the MEASURE-path
+                    //     counterpart of the filtered nDrawTextRun draw path: the
+                    //     framework's own line measurement queries the line's spans
+                    //     via `SpanSet.init`, and `getSpans` sorts the collected span
+                    //     indices — work bounded by the number of spans the app
+                    //     places on the text (search highlights are scoped to the
+                    //     currently loaded text page; syntax highlighting is capped
+                    //     at the edit-mode size limit), so it cannot by itself occupy
+                    //     the main thread for 5 s. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames — the only
+                    //     non-platform frame is the bundled-library spanned wrapper's
+                    //     `getSpans`, not app business logic. The >5 s block is
+                    //     therefore device-side slowness / CPU starvation on a very
+                    //     low-end device, or a post-stall sample (the Choreographer
+                    //     frame callback is an async message the main looper can
+                    //     process ahead of the overdue sync heartbeat ticker after a
+                    //     stall, leaving `tickerJustRan` false while the sampled
+                    //     measure is fast post-stall work). A genuine freeze keeps
+                    //     the main thread inside app business logic or heavy app
+                    //     span work — an app frame on the stack, or a span query
+                    //     that is not reached from the framework's
+                    //     `SpanSet.init`/`TextLine`/`TextView.onMeasure` measure
+                    //     path — and still fails this test.
+                    val isTextMeasureSpanQueryStall =
+                        topFrame?.className == "android.text.SpannableStringBuilder" &&
+                        topFrame?.methodName == "sort" &&
+                        mainStackTrace.any {
+                            it.className == "android.text.SpannableStringBuilder" &&
+                            it.methodName == "getSpans"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.text.SpanSet" && it.methodName == "init"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.text.TextLine" &&
+                            (it.methodName == "handleRun" ||
+                             it.methodName == "measureRun" ||
+                             it.methodName == "measure" ||
+                             it.methodName == "metrics")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" &&
+                            (it.methodName == "onMeasure" || it.methodName == "desired")
+                        } &&
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performMeasure" || it.methodName == "performTraversals")
+                        }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
