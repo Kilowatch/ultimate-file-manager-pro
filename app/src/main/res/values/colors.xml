@@ -124,6 +124,8 @@
     <color name="mobile_toolbar_solid">#FFF0F4FF</color>
     <!-- Card background: crisp white frosted surface -->
     <color name="mobile_glass_card">#DDFFFFFF</color>
+    <color name="bg_glass_card">#DDFFFFFF</color>
+    <color name="tv_bg_card_dark">#1A000000</color>
     <!-- Thicker glass overlay (selection bar, modals) -->
     <color name="mobile_glass_card_thick">#EEFFFFFF</color>
     <!-- Card stroke / border: subtle gray edge -->

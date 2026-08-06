@@ -1636,6 +1636,36 @@ APKs
     <string name="batch_rename_option_padding">
 إضافة حشوة الأرقام
 </string>
+    <string name="batch_rename_replace_text_hint">
+استبدال النص
+</string>
+    <string name="batch_rename_replace_with_hint">
+بـ
+</string>
+    <string name="batch_rename_custom_ext_hint">
+الامتداد الجديد (مثال: csv)
+</string>
+    <string name="batch_rename_tokens_label">
+رموز النمط
+</string>
+    <string name="batch_rename_help_title">
+مساعدة رموز النمط
+</string>
+    <string name="batch_rename_help_message">
+رموز النمط:\n
+• # / ### — أرقام تسلسلية (1 أو 001)\n
+• $N / $name — الاسم الأصلي بدون الامتداد (مثال: photo)\n
+• $F / $fullname — اسم الملف الأصلي الكامل مع الامتداد (مثال: photo.jpg)\n
+• $Y — السنة (مثال: 2026)\n
+• $M — الشهر (مثال: 08)\n
+• $D — اليوم (مثال: 06)\n
+• $U / $upper — تحويل الاسم إلى أحرف كبيرة (مثال: PHOTO.JPG)\n
+• $L / $lower — تحويل الاسم إلى أحرف صغيرة (مثال: photo.jpg)\n
+• $E / $ext — تبديل الامتداد المخصص (مثال: csv)\n
+\n
+استبدال النص ← بـ:\n
+يبحث عن نص في أسماء الملفات الأصلية ويستبدله أو يزيله.
+</string>
     <string name="batch_rename_padding_length_label">
 طول الحشوة (الحد الأقصى 9)
 </string>

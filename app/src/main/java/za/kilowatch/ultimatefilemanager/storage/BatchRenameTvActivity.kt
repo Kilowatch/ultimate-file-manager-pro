@@ -43,6 +43,8 @@ class BatchRenameTvActivity : AppCompatActivity() {
 
     // UI references
     private lateinit var edtPattern: TextInputEditText
+    private lateinit var edtReplaceText: TextInputEditText
+    private lateinit var edtReplaceWith: TextInputEditText
     private lateinit var txtPatternError: android.widget.TextView
     private lateinit var btnToggleOriginal: MaterialButton
     private lateinit var btnTogglePadding: MaterialButton
@@ -77,6 +79,7 @@ class BatchRenameTvActivity : AppCompatActivity() {
         bindViews()
         setupRecyclerView()
         setupPatternEditText()
+        setupReplaceInputs()
         setupToggleButtons()
         setupPaddingInputs()
         setupActionButtons()
@@ -88,6 +91,8 @@ class BatchRenameTvActivity : AppCompatActivity() {
 
     private fun bindViews() {
         edtPattern = findViewById(R.id.edtPattern)
+        edtReplaceText = findViewById(R.id.edtReplaceText)
+        edtReplaceWith = findViewById(R.id.edtReplaceWith)
         txtPatternError = findViewById(R.id.txtPatternError)
         btnToggleOriginal = findViewById(R.id.btnToggleOriginal)
         btnTogglePadding = findViewById(R.id.btnTogglePadding)
@@ -98,6 +103,74 @@ class BatchRenameTvActivity : AppCompatActivity() {
         btnCancel = findViewById(R.id.btnCancel)
         btnRename = findViewById(R.id.btnRename)
         btnBack = findViewById(R.id.btnBack)
+
+        findViewById<View>(R.id.btnHelp)?.setOnClickListener {
+            showHelpDialog()
+        }
+
+        findViewById<TextInputEditText>(R.id.edtExtension)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomExtension(s?.toString() ?: "")
+            }
+        })
+
+        findViewById<TextInputEditText>(R.id.edtYear)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomYear(s?.toString() ?: "")
+            }
+        })
+
+        findViewById<TextInputEditText>(R.id.edtMonth)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomMonth(s?.toString() ?: "")
+            }
+        })
+
+        findViewById<TextInputEditText>(R.id.edtDay)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomDay(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun showHelpDialog() {
+        MaterialAlertDialogBuilder(
+            this,
+            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        )
+            .setTitle(getString(R.string.batch_rename_help_title))
+            .setMessage(getString(R.string.batch_rename_help_message))
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+            .also { dialog ->
+                dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+            }
+    }
+
+    private fun setupReplaceInputs() {
+        edtReplaceText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateReplaceText(s?.toString() ?: "")
+            }
+        })
+
+        edtReplaceWith.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateReplaceWith(s?.toString() ?: "")
+            }
+        })
     }
 
     // ── RecyclerView ─────────────────────────────────────────────────────────
@@ -225,7 +298,7 @@ class BatchRenameTvActivity : AppCompatActivity() {
     private fun setupToggleButtons() {
         btnToggleOriginal.setOnClickListener {
             val currentState = viewModel.state.value
-            val token = "{Original}"
+            val token = "\$F"
             val newState = !currentState.useOriginal
 
             suppressTextWatcher = true
@@ -422,6 +495,23 @@ class BatchRenameTvActivity : AppCompatActivity() {
                 btnTogglePadding.isChecked = state.usePadding
 
                 layoutPaddingControls.visibility = if (state.usePadding) View.VISIBLE else View.GONE
+                findViewById<View>(R.id.cardExtensionControls)?.visibility =
+                    if (state.useCustomExtension) View.VISIBLE else View.GONE
+
+                val hasDateSelection = state.hasYearToken || state.hasMonthToken || state.hasDayToken
+                findViewById<View>(R.id.cardDateControls)?.visibility =
+                    if (hasDateSelection) View.VISIBLE else View.GONE
+
+                findViewById<View>(R.id.tilYear)?.visibility =
+                    if (state.hasYearToken) View.VISIBLE else View.GONE
+                findViewById<View>(R.id.tilMonth)?.visibility =
+                    if (state.hasMonthToken) View.VISIBLE else View.GONE
+                findViewById<View>(R.id.tilDay)?.visibility =
+                    if (state.hasDayToken) View.VISIBLE else View.GONE
+
+                val isExtActive = state.useCustomExtension
+                btnToggleOriginal.isEnabled = !isExtActive
+                btnToggleOriginal.alpha = if (isExtActive) 0.5f else 1.0f
 
                 if (state.patternError != null) {
                     txtPatternError.text = getString(

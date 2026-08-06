@@ -581,6 +581,12 @@
     <string name="batch_rename_hint">Enter new name…</string>
     <string name="batch_rename_option_original">Keep Original Text</string>
     <string name="batch_rename_option_padding">Add Number Padding</string>
+    <string name="batch_rename_replace_text_hint">Replace text</string>
+    <string name="batch_rename_replace_with_hint">With</string>
+    <string name="batch_rename_custom_ext_hint">New extension (e.g. csv)</string>
+    <string name="batch_rename_tokens_label">Pattern Tokens</string>
+    <string name="batch_rename_help_title">Pattern Tokens Help</string>
+    <string name="batch_rename_help_message">Pattern Tokens:\n• # / ### — Sequential numbers (1 or 001)\n• $N / $name — Original name without extension (e.g. photo)\n• $F / $fullname — Full original filename with extension (e.g. photo.jpg)\n• $Y — Year (e.g. 2026)\n• $M — Month (e.g. 08)\n• $D — Day (e.g. 06)\n• $U / $upper — Convert name to UPPERCASE (e.g. PHOTO.JPG)\n• $L / $lower — Convert name to lowercase (e.g. photo.jpg)\n• $E / $ext — Custom extension toggle (e.g. csv)\n\nReplace Text → With:\nFinds text in original filenames and replaces or removes it.</string>
     <string name="batch_rename_padding_length_label">Padding Length (max 9)</string>
     <string name="batch_rename_padding_start_label">Starting Number</string>
     <string name="batch_rename_preview_header">Preview</string>

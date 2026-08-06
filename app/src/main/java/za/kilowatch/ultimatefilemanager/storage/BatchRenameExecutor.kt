@@ -16,6 +16,7 @@ import za.kilowatch.ultimatefilemanager.network.SmbShareClient
 import za.kilowatch.ultimatefilemanager.network.SshShareClient
 import za.kilowatch.ultimatefilemanager.network.TvShareClient
 import za.kilowatch.ultimatefilemanager.network.WebDavShareClient
+import za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier
 import java.io.File
 
 /**
@@ -63,6 +64,9 @@ object BatchRenameExecutor {
         }
 
         // ── Local items ──────────────────────────────────────────────────
+        val scannedOldPaths = mutableListOf<String>()
+        val scannedNewPaths = mutableListOf<String>()
+
         for ((index, item) in localItems) {
             val newFullName = resolvedNames[index]
             try {
@@ -73,16 +77,46 @@ object BatchRenameExecutor {
                     continue
                 }
                 val newFile = File(localFile.parent, newFullName)
-                val ok = localFile.renameTo(newFile)
+
+                // On case-insensitive filesystems (FAT32, exFAT, NTFS, sdcardfs),
+                // renaming "PHOTO.JPG" -> "photo.jpg" directly fails because File.renameTo()
+                // considers the target destination to be the existing file.
+                // We perform a 2-step intermediate rename when only letter casing changes.
+                val isCaseOnlyChange = localFile.name.equals(newFile.name, ignoreCase = true) && localFile.name != newFile.name
+
+                val ok = if (isCaseOnlyChange) {
+                    val tempFile = File(localFile.parent, "${newFullName}.ufm_tmp_${System.currentTimeMillis()}")
+                    if (localFile.renameTo(tempFile)) {
+                        val step2Ok = tempFile.renameTo(newFile)
+                        if (!step2Ok) {
+                            tempFile.renameTo(localFile) // Rollback if step 2 fails
+                        }
+                        step2Ok
+                    } else {
+                        false
+                    }
+                } else {
+                    localFile.renameTo(newFile)
+                }
+
                 if (ok) {
                     successCount++
                     FileTagsManager.onPathMoved(context, localFile.absolutePath, newFile.absolutePath)
+                    scannedOldPaths.add(localFile.absolutePath)
+                    scannedNewPaths.add(newFile.absolutePath)
                 } else {
                     failures.add(item to "renameTo returned false")
                 }
             } catch (e: Exception) {
                 failures.add(item to (e.message ?: "Unknown error"))
             }
+        }
+
+        if (scannedOldPaths.isNotEmpty()) {
+            MediaScannerNotifier.scanFiles(context, scannedOldPaths)
+        }
+        if (scannedNewPaths.isNotEmpty()) {
+            MediaScannerNotifier.scanFiles(context, scannedNewPaths)
         }
 
         // ── Network items (group by ShareType) ────────────────────────────
@@ -92,12 +126,8 @@ object BatchRenameExecutor {
             }
 
         for ((type, group) in byType) {
-            // All items in a group share the same share object (or should)
             var share = group.firstOrNull()?.second?.networkShare ?: continue
 
-            // Server-mode SMB: extract share name from first segment of item paths.
-            // Assumes all items in the group are from the same share, so the first
-            // item's path is representative (e.g. "ShareName/sub/file.txt" → "ShareName").
             if (share.isServerMode && share.remotePath.isEmpty()) {
                 val firstItem = group.firstOrNull()?.second
                 val samplePath = firstItem?.networkFile?.path?.trimStart('/')
@@ -156,11 +186,6 @@ object BatchRenameExecutor {
     /**
      * Build the target path for a network file rename.
      * The target path is: parent directory of the original + new name.
-     *
-     * Example:
-     * - fromPath = "/share/folder/photo.jpg"
-     * - newName  = "Test 001.jpg"
-     * - result   = "/share/folder/Test 001.jpg"
      */
     private fun buildTargetPath(fromPath: String, newName: String): String {
         val lastSlash = fromPath.lastIndexOf('/')

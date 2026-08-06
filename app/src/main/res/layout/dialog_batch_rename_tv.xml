@@ -7,17 +7,35 @@
     android:orientation="vertical"
     android:padding="32dp">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/txtTitle"
+    <!-- Title + Help Button -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/batch_rename_title"
-        android:textColor="@color/tv_text_primary"
-        android:textSize="22sp"
-        android:fontFamily="sans-serif-medium"
-        android:focusable="false"
-        android:layout_marginBottom="16dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/batch_rename_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-medium"
+            android:focusable="false" />
+
+        <ImageView
+            android:id="@+id/btnHelp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_help"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:contentDescription="@string/batch_rename_help_title" />
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollTv"
@@ -51,8 +69,211 @@
                     android:textSize="18sp"
                     android:paddingVertical="16dp"
                     android:focusable="true"
-                    android:nextFocusDown="@id/btnToggleOriginal" />
+                    android:nextFocusDown="@id/edtReplaceText" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Replace Text -> With Row -->
+            <LinearLayout
+                android:id="@+id/layoutReplaceControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilReplaceText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:hintTextColor="@color/tv_text_hint"
+                    app:boxStrokeColor="@color/tv_button_focused_yellow"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtReplaceText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/batch_rename_replace_text_hint"
+                        android:singleLine="true"
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_hint"
+                        android:textSize="16sp"
+                        android:paddingVertical="12dp"
+                        android:focusable="true"
+                        android:nextFocusUp="@id/edtPattern"
+                        android:nextFocusRight="@id/edtReplaceWith"
+                        android:nextFocusDown="@id/btnToggleOriginal" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilReplaceWith"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:hintTextColor="@color/tv_text_hint"
+                    app:boxStrokeColor="@color/tv_button_focused_yellow"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtReplaceWith"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/batch_rename_replace_with_hint"
+                        android:singleLine="true"
+                        android:textColor="@color/tv_text_primary"
+                        android:textColorHint="@color/tv_text_hint"
+                        android:textSize="16sp"
+                        android:paddingVertical="12dp"
+                        android:focusable="true"
+                        android:nextFocusUp="@id/edtPattern"
+                        android:nextFocusLeft="@id/edtReplaceText"
+                        android:nextFocusDown="@id/btnTogglePadding" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Custom Extension CardView (initially GONE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExtensionControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/tv_glass_white_10"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/tv_bg_card_dark">
+
+                <LinearLayout
+                    android:id="@+id/layoutExtensionControls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilExtension"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/tv_text_hint"
+                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtExtension"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/batch_rename_custom_ext_hint"
+                            android:singleLine="true"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:textSize="16sp"
+                            android:paddingVertical="12dp"
+                            android:focusable="true"
+                            android:nextFocusUp="@id/edtReplaceText"
+                            android:nextFocusDown="@id/btnToggleOriginal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Custom Date Options CardView (initially GONE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDateControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/tv_glass_white_10"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/tv_bg_card_dark">
+
+                <LinearLayout
+                    android:id="@+id/layoutDateControls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="12dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilYear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/tv_text_hint"
+                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtYear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Year (e.g. 2026)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:textSize="14sp"
+                            android:paddingVertical="10dp"
+                            android:focusable="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="2dp"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/tv_text_hint"
+                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Month (e.g. 08)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:textSize="14sp"
+                            android:paddingVertical="10dp"
+                            android:focusable="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/tv_text_hint"
+                        app:boxStrokeColor="@color/tv_button_focused_yellow"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtDay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Day (e.g. 06)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/tv_text_primary"
+                            android:textColorHint="@color/tv_text_hint"
+                            android:textSize="14sp"
+                            android:paddingVertical="10dp"
+                            android:focusable="true" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Inline error text -->
             <TextView

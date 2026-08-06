@@ -1636,6 +1636,36 @@ Pertahankan Teks Asli
     <string name="batch_rename_option_padding">
 Tambahkan Padding Angka
 </string>
+    <string name="batch_rename_replace_text_hint">
+Ganti teks
+</string>
+    <string name="batch_rename_replace_with_hint">
+Dengan
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Ekstensi baru (mis. csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Token Pola
+</string>
+    <string name="batch_rename_help_title">
+Bantuan Token Pola
+</string>
+    <string name="batch_rename_help_message">
+Token Pola:\n
+• # / ### — Angka berurutan (1 atau 001)\n
+• $N / $name — Nama asli tanpa ekstensi (mis. foto)\n
+• $F / $fullname — Nama file asli lengkap dengan ekstensi (mis. foto.jpg)\n
+• $Y — Tahun (mis. 2026)\n
+• $M — Bulan (mis. 08)\n
+• $D — Hari (mis. 06)\n
+• $U / $upper — Ubah nama menjadi HURUF BESAR (mis. FOTO.JPG)\n
+• $L / $lower — Ubah nama menjadi huruf kecil (mis. foto.jpg)\n
+• $E / $ext — Sakelar ekstensi khusus (mis. csv)\n
+\n
+Ganti Teks → Dengan:\n
+Menemukan teks dalam nama file asli lalu mengganti atau menghapusnya.
+</string>
     <string name="batch_rename_padding_length_label">
 Panjang Padding (maks 9)
 </string>

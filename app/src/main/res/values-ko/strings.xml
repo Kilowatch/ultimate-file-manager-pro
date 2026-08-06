@@ -1636,6 +1636,36 @@ UFM 슬라이드 쇼
     <string name="batch_rename_option_padding">
 번호 패딩 추가
 </string>
+    <string name="batch_rename_replace_text_hint">
+바꿀 텍스트
+</string>
+    <string name="batch_rename_replace_with_hint">
+다음으로
+</string>
+    <string name="batch_rename_custom_ext_hint">
+새 확장자 (예: csv)
+</string>
+    <string name="batch_rename_tokens_label">
+패턴 토큰
+</string>
+    <string name="batch_rename_help_title">
+패턴 토큰 도움말
+</string>
+    <string name="batch_rename_help_message">
+패턴 토큰:\n
+• # / ### — 순차 번호 (1 또는 001)\n
+• $N / $name — 확장자 없는 원본 이름 (예: photo)\n
+• $F / $fullname — 확장자를 포함한 전체 원본 파일 이름 (예: photo.jpg)\n
+• $Y — 연도 (예: 2026)\n
+• $M — 월 (예: 08)\n
+• $D — 일 (예: 06)\n
+• $U / $upper — 이름을 대문자로 변환 (예: PHOTO.JPG)\n
+• $L / $lower — 이름을 소문자로 변환 (예: photo.jpg)\n
+• $E / $ext — 사용자 지정 확장자 토글 (예: csv)\n
+\n
+바꿀 텍스트 → 다음으로:\n
+원본 파일 이름에서 텍스트를 찾아 바꾸거나 제거합니다.
+</string>
     <string name="batch_rename_padding_length_label">
 패딩 길이 (최대 9)
 </string>

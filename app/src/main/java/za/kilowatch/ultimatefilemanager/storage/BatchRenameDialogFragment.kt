@@ -53,6 +53,8 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
 
     // UI references
     private lateinit var edtPattern: TextInputEditText
+    private lateinit var edtReplaceText: TextInputEditText
+    private lateinit var edtReplaceWith: TextInputEditText
     private lateinit var txtPatternError: android.widget.TextView
     private lateinit var btnToggleOriginal: MaterialButton
     private lateinit var btnTogglePadding: MaterialButton
@@ -70,14 +72,6 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
 
         fun newInstance(items: List<BatchRenameItem>): BatchRenameDialogFragment {
             val fragment = BatchRenameDialogFragment()
-            // The full items list can be large (thousands of files, each carrying
-            // a path and network-share context). Passing it through fragment
-            // arguments re-serializes it into the host Activity's saved-state
-            // parcel on every activity stop, which exceeds the Binder limit and
-            // crashes with TransactionTooLargeException at activityStopped.
-            // Only a small cache key travels via arguments; the list stays in
-            // the in-memory BatchRenameItemsCache (see PlaylistCache for the
-            // same pattern used by the media player).
             val cacheKey = BatchRenameItemsCache.put(items)
             fragment.arguments = Bundle().apply {
                 putString(ARG_ITEMS_CACHE_KEY, cacheKey)
@@ -101,8 +95,6 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
         val items: List<BatchRenameItem> = cacheKey?.let { BatchRenameItemsCache.peek(it) } ?: emptyList()
 
         if (items.isEmpty()) {
-            // Process was restarted (in-memory cache gone) or the dialog was
-            // never handed a list — close instead of crashing.
             dismiss()
             return
         }
@@ -112,10 +104,6 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
     }
 
     override fun onDestroy() {
-        // Release the cache entry once the dialog is truly finished. During a
-        // configuration change the fragment is destroyed and immediately
-        // re-created, and the re-created dialog still needs to peek the items,
-        // so keep the entry alive while the Activity is changing configuration.
         if (!requireActivity().isChangingConfigurations) {
             arguments?.getString(ARG_ITEMS_CACHE_KEY)?.let { BatchRenameItemsCache.remove(it) }
         }
@@ -149,6 +137,8 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
         bindViews(view)
         setupRecyclerView()
         setupPatternEditText()
+        setupReplaceInputs()
+        setupTokenChips(view)
         setupToggleButtons()
         setupPaddingInputs()
         setupActionButtons()
@@ -156,7 +146,6 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
         setupBackHandling()
 
         if (!isTv) {
-            // Auto-open keyboard on mobile
             edtPattern.requestFocus()
             dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
@@ -186,6 +175,8 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
 
     private fun bindViews(view: View) {
         edtPattern = view.findViewById(R.id.edtPattern)
+        edtReplaceText = view.findViewById(R.id.edtReplaceText)
+        edtReplaceWith = view.findViewById(R.id.edtReplaceWith)
         txtPatternError = view.findViewById(R.id.txtPatternError)
         btnToggleOriginal = view.findViewById(R.id.btnToggleOriginal)
         btnTogglePadding = view.findViewById(R.id.btnTogglePadding)
@@ -195,6 +186,147 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
         recyclerPreview = view.findViewById(R.id.recyclerPreview)
         btnCancel = view.findViewById(R.id.btnCancel)
         btnRename = view.findViewById(R.id.btnRename)
+
+        val btnHelp = view.findViewById<View>(R.id.btnHelp)
+        btnHelp?.setOnClickListener {
+            showHelpDialog()
+        }
+
+        view.findViewById<TextInputEditText>(R.id.edtExtension)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomExtension(s?.toString() ?: "")
+            }
+        })
+
+        view.findViewById<TextInputEditText>(R.id.edtYear)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomYear(s?.toString() ?: "")
+            }
+        })
+
+        view.findViewById<TextInputEditText>(R.id.edtMonth)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomMonth(s?.toString() ?: "")
+            }
+        })
+
+        view.findViewById<TextInputEditText>(R.id.edtDay)?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.setCustomDay(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun showHelpDialog() {
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        )
+            .setTitle(getString(R.string.batch_rename_help_title))
+            .setMessage(getString(R.string.batch_rename_help_message))
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+            .also { dialog ->
+                dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+            }
+    }
+
+    private fun setupReplaceInputs() {
+        edtReplaceText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateReplaceText(s?.toString() ?: "")
+            }
+        })
+
+        edtReplaceWith.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                viewModel.updateReplaceWith(s?.toString() ?: "")
+            }
+        })
+    }
+
+    private fun setupTokenChips(view: View) {
+        val chipsMap = mapOf(
+            R.id.chipNumber to "#",
+            R.id.chipPaddedNumber to "###",
+            R.id.chipName to "\$N",
+            R.id.chipFullName to "\$F",
+            R.id.chipYear to "\$Y",
+            R.id.chipMonth to "\$M",
+            R.id.chipDay to "\$D"
+        )
+        for ((chipId, token) in chipsMap) {
+            val chip = view.findViewById<com.google.android.material.chip.Chip>(chipId) ?: continue
+            chip.setOnClickListener {
+                if (chip.isChecked) {
+                    insertToken(token)
+                } else {
+                    removeToken(token)
+                }
+                when (chipId) {
+                    R.id.chipYear -> viewModel.toggleYearOption()
+                    R.id.chipMonth -> viewModel.toggleMonthOption()
+                    R.id.chipDay -> viewModel.toggleDayOption()
+                }
+            }
+        }
+
+        view.findViewById<com.google.android.material.chip.Chip>(R.id.chipUpper)?.setOnClickListener {
+            viewModel.toggleUpperOption()
+        }
+        view.findViewById<com.google.android.material.chip.Chip>(R.id.chipLower)?.setOnClickListener {
+            viewModel.toggleLowerOption()
+        }
+        view.findViewById<com.google.android.material.chip.Chip>(R.id.chipExt)?.setOnClickListener {
+            val currentState = viewModel.state.value.useCustomExtension
+            val nextState = !currentState
+            viewModel.toggleCustomExtension()
+            if (nextState) {
+                if (!edtPattern.text.toString().contains("\$N")) {
+                    insertToken("\$N")
+                }
+                removeToken("\$F")
+            }
+        }
+    }
+
+    private fun removeToken(token: String) {
+        suppressTextWatcher = true
+        val text = edtPattern.text?.toString() ?: ""
+        val cleaned = text.replace(token, "").replace("  ", " ").trim()
+        edtPattern.setText(cleaned)
+        edtPattern.setSelection(cleaned.length)
+        suppressTextWatcher = false
+
+        applyTokenSpans()
+        viewModel.setPatternText(cleaned)
+    }
+
+    private fun insertToken(token: String) {
+        val cursor = edtPattern.selectionStart.coerceAtLeast(0)
+        val text = edtPattern.text?.toString() ?: ""
+        val needsSpace = text.isNotEmpty() && !text.endsWith(" ") && cursor == text.length
+        val insertion = (if (needsSpace) " " else "") + token
+        val newText = if (cursor >= text.length) {
+            text + insertion
+        } else {
+            text.substring(0, cursor) + insertion + text.substring(cursor)
+        }
+        edtPattern.setText(newText)
+        edtPattern.setSelection((cursor + insertion.length).coerceAtMost(newText.length))
+        viewModel.updatePattern(newText)
     }
 
     // ── RecyclerView ─────────────────────────────────────────────────────────
@@ -334,7 +466,7 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
     private fun setupToggleButtons() {
         btnToggleOriginal.setOnClickListener {
             val currentState = viewModel.state.value
-            val token = "{Original}"
+            val token = "\$F"
             val newState = !currentState.useOriginal
 
             suppressTextWatcher = true
@@ -539,8 +671,42 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
                 updateButtonState(btnToggleOriginal, state.useOriginal)
                 updateButtonState(btnTogglePadding, state.usePadding)
 
-                // Toggle padding controls visibility
+                // Toggle padding, extension & date card controls visibility
                 layoutPaddingControls.visibility = if (state.usePadding) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.cardExtensionControls)?.visibility =
+                    if (state.useCustomExtension) View.VISIBLE else View.GONE
+
+                val hasDateSelection = state.hasYearToken || state.hasMonthToken || state.hasDayToken
+                view?.findViewById<View>(R.id.cardDateControls)?.visibility =
+                    if (hasDateSelection) View.VISIBLE else View.GONE
+
+                view?.findViewById<View>(R.id.tilYear)?.visibility =
+                    if (state.hasYearToken) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.tilMonth)?.visibility =
+                    if (state.hasMonthToken) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.tilDay)?.visibility =
+                    if (state.hasDayToken) View.VISIBLE else View.GONE
+
+                // Disable $F when $E is active
+                val isExtActive = state.useCustomExtension
+                val chipFullName = view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipFullName)
+                chipFullName?.isEnabled = !isExtActive
+                chipFullName?.alpha = if (isExtActive) 0.5f else 1.0f
+
+                btnToggleOriginal.isEnabled = !isExtActive
+                btnToggleOriginal.alpha = if (isExtActive) 0.5f else 1.0f
+
+                // Update token chip checked states
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipNumber)?.isChecked = state.hasNumberToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipPaddedNumber)?.isChecked = state.hasPaddedNumberToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipName)?.isChecked = state.hasNameToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipFullName)?.isChecked = state.hasFullNameToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipYear)?.isChecked = state.hasYearToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipMonth)?.isChecked = state.hasMonthToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipDay)?.isChecked = state.hasDayToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipUpper)?.isChecked = state.hasUpperToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipLower)?.isChecked = state.hasLowerToken
+                view?.findViewById<com.google.android.material.chip.Chip>(R.id.chipExt)?.isChecked = state.useCustomExtension
 
                 // Update error state
                 if (state.patternError != null) {

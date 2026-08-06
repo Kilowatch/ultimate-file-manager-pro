@@ -1636,6 +1636,36 @@ Conserver le texte original
     <string name="batch_rename_option_padding">
 Ajouter un remplissage numérique
 </string>
+    <string name="batch_rename_replace_text_hint">
+Remplacer le texte
+</string>
+    <string name="batch_rename_replace_with_hint">
+Par
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Nouvelle extension (p. ex. csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Jetons de modèle
+</string>
+    <string name="batch_rename_help_title">
+Aide sur les jetons de modèle
+</string>
+    <string name="batch_rename_help_message">
+Jetons de modèle :\n
+• # / ### — Numéros séquentiels (1 ou 001)\n
+• $N / $name — Nom d\\\'origine sans extension (p. ex. photo)\n
+• $F / $fullname — Nom de fichier d\\\'origine complet avec extension (p. ex. photo.jpg)\n
+• $Y — Année (p. ex. 2026)\n
+• $M — Mois (p. ex. 08)\n
+• $D — Jour (p. ex. 06)\n
+• $U / $upper — Convertir le nom en MAJUSCULES (p. ex. PHOTO.JPG)\n
+• $L / $lower — Convertir le nom en minuscules (p. ex. photo.jpg)\n
+• $E / $ext — Activation de l\\\'extension personnalisée (p. ex. csv)\n
+\n
+Remplacer le texte → Par :\n
+Recherche du texte dans les noms de fichiers d\\\'origine et le remplace ou le supprime.
+</string>
     <string name="batch_rename_padding_length_label">
 Longueur du remplissage (max 9)
 </string>

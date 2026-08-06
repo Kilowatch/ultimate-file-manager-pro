@@ -1636,6 +1636,36 @@ UFM Slide Show
     <string name="batch_rename_option_padding">
 Добавить нумерацию
 </string>
+    <string name="batch_rename_replace_text_hint">
+Текст для замены
+</string>
+    <string name="batch_rename_replace_with_hint">
+На
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Новое расширение (например, csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Токены шаблона
+</string>
+    <string name="batch_rename_help_title">
+Справка по токенам шаблона
+</string>
+    <string name="batch_rename_help_message">
+Токены шаблона:\n
+• # / ### — Последовательные номера (1 или 001)\n
+• $N / $name — Оригинальное имя без расширения (например, photo)\n
+• $F / $fullname — Полное оригинальное имя файла с расширением (например, photo.jpg)\n
+• $Y — Год (например, 2026)\n
+• $M — Месяц (например, 08)\n
+• $D — День (например, 06)\n
+• $U / $upper — Преобразовать имя в верхний регистр (например, PHOTO.JPG)\n
+• $L / $lower — Преобразовать имя в нижний регистр (например, photo.jpg)\n
+• $E / $ext — Переключатель пользовательского расширения (например, csv)\n
+\n
+Текст для замены → На:\n
+Находит текст в исходных именах файлов и заменяет или удаляет его.
+</string>
     <string name="batch_rename_padding_length_label">
 Длина нумерации (макс. 9)
 </string>

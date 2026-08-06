@@ -101,6 +101,8 @@
     <!-- Solid opaque toolbar for screens where content scrolls underneath -->
     <color name="mobile_toolbar_solid">#FF1E293B</color>
     <color name="mobile_glass_card">#22FFFFFF</color>
+    <color name="bg_glass_card">#22FFFFFF</color>
+    <color name="tv_bg_card_dark">#22FFFFFF</color>
     <color name="mobile_glass_card_thick">#26FFFFFF</color>
     <color name="mobile_glass_stroke">#33FFFFFF</color>
     <color name="mobile_text_primary">#FFFFFFFF</color>

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * ViewModel for [BatchRenameDialogFragment].
+ * ViewModel for [BatchRenameDialogFragment] and [BatchRenameTvActivity].
  *
  * Holds all dialog state and survives configuration changes.
  * Pattern resolution is delegated to [BatchRenamePatternResolver].
@@ -33,6 +33,85 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
 
     fun updatePattern(text: String) {
         _state.update { it.copy(patternText = text) }
+        syncButtonStates(text)
+        rebuildPreviews()
+    }
+
+    fun updateReplaceText(text: String) {
+        _state.update { it.copy(replaceText = text) }
+        rebuildPreviews()
+    }
+
+    fun updateReplaceWith(text: String) {
+        _state.update { it.copy(replaceWith = text) }
+        rebuildPreviews()
+    }
+
+    // ── Extension controls ───────────────────────────────────────────────────
+
+    fun toggleCustomExtension() {
+        _state.update { it.copy(useCustomExtension = !it.useCustomExtension) }
+        rebuildPreviews()
+    }
+
+    fun setCustomExtension(ext: String) {
+        _state.update { it.copy(customExtension = ext) }
+        rebuildPreviews()
+    }
+
+    // ── Date controls ────────────────────────────────────────────────────────
+
+    fun toggleYearOption() {
+        _state.update { it.copy(hasYearToken = !it.hasYearToken) }
+        rebuildPreviews()
+    }
+
+    fun toggleMonthOption() {
+        _state.update { it.copy(hasMonthToken = !it.hasMonthToken) }
+        rebuildPreviews()
+    }
+
+    fun toggleDayOption() {
+        _state.update { it.copy(hasDayToken = !it.hasDayToken) }
+        rebuildPreviews()
+    }
+
+    fun setCustomYear(year: String) {
+        _state.update { it.copy(customYear = year) }
+        rebuildPreviews()
+    }
+
+    fun setCustomMonth(month: String) {
+        _state.update { it.copy(customMonth = month) }
+        rebuildPreviews()
+    }
+
+    fun setCustomDay(day: String) {
+        _state.update { it.copy(customDay = day) }
+        rebuildPreviews()
+    }
+
+    // ── Case option toggles (hidden from EditText) ───────────────────────────
+
+    fun toggleUpperOption() {
+        _state.update {
+            val nextUpper = !it.hasUpperToken
+            it.copy(
+                hasUpperToken = nextUpper,
+                hasLowerToken = if (nextUpper) false else it.hasLowerToken
+            )
+        }
+        rebuildPreviews()
+    }
+
+    fun toggleLowerOption() {
+        _state.update {
+            val nextLower = !it.hasLowerToken
+            it.copy(
+                hasLowerToken = nextLower,
+                hasUpperToken = if (nextLower) false else it.hasUpperToken
+            )
+        }
         rebuildPreviews()
     }
 
@@ -67,37 +146,38 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
     // ── Two-way sync: EditText → button states ────────────────────────────────
 
     fun syncButtonStates(currentText: String) {
-        val originalPresent = currentText.contains(TOKEN_ORIGINAL)
-        val paddingPresent = currentText.contains(TOKEN_PADDING)
+        val originalPresent = currentText.contains("\$F") || currentText.contains("\$fullname") || currentText.contains("{fullname}") || currentText.contains("%F")
+        val paddingPresent = currentText.contains(TOKEN_PADDING) || currentText.contains("###")
 
-        var changed = false
-        var newState = _state.value
+        val hasNumber = currentText.contains("#") && !currentText.contains("###")
+        val hasPaddedNumber = currentText.contains("###") || currentText.contains(TOKEN_PADDING)
+        val hasName = currentText.contains("\$N") || currentText.contains("\$name") || currentText.contains("{name}") || currentText.contains("%N") || currentText.contains(TOKEN_ORIGINAL)
+        val hasFullName = currentText.contains("\$F") || currentText.contains("\$fullname") || currentText.contains("{fullname}") || currentText.contains("%F")
+        val hasYear = currentText.contains("\$Y") || _state.value.hasYearToken
+        val hasMonth = currentText.contains("\$M") || _state.value.hasMonthToken
+        val hasDay = currentText.contains("\$D") || _state.value.hasDayToken
 
-        if (newState.useOriginal != originalPresent) {
-            newState = newState.copy(useOriginal = originalPresent)
-            changed = true
-        }
-        if (newState.usePadding != paddingPresent) {
-            newState = newState.copy(usePadding = paddingPresent)
-            changed = true
-        }
-
-        if (changed) {
-            _state.value = newState
-            rebuildPreviews()
+        _state.update {
+            it.copy(
+                useOriginal = originalPresent,
+                usePadding = paddingPresent,
+                hasNumberToken = hasNumber,
+                hasPaddedNumberToken = hasPaddedNumber,
+                hasNameToken = hasName,
+                hasFullNameToken = hasFullName,
+                hasYearToken = hasYear,
+                hasMonthToken = hasMonth,
+                hasDayToken = hasDay
+            )
         }
     }
 
-    // ── Token snap-in (called by DialogFragment after programmatic edits) ─────
+    // ── Token snap-in ─────────────────────────────────────────────────────────
 
-    /**
-     * Snap the pattern text to the ViewModel without triggering re-entrancy.
-     * Used after programmatic token insertion/removal so the ViewModel is in sync
-     * with what's actually in the EditText.
-     */
     fun setPatternText(text: String) {
         val trimmed = collapseSpaces(text)
         _state.update { it.copy(patternText = trimmed) }
+        syncButtonStates(trimmed)
         rebuildPreviews()
     }
 
@@ -107,23 +187,27 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
         val s = _state.value
         val pattern = s.patternText
 
-        // Determine if base text (after stripping tokens) is non-empty
         val baseText = pattern
             .replace(TOKEN_ORIGINAL, "")
             .replace(TOKEN_PADDING, "")
             .trim()
 
-        val hasTokens = s.useOriginal || s.usePadding
-        val isRenameEnabled = baseText.isNotEmpty() || hasTokens
+        val hasTokens = s.useOriginal || s.usePadding || s.hasYearToken || s.hasMonthToken || s.hasDayToken ||
+                s.hasUpperToken || s.hasLowerToken ||
+                pattern.contains("#") || pattern.contains("$") ||
+                pattern.contains("%") || pattern.contains("{")
+        val hasReplaceText = s.replaceText.isNotEmpty()
+        val hasExtOverride = s.useCustomExtension && s.customExtension.isNotBlank()
+        val isRenameEnabled = baseText.isNotEmpty() || hasTokens || hasReplaceText || hasExtOverride
 
-        val patternError = if (!isRenameEnabled && !hasTokens && baseText.isEmpty()) {
+        val patternError = if (!isRenameEnabled && !hasTokens && !hasReplaceText && !hasExtOverride && baseText.isEmpty()) {
             "batch_rename_error_empty_pattern"
         } else {
             null
         }
 
         val previews = s.items.mapIndexed { index, item ->
-            val counter = index + 1  // 1-based
+            val counter = index + 1
 
             val resolvedName = BatchRenamePatternResolver.resolve(
                 pattern = pattern,
@@ -132,10 +216,30 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
                 useOriginal = s.useOriginal,
                 usePadding = s.usePadding,
                 paddingLength = s.paddingLength,
-                paddingStart = s.paddingStart
+                paddingStart = s.paddingStart,
+                replaceText = s.replaceText,
+                replaceWith = s.replaceWith,
+                useCustomExtension = s.useCustomExtension,
+                customExtension = s.customExtension,
+                useYear = s.hasYearToken,
+                useMonth = s.hasMonthToken,
+                useDay = s.hasDayToken,
+                customYear = s.customYear,
+                customMonth = s.customMonth,
+                customDay = s.customDay,
+                hasUpper = s.hasUpperToken,
+                hasLower = s.hasLowerToken
             )
 
-            val fullResult = BatchRenamePatternResolver.appendExtension(resolvedName, item)
+            val fullResult = BatchRenamePatternResolver.appendExtension(
+                resolvedName = resolvedName,
+                item = item,
+                pattern = pattern,
+                useCustomExtension = s.useCustomExtension,
+                customExtension = s.customExtension,
+                hasUpper = s.hasUpperToken,
+                hasLower = s.hasLowerToken
+            )
 
             PreviewItem(
                 originalName = item.fullName,
@@ -170,7 +274,6 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BatchRenameViewModel::class.java)) {
-                // Sort: folders first, then files, preserving original order within each group
                 val sorted = items.sortedWith(compareByDescending<BatchRenameItem> { it.isDirectory }
                     .thenBy { items.indexOf(it) })
                 return BatchRenameViewModel(sorted) as T

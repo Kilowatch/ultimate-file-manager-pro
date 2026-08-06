@@ -1636,6 +1636,36 @@ UFMスライドショー
     <string name="batch_rename_option_padding">
 番号パディングを追加
 </string>
+    <string name="batch_rename_replace_text_hint">
+置換テキスト
+</string>
+    <string name="batch_rename_replace_with_hint">
+置換後
+</string>
+    <string name="batch_rename_custom_ext_hint">
+新しい拡張子（例: csv）
+</string>
+    <string name="batch_rename_tokens_label">
+パターントークン
+</string>
+    <string name="batch_rename_help_title">
+パターントークンのヘルプ
+</string>
+    <string name="batch_rename_help_message">
+パターントークン:
+• # / ### — 連番（1 または 001）
+• $N / $name — 拡張子なしの元の名前（例: photo）
+• $F / $fullname — 拡張子を含む完全な元のファイル名（例: photo.jpg）
+• $Y — 年（例: 2026）
+• $M — 月（例: 08）
+• $D — 日（例: 06）
+• $U / $upper — 名前を大文字に変換（例: PHOTO.JPG）
+• $L / $lower — 名前を小文字に変換（例: photo.jpg）
+• $E / $ext — カスタム拡張子の切り替え（例: csv）
+
+置換テキスト → 置換後:
+元のファイル名内のテキストを検索して、置換または削除します。
+</string>
     <string name="batch_rename_padding_length_label">
 パディング長（最大9）
 </string>

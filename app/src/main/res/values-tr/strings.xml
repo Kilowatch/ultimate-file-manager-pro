@@ -1636,6 +1636,36 @@ Orijinal Metni Koru
     <string name="batch_rename_option_padding">
 Sayı Dolgusu Ekle
 </string>
+    <string name="batch_rename_replace_text_hint">
+Değiştirilecek metin
+</string>
+    <string name="batch_rename_replace_with_hint">
+Yeni metin
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Yeni uzantı (ör. csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Desen Belirteçleri
+</string>
+    <string name="batch_rename_help_title">
+Desen Belirteçleri Yardımı
+</string>
+    <string name="batch_rename_help_message">
+Desen Belirteçleri:\n
+• # / ### — Sıralı sayılar (1 veya 001)\n
+• $N / $name — Uzantısız orijinal ad (ör. photo)\n
+• $F / $fullname — Uzantılı tam orijinal dosya adı (ör. photo.jpg)\n
+• $Y — Yıl (ör. 2026)\n
+• $M — Ay (ör. 08)\n
+• $D — Gün (ör. 06)\n
+• $U / $upper — Adı BÜYÜK HARFE dönüştürür (ör. PHOTO.JPG)\n
+• $L / $lower — Adı küçük harfe dönüştürür (ör. photo.jpg)\n
+• $E / $ext — Özel uzantı geçişi (ör. csv)\n
+\n
+Değiştirilecek metin → Yeni metin:\n
+Orijinal dosya adlarındaki metni bulur ve değiştirir veya kaldırır.
+</string>
     <string name="batch_rename_padding_length_label">
 Dolgu Uzunluğu (maks 9)
 </string>

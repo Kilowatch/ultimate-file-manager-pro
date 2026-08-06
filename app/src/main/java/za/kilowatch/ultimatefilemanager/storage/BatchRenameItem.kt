@@ -31,6 +31,9 @@ data class BatchRenameItem(
     /** Full original display name including extension (e.g. "photo.jpg" or "MyFolder"). */
     val fullName: String get() = name + extension
 
+    /** Modification timestamp in milliseconds (0L if unavailable). */
+    val lastModified: Long get() = if (isLocal) (localFile?.lastModified() ?: 0L) else (networkFile?.lastModified ?: 0L)
+
     companion object {
         /**
          * Create a [BatchRenameItem] from a local file.

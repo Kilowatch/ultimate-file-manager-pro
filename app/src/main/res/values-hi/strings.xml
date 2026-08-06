@@ -1636,6 +1636,36 @@ UFM स्लाइड शो
     <string name="batch_rename_option_padding">
 संख्या पैडिंग जोड़ें
 </string>
+    <string name="batch_rename_replace_text_hint">
+टेक्स्ट बदलें
+</string>
+    <string name="batch_rename_replace_with_hint">
+इससे
+</string>
+    <string name="batch_rename_custom_ext_hint">
+नया एक्सटेंशन (जैसे csv)
+</string>
+    <string name="batch_rename_tokens_label">
+पैटर्न टोकन
+</string>
+    <string name="batch_rename_help_title">
+पैटर्न टोकन सहायता
+</string>
+    <string name="batch_rename_help_message">
+पैटर्न टोकन:\n
+• # / ### — क्रमिक संख्याएँ (1 या 001)\n
+• $N / $name — बिना एक्सटेंशन के मूल नाम (जैसे photo)\n
+• $F / $fullname — एक्सटेंशन सहित पूरा मूल फ़ाइल नाम (जैसे photo.jpg)\n
+• $Y — वर्ष (जैसे 2026)\n
+• $M — माह (जैसे 08)\n
+• $D — दिन (जैसे 06)\n
+• $U / $upper — नाम को UPPERCASE में बदलें (जैसे PHOTO.JPG)\n
+• $L / $lower — नाम को lowercase में बदलें (जैसे photo.jpg)\n
+• $E / $ext — कस्टम एक्सटेंशन टॉगल (जैसे csv)\n
+\n
+टेक्स्ट बदलें → इससे:\n
+मूल फ़ाइल नामों में टेक्स्ट खोजता है और उसे बदलता या हटाता है।
+</string>
     <string name="batch_rename_padding_length_label">
 पैडिंग लंबाई (अधिकतम 9)
 </string>

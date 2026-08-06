@@ -1636,6 +1636,36 @@ Originaltext beibehalten
     <string name="batch_rename_option_padding">
 Zahlenauffüllung hinzufügen
 </string>
+    <string name="batch_rename_replace_text_hint">
+Text ersetzen
+</string>
+    <string name="batch_rename_replace_with_hint">
+Mit
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Neue Erweiterung (z. B. csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Muster-Tokens
+</string>
+    <string name="batch_rename_help_title">
+Hilfe zu Muster-Tokens
+</string>
+    <string name="batch_rename_help_message">
+Pattern Tokens:\n
+• # / ### — Fortlaufende Nummern (1 oder 001)\n
+• $N / $name — Originalname ohne Erweiterung (z. B. photo)\n
+• $F / $fullname — Vollständiger Originaldateiname mit Erweiterung (z. B. photo.jpg)\n
+• $Y — Jahr (z. B. 2026)\n
+• $M — Monat (z. B. 08)\n
+• $D — Tag (z. B. 06)\n
+• $U / $upper — Namen in GROSSBUCHSTABEN umwandeln (z. B. PHOTO.JPG)\n
+• $L / $lower — Namen in Kleinbuchstaben umwandeln (z. B. photo.jpg)\n
+• $E / $ext — Umschalter für benutzerdefinierte Erweiterung (z. B. csv)\n
+\n
+Text ersetzen → Mit:\n
+Sucht Text in den Originaldateinamen und ersetzt oder entfernt ihn.
+</string>
     <string name="batch_rename_padding_length_label">
 Auffüllungslänge (max. 9)
 </string>

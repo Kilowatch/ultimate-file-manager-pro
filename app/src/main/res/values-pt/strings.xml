@@ -1636,6 +1636,36 @@ Manter Texto Original
     <string name="batch_rename_option_padding">
 Adicionar Preenchimento Numérico
 </string>
+    <string name="batch_rename_replace_text_hint">
+Substituir texto
+</string>
+    <string name="batch_rename_replace_with_hint">
+Por
+</string>
+    <string name="batch_rename_custom_ext_hint">
+Nova extensão (ex.: csv)
+</string>
+    <string name="batch_rename_tokens_label">
+Tokens de padrão
+</string>
+    <string name="batch_rename_help_title">
+Ajuda sobre tokens de padrão
+</string>
+    <string name="batch_rename_help_message">
+Tokens de padrão:\n
+• # / ### — Números sequenciais (1 ou 001)\n
+• $N / $name — Nome original sem extensão (ex.: photo)\n
+• $F / $fullname — Nome original completo com extensão (ex.: photo.jpg)\n
+• $Y — Ano (ex.: 2026)\n
+• $M — Mês (ex.: 08)\n
+• $D — Dia (ex.: 06)\n
+• $U / $upper — Converter nome para MAIÚSCULAS (ex.: PHOTO.JPG)\n
+• $L / $lower — Converter nome para minúsculas (ex.: photo.jpg)\n
+• $E / $ext — Alternar extensão personalizada (ex.: csv)\n
+\n
+Substituir texto → Por:\n
+Encontra texto nos nomes de arquivo originais e o substitui ou remove.
+</string>
     <string name="batch_rename_padding_length_label">
 Comprimento do Preenchimento (máx. 9)
 </string>
