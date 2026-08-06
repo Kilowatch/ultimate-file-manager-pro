@@ -581,19 +581,41 @@ object CrashReportManager {
                     //     under the same freshly dispatched `run()` (the direct caller of the
                     //     append is the Runnable itself, with `Handler.handleCallback` one
                     //     frame below it), so it is the same post-stall artifact just one
-                    //     frame further in. Genuine freezes keep the main thread inside the
-                    //     blocking work — the top frame is not a trivial StringBuilder
-                    //     `<init>`/`append` directly under a Runnable just entered via
-                    //     `Handler.handleCallback` — and are still reported.
-                    val runFrame = mainStackTrace.getOrNull(1)
+                    //     frame further in. A further variant of the same family sampled the
+                    //     constructor one instruction deeper still — top frame
+                    //     `StringBuilder.append` with a `StringBuilder.<init>` frame directly
+                    //     below it (the `StringBuilder(String)` constructor invokes `append`
+                    //     internally, so the whole `append` -> `<init>` pair is still the
+                    //     freshly entered Runnable's first statement), then the non-platform
+                    //     `run()` and `Handler.handleCallback` beneath (reported from a
+                    //     Google Pixel 6a, SDK 37, app 1.7.6). Genuine freezes keep the main
+                    //     thread inside the blocking work — the top frame is not a trivial
+                    //     StringBuilder `<init>`/`append` directly under a Runnable just
+                    //     entered via `Handler.handleCallback` — and are still reported.
                     val isTrivialStringBuilderStartStall =
-                        runFrame != null &&
-                        runFrame.methodName == "run" &&
-                        PLATFORM_PREFIXES.none { runFrame.className.startsWith(it) } &&
-                        mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
-                        mainStackTrace.getOrNull(2)?.methodName == "handleCallback" &&
                         topFrame?.className == "java.lang.StringBuilder" &&
-                        (topFrame?.methodName == "<init>" || topFrame?.methodName == "append")
+                        (topFrame?.methodName == "<init>" || topFrame?.methodName == "append") &&
+                        run {
+                            // The Runnable's run() sits directly under the StringBuilder
+                            // frame(s): one StringBuilder frame for the `<init>`-top and
+                            // direct `append`-top shapes, two (`append` -> `<init>`) when the
+                            // top `append` is the constructor's own internal call. In every
+                            // shape `Handler.handleCallback` sits directly below the run(),
+                            // proving the dispatch came from the main Handler and the >5 s
+                            // block occurred in a previous main-looper message.
+                            val sbFrameCount = when {
+                                topFrame.methodName == "<init>" -> 1
+                                mainStackTrace.getOrNull(1)?.className == "java.lang.StringBuilder" &&
+                                    mainStackTrace.getOrNull(1)?.methodName == "<init>" -> 2
+                                else -> 1
+                            }
+                            val runFrame = mainStackTrace.getOrNull(sbFrameCount)
+                            runFrame != null &&
+                                runFrame.methodName == "run" &&
+                                PLATFORM_PREFIXES.none { runFrame.className.startsWith(it) } &&
+                                mainStackTrace.getOrNull(sbFrameCount + 1)?.className == "android.os.Handler" &&
+                                mainStackTrace.getOrNull(sbFrameCount + 1)?.methodName == "handleCallback"
+                        }
 
                     // 11. The main thread is sampled during a cold-start layout inflation of
                     //     an Activity layout — top frame `android.widget.TextView.
