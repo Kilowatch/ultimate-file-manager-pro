@@ -191,6 +191,11 @@ class FileServerService : Service() {
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
+    // Scope for blocking server shutdown. Kept separate from serviceJob so
+    // onDestroy's serviceJob.cancel() can never cancel an in-flight stop —
+    // a cancelled stop would leave the FTP/SFTP/DLNA server listening.
+    private val serverStopScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
@@ -258,14 +263,12 @@ class FileServerService : Service() {
         // Demote from foreground FIRST — required by Android 15 to avoid
         // ForegroundServiceDidNotStopInTimeException.
         stopForeground(STOP_FOREGROUND_REMOVE)
-        // Dispatch blocking server.stop() calls off the Main thread so we
-        // don't hold the main thread long enough to hit the system timeout.
-        serviceScope.launch(Dispatchers.IO) {
-            stopFtpServer()
-            stopSftpServer()
-            stopDlnaServer()
-            stopRendererServer()
-        }
+        // Server shutdown is blocking I/O — each stop method dispatches to
+        // serverStopScope, so the main thread is never held.
+        stopFtpServer()
+        stopSftpServer()
+        stopDlnaServer()
+        stopRendererServer()
         setFtpEnabled(this, false)
         setSftpEnabled(this, false)
         setDlnaServerEnabled(this, false)
@@ -279,15 +282,13 @@ class FileServerService : Service() {
         // Demote from foreground before any cleanup — prevents
         // ForegroundServiceDidNotStopInTimeException on Android 15.
         stopForeground(STOP_FOREGROUND_REMOVE)
-        // Server shutdown is blocking I/O — run on IO, then cancel the job.
-        // We use a fresh scope (not serviceScope) because serviceJob is
-        // cancelled right after, which would race with the coroutine launch.
-        CoroutineScope(Dispatchers.IO).launch {
-            stopFtpServer()
-            stopSftpServer()
-            stopDlnaServer()
-            stopRendererServer()
-        }
+        // Server shutdown is blocking I/O — the stop methods dispatch to
+        // serverStopScope (not serviceJob), so cancelling serviceJob below
+        // cannot cancel the in-flight shutdown.
+        stopFtpServer()
+        stopSftpServer()
+        stopDlnaServer()
+        stopRendererServer()
         serviceJob.cancel()
         updateState(false, false, false, false)
     }
@@ -334,8 +335,13 @@ class FileServerService : Service() {
 
     private fun stopFtpServer() {
         isFtpStarting = false
-        ftpServer?.stop()
+        val server = ftpServer
         ftpServer = null
+        // FTP shutdown blocks on the Mina acceptor unbind (DefaultIoFuture.await0)
+        // — must run off the main thread.
+        serverStopScope.launch {
+            server?.stop()
+        }
     }
 
     private fun startSftpServer() {
@@ -369,8 +375,12 @@ class FileServerService : Service() {
 
     private fun stopSftpServer() {
         isSftpStarting = false
-        sftpServer?.stop()
+        val server = sftpServer
         sftpServer = null
+        // SFTP shutdown is blocking I/O — must run off the main thread.
+        serverStopScope.launch {
+            server?.stop()
+        }
     }
 
     private fun startDlnaServer() {
@@ -406,7 +416,7 @@ class FileServerService : Service() {
         val server = dlnaServer
         dlnaServer = null
         // SSDP bye-bye sends UDP multicast — must run off main thread
-        serviceScope.launch(Dispatchers.IO) {
+        serverStopScope.launch {
             server?.stop()
         }
     }
@@ -445,7 +455,7 @@ class FileServerService : Service() {
         val server = dlnaRenderer
         dlnaRenderer = null
         // SSDP bye-bye sends UDP multicast — must run off main thread
-        serviceScope.launch(Dispatchers.IO) {
+        serverStopScope.launch {
             server?.stop()
         }
     }
