@@ -776,7 +776,17 @@ object CrashReportManager {
                     //     text (search highlights are scoped to the currently loaded
                     //     text page; syntax highlighting is capped at the edit-mode
                     //     size limit), so it cannot by itself occupy the main thread
-                    //     for 5 s. The >5 s block is therefore device-side
+                    //     for 5 s. A later report from the SAME device and session
+                    //     sampled the identical span-removal chain one step further:
+                    //     the TextView reacting to the removal and invalidating
+                    //     itself — top frame `android.view.View.invalidate`, under
+                    //     `TextView.spanChange` -> `TextView$ChangeWatcher.
+                    //     onSpanRemoved` -> `SpannableStringBuilder.sendSpanRemoved`/
+                    //     `removeSpan`, again reached from the same main-looper
+                    //     Runnable dispatch. `View.invalidate` only marks the view
+                    //     dirty (an O(1) flag set), so the whole chain is the same
+                    //     bounded framework bookkeeping as the removeSpan-top shape.
+                    //     The >5 s block is therefore device-side
                     //     slowness / CPU starvation or a post-stall sample of the
                     //     backlog the main looper drains after a genuine stall. A
                     //     genuine freeze that keeps the main thread inside heavy app
@@ -787,15 +797,43 @@ object CrashReportManager {
                     //     from a Runnable just dispatched by the main Handler) and is
                     //     still reported.
                     val isSpannableSpanRemovalStall =
-                        topFrame?.className == "android.text.SpannableStringBuilder" &&
-                        (topFrame?.methodName == "removeSpan" ||
-                         topFrame?.methodName == "restoreInvariants") &&
                         mainStackTrace.withIndex().any { (i, frame) ->
                             frame.methodName == "run" &&
                             PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
                             mainStackTrace.getOrNull(i + 1)?.className == "android.os.Handler" &&
                             mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
-                        }
+                        } &&
+                        (
+                            // Shape 1 — sampled directly inside the builder's span
+                            // bookkeeping: top frame `SpannableStringBuilder.
+                            // removeSpan`/`restoreInvariants`.
+                            (topFrame?.className == "android.text.SpannableStringBuilder" &&
+                             (topFrame?.methodName == "removeSpan" ||
+                              topFrame?.methodName == "restoreInvariants")) ||
+                            // Shape 2 — sampled one step further along the same
+                            // span-removal notification chain: the TextView reacting
+                            // to the removal and invalidating itself (top frame
+                            // `View.invalidate`), with the framework's change
+                            // notification chain (`TextView.spanChange` ->
+                            // `TextView$ChangeWatcher.onSpanRemoved` ->
+                            // `SpannableStringBuilder.sendSpanRemoved`/`removeSpan`)
+                            // present on the stack.
+                            (topFrame?.className == "android.view.View" &&
+                             topFrame?.methodName == "invalidate" &&
+                             mainStackTrace.any {
+                                 it.className == "android.widget.TextView" && it.methodName == "spanChange"
+                             } &&
+                             mainStackTrace.any {
+                                 it.className == "android.widget.TextView\$ChangeWatcher" &&
+                                     it.methodName == "onSpanRemoved"
+                             } &&
+                             mainStackTrace.any {
+                                 it.className == "android.text.SpannableStringBuilder" &&
+                                 (it.methodName == "removeSpan" ||
+                                  it.methodName == "restoreInvariants" ||
+                                  it.methodName == "sendSpanRemoved")
+                             })
+                        )
 
                     // 17. The main thread is sampled inside the framework's text-drawing
                     //     path for an editable TextView (EditText) during a normal frame
