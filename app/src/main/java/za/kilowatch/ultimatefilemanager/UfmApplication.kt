@@ -275,8 +275,18 @@ class UfmApplication : Application() {
             Log.e(TAG, "Failed to schedule Recycle Bin cleanup", e)
         }
 
-        // Register network connectivity listener to purge SMB pool on Wi-Fi network transitions
-        registerNetworkCallback()
+        // Register network connectivity listener to purge SMB pool on Wi-Fi network transitions.
+        // Done on a background thread: registerDefaultNetworkCallback() is a synchronous binder
+        // call to the system server (IConnectivityManager.requestNetwork) that can block for
+        // >5 s on slow or busy devices while the main thread is still in Application.onCreate()
+        // (reported from an onn Full HD Streaming Device, SDK 34, app 1.7.8-GOOGLE), freezing
+        // cold startup and tripping the ANR watchdog. NetworkCallback callbacks are delivered on
+        // the ConnectivityThread (not the registering thread), so background registration is safe
+        // and SMB pool purging on Wi-Fi transitions still works.
+        Thread {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
+            registerNetworkCallback()
+        }.apply { name = "ufm-net-callback"; isDaemon = true; start() }
     }
 
     private fun registerNetworkCallback() {
