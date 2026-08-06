@@ -1174,7 +1174,35 @@ object CrashReportManager {
                             }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall) {
+                    // 23. The main thread is blocked on a synchronous binder call to
+                    //     the system server's ActivityTaskManager while the app
+                    //     launches an Activity — e.g. LanguageWelcomeActivity.onCreate
+                    //     -> Activity.startActivity -> startActivityForResult ->
+                    //     Instrumentation.execStartActivity ->
+                    //     IActivityTaskManager$Stub$Proxy.startActivity ->
+                    //     BinderProxy.transact -> transactNative (top frame) (reported
+                    //     from a Xiaomi MiTV-AFMU0, SDK 34, app 1.8.0-GOOGLE). The app
+                    //     merely invoked the one-line framework API `startActivity()`;
+                    //     the >5 s block is the system server's response latency to the
+                    //     activity-launch transaction, which the app cannot act on. The
+                    //     top frame is the binder transact into the system server — the
+                    //     app is inside the round-trip, not executing business logic —
+                    //     so even though the stack carries the launching Activity's own
+                    //     `onCreate` call-path frame (the onCreate decided to launch
+                    //     the next screen), the wait is still system-side, the same
+                    //     class as the unbindService binder filter above. A genuine
+                    //     freeze that runs app business logic has an app frame as the
+                    //     current frame (the top frame is not
+                    //     `BinderProxy.transact`/`transactNative`) and is still
+                    //     reported.
+                    val isActivityLaunchBinderStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        mainStackTrace.any {
+                            it.className == "android.app.IActivityTaskManager\$Stub\$Proxy" && it.methodName == "startActivity"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
