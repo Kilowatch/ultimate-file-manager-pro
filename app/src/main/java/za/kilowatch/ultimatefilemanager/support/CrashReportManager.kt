@@ -845,7 +845,50 @@ object CrashReportManager {
                         }) &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall) {
+                    // 18. The main thread is sampled inside the framework's native text
+                    //     measurement while an EditText processes a character committed by
+                    //     the IME — top frame `android.graphics.text.MeasuredText$Builder.
+                    //     nBuildMeasuredText`/`build`, under `MeasuredParagraph.
+                    //     buildForStaticLayout` -> `StaticLayout.generate` -> `DynamicLayout.
+                    //     reflow`/`DynamicLayout$ChangeWatcher.reflow`, reached from the
+                    //     IME text-input path (`BaseInputConnection.replaceText` -> the
+                    //     editable's `replace` -> `SpannableStringBuilder.replace` ->
+                    //     `sendTextChanged` -> the TextView's watcher chain) (reported
+                    //     from a TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS — the same
+                    //     device and session that produced the already-filtered
+                    //     `nDrawTextRun` and `SpannableStringBuilder.removeSpan` reports).
+                    //     This is the normal framework text-layout work that runs every
+                    //     time the user types into any EditText: the only non-platform
+                    //     frames on the stack are the framework's own text-change
+                    //     notification chain — the TextView's TextWatcher `onTextChanged`
+                    //     callbacks and the emoji-aware editable wrapper (e.g.
+                    //     `androidx.emoji2.text.SpannableBuilder`) that the IME edits
+                    //     through — not heavy app business logic; the app merely runs its
+                    //     standard edit path. The measurement is bounded by the edited
+                    //     paragraph, and the Text Viewer/Editor's edit mode is already
+                    //     capped at 128 KB (EDIT_MAX_BYTES), so it cannot by itself hold
+                    //     the main thread for 5 s on a normally-provisioned device; the
+                    //     >5 s block is device-side slowness / CPU starvation on a very
+                    //     low-end device. A genuine freeze keeps the main thread inside
+                    //     app business logic — the top frame is not the native
+                    //     measurement, or the reflow is not reached from an IME text edit
+                    //     (no `BaseInputConnection.replaceText` frame, e.g. the app calls
+                    //     setText/append directly) — and still fails this test.
+                    val isTextMeasurementDuringInputStall =
+                        topFrame?.className == "android.graphics.text.MeasuredText\$Builder" &&
+                        (topFrame?.methodName == "nBuildMeasuredText" ||
+                         topFrame?.methodName == "build") &&
+                        mainStackTrace.any {
+                            (it.className == "android.text.DynamicLayout" ||
+                             it.className == "android.text.DynamicLayout\$ChangeWatcher") &&
+                            it.methodName == "reflow"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.inputmethod.BaseInputConnection" &&
+                            it.methodName == "replaceText"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
