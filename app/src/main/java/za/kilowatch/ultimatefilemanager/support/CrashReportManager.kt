@@ -797,7 +797,55 @@ object CrashReportManager {
                             mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall) {
+                    // 17. The main thread is sampled inside the framework's text-drawing
+                    //     path for an editable TextView (EditText) during a normal frame
+                    //     draw — top frame `android.graphics.BaseRecordingCanvas.
+                    //     nDrawTextRun`/`drawTextRun`, under `android.text.Layout.drawText`
+                    //     -> `Editor.drawHardwareAcceleratedInner` -> `Editor.onDraw` ->
+                    //     `TextView.onDraw`, dispatched from `Choreographer.doFrame` /
+                    //     `ViewRootImpl.performDraw` (reported from a TECNO TECNO KJ5,
+                    //     SDK 33, app 1.7.8-FOSS). The draw is bounded to the EditText's
+                    //     visible lines (`TextView.onDraw` only draws the line range that
+                    //     intersects the viewport), so it cannot by itself occupy the main
+                    //     thread for 5 s; the stack has zero UFM frames — the only
+                    //     non-platform frame is the AndroidX ConstraintLayout.dispatchDraw
+                    //     in the draw chain, which breaks the pure-framework test but is
+                    //     still a bundled-library view-layout frame, not app business logic.
+                    //     The >5 s block is therefore device-side slowness / CPU starvation,
+                    //     or a post-stall sample: the Choreographer frame callback is an
+                    //     async message that the main looper can process ahead of the
+                    //     overdue sync heartbeat ticker after a stall, leaving
+                    //     `tickerJustRan` false while the sampled draw is fast post-stall
+                    //     work. A genuine freeze keeps the main thread inside app business
+                    //     logic — an app frame (`za.kilowatch.ultimatefilemanager.*`) on
+                    //     the stack, or a custom view whose own onDraw performs heavy text
+                    //     drawing (its app class frame appears on the stack) — and still
+                    //     fails this test.
+                    val isTextDrawFrameStall =
+                        topFrame?.className == "android.graphics.BaseRecordingCanvas" &&
+                        (topFrame?.methodName == "nDrawTextRun" ||
+                         topFrame?.methodName == "drawTextRun") &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" && it.methodName == "onDraw"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.Editor" &&
+                            (it.methodName == "onDraw" ||
+                             it.methodName == "drawHardwareAccelerated" ||
+                             it.methodName == "drawHardwareAcceleratedInner")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.text.Layout" && it.methodName == "drawText"
+                        } &&
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" && it.methodName == "performDraw"
+                        }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
