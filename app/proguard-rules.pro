@@ -352,3 +352,11 @@
 -dontwarn androidx.media3.exoplayer.hls.**
 -dontwarn androidx.media3.exoplayer.dash.**
 -dontwarn androidx.media3.exoplayer.rtsp.**
+
+# ── AVIF Android JNI Decoder (org.aomedia.avif.android) ─────────────────
+-keep class org.aomedia.avif.android.** { *; }
+-keepclassmembers class org.aomedia.avif.android.** {
+    native <methods>;
+    *;
+}
+-dontwarn org.aomedia.avif.android.**
