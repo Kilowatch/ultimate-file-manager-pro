@@ -398,7 +398,13 @@ dependencies {
     implementation(libs.zip4j)
     implementation(libs.commons.compress)
     implementation(libs.tukaani.xz)
-    implementation(libs.zstd.jni)
+    // zstd-jni: the plain JAR ships desktop-only native libs (linux/win/darwin), so on
+    // Android the native library is never packaged and every .zst/.tar.zst operation
+    // crashed with UnsatisfiedLinkError (dlopen failed: libzstd-jni-1.5.7-12.so not
+    // found). The AAR packages the Android libs into lib/<abi>/ so System.loadLibrary
+    // finds them. Keep the plain JAR for JVM unit tests (which need the desktop libs).
+    implementation("com.github.luben:zstd-jni:1.5.7-12@aar")
+    testImplementation(libs.zstd.jni)
     implementation(libs.junrar)
     "googleImplementation"(libs.play.review)
     implementation(libs.libadb) {

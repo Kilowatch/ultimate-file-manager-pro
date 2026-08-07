@@ -64,21 +64,28 @@ object ArchiveManager {
         archiveFile: File,
         password: String? = null
     ): List<ArchiveEntryInfo> = withContext(Dispatchers.IO) {
-        val name = archiveFile.name.lowercase()
-        when {
-            name.endsWith(".tar.gz") || name.endsWith(".tgz") -> getTarEntries(archiveFile, CompressorStream.GZIP)
-            name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> getTarEntries(archiveFile, CompressorStream.BZIP2)
-            name.endsWith(".tar.xz") || name.endsWith(".txz") -> getTarEntries(archiveFile, CompressorStream.XZ)
-            name.endsWith(".tar.zst") || name.endsWith(".tzst") -> getTarEntries(archiveFile, CompressorStream.ZSTD)
-            name.endsWith(".tar") -> getTarEntries(archiveFile, CompressorStream.NONE)
-            name.endsWith(".rar") -> getRarEntries(archiveFile, password)
-            name.endsWith(".gz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.GZIP)
-            name.endsWith(".bz2") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.BZIP2)
-            name.endsWith(".xz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.XZ)
-            name.endsWith(".zst") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.ZSTD)
-            archiveFile.extension.lowercase() == "zip" -> getZipEntries(archiveFile, password)
-            archiveFile.extension.lowercase() == "7z" -> get7zEntries(archiveFile, password)
-            else -> emptyList()
+        try {
+            val name = archiveFile.name.lowercase()
+            when {
+                name.endsWith(".tar.gz") || name.endsWith(".tgz") -> getTarEntries(archiveFile, CompressorStream.GZIP)
+                name.endsWith(".tar.bz2") || name.endsWith(".tbz2") || name.endsWith(".tbz") -> getTarEntries(archiveFile, CompressorStream.BZIP2)
+                name.endsWith(".tar.xz") || name.endsWith(".txz") -> getTarEntries(archiveFile, CompressorStream.XZ)
+                name.endsWith(".tar.zst") || name.endsWith(".tzst") -> getTarEntries(archiveFile, CompressorStream.ZSTD)
+                name.endsWith(".tar") -> getTarEntries(archiveFile, CompressorStream.NONE)
+                name.endsWith(".rar") -> getRarEntries(archiveFile, password)
+                name.endsWith(".gz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.GZIP)
+                name.endsWith(".bz2") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.BZIP2)
+                name.endsWith(".xz") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.XZ)
+                name.endsWith(".zst") -> getSingleStreamOrTarEntries(archiveFile, CompressorStream.ZSTD)
+                archiveFile.extension.lowercase() == "zip" -> getZipEntries(archiveFile, password)
+                archiveFile.extension.lowercase() == "7z" -> get7zEntries(archiveFile, password)
+                else -> emptyList()
+            }
+        } catch (e: LinkageError) {
+            // Native codec (e.g. zstd-jni for .zst) missing on this device — treat the
+            // archive as unreadable instead of crashing the app.
+            Log.w(TAG, "Archive codec unavailable: ${e.message}")
+            emptyList()
         }
     }
 
@@ -228,6 +235,10 @@ object ArchiveManager {
             Result.success(Unit)
         } catch (e: OutOfMemoryError) {
             Result.failure(Exception("Not enough memory for compression", e))
+        } catch (e: LinkageError) {
+            // Native codec (e.g. zstd-jni for .zst) missing on this device — fail the
+            // operation instead of crashing the app with an UnsatisfiedLinkError.
+            Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -369,6 +380,10 @@ object ArchiveManager {
             Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
         } catch (e: org.apache.commons.compress.MemoryLimitException) {
             Result.failure(Exception(context.getString(R.string.error_not_enough_memory), e))
+        } catch (e: LinkageError) {
+            // Native codec (e.g. zstd-jni for .zst) missing on this device — fail the
+            // operation instead of crashing the app with an UnsatisfiedLinkError.
+            Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -1055,6 +1070,8 @@ object ArchiveManager {
             }
 
             Result.success(Unit)
+        } catch (e: LinkageError) {
+            Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -1134,6 +1151,8 @@ object ArchiveManager {
                 }
             }
             Result.success(Unit)
+        } catch (e: LinkageError) {
+            Result.failure(e)
         } catch (e: Exception) {
             Result.failure(e)
         }

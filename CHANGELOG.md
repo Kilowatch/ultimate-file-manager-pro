@@ -5,6 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] — 2026-08-07
+
+### Fixed
+- Fixed a crash (`java.lang.UnsatisfiedLinkError`) when compressing or extracting Zstandard archives (`.zst`, `.tar.zst`, `.tzst`) on Android — reported from a vivo I2219, SDK 36, app 1.8.1-FOSS. The app depended on the plain `com.github.luben:zstd-jni` JAR, which bundles only desktop native libraries; on Android zstd-jni resolves its resource path from `os.name` (`"linux"`) and looked for `/linux/aarch64/libzstd-jni-1.5.7-12.so`, which is not shipped for the APK, then fell back to `System.loadLibrary("zstd-jni-1.5.7-12")`, which failed because the native library was never packaged — so every `.zst`/`.tar.zst` operation crashed on a background worker thread. The app now depends on the zstd-jni AAR artifact (`@aar`), which packages the Android native libraries into the APK's `lib/<abi>/` (arm64-v8a, armeabi-v7a, x86_64, x86) so the native library loads successfully. As a safety net, `ArchiveManager` now catches `LinkageError` (e.g. a device where the native codec still cannot load) and fails the compression/extraction operation instead of crashing.
+
 ## [1.8.1] — 2026-08-06
 
 ### Added
