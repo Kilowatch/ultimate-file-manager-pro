@@ -74,9 +74,7 @@ class ArchiveOptionsDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val rgFormat = view.findViewById<RadioGroup>(R.id.rgFormat)
-        val rbZip = view.findViewById<RadioButton>(R.id.rbZip)
-        val rb7z = view.findViewById<RadioButton>(R.id.rb7z)
+        val cgFormat = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.cgFormat)
         val edtFilename = view.findViewById<EditText>(R.id.edtFilename)
         val switchPassword = view.findViewById<CompoundButton>(R.id.switchPassword)
         val layoutPasswordFields = view.findViewById<View>(R.id.layoutPasswordFields)
@@ -90,10 +88,38 @@ class ArchiveOptionsDialog : DialogFragment() {
         val tilPassword = view.findViewById<TextInputLayout>(R.id.tilPassword)
         val tilConfirmPassword = view.findViewById<TextInputLayout>(R.id.tilConfirmPassword)
 
+        val chipToFormat = mapOf(
+            R.id.chipFormatZip to ArchiveManager.Format.ZIP,
+            R.id.chipFormat7z to ArchiveManager.Format.SEVEN_Z,
+            R.id.chipFormatTar to ArchiveManager.Format.TAR,
+            R.id.chipFormatTarGz to ArchiveManager.Format.TAR_GZ,
+            R.id.chipFormatTarXz to ArchiveManager.Format.TAR_XZ,
+            R.id.chipFormatTarZst to ArchiveManager.Format.TAR_ZST,
+            R.id.chipFormatTarBz2 to ArchiveManager.Format.TAR_BZ2,
+            R.id.chipFormatGz to ArchiveManager.Format.GZ,
+            R.id.chipFormatXz to ArchiveManager.Format.XZ,
+            R.id.chipFormatZst to ArchiveManager.Format.ZST,
+            R.id.chipFormatBz2 to ArchiveManager.Format.BZ2
+        )
+
+        var selectedFormat = ArchiveManager.Format.ZIP
+
         edtFilename.setText("archive")
 
+        cgFormat.setOnCheckedStateChangeListener { _, checkedIds ->
+            val checkedId = checkedIds.firstOrNull() ?: R.id.chipFormatZip
+            selectedFormat = chipToFormat[checkedId] ?: ArchiveManager.Format.ZIP
+            if (!selectedFormat.supportsPassword) {
+                switchPassword.isChecked = false
+                switchPassword.visibility = View.GONE
+                layoutPasswordFields.visibility = View.GONE
+            } else {
+                switchPassword.visibility = View.VISIBLE
+            }
+        }
+
         switchPassword.setOnCheckedChangeListener { _, isChecked ->
-            layoutPasswordFields.visibility = if (isChecked) View.VISIBLE else View.GONE
+            layoutPasswordFields.visibility = if (isChecked && selectedFormat.supportsPassword) View.VISIBLE else View.GONE
         }
 
         btnCancel.setOnClickListener { dismiss() }
@@ -106,10 +132,9 @@ class ArchiveOptionsDialog : DialogFragment() {
                 return@setOnClickListener
             }
 
-            val format = if (rb7z.isChecked) ArchiveManager.Format.SEVEN_Z else ArchiveManager.Format.ZIP
             var password: String? = null
 
-            if (switchPassword.isChecked) {
+            if (selectedFormat.supportsPassword && switchPassword.isChecked) {
                 val p1 = edtPassword.text.toString()
                 val p2 = edtConfirmPassword.text.toString()
 
@@ -126,7 +151,7 @@ class ArchiveOptionsDialog : DialogFragment() {
                 password = p1
             }
 
-            onConfirm?.invoke(filename, format, password)
+            onConfirm?.invoke(filename, selectedFormat, password)
             dismiss()
         }
     }

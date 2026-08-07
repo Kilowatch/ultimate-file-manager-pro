@@ -111,7 +111,7 @@ object FileViewerRouter {
     private val PDF_EXTENSIONS = setOf("pdf")
 
     // ── Archives ─────────────────────────────────────────────────────────────
-    private val ZIP_EXTENSIONS = setOf("zip", "7z")
+    private val ZIP_EXTENSIONS = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.SUPPORTED_ARCHIVE_EXTENSIONS
     private val PACKAGE_EXTENSIONS = setOf("apk", "xapk", "apks")
 
     // ── Audio ─────────────────────────────────────────────────────────────────
@@ -226,7 +226,7 @@ object FileViewerRouter {
             in IMAGE_EXTENSIONS -> Intent(context, ImageViewerActivity::class.java)
             in PDF_EXTENSIONS -> Intent(context, PdfViewerActivity::class.java)
             "zip" -> Intent(context, ZipViewerActivity::class.java)
-            "7z" -> Intent(context, SevenZipViewerActivity::class.java)
+            "7z", in ZIP_EXTENSIONS -> Intent(context, SevenZipViewerActivity::class.java)
             in AUDIO_EXTENSIONS, in VIDEO_EXTENSIONS -> {
                 // Keep the original MediaPlayerActivity path for built-in viewer
                 // (the UFM Media Player with background playback is available

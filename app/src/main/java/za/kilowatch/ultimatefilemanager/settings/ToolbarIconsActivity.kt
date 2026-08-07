@@ -84,6 +84,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_shield_unprotected, R.string.unprotect, ToolbarIconsPreferenceManager.KEY_UNPROTECT),
             IconItem(R.drawable.ic_check, R.string.action_select_all, ToolbarIconsPreferenceManager.KEY_SELECT_ALL),
             IconItem(R.drawable.ic_compress, R.string.action_compress, ToolbarIconsPreferenceManager.KEY_COMPRESS),
+            IconItem(R.drawable.ic_extract, R.string.action_extract_here, ToolbarIconsPreferenceManager.KEY_EXTRACT),
             IconItem(R.drawable.ic_compress_image, R.string.action_compress_image, ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS),
             IconItem(R.drawable.ic_photo_video, R.string.action_retrigger_thumbnails, ToolbarIconsPreferenceManager.KEY_RETRIGGER_THUMBNAILS),
             IconItem(R.drawable.ic_delete, R.string.action_delete, ToolbarIconsPreferenceManager.KEY_DELETE),

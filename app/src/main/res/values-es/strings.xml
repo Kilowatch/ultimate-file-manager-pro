@@ -3057,6 +3057,21 @@ Aceptar
     <string name="action_compress">
 Comprimir
 </string>
+    <string name="action_extract_here">
+Extraer aquí
+</string>
+    <string name="extract_progress_title">
+Extrayendo...
+</string>
+    <string name="extract_success">
+Extraído correctamente
+</string>
+    <string name="extract_error">
+Error al extraer: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Extraer aquí
+</string>
     <string name="compress_title">
 Comprimir selección
 </string>

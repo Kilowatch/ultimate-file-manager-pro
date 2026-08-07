@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — biblioteca de processamento de imagens de cód
         <item>
 Amazon Appstore SDK — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — biblioteca de processamento de imagens de código de barras. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — processa compras opcionais de gorjetas dentro do aplicativo em dispositivos Amazon. (Proprietário)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

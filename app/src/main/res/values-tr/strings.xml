@@ -3057,6 +3057,21 @@ Tamam
     <string name="action_compress">
 Sıkıştır
 </string>
+    <string name="action_extract_here">
+Buraya çıkar
+</string>
+    <string name="extract_progress_title">
+Çıkarılıyor...
+</string>
+    <string name="extract_success">
+Başarıyla çıkarıldı
+</string>
+    <string name="extract_error">
+Çıkarma başarısız oldu: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Buraya Çıkar
+</string>
     <string name="compress_title">
 Seçimi Sıkıştır
 </string>

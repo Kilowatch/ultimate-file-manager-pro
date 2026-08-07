@@ -592,6 +592,12 @@ ZXing（com.google.zxing:core） — バーコード画像処理ライブラリ�
         <item>
 Amazon Appstore SDK — Amazonデバイスでのオプションのアプリ内チップ購入を処理します。（プロプライエタリ）
 </item>
+        <item>
+ZXing (com.google.zxing:core) — バーコード画像処理ライブラリ。(Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ購入を処理します。(Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

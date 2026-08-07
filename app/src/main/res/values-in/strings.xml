@@ -3057,6 +3057,21 @@ OK
     <string name="action_compress">
 Kompres
 </string>
+    <string name="action_extract_here">
+Ekstrak di sini
+</string>
+    <string name="extract_progress_title">
+Mengekstrak...
+</string>
+    <string name="extract_success">
+Berhasil diekstrak
+</string>
+    <string name="extract_error">
+Ekstraksi gagal: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Ekstrak di sini
+</string>
     <string name="compress_title">
 Kompres Pilihan
 </string>

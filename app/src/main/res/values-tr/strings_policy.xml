@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — barkod resim işleme kütüphanesi. (Apache-2.
         <item>
 Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın almalarını işler. (Özel Mülk)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — barkod görüntü işleme kütüphanesi. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Tescilli)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

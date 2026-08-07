@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlin.coroutines.resume
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -73,6 +75,7 @@ class FileBrowserFragment : Fragment() {
     private var btnPin: ImageView? = null
     private var btnUnpin: ImageView? = null
     private lateinit var btnCompress: View
+    private var btnExtract: View? = null
     private lateinit var btnImageCompress: View
     private var btnViewToggle: ImageView? = null
     private var btnSort: ImageView? = null
@@ -413,6 +416,7 @@ class FileBrowserFragment : Fragment() {
         btnPin = view.findViewById(R.id.btnPin)
         btnUnpin = view.findViewById(R.id.btnUnpin)
         btnCompress = view.findViewById(R.id.btnCompress)
+        btnExtract = view.findViewById(R.id.btnExtract)
         btnImageCompress = view.findViewById(R.id.btnImageCompress)
         fabPaste = view.findViewById(R.id.fabPaste)
         fabTools = view.findViewById(R.id.fabTools)
@@ -824,6 +828,13 @@ class FileBrowserFragment : Fragment() {
             }
         }
         
+        btnExtract?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles()
+            if (selected.isNotEmpty()) {
+                performExtractHere(selected)
+            }
+        }
+
         fabPaste?.setOnClickListener {
             val act = activity
             if (act is TwinWindowActivity) {
@@ -935,7 +946,7 @@ class FileBrowserFragment : Fragment() {
                 }
             }
 
-            // 5. Compress Image
+            // 6. Compress Image
             val allImages = selected.isNotEmpty() && selected.all {
                 it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             }
@@ -947,6 +958,14 @@ class FileBrowserFragment : Fragment() {
                             java.util.ArrayList(selected.map { it.absolutePath })
                         )
                     })
+                })
+            }
+
+            // Extract Here
+            val hasArchiveSelected = selected.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+            if (hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) {
+                list.add(FileToolsBottomSheet.ActionItem("extract_here", getString(R.string.action_extract_here), R.drawable.ic_extract, "toolbar_extract") {
+                    performExtractHere(selected)
                 })
             }
 
@@ -1396,6 +1415,7 @@ class FileBrowserFragment : Fragment() {
                         fabSelAll.visibility = View.VISIBLE
                     }
                 }
+                btnExtract?.visibility = View.GONE
                 fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
             } else {
                 fabTools?.visibility = View.GONE
@@ -1428,6 +1448,8 @@ class FileBrowserFragment : Fragment() {
                 btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
                 btnCompress.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
                 val imgFiles = fileAdapter.getSelectedFiles()
+                val hasArchiveSelected = imgFiles.isNotEmpty() && imgFiles.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+                btnExtract?.visibility = if (isTv && showActions && hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) View.VISIBLE else View.GONE
                 val allImages = imgFiles.isNotEmpty() && imgFiles.all {
                     it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 }
@@ -2377,6 +2399,96 @@ class FileBrowserFragment : Fragment() {
     fun refresh() = loadDirectory(currentDir)
     fun getStorageId() = storageId
     fun getStorageType() = storageType
+
+    private fun performExtractHere(files: List<File>) {
+        val archives = files.filter { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+        if (archives.isEmpty()) return
+
+        fileAdapter.exitSelectionMode()
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            val ctx = context ?: return@launch
+            val progressDialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+                .setTitle(R.string.extract_progress_title)
+                .setMessage(archives.first().name)
+                .setCancelable(false)
+                .create()
+            progressDialog.show()
+
+            var extractedCount = 0
+            var lastError: Exception? = null
+
+            withContext(Dispatchers.IO) {
+                for (archive in archives) {
+                    var password: String? = null
+                    var success = false
+                    var attempts = 0
+
+                    while (!success && attempts < 3) {
+                        val act = activity ?: break
+                        val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
+                            ctx,
+                            archive,
+                            archive.parentFile ?: currentDir,
+                            password,
+                            onProgress = {},
+                            onConflict = { file, isFolder, destSizeBytes, applyToAllRef ->
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    act,
+                                    file.name,
+                                    isFolder,
+                                    destSizeBytes,
+                                    applyToAllRef
+                                )
+                            }
+                        )
+
+                        if (result.isSuccess) {
+                            success = true
+                            extractedCount++
+                        } else {
+                            val ex = result.exceptionOrNull()
+                            lastError = ex as? Exception ?: Exception(ex?.message)
+                            val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
+                            val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
+                                    msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
+
+                            if (attempts == 0 && (isEncryptedErr || password == null)) {
+                                val pwd = withContext(Dispatchers.Main) {
+                                    suspendCancellableCoroutine<String?> { cont ->
+                                        val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                                        dialog.setOnConfirm { pw ->
+                                            if (cont.isActive) cont.resume(pw)
+                                        }
+                                        dialog.setOnCancel {
+                                            if (cont.isActive) cont.resume(null)
+                                        }
+                                        dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                                    }
+                                }
+                                if (pwd == null) {
+                                    break
+                                }
+                                password = pwd
+                                attempts++
+                            } else {
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+
+            progressDialog.dismiss()
+            loadDirectory(currentDir)
+
+            if (extractedCount > 0) {
+                android.widget.Toast.makeText(ctx, getString(R.string.extract_success, extractedCount), android.widget.Toast.LENGTH_SHORT).show()
+            } else if (lastError != null) {
+                android.widget.Toast.makeText(ctx, getString(R.string.extract_error, lastError?.message ?: "Extraction failed"), android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     /**
      * Determines whether a file should be visible in the file list.

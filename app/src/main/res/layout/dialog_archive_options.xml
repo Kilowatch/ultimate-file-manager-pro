@@ -59,32 +59,101 @@
                 android:textSize="13sp"
                 android:layout_marginBottom="8dp" />
 
-            <RadioGroup
-                android:id="@+id/rgFormat"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:scrollbars="none"
+                android:overScrollMode="never"
                 android:layout_marginBottom="16dp">
 
-                <RadioButton
-                    android:id="@+id/rbZip"
-                    android:layout_width="0dp"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgFormat"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/zip"
-                    android:checked="true"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:textColor="@color/ufm_text_primary" />
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:singleLine="true">
 
-                <RadioButton
-                    android:id="@+id/rb7z"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/s_7z"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:textColor="@color/ufm_text_primary" />
-            </RadioGroup>
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatZip"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".zip"
+                        android:checked="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormat7z"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".7z" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatTar"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".tar" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatTarGz"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".tar.gz" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatTarXz"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".tar.xz" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatTarZst"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".tar.zst" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatTarBz2"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".tar.bz2" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatGz"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".gz" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatXz"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".xz" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatZst"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".zst" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFormatBz2"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=".bz2" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switchPassword"

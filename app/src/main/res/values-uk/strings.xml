@@ -3057,6 +3057,21 @@ OK
     <string name="action_compress">
 Стиснути
 </string>
+    <string name="action_extract_here">
+Розпакувати тут
+</string>
+    <string name="extract_progress_title">
+Розпакування...
+</string>
+    <string name="extract_success">
+Успішно розпаковано
+</string>
+    <string name="extract_error">
+Не вдалося розпакувати: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Розпакувати тут
+</string>
     <string name="compress_title">
 Стиснути вибрані
 </string>

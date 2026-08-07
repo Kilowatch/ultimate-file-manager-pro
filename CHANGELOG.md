@@ -8,12 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.1] — 2026-08-06
 
 ### Added
+- Multi-format compression support for `.tar`, `.tar.gz`, `.tar.bz2`, `.tar.xz`, `.tar.zst`, `.gz`, `.bz2`, `.xz`, and `.zst`.
+- Modern checkable format toggle pills (`ChipGroup`) in the Compression dialog for Mobile and Android TV.
+- Extraction support and conflict/collision handling for `.tar`, `.tar.gz`, `.tar.bz2`, `.tar.xz`, `.tar.zst`, `.rar`, `.gz`, `.bz2`, `.xz`, and `.zst`.
+- Universal archive entry viewing, single-entry extraction, moving out, and deletion for ZIP, 7Z, and TAR-compressed streams (`.tar`, `.tar.gz`, `.tar.bz2`, `.tar.xz`, `.tar.zst`, `.gz`, `.bz2`, `.xz`, `.zst`).
+- Network & Cloud share "Extract Here" support for SMB, FTP, SFTP, NFS, and Cloud storage targets.
 - Flexible Batch Rename patterns with token support (`#`/`##`/`###`, `$F`/`$fullname`, `$N`/`$name`, `$E`/`$ext`, date tokens `$Y`, `$M`, `$D`, and case transform tokens `$U`/`$upper`, `$L`/`$lower`).
 - Standalone Extension (`$E`) toggle pill with dedicated custom extension input field (`csv` → `photo.csv`).
 - Two-way checkable toggle chips helper panel for pattern insertion & auto-syncing on Mobile and Android TV.
 - Pattern Tokens Help (`?`) toolbar button with token reference guide & examples on Mobile and Android TV.
 
 ### Changed
+- Compression dialog dynamically hides password protection fields for archive formats that do not support encryption.
+- Set "Extract Here" to FAB Tools bottom sheet on Mobile and top action bar on Android TV.
 - Updated `$N` token to output strictly bare filename without extension (`photo`).
 - Removed parenthesis wrapping from `{Padding}` token output in Batch Rename.
 

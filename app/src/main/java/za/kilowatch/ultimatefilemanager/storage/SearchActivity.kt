@@ -34,6 +34,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import kotlin.coroutines.resume
 import kotlinx.coroutines.*
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -668,6 +669,13 @@ class SearchActivity : AppCompatActivity() {
             actions.add { shareFile(file) }
         }
 
+        // Extract Here
+        val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+        if (!file.isDirectory && za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(file) && pm.isIconEnabled(this, pm.KEY_EXTRACT)) {
+            options.add(getString(R.string.action_extract_here))
+            actions.add { performExtractHere(file) }
+        }
+
         // Delete
         options.add(getString(R.string.action_delete))
         actions.add { confirmDelete(file) }
@@ -776,6 +784,83 @@ class SearchActivity : AppCompatActivity() {
         }
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.apply {
             backgroundTintList = glassCsl; setTextColor(white)
+        }
+    }
+
+    private fun performExtractHere(file: File) {
+        if (!za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(file)) return
+
+        scope.launch(Dispatchers.Main) {
+            val progressDialog = MaterialAlertDialogBuilder(this@SearchActivity, R.style.UFM_Dialog)
+                .setTitle(R.string.extract_progress_title)
+                .setMessage(file.name)
+                .setCancelable(false)
+                .create()
+            progressDialog.show()
+
+            var password: String? = null
+            var success = false
+            var attempts = 0
+            var lastError: Exception? = null
+
+            withContext(Dispatchers.IO) {
+                while (!success && attempts < 3) {
+                    val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
+                        this@SearchActivity,
+                        file,
+                        file.parentFile ?: filesDir,
+                        password,
+                        onProgress = {},
+                        onConflict = { conflictFile, isFolder, destSizeBytes, applyToAllRef ->
+                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                this@SearchActivity,
+                                conflictFile.name,
+                                isFolder,
+                                destSizeBytes,
+                                applyToAllRef
+                            )
+                        }
+                    )
+
+                    if (result.isSuccess) {
+                        success = true
+                    } else {
+                        val ex = result.exceptionOrNull()
+                        lastError = ex as? Exception ?: Exception(ex?.message)
+                        val msg = ex?.message?.lowercase(java.util.Locale.ROOT) ?: ""
+                        val isEncryptedErr = msg.contains("password") || msg.contains("encrypt") ||
+                                msg.contains("decrypt") || (ex is net.lingala.zip4j.exception.ZipException)
+
+                        if (attempts == 0 && (isEncryptedErr || password == null)) {
+                            val pwd = withContext(Dispatchers.Main) {
+                                suspendCancellableCoroutine<String?> { cont ->
+                                    val dialog = za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog()
+                                    dialog.setOnConfirm { pw ->
+                                        if (cont.isActive) cont.resume(pw)
+                                    }
+                                    dialog.setOnCancel {
+                                        if (cont.isActive) cont.resume(null)
+                                    }
+                                    dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog.TAG)
+                                }
+                            }
+                            if (pwd == null) break
+                            password = pwd
+                            attempts++
+                        } else {
+                            break
+                        }
+                    }
+                }
+            }
+
+            progressDialog.dismiss()
+
+            if (success) {
+                showSnackbar(getString(R.string.extract_success, 1))
+            } else if (lastError != null) {
+                showSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+            }
         }
     }
 

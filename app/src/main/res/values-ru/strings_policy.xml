@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — библиотека обработки изо
         <item>
 Amazon Appstore SDK — обрабатывает необязательные покупки внутри приложения на устройствах Amazon. (Proprietary)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — библиотека обработки изображений штрих-кодов. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — обрабатывает необязательные покупки чаевых внутри приложений на устройствах Amazon. (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

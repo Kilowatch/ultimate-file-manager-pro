@@ -211,6 +211,8 @@
         <item>zip4j (net.lingala.zip4j) — advanced ZIP library for password-protected and AES-encrypted archives. (Apache-2.0)</item>
         <item>Apache Commons Compress — library for reading and writing various archive formats (7z, zip, tar, etc). (Apache-2.0)</item>
         <item>XZ for Java (org.tukaani.xz) — implementation of XZ and LZMA compression. (Public Domain)</item>
+        <item>zstd-jni (com.github.luben:zstd-jni) — JNI bindings for Zstandard compression and extraction library. (BSD-2-Clause)</item>
+        <item>Junrar (com.github.junrar:junrar) — Java RAR extraction library. (BSD-3-Clause)</item>
         <item>libadb-android (com.github.MuntashirAkon) — Android Debug Bridge library enabling secure connections to ADB-enabled devices for remote shell access and certificate-based pairing. (Apache-2.0)</item>
         <item>Apache MINA SSHD (org.apache.sshd) — comprehensive SSHD core, SFTP, and SCP client library for secure network share access. (Apache-2.0)</item>
         <item>EdDSA for Java (net.i2p.crypto:eddsa) — implementation of EdDSA (Edwards-curve Digital Signature Algorithm) for Ed25519 SSH keys. (CC0-1.0)</item>

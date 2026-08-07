@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — pustaka pemrosesan gambar barcode. (Apache-2.0
         <item>
 Amazon Appstore SDK — memproses pembelian tip dalam aplikasi opsional di perangkat Amazon. (Proprietary)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — pustaka pemrosesan gambar kode batang. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

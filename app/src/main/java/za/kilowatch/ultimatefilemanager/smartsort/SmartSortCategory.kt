@@ -35,7 +35,7 @@ enum class SmartSortCategory(
     ARCHIVES(
         folderName = "UFM Archives",
         displayNameResId = R.string.smart_sort_category_archives,
-        extensions = setOf("zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "tgz")
+        extensions = setOf("zip", "rar", "7z", "tar", "gz", "bz2", "xz", "iso", "tgz", "zst", "tzst", "txz", "tbz", "tbz2")
     ),
     APPS(
         folderName = "UFM Apps",

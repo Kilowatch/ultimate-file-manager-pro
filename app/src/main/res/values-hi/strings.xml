@@ -3057,6 +3057,21 @@ UFM रंग कोड
     <string name="action_compress">
 संपीड़ित करें
 </string>
+    <string name="action_extract_here">
+यहाँ निकालें
+</string>
+    <string name="extract_progress_title">
+निकाला जा रहा है...
+</string>
+    <string name="extract_success">
+सफलतापूर्वक निकाला गया
+</string>
+    <string name="extract_error">
+निकालना विफल: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+यहाँ निकालें
+</string>
     <string name="compress_title">
 चयन संपीड़ित करें
 </string>

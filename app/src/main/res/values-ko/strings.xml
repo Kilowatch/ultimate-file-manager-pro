@@ -3057,6 +3057,21 @@ UFM 색상 코드
     <string name="action_compress">
 압축
 </string>
+    <string name="action_extract_here">
+여기에 압축 풀기
+</string>
+    <string name="extract_progress_title">
+압축 푸는 중...
+</string>
+    <string name="extract_success">
+압축 풀기 성공
+</string>
+    <string name="extract_error">
+압축 풀기 실패: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+여기에 압축 풀기
+</string>
     <string name="compress_title">
 선택 항목 압축
 </string>

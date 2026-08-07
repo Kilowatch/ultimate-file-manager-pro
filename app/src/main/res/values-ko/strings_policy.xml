@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — 바코드 이미지 처리 라이브러리. (A
         <item>
 Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (독점 라이선스)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — 바코드 이미지 처리 라이브러리. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

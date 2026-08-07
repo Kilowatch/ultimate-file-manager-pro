@@ -19,11 +19,13 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 class ArchiveItemOptionsDialog : DialogFragment() {
 
     private var itemName: String = ""
+    private var allowModification: Boolean = true
     private var onCopyOutListener: (() -> Unit)? = null
     private var onMoveOutListener: (() -> Unit)? = null
     private var onDeleteListener: (() -> Unit)? = null
 
     fun setItemName(name: String) { itemName = name }
+    fun setAllowModification(allow: Boolean) { allowModification = allow }
     fun setOnCopyOut(listener: () -> Unit) { onCopyOutListener = listener }
     fun setOnMoveOut(listener: () -> Unit) { onMoveOutListener = listener }
     fun setOnDelete(listener: () -> Unit) { onDeleteListener = listener }
@@ -78,6 +80,11 @@ class ArchiveItemOptionsDialog : DialogFragment() {
         val btnExtractTo = view.findViewById<View>(R.id.btnExtractTo)
         val btnMoveOut = view.findViewById<View>(R.id.btnMoveOut)
         val btnDeleteFromArchive = view.findViewById<View>(R.id.btnDeleteFromArchive)
+
+        if (!allowModification) {
+            btnMoveOut.visibility = View.GONE
+            btnDeleteFromArchive.visibility = View.GONE
+        }
 
         btnExtractTo.setOnClickListener {
             dismiss()

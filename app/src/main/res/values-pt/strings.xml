@@ -3057,6 +3057,21 @@ OK
     <string name="action_compress">
 Compactar
 </string>
+    <string name="action_extract_here">
+Extrair aqui
+</string>
+    <string name="extract_progress_title">
+Extraindo...
+</string>
+    <string name="extract_success">
+Extraído com sucesso
+</string>
+    <string name="extract_error">
+Falha na extração: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Extrair aqui
+</string>
     <string name="compress_title">
 Compactar Seleção
 </string>

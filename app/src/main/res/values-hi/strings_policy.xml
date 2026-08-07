@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — बारकोड इमेज प्रो�
         <item>
 Amazon Appstore SDK — Amazon डिवाइसों पर वैकल्पिक इन-ऐप टिप खरीदारी को संसाधित करता है। (स्वामित्व)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — बारकोड छवि प्रसंस्करण लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon उपकरणों पर वैकल्पिक इन-ऐप टिप खरीदारी की प्रक्रिया करता है। (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

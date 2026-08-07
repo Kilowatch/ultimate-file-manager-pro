@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — مكتبة معالجة صور الباركو�
         <item>
 مجموعة تطوير Amazon Appstore — تعالج عمليات شراء البقشيش الاختيارية داخل التطبيق على أجهزة Amazon. (ملكية خاصة)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — مكتبة معالجة صور الباركود. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة أمازون. (Proprietary)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

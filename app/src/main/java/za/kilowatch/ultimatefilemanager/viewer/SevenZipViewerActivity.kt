@@ -59,6 +59,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private var sourceFile: File? = null
     private var currentPath = ""
     private var allEntries = listOf<SevenZArchiveEntry>()
+    private var allEntryInfos = listOf<ArchiveManager.ArchiveEntryInfo>()
     private var archivePassword: String? = null
 
     private var pendingExtractEntry: SevenZArchiveEntry? = null
@@ -180,38 +181,47 @@ class SevenZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val szf = createSevenZFile(file, archivePassword)
-                
-                val entries = szf.entries.toList()
-                
-                // If opened without password, we must check if content is encrypted
-                if (archivePassword == null) {
-                    var needsPassword = false
+                if (file.extension.lowercase(Locale.ROOT) == "7z") {
+                    val szf = createSevenZFile(file, archivePassword)
+                    val entries = szf.entries.toList()
                     
-                    // 1. Check metadata for AES method
-                    for (entry in entries) {
-                        if (!entry.isDirectory && entry.hasStream()) {
-                            entry.contentMethods?.forEach { m ->
-                                if (m.method == SevenZMethod.AES256SHA256) {
-                                    needsPassword = true
+                    if (archivePassword == null) {
+                        var needsPassword = false
+                        for (entry in entries) {
+                            if (!entry.isDirectory && entry.hasStream()) {
+                                entry.contentMethods?.forEach { m ->
+                                    if (m.method == SevenZMethod.AES256SHA256) {
+                                        needsPassword = true
+                                    }
                                 }
                             }
+                            if (needsPassword) break
                         }
-                        if (needsPassword) break
-                    }
-                    
-                    if (needsPassword) {
-                        szf.close()
-                        withContext(Dispatchers.Main) {
-                            progressBar.visibility = View.GONE
-                            showPasswordPrompt(file)
+                        
+                        if (needsPassword) {
+                            szf.close()
+                            withContext(Dispatchers.Main) {
+                                progressBar.visibility = View.GONE
+                                showPasswordPrompt(file)
+                            }
+                            return@launch
                         }
-                        return@launch
                     }
-                }
 
-                sevenZipFile = szf
-                allEntries = entries
+                    sevenZipFile = szf
+                    allEntries = entries
+                    allEntryInfos = entries.map { entry ->
+                        ArchiveManager.ArchiveEntryInfo(
+                            name = entry.name,
+                            isDirectory = entry.isDirectory,
+                            uncompressedSize = entry.size,
+                            lastModified = entry.lastModifiedDate?.time ?: 0L
+                        )
+                    }
+                } else {
+                    val entries = ArchiveManager.getArchiveEntries(file, archivePassword)
+                    allEntryInfos = entries
+                }
                 
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
@@ -252,17 +262,18 @@ class SevenZipViewerActivity : AppCompatActivity() {
             archivePassword = password
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
-                    // Test password by attempting to read from the first file entry
-                    createSevenZFile(file, password).use { testSzf ->
-                        val entries = testSzf.entries.toList()
-                        val firstFile = entries.firstOrNull { it.hasStream() && it.size > 0 }
-                        if (firstFile != null) {
-                            var te = testSzf.getNextEntry()
-                            while (te != null && te.name != firstFile.name) {
-                                te = testSzf.getNextEntry()
-                            }
-                            if (te != null) {
-                                testSzf.read()
+                    if (file.extension.lowercase(Locale.ROOT) == "7z") {
+                        createSevenZFile(file, password).use { testSzf ->
+                            val entries = testSzf.entries.toList()
+                            val firstFile = entries.firstOrNull { it.hasStream() && it.size > 0 }
+                            if (firstFile != null) {
+                                var te = testSzf.getNextEntry()
+                                while (te != null && te.name != firstFile.name) {
+                                    te = testSzf.getNextEntry()
+                                }
+                                if (te != null) {
+                                    testSzf.read()
+                                }
                             }
                         }
                     }
@@ -295,7 +306,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
         val items = mutableListOf<SevenZipItem>()
         val seenDirs = mutableSetOf<String>()
 
-        for (entry in allEntries) {
+        for (entry in allEntryInfos) {
             val name = entry.name
             if (!name.startsWith(prefix)) continue
             val relativeName = name.removePrefix(prefix)
@@ -305,11 +316,11 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 val dirName = relativeName.substringBefore("/")
                 if (dirName !in seenDirs) {
                     seenDirs.add(dirName)
-                    items.add(SevenZipItem(dirName, true, null))
+                    items.add(SevenZipItem(dirName, true, entryInfo = null, entry = null))
                 }
             } else {
                 if (!entry.isDirectory) {
-                    items.add(SevenZipItem(relativeName, false, entry))
+                    items.add(SevenZipItem(relativeName, false, entryInfo = entry, entry = null))
                 }
             }
         }
@@ -345,6 +356,9 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private fun showItemOptions(item: SevenZipItem) {
         val dialog = ArchiveItemOptionsDialog()
         dialog.setItemName(item.name)
+        val ext = sourceFile?.extension?.lowercase(Locale.ROOT) ?: ""
+        val isModifiable = ext != "rar"
+        dialog.setAllowModification(isModifiable)
         dialog.setOnCopyOut {
             pendingExtractAll = false
             pendingExtractEntry = item.entry
@@ -382,8 +396,8 @@ class SevenZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.extract7zEntry(file, entryPath, destDir, archivePassword)
+                val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.extractArchiveEntry(file, entryPath, destDir, archivePassword)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -401,14 +415,14 @@ class SevenZipViewerActivity : AppCompatActivity() {
         }
     }
 
-    /** Performs moving a single item out of the 7z archive once the user has chosen a destination. */
+    /** Performs moving a single item out of the archive once the user has chosen a destination. */
     private fun doMoveOutSingleItem(item: SevenZipItem, destDir: File) {
         val file = sourceFile ?: return
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.move7zEntry(file, entryPath, destDir, archivePassword)
+                val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.moveArchiveEntry(file, entryPath, destDir, archivePassword)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -443,8 +457,8 @@ class SevenZipViewerActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val entryPath = item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
-                val res = ArchiveManager.delete7zEntry(file, entryPath, archivePassword)
+                val entryPath = item.entryInfo?.name ?: item.entry?.name ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                val res = ArchiveManager.deleteArchiveEntry(file, entryPath, archivePassword)
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
                     if (res.isSuccess) {
@@ -463,60 +477,17 @@ class SevenZipViewerActivity : AppCompatActivity() {
         }
     }
 
-    /** Performs the actual "Extract All" once the user has chosen a destination. */
     private fun doExtractAll(destDir: File) {
+        val file = sourceFile ?: return
         progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                destDir.mkdirs()
-                val szf = createSevenZFile(sourceFile!!, archivePassword)
-
-                szf.use { z ->
-                    val canonicalDest = destDir.canonicalPath
-                    var entry = z.getNextEntry()
-                    while (entry != null) {
-                        val outFile = File(destDir, entry.name)
-                        val canonicalOut = outFile.canonicalPath
-                        
-                        if (!canonicalOut.startsWith(canonicalDest + File.separator)) {
-                            Log.w("7zViewer", "Zip Slip attempt detected! Skipping entry: ${entry.name}")
-                            entry = z.getNextEntry()
-                            continue
-                        }
-
-                        if (entry.isDirectory) {
-                            outFile.mkdirs()
-                        } else {
-                            outFile.parentFile?.mkdirs()
-                            outFile.outputStream().use { out ->
-                                val buffer = ByteArray(8192)
-                                var len: Int
-                                while (z.read(buffer).also { len = it } != -1) {
-                                    out.write(buffer, 0, len)
-                                }
-                            }
-                        }
-                        entry = z.getNextEntry()
-                    }
-                }
-
-                withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
+            val res = ArchiveManager.extract(this@SevenZipViewerActivity, file, destDir, archivePassword)
+            withContext(Dispatchers.Main) {
+                progressBar.visibility = View.GONE
+                if (res.isSuccess) {
                     showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
-                }
-            } catch (e: OutOfMemoryError) {
-                withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
-                    showSnackbar("${getString(R.string.archive_extract_error)}: ${getString(R.string.error_not_enough_memory)}")
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    progressBar.visibility = View.GONE
-                    val msg = if (e is MemoryLimitException) {
-                        getString(R.string.error_not_enough_memory)
-                    } else {
-                        e.message
-                    }
+                } else {
+                    val msg = res.exceptionOrNull()?.message ?: ""
                     showSnackbar("${getString(R.string.archive_extract_error)}: $msg")
                 }
             }
@@ -582,7 +553,12 @@ class SevenZipViewerActivity : AppCompatActivity() {
         Snackbar.make(root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    data class SevenZipItem(val name: String, val isDirectory: Boolean, val entry: SevenZArchiveEntry?)
+    data class SevenZipItem(
+        val name: String,
+        val isDirectory: Boolean,
+        val entryInfo: ArchiveManager.ArchiveEntryInfo? = null,
+        val entry: SevenZArchiveEntry? = null
+    )
 
     inner class SevenZipAdapter(private val items: List<SevenZipItem>) : RecyclerView.Adapter<SevenZipAdapter.VH>() {
         inner class VH(v: View) : RecyclerView.ViewHolder(v) {
@@ -611,8 +587,8 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 holder.icon.setImageResource(
                     FileTypeIconProvider.iconForExtension(holder.itemView.context, item.name.substringAfterLast('.', ""))
                 )
-                val entry = item.entry!!
-                val size = Formatter.formatFileSize(this@SevenZipViewerActivity, entry.size)
+                val rawSize = item.entryInfo?.uncompressedSize ?: item.entry?.size ?: 0L
+                val size = Formatter.formatFileSize(this@SevenZipViewerActivity, rawSize)
                 holder.txtInfo.text = size
                 holder.itemView.setOnClickListener { showItemOptions(item) }
                 holder.itemView.setOnLongClickListener {

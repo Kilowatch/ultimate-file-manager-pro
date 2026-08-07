@@ -503,6 +503,21 @@
                 app:iconSize="20dp" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnExtract"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@string/action_extract_here"
+                android:textColor="@color/tv_accent"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:backgroundTint="@color/tv_glass_white_10"
+                app:icon="@drawable/ic_extract"
+                app:iconTint="@color/tv_accent"
+                app:iconSize="20dp" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDelete"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"

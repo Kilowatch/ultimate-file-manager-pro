@@ -204,6 +204,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var btnPin: ImageView? = null
     private var btnUnpin: ImageView? = null
     private lateinit var btnCompress: android.view.View
+    private var btnExtract: android.view.View? = null
     private lateinit var btnImageCompress: android.view.View
     private var btnOptionsToggle: ImageView? = null
     private var layoutOptionsRow: LinearLayout? = null
@@ -675,6 +676,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         btnPin = findViewById(R.id.btnPin)
         btnUnpin = findViewById(R.id.btnUnpin)
         btnCompress = findViewById(R.id.btnCompress)
+        btnExtract = findViewById(R.id.btnExtract)
         btnImageCompress = findViewById(R.id.btnImageCompress)
         btnRetriggerThumbnails = findViewById(R.id.btnRetriggerThumbnails)
         fabPaste = findViewById(R.id.fabPaste)
@@ -1118,6 +1120,15 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
+        btnExtract?.setOnClickListener {
+            val selected = fileAdapter.getSelectedFiles().filter {
+                ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.'))
+            }
+            if (selected.isNotEmpty()) {
+                performNetworkExtractHere(selected)
+            }
+        }
+
         btnImageCompress.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles().filter {
                 it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
@@ -1252,6 +1263,18 @@ class NetworkBrowserActivity : AppCompatActivity() {
             if (pm.isIconEnabled(this, pm.KEY_COMPRESS)) {
                 list.add(FileToolsBottomSheet.ActionItem("compress", getString(R.string.action_compress), R.drawable.ic_compress, "toolbar_compress") {
                     showArchiveOptions(selected)
+                })
+            }
+
+            // 6b. Extract Here
+            val hasArchiveSelected = selected.isNotEmpty() && selected.any {
+                ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.'))
+            }
+            if (hasArchiveSelected && pm.isIconEnabled(this, pm.KEY_EXTRACT)) {
+                list.add(FileToolsBottomSheet.ActionItem("extract_here", getString(R.string.action_extract_here), R.drawable.ic_extract, "toolbar_extract") {
+                    performNetworkExtractHere(selected.filter {
+                        ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.'))
+                    })
                 })
             }
 
@@ -2025,6 +2048,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 btnSelectAll.visibility = if (pm.isIconEnabled(this, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
                 btnDelete.visibility = View.GONE
                 btnCompress.visibility = View.GONE
+                btnExtract?.visibility = View.GONE
                 fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
             } else {
                 fabTools?.visibility = View.GONE
@@ -2051,6 +2075,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
                 btnCompress.visibility = if (showActions && pm.isIconEnabled(this, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
                 val netFiles = fileAdapter.getSelectedFiles()
+                val hasArchiveSelected = netFiles.isNotEmpty() && netFiles.any {
+                    za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchiveExtension(it.name.substringAfterLast('.'))
+                }
+                btnExtract?.visibility = if (isTv && showActions && hasArchiveSelected && pm.isIconEnabled(this, pm.KEY_EXTRACT)) View.VISIBLE else View.GONE
                 val hasVideoOrFolder = netFiles.isNotEmpty() && netFiles.any {
                     it.isDirectory || it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
                 }
@@ -2663,57 +2691,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             tempDir.mkdirs()
             var tempArchive: File? = null  // set once archive is created; cleaned in finally
 
-            /**
-             * Recursively downloads a single network entry (file or directory) into [localParent].
-             * - For files: opens an input stream and writes bytes to disk.
-             * - For directories: creates the local dir, lists children, and recurses.
-             * Returns the local [File] that was created.
-             */
-            suspend fun downloadNetworkEntry(netFile: NetworkFile, localParent: File): File {
-                val localFile = File(localParent, netFile.name)
-                if (netFile.isDirectory) {
-                    localFile.mkdirs()
-                    val children = when (share.type) {
-                        ShareType.SMB -> SmbShareClient.listFiles(share, netFile.path)
-                        ShareType.FTP -> FtpShareClient.listFiles(share, netFile.path)
-                        ShareType.TV  -> TvShareClient.listFiles(share, netFile.path)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, netFile.path)
-                        ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(share, netFile.path)
-                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, netFile.path)
-                        ShareType.DROPBOX -> DropboxShareClient.listFiles(share, netFile.path)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, netFile.path)
-                        ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, netFile.path)
-                        ShareType.NFS                         -> NfsShareClient.listFiles(share, netFile.path)
-                        ShareType.DLNA                        -> DlnaShareClient.listFiles(share, netFile.path)
-                    }
-                    for (child in children) {
-                        downloadNetworkEntry(child, localFile)
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        statusText.text = getString(R.string.downloading_netfilename, netFile.name)
-                    }
-                        val inStream = when (share.type) {
-                            ShareType.SMB -> SmbShareClient.openInputStream(share, netFile.path)
-                            ShareType.FTP -> FtpShareClient.openInputStream(share, netFile.path)
-                            ShareType.TV  -> TvShareClient.openInputStream(share, netFile.path)
-                            ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, netFile.path)
-                            ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, netFile.path).first
-                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, netFile.path).first
-                            ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, netFile.path).first
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, netFile.path).first
-                        ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, netFile.path).first
-                        ShareType.NFS                         -> NfsShareClient.openInputStream(share, netFile.path)
-                        ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, netFile.path)
-                        }
-                    inStream.use { inp ->
-                        FileOutputStream(localFile).use { out ->
-                            inp.copyTo(out)
-                        }
-                    }
-                }
-                return localFile
-            }
+            // downloadNetworkEntry extracted to class level
 
             try {
                 // 1. Recursively download all selected items to temp dir
@@ -2723,17 +2701,19 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         statusText.text = if (netFile.isDirectory) getString(R.string.downloading_folder_netfilename) else "Downloading: ${netFile.name}"
                         dialogProgress.progress = ((index.toFloat() / sourceFiles.size) * 50).toInt()
                     }
-                    localFiles.add(downloadNetworkEntry(netFile, tempDir))
+                    localFiles.add(downloadNetworkEntry(netFile, tempDir) { msg ->
+                        runOnUiThread { statusText.text = msg }
+                    })
                 }
 
                 // 2. Compress into a temp archive alongside tempDir
-                val extension = if (format == ArchiveManager.Format.ZIP) ".zip" else ".7z"
+                val extension = format.displayName
                 val archiveName = "$customFileName$extension"
                 val tempArchiveFile = File(cacheDir, "comp_arch_${System.currentTimeMillis()}$extension")
                 tempArchive = tempArchiveFile
 
                 withContext(Dispatchers.Main) { statusText.setText(R.string.compressing) }
-                ArchiveManager.compress(localFiles, tempArchiveFile, password) { progress ->
+                ArchiveManager.compress(localFiles, tempArchiveFile, password, format) { progress ->
                     runOnUiThread { dialogProgress.progress = 50 + (progress / 2) }
                 }
 
@@ -2812,13 +2792,201 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     /** Returns a File with no conflicts in [dir] — appends (1), (2) … if needed. */
     private fun uniqueFile(dir: File, baseName: String, extension: String): File {
-        var file = File(dir, "$baseName$extension")
-        var counter = 1
-        while (file.exists()) {
-            file = File(dir, "$baseName ($counter)$extension")
-            counter++
+        var candidate = File(dir, "$baseName$extension")
+        var count = 1
+        while (candidate.exists()) {
+            candidate = File(dir, "$baseName ($count)$extension")
+            count++
         }
-        return file
+        return candidate
+    }
+
+    private suspend fun downloadNetworkEntry(
+        netFile: NetworkFile,
+        localParent: File,
+        onStatusUpdate: ((String) -> Unit)? = null
+    ): File {
+        val localFile = File(localParent, netFile.name)
+        if (netFile.isDirectory) {
+            localFile.mkdirs()
+            val children = when (share.type) {
+                ShareType.SMB -> SmbShareClient.listFiles(share, netFile.path)
+                ShareType.FTP -> FtpShareClient.listFiles(share, netFile.path)
+                ShareType.TV  -> TvShareClient.listFiles(share, netFile.path)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, netFile.path)
+                ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(share, netFile.path)
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, netFile.path)
+                ShareType.DROPBOX -> DropboxShareClient.listFiles(share, netFile.path)
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, netFile.path)
+                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, netFile.path)
+                ShareType.NFS                         -> NfsShareClient.listFiles(share, netFile.path)
+                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, netFile.path)
+            }
+            for (child in children) {
+                downloadNetworkEntry(child, localFile, onStatusUpdate)
+            }
+        } else {
+            onStatusUpdate?.invoke(getString(R.string.downloading_netfilename, netFile.name))
+            val inStream = when (share.type) {
+                ShareType.SMB -> SmbShareClient.openInputStream(share, netFile.path)
+                ShareType.FTP -> FtpShareClient.openInputStream(share, netFile.path)
+                ShareType.TV  -> TvShareClient.openInputStream(share, netFile.path)
+                ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, netFile.path)
+                ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, netFile.path).first
+                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, netFile.path).first
+                ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, netFile.path).first
+                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, netFile.path).first
+                ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, netFile.path).first
+                ShareType.NFS                         -> NfsShareClient.openInputStream(share, netFile.path)
+                ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, netFile.path)
+            }
+            inStream.use { inp ->
+                FileOutputStream(localFile).use { out ->
+                    inp.copyTo(out)
+                }
+            }
+        }
+        return localFile
+    }
+
+    private suspend fun uploadLocalEntryToNetwork(localFile: File, remotePath: String) {
+        if (localFile.isDirectory) {
+            val children = localFile.listFiles() ?: return
+            for (child in children) {
+                val childRemotePath = if (remotePath.isEmpty()) child.name else "$remotePath/${child.name}"
+                uploadLocalEntryToNetwork(child, childRemotePath)
+            }
+        } else {
+            val inStream = localFile.inputStream()
+            try {
+                when (share.type) {
+                    ShareType.SMB -> SmbShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.FTP -> FtpShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.TV -> TvShareClient.uploadStream(share, remotePath, inStream, localFile.length())
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.ONEDRIVE -> OnedriveShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.DROPBOX -> DropboxShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.WEBDAV -> WebDavShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.NFS -> NfsShareClient.openOutputStream(share, remotePath).use { out -> inStream.copyTo(out) }
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+            } finally {
+                inStream.close()
+            }
+        }
+    }
+
+    private fun performNetworkExtractHere(archives: List<NetworkFile>) {
+        if (archives.isEmpty()) return
+        fileAdapter.exitSelectionMode()
+
+        val dialogView = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(48, 32, 48, 8)
+        }
+        val statusText = android.widget.TextView(this).apply {
+            text = getString(R.string.extract_progress_title)
+            textSize = 14f
+        }
+        val dialogProgress = android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            isIndeterminate = false; max = 100; progress = 0
+            layoutParams = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = 16; bottomMargin = 8 }
+        }
+        dialogView.addView(statusText)
+        dialogView.addView(dialogProgress)
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.extract_progress_title)
+            .setView(dialogView)
+            .setCancelable(false)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+        dialog.show()
+
+        val job = lifecycleScope.launch(Dispatchers.IO) {
+            val tempExtractDir = File(cacheDir, "net_extract_${System.currentTimeMillis()}")
+            tempExtractDir.mkdirs()
+
+            try {
+                for ((index, netArchive) in archives.withIndex()) {
+                    withContext(Dispatchers.Main) {
+                        statusText.text = getString(R.string.downloading_netfilename, netArchive.name)
+                        dialogProgress.progress = ((index.toFloat() / archives.size) * 30).toInt()
+                    }
+
+                    // 1. Download network archive to temp file
+                    val tempArchiveFile = downloadNetworkEntry(netArchive, tempExtractDir)
+
+                    // 2. Extract locally into subfolder
+                    val localExtractedDir = File(tempExtractDir, "extracted_${netArchive.name.substringBeforeLast('.')}")
+                    localExtractedDir.mkdirs()
+
+                    withContext(Dispatchers.Main) {
+                        statusText.text = getString(R.string.archive_extracting)
+                    }
+
+                    val extractRes = ArchiveManager.extract(
+                        context = this@NetworkBrowserActivity,
+                        archiveFile = tempArchiveFile,
+                        destDir = localExtractedDir,
+                        password = null,
+                        onProgress = { p ->
+                            runOnUiThread {
+                                dialogProgress.progress = 30 + ((p * 0.3f) + (index * 30)).toInt()
+                            }
+                        }
+                    )
+
+                    if (extractRes.isFailure) {
+                        throw extractRes.exceptionOrNull() ?: Exception("Extraction failed")
+                    }
+
+                    // 3. Upload extracted items to network share at currentPath
+                    withContext(Dispatchers.Main) {
+                        statusText.text = getString(R.string.uploading_to_sharename, share.name)
+                    }
+
+                    val itemsToUpload = localExtractedDir.listFiles() ?: emptyArray()
+                    for ((itemIndex, item) in itemsToUpload.withIndex()) {
+                        val remoteDestPath = if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}"
+                        uploadLocalEntryToNetwork(item, remoteDestPath)
+                        withContext(Dispatchers.Main) {
+                            dialogProgress.progress = 60 + (((itemIndex + 1).toFloat() / itemsToUpload.size) * 40).toInt()
+                        }
+                    }
+
+                    // Clean up local temp for this archive
+                    tempArchiveFile.delete()
+                    localExtractedDir.deleteRecursively()
+                }
+
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    showPremiumSnackbar(getString(R.string.extract_success))
+                    loadDirectory()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    dialog.dismiss()
+                    val msg = e.message ?: "Unknown error"
+                    showPremiumSnackbar(getString(R.string.extract_error, msg))
+                    loadDirectory()
+                }
+            } finally {
+                tempExtractDir.deleteRecursively()
+            }
+        }
+
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+            job.cancel()
+            dialog.dismiss()
+            showPremiumSnackbar(getString(R.string.archive_extract_error))
+        }
     }
 
     // ── Operations ────────────────────────────────────────────────────────────

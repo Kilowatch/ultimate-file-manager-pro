@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — bibliothèque de traitement d\\\'images de cod
         <item>
 SDK Amazon Appstore — traite les achats facultatifs de pourboires in-app sur les appareils Amazon. (Propriétaire)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — bibliothèque de traitement d\'images de codes-barres. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — traite les achats facultatifs de pourboires intégrés à l\'application sur les appareils Amazon. (Propriétaire)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

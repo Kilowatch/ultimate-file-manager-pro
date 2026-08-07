@@ -423,6 +423,29 @@
                     app:cornerRadius="14dp" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExtract"
+                    style="@style/Widget.Material3Expressive.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:visibility="gone"
+                    android:text="@string/action_extract_here"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
+                    android:paddingVertical="0dp"
+                    android:paddingHorizontal="10dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:minHeight="0dp"
+                    app:backgroundTint="#1A00897B"
+                    app:icon="@drawable/ic_extract"
+                    app:iconTint="?attr/colorPrimary"
+                    app:iconSize="14dp"
+                    app:iconPadding="4dp"
+                    app:cornerRadius="14dp" />
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDelete"
                     style="@style/Widget.Material3Expressive.Button.TonalButton"
                     android:layout_width="wrap_content"

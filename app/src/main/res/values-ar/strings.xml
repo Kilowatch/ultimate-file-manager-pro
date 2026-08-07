@@ -3057,6 +3057,21 @@ NFSv4
     <string name="action_compress">
 ضغط
 </string>
+    <string name="action_extract_here">
+استخراج هنا
+</string>
+    <string name="extract_progress_title">
+جارٍ الاستخراج...
+</string>
+    <string name="extract_success">
+تم الاستخراج بنجاح
+</string>
+    <string name="extract_error">
+فشل الاستخراج: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+استخراج هنا
+</string>
     <string name="compress_title">
 ضغط التحديد
 </string>

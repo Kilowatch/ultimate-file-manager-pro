@@ -221,9 +221,14 @@
 -dontwarn com.aayushatharva.brotli4j.encoder.BrotliEncoderChannel
 -dontwarn com.aayushatharva.brotli4j.encoder.Encoder$Mode
 -dontwarn com.aayushatharva.brotli4j.encoder.Encoder$Parameters
--dontwarn com.github.luben.zstd.Zstd
--dontwarn com.github.luben.zstd.ZstdInputStreamNoFinalizer
--dontwarn com.github.luben.zstd.util.Native
+# ── Archive & Compression Libraries (zstd-jni, Junrar, Commons Compress, XZ) ────
+-keep class com.github.luben.zstd.** { *; }
+-keep class com.github.junrar.** { *; }
+-keep class org.apache.commons.compress.** { *; }
+-keep class org.tukaani.xz.** { *; }
+-dontwarn com.github.luben.zstd.**
+-dontwarn com.github.junrar.**
+-dontwarn org.apache.commons.compress.**
 -dontwarn com.jcraft.jzlib.Deflater
 -dontwarn com.jcraft.jzlib.Inflater
 -dontwarn com.jcraft.jzlib.JZlib$WrapperType

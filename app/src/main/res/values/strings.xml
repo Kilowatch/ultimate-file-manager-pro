@@ -1099,6 +1099,11 @@
 
     <!-- Compression & Archives -->
     <string name="action_compress">Compress</string>
+    <string name="action_extract_here">Extract here</string>
+    <string name="extract_progress_title">Extracting...</string>
+    <string name="extract_success">Extracted successfully</string>
+    <string name="extract_error">Extraction failed: %1$s</string>
+    <string name="icon_toolbar_extract">Extract Here</string>
     <string name="compress_title">Compress Selection</string>
     <string name="compress_format">Archive Format</string>
     <string name="compress_password_protect">Password Protect</string>

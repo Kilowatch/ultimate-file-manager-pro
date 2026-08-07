@@ -3057,6 +3057,21 @@ NFSv4
     <string name="action_compress">
 Сжать
 </string>
+    <string name="action_extract_here">
+Извлечь сюда
+</string>
+    <string name="extract_progress_title">
+Извлечение...
+</string>
+    <string name="extract_success">
+Успешно извлечено
+</string>
+    <string name="extract_error">
+Ошибка извлечения: %1$s
+</string>
+    <string name="icon_toolbar_extract">
+Извлечь сюда
+</string>
     <string name="compress_title">
 Сжать выделенное
 </string>

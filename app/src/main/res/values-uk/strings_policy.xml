@@ -592,6 +592,12 @@ ZXing (com.google.zxing:core) — бібліотека обробки зобра
         <item>
 Amazon Appstore SDK — обробляє додаткові покупки чайових у додатку на пристроях Amazon. (Proprietary)
 </item>
+        <item>
+ZXing (com.google.zxing:core) — бібліотека обробки зображень штрих-кодів. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — обробляє добровільні покупки чайових у застосунках на пристроях Amazon. (Пропрієтарна)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->
