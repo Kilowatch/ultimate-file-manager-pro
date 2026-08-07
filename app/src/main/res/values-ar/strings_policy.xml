@@ -174,67 +174,67 @@ Ultimate File Manager Pro هو تطبيق Android مجاني — متوفر عل
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-متصفح الملفات — تصفح ونسخ ونقل وإعادة تسمية وحذف الملفات في أي مكان على جهازك.
+متصفح الملفات — تصفح، انسخ، انقل، أعد تسمية، واحذف الملفات في أي مكان على جهازك.
 </item>
         <item>
-الخزنة المشفرة — قم بقفل الملفات الحساسة خلف تشفير AES-256-GCM باستخدام رمز PIN الخاص بك.
+خزنة مشفرة — قم بتأمين الملفات الحساسة بتشفير AES-256-GCM باستخدام رمز PIN خاص بك.
 </item>
         <item>
-خادم الملفات — قم باستضافة خادم FTP أو SFTP آمن مباشرة على جهازك لمشاركة الملفات عبر شبكتك المحلية.
+خادم الملفات — شغّل خادم FTP أو SFTP آمن مباشرة على جهازك لمشاركة الملفات عبر شبكتك المحلية.
 </item>
         <item>
-الإدارة عن بُعد — إدارة الملفات عبر شبكة Wi-Fi المحلية باستخدام خادم HTTP مدمج يدعم الرفع والتنزيل وتثبيت ملفات APK عن بُعد.
+الإدارة عن بُعد — أدر الملفات عبر شبكة Wi-Fi المحلية من خلال خادم HTTP مدمج يدعم الرفع والتنزيل وتثبيت ملفات APK عن بُعد.
 </item>
         <item>
-المشاركات الشبكية — الاتصال بخوادم SMB وFTP وNFS على شبكتك المحلية لتصفح وتنزيل وإدارة الملفات البعيدة.
+مشاركات الشبكة — اتصل بخوادم SMB وFTP وNFS على شبكتك المحلية لتصفح وتنزيل وإدارة الملفات البعيدة.
 </item>
         <item>
-مزامنة المجلدات — قم بنسخ احتياطي تلقائي لمجلدات الهاتف المحلي إلى مشاركة شبكة SMB أو FTP وفقًا لجدول تختاره (فاصل زمني أو وقت محدد يوميًا أو أسبوعيًا أو شهريًا).
+مزامنة المجلدات — قم تلقائيًا بنسخ المجلدات المحلية احتياطيًا إلى مشاركة شبكة SMB أو FTP وفقًا لجدول زمني تختاره (فترة زمنية أو وقت محدد يوميًا أو أسبوعيًا أو شهريًا).
 </item>
         <item>
-إقران الأجهزة — قم بإقران هاتفك المحمول وجهاز Android TV عبر شبكة Wi-Fi المحلية لنقل الملفات وتثبيتها.
+إقران الأجهزة — اقرن هاتفك المحمول مع Android TV عبر شبكة Wi-Fi المحلية لنقل الملفات وتثبيتها.
 </item>
         <item>
-طرفية ADB — الاتصال بأجهزة Android في وضع المطور عبر شبكة Wi-Fi المحلية باستخدام ADB (جسر تصحيح أندرويد) للوصول المباشر إلى الصدفة واستكشاف الأخطاء المتقدم.
+طرفية ADB — اتصل بأجهزة Android في وضع المطوّر عبر شبكة Wi-Fi المحلية باستخدام ADB (جسر تصحيح أندرويد) للوصول المباشر إلى shell واستكشاف الأخطاء المتقدمة.
 </item>
         <item>
-عارضات مدمجة — عرض ملفات النصوص وPDF والصور المتحركة (APNG وGIF وWebP متحركة وSVG وغيرها) والأرشيفات والتنسيقات الأخرى مباشرة داخل التطبيق.
+عارضات مدمجة — اعرض ملفات النصوص وPDF والصور المتحركة (APNG وGIF وWebP المتحركة وAVIF وSVG والمزيد) والملفات المضغوطة وغيرها من التنسيقات مباشرة داخل التطبيق.
 </item>
         <item>
-دعم ZIP متقدم — إنشاء واستخراج أرشيفات ZIP محمية بكلمة مرور ومشفرة بـ AES.
+دعم ZIP المتقدم — أنشئ واستخرج أرشيفات ZIP المحمية بكلمة مرور والمشفرة بـ AES.
 </item>
         <item>
-لقطات الشاشة عن بُعد — التقاط شاشة جهاز Android TV المقترن عبر شبكة Wi-Fi المحلية عبر ADB وحفظها مباشرة في تخزين هاتفك.
+لقطات الشاشة عن بُعد — التقط شاشة Android TV المقترن عبر شبكة Wi-Fi المحلية باستخدام ADB واحفظها مباشرة في تخزين هاتفك.
 </item>
         <item>
-دعم أرشيف 7Z — استخراج أرشيفات 7Z بضغط LZMA/LZMA2.
+دعم أرشيفات 7Z — استخرج أرشيفات 7Z بضغط LZMA/LZMA2.
 </item>
         <item>
-بحث الملفات — البحث بسرعة عن الملفات والمجلدات في تخزين جهازك.
+بحث الملفات — ابحث بسرعة عن الملفات والمجلدات في جميع أنحاء تخزين جهازك.
 </item>
         <item>
-محلل التخزين — رؤية تحليل مرئي لما يستهلك مساحة التخزين لديك.
+محلل التخزين — شاهد تحليلاً مرئيًا لما يستهلك مساحة التخزين لديك.
 </item>
         <item>
-مدير التطبيقات — عرض وإدارة جميع التطبيقات المثبتة على جهازك، مع توصيات إلغاء التضخم للتطبيقات المثبتة مسبقًا.
+مدير التطبيقات — اعرض وأدر جميع التطبيقات المثبتة على جهازك، مع توصيات لإزالة التطبيقات المثبتة مسبقًا (Debloat).
 </item>
         <item>
-مثبت APK — تثبيت تطبيقات Android وملفات APK المجزأة (XAPK) مباشرة من الملفات المحفوظة محليًا.
+مثبّت APK — ثبّت تطبيقات Android وملفات APK المقسمة (XAPK) مباشرة من الملفات المحفوظة محليًا.
 </item>
         <item>
-الوصول المرتفع (Shizuku وShevery وADB) — الحصول على وصول شبيه بالجذر لإدارة ملفات النظام والأدلة المقيدة دون تجذير جهازك فعليًا.
+وصول موسّع (Shizuku وShevery وADB) — احصل على وصول شبيه بالجذر لإدارة ملفات النظام والأدلة المقيدة دون الحاجة إلى تجذير جهازك فعليًا.
 </item>
         <item>
-مفهرس التخزين — إنشاء فهرس محلي لبيانات تعريف الملفات للبحث الفوري والتصفح فائق السرعة.
+مفهرس التخزين — أنشئ فهرسًا محليًا لبيانات الملفات للبحث الفوري والتصفح السريع للغاية.
 </item>
         <item>
-إطار الوصول للتخزين — يمكن للتطبيقات الأخرى الوصول إلى ملفاتك من خلال موفر المستندات في UFM.
+إطار الوصول إلى التخزين — يمكن للتطبيقات الأخرى الوصول إلى ملفاتك عبر موفّر المستندات في UFM.
 </item>
         <item>
-وعاء البقشيش — عمليات شراء لمرة واحدة اختيارية لدعم المطور؛ التطبيق دائمًا مجاني دون بقشيش.
+وعاء الإكراميات — مشتريات اختيارية لمرة واحدة لدعم المطوّر؛ التطبيق يظل مجانيًا دائمًا دون الحاجة للإكرامية.
 </item>
         <item>
-مشغل وسائط UFM — تشغيل ملفات الصوت والفيديو مع التشغيل في الخلفية وعناصر تحكم الإشعارات ووضع الصورة داخل الصورة وإدارة قوائم التشغيل.
+مشغل وسائط UFM — شغّل ملفات الصوت والفيديو مع التشغيل في الخلفية وعناصر التحكم في الإشعارات ووضع Picture-in-Picture وإدارة قوائم التشغيل.
 </item>
     </string-array>
 
@@ -485,118 +485,121 @@ Shizuku وShevery والوصول المرتفع
     <!-- Open-source list (Section 7) -->
     <string-array name="tc_opensource">
         <item>
-NanoHTTPD — خادم HTTP خفيف يشغل الإدارة عن بُعد. (BSD-3-Clause)
+NanoHTTPD — خادم HTTP خفيف يشغّل الإدارة عن بُعد. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — مكتبة عميل SMB2/SMB3 لتصفح المشاركات الشبكية ومزامنة المجلدات. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — مكتبة عميل SMB2/SMB3 لتصفح مشاركات الشبكة ومزامنة المجلدات. (LGPL-2.1)
 </item>
         <item>
-smbj (hierynomus/smbj) — تطبيق Java لـ SMB2/SMB3 يستخدم للوصول إلى المشاركات الشبكية. (Apache-2.0)
+smbj (hierynomus/smbj) — تنفيذ Java لبروتوكول SMB2/SMB3 يُستخدم للوصول إلى مشاركات الشبكة. (Apache-2.0)
 </item>
         <item>
-عميل NFS EMC ECS (com.emc.ecs:nfs-client) — مكتبة عميل NFS v3 للوصول إلى المشاركات الشبكية. (Apache-2.0)
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — مكتبة عميل NFS v3 للوصول إلى مشاركات الشبكة. (Apache-2.0)
 </item>
         <item>
 libnfs (sahlberg/libnfs) — مكتبة عميل NFS أصلية تدعم NFSv2 وNFSv3 وNFSv4. (LGPL-2.1 / BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — مكتبة شاملة لنواة SSHD وعميل SFTP وSCP للوصول الآمن إلى المشاركات الشبكية والاستضافة. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — مكتبة عميل شاملة لـ SSHD الأساسي وSFTP وSCP للوصول الآمن إلى مشاركات الشبكة واستضافتها. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — خادم FTP نقي 100٪ بلغة Java. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — خادم FTP نقي 100% بلغة Java. (Apache-2.0)
 </item>
         <item>
-Apache POI — مكتبة معالجة المستندات لعرض ملفات المكتب. (Apache-2.0)
+Apache POI — مكتبة معالجة المستندات لعرض ملفات Office. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — منصة تحليلات Google التي تساعدنا في فهم استخدام التطبيق. (Apache-2.0)
+Firebase Analytics — منصة التحليلات من Google التي تساعدنا على فهم استخدام التطبيق. (Apache-2.0)
 </item>
         <item>
-مكتبات AndroidX (بما في ذلك Leanback لأجهزة Android TV) — مكونات Jetpack من Google لتطوير Android الحديث. (Apache-2.0)
+مكتبات AndroidX (بما في ذلك Leanback لـ Android TV) — مكونات Jetpack من Google لتطوير Android الحديث. (Apache-2.0)
 </item>
         <item>
 مكونات Material Design — مكتبة واجهة المستخدم من Google لواجهة نظيفة ومتسقة. (Apache-2.0)
 </item>
         <item>
-مكتبة الثبات Room — طبقة تجريد SQLite لفهرسة البيانات الوصفية المحلية. (Apache-2.0)
+مكتبة Room Persistence — طبقة تجريد SQLite لفهرسة البيانات الوصفية محليًا. (Apache-2.0)
 </item>
         <item>
 zip4j (net.lingala.zip4j) — مكتبة ZIP متقدمة للأرشيفات المحمية بكلمة مرور والمشفرة بـ AES. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — مكتبة لقراءة وكتابة تنسيقات أرشيف متنوعة (7z، zip، tar، إلخ). (Apache-2.0)
+Apache Commons Compress — مكتبة لقراءة وكتابة تنسيقات الأرشيف المختلفة (7z وzip وtar وغيرها). (Apache-2.0)
 </item>
         <item>
-XZ for Java (org.tukaani.xz) — تطبيق لضغط XZ وLZMA. (الملكية العامة)
+XZ for Java (org.tukaani.xz) — تنفيذ لضغط XZ وLZMA. (الملكية العامة)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — مكتبة Android Debug Bridge التي تمكن الاتصالات الآمنة بالأجهزة الممكنة لـ ADB للوصول عن بُعد إلى الصدفة والإقران القائم على الشهادات. (Apache-2.0)
+zstd-jni (com.github.luben:zstd-jni) — روابط JNI لمكتبة ضغط واستخراج Zstandard. (BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — مكتبة شاملة لنواة SSHD وعميل SFTP وSCP للوصول الآمن إلى المشاركات الشبكية. (Apache-2.0)
+Junrar (com.github.junrar:junrar) — مكتبة استخراج RAR بلغة Java. (BSD-3-Clause)
 </item>
         <item>
-EdDSA for Java (net.i2p.crypto:eddsa) — تطبيق لخوارزمية التوقيع الرقمي لمنحنى إدواردز (EdDSA) لمفاتيح SSH Ed25519. (CC0-1.0)
+libadb-android (com.github.MuntashirAkon) — مكتبة Android Debug Bridge التي تتيح اتصالات آمنة بالأجهزة التي تدعم ADB للوصول عن بُعد إلى shell والإقران المستند إلى الشهادات. (Apache-2.0)
 </item>
         <item>
-SLF4J Android (uk.uuid.slf4j:slf4j-android) — ربط التسجيل لنظام Android تستخدمه مكتبة SSHD. (MIT)
+Apache MINA SSHD (org.apache.sshd) — مكتبة عميل شاملة لـ SSHD الأساسي وSFTP وSCP للوصول الآمن إلى مشاركات الشبكة. (Apache-2.0)
 </item>
         <item>
-BouncyCastle (org.bouncycastle) — مكتبة تشفير لتوليد أزواج مفاتيح RSA/EdDSA وإنشاء شهادات X.509؛ الإصدار 1.83. (ترخيص بأسلوب MIT)
+EdDSA for Java (net.i2p.crypto:eddsa) — تنفيذ خوارزمية EdDSA (خوارزمية التوقيع الرقمي لمنحنى إدواردز) لمفاتيح SSH من نوع Ed25519. (CC0-1.0)
 </item>
         <item>
-مكتبة فوترة Google Play — تعالج عمليات شراء البقشيش الاختيارية داخل التطبيق؛ تخضع لسياسة خصوصية Google Play. (Apache-2.0)
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — ربط تسجيل السجلات لنظام Android تستخدمه مكتبة SSHD. (MIT)
 </item>
         <item>
-مكتبة مراجعة Google Play — تشغل وظيفة التقييم والمراجعة داخل التطبيق. (Apache-2.0)
+BouncyCastle (org.bouncycastle) — مكتبة تشفير لتوليد أزواج مفاتيح RSA/EdDSA وإنشاء شهادات X.509؛ الإصدار 1.83. (رخصة بأسلوب MIT)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — مكتبة تحميل الصور التي تشغل عرض الصور المتحركة (APNG وGIF وWebP متحركة وSVG) في عارض الصور المدمج. (Apache-2.0)
+مكتبة Google Play Billing — تعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق؛ وتخضع لسياسة خصوصية Google Play. (Apache-2.0)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — المكتبة الأساسية لفك تشفير وعرض ملفات PNG متحركة على Android. (Apache-2.0)
+مكتبة Google Play Review — تشغّل وظيفة التقييم والمراجعة داخل التطبيق. (Apache-2.0)
 </item>
         <item>
-واجهة برمجة تطبيقات Shizuku وShevery (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — مكتبات تمكن الوصول المرتفع لنظام الملفات عبر تطبيقات مدير Shizuku أو Shevery. (Apache-2.0)
+Coil (io.coil-kt.coil3) — مكتبة تحميل الصور التي تشغّل عرض الصور المتحركة (APNG وGIF وWebP المتحركة وAVIF وSVG) في عارض الصور المدمج. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — مكتبة Android للتمرير بين الأجزاء والتخطيطات. (Apache-2.0)
+avif-android (org.aomedia.avif.android) — مكتبة فك ترميز صور AVIF توفر دعمًا أصليًا لـ AVIF على Android API 26–30؛ أما API 31+ فيستخدم ImageDecoder المدمج. (BSD-2-Clause)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — مكتبة الرسوم المتحركة لعرض رسوم Adobe After Effects بشكل أصلي على Android، تُستخدم لرسوم متحركة سلسة لواجهة المستخدم في جميع أنحاء التطبيق. (Apache-2.0)
+APNG4Android (com.github.penfeizhou.android.animation) — المكتبة الأساسية لفك ترميز وعرض ملفات PNG المتحركة على Android. (Apache-2.0)
 </item>
         <item>
-Ktor (io.ktor) — إطار ويب خفيف يستخدم لتشغيل خادم الملفات المحلي. (Apache-2.0)
+Shizuku وShevery API (dev.rikka.shizuku:api وprovider / com.hamondev.shevery) — مكتبات تتيح الوصول الموسّع إلى نظام الملفات عبر تطبيقي Shizuku أو Shevery Manager. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — مكتبة لعرض مستندات PDF بشكل أصلي. (Apache-2.0)
+ViewPager2 — مكتبة Android للتنقل بين الأجزاء (Fragments) والتخطيطات بالتمرير. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — مشغل وسائط متقدم لتشغيل الفيديو والصوت بشكل قوي. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) الإصدار 6.3.0 — مكتبة رسوم متحركة لعرض رسوم Adobe After Effects بشكل أصلي على Android، وتُستخدم لرسوم واجهة المستخدم السلسة في جميع أنحاء التطبيق. (Apache-2.0)
 </item>
         <item>
-مكتبة مصادقة Microsoft (MSAL) — تعالج مصادقة واجهة برمجة تطبيقات OneDrive بشكل أصلي. (MIT)
+Ktor (io.ktor) — إطار عمل ويب خفيف يُستخدم لتشغيل خادم الملفات المحلي. (Apache-2.0)
 </item>
         <item>
-OkHttp (com.squareup.okhttp3) — عميل HTTP وHTTP/2 قوي لطلبات الشبكة للتخزين السحابي. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — مكتبة لعرض مستندات PDF والاطلاع عليها بشكل أصلي. (Apache-2.0)
 </item>
         <item>
-Gson (com.google.code.gson) — مكتبة معالجة JSON تستخدم لتكامل التخزين السحابي. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — مشغل وسائط متقدم لتشغيل فيديو وصوت قوي. (Apache-2.0)
 </item>
         <item>
-متصفح AndroidX (androidx.browser) — دعم علامات تبويب Chrome المخصصة لمصادقة واجهة برمجة تطبيقات Google Drive. (Apache-2.0)
+مكتبة مصادقة Microsoft (MSAL) — تتعامل مع مصادقة OneDrive API بشكل أصلي. (MIT)
 </item>
         <item>
-ZXing (com.google.zxing:core) — مكتبة معالجة صور الباركود. (Apache-2.0)
+OkHttp (com.squareup.okhttp3) — عميل HTTP وHTTP/2 قوي لطلبات الشبكة الخاصة بالتخزين السحابي. (Apache-2.0)
 </item>
         <item>
-مجموعة تطوير Amazon Appstore — تعالج عمليات شراء البقشيش الاختيارية داخل التطبيق على أجهزة Amazon. (ملكية خاصة)
+Gson (com.google.code.gson) — مكتبة معالجة JSON المستخدمة في تكامل التخزين السحابي. (Apache-2.0)
 </item>
         <item>
-ZXing (com.google.zxing:core) — مكتبة معالجة صور الباركود. (Apache-2.0)
+AndroidX Browser (androidx.browser) — دعم علامات تبويب Chrome المخصصة لمصادقة Google Drive API. (Apache-2.0)
 </item>
         <item>
-Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة أمازون. (Proprietary)
+ZXing (com.google.zxing:core) — مكتبة معالجة صور الرموز الشريطية. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة Amazon. (مملوكة)
 </item>
     </string-array>
 
@@ -1553,10 +1556,10 @@ Amazon Web Services والموفرون المتوافقون
 تثبيت الحزم
 </item>
         <item>
-الوصول المرتفع (Shizuku)
+الوصول الموسّع (Shizuku)
 </item>
         <item>
-فهرس التخزين
+مفهرس التخزين
 </item>
         <item>
 الاستعلام عن الحزم
@@ -1565,7 +1568,10 @@ Amazon Web Services والموفرون المتوافقون
 المراجعات داخل التطبيق
 </item>
         <item>
-رسوم متحركة Lottie
+دعم صور AVIF
+</item>
+        <item>
+رسوم Lottie المتحركة
 </item>
     </string-array>
     <string-array name="pp_compliance_details">
@@ -1573,34 +1579,37 @@ Amazon Web Services والموفرون المتوافقون
 تصفح الملفات وإدارتها
 </item>
         <item>
-إدارة الملفات عن بُعد، ومشاركات الشبكة SMB/FTP/SFTP/SCP/NFS، وإقران الأجهزة عبر Wi-Fi المحلي
+إدارة الملفات عن بُعد، مشاركات الشبكة SMB/FTP/SFTP/SCP/NFS، وإقران الأجهزة عبر شبكة Wi-Fi المحلية
 </item>
         <item>
-كشف VPN للإدارة عن بُعد واتصال مشاركة الشبكة
+كشف VPN للإدارة عن بُعد والاتصال بمشاركات الشبكة
 </item>
         <item>
-اكتشاف أجهزة الشبكة المحلية (NSD/mDNS) لإقران الأجهزة
+اكتشاف الأجهزة على الشبكة المحلية (NSD/mDNS) لإقران الأجهزة
 </item>
         <item>
-تنبيهات اكتمال العملية وتحذيرات التخزين
+تنبيهات اكتمال العمليات وتحذيرات التخزين
 </item>
         <item>
 تثبيت APK من التخزين المحلي
 </item>
         <item>
-إدارة الملفات المتقدمة في أدلة النظام المقيدة عبر واجهة Shizuku API
+إدارة الملفات المتقدمة في أدلة النظام المقيدة عبر Shizuku API
 </item>
         <item>
 يفهرس بيانات الملفات الوصفية محليًا للبحث السريع
 </item>
         <item>
-ميزات إدارة التطبيقات وإزالة التطبيقات الزائدة — يقرأ أسماء الحزم المثبتة والإصدارات والأحجام والأعلام النظامية/للمستخدم على الجهاز فقط. لا يتم تحميلها أو مشاركتها. يقوم مزيل التطبيقات الزائدة بمقارنة أسماء الحزم محليًا بقائمة مرجعية متاحة للجمهور لإزالة التطبيقات الزائدة.
+ميزات مدير التطبيقات وإزالة التطبيقات المثبتة مسبقًا — يقرأ أسماء الحزم المثبتة وإصداراتها وأحجامها وعلامات النظام/المستخدم على الجهاز فقط. ولا يتم رفعها أو مشاركتها. وتقوم ميزة إزالة التطبيقات بمطابقة أسماء الحزم محليًا مع قائمة مرجعية متاحة للعموم.
 </item>
         <item>
-Google Play API للمراجعة داخل التطبيق لجمع ملاحظات المستخدمين
+واجهة برمجة تطبيقات المراجعات داخل التطبيق من Google Play لجمع ملاحظات المستخدمين
 </item>
         <item>
-يعرض رسومًا متحركة سلسة لواجهة المستخدم في جميع أنحاء التطبيق عبر مكتبة Lottie v6.3.0 (com.airbnb.android:lottie)
+يفك ترميز صور AVIF ويعرضها في العارض المدمج عبر avif-android (org.aomedia.avif.android) على API 26–30؛ أما API 31+ فيستخدم ImageDecoder المدمج
+</item>
+        <item>
+يعرض رسوم واجهة المستخدم السلسة في جميع أنحاء التطبيق عبر مكتبة Lottie الإصدار 6.3.0 (com.airbnb.android:lottie)
 </item>
     </string-array>
 

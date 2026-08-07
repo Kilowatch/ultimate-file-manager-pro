@@ -75,6 +75,7 @@ class ImageViewerActivity : AppCompatActivity() {
                     add(GifDecoder.Factory())
                 }
                 add(AnimatedPngDecoder.Factory())
+                add(AvifDecoder.Factory())
                 add(SvgDecoder.Factory())
             }
             .build()

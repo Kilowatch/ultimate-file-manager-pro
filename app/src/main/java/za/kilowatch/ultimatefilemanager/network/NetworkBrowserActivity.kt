@@ -5142,7 +5142,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         mime = when (ext) {
                             "mkv", "mp4", "avi", "mov", "webm", "ts" -> "video/*"
                             "mp3", "flac", "wav", "m4a", "ogg", "aac" -> "audio/*"
-                            "jpg", "jpeg", "png", "gif", "webp", "heic" -> "image/*"
+                            "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "avif" -> "image/*"
                             "pdf" -> "application/pdf"
                             else -> "*/*"
                         }
@@ -5314,7 +5314,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         mime = when (ext) {
                             "mkv", "mp4", "avi", "mov", "webm", "ts" -> "video/*"
                             "mp3", "flac", "wav", "m4a", "ogg", "aac" -> "audio/*"
-                            "jpg", "jpeg", "png", "gif", "webp", "heic" -> "image/*"
+                            "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "avif" -> "image/*"
                             "pdf" -> "application/pdf"
                             else -> "*/*"
                         }

@@ -546,12 +546,12 @@ interface FileIndexDao {
         WHERE isDirectory = 0
           AND storageId = :storageId
           AND (
-              (:filterType = 1 AND (extension IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif'))) OR
+              (:filterType = 1 AND (extension IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','avif'))) OR
               (:filterType = 2 AND (extension IN ('mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v'))) OR
               (:filterType = 3 AND (extension IN ('mp3','wav','aac','flac','ogg','wma','m4a','opus'))) OR
               (:filterType = 4 AND (extension IN ('pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb'))) OR
               (:filterType = 5 AND (extension IN ('apk','xapk','apks'))) OR
-              (:filterType = 6 AND (extension NOT IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v','mp3','wav','aac','flac','ogg','wma','m4a','opus','pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb','apk','xapk','apks')))
+              (:filterType = 6 AND (extension NOT IN ('jpg','jpeg','png','gif','bmp','webp','svg','heic','heif','avif','mp4','mkv','avi','mov','wmv','flv','webm','3gp','m4v','mp3','wav','aac','flac','ogg','wma','m4a','opus','pdf','doc','docx','docm','dot','dotx','dotm','xls','xlsx','xlsm','xlt','xltx','xltm','xlsb','ppt','pptx','pptm','pps','ppsx','pot','potx','potm','txt','csv','rtf','odt','dat','vsd','vsdx','pub','accdb','mdb','apk','xapk','apks')))
           )
         ORDER BY lastModified DESC
         LIMIT :limit OFFSET :offset

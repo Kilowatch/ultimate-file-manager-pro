@@ -163,7 +163,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
         // Resolve Image Dimensions & Megapixels if it is local
         if (!isNetwork && !isDirectory) {
             val ext = name.substringAfterLast('.').lowercase()
-            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif")) {
+            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif")) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     try {
                         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }

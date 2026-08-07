@@ -174,67 +174,67 @@ En utilisant Ultimate File Manager Pro, vous confirmez avoir lu et compris ces C
     <!-- Feature list (Section 2) -->
     <string-array name="tc_features">
         <item>
-Navigateur de fichiers — parcourir, copier, déplacer, renommer et supprimer des fichiers n\\\'importe où sur votre appareil.
+Explorateur de fichiers — parcourir, copier, déplacer, renommer et supprimer des fichiers où que ce soit sur votre appareil.
 </item>
         <item>
-Coffre crypté — verrouillez les fichiers sensibles avec un chiffrement AES-256-GCM et votre propre code PIN.
+Coffre-fort chiffré — verrouillez vos fichiers sensibles avec un chiffrement AES-256-GCM et votre propre code PIN.
 </item>
         <item>
 Serveur de fichiers — hébergez un serveur FTP ou SFTP sécurisé directement sur votre appareil pour partager des fichiers sur votre réseau local.
 </item>
         <item>
-Gestion à distance — gérez vos fichiers via votre réseau Wi-Fi local grâce à un serveur HTTP intégré prenant en charge le téléchargement, l\\\'installation et la gestion des APK à distance.
+Gestion à distance — gérez vos fichiers via votre Wi-Fi local grâce à un serveur HTTP intégré qui prend en charge le téléversement, le téléchargement et l\\\'installation d\\\'APK à distance.
 </item>
         <item>
 Partages réseau — connectez-vous à des serveurs SMB, FTP et NFS sur votre réseau local pour parcourir, télécharger et gérer des fichiers distants.
 </item>
         <item>
-Synchronisation de dossiers — sauvegardez automatiquement les dossiers locaux de votre téléphone vers un partage réseau SMB ou FTP selon un calendrier de votre choix (intervalle ou heure spécifique quotidienne, hebdomadaire ou mensuelle).
+Synchronisation de dossiers — sauvegardez automatiquement les dossiers locaux de votre téléphone vers un partage réseau SMB ou FTP selon un calendrier de votre choix (intervalle ou heure précise, quotidien, hebdomadaire ou mensuel).
 </item>
         <item>
-Appairage d\\\'appareils — associez votre téléphone mobile et votre Android TV via le Wi-Fi local pour transférer et installer des fichiers.
+Appairage d\\\'appareils — appairez votre téléphone mobile et votre Android TV via le Wi-Fi local pour transférer et installer des fichiers.
 </item>
         <item>
-Terminal ADB — connectez-vous à des appareils Android en mode développeur via votre réseau Wi-Fi local en utilisant ADB (Android Debug Bridge) pour un accès direct au shell et un dépannage avancé.
+Terminal ADB — connectez-vous à des appareils Android en mode développeur via votre Wi-Fi local à l\\\'aide d\\\'ADB (Android Debug Bridge) pour un accès direct au shell et un dépannage avancé.
 </item>
         <item>
-Visionneuses intégrées — visualisez des fichiers texte, des PDF, des images animées (APNG, GIF, WebP animé, SVG et plus), des archives et d\\\'autres formats directement dans l\\\'application.
+Visionneuses intégrées — visualisez des fichiers texte, des PDF, des images animées (APNG, GIF, WebP animé, AVIF, SVG et plus), des archives et d\\\'autres formats directement dans l\\\'application.
 </item>
         <item>
 Prise en charge avancée des ZIP — créez et extrayez des archives ZIP protégées par mot de passe et chiffrées en AES.
 </item>
         <item>
-Captures d\\\'écran à distance — capturez l\\\'écran de votre Android TV appairé via le Wi-Fi local en utilisant ADB et enregistrez-le directement dans le stockage de votre téléphone.
+Captures d\\\'écran à distance — capturez l\\\'écran de votre Android TV appairé via le Wi-Fi local à l\\\'aide d\\\'ADB et enregistrez-le directement dans le stockage de votre téléphone.
 </item>
         <item>
-Prise en charge des archives 7Z — extrayez des archives 7Z avec compression LZMA/LZMA2.
+Prise en charge des archives 7Z — extrayez des archives 7Z avec la compression LZMA/LZMA2.
 </item>
         <item>
-Recherche de fichiers — trouvez rapidement des fichiers et dossiers dans le stockage de votre appareil.
+Recherche de fichiers — trouvez rapidement des fichiers et des dossiers dans le stockage de votre appareil.
 </item>
         <item>
-Analyseur de stockage — visualisez la répartition de l\\\'utilisation de votre espace de stockage.
+Analyseur de stockage — visualisez la répartition de ce qui utilise votre espace de stockage.
 </item>
         <item>
-Gestionnaire d\\\'applications — visualisez et gérez toutes les applications installées sur votre appareil, avec des recommandations de désencombrement pour les applications préinstallées.
+Gestionnaire d\\\'applications — affichez et gérez toutes les applications installées sur votre appareil, avec des recommandations de débloatage pour les applications préinstallées.
 </item>
         <item>
-Installateur d\\\'APK — installez des applications Android et des APK fractionnés (XAPK) directement à partir de fichiers sauvegardés localement.
+Installateur d\\\'APK — installez des applications Android et des APK fractionnés (XAPK) directement à partir de fichiers enregistrés localement.
 </item>
         <item>
-Accès élevé (Shizuku, Shevery et ADB) — obtenez un accès de type root pour gérer les fichiers système et les répertoires restreints sans rooter votre appareil.
+Accès élevé (Shizuku, Shevery et ADB) — obtenez un accès de type root pour gérer les fichiers système et les répertoires restreints sans réellement rooter votre appareil.
 </item>
         <item>
 Indexeur de stockage — créez un index local des métadonnées de fichiers pour une recherche instantanée et une navigation ultra-rapide.
 </item>
         <item>
-Framework d\\\'accès au stockage — d\\\'autres applications peuvent accéder à vos fichiers via le fournisseur de documents d\\\'UFM.
+Storage Access Framework — d\\\'autres applications peuvent accéder à vos fichiers via le fournisseur de documents d\\\'UFM.
 </item>
         <item>
-Boîte à pourboires — achats uniques facultatifs pour soutenir le développeur ; l\\\'application est toujours gratuite sans pourboire.
+Pourboire — achats uniques facultatifs pour soutenir le développeur ; l\\\'application reste gratuite sans pourboire.
 </item>
         <item>
-Lecteur multimédia UFM — lisez des fichiers audio et vidéo avec lecture en arrière-plan, commandes de notification, mode Picture-in-Picture et gestion des listes de lecture.
+UFM Media Player — lisez des fichiers audio et vidéo avec lecture en arrière-plan, commandes de notification, mode Picture-in-Picture et gestion des listes de lecture.
 </item>
     </string-array>
 
@@ -488,55 +488,61 @@ Fournit un retour haptique lors de l\\\'appui sur les boutons de la télécomman
 NanoHTTPD — serveur HTTP léger qui alimente la gestion à distance. (BSD-3-Clause)
 </item>
         <item>
-jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — bibliothèque cliente SMB2/SMB3 pour la navigation dans les partages réseau et la synchronisation de dossiers. (LGPL-2.1)
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — bibliothèque cliente SMB2/SMB3 pour la navigation des partages réseau et la synchronisation de dossiers. (LGPL-2.1)
 </item>
         <item>
 smbj (hierynomus/smbj) — implémentation Java SMB2/SMB3 utilisée pour l\\\'accès aux partages réseau. (Apache-2.0)
 </item>
         <item>
-Client NFS EMC ECS (com.emc.ecs:nfs-client) — bibliothèque cliente NFS v3 pour l\\\'accès aux partages réseau. (Apache-2.0)
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — bibliothèque cliente NFS v3 pour l\\\'accès aux partages réseau. (Apache-2.0)
 </item>
         <item>
 libnfs (sahlberg/libnfs) — bibliothèque cliente NFS native prenant en charge NFSv2, NFSv3 et NFSv4. (LGPL-2.1 / BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — bibliothèque cliente SSHD, SFTP et SCP complète pour l\\\'accès sécurisé aux partages réseau et l\\\'hébergement. (Apache-2.0)
+Apache MINA SSHD (org.apache.sshd) — bibliothèque cliente complète pour le cœur SSHD, SFTP et SCP, pour l\\\'accès sécurisé aux partages réseau et leur hébergement. (Apache-2.0)
 </item>
         <item>
-Apache FtpServer (org.apache.ftpserver) — serveur FTP 100% pur Java. (Apache-2.0)
+Apache FtpServer (org.apache.ftpserver) — serveur FTP 100 % pure Java. (Apache-2.0)
 </item>
         <item>
-Apache POI — bibliothèque de traitement de documents pour la visualisation de fichiers bureautiques. (Apache-2.0)
+Apache POI — bibliothèque de traitement de documents pour visualiser les fichiers bureautiques. (Apache-2.0)
 </item>
         <item>
-Firebase Analytics — plateforme d\\\'analyse de Google qui nous aide à comprendre l\\\'utilisation de l\\\'application. (Apache-2.0)
+Firebase Analytics — la plateforme d\\\'analyse de Google qui nous aide à comprendre l\\\'utilisation de l\\\'application. (Apache-2.0)
 </item>
         <item>
-Bibliothèques AndroidX (incl. Leanback pour Android TV) — composants Jetpack de Google pour le développement Android moderne. (Apache-2.0)
+Bibliothèques AndroidX (incluant Leanback pour Android TV) — les composants Jetpack de Google pour le développement Android moderne. (Apache-2.0)
 </item>
         <item>
-Composants Material Design — bibliothèque d\\\'interface utilisateur de Google pour une interface propre et cohérente. (Apache-2.0)
+Composants Material Design — la bibliothèque d\\\'interface de Google pour une interface propre et cohérente. (Apache-2.0)
 </item>
         <item>
-Bibliothèque de persistance Room — couche d\\\'abstraction SQLite pour l\\\'indexation locale des métadonnées. (Apache-2.0)
+Room Persistence Library — couche d\\\'abstraction SQLite pour l\\\'indexation locale des métadonnées. (Apache-2.0)
 </item>
         <item>
 zip4j (net.lingala.zip4j) — bibliothèque ZIP avancée pour les archives protégées par mot de passe et chiffrées en AES. (Apache-2.0)
 </item>
         <item>
-Apache Commons Compress — bibliothèque pour lire et écrire divers formats d\\\'archives (7z, zip, tar, etc.). (Apache-2.0)
+Apache Commons Compress — bibliothèque pour la lecture et l\\\'écriture de divers formats d\\\'archives (7z, zip, tar, etc.). (Apache-2.0)
 </item>
         <item>
 XZ pour Java (org.tukaani.xz) — implémentation de la compression XZ et LZMA. (Domaine public)
 </item>
         <item>
-libadb-android (com.github.MuntashirAkon) — bibliothèque Android Debug Bridge permettant des connexions sécurisées à des appareils compatibles ADB pour un accès shell à distance et un appairage basé sur des certificats. (Apache-2.0)
+zstd-jni (com.github.luben:zstd-jni) — liaisons JNI pour la bibliothèque de compression et d\\\'extraction Zstandard. (BSD-2-Clause)
 </item>
         <item>
-Apache MINA SSHD (org.apache.sshd) — bibliothèque cliente SSHD, SFTP et SCP complète pour l\\\'accès sécurisé aux partages réseau. (Apache-2.0)
+Junrar (com.github.junrar:junrar) — bibliothèque d\\\'extraction RAR en Java. (BSD-3-Clause)
 </item>
         <item>
-EdDSA pour Java (net.i2p.crypto:eddsa) — implémentation d\\\'EdDSA (Edwards-curve Digital Signature Algorithm) pour les clés SSH Ed25519. (CC0-1.0)
+libadb-android (com.github.MuntashirAkon) — bibliothèque Android Debug Bridge permettant des connexions sécurisées aux appareils compatibles ADB pour un accès shell à distance et un appairage par certificat. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — bibliothèque cliente complète pour le cœur SSHD, SFTP et SCP, pour un accès sécurisé aux partages réseau. (Apache-2.0)
+</item>
+        <item>
+EdDSA pour Java (net.i2p.crypto:eddsa) — implémentation d\\\'EdDSA (algorithme de signature numérique à courbe d\\\'Edwards) pour les clés SSH Ed25519. (CC0-1.0)
 </item>
         <item>
 SLF4J Android (uk.uuid.slf4j:slf4j-android) — liaison de journalisation pour Android utilisée par la bibliothèque SSHD. (MIT)
@@ -545,37 +551,40 @@ SLF4J Android (uk.uuid.slf4j:slf4j-android) — liaison de journalisation pour A
 BouncyCastle (org.bouncycastle) — bibliothèque de cryptographie pour la génération de paires de clés RSA/EdDSA et la création de certificats X.509 ; version 1.83. (Licence de type MIT)
 </item>
         <item>
-Bibliothèque de facturation Google Play — traite les achats facultatifs de pourboires in-app ; régie par la politique de confidentialité de Google Play. (Apache-2.0)
+Google Play Billing Library — traite les achats de pourboires facultatifs dans l\\\'application ; régie par la politique de confidentialité de Google Play. (Apache-2.0)
 </item>
         <item>
-Bibliothèque d\\\'avis Google Play — alimente la fonctionnalité d\\\'évaluation et d\\\'avis in-app de l\\\'application. (Apache-2.0)
+Google Play Review Library — alimente la fonctionnalité d\\\'évaluation et d\\\'avis dans l\\\'application. (Apache-2.0)
 </item>
         <item>
-Coil (io.coil-kt.coil3) — bibliothèque de chargement d\\\'images qui alimente le rendu d\\\'images animées (APNG, GIF, WebP animé, SVG) dans la visionneuse d\\\'images intégrée. (Apache-2.0)
+Coil (io.coil-kt.coil3) — bibliothèque de chargement d\\\'images qui alimente le rendu des images animées (APNG, GIF, WebP animé, AVIF, SVG) dans la visionneuse d\\\'images intégrée. (Apache-2.0)
 </item>
         <item>
-APNG4Android (com.github.penfeizhou.android.animation) — bibliothèque principale de décodage et de rendu des fichiers PNG animés sur Android. (Apache-2.0)
+avif-android (org.aomedia.avif.android) — bibliothèque de décodage d\\\'images AVIF offrant une prise en charge native d\\\'AVIF sur Android API 26–30 ; API 31+ utilise le ImageDecoder intégré. (BSD-2-Clause)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — bibliothèque principale pour décoder et rendre les fichiers PNG animés sur Android. (Apache-2.0)
 </item>
         <item>
 API Shizuku et Shevery (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — bibliothèques permettant un accès élevé au système de fichiers via les applications Shizuku ou Shevery Manager. (Apache-2.0)
 </item>
         <item>
-ViewPager2 — bibliothèque Android pour glisser entre fragments et mises en page. (Apache-2.0)
+ViewPager2 — bibliothèque Android pour naviguer entre les fragments et les mises en page. (Apache-2.0)
 </item>
         <item>
-Lottie (com.airbnb.android:lottie) v6.3.0 — bibliothèque d\\\'animation pour le rendu natif d\\\'animations Adobe After Effects sur Android, utilisée pour des animations fluides de l\\\'interface utilisateur dans toute l\\\'application. (Apache-2.0)
+Lottie (com.airbnb.android:lottie) v6.3.0 — bibliothèque d\\\'animation pour le rendu natif des animations Adobe After Effects sur Android, utilisée pour des animations d\\\'interface fluides dans toute l\\\'application. (Apache-2.0)
 </item>
         <item>
 Ktor (io.ktor) — framework web léger utilisé pour alimenter le serveur de fichiers local. (Apache-2.0)
 </item>
         <item>
-PDFBox-Android (com.tom-roush:pdfbox-android) — bibliothèque pour le rendu et la visualisation native de documents PDF. (Apache-2.0)
+PDFBox-Android (com.tom-roush:pdfbox-android) — bibliothèque pour le rendu et l\\\'affichage natifs des documents PDF. (Apache-2.0)
 </item>
         <item>
-ExoPlayer / Media3 (androidx.media3) — lecteur multimédia avancé pour une lecture robuste de vidéos et d\\\'audio. (Apache-2.0)
+ExoPlayer / Media3 (androidx.media3) — lecteur multimédia avancé pour une lecture vidéo et audio robuste. (Apache-2.0)
 </item>
         <item>
-Bibliothèque d\\\'authentification Microsoft (MSAL) — gère l\\\'authentification de l\\\'API OneDrive de manière native. (MIT)
+Microsoft Authentication Library (MSAL) — gère l\\\'authentification native à l\\\'API OneDrive. (MIT)
 </item>
         <item>
 OkHttp (com.squareup.okhttp3) — client HTTP et HTTP/2 robuste pour les requêtes réseau de stockage cloud. (Apache-2.0)
@@ -584,19 +593,13 @@ OkHttp (com.squareup.okhttp3) — client HTTP et HTTP/2 robuste pour les requêt
 Gson (com.google.code.gson) — bibliothèque de traitement JSON utilisée pour l\\\'intégration du stockage cloud. (Apache-2.0)
 </item>
         <item>
-AndroidX Browser (androidx.browser) — prise en charge des Chrome Custom Tabs pour l\\\'authentification de l\\\'API Google Drive. (Apache-2.0)
+AndroidX Browser (androidx.browser) — prise en charge des Chrome Custom Tabs pour l\\\'authentification à l\\\'API Google Drive. (Apache-2.0)
 </item>
         <item>
 ZXing (com.google.zxing:core) — bibliothèque de traitement d\\\'images de codes-barres. (Apache-2.0)
 </item>
         <item>
-SDK Amazon Appstore — traite les achats facultatifs de pourboires in-app sur les appareils Amazon. (Propriétaire)
-</item>
-        <item>
-ZXing (com.google.zxing:core) — bibliothèque de traitement d\'images de codes-barres. (Apache-2.0)
-</item>
-        <item>
-Amazon Appstore SDK — traite les achats facultatifs de pourboires intégrés à l\'application sur les appareils Amazon. (Propriétaire)
+Amazon Appstore SDK — traite les achats de pourboires facultatifs dans l\\\'application sur les appareils Amazon. (Propriétaire)
 </item>
     </string-array>
 
@@ -1546,7 +1549,7 @@ Autorisations réseau
 État du réseau
 </item>
         <item>
-Multicast
+Multidiffusion
 </item>
         <item>
 Notifications
@@ -1567,6 +1570,9 @@ Interroger les packages
 Avis dans l\\\'application
 </item>
         <item>
+Prise en charge des images AVIF
+</item>
+        <item>
 Animations Lottie
 </item>
     </string-array>
@@ -1575,19 +1581,19 @@ Animations Lottie
 Navigation et gestion de fichiers
 </item>
         <item>
-Gestion de fichiers à distance, partages réseau SMB/FTP/SFTP/SCP/NFS et appairage d\\\'appareils via Wi-Fi local
+Gestion de fichiers à distance, partages réseau SMB/FTP/SFTP/SCP/NFS et appairage d\\\'appareils via le Wi-Fi local
 </item>
         <item>
 Détection VPN pour la gestion à distance et la connectivité des partages réseau
 </item>
         <item>
-Découverte d\\\'appareils sur le réseau local (NSD/mDNS) pour l\\\'appairage
+Découverte des appareils sur le réseau local (NSD/mDNS) pour l\\\'appairage d\\\'appareils
 </item>
         <item>
 Alertes de fin d\\\'opération et avertissements de stockage
 </item>
         <item>
-Installation d\\\'APK depuis le stockage local
+Installation d\\\'APK à partir du stockage local
 </item>
         <item>
 Gestion avancée des fichiers dans les répertoires système restreints via l\\\'API Shizuku
@@ -1596,13 +1602,16 @@ Gestion avancée des fichiers dans les répertoires système restreints via l\\\
 Indexe les métadonnées des fichiers localement pour une recherche rapide
 </item>
         <item>
-Fonctionnalités de gestionnaire d\\\'applications et de débloatage — lit les noms, versions, tailles et indicateurs système/utilisateur des packages installés uniquement sur l\\\'appareil. Non téléchargé ni partagé. Le débloatage compare localement les noms de packages avec une liste de référence publique de débloatage.
+Fonctionnalités de gestionnaire d\\\'applications et de débloatage — lit les noms des packages installés, leurs versions, tailles et indicateurs système/utilisateur uniquement sur l\\\'appareil. Aucune donnée n\\\'est téléversée ni partagée. Le débloatage recoupe localement les noms de packages avec une liste de référence publique.
 </item>
         <item>
-API Google Play d\\\'avis dans l\\\'application pour recueillir les commentaires des utilisateurs
+API Google Play In-App Review pour recueillir les avis des utilisateurs
 </item>
         <item>
-Rend les animations UI fluides dans toute l\\\'application via la bibliothèque Lottie v6.3.0 (com.airbnb.android:lottie)
+Décode et affiche les images AVIF dans la visionneuse intégrée via avif-android (org.aomedia.avif.android) sur API 26–30 ; API 31+ utilise le ImageDecoder intégré
+</item>
+        <item>
+Rend des animations d\\\'interface fluides dans toute l\\\'application via la bibliothèque Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
     </string-array>
 

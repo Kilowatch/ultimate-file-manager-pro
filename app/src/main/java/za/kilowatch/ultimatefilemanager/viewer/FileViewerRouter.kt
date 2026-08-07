@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider
 import java.io.File
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
+import za.kilowatch.ultimatefilemanager.util.MimeTypeHelper
 
 /**
  * Central routing helper that dispatches file opens to built-in viewer activities.
@@ -341,7 +342,7 @@ object FileViewerRouter {
     private fun hasExternalHandler(context: Context, file: File): Boolean {
         return try {
             val ext = file.extension.lowercase()
-            val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+            val mimeType = MimeTypeHelper.getOrFallback(ext)
             val uri: Uri = FileProvider.getUriForFile(
                 context,
                 "${context.packageName}.fileprovider",
@@ -672,7 +673,7 @@ object FileViewerRouter {
         val mimeType: String
         val uri: Uri
         try {
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "*/*"
+            mimeType = MimeTypeHelper.getOrFallback(ext)
             uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             android.util.Log.d(tag, "  uri=$uri  mime=$mimeType")
         } catch (e: Exception) {

@@ -409,6 +409,7 @@ dependencies {
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
     implementation(libs.coil.svg)
+    implementation(libs.avif.android) // AVIF decoding fallback for API 26–30 (API 31+ uses ImageDecoder)
     implementation(libs.apng.core)
     // BouncyCastle for certificate generation and SSHD cryptography
     // SEC: upgraded 1.83 → 1.84 to fix CVE-2026-5588 (HIGH — CompositeVerifier signature bypass in bcpkix)

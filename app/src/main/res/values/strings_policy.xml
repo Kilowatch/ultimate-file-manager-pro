@@ -87,7 +87,7 @@
         <item>Folder Sync — automatically back up local phone folders to an SMB or FTP network share on a schedule you choose (interval or specific time daily, weekly, or monthly).</item>
         <item>Device Pairing — pair your mobile phone and Android TV over local Wi-Fi to transfer and install files.</item>
         <item>ADB Terminal — connect to Android devices in Developer Mode over your local Wi-Fi using ADB (Android Debug Bridge) for direct shell access and advanced troubleshooting.</item>
-        <item>Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, SVG and more), archives, and other formats directly within the app.</item>
+        <item>Built-in Viewers — view text files, PDFs, animated images (APNG, GIF, animated WebP, AVIF, SVG and more), archives, and other formats directly within the app.</item>
         <item>Advanced ZIP Support — create and extract password-protected and AES-encrypted ZIP archives.</item>
         <item>Remote Screenshots — capture the screen of your paired Android TV over local Wi-Fi via ADB and save it directly to your phone\'s storage.</item>
         <item>7Z Archive Support — extract 7Z archives with LZMA/LZMA2 compression.</item>
@@ -220,7 +220,8 @@
         <item>BouncyCastle (org.bouncycastle) — cryptography library for RSA/EdDSA keypair generation and X.509 certificate creation; version 1.83. (MIT-style License)</item>
         <item>Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)</item>
         <item>Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)</item>
-        <item>Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, SVG) in the built-in image viewer. (Apache-2.0)</item>
+        <item>Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, SVG) in the built-in image viewer. (Apache-2.0)</item>
+        <item>avif-android (org.aomedia.avif.android) — AVIF image decoding library providing native AVIF support on Android API 26–30; API 31+ uses the built-in ImageDecoder. (BSD-2-Clause)</item>
         <item>APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)</item>
         <item>Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — libraries enabling elevated file system access via Shizuku or Shevery Manager apps. (Apache-2.0)</item>
         <item>ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)</item>
@@ -646,6 +647,7 @@
         <item>Storage Indexer</item>
         <item>Query Packages</item>
         <item>In-App Reviews</item>
+        <item>AVIF Image Support</item>
         <item>Lottie Animations</item>
     </string-array>
     <string-array name="pp_compliance_details">
@@ -659,6 +661,7 @@
         <item>Indexes file metadata locally for fast search</item>
         <item>App Manager and Debloater features — reads installed package names, versions, sizes, and system/user flags on-device only. Not uploaded or shared. The Debloater cross-references package names locally against a publicly available debloat reference list.</item>
         <item>Google Play In-App Review API for collecting user feedback</item>
+        <item>Decodes and displays AVIF images in the built-in viewer via avif-android (org.aomedia.avif.android) on API 26–30; API 31+ uses the built-in ImageDecoder</item>
         <item>Renders smooth UI animations throughout the app via the Lottie library v6.3.0 (com.airbnb.android:lottie)</item>
     </string-array>
 

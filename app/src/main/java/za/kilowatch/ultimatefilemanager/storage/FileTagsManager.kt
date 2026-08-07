@@ -78,7 +78,7 @@ object FileTagsManager {
         val file = File(filePath)
         if (file.exists() && file.isFile) {
             val ext = file.extension.lowercase()
-            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif")) {
+            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif")) {
                 try {
                     val exifInterface = ExifInterface(filePath)
                     // Standard Windows/Samsung keywords (semicolon-delimited)
@@ -126,7 +126,7 @@ object FileTagsManager {
         // 2. For local files, read EXIF if it's a supported image format
         if (file.exists() && file.isFile) {
             val ext = file.extension.lowercase()
-            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif")) {
+            if (ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif")) {
                 try {
                     val exifInterface = ExifInterface(filePath)
                     // Read standard Windows/Samsung EXIF keywords

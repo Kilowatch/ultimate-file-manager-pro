@@ -121,7 +121,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         }
 
         val ext = networkFile.name.substringAfterLast('.', "").lowercase()
-        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif")
+        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
         val isVideo = ext in VIDEO_EXTENSIONS
         val isApk = ext in listOf("apk", "xapk", "apks")
 
@@ -249,12 +249,23 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                     if (totalRead > maxImageSize) break
                                 }
                                 val imageBytes = buffer.toByteArray()
-                                val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                                BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
-                                val sampledOptions = BitmapFactory.Options().apply {
-                                    inSampleSize = calculateInSampleSize(options, THUMB_MAX_PX, THUMB_MAX_PX)
+                                if (ext == "avif") {
+                                    val rawBmp = decodeAvifBitmap(imageBytes)
+                                    finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                    rawBmp?.takeIf { it !== finalBitmap }?.recycle()
+                                } else {
+                                    val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, options)
+                                    val sampledOptions = BitmapFactory.Options().apply {
+                                        inSampleSize = calculateInSampleSize(options, THUMB_MAX_PX, THUMB_MAX_PX)
+                                    }
+                                    finalBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, sampledOptions)
+                                    if (finalBitmap == null) {
+                                        val rawBmp = decodeAvifBitmap(imageBytes)
+                                        finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                        rawBmp?.takeIf { it !== finalBitmap }?.recycle()
+                                    }
                                 }
-                                finalBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, sampledOptions)
 
                             } else if (tempFile != null) {
                                 // Video or APK: download into a temp file
@@ -407,6 +418,36 @@ class NetworkThumbnailCacheManager(private val context: Context) {
             }
         }
         return inSampleSize
+    }
+
+    private fun decodeAvifBitmap(bytes: ByteArray): Bitmap? {
+        if (bytes.isEmpty()) return null
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val source = android.graphics.ImageDecoder.createSource(java.nio.ByteBuffer.wrap(bytes))
+                android.graphics.ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                    decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
+                }
+            } else {
+                val byteBuffer = java.nio.ByteBuffer.wrap(bytes)
+                val info = org.aomedia.avif.android.AvifDecoder.Info()
+                if (!org.aomedia.avif.android.AvifDecoder.getInfo(byteBuffer, bytes.size, info)) return null
+                byteBuffer.rewind()
+                val decoder = org.aomedia.avif.android.AvifDecoder.create(byteBuffer, bytes.size) ?: return null
+                try {
+                    val bmp = Bitmap.createBitmap(info.width, info.height, Bitmap.Config.ARGB_8888)
+                    decoder.nextFrame(bmp)
+                    bmp
+                } catch (e: Exception) {
+                    null
+                } finally {
+                    decoder.release()
+                }
+            }
+        } catch (e: Throwable) {
+            GoRoLog.e("UFM_CACHE", "Failed to decode AVIF bitmap", e)
+            null
+        }
     }
 
     /**

@@ -10,7 +10,7 @@ enum class SmartSortCategory(
     PHOTOS(
         folderName = "UFM Photos",
         displayNameResId = R.string.smart_sort_category_photos,
-        extensions = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif")
+        extensions = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif", "avif")
     ),
     VIDEOS(
         folderName = "UFM Videos",
