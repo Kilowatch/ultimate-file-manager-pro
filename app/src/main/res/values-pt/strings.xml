@@ -10364,5 +10364,19 @@ Deseja definir \"%1$s\" como papel de parede da tela de bloqueio?
     <string name="action_set_wallpaper">
 Definir papel de parede
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Toque no ícone para editar
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+Tocar no ícone de uma pasta ou arquivo na visualização em lista entra no modo de seleção
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Tocar no ícone de uma pasta ou arquivo abre o item normalmente
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Configurações do modo de edição ao tocar no ícone
+</string>
 </resources>
+
 

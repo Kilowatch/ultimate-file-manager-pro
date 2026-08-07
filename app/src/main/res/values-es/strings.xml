@@ -10376,5 +10376,19 @@ Establecer fondo de pantalla
     <string name="action_set_wallpaper">
 Establecer fondo de pantalla
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Toca el icono para editar
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+Al tocar el icono de una carpeta o archivo en la vista de lista, se activa el modo de selección
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Al tocar el icono de una carpeta o archivo se abre el elemento normalmente
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Ajustes del modo de edición al tocar el icono
+</string>
 </resources>
+
 

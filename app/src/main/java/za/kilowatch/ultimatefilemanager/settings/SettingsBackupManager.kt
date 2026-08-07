@@ -292,6 +292,7 @@ object SettingsBackupManager {
         add("loyalty_prefs",             context.getString(R.string.backup_pref_loyalty))
         add("ufm_file_tags",             context.getString(R.string.backup_pref_file_tags))
         add("analytics_prefs",           context.getString(R.string.backup_pref_analytics))
+        add("icon_tap_edit_mode_prefs",  context.getString(R.string.backup_pref_icon_tap_edit_mode))
 
         val shares = NetworkShareRepository.getInstance(context).getAll()
         for (share in shares) {
@@ -585,7 +586,8 @@ object SettingsBackupManager {
                 "icon_customization_prefs"  to R.string.backup_pref_icon_customization,
                 "loyalty_prefs"             to R.string.backup_pref_loyalty,
                 "ufm_file_tags"             to R.string.backup_pref_file_tags,
-                "analytics_prefs"           to R.string.backup_pref_analytics
+                "analytics_prefs"           to R.string.backup_pref_analytics,
+                "icon_tap_edit_mode_prefs"  to R.string.backup_pref_icon_tap_edit_mode
             )
             while (keys.hasNext()) {
                 val key = keys.next()

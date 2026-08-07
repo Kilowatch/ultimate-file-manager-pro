@@ -20,9 +20,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
+import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import java.text.SimpleDateFormat
+
 import java.util.Date
 import java.util.Locale
 
@@ -296,7 +298,24 @@ class RecycleBinAdapter(
                 checkSelect?.visibility = View.GONE
             }
 
+            // Icon tap to enter edit/selection mode (Mobile only)
+            val targetIconView = itemView.findViewById<View>(R.id.iconContainer) ?: imgFileIcon
+            if (!isTv && IconTapEditModePreferenceManager.isEnabled(itemView.context)) {
+
+                targetIconView.setOnClickListener {
+                    if (!selectionMode) {
+                        enterSelectionMode(entity.id)
+                    } else {
+                        toggleSelection(entity.id)
+                    }
+                }
+            } else {
+                targetIconView.setOnClickListener(null)
+                targetIconView.isClickable = false
+            }
+
             itemView.setOnClickListener {
+
                 if (selectionMode) {
                     toggleSelection(entity.id)
                 } else {

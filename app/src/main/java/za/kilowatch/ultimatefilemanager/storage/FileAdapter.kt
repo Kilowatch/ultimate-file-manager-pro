@@ -28,6 +28,7 @@ import java.io.File
 import za.kilowatch.ultimatefilemanager.settings.ThumbnailPreferenceManager
 import za.kilowatch.ultimatefilemanager.storage.ViewModeManager
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
+import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextHelper
 import za.kilowatch.ultimatefilemanager.settings.ScrollingTextPreferenceManager
@@ -727,8 +728,42 @@ class FileAdapter(
                 }
             }
 
+            // Icon tap to enter edit/selection mode (Mobile List view only)
+            val targetIconView = iconContainer ?: itemView.findViewById<View>(R.id.imgFileIcon)
+            if (!isTv && !isGrid && IconTapEditModePreferenceManager.isEnabled(context)) {
+                targetIconView?.setOnClickListener {
+                    val pos = bindingAdapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        val item = items[pos]
+                        if (item is ListItem.FileEntry) {
+                            val currentFile = item.javaFile
+                            if (onItemLongClick != null) {
+                                onItemLongClick.invoke(currentFile)
+                            } else if (!isSelectionMode) {
+                                isSelectionMode = true
+                                longPressAnchorIndex = pos
+                                selectedPaths.add(currentFile.absolutePath)
+                                notifyItemRangeChanged(0, itemCount)
+                                onSelectionChanged(selectedPaths.size)
+                            } else {
+                                val wasSelected = currentFile.absolutePath in selectedPaths
+                                toggleSelection(currentFile)
+                                if (!wasSelected) {
+                                    longPressAnchorIndex = pos
+                                }
+                                notifyItemChanged(pos)
+                            }
+                        }
+                    }
+                }
+            } else {
+                targetIconView?.setOnClickListener(null)
+                targetIconView?.isClickable = false
+            }
+
             // Click handling
             itemView.setOnClickListener {
+
                 val pos = bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
                     val item = items[pos]

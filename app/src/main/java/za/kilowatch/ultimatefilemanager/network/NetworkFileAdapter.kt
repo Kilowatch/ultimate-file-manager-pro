@@ -22,6 +22,7 @@ import kotlinx.coroutines.*
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import za.kilowatch.ultimatefilemanager.settings.IconCustomizationManager
+import za.kilowatch.ultimatefilemanager.settings.IconTapEditModePreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager
@@ -770,7 +771,35 @@ class NetworkFileAdapter(
                 switchToggle?.visibility = View.GONE
                 imgChevron?.visibility = View.VISIBLE
             }
+
+            // Icon tap to enter edit/selection mode (Mobile List view only)
+            val targetIconView = iconContainer ?: itemView.findViewById<View>(R.id.imgFileIcon)
+            if (!isTv && !isGrid && !file.isToggle && IconTapEditModePreferenceManager.isEnabled(context)) {
+                targetIconView?.setOnClickListener {
+                    val pos = bindingAdapterPosition
+                    if (pos != RecyclerView.NO_POSITION) {
+                        val item = items[pos]
+                        if (item is za.kilowatch.ultimatefilemanager.storage.ListItem.NetworkEntry) {
+                            val f = item.file
+                            if (f.isToggle) return@setOnClickListener
+                            if (!isSelectionMode) {
+                                isSelectionMode = true
+                                longPressAnchorIndex = pos
+                                selectedFiles.add(f)
+                                notifyItemRangeChanged(0, itemCount)
+                                onSelectionChanged(selectedFiles.size)
+                            } else {
+                                toggleSelection(f)
+                            }
+                        }
+                    }
+                }
+            } else {
+                targetIconView?.setOnClickListener(null)
+                targetIconView?.isClickable = false
+            }
         }
+
 
         private var thumbnailJob: Job? = null
         private var coilDisposable: Disposable? = null

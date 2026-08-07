@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.1] — 2026-08-06
 
 ### Added
+- Option in mobile settings to tap folder or file icons in list view to enter edit/selection mode (enabled by default).
 - Multi-format compression support for `.tar`, `.tar.gz`, `.tar.bz2`, `.tar.xz`, `.tar.zst`, `.gz`, `.bz2`, `.xz`, and `.zst`.
 - Modern checkable format toggle pills (`ChipGroup`) in the Compression dialog for Mobile and Android TV.
 - Extraction support and conflict/collision handling for `.tar`, `.tar.gz`, `.tar.bz2`, `.tar.xz`, `.tar.zst`, `.rar`, `.gz`, `.bz2`, `.xz`, and `.zst`.
@@ -19,7 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pattern Tokens Help (`?`) toolbar button with token reference guide & examples on Mobile and Android TV.
 
 ### Changed
+- Tapping a folder or file icon in list view on mobile now enters selection mode when enabled.
 - Compression dialog dynamically hides password protection fields for archive formats that do not support encryption.
+
 - Set "Extract Here" to FAB Tools bottom sheet on Mobile and top action bar on Android TV.
 - Updated `$N` token to output strictly bare filename without extension (`photo`).
 - Removed parenthesis wrapping from `{Padding}` token output in Batch Rename.

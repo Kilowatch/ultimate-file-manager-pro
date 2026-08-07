@@ -3653,5 +3653,11 @@
     <string name="wallpaper_confirm_home_message">Do you want to set \"%1$s\" as your home screen wallpaper?</string>
     <string name="wallpaper_confirm_lock_message">Do you want to set \"%1$s\" as your lock screen wallpaper?</string>
     <string name="action_set_wallpaper">Set Wallpaper</string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">Tap icon to edit</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">Tapping a folder or file icon in list view enters selection mode</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">Tapping a folder or file icon opens the item normally</string>
+    <string name="backup_pref_icon_tap_edit_mode">Icon Tap Edit Mode Settings</string>
 </resources>
+
 

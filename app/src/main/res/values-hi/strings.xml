@@ -10364,5 +10364,19 @@ UFM ने आपके पिछले सत्र में प्रति�
     <string name="action_set_wallpaper">
 वॉलपेपर सेट करें
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+संपादन के लिए आइकन पर टैप करें
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+सूची दृश्य में किसी फ़ोल्डर या फ़ाइल आइकन पर टैप करने से चयन मोड सक्रिय होता है
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+किसी फ़ोल्डर या फ़ाइल आइकन पर टैप करने से आइटम सामान्य रूप से खुलता है
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+आइकन टैप संपादन मोड सेटिंग्स
+</string>
 </resources>
+
 

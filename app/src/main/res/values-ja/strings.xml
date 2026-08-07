@@ -10364,5 +10364,19 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
     <string name="action_set_wallpaper">
 壁紙を設定
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+アイコンをタップして編集
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+リスト表示でフォルダやファイルのアイコンをタップすると、選択モードになります
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+リスト表示でフォルダやファイルのアイコンをタップすると、アイテムが通常どおり開きます
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+アイコンタップ編集モードの設定
+</string>
 </resources>
+
 

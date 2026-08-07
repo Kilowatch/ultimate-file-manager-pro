@@ -10364,5 +10364,19 @@ Apakah Anda ingin mengatur \"%1$s\" sebagai wallpaper layar kunci?
     <string name="action_set_wallpaper">
 Atur Wallpaper
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Ketuk ikon untuk mengedit
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+Mengetuk ikon folder atau file pada tampilan daftar akan masuk ke mode pemilihan
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Mengetuk ikon folder atau file akan membuka item tersebut secara normal
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Pengaturan Mode Edit Ketuk Ikon
+</string>
 </resources>
+
 

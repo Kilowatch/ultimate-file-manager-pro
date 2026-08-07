@@ -10364,5 +10364,19 @@ Möchten Sie \"%1$s\" als Sperrbildschirm-Hintergrund festlegen?
     <string name="action_set_wallpaper">
 Hintergrund festlegen
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Zum Bearbeiten auf das Symbol tippen
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+Durch Tippen auf ein Ordner- oder Dateisymbol in der Listenansicht wechseln Sie in den Auswahlmodus.
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Durch Tippen auf ein Ordner- oder Dateisymbol wird das Element normal geöffnet.
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Einstellungen für den Bearbeitungsmodus beim Antippen von Symbolen
+</string>
 </resources>
+
 

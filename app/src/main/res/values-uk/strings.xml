@@ -10364,5 +10364,19 @@ UFM перестав відповідати під час вашого оста�
     <string name="action_set_wallpaper">
 Встановити шпалери
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Торкніться значка, щоб редагувати
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+У списку торкання значка папки або файлу вмикає режим вибору
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Торкання значка папки або файлу відкриває елемент у звичайному режимі
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Налаштування режиму редагування торканням значка
+</string>
 </resources>
+
 

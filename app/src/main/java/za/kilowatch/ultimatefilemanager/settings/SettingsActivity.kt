@@ -79,6 +79,9 @@ class SettingsActivity : AppCompatActivity() {
     private var switchBreadcrumbs: SwitchMaterial? = null
     private var txtBreadcrumbsSubtitle: TextView? = null
 
+    private var switchIconTapEditMode: SwitchMaterial? = null
+    private var txtIconTapEditModeSubtitle: TextView? = null
+
     private lateinit var switchScrollingText: SwitchMaterial
     private lateinit var txtScrollingTextSubtitle: TextView
 
@@ -396,6 +399,20 @@ class SettingsActivity : AppCompatActivity() {
 
             cardBreadcrumbs.setOnClickListener { toggleBreadcrumbs() }
             switchBreadcrumbs?.setOnCheckedChangeListener(null)
+        }
+
+        // Tap Icon to Edit Mode toggle (Mobile Only)
+        val cardIconTapEditMode = findViewById<MaterialCardView?>(R.id.cardIconTapEditMode)
+        if (cardIconTapEditMode != null) {
+            switchIconTapEditMode = findViewById(R.id.switchIconTapEditMode)
+            txtIconTapEditModeSubtitle = findViewById(R.id.txtIconTapEditModeSubtitle)
+
+            val iconTapEditModeEnabled = IconTapEditModePreferenceManager.isEnabled(this)
+            switchIconTapEditMode?.isChecked = iconTapEditModeEnabled
+            updateIconTapEditModeSubtitle(iconTapEditModeEnabled)
+
+            cardIconTapEditMode.setOnClickListener { toggleIconTapEditMode() }
+            switchIconTapEditMode?.setOnCheckedChangeListener(null)
         }
 
         // Scrolling Text toggle
@@ -854,6 +871,13 @@ class SettingsActivity : AppCompatActivity() {
             updateBreadcrumbsSubtitle(enabled)
         }
 
+        // Refresh Icon Tap Edit Mode subtitle
+        switchIconTapEditMode?.let { sw ->
+            val enabled = IconTapEditModePreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateIconTapEditModeSubtitle(enabled)
+        }
+
         // Refresh Scrolling Text subtitle
         if (::switchScrollingText.isInitialized) {
             val enabled = ScrollingTextPreferenceManager.isEnabled(this)
@@ -1233,6 +1257,22 @@ class SettingsActivity : AppCompatActivity() {
             getString(R.string.settings_breadcrumbs_subtitle_on)
         } else {
             getString(R.string.settings_breadcrumbs_subtitle_off)
+        }
+    }
+
+    private fun toggleIconTapEditMode() {
+        val sw = switchIconTapEditMode ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        IconTapEditModePreferenceManager.setEnabled(this, newValue)
+        updateIconTapEditModeSubtitle(newValue)
+    }
+
+    private fun updateIconTapEditModeSubtitle(enabled: Boolean) {
+        txtIconTapEditModeSubtitle?.text = if (enabled) {
+            getString(R.string.settings_icon_tap_edit_mode_subtitle_enabled)
+        } else {
+            getString(R.string.settings_icon_tap_edit_mode_subtitle_disabled)
         }
     }
 

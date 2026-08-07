@@ -93,9 +93,10 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 220          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.8.0"      // Shown in Play Store listing
+val appVersionCode = 222          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.8.1"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
+
 
 android {
     namespace = "za.kilowatch.ultimatefilemanager"

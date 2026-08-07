@@ -10364,5 +10364,19 @@ Voulez-vous définir \"%1$s\" comme fond d\\\'écran de verrouillage ?
     <string name="action_set_wallpaper">
 Définir le fond d\\\'écran
 </string>
+    <!-- Icon Tap Edit Mode -->
+    <string name="settings_icon_tap_edit_mode_title">
+Touchez l\\\'icône pour modifier
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_enabled">
+Toucher l\\\'icône d\\\'un dossier ou d\\\'un fichier dans la liste active le mode de sélection
+</string>
+    <string name="settings_icon_tap_edit_mode_subtitle_disabled">
+Toucher l\\\'icône d\\\'un dossier ou d\\\'un fichier ouvre l\\\'élément normalement
+</string>
+    <string name="backup_pref_icon_tap_edit_mode">
+Paramètres du mode d\\\'édition par appui sur l\\\'icône
+</string>
 </resources>
+
 
