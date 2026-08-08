@@ -3492,18 +3492,22 @@ class FileBrowserActivity : AppCompatActivity() {
                 runCatching { inp?.close() }
                 currentTransferStreams = null
             }
-            // Clean up the incomplete destination file
+            // Clean up the incomplete destination file — on the IO dispatcher so the
+            // blocking File.delete() (native remove syscall) can't freeze the main
+            // thread (reported from a KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
             currentTransferDestFile?.let { f ->
-                try {
-                    if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(f.absolutePath)) {
-                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(f.absolutePath)
-                    } else if (f.isDirectory) {
-                        f.deleteRecursively()
-                    } else {
-                        f.delete()
-                    }
-                } catch (_: Exception) {}
                 currentTransferDestFile = null
+                lifecycleScope.launch(Dispatchers.IO) {
+                    try {
+                        if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(f.absolutePath)) {
+                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(f.absolutePath)
+                        } else if (f.isDirectory) {
+                            f.deleteRecursively()
+                        } else {
+                            f.delete()
+                        }
+                    } catch (_: Exception) {}
+                }
             }
             isTransferring = false
             za.kilowatch.ultimatefilemanager.util.TransferService.stop(this)

@@ -30,8 +30,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -692,26 +694,33 @@ class StorageAnalyzerActivity : AppCompatActivity() {
 
     private fun deleteDuplicates(paths: Set<String>, adapter: AnalyzerDuplicateAdapter) {
         lifecycleScope.launch {
-            val deleted = mutableSetOf<String>()
-            var failedCount = 0
-            var hasProtectedFailed = false
-            for (path in paths) {
-                val f = File(path)
-                val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
-                } else {
-                    f.exists() && f.delete()
-                }
-                if (success) {
-                    // Keep the Room index in sync
-                    indexingRepo.deleteFromIndex(path)
-                    deleted.add(path)
-                } else {
-                    failedCount++
-                    if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)) {
-                        hasProtectedFailed = true
+            // Run the blocking File.delete() calls (native remove syscall) on the IO
+            // dispatcher: on slow or busy storage a single delete can exceed the 5 s
+            // ANR watchdog threshold and freeze the main thread (reported from a
+            // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
+            val (deleted, failedCount, hasProtectedFailed) = withContext(Dispatchers.IO) {
+                val deleted = mutableSetOf<String>()
+                var failedCount = 0
+                var hasProtectedFailed = false
+                for (path in paths) {
+                    val f = File(path)
+                    val success = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
+                    } else {
+                        f.exists() && f.delete()
+                    }
+                    if (success) {
+                        // Keep the Room index in sync
+                        indexingRepo.deleteFromIndex(path)
+                        deleted.add(path)
+                    } else {
+                        failedCount++
+                        if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)) {
+                            hasProtectedFailed = true
+                        }
                     }
                 }
+                Triple(deleted, failedCount, hasProtectedFailed)
             }
             adapter.removeFiles(deleted)
             fabDeleteDuplicates.visibility = View.GONE

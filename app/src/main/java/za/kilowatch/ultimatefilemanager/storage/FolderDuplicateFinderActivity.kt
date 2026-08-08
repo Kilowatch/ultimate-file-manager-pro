@@ -22,8 +22,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.FileIndex
@@ -277,29 +279,35 @@ class FolderDuplicateFinderActivity : AppCompatActivity() {
 
     private fun deleteDuplicates(paths: Set<String>, adapter: AnalyzerDuplicateAdapter) {
         lifecycleScope.launch {
-            val deleted = mutableSetOf<String>()
-            var failedCount = 0
-            var hasProtectedFailed = false
-
+            // Run the blocking File.delete() calls (native remove syscall) on the IO
+            // dispatcher: on slow or busy storage a single delete can exceed the 5 s
+            // ANR watchdog threshold and freeze the main thread (reported from a
+            // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
             val repo = UfmApplication.indexingRepository
+            val (deleted, failedCount, hasProtectedFailed) = withContext(Dispatchers.IO) {
+                val deleted = mutableSetOf<String>()
+                var failedCount = 0
+                var hasProtectedFailed = false
 
-            for (path in paths) {
-                val f = File(path)
-                val success = if (ShizukuShellWrapper.canUseShizukuForPath(path)) {
-                    ShizukuShellWrapper.delete(path)
-                } else {
-                    f.exists() && f.delete()
-                }
+                for (path in paths) {
+                    val f = File(path)
+                    val success = if (ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                        ShizukuShellWrapper.delete(path)
+                    } else {
+                        f.exists() && f.delete()
+                    }
 
-                if (success) {
-                    repo.deleteFromIndex(path)
-                    deleted.add(path)
-                } else {
-                    failedCount++
-                    if (ShizukuShellWrapper.isProtectedPath(path)) {
-                        hasProtectedFailed = true
+                    if (success) {
+                        repo.deleteFromIndex(path)
+                        deleted.add(path)
+                    } else {
+                        failedCount++
+                        if (ShizukuShellWrapper.isProtectedPath(path)) {
+                            hasProtectedFailed = true
+                        }
                     }
                 }
+                Triple(deleted, failedCount, hasProtectedFailed)
             }
 
             if (deleted.isNotEmpty()) {

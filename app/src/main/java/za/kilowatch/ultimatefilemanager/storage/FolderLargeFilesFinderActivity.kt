@@ -19,8 +19,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
@@ -209,42 +211,50 @@ class FolderLargeFilesFinderActivity : AppCompatActivity() {
     }
 
     private fun executeDeletion(targets: List<FileIndex>) {
-        val deletedPaths = mutableSetOf<String>()
-        var failedCount = 0
+        // Run the blocking File.delete() calls (native remove syscall) on the IO
+        // dispatcher: on slow or busy storage a single delete can exceed the 5 s
+        // ANR watchdog threshold and freeze the main thread (reported from a
+        // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
+        lifecycleScope.launch(Dispatchers.IO) {
+            val deletedPaths = mutableSetOf<String>()
+            var failedCount = 0
 
-        for (fi in targets) {
-            try {
-                val f = File(fi.path)
-                if (f.exists() && f.delete()) {
-                    deletedPaths.add(fi.path)
-                } else if (!f.exists()) {
-                    deletedPaths.add(fi.path)
-                } else {
+            for (fi in targets) {
+                try {
+                    val f = File(fi.path)
+                    if (f.exists() && f.delete()) {
+                        deletedPaths.add(fi.path)
+                    } else if (!f.exists()) {
+                        deletedPaths.add(fi.path)
+                    } else {
+                        failedCount++
+                    }
+                } catch (e: Exception) {
+                    GoRoLog.e("FolderLargeFiles", "Failed to delete file ${fi.path}: ${e.message}")
                     failedCount++
                 }
-            } catch (e: Exception) {
-                GoRoLog.e("FolderLargeFiles", "Failed to delete file ${fi.path}: ${e.message}")
-                failedCount++
-            }
-        }
-
-        if (deletedPaths.isNotEmpty()) {
-            largeFilesAdapter?.removeFiles(deletedPaths)
-            val remaining = currentFiles.filter { it.path !in deletedPaths }
-            currentFiles = remaining
-            updateDeleteButtonVisibility(largeFilesAdapter?.checkedFiles?.size ?: 0)
-            if (remaining.isEmpty()) {
-                layoutEmptyState.visibility = View.VISIBLE
-                recyclerLargeFiles.visibility = View.GONE
             }
 
-            val msg = getString(R.string.delete_success, deletedPaths.size)
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        }
+            withContext(Dispatchers.Main) {
+                if (deletedPaths.isNotEmpty()) {
+                    largeFilesAdapter?.removeFiles(deletedPaths)
+                    val remaining = currentFiles.filter { it.path !in deletedPaths }
+                    currentFiles = remaining
+                    updateDeleteButtonVisibility(largeFilesAdapter?.checkedFiles?.size ?: 0)
+                    if (remaining.isEmpty()) {
+                        layoutEmptyState.visibility = View.VISIBLE
+                        recyclerLargeFiles.visibility = View.GONE
+                    }
 
-        if (failedCount > 0) {
-            val msg = "Could not delete $failedCount files (permission or locked)."
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                    val msg = getString(R.string.delete_success, deletedPaths.size)
+                    Toast.makeText(this@FolderLargeFilesFinderActivity, msg, Toast.LENGTH_SHORT).show()
+                }
+
+                if (failedCount > 0) {
+                    val msg = "Could not delete $failedCount files (permission or locked)."
+                    Toast.makeText(this@FolderLargeFilesFinderActivity, msg, Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 

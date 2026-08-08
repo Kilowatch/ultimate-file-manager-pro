@@ -897,40 +897,48 @@ class SearchActivity : AppCompatActivity() {
                 val isDir = file.isDirectory
                 val name = file.name
 
-                val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
-                } else if (isDir) {
-                    file.deleteRecursively()
-                } else {
-                    file.delete()
-                }
-                if (deleted) {
-                    // Sync index in background
-                    scope.launch(Dispatchers.IO) {
-                        try {
-                            val repo = UfmApplication.indexingRepository
-                            if (isDir) repo.deleteTreeFromIndex(path)
-                            else repo.deleteFromIndex(path)
-                        } catch (e: Exception) {
-                            GoRoLog.e("SearchActivity", "Index sync failed for delete: ${e.message}")
+                // Run the blocking delete (File.delete -> native remove syscall) on the
+                // IO dispatcher: on slow or busy storage a single delete can exceed the
+                // 5 s ANR watchdog threshold and freeze the main thread (reported from a
+                // KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
+                scope.launch(Dispatchers.IO) {
+                    val deleted = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(path)
+                    } else if (isDir) {
+                        file.deleteRecursively()
+                    } else {
+                        file.delete()
+                    }
+                    withContext(Dispatchers.Main) {
+                        if (deleted) {
+                            // Sync index in background
+                            scope.launch(Dispatchers.IO) {
+                                try {
+                                    val repo = UfmApplication.indexingRepository
+                                    if (isDir) repo.deleteTreeFromIndex(path)
+                                    else repo.deleteFromIndex(path)
+                                } catch (e: Exception) {
+                                    GoRoLog.e("SearchActivity", "Index sync failed for delete: ${e.message}")
+                                }
+                            }
+
+                            showSnackbar(getString(R.string.name_deleted, name))
+                            val query = editSearch.text?.toString()?.trim() ?: ""
+                            if (query.length >= 2) {
+                                searchJob?.cancel()
+                                searchJob = scope.launch { performSearch(query, offset = 0, append = false) }
+                            }
+                        } else {
+                            val hasProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)
+                            val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
+                            val msg = if (hasProtected && !shizukuAuthorized) {
+                                getString(R.string.delete_error_shizuku_required)
+                            } else {
+                                getString(R.string.failed_to_delete_name, name)
+                            }
+                            showSnackbar(msg)
                         }
                     }
-
-                    showSnackbar(getString(R.string.name_deleted, name))
-                    val query = editSearch.text?.toString()?.trim() ?: ""
-                    if (query.length >= 2) {
-                        searchJob?.cancel()
-                        searchJob = scope.launch { performSearch(query, offset = 0, append = false) }
-                    }
-                } else {
-                    val hasProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)
-                    val shizukuAuthorized = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isAuthorized()
-                    val msg = if (hasProtected && !shizukuAuthorized) {
-                        getString(R.string.delete_error_shizuku_required)
-                    } else {
-                        getString(R.string.failed_to_delete_name, name)
-                    }
-                    showSnackbar(msg)
                 }
             }
             .setNegativeButton(android.R.string.cancel, null)
