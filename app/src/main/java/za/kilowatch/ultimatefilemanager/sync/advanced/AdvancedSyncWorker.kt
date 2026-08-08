@@ -55,6 +55,11 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
 
         if (profile.notificationsEnabled) {
             setupNotificationChannel()
+            try {
+                setForeground(getForegroundInfo())
+            } catch (e: Exception) {
+                Log.w(TAG, "Could not set foreground info for worker", e)
+            }
         }
 
         Log.d(TAG, "Starting sync for profile '${profile.name}' (id=${profile.id}, dir=${profile.direction}, dest=${profile.networkShareId})")
@@ -260,12 +265,6 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 nm.cancel(notificationId)
             }
 
-            // Notify watcher so any pending re-trigger (files that arrived during this run)
-            // can fire a follow-up sync immediately.
-            if (profile.instantSyncEnabled) {
-                InstantSyncWatcher.onSyncCompleted(applicationContext, profile.id)
-            }
-
             return Result.success()
 
         } catch (e: Exception) {
@@ -275,6 +274,10 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 nm.cancel(notificationId)
             }
             return Result.failure()
+        } finally {
+            if (profile.instantSyncEnabled) {
+                InstantSyncWatcher.onSyncCompleted(applicationContext, profile.id)
+            }
         }
     }
 
@@ -414,6 +417,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                     // Only delete if UFM downloaded it before AND it no longer exists on the remote
                     if (hash in previousHashes && localFile.name !in remoteNames && localFile.delete()) {
                         Log.d(TAG, "Download deletion: removed '${localFile.name}' from local")
+                        notifyLocalFileDeleted(localFile)
                     }
                 }
             }
@@ -574,6 +578,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                         destFile.length(), file.length(), file.name) && file.delete()) {
                     Log.d(TAG, "Moved (deleted source): ${file.name}")
+                    notifyLocalFileDeleted(file)
                 }
             }
         }
@@ -593,6 +598,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                     val hash = sha256(destFileName)
                     if (hash in previousHashes && destFileName !in currentSrcNames && destFile.delete()) {
                         Log.d(TAG, "Local deletion: removed '${destFileName}' from destination")
+                        notifyLocalFileDeleted(destFile)
                     }
                 }
             }
@@ -765,7 +771,9 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                 )
             )
             .setSmallIcon(R.drawable.ic_sync_advanced)
+            .setProgress(total, index, false)
             .setOngoing(true)
+            .setOnlyAlertOnce(true)
             .build()
         val nm = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.notify(notificationId, notification)
@@ -943,6 +951,7 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
                         remoteSize, file.length(), file.name
                     ) && file.delete()) {
                     Log.d(TAG, "Moved (deleted source): ${file.name}")
+                    notifyLocalFileDeleted(file)
                 }
             }
         }
@@ -1151,9 +1160,9 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
         val profileId = inputData.getString("PROFILE_ID") ?: ""
         val profile = repo.getById(profileId)
         val title = profile?.name ?: "Unknown"
-        val notificationId = NOTIFICATION_ID_BASE + title.hashCode().rem(1000).let { if (it < 0) -it else it }
+        val notificationId = NOTIFICATION_ID_BASE + (profile?.id ?: profileId).hashCode().rem(1000).let { if (it < 0) -it else it }
         return createForegroundInfo(
-            applicationContext.getString(R.string.syncing_title), notificationId
+            applicationContext.getString(R.string.syncing_title, title), notificationId
         )
     }
 
@@ -1288,5 +1297,17 @@ class AdvancedSyncWorker(appContext: Context, params: WorkerParameters) :
     private fun sha256(input: String): String {
         val digest = java.security.MessageDigest.getInstance("SHA-256")
         return digest.digest(input.toByteArray()).joinToString("") { "%02x".format(it) }
+    }
+
+    /** Notify MediaScanner and IndexingRepository when a local file is deleted by sync. */
+    private fun notifyLocalFileDeleted(file: File) {
+        val path = file.absolutePath
+        za.kilowatch.ultimatefilemanager.util.MediaScannerNotifier.scanFile(applicationContext, path)
+        val (storageId, _) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(path)
+        if (storageId.isNotEmpty()) {
+            za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.getInstance(applicationContext)
+                .handleFileDeleted(path, storageId)
+        }
+        InstantSyncWatcher.notifyFolderChangedBroadcast(applicationContext, file.parent ?: "")
     }
 }

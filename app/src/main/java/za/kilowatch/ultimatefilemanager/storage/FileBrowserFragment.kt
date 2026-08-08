@@ -252,6 +252,22 @@ class FileBrowserFragment : Fragment() {
         loadDirectory(currentDir)
     }
 
+    private val folderChangedReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+            val folderPath = intent.getStringExtra(za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.EXTRA_FOLDER_PATH) ?: return
+            if (::currentDir.isInitialized) {
+                val currentNorm = za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.normalizePath(currentDir.absolutePath)
+                val targetNorm = za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.normalizePath(folderPath)
+                if (currentNorm == targetNorm || currentNorm.startsWith("$targetNorm/") || targetNorm.startsWith("$currentNorm/")) {
+                    android.util.Log.d("FileBrowserFragment", "folderChangedReceiver: Auto-refreshing $currentNorm")
+                    android.os.Handler(android.os.Looper.getMainLooper()).post {
+                        loadDirectory(currentDir)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         applyLeftHandedFabSettings()
@@ -260,6 +276,25 @@ class FileBrowserFragment : Fragment() {
         // Refresh file list on return from child activities (e.g. Settings toggle)
         if (::currentDir.isInitialized) {
             loadDirectory(currentDir)
+        }
+        context?.let { ctx ->
+            try {
+                androidx.core.content.ContextCompat.registerReceiver(
+                    ctx,
+                    folderChangedReceiver,
+                    android.content.IntentFilter(za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.ACTION_FOLDER_CHANGED),
+                    androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+                )
+            } catch (_: Exception) {}
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context?.let { ctx ->
+            try {
+                ctx.unregisterReceiver(folderChangedReceiver)
+            } catch (_: Exception) {}
         }
     }
 
@@ -1599,7 +1634,7 @@ class FileBrowserFragment : Fragment() {
                                     submitAdapterList(sorted, false, hiddenPaths)
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { isFileVisible(it, showHidden, hiddenPaths) }
+                                val files = fileIndices.map { File(it.path) }.filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList(sorted, true, hiddenPaths)
@@ -2564,7 +2599,7 @@ class FileBrowserFragment : Fragment() {
                         storageId = storageId,
                         folderScope = currentDir.absolutePath
                     )
-                    results.map { File(it.path) }
+                    results.map { File(it.path) }.filter { it.exists() }
                 } else {
                     val lowerQuery = query.lowercase()
                     val found = mutableListOf<File>()

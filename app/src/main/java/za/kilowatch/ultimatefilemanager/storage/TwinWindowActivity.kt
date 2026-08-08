@@ -1547,6 +1547,9 @@ class TwinWindowActivity : AppCompatActivity() {
                         (getPane2() as? AppBrowserFragment)?.exitSelectionMode()
 
                         if (!isCancelled) {
+                            (target as? FileBrowserFragment)?.getCurrentDir()?.let { destDir ->
+                                za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.notifyDirectoryChanged(this@TwinWindowActivity, destDir.absolutePath)
+                            }
                             showPremiumSnackbar(if (isMove) getString(R.string.move_complete) else getString(R.string.copy_complete))
                         }
                     }

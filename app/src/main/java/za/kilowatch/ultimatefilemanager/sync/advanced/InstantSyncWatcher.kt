@@ -4,10 +4,8 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.BatteryManager
+import android.os.Build
 import android.os.FileObserver
-// Note: Recursive FileObserver watching (SUBTREE flag) is not available in this SDK.
-// Only the immediate directory is watched. For full recursive support, migrate to
-// FileObserver(File, Int, Int) with SUBTREE when the compile SDK supports it.
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -29,14 +27,13 @@ import java.io.File
  *
  * Files can land in the source folder while [AdvancedSyncWorker] is already running.
  * To avoid missing those files, [performTrigger] checks whether an instant sync for
- * the profile is currently RUNNING or ENQUEUED.  If so, it sets a flag in
- * [pendingTriggers] rather than enqueuing another request.  When the worker finishes
+ * the profile is currently RUNNING or ENQUEUED. If so, it sets a flag in
+ * [pendingTriggers] rather than enqueuing another request. When the worker finishes
  * it calls [onSyncCompleted]; that callback fires the pending trigger so the
  * newly-arrived files are picked up in a follow-up run.
  *
  * At most **one** follow-up run is queued per profile — many rapid arrivals collapse
  * into a single follow-up thanks to the set semantics of [pendingTriggers].
- * WorkManager's [ExistingWorkPolicy.KEEP] additionally prevents accidental stacking.
  */
 object InstantSyncWatcher {
 
@@ -58,6 +55,16 @@ object InstantSyncWatcher {
     /** Unique WorkManager work name for one-shot instant sync of the given profile. */
     private fun instantWorkName(profileId: String) = "instant_sync_$profileId"
 
+    /** Clean and normalize file path string. */
+    fun normalizePath(rawPath: String): String {
+        val clean = rawPath.removePrefix("file://").trimEnd('/')
+        return try {
+            File(clean).canonicalPath
+        } catch (_: Exception) {
+            clean
+        }
+    }
+
     /**
      * Start watching the source folder of the given profile.
      * If a watcher already exists for this profile ID, it is restarted.
@@ -65,7 +72,7 @@ object InstantSyncWatcher {
     fun startWatching(context: Context, profile: AdvancedSyncProfile) {
         stopWatching(profile.id)
 
-        val localPath = profile.localUri
+        val localPath = normalizePath(profile.localUri)
         val dir = File(localPath)
         if (!dir.exists() || !dir.isDirectory) {
             Log.w(TAG, "Cannot watch: $localPath does not exist or is not a directory")
@@ -82,13 +89,56 @@ object InstantSyncWatcher {
         Log.d(TAG, "Started watching ${profile.name} at $localPath")
     }
 
+    const val ACTION_FOLDER_CHANGED = "za.kilowatch.ultimatefilemanager.ACTION_FOLDER_CHANGED"
+    const val EXTRA_FOLDER_PATH = "folder_path"
+
+    /**
+     * Send a local broadcast so any active file browser screens auto-refresh if they are currently
+     * displaying the modified folder.
+     */
+    fun notifyFolderChangedBroadcast(context: Context, path: String) {
+        if (path.isBlank()) return
+        val normPath = normalizePath(path)
+        val intent = android.content.Intent(ACTION_FOLDER_CHANGED).apply {
+            putExtra(EXTRA_FOLDER_PATH, normPath)
+            setPackage(context.packageName)
+        }
+        context.sendBroadcast(intent)
+    }
+
+    /**
+     * Directly notify [InstantSyncWatcher] that a local directory's contents were modified.
+     * Use this after internal file operations (copy, move, paste, delete, rename) complete,
+     * to guarantee instant sync triggers even if native inotify events are missed on scoped storage.
+     */
+    fun notifyDirectoryChanged(context: Context, path: String) {
+        if (path.isBlank()) return
+        val targetNorm = normalizePath(path)
+        notifyFolderChangedBroadcast(context, targetNorm)
+
+        val repo = AdvancedSyncProfileRepository.getInstance(context)
+        val profiles = repo.getAll().filter { it.instantSyncEnabled && it.enabled }
+
+        for (profile in profiles) {
+            val localNorm = normalizePath(profile.localUri)
+            if (localNorm.isBlank()) continue
+            // Trigger if target directory matches or is inside the profile's local source directory
+            if (targetNorm == localNorm || targetNorm.startsWith("$localNorm/")) {
+                val dir = File(localNorm)
+                if (dir.exists() && dir.isDirectory) {
+                    Log.d(TAG, "Direct notification received for ${profile.name} at $targetNorm")
+                    onFileEvent(context, profile, dir)
+                }
+            }
+        }
+    }
+
     /**
      * Stop watching the given profile. Safe to call even if not watching.
      * Also clears any pending re-trigger for this profile.
      */
     fun stopWatching(profileId: String) {
         pendingTriggers.remove(profileId)
-        // Remove and stop the FileObserver (inner stopWatching() is FileObserver's method)
         watchers.remove(profileId)?.apply {
             stopWatching()
             Log.d(TAG, "Stopped watching profile $profileId")
@@ -130,9 +180,12 @@ object InstantSyncWatcher {
      * files are synced in a follow-up run.
      */
     fun onSyncCompleted(context: Context, profileId: String) {
+        val profile = AdvancedSyncProfileRepository.getInstance(context).getById(profileId)
+        if (profile != null) {
+            notifyFolderChangedBroadcast(context, profile.localUri)
+        }
         if (pendingTriggers.remove(profileId)) {
             Log.d(TAG, "Pending trigger fired for profile $profileId after sync completion")
-            val profile = AdvancedSyncProfileRepository.getInstance(context).getById(profileId)
             if (profile != null && profile.enabled && profile.instantSyncEnabled) {
                 performTrigger(context, profile)
             }
@@ -147,10 +200,21 @@ object InstantSyncWatcher {
         val mask = FileObserver.CREATE or FileObserver.MODIFY or FileObserver.DELETE or
             FileObserver.MOVED_FROM or FileObserver.MOVED_TO
 
-        return object : FileObserver(dir.absolutePath, mask) {
-            override fun onEvent(event: Int, path: String?) {
-                if (path != null) {
-                    onFileEvent(context, profile, dir)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            object : FileObserver(dir, mask or 0x04000000) {
+                override fun onEvent(event: Int, path: String?) {
+                    if (path != null) {
+                        onFileEvent(context, profile, dir)
+                    }
+                }
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            object : FileObserver(dir.absolutePath, mask) {
+                override fun onEvent(event: Int, path: String?) {
+                    if (path != null) {
+                        onFileEvent(context, profile, dir)
+                    }
                 }
             }
         }
@@ -158,7 +222,7 @@ object InstantSyncWatcher {
 
     private fun onFileEvent(context: Context, profile: AdvancedSyncProfile, dir: File) {
         // Debounce: cancel previous pending trigger, schedule new one
-        val handler = debounceHandlers[profile.id] ?: return
+        val handler = debounceHandlers[profile.id] ?: Handler(Looper.getMainLooper()).also { debounceHandlers[profile.id] = it }
         val previous = debounceRunnables[profile.id]
         if (previous != null) {
             handler.removeCallbacks(previous)
@@ -180,7 +244,7 @@ object InstantSyncWatcher {
 
         // Check network constraint
         if (profile.wifiOnly && !isOnWifi(context)) {
-            Log.d(TAG, "Not on WiFi, skipping instant sync for ${profile.name}")
+            Log.d(TAG, "Not on WiFi/Ethernet, skipping instant sync for ${profile.name}")
             return
         }
 
@@ -188,8 +252,6 @@ object InstantSyncWatcher {
 
         // If a run for this profile is already RUNNING or ENQUEUED, record a pending
         // trigger so a follow-up sync fires once the current run completes.
-        // WorkManager's KEEP policy ensures we never stack duplicate requests on top of
-        // each other — at most one queued run exists at any time per profile.
         val infos = try {
             WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWork(workName)
@@ -209,9 +271,8 @@ object InstantSyncWatcher {
             return
         }
 
-        // Enqueue a unique one-shot work request. KEEP means if somehow a request is
-        // already queued (e.g. a race between the isActive check above and this call),
-        // we do not stack another on top of it.
+        // Enqueue a unique one-shot work request. ExistingWorkPolicy.REPLACE ensures any
+        // completed/failed work is cleanly replaced by the new work request.
         val inputData = workDataOf("PROFILE_ID" to profile.id)
         val workRequest = OneTimeWorkRequestBuilder<AdvancedSyncWorker>()
             .setInputData(inputData)
@@ -219,7 +280,7 @@ object InstantSyncWatcher {
 
         WorkManager.getInstance(context).enqueueUniqueWork(
             workName,
-            ExistingWorkPolicy.KEEP,
+            ExistingWorkPolicy.REPLACE,
             workRequest
         )
         Log.d(TAG, "Instant sync triggered for ${profile.name}")
@@ -235,6 +296,7 @@ object InstantSyncWatcher {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return true
         val network = cm.activeNetwork ?: return false
         val caps = cm.getNetworkCapabilities(network) ?: return false
-        return caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+        return caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+            caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
     }
 }

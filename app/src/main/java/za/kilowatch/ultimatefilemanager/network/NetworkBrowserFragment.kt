@@ -96,6 +96,7 @@ class NetworkBrowserFragment : Fragment() {
     private var btnSearchClear: ImageView? = null
     private var isSearchVisible = false
     private var searchJob: Job? = null
+    private var loadJob: Job? = null
 
     private var sortMode = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME
     private var sortOrder = za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.ASC
@@ -902,7 +903,8 @@ class NetworkBrowserFragment : Fragment() {
 
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("NetFragment", "[${hashCode()}] Loading directory: $currentPath")
         progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch(Dispatchers.IO) {
+        loadJob?.cancel()
+        loadJob = lifecycleScope.launch(Dispatchers.IO) {
             val state = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadForPath(ctx, currentPath, share.id)
                 ?: za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.loadGlobal(ctx)
             val hasFolderOverride = za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager.hasFolderOverride(ctx, currentPath, share.id)
@@ -910,43 +912,45 @@ class NetworkBrowserFragment : Fragment() {
 
             try {
                 // Server-mode SMB: intercept at root to discover shares
-                val files = if (share.type == ShareType.SMB && share.isServerMode) {
-                    if (currentPath.isEmpty()) {
-                        discoverServerShares(share)
-                    } else {
-                        // Inside a discovered share
-                        val existingShare = share.remotePath.trimStart('/')
-                        if (existingShare.isNotEmpty()) {
-                            // Already navigated into a share — currentPath is relative to share root
-                            val innerPath = stripSharePrefix(currentPath.trimStart('/'))
-                            SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
+                val files = kotlinx.coroutines.withTimeout(15_000L) {
+                    if (share.type == ShareType.SMB && share.isServerMode) {
+                        if (currentPath.isEmpty()) {
+                            discoverServerShares(share)
                         } else {
-                            // First navigation into a share — extract share name from currentPath
-                            val parts = currentPath.trimStart('/').split("/", limit = 2)
-                            val shareName = parts[0]
-                            val innerPath = parts.getOrElse(1) { "" }
-                            // Update share to the effective copy so all file operations
-                            // (copy, delete, rename, etc.) use the correct remotePath
-                            share = share.copy(remotePath = "/$shareName")
-                            withContext(Dispatchers.Main) {
-                                fileAdapter.share = share
+                            // Inside a discovered share
+                            val existingShare = share.remotePath.trimStart('/')
+                            if (existingShare.isNotEmpty()) {
+                                // Already navigated into a share — currentPath is relative to share root
+                                val innerPath = stripSharePrefix(currentPath.trimStart('/'))
+                                SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
+                            } else {
+                                // First navigation into a share — extract share name from currentPath
+                                val parts = currentPath.trimStart('/').split("/", limit = 2)
+                                val shareName = parts[0]
+                                val innerPath = parts.getOrElse(1) { "" }
+                                // Update share to the effective copy so all file operations
+                                // (copy, delete, rename, etc.) use the correct remotePath
+                                share = share.copy(remotePath = "/$shareName")
+                                withContext(Dispatchers.Main) {
+                                    fileAdapter.share = share
+                                }
+                                SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                             }
-                            SmbShareClient.listFiles(share, innerPath).filter { it.name != ".." }
                         }
-                    }
-                } else {
-                    when (share.type) {
-                        ShareType.SMB          -> SmbShareClient.listFiles(share, currentPath)
-                        ShareType.FTP          -> FtpShareClient.listFiles(share, currentPath)
-                        ShareType.TV           -> TvShareClient.listFiles(share, currentPath)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
-                        ShareType.NFS          -> NfsShareClient.listFiles(share, currentPath)
-                        ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, currentPath)
-                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, currentPath)
-                        ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, currentPath)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, currentPath)
-                        ShareType.WEBDAV       -> WebDavShareClient.listFiles(share, currentPath)
-                        ShareType.DLNA         -> DlnaShareClient.listFiles(share, currentPath)
+                    } else {
+                        when (share.type) {
+                            ShareType.SMB          -> SmbShareClient.listFiles(share, currentPath)
+                            ShareType.FTP          -> FtpShareClient.listFiles(share, currentPath)
+                            ShareType.TV           -> TvShareClient.listFiles(share, currentPath)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, currentPath)
+                            ShareType.NFS          -> NfsShareClient.listFiles(share, currentPath)
+                            ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, currentPath)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, currentPath)
+                            ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, currentPath)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, currentPath)
+                            ShareType.WEBDAV       -> WebDavShareClient.listFiles(share, currentPath)
+                            ShareType.DLNA         -> DlnaShareClient.listFiles(share, currentPath)
+                        }
                     }
                 }
 
@@ -971,10 +975,15 @@ class NetworkBrowserFragment : Fragment() {
                     updateSubtitle()
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
+                if (e is kotlinx.coroutines.CancellationException && e !is kotlinx.coroutines.TimeoutCancellationException) throw e
                 withContext(Dispatchers.Main) {
                     progressBar.visibility = View.GONE
-                    showPremiumSnackbar(getString(R.string.error_loading_emessage, e.message ?: "Unknown error"))
+                    val errMsg = if (e is kotlinx.coroutines.TimeoutCancellationException) {
+                        getString(R.string.network_connection_restored_first)
+                    } else {
+                        getString(R.string.error_loading_emessage, e.message ?: "Unknown error")
+                    }
+                    showPremiumSnackbar(errMsg)
                 }
             }
         }

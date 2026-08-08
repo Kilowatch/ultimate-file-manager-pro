@@ -86,7 +86,7 @@ object SmbSessionPool {
         synchronized(entry) {
             val existing = entry.session
             val idleMs   = if (entry.lastReleasedMs > 0) System.currentTimeMillis() - entry.lastReleasedMs else 0L
-            val isStale  = idleMs > 2_000L // SMB servers often drop idle sessions after 3-5s
+            val isStale  = idleMs > 60_000L // SMB servers often drop idle sessions after 5-15m; 60s avoids unnecessary reconnects
 
             if (existing != null && !isStale && isAlive(existing)) {
                 entry.useCount++
@@ -100,7 +100,7 @@ object SmbSessionPool {
                     },
                     onInvalidate = {
                         synchronized(entry) {
-                            closeEntryQuietly(entry)
+                            closeEntryQuietly(entry, forceDisconnect = true)
                             entry.useCount       = 0
                             entry.lastReleasedMs = 0L
                         }
@@ -111,7 +111,7 @@ object SmbSessionPool {
             // Fresh connection needed. If the slot is empty or the existing connection
             // is dead/stale, we open a new one. Stale entries with useCount=0 are closed.
             if (entry.useCount == 0) {
-                closeEntryQuietly(entry)
+                closeEntryQuietly(entry, forceDisconnect = true)
             }
         }
 
@@ -130,7 +130,7 @@ object SmbSessionPool {
                 val existing = entry.session
                 if (existing != null && isAlive(existing)) {
                     // Another thread established a session while we were connecting; reuse it
-                    closeQuietly(newClient, newConn, newSession)
+                    closeQuietly(newClient, newConn, newSession, forceDisconnect = true)
                     entry.useCount++
                     return PooledConnection(
                         session      = existing,
@@ -142,7 +142,7 @@ object SmbSessionPool {
                         },
                         onInvalidate = {
                             synchronized(entry) {
-                                closeEntryQuietly(entry)
+                                closeEntryQuietly(entry, forceDisconnect = true)
                                 entry.useCount       = 0
                                 entry.lastReleasedMs = 0L
                             }
@@ -166,7 +166,7 @@ object SmbSessionPool {
                     },
                     onInvalidate = {
                         synchronized(entry) {
-                            closeEntryQuietly(entry)
+                            closeEntryQuietly(entry, forceDisconnect = true)
                             entry.useCount       = 0
                             entry.lastReleasedMs = 0L
                         }
@@ -174,7 +174,7 @@ object SmbSessionPool {
                 )
             }
         } catch (e: Exception) {
-            closeQuietly(newClient, newConn, newSession)
+            closeQuietly(newClient, newConn, newSession, forceDisconnect = true)
             throw e
         }
     }
@@ -182,7 +182,7 @@ object SmbSessionPool {
     /** Close every pooled connection immediately. Call from Application.onTerminate(). */
     fun closeAll() {
         pool.values.forEach { entry ->
-            synchronized(entry) { closeEntryQuietly(entry) }
+            synchronized(entry) { closeEntryQuietly(entry, forceDisconnect = true) }
         }
         pool.clear()
     }
@@ -304,17 +304,49 @@ object SmbSessionPool {
 
     private fun isAlive(session: Session): Boolean = try {
         val conn = session.connection
-        conn != null && conn.isConnected
+        if (conn == null || !conn.isConnected) {
+            false
+        } else {
+            // conn.isConnected is a software flag — it only flips false when smbj's
+            // own PacketReader detects a failure.  If the TCP connection was silently
+            // dropped (NAT timeout, Wi-Fi roaming, server closed idle session while
+            // the app was in background), the flag stays true until the next actual
+            // read.  Probe the underlying socket to catch OS-level disconnects.
+            val transport = conn.javaClass.getDeclaredField("transport")
+            transport.isAccessible = true
+            val transportObj = transport.get(conn)
+            if (transportObj != null) {
+                val socketField = transportObj.javaClass.getDeclaredField("socket")
+                socketField.isAccessible = true
+                val socket = socketField.get(transportObj) as? java.net.Socket
+                socket != null && !socket.isClosed && socket.isConnected
+            } else {
+                false
+            }
+        }
     } catch (_: Exception) { false }
 
-    private fun closeQuietly(client: SMBClient?, conn: Connection?, session: Session?) {
-        runCatching { session?.close() }
-        runCatching { conn?.close() }
-        runCatching { client?.close() }
+    private fun closeQuietly(
+        client: SMBClient?,
+        conn: Connection?,
+        session: Session?,
+        forceDisconnect: Boolean = false
+    ) {
+        if (forceDisconnect) {
+            // Force-close the TCP connection socket FIRST to abort blocked socket reads/writes immediately
+            // without waiting for session.close() to attempt an SMB LOGOFF packet over a dead/stale pipe.
+            runCatching { conn?.close() }
+            runCatching { session?.close() }
+            runCatching { client?.close() }
+        } else {
+            runCatching { session?.close() }
+            runCatching { conn?.close() }
+            runCatching { client?.close() }
+        }
     }
 
-    private fun closeEntryQuietly(entry: PoolEntry) {
-        closeQuietly(entry.client, entry.connection, entry.session)
+    private fun closeEntryQuietly(entry: PoolEntry, forceDisconnect: Boolean = true) {
+        closeQuietly(entry.client, entry.connection, entry.session, forceDisconnect = forceDisconnect)
         entry.client     = null
         entry.connection = null
         entry.session    = null

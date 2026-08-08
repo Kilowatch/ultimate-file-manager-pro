@@ -506,7 +506,7 @@ class SearchActivity : AppCompatActivity() {
                             storageId = sid,
                             limit     = PAGE_SIZE,
                             offset    = offset
-                        ).map { File(it.path) }
+                        ).map { File(it.path) }.filter { it.exists() }
                     }
 
                     val unindexedDeferreds = if (append) emptyList() else unindexedRoots.map { root ->

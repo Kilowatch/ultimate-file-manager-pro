@@ -305,6 +305,14 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             Log.e(TAG, "Failed to schedule Recycle Bin cleanup", e)
         }
 
+        // Re-register instant sync watchers for all enabled sync profiles
+        try {
+            za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher.rewatchAll(this)
+            Log.d(TAG, "InstantSyncWatcher watchers initialized")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to initialize InstantSyncWatcher watchers", e)
+        }
+
         // Register network connectivity listener to purge SMB pool on Wi-Fi network transitions.
         // Done on a background thread: registerDefaultNetworkCallback() is a synchronous binder
         // call to the system server (IConnectivityManager.requestNetwork) that can block for

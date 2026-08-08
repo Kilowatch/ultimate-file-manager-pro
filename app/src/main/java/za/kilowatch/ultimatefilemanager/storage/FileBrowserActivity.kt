@@ -42,6 +42,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.FileIndex
 import za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
+import za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -410,6 +411,22 @@ class FileBrowserActivity : AppCompatActivity() {
         loadDirectory(currentDir)
     }
 
+    private val folderChangedReceiver = object : android.content.BroadcastReceiver() {
+        override fun onReceive(context: android.content.Context, intent: android.content.Intent) {
+            val folderPath = intent.getStringExtra(InstantSyncWatcher.EXTRA_FOLDER_PATH) ?: return
+            if (::currentDir.isInitialized) {
+                val currentNorm = InstantSyncWatcher.normalizePath(currentDir.absolutePath)
+                val targetNorm = InstantSyncWatcher.normalizePath(folderPath)
+                if (currentNorm == targetNorm || currentNorm.startsWith("$targetNorm/") || targetNorm.startsWith("$currentNorm/")) {
+                    Log.d("FileBrowserActivity", "folderChangedReceiver: Auto-refreshing $currentNorm")
+                    android.os.Handler(android.os.Looper.getMainLooper()).post {
+                        loadDirectory(currentDir)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         applyLeftHandedFabSettings()
@@ -421,6 +438,21 @@ class FileBrowserActivity : AppCompatActivity() {
         }
         // Show/hide paste FAB based on clipboard state or picker modes
         updatePasteFab()
+        try {
+            androidx.core.content.ContextCompat.registerReceiver(
+                this,
+                folderChangedReceiver,
+                android.content.IntentFilter(InstantSyncWatcher.ACTION_FOLDER_CHANGED),
+                androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        } catch (_: Exception) {}
+    }
+
+    override fun onPause() {
+        super.onPause()
+        try {
+            unregisterReceiver(folderChangedReceiver)
+        } catch (_: Exception) {}
     }
 
     private fun applyLeftHandedFabSettings() {
@@ -925,7 +957,7 @@ class FileBrowserActivity : AppCompatActivity() {
             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
                 .getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
             val files = fileIndices.map { File(it.path) }
-                .filter { isFileVisible(it, showHidden, hiddenPaths) }
+                .filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
 
             withContext(Dispatchers.Main) {
                 if (append) {
@@ -3903,6 +3935,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
                 updatePasteFab()
                 loadDirectory(currentDir)
+                InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
                 
                 if (failCount == 0 && successCount > 0) showPremiumSnackbar(getString(R.string.paste_success, successCount))
                 else if (failCount > 0) showPremiumSnackbar(getString(R.string.paste_error))
@@ -4150,7 +4183,7 @@ class FileBrowserActivity : AppCompatActivity() {
                                     }
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { isFileVisible(it, showHidden, hiddenPaths) }
+                                val files = fileIndices.map { File(it.path) }.filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList {
@@ -4171,6 +4204,11 @@ class FileBrowserActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        // Background sync to ensure index matches filesystem
+        lifecycleScope.launch(Dispatchers.IO) {
+            syncFolderWithIndex(directory)
         }
     }
 
@@ -5244,7 +5282,7 @@ class FileBrowserActivity : AppCompatActivity() {
                         storageId = storageId,
                         folderScope = currentDir.absolutePath
                     )
-                    results.map { File(it.path) }
+                    results.map { File(it.path) }.filter { it.exists() }
                 } else {
                     val lowerQuery = query.lowercase()
                     val found = mutableListOf<File>()

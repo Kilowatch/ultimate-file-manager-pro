@@ -481,9 +481,16 @@ object SmbShareClient {
                 pooled.release()
                 return result
             } catch (e: Exception) {
+                if (e is kotlinx.coroutines.CancellationException) {
+                    pooled.release()
+                    throw e
+                }
                 pooled.invalidate()
                 lastError = e
-                if (attempt < maxAttempts && e !is kotlinx.coroutines.CancellationException) {
+                if (attempt < maxAttempts) {
+                    // Give the pool time to process the invalidation before retrying,
+                    // otherwise borrow() may race and return the same broken entry.
+                    Thread.sleep(150)
                     continue
                 }
                 throw e
