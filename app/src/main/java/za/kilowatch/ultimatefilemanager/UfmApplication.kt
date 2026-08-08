@@ -2,7 +2,14 @@ package za.kilowatch.ultimatefilemanager
 
 import android.app.Application
 import android.content.ComponentCallbacks2
+import android.os.Build
 import android.util.Log
+import coil3.ImageLoader
+import coil3.PlatformContext
+import coil3.SingletonImageLoader
+import coil3.gif.AnimatedImageDecoder
+import coil3.gif.GifDecoder
+import coil3.svg.SvgDecoder
 import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.DynamicColorsOptions
 import za.kilowatch.ultimatefilemanager.settings.MaterialYouPrefs
@@ -10,6 +17,10 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.network.AdbManager
 import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
+import za.kilowatch.ultimatefilemanager.viewer.AnimatedPngDecoder
+import za.kilowatch.ultimatefilemanager.viewer.AvifDecoder
+
+
 
 import za.kilowatch.ultimatefilemanager.network.PairingServer
 import za.kilowatch.ultimatefilemanager.network.SmbSessionPool
@@ -27,7 +38,7 @@ import kotlin.io.path.toPath
  * as long as the application process is running, allowing symmetrical
  * file sharing between paired phones and TVs, plus high-performance file searching.
  */
-class UfmApplication : Application() {
+class UfmApplication : Application(), SingletonImageLoader.Factory {
     companion object {
         lateinit var instance: UfmApplication
             private set
@@ -38,6 +49,25 @@ class UfmApplication : Application() {
 
     private val TAG = "UfmApplication"
     private var pairingServer: PairingServer? = null
+
+    // ── Coil global ImageLoader ───────────────────────────────────────────────────
+    // Providing the singleton here ensures every imgIcon.load() call (e.g. in
+    // FileAdapter, SafPickerActivity) automatically gets AVIF, animated PNG, SVG
+    // and GIF support — not just the image viewer / slideshow activities.
+    override fun newImageLoader(context: PlatformContext): ImageLoader {
+        return ImageLoader.Builder(context)
+            .components {
+                if (Build.VERSION.SDK_INT >= 28) {
+                    add(AnimatedImageDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+                add(AnimatedPngDecoder.Factory())
+                add(AvifDecoder.Factory())
+                add(SvgDecoder.Factory())
+            }
+            .build()
+    }
 
     // Live activities, tracked so a global theme/colour preference change
     // (e.g. toggling Material You) can recreate the WHOLE app — dynamic colors are

@@ -2169,7 +2169,6 @@ class FileBrowserActivity : AppCompatActivity() {
         sheet.currentSortMode = sortMode
         sheet.currentSortOrder = sortOrder
         sheet.currentFilterType = filterType
-        sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(this)
         sheet.activeTags = activeTagsFilter
 
@@ -2184,6 +2183,11 @@ class FileBrowserActivity : AppCompatActivity() {
         } else {
             null
         }
+        sheet.currentShowHidden = if (hasFolderOverride) {
+            activeState?.showHidden ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        } else {
+            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        }
         sheet.currentViewMode = activeState?.viewMode
         sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
@@ -2192,7 +2196,9 @@ class FileBrowserActivity : AppCompatActivity() {
             sortOrder = order
             filterType = filter
             activeTagsFilter = tags
-            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            if (scope == SortFilterSheet.Scope.GLOBAL) {
+                za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            }
 
             val state = SortFilterPreferenceManager.SortFilterState(
                 mode, order, filter, showHidden, groupByDate, tags,
@@ -3522,18 +3528,9 @@ class FileBrowserActivity : AppCompatActivity() {
             } catch (_: Exception) { /* Activity might be finishing — ignore */ }
         }
 
-        // Acquire WakeLock + WifiLock to keep CPU and Wi-Fi alive during screen-off
-        val pm = getSystemService(android.content.Context.POWER_SERVICE) as android.os.PowerManager
-        val wakeLock = pm.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "UFM:FileCopy")
-        val wm = applicationContext.getSystemService(android.content.Context.WIFI_SERVICE) as android.net.wifi.WifiManager
-        val wifiLockMode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q)
-            android.net.wifi.WifiManager.WIFI_MODE_FULL_LOW_LATENCY
-        else
-            @Suppress("DEPRECATION") android.net.wifi.WifiManager.WIFI_MODE_FULL_HIGH_PERF
-        val wifiLock = wm.createWifiLock(wifiLockMode, "UFM:FileCopy")
-        wakeLock.acquire(60 * 60 * 1000L) // 1 hour max
-        wifiLock.acquire()
-
+        // WakeLock + WifiLock are now held by TransferService for the full transfer duration.
+        // The service acquires them in onStartCommand and releases them in onDestroy,
+        // keeping CPU and Wi-Fi alive regardless of Activity lifecycle.
         isTransferring = true
         za.kilowatch.ultimatefilemanager.util.TransferService.start(this)
         transferJob = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO + kotlinx.coroutines.SupervisorJob()).launch {
@@ -3909,8 +3906,6 @@ class FileBrowserActivity : AppCompatActivity() {
             } finally {
                 isTransferring = false
                 za.kilowatch.ultimatefilemanager.util.TransferService.stop(this@FileBrowserActivity)
-                if (wakeLock.isHeld) wakeLock.release()
-                if (wifiLock.isHeld) wifiLock.release()
             }
         }
     }

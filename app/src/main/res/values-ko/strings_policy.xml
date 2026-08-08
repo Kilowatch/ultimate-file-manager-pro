@@ -560,9 +560,6 @@ Google Play 리뷰 라이브러리 — 앱의 인앱 평점 및 리뷰 기능을
 Coil (io.coil-kt.coil3) — 내장 이미지 뷰어에서 애니메이션 이미지(APNG, GIF, 애니메이션 WebP, AVIF, SVG) 렌더링을 지원하는 이미지 로딩 라이브러리입니다. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — Android API 26~30에서 기본 AVIF 지원을 제공하는 AVIF 이미지 디코딩 라이브러리입니다. API 31 이상에서는 내장 ImageDecoder를 사용합니다. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — Android에서 애니메이션 PNG 파일을 디코딩하고 렌더링하는 핵심 라이브러리입니다. (Apache-2.0)
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing (com.google.zxing:core) — 바코드 이미지 처리 라이브러리입�
 </item>
         <item>
 Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (사유)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (독점)
 </item>
     </string-array>
 
@@ -1606,10 +1606,10 @@ Shizuku API를 통한 제한된 시스템 디렉터리에서의 고급 파일 �
 사용자 피드백 수집을 위한 Google Play 인앱 리뷰 API
 </item>
         <item>
-API 26~30에서는 avif-android (org.aomedia.avif.android)를 통해 내장 뷰어에서 AVIF 이미지를 디코딩하여 표시하고, API 31 이상에서는 내장 ImageDecoder를 사용합니다.
+Lottie 라이브러리 v6.3.0 (com.airbnb.android:lottie)을 통해 앱 전체에서 부드러운 UI 애니메이션을 렌더링합니다.
 </item>
         <item>
-Lottie 라이브러리 v6.3.0 (com.airbnb.android:lottie)을 통해 앱 전체에서 부드러운 UI 애니메이션을 렌더링합니다.
+Lottie 라이브러리 v6.3.0(com.airbnb.android:lottie)을 통해 앱 전체에서 부드러운 UI 애니메이션을 렌더링합니다.
 </item>
     </string-array>
 

@@ -438,6 +438,11 @@ class ImageViewerActivity : AppCompatActivity() {
         val request = ImageRequest.Builder(this)
             .data(file)
             .allowHardware(false)
+            .listener(
+                onError = { _, result ->
+                    za.kilowatch.ultimatefilemanager.util.GoRoLog.e("ImageViewerActivity", "Failed to load image: ${file.path}", result.throwable)
+                }
+            )
             .target(
                 onStart = {
                     progressBar.visibility = View.VISIBLE

@@ -560,9 +560,6 @@ BouncyCastle (org.bouncycastle) — مكتبة تشفير لتوليد أزوا�
 Coil (io.coil-kt.coil3) — مكتبة تحميل الصور التي تشغّل عرض الصور المتحركة (APNG وGIF وWebP المتحركة وAVIF وSVG) في عارض الصور المدمج. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — مكتبة فك ترميز صور AVIF توفر دعمًا أصليًا لـ AVIF على Android API 26–30؛ أما API 31+ فيستخدم ImageDecoder المدمج. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — المكتبة الأساسية لفك ترميز وعرض ملفات PNG المتحركة على Android. (Apache-2.0)
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing (com.google.zxing:core) — مكتبة معالجة صور الرموز ا
 </item>
         <item>
 Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة Amazon. (مملوكة)
+</item>
+        <item>
+Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة Amazon. (خاص)
 </item>
     </string-array>
 
@@ -1606,10 +1606,10 @@ Amazon Web Services والموفرون المتوافقون
 واجهة برمجة تطبيقات المراجعات داخل التطبيق من Google Play لجمع ملاحظات المستخدمين
 </item>
         <item>
-يفك ترميز صور AVIF ويعرضها في العارض المدمج عبر avif-android (org.aomedia.avif.android) على API 26–30؛ أما API 31+ فيستخدم ImageDecoder المدمج
+يعرض رسوم واجهة المستخدم السلسة في جميع أنحاء التطبيق عبر مكتبة Lottie الإصدار 6.3.0 (com.airbnb.android:lottie)
 </item>
         <item>
-يعرض رسوم واجهة المستخدم السلسة في جميع أنحاء التطبيق عبر مكتبة Lottie الإصدار 6.3.0 (com.airbnb.android:lottie)
+يعرض حركات واجهة مستخدم سلسة في جميع أنحاء التطبيق عبر مكتبة Lottie الإصدار 6.3.0 (com.airbnb.android:lottie)
 </item>
     </string-array>
 

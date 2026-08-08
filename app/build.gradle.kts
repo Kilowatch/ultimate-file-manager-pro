@@ -93,8 +93,8 @@ val dropboxAppSecret = localProperties.getProperty("DROPBOX_APP_SECRET")
     ?: "YOUR_SECRET_HERE"
 
 // ── Single source of truth — bump these on every release ────────────────────
-val appVersionCode = 222          // Mobile versionCode; TV = this + 1
-val appVersionName = "1.8.1"      // Shown in Play Store listing
+val appVersionCode = 224          // Mobile versionCode; TV = this + 1
+val appVersionName = "1.8.2"      // Shown in Play Store listing
 // ─────────────────────────────────────────────────────────────────────────────
 
 
@@ -415,7 +415,7 @@ dependencies {
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
     implementation(libs.coil.svg)
-    implementation(libs.avif.android) // AVIF decoding fallback for API 26–30 (API 31+ uses ImageDecoder)
+    implementation(libs.avif.coder) // AVIF decoding for API 24–30 (API 31+ uses ImageDecoder); avif-coder by awxkee
     implementation(libs.apng.core)
     // BouncyCastle for certificate generation and SSHD cryptography
     // SEC: upgraded 1.83 → 1.84 to fix CVE-2026-5588 (HIGH — CompositeVerifier signature bypass in bcpkix)

@@ -89,7 +89,7 @@ object FileTypeIconProvider {
         "txt", "log", "md", "markdown", "nfo",
         "ini", "cfg", "conf", "yaml", "yml",
         "toml", "properties", "env", "editorconfig",
-        "gitignore", "gitattributes" ->
+        "gitignore", "gitattributes", "m3u", "m3u8" ->
             R.drawable.ic_file_text
 
         // ── Fonts ─────────────────────────────────────────────────────────────
@@ -237,7 +237,7 @@ object FileTypeIconProvider {
         "txt", "log", "md", "markdown", "nfo",
         "ini", "cfg", "conf", "yaml", "yml",
         "toml", "properties", "env", "editorconfig",
-        "gitignore", "gitattributes" -> "file_text"
+        "gitignore", "gitattributes", "m3u", "m3u8" -> "file_text"
 
         "ttf", "otf", "woff", "woff2", "eot", "pfb", "pfm" -> "file_font"
         "epub", "mobi", "azw", "azw3", "fb2", "djvu", "cbz", "cbr" -> "file_ebook"

@@ -57,6 +57,10 @@ WEBSITE/
 keystore.properties
 signing.properties
 release.properties
+# Mail server settings (.env) written by autofix/save_mail_config.py --
+# may later hold secrets, so never commit it.
+.env
+*.env
 
 # ── 🔴 Non-FOSS: Compiled Release & Distribution Files ───────
 app/store/

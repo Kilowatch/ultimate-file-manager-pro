@@ -2310,7 +2310,6 @@ class FileBrowserFragment : Fragment() {
         sheet.currentSortMode = sortMode
         sheet.currentSortOrder = sortOrder
         sheet.currentFilterType = filterType
-        sheet.currentShowHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
         sheet.currentGroupByDate = za.kilowatch.ultimatefilemanager.settings.DateGroupPreferenceManager.isEnabled(ctx)
         sheet.activeTags = activeTagsFilter
 
@@ -2325,6 +2324,11 @@ class FileBrowserFragment : Fragment() {
         } else {
             null
         }
+        sheet.currentShowHidden = if (hasFolderOverride) {
+            activeState?.showHidden ?: za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        } else {
+            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
+        }
         sheet.currentViewMode = activeState?.viewMode
         sheet.currentIsRecursive = activeState?.isRecursive ?: false
 
@@ -2333,7 +2337,9 @@ class FileBrowserFragment : Fragment() {
             sortOrder = order
             filterType = filter
             activeTagsFilter = tags
-            za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            if (scope == SortFilterSheet.Scope.GLOBAL) {
+                za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled = showHidden
+            }
 
             val state = SortFilterPreferenceManager.SortFilterState(
                 mode, order, filter, showHidden, groupByDate, tags,

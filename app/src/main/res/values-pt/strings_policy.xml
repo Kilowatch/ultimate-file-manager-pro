@@ -560,9 +560,6 @@ Google Play Review Library — alimenta a funcionalidade de avaliação e análi
 Coil (io.coil-kt.coil3) — biblioteca de carregamento de imagens que alimenta a renderização de imagens animadas (APNG, GIF, WebP animado, AVIF, SVG) no visualizador de imagens integrado. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — biblioteca de decodificação de imagens AVIF que fornece suporte nativo a AVIF nas APIs 26–30; API 31+ usa o ImageDecoder integrado. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — biblioteca principal para decodificar e renderizar arquivos PNG animados no Android. (Apache-2.0)
 </item>
         <item>
@@ -597,6 +594,9 @@ AndroidX Browser (androidx.browser) — suporte ao Chrome Custom Tabs para auten
 </item>
         <item>
 ZXing (com.google.zxing:core) — biblioteca de processamento de imagens de código de barras. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
 </item>
         <item>
 Amazon Appstore SDK — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
@@ -1608,10 +1608,10 @@ Recursos do Gerenciador de Aplicativos e do Debloater — lê nomes, versões, t
 API Google Play In-App Review para coletar feedback dos usuários
 </item>
         <item>
-Decodifica e exibe imagens AVIF no visualizador integrado via avif-android (org.aomedia.avif.android) nas APIs 26–30; API 31+ usa o ImageDecoder integrado
+Renderiza animações suaves de interface em todo o aplicativo por meio da biblioteca Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
         <item>
-Renderiza animações suaves de interface em todo o aplicativo por meio da biblioteca Lottie v6.3.0 (com.airbnb.android:lottie)
+Renderiza animações de UI suaves em todo o aplicativo por meio da biblioteca Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
     </string-array>
 

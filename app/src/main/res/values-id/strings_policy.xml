@@ -560,9 +560,6 @@ Google Play Review Library — mendukung fungsionalitas penilaian dan ulasan dal
 Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang mendukung rendering gambar animasi (APNG, GIF, WebP animasi, AVIF, SVG) di penampil gambar bawaan. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — pustaka decoding gambar AVIF yang menyediakan dukungan AVIF asli di Android API 26–30; API 31+ menggunakan ImageDecoder bawaan. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk decoding dan rendering file PNG animasi di Android. (Apache-2.0)
 </item>
         <item>
@@ -597,6 +594,9 @@ AndroidX Browser (androidx.browser) — dukungan Chrome Custom Tabs untuk autent
 </item>
         <item>
 ZXing (com.google.zxing:core) — pustaka pemrosesan gambar barcode. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
 </item>
         <item>
 Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
@@ -1606,10 +1606,10 @@ Fitur Manajer Aplikasi dan Debloater — membaca nama paket, versi, ukuran, dan 
 Google Play In-App Review API untuk mengumpulkan umpan balik pengguna
 </item>
         <item>
-Mendekode dan menampilkan gambar AVIF di penampil bawaan melalui avif-android (org.aomedia.avif.android) di API 26–30; API 31+ menggunakan ImageDecoder bawaan
+Merender animasi UI yang mulus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
         <item>
-Merender animasi UI yang mulus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)
+Merender animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
     </string-array>
 

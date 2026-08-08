@@ -369,7 +369,7 @@ class SortFilterSheet : BottomSheetDialogFragment() {
         val TEXT_EXTENSIONS = setOf(
             "txt", "log", "ini", "cfg", "conf", "json", "xml", "yaml", "yml", "md",
             "sh", "bat", "py", "js", "html", "css", "java", "kt", "c", "cpp", "h",
-            "sql", "gradle", "properties", "csv", "rtf"
+            "sql", "gradle", "properties", "csv", "rtf", "m3u", "m3u8"
         )
         val ARCHIVE_EXTENSIONS = setOf("zip")
 

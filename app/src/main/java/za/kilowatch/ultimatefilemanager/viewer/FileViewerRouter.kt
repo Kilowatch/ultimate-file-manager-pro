@@ -63,6 +63,8 @@ object FileViewerRouter {
         "go", "rs", "rlib", "swift", "swiftmodule", "dart",
         // Data
         "sql", "ddl", "dml", "pks", "pkb", "fnc", "prc", "trg", "vw",
+        // Playlists / Media lists
+        "m3u", "m3u8",
         // Docs
         "md", "markdown", "mdown", "mdwn"
     )

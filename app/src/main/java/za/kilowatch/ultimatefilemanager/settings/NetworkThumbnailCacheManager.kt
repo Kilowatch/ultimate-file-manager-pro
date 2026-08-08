@@ -422,30 +422,25 @@ class NetworkThumbnailCacheManager(private val context: Context) {
 
     private fun decodeAvifBitmap(bytes: ByteArray): Bitmap? {
         if (bytes.isEmpty()) return null
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            try {
                 val source = android.graphics.ImageDecoder.createSource(java.nio.ByteBuffer.wrap(bytes))
-                android.graphics.ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                return android.graphics.ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
                     decoder.allocator = android.graphics.ImageDecoder.ALLOCATOR_SOFTWARE
                 }
-            } else {
-                val byteBuffer = java.nio.ByteBuffer.wrap(bytes)
-                val info = org.aomedia.avif.android.AvifDecoder.Info()
-                if (!org.aomedia.avif.android.AvifDecoder.getInfo(byteBuffer, bytes.size, info)) return null
-                byteBuffer.rewind()
-                val decoder = org.aomedia.avif.android.AvifDecoder.create(byteBuffer, bytes.size) ?: return null
-                try {
-                    val bmp = Bitmap.createBitmap(info.width, info.height, Bitmap.Config.ARGB_8888)
-                    decoder.nextFrame(bmp)
-                    bmp
-                } catch (e: Exception) {
-                    null
-                } finally {
-                    decoder.release()
-                }
+            } catch (t: Throwable) {
+                GoRoLog.e("UFM_CACHE", "System ImageDecoder failed for AVIF thumbnail, falling back to HeifCoder", t)
             }
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return null
+        return try {
+            com.radzivon.bartoshyk.avif.coder.HeifCoder().decodeSampled(
+                bytes, THUMB_MAX_PX, THUMB_MAX_PX,
+                com.radzivon.bartoshyk.avif.coder.PreferredColorConfig.RGBA_8888
+            )
         } catch (e: Throwable) {
-            GoRoLog.e("UFM_CACHE", "Failed to decode AVIF bitmap", e)
+            GoRoLog.e("UFM_CACHE", "Failed to decode AVIF bitmap with HeifCoder", e)
             null
         }
     }

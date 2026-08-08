@@ -221,7 +221,7 @@
         <item>Google Play Billing Library — processes optional in-app tip purchases; governed by Google Play\'s Privacy Policy. (Apache-2.0)</item>
         <item>Google Play Review Library — powers the app\'s in-app rating and review functionality. (Apache-2.0)</item>
         <item>Coil (io.coil-kt.coil3) — image loading library that powers animated image rendering (APNG, GIF, animated WebP, AVIF, SVG) in the built-in image viewer. (Apache-2.0)</item>
-        <item>avif-android (org.aomedia.avif.android) — AVIF image decoding library providing native AVIF support on Android API 26–30; API 31+ uses the built-in ImageDecoder. (BSD-2-Clause)</item>
+        <item>avif-coder (io.github.awxkee) — AVIF image decoding library providing native AVIF support on Android API 24–30; API 31+ uses the built-in ImageDecoder. (Apache-2.0)</item>
         <item>APNG4Android (com.github.penfeizhou.android.animation) — core library for decoding and rendering animated PNG files on Android. (Apache-2.0)</item>
         <item>Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — libraries enabling elevated file system access via Shizuku or Shevery Manager apps. (Apache-2.0)</item>
         <item>ViewPager2 — Android library for sliding between fragments and layouts. (Apache-2.0)</item>
@@ -661,7 +661,7 @@
         <item>Indexes file metadata locally for fast search</item>
         <item>App Manager and Debloater features — reads installed package names, versions, sizes, and system/user flags on-device only. Not uploaded or shared. The Debloater cross-references package names locally against a publicly available debloat reference list.</item>
         <item>Google Play In-App Review API for collecting user feedback</item>
-        <item>Decodes and displays AVIF images in the built-in viewer via avif-android (org.aomedia.avif.android) on API 26–30; API 31+ uses the built-in ImageDecoder</item>
+        <item>Decodes and displays AVIF images in the built-in viewer via avif-coder (io.github.awxkee) on API 24–30; API 31+ uses the built-in ImageDecoder</item>
         <item>Renders smooth UI animations throughout the app via the Lottie library v6.3.0 (com.airbnb.android:lottie)</item>
     </string-array>
 

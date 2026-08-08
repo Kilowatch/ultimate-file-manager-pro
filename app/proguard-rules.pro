@@ -353,10 +353,14 @@
 -dontwarn androidx.media3.exoplayer.dash.**
 -dontwarn androidx.media3.exoplayer.rtsp.**
 
-# ── AVIF Android JNI Decoder (org.aomedia.avif.android) ─────────────────
--keep class org.aomedia.avif.android.** { *; }
--keepclassmembers class org.aomedia.avif.android.** {
+# ── avif-coder (io.github.awxkee) — AVIF/HEIF decoder for API 24–30 ─────────
+# HeifCoder is accessed directly from AvifDecoder.kt and NetworkThumbnailCacheManager.kt.
+# Its JNI bridge (libavif + libdav1d native layer) must not be stripped or renamed.
+-keep class com.radzivon.bartoshyk.avif.coder.** { *; }
+-keepclassmembers class com.radzivon.bartoshyk.avif.coder.** {
     native <methods>;
     *;
 }
+-dontwarn com.radzivon.bartoshyk.avif.coder.**
+# The old avif-android library has been removed; suppress any stale references.
 -dontwarn org.aomedia.avif.android.**

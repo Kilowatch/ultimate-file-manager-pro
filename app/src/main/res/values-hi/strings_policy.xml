@@ -560,9 +560,6 @@ Google Play समीक्षा लाइब्रेरी — ऐप की 
 Coil (io.coil-kt.coil3) — छवि लोडिंग लाइब्रेरी जो अंतर्निहित छवि व्यूअर में एनिमेटेड छवि रेंडरिंग (APNG, GIF, एनिमेटेड WebP, AVIF, SVG) को शक्ति देती है। (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — AVIF छवि डिकोडिंग लाइब्रेरी जो Android API 26–30 पर मूल AVIF समर्थन प्रदान करती है; API 31+ अंतर्निहित ImageDecoder का उपयोग करता है। (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — Android पर एनिमेटेड PNG फ़ाइलों को डिकोड और रेंडर करने के लिए कोर लाइब्रेरी। (Apache-2.0)
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing (com.google.zxing:core) — बारकोड छवि प्रसं�
 </item>
         <item>
 Amazon Appstore SDK — Amazon डिवाइसों पर वैकल्पिक इन-ऐप टिप खरीदारी की प्रक्रिया करता है। (मालिकाना)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon उपकरणों पर वैकल्पिक इन-ऐप टिप खरीदारी को संसाधित करता है। (मालिकाना)
 </item>
     </string-array>
 
@@ -1608,10 +1608,10 @@ Shizuku API के माध्यम से प्रतिबंधित स�
 उपयोगकर्ता प्रतिक्रिया एकत्र करने के लिए Google Play इन-ऐप समीक्षा API
 </item>
         <item>
-अंतर्निहित व्यूअर में API 26–30 पर avif-android (org.aomedia.avif.android) के माध्यम से AVIF छवियों को डिकोड और प्रदर्शित करता है; API 31+ अंतर्निहित ImageDecoder का उपयोग करता है
+Lottie लाइब्रेरी v6.3.0 (com.airbnb.android:lottie) के माध्यम से पूरे ऐप में स्मूथ UI एनिमेशन रेंडर करता है
 </item>
         <item>
-Lottie लाइब्रेरी v6.3.0 (com.airbnb.android:lottie) के माध्यम से पूरे ऐप में स्मूथ UI एनिमेशन रेंडर करता है
+Lottie लाइब्रेरी v6.3.0 (com.airbnb.android:lottie) के माध्यम से पूरे ऐप में सुगम UI एनिमेशन प्रस्तुत करता है।
 </item>
     </string-array>
 

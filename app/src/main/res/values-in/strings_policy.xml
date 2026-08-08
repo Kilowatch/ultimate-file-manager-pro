@@ -560,9 +560,6 @@ Google Play Review Library — menggerakkan fungsionalitas rating dan ulasan dal
 Coil (io.coil-kt.coil3) — pustaka pemuatan gambar yang menggerakkan rendering gambar animasi (APNG, GIF, WebP animasi, AVIF, SVG) di penampil gambar bawaan. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — pustaka dekode gambar AVIF yang menyediakan dukungan AVIF native di Android API 26–30; API 31+ menggunakan ImageDecoder bawaan. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — pustaka inti untuk mendekode dan merender file PNG animasi di Android. (Apache-2.0)
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing (com.google.zxing:core) — pustaka pemrosesan gambar barcode. (Apache-2.0
 </item>
         <item>
 Amazon Appstore SDK — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
+</item>
+        <item>
+SDK Amazon Appstore — memproses pembelian tip opsional dalam aplikasi di perangkat Amazon. (Proprietary)
 </item>
     </string-array>
 
@@ -1608,7 +1608,7 @@ Fitur Manajer Aplikasi dan Debloater — membaca nama paket terpasang, versi, uk
 Google Play In-App Review API untuk mengumpulkan umpan balik pengguna
 </item>
         <item>
-Mendekode dan menampilkan gambar AVIF di penampil bawaan melalui avif-android (org.aomedia.avif.android) pada API 26–30; API 31+ menggunakan ImageDecoder bawaan
+Merender animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)
 </item>
         <item>
 Merender animasi UI yang halus di seluruh aplikasi melalui pustaka Lottie v6.3.0 (com.airbnb.android:lottie)

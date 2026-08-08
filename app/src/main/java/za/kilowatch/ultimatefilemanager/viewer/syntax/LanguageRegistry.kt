@@ -67,6 +67,18 @@ object LanguageRegistry {
         isDotenv = true
     )
 
+    val M3U = LanguageDef(
+        name = "M3U Playlist",
+        keywords = setOf(
+            "#EXTM3U", "#EXTINF", "#EXT-X-STREAM-INF", "#EXT-X-TARGETDURATION",
+            "#EXT-X-MEDIA-SEQUENCE", "#EXT-X-KEY", "#EXT-X-PROGRAM-DATE-TIME",
+            "#EXT-X-ALLOW-CACHE", "#EXT-X-ENDLIST", "#EXT-X-VERSION",
+            "#EXT-X-INDEPENDENT-SEGMENTS", "#EXT-X-MEDIA"
+        ),
+        lineComments = listOf("#"),
+        stringDelimiters = listOf("\"")
+    )
+
     // ── Markup languages ───────────────────────────────────────────────
 
     val XML = LanguageDef(
@@ -1736,6 +1748,7 @@ object LanguageRegistry {
         putExt(Swift,          "swift", "swiftmodule")
         putExt(Dart,           "dart")
         putExt(Dockerfile,     "dockerfile", "containerfile")
+        putExt(M3U,            "m3u", "m3u8")
     }.also { map ->
         // Add lowercase-only aliases for all registered extensions
         // (map is immutable after .also {} — this is informational)

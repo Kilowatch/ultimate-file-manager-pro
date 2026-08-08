@@ -560,9 +560,6 @@ Google Play Review Library — アプリのアプリ内評価・レビュー機�
 Coil（io.coil-kt.coil3） — 内蔵イメージビューアでアニメーション画像（APNG、GIF、アニメーションWebP、AVIF、SVG）のレンダリングを支える画像読み込みライブラリです。（Apache-2.0）
 </item>
         <item>
-avif-android（org.aomedia.avif.android） — Android API 26～30でネイティブAVIFサポートを提供するAVIF画像デコードライブラリです。API 31以上では内蔵のImageDecoderを使用します。（BSD-2-Clause）
-</item>
-        <item>
 APNG4Android（com.github.penfeizhou.android.animation） — AndroidでアニメーションPNGファイルをデコードおよびレンダリングするためのコアライブラリです。（Apache-2.0）
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing（com.google.zxing:core） — バーコード画像処理ライブラリ�
 </item>
         <item>
 Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ購入を処理します。（Proprietary）
+</item>
+        <item>
+Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ購入を処理します。(プロプライエタリ)
 </item>
     </string-array>
 
@@ -1606,10 +1606,10 @@ Shizuku API経由での制限されたシステムディレクトリの高度な
 ユーザーフィードバック収集のためのGoogle Playアプリ内レビューAPI
 </item>
         <item>
-API 26～30ではavif-android（org.aomedia.avif.android）経由で内蔵ビューアにAVIF画像をデコードして表示します。API 31以上では内蔵のImageDecoderを使用します。
+Lottieライブラリv6.3.0（com.airbnb.android:lottie）により、アプリ全体でスムーズなUIアニメーションをレンダリングします。
 </item>
         <item>
-Lottieライブラリv6.3.0（com.airbnb.android:lottie）により、アプリ全体でスムーズなUIアニメーションをレンダリングします。
+Lottieライブラリv6.3.0 (com.airbnb.android:lottie) を使用して、アプリ全体で滑らかなUIアニメーションを描画します。
 </item>
     </string-array>
 

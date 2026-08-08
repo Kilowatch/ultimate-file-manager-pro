@@ -560,9 +560,6 @@ Google Play İnceleme Kitaplığı — uygulamanın uygulama içi puanlama ve in
 Coil (io.coil-kt.coil3) — yerleşik görüntü görüntüleyicide animasyonlu görüntü oluşturmayı (APNG, GIF, animasyonlu WebP, AVIF, SVG) sağlayan görüntü yükleme kitaplığı. (Apache-2.0)
 </item>
         <item>
-avif-android (org.aomedia.avif.android) — Android API 26–30\\\'da yerel AVIF desteği sağlayan AVIF görüntü kod çözme kitaplığı; API 31+ yerleşik ImageDecoder\\\'ı kullanır. (BSD-2-Clause)
-</item>
-        <item>
 APNG4Android (com.github.penfeizhou.android.animation) — Android\\\'de animasyonlu PNG dosyalarını kod çözmek ve işlemek için temel kitaplık. (Apache-2.0)
 </item>
         <item>
@@ -600,6 +597,9 @@ ZXing (com.google.zxing:core) — barkod görüntü işleme kitaplığı. (Apach
 </item>
         <item>
 Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın almalarını işler. (Özel)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Tescilli)
 </item>
     </string-array>
 
@@ -1608,10 +1608,10 @@ Uygulama Yöneticisi ve Debloater özellikleri — kurulu paket adlarını, sür
 Kullanıcı geri bildirimi toplamak için Google Play Uygulama İçi İnceleme API\\\'si
 </item>
         <item>
-API 26–30\\\'da avif-android (org.aomedia.avif.android) aracılığıyla yerleşik görüntüleyicide AVIF görüntülerini kodlar ve görüntüler; API 31+ yerleşik ImageDecoder\\\'ı kullanır
+Lottie kitaplığı v6.3.0 (com.airbnb.android:lottie) aracılığıyla uygulama genelinde akıcı arayüz animasyonları oluşturur
 </item>
         <item>
-Lottie kitaplığı v6.3.0 (com.airbnb.android:lottie) aracılığıyla uygulama genelinde akıcı arayüz animasyonları oluşturur
+Lottie kütüphanesi v6.3.0 (com.airbnb.android:lottie) ile uygulama genelinde akıcı arayüz animasyonları oluşturur.
 </item>
     </string-array>
 

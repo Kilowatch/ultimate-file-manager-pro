@@ -6,8 +6,11 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import za.kilowatch.ultimatefilemanager.R
 
@@ -19,13 +22,23 @@ import za.kilowatch.ultimatefilemanager.R
  * shows a persistent notification ("Transferring files…") and is started/stopped
  * around every paste operation.
  *
- * No actual work is done here — the transfer runs in the Activity's coroutine.
+ * The service also holds a [PowerManager.PARTIAL_WAKE_LOCK] and a
+ * [WifiManager.WifiLock] for the full duration of the transfer.  A foreground
+ * service alone only prevents process-death — without a PARTIAL_WAKE_LOCK the
+ * CPU can still be suspended by the power manager when the screen turns off,
+ * which interrupts active socket I/O on NAS transfers.
+ *
+ * No actual I/O work is done here — the transfer runs in the Activity's coroutine.
  */
 class TransferService : Service() {
 
     companion object {
+        private const val TAG = "TransferService"
         private const val CHANNEL_ID = "ufm_transfer_channel"
         private const val NOTIFICATION_ID = 9901
+
+        /** 2-hour safety cap — any transfer running longer will have its lock released. */
+        private const val WAKE_LOCK_TIMEOUT_MS = 2 * 60 * 60 * 1000L
 
         const val EXTRA_TITLE = "extra_title"
         const val EXTRA_TEXT = "extra_text"
@@ -46,6 +59,9 @@ class TransferService : Service() {
             context.stopService(Intent(context, TransferService::class.java))
         }
     }
+
+    private var wakeLock: PowerManager.WakeLock? = null
+    private var wifiLock: WifiManager.WifiLock? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -71,8 +87,67 @@ class TransferService : Service() {
         } else {
             startForeground(NOTIFICATION_ID, notification)
         }
-        return START_NOT_STICKY
+
+        acquireLocks()
+
+        // START_REDELIVER_INTENT: if the process is killed mid-transfer Android will
+        // restart the service and re-deliver the last intent, keeping the notification
+        // and locks alive again until the Activity's finally-block calls stop().
+        return START_REDELIVER_INTENT
     }
+
+    override fun onDestroy() {
+        releaseLocks()
+        super.onDestroy()
+    }
+
+    // ── Lock management ───────────────────────────────────────────────────────
+
+    private fun acquireLocks() {
+        // PARTIAL_WAKE_LOCK: keeps the CPU running even when the screen is off.
+        // This is the critical piece that prevents TCP socket interruption on NAS copies.
+        if (wakeLock == null) {
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "UFM:TransferService").also {
+                it.acquire(WAKE_LOCK_TIMEOUT_MS)
+                Log.d(TAG, "PARTIAL_WAKE_LOCK acquired (timeout ${WAKE_LOCK_TIMEOUT_MS / 1000}s)")
+            }
+        }
+
+        // WifiLock: prevents the Wi-Fi radio from entering low-power mode,
+        // which would throttle or drop active NAS socket connections.
+        // Held unconditionally across all share types (SMB, FTP, NFS, SSH, WebDAV, cloud, etc.)
+        if (wifiLock == null) {
+            val wm = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                WifiManager.WIFI_MODE_FULL_LOW_LATENCY
+            else
+                @Suppress("DEPRECATION") WifiManager.WIFI_MODE_FULL_HIGH_PERF
+            wifiLock = wm.createWifiLock(mode, "UFM:TransferService").also {
+                it.acquire()
+                Log.d(TAG, "WifiLock acquired (mode=$mode)")
+            }
+        }
+    }
+
+    private fun releaseLocks() {
+        wakeLock?.let {
+            if (it.isHeld) {
+                it.release()
+                Log.d(TAG, "PARTIAL_WAKE_LOCK released")
+            }
+            wakeLock = null
+        }
+        wifiLock?.let {
+            if (it.isHeld) {
+                it.release()
+                Log.d(TAG, "WifiLock released")
+            }
+            wifiLock = null
+        }
+    }
+
+    // ── Notification channel ──────────────────────────────────────────────────
 
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

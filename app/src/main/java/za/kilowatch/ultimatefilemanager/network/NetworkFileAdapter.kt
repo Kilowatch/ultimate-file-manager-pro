@@ -670,7 +670,11 @@ class NetworkFileAdapter(
                 val fileTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
                 imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(fileTintColor)
                 if (!isGrid) {
-                    val sizeStr = Formatter.formatFileSize(context, file.size)
+                    val sizeStr = if (file.size == SmbShareClient.SIZE_UNKNOWN_SENTINEL) {
+                        Formatter.formatFileSize(context, 0L)
+                    } else {
+                        Formatter.formatFileSize(context, file.size)
+                    }
                     val dateStr = if (file.lastModified > 0) dateFormat.format(Date(file.lastModified)) else ""
                     txtDetails.text = if (dateStr.isNotEmpty()) "$sizeStr • $dateStr" else sizeStr
                 }

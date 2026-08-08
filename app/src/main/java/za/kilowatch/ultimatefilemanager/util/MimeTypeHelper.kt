@@ -26,6 +26,8 @@ object MimeTypeHelper {
         "heic"          -> "image/heic"
         "heif"          -> "image/heif"
         "jxl"           -> "image/jxl"   // future-proofing
+        "yaml", "yml"   -> "text/yaml"
+        "m3u", "m3u8"   -> "audio/x-mpegurl"
         else            -> "application/octet-stream"
     }
 }
