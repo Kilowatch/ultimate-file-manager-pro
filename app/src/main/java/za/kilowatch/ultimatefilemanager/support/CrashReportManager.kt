@@ -1446,7 +1446,62 @@ object CrashReportManager {
                             } == true
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall) {
+                    // 28. The main thread is sampled inside the frame-skip logging
+                    //     that a device-vendor (OEM) ROM injects into the
+                    //     frame-rendering pipeline — e.g. TECNO/Transsion's
+                    //     `com.transsion.hubcore.view.TranChoreographerImpl.
+                    //     skippedFrames` (the same Choreographer hook as filter 21,
+                    //     but its pure frame-skip LOGGING variant instead of the
+                    //     binder service-lookup variant) -> `android.util.Slog.e`
+                    //     -> `android.util.Log.println_native` (top frame), under
+                    //     `android.view.Choreographer.doFrame` ->
+                    //     `Choreographer$FrameDisplayEventReceiver.run` (a vsync
+                    //     frame callback freshly dispatched to the main looper by
+                    //     `Handler.handleCallback`) (reported from a TECNO TECNO
+                    //     KJ5, SDK 33, app 1.7.8-FOSS — the same device and
+                    //     session family that produced the already-filtered
+                    //     `ne2.run`, `SpannableStringBuilder.*`, `MeasuredText`/
+                    //     `nDrawTextRun` and `View.invalidate` reports). The
+                    //     sampled frame is the vendor hook emitting the platform's
+                    //     standard "Skipped N frames" warning: `Log.println_native`/
+                    //     `Slog.e` is a fast log-buffer write (µs-scale) that
+                    //     cannot by itself occupy the main thread for 5 s, and a
+                    //     thread genuinely parked inside a >5 s block cannot be
+                    //     processing a freshly dispatched vsync frame callback at
+                    //     sample time — so the >5 s block occurred in a PREVIOUS
+                    //     main-looper message and this sample is the post-stall
+                    //     first frame after recovery, the same family as filters
+                    //     10/20/21/22. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames, and the
+                    //     vendor hook's class names (`com.transsion.*`, injected
+                    //     by the TECNO ROM, not part of this app) are not
+                    //     platform-prefixed, so `isPureFrameworkStack` is false
+                    //     even though the wait is the same system-side class. A
+                    //     genuine freeze keeps the main thread inside app business
+                    //     logic — an app frame on the stack, or a top frame that
+                    //     is not a Log/Slog emission under the vendor's
+                    //     `skippedFrames` (e.g. a lock, file I/O, or binder
+                    //     frame) — and is still reported.
+                    val isVendorFrameSkipLoggingStall =
+                        (
+                            (topFrame?.className == "android.util.Log" &&
+                                (topFrame?.methodName == "println_native" ||
+                                 topFrame?.methodName == "println")) ||
+                            (topFrame?.className == "android.util.Slog" && topFrame?.methodName == "e")
+                        ) &&
+                        mainStackTrace.any {
+                            it.className == "com.transsion.hubcore.view.TranChoreographerImpl" &&
+                            it.methodName == "skippedFrames"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" && it.methodName == "handleCallback"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
