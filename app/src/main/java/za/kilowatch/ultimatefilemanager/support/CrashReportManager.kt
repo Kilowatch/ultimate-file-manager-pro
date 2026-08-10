@@ -1544,7 +1544,42 @@ object CrashReportManager {
                             it.className == "android.app.Activity" && it.methodName == "dispatchActivityResumed"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall) {
+                    // 30. The main thread is sampled while the framework dispatches the
+                    //     Activity-resumed lifecycle event through an Activity's own
+                    //     `onPostResume` hook during a normal Activity resume — top frame
+                    //     `android.app.Activity.onPostResume` (the platform's empty post-resume
+                    //     hook), reached from a non-platform (R8-obfuscated app/library) frame
+                    //     — the app Activity's `onPostResume` override calling super — under
+                    //     `android.app.Activity.performResume` -> `ActivityThread.
+                    //     performResumeActivity` -> `handleResumeActivity` ->
+                    //     `servertransaction.ResumeActivityItem.execute` (reported from a
+                    //     CADENA CADENA PRO W2 CSB-243, SDK 30, app 1.8.1-FOSS). The currently
+                    //     executing frame is the framework's empty `onPostResume` hook, which
+                    //     cannot by itself occupy the main thread for 5 s; the sample caught
+                    //     the app Activity's `onPostResume` override inside its `super()` call,
+                    //     before any of the app's own post-super work could run — so the >5 s
+                    //     block is device-side slowness / CPU starvation on a low-end device
+                    //     (this report's `ufm-startup-io` is RUNNABLE doing MediaStore
+                    //     class-init and `ufm-pairing-init` is WAITING on a keystore lookup,
+                    //     while the watchdog's own `ufm-anr-watchdog` sampling thread is
+                    //     RUNNABLE) or a post-stall sample of the backlog the main looper
+                    //     drains after a genuine stall. A genuine freeze keeps the main thread
+                    //     inside blocking work — the top frame is NOT
+                    //     `android.app.Activity.onPostResume` (it is a deeper frame such as a
+                    //     lock, file I/O, binder call, or the Activity's own post-super work
+                    //     executing after `super.onPostResume()` returned) — and is still
+                    //     reported.
+                    val isActivityPostResumeLifecycleDispatchStall =
+                        topFrame?.className == "android.app.Activity" &&
+                        topFrame?.methodName == "onPostResume" &&
+                        mainStackTrace.getOrNull(1)?.let {
+                            PLATFORM_PREFIXES.none { prefix -> it.className.startsWith(prefix) }
+                        } == true &&
+                        mainStackTrace.any {
+                            it.className == "android.app.Activity" && it.methodName == "performResume"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
