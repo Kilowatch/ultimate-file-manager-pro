@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="10dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/selector_tv_list_item">
+
+    <TextView
+        android:id="@+id/txtSeqNum"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:text="#1"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/tv_button_focused_yellow"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgThumbnail"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="14dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.Corner.Small"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/tv_text_primary"
+            android:maxLines="1"
+            android:ellipsize="middle"/>
+
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/tv_text_secondary"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgDragHandle"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_sort"
+        app:tint="@color/tv_text_secondary"
+        android:contentDescription="Reorder handle"/>
+
+</LinearLayout>

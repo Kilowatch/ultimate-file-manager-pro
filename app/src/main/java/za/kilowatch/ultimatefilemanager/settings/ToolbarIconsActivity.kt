@@ -93,7 +93,8 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_duplicate_finder, R.string.action_duplicate_finder, ToolbarIconsPreferenceManager.KEY_DUPLICATE_FINDER),
             IconItem(R.drawable.ic_folder_large_files, R.string.action_large_files_finder, ToolbarIconsPreferenceManager.KEY_LARGE_FILES_FINDER),
             IconItem(R.drawable.ic_wallpaper_home, R.string.action_set_home_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_HOME_WALLPAPER),
-            IconItem(R.drawable.ic_wallpaper_lock, R.string.action_set_lock_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_LOCK_WALLPAPER)
+            IconItem(R.drawable.ic_wallpaper_lock, R.string.action_set_lock_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_LOCK_WALLPAPER),
+            IconItem(R.drawable.ic_gif, R.string.action_create_gif, ToolbarIconsPreferenceManager.KEY_CREATE_GIF)
         )
 
 
@@ -126,6 +127,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 ToolbarIconsPreferenceManager.KEY_SELECT_ALL -> "toolbar_select_all"
                 ToolbarIconsPreferenceManager.KEY_COMPRESS -> "toolbar_compress"
                 ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS -> "toolbar_image_compress"
+                ToolbarIconsPreferenceManager.KEY_CREATE_GIF -> "toolbar_create_gif"
                 ToolbarIconsPreferenceManager.KEY_RETRIGGER_THUMBNAILS -> "toolbar_retrigger_thumbnails"
                 ToolbarIconsPreferenceManager.KEY_DELETE -> "toolbar_delete"
                 ToolbarIconsPreferenceManager.KEY_PIN -> "toolbar_pin"

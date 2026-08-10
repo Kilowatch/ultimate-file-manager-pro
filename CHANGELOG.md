@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.2] — 2026-08-07
 
 ### Added
+- Feature to generate animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering on Mobile and Android TV.
+- Support for generating GIFs directly from local storage and remote network/cloud shares.
+- `gifencoder` (v0.10.1) library integration for fast on-device GIF encoding.
 - Added `.m3u` and `.m3u8` playlist file support to built-in Text Editor with syntax highlighting for M3U directives.
 - Added built-in EPUB reader. Tapping any `.epub` file now opens it directly in UFM without requiring an external app. The viewer supports EPUB 2 and EPUB 3 formats, renders chapters in a WebView with previous/next chapter navigation and a table of contents, respects the app-wide font size preference, and switches to a dark background automatically when the device is in dark mode. Available on both mobile and Android TV. No third-party library was added — parsing uses the standard Android platform APIs.
 

@@ -791,6 +791,11 @@
             android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
 
         <activity
+            android:name=".viewer.GifCreatorActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboard|keyboardHidden|navigation" />
+
+        <activity
             android:name=".viewer.MediaPlayerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|uiMode|keyboard|keyboardHidden|navigation" />

@@ -1908,6 +1908,19 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Create GIF (Requires 2+ images)
+            val canCreateGif = selected.size >= 2 && allImages
+            if (canCreateGif && pm.isIconEnabled(this, pm.KEY_CREATE_GIF)) {
+                list.add(FileToolsBottomSheet.ActionItem("create_gif", getString(R.string.action_create_gif), R.drawable.ic_gif, "toolbar_create_gif") {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_FILE_PATHS,
+                            ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
             // Wallpaper (Single image file, mobile only)
             val isSingleImage = count == 1 && selected.first().isFile &&
                 selected.first().extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="8dp"
+    android:background="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/txtSeqNum"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:text="#1"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/ufm_primary"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgThumbnail"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="12dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.Corner.Small"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/mobile_card_text_primary"
+            android:maxLines="1"
+            android:ellipsize="middle"/>
+
+        <TextView
+            android:id="@+id/txtFileSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/mobile_card_text_secondary"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgDragHandle"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_sort"
+        app:tint="@color/mobile_card_text_secondary"
+        android:contentDescription="Reorder handle"/>
+
+</LinearLayout>

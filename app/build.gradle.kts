@@ -415,6 +415,7 @@ dependencies {
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
     implementation(libs.coil.svg)
+    implementation("com.squareup:gifencoder:0.10.1")
     implementation(libs.avif.coder) // AVIF decoding for API 24–30 (API 31+ uses ImageDecoder); avif-coder by awxkee
     implementation(libs.apng.core)
     // BouncyCastle for certificate generation and SSHD cryptography

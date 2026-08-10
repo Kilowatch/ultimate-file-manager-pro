@@ -996,6 +996,19 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Create GIF (Requires 2+ images)
+            val canCreateGif = selected.size >= 2 && allImages
+            if (canCreateGif && pm.isIconEnabled(requireContext(), pm.KEY_CREATE_GIF)) {
+                list.add(FileToolsBottomSheet.ActionItem("create_gif", getString(R.string.action_create_gif), R.drawable.ic_gif, "toolbar_create_gif") {
+                    startActivity(android.content.Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_FILE_PATHS,
+                            java.util.ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
             // Extract Here
             val hasArchiveSelected = selected.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
             if (hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) {

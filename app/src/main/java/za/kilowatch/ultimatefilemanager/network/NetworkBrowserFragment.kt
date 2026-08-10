@@ -447,6 +447,19 @@ class NetworkBrowserFragment : Fragment() {
                     }
                 })
             }
+            // Create GIF (Requires 2+ images)
+            val allNetworkImages = selected.isNotEmpty() && selected.all {
+                it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            }
+            val canCreateGif = selected.size >= 2 && allNetworkImages
+            if (canCreateGif && pm.isIconEnabled(requireContext(), pm.KEY_CREATE_GIF)) {
+                list.add(FileToolsBottomSheet.ActionItem("create_gif", getString(R.string.action_create_gif), R.drawable.ic_gif, "toolbar_create_gif") {
+                    val netImages = selected.filter {
+                        it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                    }
+                    (activity as? NetworkBrowserActivity)?.downloadNetworkImagesAndCreateGif(netImages)
+                })
+            }
 
             // Wallpaper (Single network image file, mobile only)
             val isSingleNetworkImage = count == 1 && !selected.first().isDirectory &&

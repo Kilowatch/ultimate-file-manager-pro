@@ -209,6 +209,8 @@ class StorageBrowserActivity : AppCompatActivity() {
         const val EXTRA_KEYFILE_PICKER = "extra_keyfile_picker"
         /** When true, the user is picking a certificate file for Remote Manage HTTPS */
         const val EXTRA_CERT_PICKER = "extra_cert_picker"
+        /** When true, the user is picking a destination folder for GIF Creator */
+        const val EXTRA_GIF_CREATOR_DEST_PICKER = "extra_gif_creator_dest_picker"
         
         /** Result keys for location picker */
         const val RESULT_URI = "result_uri"

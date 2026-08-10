@@ -100,6 +100,7 @@
         <item>Storage Access Framework — other apps can access your files through UFM\'s document provider.</item>
         <item>Tip Jar — optional one-time purchases to support the developer; the app is always free without tipping.</item>
         <item>UFM Media Player — play audio and video files with background playback, notification controls, Picture-in-Picture mode, and playlist management.</item>
+        <item>GIF Creator — create animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering.</item>
     </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
@@ -234,6 +235,7 @@
         <item>Gson (com.google.code.gson) — JSON processing library used for cloud storage integration. (Apache-2.0)</item>
         <item>AndroidX Browser (androidx.browser) — Chrome Custom Tabs support for Google Drive API authentication. (Apache-2.0)</item>
         <item>ZXing (com.google.zxing:core) — barcode image processing library. (Apache-2.0)</item>
+        <item>gifencoder (com.squareup:gifencoder) — pure Java GIF encoding library for creating animated GIF files from selected images. (Apache-2.0)</item>
         <item>Amazon Appstore SDK — processes optional in-app tip purchases on Amazon devices. (Proprietary)</item>
     </string-array>
 

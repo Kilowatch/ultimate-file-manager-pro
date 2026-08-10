@@ -1290,6 +1290,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Create GIF (Requires 2+ images)
+            val canCreateGif = selected.size >= 2 && allImages
+            if (canCreateGif && pm.isIconEnabled(this, pm.KEY_CREATE_GIF)) {
+                list.add(FileToolsBottomSheet.ActionItem("create_gif", getString(R.string.action_create_gif), R.drawable.ic_gif, "toolbar_create_gif") {
+                    downloadNetworkImagesAndCreateGif(selected.filter {
+                        it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                    })
+                })
+            }
+
             // Wallpaper (Single network image file, mobile only)
             val isSingleNetworkImage = count == 1 && !selected.first().isDirectory &&
                 selected.first().name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
@@ -5597,6 +5607,63 @@ class NetworkBrowserActivity : AppCompatActivity() {
                             putExtra(za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_SOURCE_SHARE_ID, share.id)
                             putExtra(za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_NETWORK_SHARE_ID, share.id)
                             putExtra(za.kilowatch.ultimatefilemanager.viewer.ImageCompressActivity.EXTRA_NETWORK_PATH, currentPath)
+                        })
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    showPremiumSnackbar(getString(R.string.compress_image_error, files.first().name, e.message ?: ""))
+                }
+            }
+        }
+    }
+
+    /**
+     * Downloads selected image files to a local temp cache directory and launches GifCreatorActivity.
+     */
+    fun downloadNetworkImagesAndCreateGif(files: List<NetworkFile>) {
+        if (files.isEmpty()) return
+        val snack = Snackbar.make(findViewById(R.id.main), getString(R.string.fetching_filename, files.first().name), Snackbar.LENGTH_INDEFINITE)
+        snack.show()
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val tempDir = java.io.File(cacheDir, "gif_src_${System.currentTimeMillis()}")
+                tempDir.mkdirs()
+                val localPaths = java.util.ArrayList<String>()
+
+                for (nf in files) {
+                    val tempFile = java.io.File(tempDir, nf.name)
+                    val inp = when (share.type) {
+                        ShareType.SMB -> SmbShareClient.openInputStream(share, nf.path)
+                        ShareType.FTP -> FtpShareClient.openInputStream(share, nf.path)
+                        ShareType.TV  -> TvShareClient.openInputStream(share, nf.path)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.openInputStream(share, nf.path)
+                        ShareType.ONEDRIVE -> OnedriveShareClient.openInputStream(share, nf.path).first
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openInputStream(share, nf.path).first
+                        ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, nf.path).first
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, nf.path).first
+                        ShareType.WEBDAV -> WebDavShareClient.openInputStream(share, nf.path).first
+                        ShareType.NFS -> NfsShareClient.openInputStream(share, nf.path)
+                        ShareType.DLNA -> DlnaShareClient.openInputStream(share, nf.path)
+                        else -> null
+                    }
+                    if (inp != null) {
+                        inp.use { input ->
+                            java.io.FileOutputStream(tempFile).use { out -> input.copyTo(out) }
+                        }
+                        localPaths.add(tempFile.absolutePath)
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    snack.dismiss()
+                    if (localPaths.isNotEmpty()) {
+                        startActivity(android.content.Intent(this@NetworkBrowserActivity, za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity::class.java).apply {
+                            putStringArrayListExtra(za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_FILE_PATHS, localPaths)
+                            putExtra(za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_SOURCE_SHARE_ID, share.id)
+                            putExtra(za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_NETWORK_SHARE_ID, share.id)
+                            putExtra(za.kilowatch.ultimatefilemanager.viewer.GifCreatorActivity.EXTRA_NETWORK_PATH, currentPath)
                         })
                     }
                 }

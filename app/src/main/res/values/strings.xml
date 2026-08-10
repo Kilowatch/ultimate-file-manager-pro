@@ -3666,6 +3666,27 @@
     <string name="settings_icon_tap_edit_mode_subtitle_enabled">Tapping a folder or file icon in list view enters selection mode</string>
     <string name="settings_icon_tap_edit_mode_subtitle_disabled">Tapping a folder or file icon opens the item normally</string>
     <string name="backup_pref_icon_tap_edit_mode">Icon Tap Edit Mode Settings</string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">Create GIF</string>
+    <string name="gif_creator_title">Create Animated GIF</string>
+    <string name="gif_creator_subtitle">%d images selected</string>
+    <string name="gif_creator_fps_label">Frame rate</string>
+    <string name="gif_creator_fps_value">%d fps</string>
+    <string name="gif_creator_output_size_label">Resize frames</string>
+    <string name="gif_creator_width_hint">Width (px)</string>
+    <string name="gif_creator_height_hint">Height (px)</string>
+    <string name="gif_creator_output_label">Output folder</string>
+    <string name="gif_creator_btn_create">Create GIF</string>
+    <string name="gif_creator_no_images">Select at least 2 image files to create a GIF</string>
+    <string name="gif_creator_progress">Encoding frame %1$d of %2$d…</string>
+    <string name="gif_creator_complete">GIF created successfully</string>
+    <string name="gif_creator_result_size">Output: %s  ·  %d frames  ·  %d fps</string>
+    <string name="gif_creator_error">Failed to encode GIF: %s</string>
+    <string name="gif_creator_view">View GIF</string>
+    <string name="icon_image_gif">Create GIF</string>
+    <string name="icon_toolbar_create_gif">Create GIF</string>
+    <string name="backup_pref_gif_creator">GIF Creator Settings</string>
 </resources>
 
 
