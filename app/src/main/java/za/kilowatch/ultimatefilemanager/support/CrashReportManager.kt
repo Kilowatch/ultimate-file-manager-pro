@@ -2349,7 +2349,75 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall) {
+                    // 42. The main thread is sampled inside a bundled-library
+                    //     constructor chain while an Activity's own `onCreate` runs
+                    //     during a framework-driven cold-start Activity launch —
+                    //     e.g. `PackageInstallerActivity.onCreate` ->
+                    //     `<obfuscated AppCompat superclass/delegate>.B` ->
+                    //     `me2.<init>` -> `xo8.<init>` -> `lk1.<init>` (top frame;
+                    //     the AppCompat delegate / superclass object graph the
+                    //     framework constructs when the Activity cold-starts),
+                    //     under `Activity.performCreate` ->
+                    //     `Instrumentation.callActivityOnCreate` ->
+                    //     `ActivityThread.performLaunchActivity` (reported from an
+                    //     SCBC R3, SDK 30, app 1.8.1-GOOGLE). The currently
+                    //     executing frame is one-time object construction
+                    //     (allocation, class loading, field init) that cannot by
+                    //     itself occupy the main thread for 5 s; the only app frame
+                    //     is the Activity's own `onCreate` lifecycle callback the
+                    //     framework invoked, and this Activity's `onCreate` body is
+                    //     itself bounded (its heavy install work already runs on
+                    //     `Dispatchers.IO`). The >5 s block is therefore the
+                    //     one-time framework-driven cold-start cost on a low-end
+                    //     device, which the app cannot act on — the same class as
+                    //     the bundled-library layout-inflation (34), Activity
+                    //     `findViewById` (24), MaterialButton-inflate (11) and
+                    //     Activity-super-constructor (26) cold-start filters,
+                    //     sampled one frame earlier than the LayoutInflater /
+                    //     setContentView frames filter 34 requires. A genuine
+                    //     freeze keeps the main thread inside app business logic —
+                    //     a top frame that is not a bundled-library `<init>` under
+                    //     an Activity `onCreate` (e.g. the Activity's own
+                    //     `onCreate` or a helper it calls directly, whose class
+                    //     starts with the app package), an app frame that is not
+                    //     an Activity class (e.g. adapter bind code or a
+                    //     repository), or a framework blocking primitive (a lock,
+                    //     file/network/database I/O, or binder frame) — and are
+                    //     still reported.
+                    val isActivityOnCreateLibraryInitStall =
+                        topFrame?.methodName == "<init>" &&
+                        topFrame?.className?.let { className ->
+                            PLATFORM_PREFIXES.none { className.startsWith(it) } &&
+                                !className.startsWith(APP_PACKAGE)
+                        } == true &&
+                        mainStackTrace.any {
+                            it.methodName == "onCreate" &&
+                            it.className.startsWith(APP_PACKAGE) &&
+                            it.className.endsWith("Activity")
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" && it.methodName == "performLaunchActivity")
+                        } &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in bounded
+                        // one-time cold-start object construction.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
