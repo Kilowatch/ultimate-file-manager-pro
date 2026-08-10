@@ -1902,7 +1902,66 @@ object CrashReportManager {
                             (it.className == "android.app.ContextImpl" && it.methodName == "getSystemService")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall) {
+                    // 36. The main thread is sampled inside the native thread-creation
+                    //     syscall while a thread pool creates a worker thread from a
+                    //     main-looper Runnable — e.g. `Handler.handleCallback` ->
+                    //     `v1.run` (a non-platform, R8-obfuscated runnable) ->
+                    //     `ThreadPoolExecutor.execute` -> `ThreadPoolExecutor.addWorker`
+                    //     -> `Thread.start` -> `Thread.nativeCreate` (top frame, the
+                    //     native `pthread_create`) — reported from a Sony BRAVIA 4K AE2,
+                    //     SDK 34, app 1.8.0-GOOGLE. The app (or a bundled library) merely
+                    //     invoked the fire-and-forget `ThreadPoolExecutor.execute()` API
+                    //     to submit a task; the pool's core size was reached with no idle
+                    //     worker, so it created a new worker thread, and the >5 s block is
+                    //     inside the OS's native thread creation — `Thread.nativeCreate`
+                    //     (`pthread_create`) stalling under device memory pressure / CPU
+                    //     starvation on a low-end TV (this report's `pool-2-thread-1`,
+                    //     `DlnaSsdpListener`, `DlnaFetchThread` and
+                    //     `DefaultDispatcher-worker-2` are all RUNNABLE, busy with the
+                    //     HTTP streaming server and SSDP/DLNA discovery, starving the
+                    //     main thread), which the app cannot act on. There is no lock,
+                    //     file/network I/O, or binder frame anywhere on the stack — the
+                    //     currently executing frame is the kernel thread-creation syscall,
+                    //     not app business logic, and the stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames. This is the START
+                    //     counterpart of filter 27 (which covers the `Thread.<init>`
+                    //     constructor bookkeeping of the same thread-lifecycle family).
+                    //     The `AnrWatchdogThread` now treats a main-thread stack whose
+                    //     top frame is `Thread.nativeCreate`/`Thread.start`, with
+                    //     `ThreadPoolExecutor.addWorker` and `ThreadPoolExecutor.execute`
+                    //     frames, the execute invoked from a non-platform `run()`
+                    //     dispatched by the main Handler, and no app frames, as a
+                    //     device-side thread-creation stall and resets its heartbeat
+                    //     instead of writing a report. Genuine freezes keep the main
+                    //     thread inside blocking work — an app frame on the stack, or a
+                    //     top frame that is not the native thread-creation syscall under
+                    //     a `ThreadPoolExecutor.execute` (e.g. app business logic creating
+                    //     threads in a loop, or a lock/file/binder block) — and are still
+                    //     reported.
+                    val isThreadPoolWorkerCreateStall =
+                        topFrame?.className == "java.lang.Thread" &&
+                        (topFrame?.methodName == "nativeCreate" || topFrame?.methodName == "start") &&
+                        mainStackTrace.any {
+                            it.className == "java.lang.Thread" && it.methodName == "start"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "java.util.concurrent.ThreadPoolExecutor" && it.methodName == "addWorker"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "java.util.concurrent.ThreadPoolExecutor" && it.methodName == "execute"
+                        } &&
+                        // The execute() is invoked from a non-platform runnable sitting
+                        // directly on the main Handler's dispatch — a fire-and-forget task
+                        // submission from a main-looper message, not app business logic.
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.methodName == "run" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            mainStackTrace.getOrNull(i + 1)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
