@@ -20,7 +20,11 @@ class FtpSftpWidgetProvider : AppWidgetProvider() {
             "za.kilowatch.ultimatefilemanager.widget.ACTION_WIDGET_TOGGLE_SFTP"
 
         fun updateAllWidgets(context: Context) {
-            val manager = AppWidgetManager.getInstance(context)
+            // AppWidgetManager.getInstance() returns null on devices with no widget
+            // host (e.g. Android TV / Fire TV launchers). There is nothing to update
+            // then, so bail out instead of crashing the caller — this is called from
+            // FileServerService.onStartCommand's foreground-notification path.
+            val manager = AppWidgetManager.getInstance(context) ?: return
             val ids = manager.getAppWidgetIds(
                 ComponentName(context, FtpSftpWidgetProvider::class.java)
             )

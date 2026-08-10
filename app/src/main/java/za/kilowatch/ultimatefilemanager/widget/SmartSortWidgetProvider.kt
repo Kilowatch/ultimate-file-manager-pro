@@ -21,7 +21,9 @@ class SmartSortWidgetProvider : AppWidgetProvider() {
         const val EXTRA_CONFIG_ID = "extra_config_id"
 
         fun updateWidget(context: Context) {
-            val manager = AppWidgetManager.getInstance(context)
+            // AppWidgetManager.getInstance() returns null on devices with no widget
+            // host (e.g. Android TV / Fire TV launchers) — bail out instead of crashing.
+            val manager = AppWidgetManager.getInstance(context) ?: return
             val ids = manager.getAppWidgetIds(ComponentName(context, SmartSortWidgetProvider::class.java))
             for (id in ids) {
                 manager.notifyAppWidgetViewDataChanged(id, R.id.widget_list)
