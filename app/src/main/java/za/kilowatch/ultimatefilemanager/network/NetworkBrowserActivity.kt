@@ -238,6 +238,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var isScannerFolderPicker = false
     private var isAutoBackupFolderPicker = false
     private var isImageCompressDestPickerMode = false
+    private var isGifCreatorDestPickerMode = false
     private var isSmartSortPickerMode = false
     private var isSmartSortCategoryPickerMode = false
     private var currentFiles: List<NetworkFile> = emptyList()
@@ -407,6 +408,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         isScannerFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, false)
         isAutoBackupFolderPicker = intent.getBooleanExtra(FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
+        isGifCreatorDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, false)
         isSmartSortPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_PICKER, false)
         isSmartSortCategoryPickerMode = intent.getBooleanExtra(EXTRA_SMART_SORT_CATEGORY_PICKER, false)
         cacheManager = za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager(this)
@@ -947,6 +949,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         // Image Compress folder picker mode: show "Use This Folder" FAB
         if (isImageCompressDestPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            showUseFolderFab()
+            return
+        }
+
+        // GIF Creator folder picker mode: show "Use This Folder" FAB
+        if (isGifCreatorDestPickerMode) {
             layoutSelectionBar.visibility = View.GONE
             showUseFolderFab()
             return
@@ -1682,6 +1691,11 @@ class NetworkBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_compress_image)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmImageCompressNetworkFolderDialog() }
+        } else if (isGifCreatorDestPickerMode) {
+            fabPaste.setText(R.string.use_this_folder)
+            fabPaste.setIconResource(R.drawable.ic_gif)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmGifCreatorNetworkFolderDialog() }
         } else if (isSmartSortCategoryPickerMode) {
             fabPaste.setText(R.string.use_this_folder)
             fabPaste.setIconResource(R.drawable.ic_folder)
@@ -1851,6 +1865,25 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_COMPRESS_SHARE_ID, share.id)
                     putExtra(RESULT_SELECTED_COMPRESS_NET_PATH, currentPath)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showConfirmGifCreatorNetworkFolderDialog() {
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.gif_creator_title)
+            .setMessage(getString(R.string.save_archive_to_path, displayPath))
+            .setIcon(R.drawable.ic_gif)
+            .setPositiveButton(R.string.use_this_folder) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_SHARE_ID, share.id.toString())
+                    putExtra(NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID, share.id)
+                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
                 }
                 setResult(RESULT_OK, result)
                 finish()

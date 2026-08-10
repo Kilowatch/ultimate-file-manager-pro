@@ -10399,6 +10399,83 @@ Box
     <string name="backup_pref_icon_tap_edit_mode">
 إعدادات وضع التحرير بالضغط على الأيقونة
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+إنشاء GIF
+</string>
+    <string name="gif_creator_title">
+إنشاء GIF متحرك
+</string>
+    <string name="gif_creator_subtitle">
+تم تحديد %d صور
+</string>
+    <string name="gif_creator_fps_label">
+معدل الإطارات
+</string>
+    <string name="gif_creator_fps_value">
+%d إطار/ثانية
+</string>
+    <string name="gif_creator_output_size_label">
+تغيير حجم الإطارات
+</string>
+    <string name="gif_creator_width_hint">
+العرض (بكسل)
+</string>
+    <string name="gif_creator_height_hint">
+الارتفاع (بكسل)
+</string>
+    <string name="gif_creator_output_label">
+مجلد الإخراج
+</string>
+    <string name="gif_creator_btn_create">
+إنشاء GIF
+</string>
+    <string name="gif_creator_no_images">
+حدد ملفي صور على الأقل لإنشاء GIF
+</string>
+    <string name="gif_creator_progress">
+ترميز الإطار %1$d من %2$d…
+</string>
+    <string name="gif_creator_complete">
+تم إنشاء GIF بنجاح
+</string>
+    <string name="gif_creator_result_size">
+الإخراج: %1$s  ·  %2$d إطارات  ·  %3$d إطار/ثانية
+</string>
+    <string name="gif_creator_error">
+فشل ترميز GIF: %s
+</string>
+    <string name="gif_creator_oom_error">
+نفدت الذاكرة أثناء إنشاء ملف GIF. يرجى تجربة تقليل حجم الإطار أو اختيار عدد أقل من الصور.
+</string>
+    <string name="slideshow_play_pause">
+تشغيل/إيقاف عرض الشرائح
+</string>
+    <string name="slideshow_interval">
+الفاصل الزمني: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+عرض GIF
+</string>
+    <string name="icon_image_gif">
+إنشاء GIF
+</string>
+    <string name="icon_toolbar_create_gif">
+إنشاء GIF
+</string>
+    <string name="backup_pref_gif_creator">
+إعدادات منشئ GIF
+</string>
+    <string name="action_change">
+تغيير
+</string>
+    <string name="gif_creator_slide_interval_label">
+الوقت بين الشرائح
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

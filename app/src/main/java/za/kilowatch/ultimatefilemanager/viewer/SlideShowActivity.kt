@@ -121,6 +121,20 @@ class SlideShowActivity : AppCompatActivity() {
     private var isRepeat = false
     private var isTracking = false
 
+    private var isSlideshowPlaying = false
+    private var slideshowStep = 4 // step 4 = 2.5s (0.5s + 4 * 0.5s)
+    private val slideshowIntervalMs: Long
+        get() = ((0.5f + slideshowStep * 0.5f) * 1000).toLong()
+
+    private val slideshowRunnable = object : Runnable {
+        override fun run() {
+            if (isSlideshowPlaying) {
+                navigateNext()
+                handler.postDelayed(this, slideshowIntervalMs)
+            }
+        }
+    }
+
     private val handler = Handler(Looper.getMainLooper())
 
     private val coilLoader by lazy {
@@ -321,8 +335,69 @@ class SlideShowActivity : AppCompatActivity() {
         // PDF dialog
         findViewById<View>(R.id.btnConvertToPdf)?.setOnClickListener { showConvertToPdfDialog() }
 
+        setupSlideshowControls()
+
         if (isTv) {
             setupTvImageActions()
+        }
+    }
+
+    private fun setupSlideshowControls() {
+        val txtInterval = findViewById<TextView>(R.id.txtSlideshowInterval)
+        val txtIntervalTv = findViewById<TextView>(R.id.txtSlideshowIntervalTv)
+        val seekBarInterval = findViewById<SeekBar>(R.id.seekBarSlideshowInterval)
+        val btnPlayPauseImg = findViewById<ImageButton>(R.id.btnSlideshowPlayPause)
+        val btnPlayPauseTv = findViewById<View>(R.id.btnSlideshowPlayPauseTv)
+        val imgPlayPauseTv = findViewById<ImageView>(R.id.imgSlideshowPlayPauseTv)
+        val btnDecTv = findViewById<View>(R.id.btnSlideshowDecTv)
+        val btnIncTv = findViewById<View>(R.id.btnSlideshowIncTv)
+
+        fun updateIntervalDisplay() {
+            val sec = 0.5f + slideshowStep * 0.5f
+            val text = String.format(java.util.Locale.US, "%.1fs", sec)
+            txtInterval?.text = text
+            txtIntervalTv?.text = text
+            seekBarInterval?.progress = slideshowStep
+            if (isSlideshowPlaying) {
+                handler.removeCallbacks(slideshowRunnable)
+                handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+            }
+        }
+
+        fun toggleSlideshowPlayPause() {
+            isSlideshowPlaying = !isSlideshowPlaying
+            val iconRes = if (isSlideshowPlaying) R.drawable.ic_pause else R.drawable.ic_play
+            btnPlayPauseImg?.setImageResource(iconRes)
+            imgPlayPauseTv?.setImageResource(iconRes)
+            handler.removeCallbacks(slideshowRunnable)
+            if (isSlideshowPlaying) {
+                handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+            }
+        }
+
+        updateIntervalDisplay()
+
+        btnPlayPauseImg?.setOnClickListener { toggleSlideshowPlayPause() }
+        btnPlayPauseTv?.setOnClickListener { toggleSlideshowPlayPause() }
+
+        seekBarInterval?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    slideshowStep = progress.coerceIn(0, 9)
+                    updateIntervalDisplay()
+                }
+            }
+            override fun onStartTrackingTouch(sb: SeekBar?) {}
+            override fun onStopTrackingTouch(sb: SeekBar?) {}
+        })
+
+        btnDecTv?.setOnClickListener {
+            slideshowStep = (slideshowStep - 1).coerceAtLeast(0)
+            updateIntervalDisplay()
+        }
+        btnIncTv?.setOnClickListener {
+            slideshowStep = (slideshowStep + 1).coerceAtMost(9)
+            updateIntervalDisplay()
         }
     }
 
@@ -459,25 +534,35 @@ class SlideShowActivity : AppCompatActivity() {
         val ext = path.substringAfterLast('.', "").lowercase()
         val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS
         val isImage = ext in FileViewerRouter.IMAGE_EXTENSIONS
+        val isGif = ext == "gif"
 
         // Stop video playback on swipe
         resetPlayer()
+        if (isSlideshowPlaying) {
+            handler.removeCallbacks(slideshowRunnable)
+            handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+        }
 
-        // Set action button visibilities in toolbar
+        // Set action button visibilities in toolbar (Hide PDF & Edit buttons for GIF files)
         val editActions = listOf(
             R.id.btnRotateLeft, R.id.btnRotateRight,
             R.id.btnDrawToggle, R.id.btnCropToggle, R.id.btnImageSave, R.id.btnConvertToPdf
         )
         editActions.forEach { id ->
-            findViewById<View>(id)?.visibility = if (isImage && !isTv) View.VISIBLE else View.GONE
+            findViewById<View>(id)?.visibility = if (isImage && !isGif && !isTv) View.VISIBLE else View.GONE
         }
 
+        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
         if (isTv) {
-            findViewById<View>(R.id.btnConvertToPdf)?.visibility = if (isImage) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnConvertToPdf)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnDrawToggleTv)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnCropToggleTv)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
             tvImageControlBar?.visibility = if (isImage && controlsVisible) View.VISIBLE else View.GONE
             controlsLayout.visibility = if (isVideo && controlsVisible) View.VISIBLE else View.GONE
+            imageSlideshowBar?.visibility = View.GONE
         } else {
             controlsLayout.visibility = if (isVideo && controlsVisible) View.VISIBLE else View.GONE
+            imageSlideshowBar?.visibility = if (isImage && controlsVisible) View.VISIBLE else View.GONE
             tvImageControlBar?.visibility = View.GONE
         }
 
@@ -815,6 +900,14 @@ class SlideShowActivity : AppCompatActivity() {
         val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS
         val isImage = ext in FileViewerRouter.IMAGE_EXTENSIONS
 
+        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
+        if (isImage && !isTv) {
+            imageSlideshowBar?.visibility = View.VISIBLE
+            imageSlideshowBar?.alpha = 1f
+        } else {
+            imageSlideshowBar?.visibility = View.GONE
+        }
+
         if (isVideo) {
             controlsLayout.visibility = View.VISIBLE
             controlsLayout.alpha = 1f
@@ -852,6 +945,10 @@ class SlideShowActivity : AppCompatActivity() {
         }
         tvImageControlBar?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
             tvImageControlBar?.visibility = View.GONE
+        }
+        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
+        imageSlideshowBar?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
+            imageSlideshowBar.visibility = View.GONE
         }
     }
 
@@ -946,8 +1043,14 @@ class SlideShowActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacks(slideshowRunnable)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        handler.removeCallbacks(slideshowRunnable)
         resetPlayer()
         // Clean up slideshow temp cache images
         val cacheFiles = cacheDir.listFiles { f -> f.name.startsWith("ufm_slideshow_") }

@@ -300,4 +300,56 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Image Slideshow Control Bar (Bottom) for mobile -->
+    <LinearLayout
+        android:id="@+id/imageSlideshowBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="#CC000000"
+        android:elevation="4dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Play / Pause Slideshow Button -->
+        <ImageButton
+            android:id="@+id/btnSlideshowPlayPause"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_icon_circle_accent"
+            android:src="@drawable/ic_play"
+            android:contentDescription="@string/slideshow_play_pause"
+            app:tint="@android:color/white" />
+
+        <!-- Slideshow Interval Label -->
+        <TextView
+            android:id="@+id/txtSlideshowInterval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="2.5s" />
+
+        <!-- Slideshow Interval SeekBar (0.5s to 5.0s, 9 steps, max=9) -->
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekBarSlideshowInterval"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:max="9"
+            android:progress="4"
+            android:splitTrack="false"
+            android:thumbTint="?attr/colorPrimary"
+            android:progressTint="?attr/colorPrimary" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

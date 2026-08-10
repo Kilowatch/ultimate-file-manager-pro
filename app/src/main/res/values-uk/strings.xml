@@ -10399,6 +10399,83 @@ UFM перестав відповідати під час вашого оста�
     <string name="backup_pref_icon_tap_edit_mode">
 Налаштування режиму редагування торканням значка
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+Створити GIF
+</string>
+    <string name="gif_creator_title">
+Створити анімований GIF
+</string>
+    <string name="gif_creator_subtitle">
+%d зображень вибрано
+</string>
+    <string name="gif_creator_fps_label">
+Частота кадрів
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+Змінити розмір кадрів
+</string>
+    <string name="gif_creator_width_hint">
+Ширина (px)
+</string>
+    <string name="gif_creator_height_hint">
+Висота (px)
+</string>
+    <string name="gif_creator_output_label">
+Папка для результату
+</string>
+    <string name="gif_creator_btn_create">
+Створити GIF
+</string>
+    <string name="gif_creator_no_images">
+Виберіть принаймні 2 файли зображень, щоб створити GIF
+</string>
+    <string name="gif_creator_progress">
+Кодування кадру %1$d з %2$d…
+</string>
+    <string name="gif_creator_complete">
+GIF успішно створено
+</string>
+    <string name="gif_creator_result_size">
+Вихід: %1$s  ·  %2$d кадрів  ·  %3$d к/с
+</string>
+    <string name="gif_creator_error">
+Не вдалося закодувати GIF: %s
+</string>
+    <string name="gif_creator_oom_error">
+Недостатньо пам\'яті під час створення GIF. Спробуйте зменшити розмір кадру або вибрати менше зображень.
+</string>
+    <string name="slideshow_play_pause">
+Відтворити/Призупинити слайд-шоу
+</string>
+    <string name="slideshow_interval">
+Інтервал: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+Переглянути GIF
+</string>
+    <string name="icon_image_gif">
+Створити GIF
+</string>
+    <string name="icon_toolbar_create_gif">
+Створити GIF
+</string>
+    <string name="backup_pref_gif_creator">
+Налаштування створення GIF
+</string>
+    <string name="action_change">
+Змінити
+</string>
+    <string name="gif_creator_slide_interval_label">
+Час між слайдами
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

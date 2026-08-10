@@ -3681,12 +3681,18 @@
     <string name="gif_creator_no_images">Select at least 2 image files to create a GIF</string>
     <string name="gif_creator_progress">Encoding frame %1$d of %2$d…</string>
     <string name="gif_creator_complete">GIF created successfully</string>
-    <string name="gif_creator_result_size">Output: %s  ·  %d frames  ·  %d fps</string>
+    <string name="gif_creator_result_size">Output: %1$s  ·  %2$d frames  ·  %3$d fps</string>
     <string name="gif_creator_error">Failed to encode GIF: %s</string>
+    <string name="gif_creator_oom_error">Out of memory while creating GIF. Please try reducing frame size or selecting fewer images.</string>
+    <string name="slideshow_play_pause">Play/Pause Slideshow</string>
+    <string name="slideshow_interval">Interval: %1$.1fs</string>
     <string name="gif_creator_view">View GIF</string>
     <string name="icon_image_gif">Create GIF</string>
     <string name="icon_toolbar_create_gif">Create GIF</string>
     <string name="backup_pref_gif_creator">GIF Creator Settings</string>
+    <string name="action_change">Change</string>
+    <string name="gif_creator_slide_interval_label">Time between slides</string>
+    <string name="gif_creator_slide_interval_value">%1$.1fs</string>
 </resources>
 
 

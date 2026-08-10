@@ -473,6 +473,89 @@
                 app:tint="@color/tv_icon_tint" />
         </LinearLayout>
 
+        <!-- Divider -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="36dp"
+            android:background="#33FFFFFF"
+            android:layout_marginHorizontal="12dp" />
+
+        <!-- Slideshow Play / Pause (TV) -->
+        <LinearLayout
+            android:id="@+id/btnSlideshowPlayPauseTv"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:id="@+id/imgSlideshowPlayPauseTv"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_play"
+                android:contentDescription="@string/slideshow_play_pause"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Interval Decrease (TV) -->
+        <LinearLayout
+            android:id="@+id/btnSlideshowDecTv"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/tv_icon_tint"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Interval Label (TV) -->
+        <TextView
+            android:id="@+id/txtSlideshowIntervalTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="2.5s" />
+
+        <!-- Interval Increase (TV) -->
+        <LinearLayout
+            android:id="@+id/btnSlideshowIncTv"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:textColor="@color/tv_icon_tint"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </FrameLayout>

@@ -385,6 +385,15 @@ class ImageViewerActivity : AppCompatActivity() {
 
         loadImage(currentImageFile!!)
 
+        val isGif = filePath.endsWith(".gif", ignoreCase = true)
+        if (isGif) {
+            findViewById<View>(R.id.btnConvertToPdf)?.visibility = View.GONE
+            findViewById<View>(R.id.btnDrawToggle)?.visibility = View.GONE
+            findViewById<View>(R.id.btnDrawToggleTv)?.visibility = View.GONE
+            findViewById<View>(R.id.btnCropToggle)?.visibility = View.GONE
+            findViewById<View>(R.id.btnCropToggleTv)?.visibility = View.GONE
+        }
+
         if (isTv) setupTvControls()
 
         postponeEnterTransition()

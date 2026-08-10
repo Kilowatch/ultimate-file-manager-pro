@@ -10399,6 +10399,83 @@ Liste görünümünde bir klasör veya dosya simgesine dokunmak öğeyi normal �
     <string name="backup_pref_icon_tap_edit_mode">
 Simge Dokunma Düzenleme Modu Ayarları
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+GIF Oluştur
+</string>
+    <string name="gif_creator_title">
+Animasyonlu GIF Oluştur
+</string>
+    <string name="gif_creator_subtitle">
+%d görsel seçildi
+</string>
+    <string name="gif_creator_fps_label">
+Kare hızı
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+Kareleri yeniden boyutlandır
+</string>
+    <string name="gif_creator_width_hint">
+Genişlik (px)
+</string>
+    <string name="gif_creator_height_hint">
+Yükseklik (px)
+</string>
+    <string name="gif_creator_output_label">
+Çıktı klasörü
+</string>
+    <string name="gif_creator_btn_create">
+GIF Oluştur
+</string>
+    <string name="gif_creator_no_images">
+GIF oluşturmak için en az 2 görsel dosyası seçin
+</string>
+    <string name="gif_creator_progress">
+Kare %1$d / %2$d kodlanıyor…
+</string>
+    <string name="gif_creator_complete">
+GIF başarıyla oluşturuldu
+</string>
+    <string name="gif_creator_result_size">
+Çıktı: %1$s  ·  %2$d kare  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+GIF kodlanamadı: %s
+</string>
+    <string name="gif_creator_oom_error">
+GIF oluşturulurken bellek yetersiz. Lütfen kare boyutunu küçültmeyi veya daha az görsel seçmeyi deneyin.
+</string>
+    <string name="slideshow_play_pause">
+Slayt Gösterisini Oynat/Duraklat
+</string>
+    <string name="slideshow_interval">
+Aralık: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+GIF\'i Görüntüle
+</string>
+    <string name="icon_image_gif">
+GIF Oluştur
+</string>
+    <string name="icon_toolbar_create_gif">
+GIF Oluştur
+</string>
+    <string name="backup_pref_gif_creator">
+GIF Oluşturucu Ayarları
+</string>
+    <string name="action_change">
+Değiştir
+</string>
+    <string name="gif_creator_slide_interval_label">
+Slaytlar arası süre
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

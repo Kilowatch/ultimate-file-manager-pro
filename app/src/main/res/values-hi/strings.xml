@@ -10399,6 +10399,83 @@ UFM ने आपके पिछले सत्र में प्रति�
     <string name="backup_pref_icon_tap_edit_mode">
 आइकन टैप संपादन मोड सेटिंग्स
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+GIF बनाएं
+</string>
+    <string name="gif_creator_title">
+एनिमेटेड GIF बनाएं
+</string>
+    <string name="gif_creator_subtitle">
+%d छवियाँ चयनित
+</string>
+    <string name="gif_creator_fps_label">
+फ़्रेम दर
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+फ़्रेम का आकार बदलें
+</string>
+    <string name="gif_creator_width_hint">
+चौड़ाई (px)
+</string>
+    <string name="gif_creator_height_hint">
+ऊँचाई (px)
+</string>
+    <string name="gif_creator_output_label">
+आउटपुट फ़ोल्डर
+</string>
+    <string name="gif_creator_btn_create">
+GIF बनाएं
+</string>
+    <string name="gif_creator_no_images">
+GIF बनाने के लिए कम से कम 2 छवि फ़ाइलें चुनें
+</string>
+    <string name="gif_creator_progress">
+फ़्रेम %1$d का %2$d एन्कोड हो रहा है…
+</string>
+    <string name="gif_creator_complete">
+GIF सफलतापूर्वक बनाया गया
+</string>
+    <string name="gif_creator_result_size">
+आउटपुट: %1$s  ·  %2$d फ्रेम  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+GIF एन्कोड करने में विफल: %s
+</string>
+    <string name="gif_creator_oom_error">
+GIF बनाते समय मेमोरी कम पड़ गई। कृपया फ़्रेम का आकार कम करने या कम छवियाँ चुनने का प्रयास करें।
+</string>
+    <string name="slideshow_play_pause">
+स्लाइडशो चलाएँ/रोकें
+</string>
+    <string name="slideshow_interval">
+अंतराल: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+GIF देखें
+</string>
+    <string name="icon_image_gif">
+GIF बनाएं
+</string>
+    <string name="icon_toolbar_create_gif">
+GIF बनाएं
+</string>
+    <string name="backup_pref_gif_creator">
+GIF निर्माता सेटिंग्स
+</string>
+    <string name="action_change">
+बदलें
+</string>
+    <string name="gif_creator_slide_interval_label">
+स्लाइडों के बीच का समय
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

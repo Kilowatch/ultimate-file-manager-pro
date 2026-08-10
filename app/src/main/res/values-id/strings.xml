@@ -10399,6 +10399,83 @@ Mengetuk ikon folder atau file akan membuka item tersebut secara normal
     <string name="backup_pref_icon_tap_edit_mode">
 Pengaturan Mode Edit Ketuk Ikon
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+Buat GIF
+</string>
+    <string name="gif_creator_title">
+Buat GIF Animasi
+</string>
+    <string name="gif_creator_subtitle">
+%d gambar dipilih
+</string>
+    <string name="gif_creator_fps_label">
+Kecepatan bingkai
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+Ubah ukuran bingkai
+</string>
+    <string name="gif_creator_width_hint">
+Lebar (px)
+</string>
+    <string name="gif_creator_height_hint">
+Tinggi (px)
+</string>
+    <string name="gif_creator_output_label">
+Folder keluaran
+</string>
+    <string name="gif_creator_btn_create">
+Buat GIF
+</string>
+    <string name="gif_creator_no_images">
+Pilih setidaknya 2 file gambar untuk membuat GIF
+</string>
+    <string name="gif_creator_progress">
+Mengodekan bingkai %1$d dari %2$d…
+</string>
+    <string name="gif_creator_complete">
+GIF berhasil dibuat
+</string>
+    <string name="gif_creator_result_size">
+Keluaran: %1$s  ·  %2$d frame  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+Gagal mengodekan GIF: %s
+</string>
+    <string name="gif_creator_oom_error">
+Kehabisan memori saat membuat GIF. Silakan coba kurangi ukuran bingkai atau pilih lebih sedikit gambar.
+</string>
+    <string name="slideshow_play_pause">
+Putar/Jeda Slideshow
+</string>
+    <string name="slideshow_interval">
+Interval: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+Lihat GIF
+</string>
+    <string name="icon_image_gif">
+Buat GIF
+</string>
+    <string name="icon_toolbar_create_gif">
+Buat GIF
+</string>
+    <string name="backup_pref_gif_creator">
+Pengaturan Pembuat GIF
+</string>
+    <string name="action_change">
+Ubah
+</string>
+    <string name="gif_creator_slide_interval_label">
+Waktu antar slide
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

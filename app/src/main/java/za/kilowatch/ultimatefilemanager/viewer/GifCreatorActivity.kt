@@ -64,8 +64,8 @@ class GifCreatorActivity : AppCompatActivity() {
 
     private lateinit var recyclerFrames: RecyclerView
     private lateinit var frameAdapter: GifFrameAdapter
-    private lateinit var seekFps: SeekBar
-    private lateinit var txtFpsValue: TextView
+    private lateinit var seekSlideInterval: SeekBar
+    private lateinit var txtSlideIntervalValue: TextView
     private lateinit var chkResize: CheckBox
     private lateinit var layoutResizeFields: View
     private lateinit var editWidth: EditText
@@ -79,16 +79,18 @@ class GifCreatorActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == RESULT_OK && result.data != null) {
-            val selectedPath = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
-            val selectedShareId = result.data?.getLongExtra(NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID, -1) ?: -1
-            val selectedNetPath = result.data?.getStringExtra(NetworkBrowserActivity.RESULT_SELECTED_NET_PATH)
+            val selectedLocalPath = result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_LOCAL_PATH)
+                ?: result.data?.getStringExtra(FileBrowserActivity.RESULT_SELECTED_PATH)
+            val selectedShareIdStr = result.data?.getStringExtra(StorageBrowserActivity.RESULT_SELECTED_SHARE_ID)
+            val selectedShareIdLong = result.data?.getLongExtra(NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID, -1L) ?: -1L
+            val selectedNetPath = result.data?.getStringExtra(StorageBrowserActivity.RESULT_SELECTED_NET_PATH)
 
-            if (selectedShareId != -1L && selectedNetPath != null) {
-                networkShareId = selectedShareId
+            if ((selectedShareIdStr != null || selectedShareIdLong != -1L) && selectedNetPath != null) {
+                networkShareId = selectedShareIdStr?.toLongOrNull() ?: selectedShareIdLong
                 networkPath = selectedNetPath
                 txtOutputPath.text = "$selectedNetPath (Network)"
-            } else if (selectedPath != null) {
-                outputDir = File(selectedPath)
+            } else if (selectedLocalPath != null) {
+                outputDir = File(selectedLocalPath)
                 networkShareId = -1
                 networkPath = null
                 txtOutputPath.text = outputDir?.absolutePath
@@ -148,8 +150,8 @@ class GifCreatorActivity : AppCompatActivity() {
         txtSubtitle.text = getString(R.string.gif_creator_subtitle, sourcePaths.size)
 
         recyclerFrames = findViewById(R.id.recyclerFrames)
-        seekFps = findViewById(R.id.seekFps)
-        txtFpsValue = findViewById(R.id.txtFpsValue)
+        seekSlideInterval = findViewById(R.id.seekSlideInterval)
+        txtSlideIntervalValue = findViewById(R.id.txtSlideIntervalValue)
         chkResize = findViewById(R.id.chkResize)
         layoutResizeFields = findViewById(R.id.layoutResizeFields)
         editWidth = findViewById(R.id.editWidth)
@@ -187,10 +189,11 @@ class GifCreatorActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        seekFps.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        txtSlideIntervalValue.text = getString(R.string.gif_creator_slide_interval_value, 1.0f)
+        seekSlideInterval.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val fps = maxOf(1, progress)
-                txtFpsValue.text = getString(R.string.gif_creator_fps_value, fps)
+                val seconds = 0.5f + (progress * 0.5f)
+                txtSlideIntervalValue.text = getString(R.string.gif_creator_slide_interval_value, seconds)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -213,8 +216,7 @@ class GifCreatorActivity : AppCompatActivity() {
 
     private fun pickOutputFolder() {
         val intent = Intent(this, StorageBrowserActivity::class.java).apply {
-            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
-            putExtra(StorageBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, true)
+            putExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, true)
         }
         folderPickerLauncher.launch(intent)
     }
@@ -226,12 +228,12 @@ class GifCreatorActivity : AppCompatActivity() {
             return
         }
 
-        val fps = maxOf(1, seekFps.progress)
-        val delayCentiseconds = (100 / fps).toLong()
+        val intervalSec = 0.5f + (seekSlideInterval.progress * 0.5f)
+        val delayMs = (intervalSec * 1000f).toLong()
 
         val isResize = chkResize.isChecked
-        val targetW = editWidth.text.toString().toIntOrNull() ?: 800
-        val targetH = editHeight.text.toString().toIntOrNull() ?: 600
+        val userReqW = editWidth.text.toString().toIntOrNull() ?: 800
+        val userReqH = editHeight.text.toString().toIntOrNull() ?: 600
 
         val dialogView = layoutInflater.inflate(
             if (isTv) R.layout.dialog_gif_creator_progress_tv else R.layout.dialog_gif_creator_progress,
@@ -260,14 +262,33 @@ class GifCreatorActivity : AppCompatActivity() {
                 val tempOutputFile = File(cacheDir, "gif_temp_${System.currentTimeMillis()}.gif")
                 val fos = FileOutputStream(tempOutputFile)
 
-                val delayMs = (1000L / fps)
-                val imageOptions = ImageOptions().setDelay(delayMs, TimeUnit.MILLISECONDS)
+                // Calculate target width and height supporting original resolution up to 1920px (1080p)
+                val (rawW, rawH) = getImageDimensions(frames.first())
+                val maxOriginalDimension = 1920
+                val (width, height) = if (isResize) {
+                    userReqW.coerceAtLeast(1) to userReqH.coerceAtLeast(1)
+                } else {
+                    if (rawW > maxOriginalDimension || rawH > maxOriginalDimension) {
+                        if (rawW >= rawH) {
+                            maxOriginalDimension to ((rawH.toDouble() / rawW.toDouble()) * maxOriginalDimension).toInt().coerceAtLeast(1)
+                        } else {
+                            ((rawW.toDouble() / rawH.toDouble()) * maxOriginalDimension).toInt().coerceAtLeast(1) to maxOriginalDimension
+                        }
+                    } else {
+                        rawW to rawH
+                    }
+                }
 
-                // First frame defines the GIF dimensions if not explicitly resizing
-                val firstFrameBitmap = decodeBitmap(frames.first(), targetW, targetH, isResize)
-                val width = firstFrameBitmap.width
-                val height = firstFrameBitmap.height
-                firstFrameBitmap.recycle()
+                // For high-resolution frames, use UniformQuantizer to eliminate MedianCut memory overhead
+                val quantizer: com.squareup.gifencoder.ColorQuantizer = if (width > 1000 || height > 1000) {
+                    com.squareup.gifencoder.UniformQuantizer.INSTANCE
+                } else {
+                    com.squareup.gifencoder.MedianCutQuantizer.INSTANCE
+                }
+
+                val imageOptions = ImageOptions()
+                    .setDelay(delayMs, TimeUnit.MILLISECONDS)
+                    .setColorQuantizer(quantizer)
 
                 val encoder = GifEncoder(fos, width, height, 0) // 0 = infinite loop
 
@@ -277,11 +298,12 @@ class GifCreatorActivity : AppCompatActivity() {
                         txtSubtitle.text = getString(R.string.gif_creator_progress, index + 1, frames.size)
                     }
 
-                    val bitmap = decodeBitmap(framePath, width, height, true)
+                    val bitmap = decodeBitmap(framePath, width, height)
                     val rgbArray = convertBitmapToRgbArray(bitmap, width, height)
                     bitmap.recycle()
 
                     encoder.addImage(rgbArray, width, imageOptions)
+                    System.gc()
                 }
 
                 encoder.finishEncoding()
@@ -302,25 +324,45 @@ class GifCreatorActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    showResultsDialog(finalFile, frames.size, fps)
+                    showResultsDialog(finalFile, frames.size, intervalSec)
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
+                System.gc()
                 withContext(Dispatchers.Main) {
                     progressDialog.dismiss()
-                    val errorMsg = getString(R.string.gif_creator_error, e.localizedMessage ?: e.message)
+                    val errorMsg = if (e is OutOfMemoryError) {
+                        getString(R.string.gif_creator_oom_error)
+                    } else {
+                        getString(R.string.gif_creator_error, e.localizedMessage ?: e.message)
+                    }
                     Toast.makeText(this@GifCreatorActivity, errorMsg, Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
-    private fun decodeBitmap(path: String, reqWidth: Int, reqHeight: Int, scale: Boolean): Bitmap {
+    private fun getImageDimensions(path: String): Pair<Int, Int> {
+        return try {
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(path, options)
+            val orientation = getExifOrientation(path)
+            if (orientation == 90 || orientation == 270) {
+                options.outHeight to options.outWidth
+            } else {
+                options.outWidth to options.outHeight
+            }
+        } catch (_: Exception) {
+            800 to 600
+        }
+    }
+
+    private fun decodeBitmap(path: String, reqWidth: Int, reqHeight: Int): Bitmap {
         val options = BitmapFactory.Options().apply {
             inJustDecodeBounds = true
         }
         BitmapFactory.decodeFile(path, options)
 
-        if (scale && reqWidth > 0 && reqHeight > 0) {
+        if (reqWidth > 0 && reqHeight > 0) {
             options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
         }
         options.inJustDecodeBounds = false
@@ -336,7 +378,7 @@ class GifCreatorActivity : AppCompatActivity() {
             bitmap = rotated
         }
 
-        if (scale && (bitmap.width != reqWidth || bitmap.height != reqHeight)) {
+        if (bitmap.width != reqWidth || bitmap.height != reqHeight) {
             val scaled = Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true)
             if (scaled != bitmap) {
                 bitmap.recycle()
@@ -351,13 +393,11 @@ class GifCreatorActivity : AppCompatActivity() {
         val (height: Int, width: Int) = options.run { outHeight to outWidth }
         var inSampleSize = 1
         if (height > reqHeight || width > reqWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
+            val heightRatio = Math.round(height.toFloat() / reqHeight.toFloat())
+            val widthRatio = Math.round(width.toFloat() / reqWidth.toFloat())
+            inSampleSize = if (heightRatio > widthRatio) heightRatio else widthRatio
         }
-        return inSampleSize
+        return inSampleSize.coerceAtLeast(1)
     }
 
     private fun getExifOrientation(path: String): Int {
@@ -398,7 +438,7 @@ class GifCreatorActivity : AppCompatActivity() {
         }
     }
 
-    private fun showResultsDialog(resultFile: File, frameCount: Int, fps: Int) {
+    private fun showResultsDialog(resultFile: File, frameCount: Int, intervalSec: Float) {
         val dialogView = layoutInflater.inflate(
             if (isTv) R.layout.dialog_gif_creator_results_tv else R.layout.dialog_gif_creator_results,
             null
@@ -409,7 +449,7 @@ class GifCreatorActivity : AppCompatActivity() {
         val btnViewGif = dialogView.findViewById<View>(R.id.btnViewGif)
 
         val formattedSize = Formatter.formatShortFileSize(this, resultFile.length())
-        txtDetail.text = getString(R.string.gif_creator_result_size, resultFile.name, frameCount, fps) + "\n\n${resultFile.absolutePath} ($formattedSize)"
+        txtDetail.text = "${resultFile.name} · $frameCount frames · ${String.format("%.1fs", intervalSec)}\n\n${resultFile.absolutePath} ($formattedSize)"
 
         val dialog = if (isTv) {
             AlertDialog.Builder(this)

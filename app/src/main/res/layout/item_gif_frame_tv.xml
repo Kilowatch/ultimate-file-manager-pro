@@ -26,7 +26,7 @@
         android:layout_height="56dp"
         android:scaleType="centerCrop"
         android:layout_marginEnd="14dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MaterialComponents.Corner.Small"/>
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Small"/>
 
     <LinearLayout
         android:layout_width="0dp"

@@ -243,6 +243,8 @@ class FileBrowserActivity : AppCompatActivity() {
         const val EXTRA_EXTRACT_DEST_PICKER = "extra_extract_dest_picker"
         /** When true the user is picking a destination folder for Image Compress */
         const val EXTRA_IMAGE_COMPRESS_DEST_PICKER = "extra_image_compress_dest_picker"
+        /** When true the user is picking a destination folder for GIF Creator */
+        const val EXTRA_GIF_CREATOR_DEST_PICKER = "extra_gif_creator_dest_picker"
         const val EXTRA_KEYFILE_PICKER = "extra_keyfile_picker"
         const val EXTRA_CERT_PICKER = "extra_cert_picker"
         const val RESULT_SELECTED_PATH = "selected_path"
@@ -294,6 +296,7 @@ class FileBrowserActivity : AppCompatActivity() {
     private var isCompressDestPickerMode = false
     private var isExtractDestPickerMode = false
     private var isImageCompressDestPickerMode = false
+    private var isGifCreatorDestPickerMode = false
     private var isNetworkCachePickerMode = false
     private var isShareDestPickerMode = false
     private var isNotepadFolderPicker = false
@@ -383,6 +386,7 @@ class FileBrowserActivity : AppCompatActivity() {
         isCompressDestPickerMode = intent.getBooleanExtra(EXTRA_COMPRESS_DEST_PICKER, false)
         isExtractDestPickerMode = intent.getBooleanExtra(EXTRA_EXTRACT_DEST_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
+        isGifCreatorDestPickerMode = intent.getBooleanExtra(EXTRA_GIF_CREATOR_DEST_PICKER, false)
         isLocationPickerMode = intent.getBooleanExtra(EXTRA_LOCATION_PICKER, false)
         isNetworkCachePickerMode = intent.getBooleanExtra(EXTRA_NETWORK_CACHE_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(EXTRA_QUICK_TRANSFER_PICKER, false)
@@ -576,6 +580,24 @@ class FileBrowserActivity : AppCompatActivity() {
             .setPositiveButton(R.string.use_this_folder) { _, _ ->
                 val result = Intent().apply {
                     putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                }
+                setResult(RESULT_OK, result)
+                finish()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showConfirmGifCreatorLocalFolderDialog() {
+        val path = currentDir.absolutePath
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.gif_creator_title)
+            .setMessage(getString(R.string.save_archive_to_path, path))
+            .setIcon(R.drawable.ic_gif)
+            .setPositiveButton(R.string.use_this_folder) { _, _ ->
+                val result = Intent().apply {
+                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                    putExtra(RESULT_SELECTED_PATH, path)
                 }
                 setResult(RESULT_OK, result)
                 finish()
@@ -1416,17 +1438,6 @@ class FileBrowserActivity : AppCompatActivity() {
             return
         }
 
-        // Hide editing controls in file picker mode
-        if (isPickerMode) {
-            layoutSelectionBar.visibility = View.GONE
-            fabPaste.visibility = View.GONE
-            // Hide new folder button
-            findViewById<android.widget.ImageView>(R.id.btnCreateNew)?.visibility = View.GONE
-            findViewById<android.widget.ImageView>(R.id.btnViewToggle)?.visibility = View.GONE
-            findViewById<android.widget.ImageView>(R.id.btnSort)?.visibility = View.GONE
-            return // Skip wiring selection/paste buttons
-        }
-
         // Extract dest picker mode: show Use This Folder FAB (folder icon)
         if (isExtractDestPickerMode) {
             layoutSelectionBar.visibility = View.GONE
@@ -1454,6 +1465,16 @@ class FileBrowserActivity : AppCompatActivity() {
             fabPaste.setIconResource(R.drawable.ic_compress_image)
             fabPaste.visibility = View.VISIBLE
             fabPaste.setOnClickListener { showConfirmImageCompressLocalFolderDialog() }
+            return
+        }
+
+        // GIF Creator dest picker mode
+        if (isGifCreatorDestPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            fabPaste.setText(R.string.use_this_folder)
+            fabPaste.setIconResource(R.drawable.ic_gif)
+            fabPaste.visibility = View.VISIBLE
+            fabPaste.setOnClickListener { showConfirmGifCreatorLocalFolderDialog() }
             return
         }
 
@@ -1492,6 +1513,17 @@ class FileBrowserActivity : AppCompatActivity() {
                 showConfirmAdvancedSyncDestFolderDialog()
             }
             return
+        }
+
+        // Hide editing controls in file picker mode
+        if (isPickerMode) {
+            layoutSelectionBar.visibility = View.GONE
+            fabPaste.visibility = View.GONE
+            // Hide new folder button
+            findViewById<android.widget.ImageView>(R.id.btnCreateNew)?.visibility = View.GONE
+            findViewById<android.widget.ImageView>(R.id.btnViewToggle)?.visibility = View.GONE
+            findViewById<android.widget.ImageView>(R.id.btnSort)?.visibility = View.GONE
+            return // Skip wiring selection/paste buttons
         }
 
         // Selection bar actions
@@ -3192,11 +3224,11 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun updatePasteFab() {
         if (isExtractDestPickerMode || isCompressDestPickerMode || isImageCompressDestPickerMode ||
-            isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode || isAdvancedSyncDestPickerMode ||
-            isLocationPickerMode || isNetworkCachePickerMode || isQuickTransferPickerMode ||
-            isShareDestPickerMode || isNotepadFolderPicker || isScannerFolderPicker ||
-            isAutoBackupFolderPicker || isKeyfilePickerMode || isCertPickerMode ||
-            isSupportAttachmentPicker || isSmartSortPickerMode) {
+            isGifCreatorDestPickerMode || isSyncFolderPickerMode || isAdvancedSyncFolderPickerMode ||
+            isAdvancedSyncDestPickerMode || isLocationPickerMode || isNetworkCachePickerMode ||
+            isQuickTransferPickerMode || isShareDestPickerMode || isNotepadFolderPicker ||
+            isScannerFolderPicker || isAutoBackupFolderPicker || isKeyfilePickerMode ||
+            isCertPickerMode || isSupportAttachmentPicker || isSmartSortPickerMode) {
             applyPickerFabState()
             return
         }
@@ -3233,6 +3265,12 @@ class FileBrowserActivity : AppCompatActivity() {
                 fabPaste.setIconResource(R.drawable.ic_compress_image)
                 fabPaste.visibility = View.VISIBLE
                 fabPaste.setOnClickListener { showConfirmImageCompressLocalFolderDialog() }
+            }
+            isGifCreatorDestPickerMode -> {
+                fabPaste.setText(R.string.use_this_folder)
+                fabPaste.setIconResource(R.drawable.ic_gif)
+                fabPaste.visibility = View.VISIBLE
+                fabPaste.setOnClickListener { showConfirmGifCreatorLocalFolderDialog() }
             }
             isSyncFolderPickerMode -> {
                 fabPaste.setText(R.string.use_this_folder)

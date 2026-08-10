@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.2] — 2026-08-07
 
 ### Added
+- GIF Creator slide interval control: Added time between slides slider (0.5s–5.0s in 0.5s increments) replacing the previous FPS control on both Mobile and TV interfaces.
 - Feature to generate animated GIF files from selected images with custom frame rate, resizing options, and drag-and-drop frame reordering on Mobile and Android TV.
 - Support for generating GIFs directly from local storage and remote network/cloud shares.
 - `gifencoder` (v0.10.1) library integration for fast on-device GIF encoding.
@@ -15,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added built-in EPUB reader. Tapping any `.epub` file now opens it directly in UFM without requiring an external app. The viewer supports EPUB 2 and EPUB 3 formats, renders chapters in a WebView with previous/next chapter navigation and a table of contents, respects the app-wide font size preference, and switches to a dark background automatically when the device is in dark mode. Available on both mobile and Android TV. No third-party library was added — parsing uses the standard Android platform APIs.
 
 ### Fixed
+- Fixed folder picker mode handling in GIF Creator custom folder selection across StorageBrowserActivity, FileBrowserActivity, and NetworkBrowserActivity to suppress feature tiles and correctly display the "Use This Folder" FAB button.
 - Fixed instant sync triggering for SMB and SFTP servers when moving or copying files into local source folders.
 - Fixed opening internal storage folders showing stale 0-byte ghost files when indexing is active. When files were moved or deleted on disk by Advanced Sync or background processes, Room database index records persisted until a manual refresh. The file list now validates physical file existence (`File.exists()`) when loading indexed paths, preventing non-existent files from rendering as 0-byte ghosts in `FileBrowserFragment`, `FileBrowserActivity`, and `SearchActivity`. In addition, `FileBrowserActivity` now triggers background folder index synchronization upon folder navigation, and `AdvancedSyncWorker` notifies `IndexingRepository` and `MediaScannerNotifier` immediately upon local file deletions during move and sync operations.
 - Fixed SMB connection drops and infinite loading spinner caused by session invalidation on back gestures, hyper-aggressive session staleness timeout, and socket teardown hangs when returning from idle sessions.

@@ -10399,6 +10399,83 @@ UFMが前回のセッション中に応答しなくなりました。修正に�
     <string name="backup_pref_icon_tap_edit_mode">
 アイコンタップ編集モードの設定
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+GIFを作成
+</string>
+    <string name="gif_creator_title">
+アニメーションGIFを作成
+</string>
+    <string name="gif_creator_subtitle">
+%d 枚の画像が選択されています
+</string>
+    <string name="gif_creator_fps_label">
+フレームレート
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+フレームをリサイズ
+</string>
+    <string name="gif_creator_width_hint">
+幅 (px)
+</string>
+    <string name="gif_creator_height_hint">
+高さ (px)
+</string>
+    <string name="gif_creator_output_label">
+出力フォルダ
+</string>
+    <string name="gif_creator_btn_create">
+GIFを作成
+</string>
+    <string name="gif_creator_no_images">
+GIFを作成するには、画像ファイルを2つ以上選択してください。
+</string>
+    <string name="gif_creator_progress">
+フレーム %1$d / %2$d をエンコード中…
+</string>
+    <string name="gif_creator_complete">
+GIFの作成に成功しました
+</string>
+    <string name="gif_creator_result_size">
+出力: %1$s  ·  %2$d フレーム  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+GIFのエンコードに失敗しました: %s
+</string>
+    <string name="gif_creator_oom_error">
+GIF作成中にメモリが不足しました。フレームサイズを小さくするか、画像の枚数を減らしてお試しください。
+</string>
+    <string name="slideshow_play_pause">
+スライドショーの再生/一時停止
+</string>
+    <string name="slideshow_interval">
+間隔: %1$.1f秒
+</string>
+    <string name="gif_creator_view">
+GIFを表示
+</string>
+    <string name="icon_image_gif">
+GIFを作成
+</string>
+    <string name="icon_toolbar_create_gif">
+GIFを作成
+</string>
+    <string name="backup_pref_gif_creator">
+GIFクリエイター設定
+</string>
+    <string name="action_change">
+変更
+</string>
+    <string name="gif_creator_slide_interval_label">
+スライド間の間隔
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1f秒
+</string>
 </resources>
 
 

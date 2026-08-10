@@ -10411,6 +10411,83 @@ Al tocar el icono de una carpeta o archivo se abre el elemento normalmente
     <string name="backup_pref_icon_tap_edit_mode">
 Ajustes del modo de edición al tocar el icono
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+Crear GIF
+</string>
+    <string name="gif_creator_title">
+Crear GIF animado
+</string>
+    <string name="gif_creator_subtitle">
+%d imágenes seleccionadas
+</string>
+    <string name="gif_creator_fps_label">
+Velocidad de fotogramas
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+Redimensionar fotogramas
+</string>
+    <string name="gif_creator_width_hint">
+Ancho (px)
+</string>
+    <string name="gif_creator_height_hint">
+Alto (px)
+</string>
+    <string name="gif_creator_output_label">
+Carpeta de salida
+</string>
+    <string name="gif_creator_btn_create">
+Crear GIF
+</string>
+    <string name="gif_creator_no_images">
+Selecciona al menos 2 archivos de imagen para crear un GIF
+</string>
+    <string name="gif_creator_progress">
+Codificando fotograma %1$d de %2$d…
+</string>
+    <string name="gif_creator_complete">
+GIF creado correctamente
+</string>
+    <string name="gif_creator_result_size">
+Salida: %1$s  ·  %2$d fotogramas  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+Error al codificar el GIF: %s
+</string>
+    <string name="gif_creator_oom_error">
+Memoria insuficiente al crear el GIF. Por favor, intenta reducir el tamaño del fotograma o seleccionar menos imágenes.
+</string>
+    <string name="slideshow_play_pause">
+Reproducir/Pausar presentación
+</string>
+    <string name="slideshow_interval">
+Intervalo: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+Ver GIF
+</string>
+    <string name="icon_image_gif">
+Crear GIF
+</string>
+    <string name="icon_toolbar_create_gif">
+Crear GIF
+</string>
+    <string name="backup_pref_gif_creator">
+Configuración del creador de GIF
+</string>
+    <string name="action_change">
+Cambiar
+</string>
+    <string name="gif_creator_slide_interval_label">
+Tiempo entre diapositivas
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

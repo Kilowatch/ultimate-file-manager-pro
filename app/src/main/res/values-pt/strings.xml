@@ -10399,6 +10399,83 @@ Tocar no ícone de uma pasta ou arquivo abre o item normalmente
     <string name="backup_pref_icon_tap_edit_mode">
 Configurações do modo de edição ao tocar no ícone
 </string>
+
+    <!-- GIF Creator -->
+    <string name="action_create_gif">
+Criar GIF
+</string>
+    <string name="gif_creator_title">
+Criar GIF animado
+</string>
+    <string name="gif_creator_subtitle">
+%d imagens selecionadas
+</string>
+    <string name="gif_creator_fps_label">
+Taxa de quadros
+</string>
+    <string name="gif_creator_fps_value">
+%d fps
+</string>
+    <string name="gif_creator_output_size_label">
+Redimensionar quadros
+</string>
+    <string name="gif_creator_width_hint">
+Largura (px)
+</string>
+    <string name="gif_creator_height_hint">
+Altura (px)
+</string>
+    <string name="gif_creator_output_label">
+Pasta de saída
+</string>
+    <string name="gif_creator_btn_create">
+Criar GIF
+</string>
+    <string name="gif_creator_no_images">
+Selecione pelo menos 2 arquivos de imagem para criar um GIF
+</string>
+    <string name="gif_creator_progress">
+Codificando quadro %1$d de %2$d…
+</string>
+    <string name="gif_creator_complete">
+GIF criado com sucesso
+</string>
+    <string name="gif_creator_result_size">
+Saída: %1$s  ·  %2$d quadros  ·  %3$d fps
+</string>
+    <string name="gif_creator_error">
+Falha ao codificar GIF: %s
+</string>
+    <string name="gif_creator_oom_error">
+Memória insuficiente ao criar o GIF. Tente reduzir o tamanho do quadro ou selecionar menos imagens.
+</string>
+    <string name="slideshow_play_pause">
+Reproduzir/Pausar Apresentação de Slides
+</string>
+    <string name="slideshow_interval">
+Intervalo: %1$.1fs
+</string>
+    <string name="gif_creator_view">
+Visualizar GIF
+</string>
+    <string name="icon_image_gif">
+Criar GIF
+</string>
+    <string name="icon_toolbar_create_gif">
+Criar GIF
+</string>
+    <string name="backup_pref_gif_creator">
+Configurações do Criador de GIF
+</string>
+    <string name="action_change">
+Alterar
+</string>
+    <string name="gif_creator_slide_interval_label">
+Tempo entre slides
+</string>
+    <string name="gif_creator_slide_interval_value">
+%1$.1fs
+</string>
 </resources>
 
 

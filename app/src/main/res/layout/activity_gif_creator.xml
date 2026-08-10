@@ -91,12 +91,12 @@
                     android:padding="4dp"
                     android:scrollbars="vertical"/>
 
-                <!-- Frame Rate Section -->
+                <!-- Slide Interval Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/gif_creator_fps_label"
+                    android:text="@string/gif_creator_slide_interval_label"
                     android:textColor="@color/mobile_card_text_primary"
                     android:textSize="14sp"
                     android:textStyle="bold"/>
@@ -109,19 +109,19 @@
                     android:layout_marginTop="4dp">
 
                     <SeekBar
-                        android:id="@+id/seekFps"
+                        android:id="@+id/seekSlideInterval"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:max="30"
-                        android:progress="10" />
+                        android:max="9"
+                        android:progress="1" />
 
                     <TextView
-                        android:id="@+id/txtFpsValue"
+                        android:id="@+id/txtSlideIntervalValue"
                         android:layout_width="56dp"
                         android:layout_height="wrap_content"
                         android:gravity="end"
-                        android:text="10 fps"
+                        android:text="1.0s"
                         android:textColor="@color/ufm_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />

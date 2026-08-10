@@ -65,6 +65,7 @@ class CustomTileActivity : AppCompatActivity() {
     private var isAdvancedSyncFolderPickerMode = false
     private var isCompressDestPickerMode = false
     private var isImageCompressDestPickerMode = false
+    private var isGifCreatorDestPickerMode = false
     private var isExtractDestPickerMode = false
     private var isNetworkCachePickerMode = false
     private var isQuickTransferPickerMode = false
@@ -141,6 +142,7 @@ class CustomTileActivity : AppCompatActivity() {
         isAdvancedSyncFolderPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, false)
         isCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, false)
         isImageCompressDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, false)
+        isGifCreatorDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, false)
         isExtractDestPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, false)
         isNetworkCachePickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, false)
         isQuickTransferPickerMode = intent.getBooleanExtra(FileBrowserActivity.EXTRA_QUICK_TRANSFER_PICKER, false)
@@ -639,6 +641,7 @@ class CustomTileActivity : AppCompatActivity() {
         if (isAdvancedSyncFolderPickerMode) putExtra(FileBrowserActivity.EXTRA_ADVANCED_SYNC_FOLDER_PICKER, true)
         if (isCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_COMPRESS_DEST_PICKER, true)
         if (isImageCompressDestPickerMode) putExtra(FileBrowserActivity.EXTRA_IMAGE_COMPRESS_DEST_PICKER, true)
+        if (isGifCreatorDestPickerMode) putExtra(FileBrowserActivity.EXTRA_GIF_CREATOR_DEST_PICKER, true)
         if (isExtractDestPickerMode) putExtra(FileBrowserActivity.EXTRA_EXTRACT_DEST_PICKER, true)
         if (isNetworkCachePickerMode) putExtra(FileBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
         if (isQuickTransferPickerMode) {
