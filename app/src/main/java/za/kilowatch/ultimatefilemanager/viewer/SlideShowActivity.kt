@@ -483,16 +483,29 @@ class SlideShowActivity : AppCompatActivity() {
 
         if (isImage) {
             txtInfo.visibility = View.GONE
-            // Read local dimensions/sizes if available to update info text
-            val file = File(path)
-            if (file.exists() && shareId.isEmpty()) {
-                val size = formatFileSize(file.length())
-                txtInfo.text = size
-                txtInfo.visibility = View.VISIBLE
-            } else if (sizesMap.containsKey(path)) {
-                val size = formatFileSize(sizesMap[path] ?: 0L)
-                txtInfo.text = size
-                txtInfo.visibility = View.VISIBLE
+            // Read local dimensions/sizes if available to update info text.
+            // File.exists()/length() are native access()/stat() syscalls that can
+            // block for >5s on slow TV storage (e.g. USB/NFS), and updatePageState()
+            // runs synchronously inside ViewPager2.setCurrentItem() from onKeyDown —
+            // so the filesystem stat is done off the main thread.
+            val localFile = File(path)
+            val isLocalImage = shareId.isEmpty()
+            lifecycleScope.launch(Dispatchers.IO) {
+                val size = if (isLocalImage && localFile.exists()) {
+                    localFile.length()
+                } else if (sizesMap.containsKey(path)) {
+                    sizesMap[path]
+                } else {
+                    null
+                }
+                withContext(Dispatchers.Main) {
+                    // Only apply if this page is still the one being shown (the user
+                    // may have navigated on while the stat was in flight).
+                    if (size != null && viewPager.currentItem == position) {
+                        txtInfo.text = formatFileSize(size)
+                        txtInfo.visibility = View.VISIBLE
+                    }
+                }
             }
         }
 
