@@ -1587,7 +1587,7 @@ object CrashReportManager {
                     // 31. The main thread is sampled inside the main Handler's
                     //     message-enqueue bookkeeping while a freshly dispatched
                     //     main-looper Runnable schedules a delayed message. The
-                    //     sample can catch the enqueue at two points of the same
+                    //     sample can catch the enqueue at three points of the same
                     //     `postDelayed` call:
                     //       (a) the entry of the call — top frame
                     //           `android.os.Message.obtain` (the Message-pool
@@ -1602,8 +1602,15 @@ object CrashReportManager {
                     //           under `android.os.Handler.enqueueMessage`, reached
                     //           from `Handler.postDelayed`/`sendMessageDelayed`
                     //           (reported from a Samsung SM-F966U, SDK 36, app
-                    //           1.8.0-GOOGLE).
-                    //     In both shapes the caller of the postDelayed is a
+                    //           1.8.0-GOOGLE); or
+                    //       (c) the very entry of the call itself — the sample caught
+                    //           the Runnable's first `postDelayed` before it
+                    //           descended into `getPostMessage`/`Message.obtain`, so
+                    //           `Handler.postDelayed`/`sendMessageDelayed` IS the top
+                    //           frame, directly under a non-platform `run()` sitting
+                    //           on `Handler.handleCallback` (reported from a Google
+                    //           Pixel 6a, SDK 37, app 1.7.7-GOOGLE).
+                    //     In all three shapes the caller of the postDelayed is a
                     //     non-platform `run()` sitting directly on
                     //     `android.os.Handler.handleCallback`: the sampled Runnable
                     //     was just entered and its `run()` is calling `postDelayed`
@@ -1643,7 +1650,20 @@ object CrashReportManager {
                             mainStackTrace.getOrNull(1)?.className == "android.os.ThreadLocalWorkSource" &&
                             mainStackTrace.getOrNull(1)?.methodName == "getUid" &&
                             mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
-                            mainStackTrace.getOrNull(2)?.methodName == "enqueueMessage")) &&
+                            mainStackTrace.getOrNull(2)?.methodName == "enqueueMessage") ||
+                         // ... or the very entry of the call itself — top frame
+                         // Handler.postDelayed/sendMessageDelayed (the sample caught
+                         // the Runnable's first postDelayed before it descended into
+                         // getPostMessage/Message.obtain), directly under a
+                         // non-platform run() sitting on Handler.handleCallback.
+                         (topFrame?.className == "android.os.Handler" &&
+                            (topFrame?.methodName == "postDelayed" || topFrame?.methodName == "sendMessageDelayed") &&
+                            mainStackTrace.getOrNull(1)?.methodName == "run" &&
+                            mainStackTrace.getOrNull(1)?.let {
+                                PLATFORM_PREFIXES.none { prefix -> it.className.startsWith(prefix) }
+                            } == true &&
+                            mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(2)?.methodName == "handleCallback")) &&
                         mainStackTrace.withIndex().any { (i, frame) ->
                             frame.className == "android.os.Handler" &&
                             (frame.methodName == "postDelayed" || frame.methodName == "sendMessageDelayed") &&
