@@ -1627,7 +1627,70 @@ object CrashReportManager {
                             mainStackTrace.getOrNull(i + 2)?.methodName == "handleCallback"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall) {
+                    // 32. The main thread is sampled inside a device-vendor ROM's
+                    //     Looper-observer hook at the very start of a message dispatch,
+                    //     while the hook posts a delayed message back onto the main
+                    //     looper — e.g. top frame `android.os.MessageQueue.nativeWake`
+                    //     (the µs-scale native wake the looper performs after a message
+                    //     is enqueued) under `android.os.MessageQueue.enqueueMessage` ->
+                    //     `android.os.Handler.enqueueMessage` ->
+                    //     `android.os.Handler.sendMessageAtTime` ->
+                    //     `android.os.Handler.sendMessageDelayed` ->
+                    //     `android.os.Handler.post`, whose caller is
+                    //     `tcl.resource.LooperMonitor.getKernelInfo` invoked by
+                    //     `tcl.resource.LooperMonitor.onDispatchStart`, called directly
+                    //     by `android.os.Looper.loop` (reported from a TCL BeyondTV,
+                    //     SDK 30, app 1.8.1-GOOGLE). TCL's ROM injects `LooperMonitor`
+                    //     into the platform Looper so `onDispatchStart` runs at the
+                    //     START of every message dispatch; the sample caught the hook's
+                    //     `getKernelInfo` posting a delayed message, which is µs-scale
+                    //     bookkeeping. `nativeWake`/`enqueueMessage`/`post` cannot by
+                    //     themselves occupy the main thread for 5 s, and the main
+                    //     thread is demonstrably inside `Looper.loop` dispatching a
+                    //     fresh message at sample time — a thread parked inside a
+                    //     >5 s block cannot be at the entry of a message dispatch — so
+                    //     the >5 s block is device-side slowness / CPU starvation on a
+                    //     low-end TV (this report's `DefaultDispatcher-worker-1` is
+                    //     RUNNABLE in a socket recv, `NanoHttpd Main Listener` and
+                    //     `pool-2-thread-1` are RUNNABLE in accept, and
+                    //     `DlnaSsdpListener` is RUNNABLE in recvfrom, busy with DLNA
+                    //     discovery and the HTTP streaming server, starving the main
+                    //     thread) or a post-stall sample of the backlog the looper
+                    //     drains after a genuine stall. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames, and the vendor
+                    //     hook's class name (`tcl.resource.LooperMonitor`, injected by
+                    //     the TCL ROM, not part of this app) is not platform-prefixed
+                    //     so the pure-framework filter did not match. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `MessageQueue.nativeWake` under the Handler
+                    //     message-enqueue chain (`enqueueMessage`/`sendMessageAtTime`/
+                    //     `sendMessageDelayed`/`post`), with a vendor
+                    //     `LooperMonitor.onDispatchStart`/`getKernelInfo` frame invoked
+                    //     from `android.os.Looper.loop`, and no
+                    //     `za.kilowatch.ultimatefilemanager` frames, as a false
+                    //     positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread inside blocking
+                    //     work — a lock, file I/O, or binder frame, or app business
+                    //     logic on the stack — and are still reported.
+                    val isVendorLooperObserverPostStall =
+                        topFrame?.className == "android.os.MessageQueue" &&
+                        topFrame?.methodName == "nativeWake" &&
+                        mainStackTrace.any {
+                            it.className.contains("LooperMonitor") &&
+                            (it.methodName == "onDispatchStart" || it.methodName == "getKernelInfo")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" &&
+                            (it.methodName == "post" || it.methodName == "postDelayed" ||
+                             it.methodName == "sendMessageDelayed" || it.methodName == "sendMessageAtTime" ||
+                             it.methodName == "enqueueMessage")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Looper" && it.methodName == "loop"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
