@@ -2262,7 +2262,94 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall) {
+                    // 41. The main thread is sampled inside the framework's
+                    //     ViewPropertyAnimator animation-end chaining while a freshly
+                    //     dispatched Choreographer frame runs the animation clock — e.g.
+                    //     top frame `android.view.ViewPropertyAnimator.getValue` (the
+                    //     property read `animateProperty` performs when a new alpha
+                    //     animation starts) under `animateProperty` under
+                    //     `ViewPropertyAnimator.alpha`, called by the app's animation-end
+                    //     listener (`b2.run`, an R8-obfuscated non-platform frame)
+                    //     dispatched from `ViewPropertyAnimator$AnimatorEventListener.
+                    //     onAnimationEnd` after a `ValueAnimator.endAnimation`, reached
+                    //     from `AnimationHandler.doAnimationFrame`/`AnimationHandler$1.
+                    //     doFrame` under a `Choreographer.doFrame` vsync dispatch
+                    //     (`Choreographer$FrameDisplayEventReceiver.run` under
+                    //     `Handler.handleCallback`) — reported from an OPPO CPH1937, SDK
+                    //     30, app 1.8.1-GOOGLE. The app chains its animations from the
+                    //     end-listener (e.g. a repeating fade/pulse: when one alpha
+                    //     animation ends, the listener starts the next `.alpha()`
+                    //     animation), which is bounded per-frame UI work — `getValue` is
+                    //     a µs-scale property read and starting the next animator is
+                    //     allocation plus a property getter, so neither can by itself
+                    //     occupy the main thread for 5 s. The main looper is demonstrably
+                    //     processing a freshly dispatched vsync frame callback at sample
+                    //     time, which a thread parked inside a >5 s block cannot do — the
+                    //     >5 s block is device-side slowness / CPU starvation on the
+                    //     mid-range OPPO (the report's own `DefaultDispatcher-worker-*`,
+                    //     `DlnaSsdpListener`, `NanoHttpd Main Listener` and HTTP-server
+                    //     threads are all RUNNABLE) or a post-stall sample of the
+                    //     backlog the main looper drains after a genuine stall. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is a `ViewPropertyAnimator` method, with a
+                    //     `ViewPropertyAnimator$AnimatorEventListener.onAnimationEnd`
+                    //     dispatch from a `ValueAnimator.endAnimation` reached through
+                    //     the `AnimationHandler`/`Choreographer` vsync frame, a
+                    //     non-platform (R8-obfuscated) listener frame directly below the
+                    //     `ViewPropertyAnimator.alpha` call (the app's end-listener
+                    //     chaining the next animation — a pure-framework animation-end
+                    //     dispatch without it would already be caught by
+                    //     `isPureFrameworkStack`), and no framework blocking primitive
+                    //     anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the
+                    //     main thread parked inside a blocking primitive (a lock,
+                    //     file/network/database I/O or binder frame appears on the
+                    //     stack), or run the animation-end listener's body doing blocking
+                    //     work, and are still reported.
+                    val alphaFrameIdx = mainStackTrace.indexOfFirst {
+                        it.className == "android.view.ViewPropertyAnimator" && it.methodName == "alpha"
+                    }
+                    val isViewPropertyAnimatorChainingStall =
+                        topFrame?.className == "android.view.ViewPropertyAnimator" &&
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewPropertyAnimator" && it.methodName == "animateProperty"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewPropertyAnimator\$AnimatorEventListener" && it.methodName == "onAnimationEnd"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.animation.ValueAnimator" && it.methodName == "endAnimation"
+                        } &&
+                        mainStackTrace.any { it.className.startsWith("android.animation.AnimationHandler") } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer\$FrameDisplayEventReceiver" && it.methodName == "run"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" && it.methodName == "handleCallback"
+                        } &&
+                        alphaFrameIdx >= 0 &&
+                        mainStackTrace.getOrNull(alphaFrameIdx + 1)
+                            ?.let { listener ->
+                                PLATFORM_PREFIXES.none { prefix -> listener.className.startsWith(prefix) }
+                            } == true &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in bounded
+                        // per-frame animation-end chaining.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
