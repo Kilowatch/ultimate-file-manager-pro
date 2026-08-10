@@ -1579,7 +1579,55 @@ object CrashReportManager {
                             it.className == "android.app.Activity" && it.methodName == "performResume"
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall) {
+                    // 31. The main thread is sampled inside the main Handler's
+                    //     message-enqueue bookkeeping while a freshly dispatched
+                    //     main-looper Runnable schedules a delayed message — top
+                    //     frame `java.lang.ThreadLocal.get` (an O(1) ThreadLocalMap
+                    //     lookup) under `android.os.ThreadLocalWorkSource.getUid`
+                    //     under `android.os.Handler.enqueueMessage`, reached from
+                    //     `Handler.postDelayed`/`sendMessageDelayed`, whose caller is
+                    //     a non-platform `run()` sitting directly on
+                    //     `android.os.Handler.handleCallback` (reported from a Samsung
+                    //     SM-F966U, SDK 36, app 1.8.0-GOOGLE). The sampled Runnable
+                    //     was just entered and its `run()` is calling `postDelayed` as
+                    //     its first action — the enqueue bookkeeping
+                    //     (`ThreadLocalWorkSource.getUid`/`ThreadLocal.get`) is
+                    //     µs-scale and the `run()` demonstrably has
+                    //     `Handler.handleCallback` directly below it, so the main
+                    //     looper is processing messages at sample time, which a thread
+                    //     parked inside a >5 s block cannot do. The >5 s block
+                    //     therefore occurred in a PREVIOUS main-looper message and
+                    //     this sample is the post-stall backlog the looper drains
+                    //     after recovery — the same family as filters 10 and 20, one
+                    //     frame further into the Runnable's entry. This is NOT the
+                    //     watchdog's own heartbeat ticker re-post (which
+                    //     `tickerJustRan` already handles): the ticker updates
+                    //     `lastTickTimestamp` before calling `postDelayed`, so a
+                    //     sample inside its re-post would carry a fresh timestamp and
+                    //     be suppressed; this report's timestamp was stale, so the
+                    //     Runnable is a different post-stall backlog entry. A genuine
+                    //     freeze keeps the main thread inside blocking work — the top
+                    //     frame is NOT the enqueue bookkeeping (it is a lock, file
+                    //     I/O, or binder frame) — and is still reported.
+                    val isPostDelayedFromFreshRunStall =
+                        topFrame?.className == "java.lang.ThreadLocal" &&
+                        topFrame?.methodName == "get" &&
+                        mainStackTrace.getOrNull(1)?.className == "android.os.ThreadLocalWorkSource" &&
+                        mainStackTrace.getOrNull(1)?.methodName == "getUid" &&
+                        mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                        mainStackTrace.getOrNull(2)?.methodName == "enqueueMessage" &&
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.className == "android.os.Handler" &&
+                            (frame.methodName == "postDelayed" || frame.methodName == "sendMessageDelayed") &&
+                            mainStackTrace.getOrNull(i + 1)?.methodName == "run" &&
+                            mainStackTrace.getOrNull(i + 1)?.let {
+                                PLATFORM_PREFIXES.none { prefix -> it.className.startsWith(prefix) }
+                            } == true &&
+                            mainStackTrace.getOrNull(i + 2)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(i + 2)?.methodName == "handleCallback"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
