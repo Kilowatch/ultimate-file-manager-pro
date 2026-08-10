@@ -1586,18 +1586,30 @@ object CrashReportManager {
 
                     // 31. The main thread is sampled inside the main Handler's
                     //     message-enqueue bookkeeping while a freshly dispatched
-                    //     main-looper Runnable schedules a delayed message — top
-                    //     frame `java.lang.ThreadLocal.get` (an O(1) ThreadLocalMap
-                    //     lookup) under `android.os.ThreadLocalWorkSource.getUid`
-                    //     under `android.os.Handler.enqueueMessage`, reached from
-                    //     `Handler.postDelayed`/`sendMessageDelayed`, whose caller is
-                    //     a non-platform `run()` sitting directly on
-                    //     `android.os.Handler.handleCallback` (reported from a Samsung
-                    //     SM-F966U, SDK 36, app 1.8.0-GOOGLE). The sampled Runnable
-                    //     was just entered and its `run()` is calling `postDelayed` as
-                    //     its first action — the enqueue bookkeeping
-                    //     (`ThreadLocalWorkSource.getUid`/`ThreadLocal.get`) is
-                    //     µs-scale and the `run()` demonstrably has
+                    //     main-looper Runnable schedules a delayed message. The
+                    //     sample can catch the enqueue at two points of the same
+                    //     `postDelayed` call:
+                    //       (a) the entry of the call — top frame
+                    //           `android.os.Message.obtain` (the Message-pool
+                    //           allocation `Handler.getPostMessage` performs to wrap
+                    //           the Runnable) under `android.os.Handler.getPostMessage`
+                    //           under `Handler.postDelayed`/`sendMessageDelayed`
+                    //           (reported from a Google Pixel 6a, SDK 37, app
+                    //           1.8.1-GOOGLE); or
+                    //       (b) the deeper enqueue bookkeeping — top frame
+                    //           `java.lang.ThreadLocal.get` (an O(1) ThreadLocalMap
+                    //           lookup) under `android.os.ThreadLocalWorkSource.getUid`
+                    //           under `android.os.Handler.enqueueMessage`, reached
+                    //           from `Handler.postDelayed`/`sendMessageDelayed`
+                    //           (reported from a Samsung SM-F966U, SDK 36, app
+                    //           1.8.0-GOOGLE).
+                    //     In both shapes the caller of the postDelayed is a
+                    //     non-platform `run()` sitting directly on
+                    //     `android.os.Handler.handleCallback`: the sampled Runnable
+                    //     was just entered and its `run()` is calling `postDelayed`
+                    //     as its first action — the enqueue bookkeeping
+                    //     (`Message.obtain`/`getPostMessage`/`getUid`/`ThreadLocal.get`)
+                    //     is µs-scale and the `run()` demonstrably has
                     //     `Handler.handleCallback` directly below it, so the main
                     //     looper is processing messages at sample time, which a thread
                     //     parked inside a >5 s block cannot do. The >5 s block
@@ -1615,12 +1627,23 @@ object CrashReportManager {
                     //     frame is NOT the enqueue bookkeeping (it is a lock, file
                     //     I/O, or binder frame) — and is still reported.
                     val isPostDelayedFromFreshRunStall =
-                        topFrame?.className == "java.lang.ThreadLocal" &&
-                        topFrame?.methodName == "get" &&
-                        mainStackTrace.getOrNull(1)?.className == "android.os.ThreadLocalWorkSource" &&
-                        mainStackTrace.getOrNull(1)?.methodName == "getUid" &&
-                        mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
-                        mainStackTrace.getOrNull(2)?.methodName == "enqueueMessage" &&
+                        // Either the entry of the postDelayed call (Message.obtain /
+                        // getPostMessage under Handler.postDelayed) ...
+                        ((topFrame?.className == "android.os.Message" &&
+                            topFrame?.methodName == "obtain" &&
+                            mainStackTrace.getOrNull(1)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(1)?.methodName == "getPostMessage" &&
+                            mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                            (mainStackTrace.getOrNull(2)?.methodName == "postDelayed" ||
+                             mainStackTrace.getOrNull(2)?.methodName == "sendMessageDelayed")) ||
+                         // ... or the deeper enqueue bookkeeping (ThreadLocal.get /
+                         // ThreadLocalWorkSource.getUid under Handler.enqueueMessage).
+                         (topFrame?.className == "java.lang.ThreadLocal" &&
+                            topFrame?.methodName == "get" &&
+                            mainStackTrace.getOrNull(1)?.className == "android.os.ThreadLocalWorkSource" &&
+                            mainStackTrace.getOrNull(1)?.methodName == "getUid" &&
+                            mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                            mainStackTrace.getOrNull(2)?.methodName == "enqueueMessage")) &&
                         mainStackTrace.withIndex().any { (i, frame) ->
                             frame.className == "android.os.Handler" &&
                             (frame.methodName == "postDelayed" || frame.methodName == "sendMessageDelayed") &&
