@@ -1501,7 +1501,50 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall) {
+                    // 29. The main thread is sampled while the framework dispatches the
+                    //     Activity-resumed lifecycle event to the Application's registered
+                    //     ActivityLifecycleCallbacks during a normal Activity resume — top
+                    //     frame `<obfuscated callback>.onActivityResumed` (the R8-obfuscated
+                    //     Application-level lifecycle callback UFM registers in UfmApplication
+                    //     to apply the saved locale / font size / AMOLED background), invoked
+                    //     by `Application.dispatchActivityResumed` ->
+                    //     `Activity.dispatchActivityResumed` -> `Activity.onResume` ->
+                    //     `<activity>.onResume` -> `Instrumentation.callActivityOnResume` ->
+                    //     `Activity.performResume` -> `ActivityThread.performResumeActivity`
+                    //     (reported from a TCL BeyondTV, SDK 30, app 1.8.0-GOOGLE). The
+                    //     callback body is fast — cached LocaleHelper/FontSizeHelper reads
+                    //     (the prefs-lock-contention fix already cached both on main),
+                    //     config comparisons and a view lookup, with a conditional
+                    //     `activity.recreate()` — and the sample caught the callback at its
+                    //     ENTRY: `onActivityResumed` is the TOP frame with no deeper frame
+                    //     into the callback body (no `SharedPreferencesImpl`, `findViewById`
+                    //     or `recreate` frame), so the main looper had just dispatched the
+                    //     ResumeActivityItem and walked the fast resume chain. A thread in
+                    //     the middle of that bounded framework dispatch cannot have been
+                    //     parked inside a >5 s block in THIS frame — the >5 s block is
+                    //     device-side slowness / CPU starvation on a low-end TV (this
+                    //     report's `DlnaFetchThread`, `DlnaSsdpListener`,
+                    //     `DefaultDispatcher-worker-*`, `NanoHttpd Main Listener` and
+                    //     `pool-2-thread-1` are all RUNNABLE, busy with SSDP/DLNA discovery
+                    //     and the HTTP streaming server, starving the main thread) or a
+                    //     post-stall sample of the backlog the main looper drains after a
+                    //     genuine stall. A genuine freeze keeps the main thread inside
+                    //     blocking work — the top frame is NOT `onActivityResumed` (it is a
+                    //     deeper frame such as a lock, file I/O, binder call, or the
+                    //     callback's own body executing blocking work, e.g. an uncached
+                    //     `getSharedPreferences` read that appears as a
+                    //     `SharedPreferencesImpl` frame) — and is still reported.
+                    val isActivityResumedLifecycleDispatchStall =
+                        topFrame?.methodName == "onActivityResumed" &&
+                        PLATFORM_PREFIXES.none { topFrame.className.startsWith(it) } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.Application" && it.methodName == "dispatchActivityResumed"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.Activity" && it.methodName == "dispatchActivityResumed"
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
