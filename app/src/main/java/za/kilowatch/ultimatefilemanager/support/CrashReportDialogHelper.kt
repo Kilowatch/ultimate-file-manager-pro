@@ -48,25 +48,47 @@ object CrashReportDialogHelper {
      */
     fun maybeShowCrashReportDialog(activity: Activity, lifecycleScope: LifecycleCoroutineScope) {
         val app = activity.application as? UfmApplication ?: return
-        if (!CrashReportManager.isEnabled(activity)) {
-            if (CrashReportManager.hasPendingReport(app)) {
-                CrashReportManager.deleteAllPendingReports(app)
+
+        // The pending-report check does synchronous file I/O — getFilesDir() (which itself
+        // runs File.exists() on the app private dir), mkdirs(), listFiles() and reading the
+        // report JSON. On a slow or busy TV that I/O blocked the main thread for >5 s while
+        // StorageBrowserActivity.onResume ran, tripping the ANR watchdog, so the whole
+        // check + parse now runs on Dispatchers.IO and only the dialog itself is shown back
+        // on the main thread.
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (!CrashReportManager.isEnabled(activity)) {
+                if (CrashReportManager.hasPendingReport(app)) {
+                    CrashReportManager.deleteAllPendingReports(app)
+                }
+                return@launch
             }
-            return
+            if (!CrashReportManager.hasPendingReport(app)) return@launch
+
+            val reportFile = CrashReportManager.getPendingReportFile(app) ?: return@launch
+            val fields = CrashReportManager.parseReport(reportFile)
+            val reportType = fields["type"] ?: "crash"
+            val fingerprint = fields["fingerprint"] ?: ""
+
+            // Fingerprint deduplication applies ONLY to ANRs (freezes). Crashes ALWAYS display.
+            if (reportType == "anr" && fingerprint.isNotEmpty() && CrashReportManager.isFingerprintReported(activity, fingerprint)) {
+                CrashReportManager.deleteReport(reportFile)
+                return@launch
+            }
+
+            withContext(Dispatchers.Main) {
+                showReportDialog(activity, reportFile, reportType, fingerprint, fields, lifecycleScope)
+            }
         }
-        if (!CrashReportManager.hasPendingReport(app)) return
+    }
 
-        val reportFile = CrashReportManager.getPendingReportFile(app) ?: return
-        val fields = CrashReportManager.parseReport(reportFile)
-        val reportType = fields["type"] ?: "crash"
-        val fingerprint = fields["fingerprint"] ?: ""
-
-        // Fingerprint deduplication applies ONLY to ANRs (freezes). Crashes ALWAYS display.
-        if (reportType == "anr" && fingerprint.isNotEmpty() && CrashReportManager.isFingerprintReported(activity, fingerprint)) {
-            CrashReportManager.deleteReport(reportFile)
-            return
-        }
-
+    private fun showReportDialog(
+        activity: Activity,
+        reportFile: java.io.File,
+        reportType: String,
+        fingerprint: String,
+        fields: Map<String, String>,
+        lifecycleScope: LifecycleCoroutineScope
+    ) {
         val isTv = DeviceUtils.isTvDevice(activity)
 
         val layoutRes = if (isTv) R.layout.dialog_crash_report_tv else R.layout.dialog_crash_report
