@@ -1812,7 +1812,50 @@ object CrashReportManager {
                         }) &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall) {
+                    // 34. The main thread is sampled inside a bundled-library view's
+                    //     `<init>` while the framework cold-starts an Activity and inflates
+                    //     its content view — e.g. `androidx.constraintlayout.widget.
+                    //     ConstraintLayout.<init>` (top frame) under
+                    //     `LayoutInflater.createView`/`createViewFromTag`/`inflate` ->
+                    //     `<obfuscated androidx setContentView helper>` ->
+                    //     `<obfuscated androidx setContentView>` ->
+                    //     `LanguageWelcomeActivity.onCreate` -> `Activity.performCreate` ->
+                    //     `Instrumentation.callActivityOnCreate` ->
+                    //     `ActivityThread.performLaunchActivity` (reported from a
+                    //     SmartTV, SDK 31, app 1.8.1-AMAZON). A view constructor that the
+                    //     framework `LayoutInflater` runs while inflating the Activity's
+                    //     layout is bounded, one-time cold-start work (class loading,
+                    //     attribute decoding, field init) that cannot by itself occupy the
+                    //     main thread for 5 s; the only app frame is the Activity's own
+                    //     `onCreate` lifecycle callback the framework invoked, so the
+                    //     >5 s block is the one-time framework-driven cold-start cost
+                    //     (class loading, resource decode, layout inflation) on a low-end
+                    //     device, which the app cannot act on — the same class as the
+                    //     MaterialButton-inflate (11) and Activity-onCreate-findViewById
+                    //     (24) cold-start filters. Genuine freezes keep an app frame on the
+                    //     stack that is not an Activity lifecycle class (e.g. adapter bind
+                    //     code or a custom view constructor, whose class starts with the
+                    //     app package), or a top frame that is not a bundled-library
+                    //     `<init>` under a LayoutInflater + setContentView + Activity
+                    //     cold-start-launch chain, and are still reported.
+                    val isColdStartLayoutInflateStall =
+                        topFrame?.methodName == "<init>" &&
+                        topFrame?.className?.let { className ->
+                            PLATFORM_PREFIXES.none { className.startsWith(it) } &&
+                                !className.startsWith(APP_PACKAGE)
+                        } == true &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.any { it.methodName == "setContentView" } &&
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" && it.methodName == "performLaunchActivity")
+                        } &&
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
