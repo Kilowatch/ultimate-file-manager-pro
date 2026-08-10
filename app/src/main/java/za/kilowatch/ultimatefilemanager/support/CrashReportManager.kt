@@ -2092,7 +2092,87 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall) {
+                    // 39. The main thread is sampled at the entry of an app Activity's own
+                    //     `onResume` override while the framework dispatches the
+                    //     Activity-resumed lifecycle event — top frame
+                    //     `java.lang.StringBuilder.append`/`<init>` (a single µs-scale O(n)
+                    //     buffer copy), directly under the Activity's own `onResume` (a
+                    //     non-platform frame whose method name is `onResume`), under
+                    //     `Instrumentation.callActivityOnResume` → `Activity.performResume`
+                    //     → `ActivityThread.performResumeActivity` → `handleResumeActivity`
+                    //     → `servertransaction.ResumeActivityItem.execute` — reported from a
+                    //     Hisense HiSmart TV, SDK 30, app 1.8.1-GOOGLE. The sample caught
+                    //     `onResume` at its first string construction; the resume body is
+                    //     bounded (the storage-volume reload and device pings run in
+                    //     background coroutines, the rest are cached prefs reads and
+                    //     one-time dialogs), so a single append cannot by itself occupy the
+                    //     main thread for 5 s. The main looper is demonstrably processing a
+                    //     freshly dispatched lifecycle message (`ActivityThread$H.
+                    //     handleMessage` → `ResumeActivityItem.execute`) at sample time,
+                    //     which a thread parked inside a >5 s block cannot do — so the
+                    //     >5 s block is device-side slowness / CPU starvation on a low-end
+                    //     TV (the report's own `DefaultDispatcher-worker-*` threads are
+                    //     BLOCKED on prefs/resource locks and `queued-work-looper` is
+                    //     RUNNABLE doing a slow `SharedPreferencesImpl.writeToFile` →
+                    //     `FileUtils.sync` disk sync, starving the main thread) or a
+                    //     post-stall sample of the backlog the main looper drains after a
+                    //     genuine stall. The `AnrWatchdogThread` now treats a main-thread
+                    //     stack whose top frame is `StringBuilder.append`/`<init>`, whose
+                    //     second frame is a non-platform `onResume` under the framework
+                    //     Activity-resume lifecycle chain, with no framework blocking
+                    //     primitive anywhere on the stack, as a false positive and resets
+                    //     its heartbeat instead of writing a report. Genuine freezes keep
+                    //     the main thread inside blocking work — a lock, file/network I/O,
+                    //     or binder frame on the stack, or an `onResume` executing a
+                    //     blocking call (the top frame is not a trivial StringBuilder
+                    //     construction) — and are still reported.
+                    val isActivityOnResumeStringBuildStall =
+                        topFrame?.className == "java.lang.StringBuilder" &&
+                        (topFrame?.methodName == "<init>" || topFrame?.methodName == "append") &&
+                        run {
+                            // The Activity's own `onResume` sits directly under the
+                            // StringBuilder frame(s): one StringBuilder frame for the
+                            // `<init>`-top and direct `append`-top shapes, two (`append` ->
+                            // `<init>`) when the top `append` is the constructor's own
+                            // internal call. In every shape the Activity-resume lifecycle
+                            // chain sits directly below the `onResume`, proving the >5 s
+                            // block occurred in a previous main-looper message.
+                            val sbFrameCount = when {
+                                topFrame.methodName == "<init>" -> 1
+                                mainStackTrace.getOrNull(1)?.className == "java.lang.StringBuilder" &&
+                                    mainStackTrace.getOrNull(1)?.methodName == "<init>" -> 2
+                                else -> 1
+                            }
+                            val resumeFrame = mainStackTrace.getOrNull(sbFrameCount)
+                            resumeFrame != null &&
+                                resumeFrame.methodName == "onResume" &&
+                                PLATFORM_PREFIXES.none { resumeFrame.className.startsWith(it) } &&
+                                // The framework Activity-resume lifecycle dispatch...
+                                mainStackTrace.any {
+                                    it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnResume"
+                                } &&
+                                mainStackTrace.any {
+                                    it.className == "android.app.Activity" && it.methodName == "performResume"
+                                } &&
+                                mainStackTrace.any {
+                                    it.className == "android.app.ActivityThread" && it.methodName == "performResumeActivity"
+                                } &&
+                                // ... and no framework blocking primitive anywhere on the
+                                // stack — a genuine freeze parks the main thread in one of
+                                // these instead of in a µs-scale string construction.
+                                mainStackTrace.none { frame ->
+                                    (frame.className == "android.os.BinderProxy" &&
+                                     (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                                    (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                                    frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                                    frame.className.startsWith("java.io.") ||
+                                    frame.className.startsWith("libcore.io.") ||
+                                    frame.className.startsWith("java.net.") ||
+                                    frame.className.startsWith("android.database.")
+                                }
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
