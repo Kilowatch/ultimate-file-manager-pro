@@ -506,17 +506,47 @@ object CrashReportManager {
                     //    carries app call-path frames (the Handler message that decided
                     //    to unbind) and a device hook's frames, but the currently
                     //    executing frame is the binder transact into the system server,
-                    //    so the wait is still system-side. Genuine freezes that run app
-                    //    business logic have an app frame as the current frame (the top
-                    //    frame is not BinderProxy.transact) and are still reported.
+                    //    so the wait is still system-side.
+                    //
+                    //    The same class of system-side wait occurs in the BIND direction
+                    //    when the device-injected service-hook proxy intercepts a
+                    //    `bindService`/`bindIsolatedService` call — e.g. Google Play's
+                    //    injected license check (com.pairip.licensecheck.LicenseClient.
+                    //    connectToLicensingService) invoking the one-line
+                    //    ContextImpl.bindService from a main-looper Runnable, which the
+                    //    vendor ROM's virtual-service hook (com.vlite.sdk, wrapping the
+                    //    ActivityManager binder in a dynamic $Proxy) redirects into its
+                    //    own binder round-trip ($Proxy5.bindIsolatedService -> ... ->
+                    //    virtualservice.am.j$b$a.initProcess -> BinderProxy.transact ->
+                    //    transactNative, reported from a Xiaomi Redmi K20 Pro, SDK 29,
+                    //    app 1.7.7-GOOGLE). The app merely invoked the framework bind
+                    //    API; the >5 s block is the vendor virtual service's binder
+                    //    response latency, which the app cannot act on. The bind
+                    //    direction requires the hook-proxy signature (a dynamic Proxy
+                    //    invoke, the vendor's com.vlite.sdk frames, and a
+                    //    bindIsolatedService frame) so a genuine freeze where app
+                    //    business logic binds a slow target service and blocks is still
+                    //    reported.
                     val isServiceConnectionBinderStall =
                         topFrame?.className == "android.os.BinderProxy" &&
                         (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
-                        (mainStackTrace.any {
-                            it.className == "android.app.IActivityManager\$Stub\$Proxy" && it.methodName == "unbindService"
-                        } || mainStackTrace.any {
-                            it.className == "android.app.ContextImpl" && it.methodName == "unbindService"
-                        })
+                        (
+                            (mainStackTrace.any {
+                                it.className == "android.app.IActivityManager\$Stub\$Proxy" && it.methodName == "unbindService"
+                            } || mainStackTrace.any {
+                                it.className == "android.app.ContextImpl" && it.methodName == "unbindService"
+                            })
+                            ||
+                            (mainStackTrace.any {
+                                it.className == "android.app.ContextImpl" &&
+                                (it.methodName == "bindService" || it.methodName == "bindServiceCommon")
+                            } &&
+                            mainStackTrace.any { it.methodName == "bindIsolatedService" } &&
+                            mainStackTrace.any {
+                                it.className == "java.lang.reflect.Proxy" && it.methodName == "invoke"
+                            } &&
+                            mainStackTrace.any { it.className.startsWith("com.vlite.sdk") })
+                        )
 
                     // 9. The main thread is blocked inside the AndroidX Activity lifecycle
                     //    dispatch while an Activity is starting — e.g. StorageBrowserActivity.
