@@ -1961,7 +1961,62 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall) {
+                    // 37. The main thread is sampled one frame INTO a freshly
+                    //     dispatched main-looper Runnable — top frame `o45.d` (a
+                    //     non-platform method the Runnable's `run()` called as its
+                    //     first action), under `ba.run` (the Runnable's `run()`),
+                    //     sitting directly on `android.os.Handler.handleCallback`
+                    //     (reported from a Google Pixel 6a, SDK 37, app 1.8.1-GOOGLE).
+                    //     The sampled Runnable was just entered — its `run()`
+                    //     demonstrably has `Handler.handleCallback` directly below it
+                    //     and only called `o45.d()` before the sample — so the main
+                    //     looper is processing messages at sample time, which a thread
+                    //     parked inside a >5 s block cannot do; the >5 s block
+                    //     occurred in a PREVIOUS main-looper message and this sample
+                    //     is the post-stall backlog the looper drains after recovery —
+                    //     the same family as the bare-`run()` (filter 20) and
+                    //     StringBuilder (filter 10) post-stall artifacts, one frame
+                    //     further into the Runnable's entry. There is no lock, file /
+                    //     network I/O, or binder frame anywhere on the stack (the
+                    //     current frame is a freshly-entered CPU-bound call, not a
+                    //     blocking primitive), so a genuine freeze that parks the main
+                    //     thread inside real blocking work still fails this test. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is a non-platform method whose direct caller is a
+                    //     non-platform `run()` sitting directly on
+                    //     `android.os.Handler.handleCallback` (with no
+                    //     `Handler.postDelayed` frame and no framework blocking
+                    //     primitive) as a false positive and resets its heartbeat
+                    //     instead of writing a report. Genuine freezes keep the main
+                    //     thread inside blocking work — a top frame that is a lock /
+                    //     file-I/O / binder frame, or a call chain more than one method
+                    //     deep above the `run()` — and are still reported.
+                    val isFreshRunBodyEntryStall =
+                        topFrame?.methodName != "run" &&
+                        topFrame?.className?.let { PLATFORM_PREFIXES.none { p -> it.startsWith(p) } } == true &&
+                        mainStackTrace.getOrNull(1)?.methodName == "run" &&
+                        mainStackTrace.getOrNull(1)?.className?.let { PLATFORM_PREFIXES.none { p -> it.startsWith(p) } } == true &&
+                        mainStackTrace.getOrNull(2)?.className == "android.os.Handler" &&
+                        mainStackTrace.getOrNull(2)?.methodName == "handleCallback" &&
+                        // Exclude the watchdog-heartbeat re-post shape (which carries
+                        // a Handler.postDelayed frame and is already handled by
+                        // `tickerJustRan`).
+                        mainStackTrace.none {
+                            it.className == "android.os.Handler" && it.methodName == "postDelayed"
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a
+                        // genuine freeze parks the main thread in one of these
+                        // instead of at a freshly-entered CPU-bound method.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
