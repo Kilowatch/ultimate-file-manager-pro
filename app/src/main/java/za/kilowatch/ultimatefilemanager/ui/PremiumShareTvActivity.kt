@@ -92,6 +92,14 @@ class PremiumShareTvActivity : AppCompatActivity() {
     private fun setupWebShareMode() {
         val cleanUpOnStop = intent.getBooleanExtra("clean_up_on_stop", false)
         val url = WebShareServer.start(this, files, cleanUpOnStop)
+        if (url.isBlank()) {
+            // WebShareServer.start() returns "" when the embedded Ktor/Netty engine could not boot
+            // (device verifier rejected the R8-optimized Netty bytecode, e.g. Android 16 / API 36).
+            Log.e(TAG, "WebShare server failed to start")
+            Toast.makeText(this, getString(R.string.remote_server_error), Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
         txtWebUrl.text = url
         txtPinCode.text = WebShareServer.pin
 

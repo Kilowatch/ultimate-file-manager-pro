@@ -538,6 +538,18 @@ class RemoteManageActivity : AppCompatActivity() {
                         updateCaStatusBadge()
                     }
                 }
+            } catch (e: LinkageError) {
+                // LinkageError covers VerifyError / ExceptionInInitializerError / NoClassDefFoundError.
+                // On some devices (e.g. Android 16 / API 36 ART) the R8-optimized Netty bytecode is
+                // rejected by the verifier when the embedded Ktor/Netty server boots; the server just
+                // fails to start and must never take down the app with it.
+                android.util.Log.e("RemoteManageActivity", "startServer failed (device verifier rejected Netty bytecode)", e)
+                runOnUiThread {
+                    startingDialog.dismiss()
+                    val txtStatus = findViewById<TextView>(R.id.txtStatus)
+                    txtStatus?.text = getString(R.string.remote_server_error)
+                    txtStatus?.setTextColor(getColor(R.color.ufm_denied))
+                }
             } catch (e: Exception) {
                 android.util.Log.e("RemoteManageActivity", "startServer failed", e)
                 runOnUiThread {

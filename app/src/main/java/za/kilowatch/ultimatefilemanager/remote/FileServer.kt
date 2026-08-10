@@ -650,6 +650,12 @@ class FileServer(
             Log.i(TAG, "FileServer started on https://0.0.0.0:$port")
             serverCertFingerprint?.let { if (BuildConfig.DEBUG) Log.i(TAG, "TLS fingerprint: $it") }
             globalInstance = this
+        } catch (e: LinkageError) {
+            // VerifyError / ExceptionInInitializerError / NoClassDefFoundError from the embedded
+            // Ktor/Netty engine boot (Netty's PlatformDependent can be rejected by the stricter ART
+            // verifier on some devices, e.g. Android 16 / API 36). The server simply does not start;
+            // the app must not crash over it. Caller (RemoteManageActivity) surfaces the error UI.
+            Log.e(TAG, "Failed to start FileServer (device verifier rejected Netty bytecode)", e)
         } catch (e: Exception) { Log.e(TAG, "Failed to start FileServer", e) }
     }
 

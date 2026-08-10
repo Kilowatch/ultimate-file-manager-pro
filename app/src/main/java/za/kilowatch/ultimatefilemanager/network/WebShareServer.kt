@@ -434,8 +434,18 @@ object WebShareServer {
             }
         }
         
-        server = serverInstance
-        serverInstance.start(wait = false)
+        try {
+            server = serverInstance
+            serverInstance.start(wait = false)
+        } catch (e: LinkageError) {
+            // VerifyError / ExceptionInInitializerError / NoClassDefFoundError from the embedded
+            // Ktor/Netty engine boot (Netty's PlatformDependent can be rejected by the stricter ART
+            // verifier on some devices, e.g. Android 16 / API 36). Called from the UI thread, so a
+            // failure here must degrade gracefully instead of crashing the activity.
+            server = null
+            Log.e(TAG, "WebShare Ktor/Netty server failed to start (device verifier rejected Netty bytecode)", e)
+            return ""
+        }
 
         // Start SSL proxy if certificate was generated
         if (sslContext != null) {

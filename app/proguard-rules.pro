@@ -210,6 +210,10 @@
 -dontwarn sun.security.x509.X509Key
 
 # Ktor Web Server & Netty (Remote Manager) use reflection, ServiceLoader and coroutine metadata
+# InnerClasses/EnclosingMethod/Signature keep reflection and MethodHandle-driven access working
+# after R8; Netty's own Android setup guide requires InnerClasses + EnclosingMethod. Missing
+# attribute metadata is a known cause of VerifyError in Netty's PlatformDependent under R8.
+-keepattributes InnerClasses,EnclosingMethod,Signature
 -keep class io.ktor.** { *; }
 -keep class io.netty.** { *; }
 -keep class org.slf4j.** { *; }
@@ -364,3 +368,8 @@
 -dontwarn com.radzivon.bartoshyk.avif.coder.**
 # The old avif-android library has been removed; suppress any stale references.
 -dontwarn org.aomedia.avif.android.**
+
+# ── gifencoder (com.squareup:gifencoder) — GIF encoding engine ─────────────
+-keep class com.squareup.gifencoder.** { *; }
+-keepclassmembers class com.squareup.gifencoder.** { *; }
+-dontwarn com.squareup.gifencoder.**
