@@ -963,7 +963,9 @@ object CrashReportManager {
                     // 18. The main thread is sampled inside the framework's native text
                     //     measurement while an EditText processes a character committed by
                     //     the IME — top frame `android.graphics.text.MeasuredText$Builder.
-                    //     nBuildMeasuredText`/`build`, under `MeasuredParagraph.
+                    //     nBuildMeasuredText`/`build`/`nFreeBuilder` (the native free that
+                    //     `build()` runs on the previous builder before measuring the new
+                    //     paragraph), under `MeasuredParagraph.
                     //     buildForStaticLayout` -> `StaticLayout.generate` -> `DynamicLayout.
                     //     reflow`/`DynamicLayout$ChangeWatcher.reflow`, reached from the
                     //     IME text-input path (`BaseInputConnection.replaceText` -> the
@@ -971,7 +973,9 @@ object CrashReportManager {
                     //     `sendTextChanged` -> the TextView's watcher chain) (reported
                     //     from a TECNO TECNO KJ5, SDK 33, app 1.7.8-FOSS — the same
                     //     device and session that produced the already-filtered
-                    //     `nDrawTextRun` and `SpannableStringBuilder.removeSpan` reports).
+                    //     `nDrawTextRun` and `SpannableStringBuilder.removeSpan` reports,
+                    //     and the `nBuildMeasuredText`/`build` sibling sampled one frame
+                    //     further inside `MeasuredText$Builder.build()`).
                     //     This is the normal framework text-layout work that runs every
                     //     time the user types into any EditText: the only non-platform
                     //     frames on the stack are the framework's own text-change
@@ -992,7 +996,8 @@ object CrashReportManager {
                     val isTextMeasurementDuringInputStall =
                         topFrame?.className == "android.graphics.text.MeasuredText\$Builder" &&
                         (topFrame?.methodName == "nBuildMeasuredText" ||
-                         topFrame?.methodName == "build") &&
+                         topFrame?.methodName == "build" ||
+                         topFrame?.methodName == "nFreeBuilder") &&
                         mainStackTrace.any {
                             (it.className == "android.text.DynamicLayout" ||
                              it.className == "android.text.DynamicLayout\$ChangeWatcher") &&
