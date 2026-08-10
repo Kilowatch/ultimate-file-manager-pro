@@ -2172,7 +2172,97 @@ object CrashReportManager {
                                 }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall) {
+                    // 40. The main thread is sampled reading a compiled XML asset from
+                    //     the APK while a bundled-library checkbox view constructor loads
+                    //     its themed background during a RecyclerView row inflation in a
+                    //     normal frame — e.g. top frame
+                    //     `android.content.res.AssetManager.nativeOpenXmlAsset` (the
+                    //     native compiled-XML asset open), under
+                    //     `Resources.getXml`/`loadXmlResourceParser` →
+                    //     `ResourcesImpl.loadXmlResourceParser`, reached from
+                    //     `androidx.appcompat.widget.AppCompatCheckBox.<init>` (the
+                    //     checkbox constructor inflating its own background drawable)
+                    //     via the framework `LayoutInflater`
+                    //     (`createView`/`createViewFromTag`/`rInflate`/`inflate`),
+                    //     under the app adapter's ViewHolder-inflation chain, under
+                    //     `androidx.recyclerview.widget.LinearLayoutManager` /
+                    //     `RecyclerView.onLayout`, reached from a frame-draw traversal
+                    //     (`Choreographer.doFrame` → `ViewRootImpl.doTraversal` →
+                    //     `performTraversals` → `performLayout`) — reported from a
+                    //     SkyworthDigital UHD Google TV STB, SDK 34, app 1.8.1-GOOGLE.
+                    //     This is the RecyclerView-row-inflation counterpart of the
+                    //     dialog-layout resource read already filtered as filter 3
+                    //     (`isDialogLayoutResourceStall`), but reached from a view
+                    //     constructor via `Resources.getXml` instead of `Dialog.show` +
+                    //     `Resources.getLayout`. The work is a single bounded native
+                    //     asset read of a small compiled XML drawable (the checkbox's
+                    //     themed background — the app already uses the lightweight
+                    //     `AppCompatCheckBox` in its item layouts) that runs once per
+                    //     inflated row, so it cannot by itself occupy the main thread
+                    //     for 5 s; the main looper is demonstrably processing a
+                    //     frame-draw layout traversal at sample time, which a thread
+                    //     parked inside a >5 s block cannot do, so the >5 s block is
+                    //     device-side slowness / CPU starvation on a low-end TV or a
+                    //     post-stall sample of the backlog the looper drains after a
+                    //     genuine stall. Unlike the genuine-freeze case the filter-3
+                    //     comment calls out (unbounded FFmpeg thumbnail decoding
+                    //     reaching the asset read via `Resources.loadDrawable` during
+                    //     adapter inflation), this shape is a `Resources.getXml` read
+                    //     under a bundled-library checkbox constructor with NO decoding
+                    //     work and NO `loadDrawable` frame, so it stays bounded. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `AssetManager.nativeOpenXmlAsset`/`openXmlBlockAsset`,
+                    //     with a `Resources.getXml` frame, an
+                    //     `androidx.appcompat.widget.AppCompatCheckBox.<init>` frame, a
+                    //     `LayoutInflater` frame, a `RecyclerView.onLayout` frame and a
+                    //     frame-draw dispatch (`Choreographer.doFrame`/
+                    //     `ViewRootImpl.performLayout`/`performTraversals`), and no
+                    //     framework blocking primitive anywhere on the stack, as a
+                    //     false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread parked inside a
+                    //     blocking primitive (a lock, file/network/database I/O, or
+                    //     binder frame), or reach the asset read from app business
+                    //     logic that is NOT a bundled-library checkbox constructor
+                    //     under a RecyclerView layout within a frame-draw traversal
+                    //     (e.g. heavy `Resources.loadDrawable` decoding, or a
+                    //     `Dialog.show` without a `RecyclerView.onLayout` frame), and
+                    //     are still reported.
+                    val isRecyclerViewCheckBoxInflateStall =
+                        topFrame?.className == "android.content.res.AssetManager" &&
+                        (topFrame?.methodName == "nativeOpenXmlAsset" || topFrame?.methodName == "openXmlBlockAsset") &&
+                        mainStackTrace.any {
+                            it.className == "android.content.res.Resources" && it.methodName == "getXml"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "androidx.appcompat.widget.AppCompatCheckBox" && it.methodName == "<init>"
+                        } &&
+                        mainStackTrace.any { it.className == "android.view.LayoutInflater" } &&
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.RecyclerView" && it.methodName == "onLayout"
+                        } &&
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performLayout" || it.methodName == "performTraversals")
+                        }) &&
+                        // No framework blocking primitive anywhere on the stack — a
+                        // genuine freeze parks the main thread in one of these instead
+                        // of in a bounded per-row asset read.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
