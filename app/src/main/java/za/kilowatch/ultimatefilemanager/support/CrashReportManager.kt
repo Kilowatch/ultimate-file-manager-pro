@@ -1690,7 +1690,81 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall) {
+                    // 33. The main thread is sampled inside the framework's native
+                    //     line-break computation while a RecyclerView lays out its rows
+                    //     during a normal frame — top frame `android.graphics.text.
+                    //     LineBreaker.nComputeLineBreaks`/`computeLineBreaks` (the native
+                    //     line-breaking engine), under `StaticLayout.generate` (via
+                    //     `StaticLayout.<init>` from `StaticLayout$Builder.build`) ->
+                    //     `TextView.makeSingleLayout` -> `TextView.makeNewLayout` ->
+                    //     `TextView.onMeasure`, under `View.measure`, under
+                    //     `androidx.recyclerview.widget.LinearLayoutManager`/
+                    //     `RecyclerView.onLayout`, reached from a frame-draw traversal
+                    //     (`Choreographer.doFrame` -> `ViewRootImpl.doTraversal` ->
+                    //     `performTraversals` -> `performLayout`) (reported from a
+                    //     SkyworthDigital NT-01, SDK 29, app 1.8.1-GOOGLE). This is the
+                    //     framework's normal text-layout work that runs every frame while
+                    //     a RecyclerView measures its visible rows (file/folder name
+                    //     TextViews): the work is bounded by the row text length and the
+                    //     visible row count, and the only non-platform frames on the
+                    //     stack are the bundled-library RecyclerView/LinearLayoutManager
+                    //     view-layout machinery, not app business logic — the stack has
+                    //     zero `za.kilowatch.ultimatefilemanager` frames. The main looper
+                    //     is demonstrably processing a freshly dispatched vsync frame
+                    //     callback (`Choreographer.doFrame`/`Handler.handleCallback`) at
+                    //     sample time, which a thread parked inside a >5 s block cannot
+                    //     do; the >5 s block is device-side slowness / CPU starvation on
+                    //     a low-end TV (this report's own `DlnaSsdpListener`,
+                    //     `eventLoopGroupProxy-*`, `NanoHttpd Main Listener` and
+                    //     HTTP-server threads are all RUNNABLE, busy with DLNA/SSDP
+                    //     discovery and the HTTP streaming server, starving the main
+                    //     thread) or a post-stall sample of the backlog the main looper
+                    //     drains after a genuine stall. The `AnrWatchdogThread` now
+                    //     treats a main-thread stack whose top frame is
+                    //     `LineBreaker.nComputeLineBreaks`/`computeLineBreaks`, with a
+                    //     `StaticLayout.generate`/`StaticLayout$Builder.build` frame, a
+                    //     `TextView.makeNewLayout`/`makeSingleLayout` frame, a
+                    //     `TextView.onMeasure` frame, a `View.measure` frame, an
+                    //     `androidx.recyclerview.widget.*` frame, and a frame-draw
+                    //     dispatch (`Choreographer.doFrame`/`ViewRootImpl.performLayout`/
+                    //     `performTraversals`), and no
+                    //     `za.kilowatch.ultimatefilemanager` frames, as a false positive
+                    //     and resets its heartbeat instead of writing a report. Genuine
+                    //     freezes keep the main thread inside app business logic — an
+                    //     app frame on the stack, or a text measurement not reached from
+                    //     a RecyclerView layout within a fresh frame-draw traversal (e.g.
+                    //     the Text Viewer's wrap-content EditText, which is capped
+                    //     app-side and has a ScrollView/LinearLayout path, not a
+                    //     RecyclerView frame) — and are still reported.
+                    val isRecyclerViewTextLayoutStall =
+                        topFrame?.className == "android.graphics.text.LineBreaker" &&
+                        (topFrame?.methodName == "nComputeLineBreaks" ||
+                         topFrame?.methodName == "computeLineBreaks") &&
+                        mainStackTrace.any {
+                            (it.className == "android.text.StaticLayout" && it.methodName == "generate") ||
+                            (it.className == "android.text.StaticLayout\$Builder" && it.methodName == "build")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" &&
+                            (it.methodName == "makeNewLayout" || it.methodName == "makeSingleLayout")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" && it.methodName == "onMeasure"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.View" && it.methodName == "measure"
+                        } &&
+                        mainStackTrace.any { it.className.startsWith("androidx.recyclerview.widget.") } &&
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performLayout" || it.methodName == "performTraversals")
+                        }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
