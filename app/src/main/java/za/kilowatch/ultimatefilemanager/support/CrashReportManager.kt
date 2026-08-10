@@ -1855,7 +1855,54 @@ object CrashReportManager {
                             appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall) {
+                    // 35. The main thread is blocked on a synchronous binder call to the
+                    //     system server's ServiceManager while the framework fetches a
+                    //     system service for the app — e.g.
+                    //     LanguageWelcomeActivity.onCreate -> DeviceUtils.isTvDevice ->
+                    //     Activity.getSystemService(UI_MODE_SERVICE) ->
+                    //     ContextThemeWrapper.getSystemService -> ContextImpl.
+                    //     getSystemService -> SystemServiceRegistry.getSystemService ->
+                    //     SystemServiceRegistry$52.createService (the UiModeManager
+                    //     fetcher) -> android.app.UiModeManager.<init> ->
+                    //     ServiceManager.getServiceOrThrow -> ServiceManager.getService
+                    //     -> ServiceManagerProxy.getService -> IServiceManager$Stub$Proxy.
+                    //     checkService -> BinderProxy.transact -> transactNative (top
+                    //     frame) — reported from a SEI Robotics Nokia Streaming Box 8010,
+                    //     SDK 34, app 1.8.1-GOOGLE. The app merely invoked the one-line
+                    //     framework API `getSystemService()` to learn whether the device
+                    //     is an Android TV (UiModeManager.currentModeType) so it can pick
+                    //     the mobile/TV layout; the >5 s block is the system server's
+                    //     response latency to the ServiceManager service-lookup
+                    //     transaction, which the app cannot act on. The top frame is the
+                    //     binder transact into the system server — the app is inside the
+                    //     round-trip, not executing business logic — so even though the
+                    //     stack carries the launching Activity's own `onCreate` call-path
+                    //     frame (the onCreate requested the service), the wait is still
+                    //     system-side, the same class as the startActivity (23) and
+                    //     unbindService (8) binder filters. A genuine freeze that runs
+                    //     app business logic has an app frame as the current frame (the
+                    //     top frame is not BinderProxy.transact/transactNative) and is
+                    //     still reported.
+                    val isSystemServiceFetchBinderStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        // The binder transaction is a ServiceManager service lookup —
+                        // `IServiceManager$Stub$Proxy.checkService`/`getService`, or the
+                        // `ServiceManager`/`ServiceManagerNative`/`ServiceManagerProxy`
+                        // public wrappers that call them.
+                        mainStackTrace.any {
+                            it.className.startsWith("android.os.ServiceManager") ||
+                            (it.className == "android.os.IServiceManager\$Stub\$Proxy" &&
+                             (it.methodName == "checkService" || it.methodName == "getService"))
+                        } &&
+                        // ...and the lookup is performed inside the framework's own
+                        // getSystemService service-fetch path, not by app code directly.
+                        mainStackTrace.any {
+                            it.className == "android.app.SystemServiceRegistry" ||
+                            (it.className == "android.app.ContextImpl" && it.methodName == "getSystemService")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
