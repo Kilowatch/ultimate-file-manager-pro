@@ -113,6 +113,9 @@ object FileViewerRouter {
     // ── PDF ──────────────────────────────────────────────────────────────────
     private val PDF_EXTENSIONS = setOf("pdf")
 
+    // ── EPUB (e-books) ────────────────────────────────────────────────────────
+    private val EPUB_EXTENSIONS = setOf("epub")
+
     // ── Archives ─────────────────────────────────────────────────────────────
     private val ZIP_EXTENSIONS = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.SUPPORTED_ARCHIVE_EXTENSIONS
     private val PACKAGE_EXTENSIONS = setOf("apk", "xapk", "apks")
@@ -130,7 +133,7 @@ object FileViewerRouter {
     /** All extensions this router can handle internally. */
     val ALL_SUPPORTED: Set<String> = TEXT_EXTENSIONS + DAT_EXTENSIONS +
         OFFICE_OOXML_EXTENSIONS + OFFICE_LEGACY_EXTENSIONS + SPREADSHEET_EXTENSIONS +
-        IMAGE_EXTENSIONS + PDF_EXTENSIONS + ZIP_EXTENSIONS +
+        IMAGE_EXTENSIONS + PDF_EXTENSIONS + EPUB_EXTENSIONS + ZIP_EXTENSIONS +
         AUDIO_EXTENSIONS + VIDEO_EXTENSIONS + PACKAGE_EXTENSIONS
 
     fun canOpenInternally(extension: String): Boolean =
@@ -227,7 +230,8 @@ object FileViewerRouter {
         val isImage = ext in IMAGE_EXTENSIONS
         val intent = when (ext) {
             in IMAGE_EXTENSIONS -> Intent(context, ImageViewerActivity::class.java)
-            in PDF_EXTENSIONS -> Intent(context, PdfViewerActivity::class.java)
+            in PDF_EXTENSIONS   -> Intent(context, PdfViewerActivity::class.java)
+            in EPUB_EXTENSIONS  -> Intent(context, EpubViewerActivity::class.java)
             "zip" -> Intent(context, ZipViewerActivity::class.java)
             "7z", in ZIP_EXTENSIONS -> Intent(context, SevenZipViewerActivity::class.java)
             in AUDIO_EXTENSIONS, in VIDEO_EXTENSIONS -> {

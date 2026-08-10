@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 Страница PDF
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Глава %1$d из %2$d
+</string>
+    <string name="epub_loading">
+Загрузка книги&amp;#8230;
+</string>
+    <string name="epub_error_open">
+Не удалось открыть файл EPUB
+</string>
+    <string name="epub_table_of_contents">
+Оглавление
+</string>
+    <string name="epub_prev_chapter">
+Предыдущая глава
+</string>
+    <string name="epub_next_chapter">
+Следующая глава
+</string>
+    <string name="epub_chapter_label">
+Глава
+</string>
     <string name="hide_tile">
 Скрыть плитку
 </string>

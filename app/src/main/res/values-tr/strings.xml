@@ -4185,6 +4185,28 @@ Favoriyi Kaldır
     <string name="pdf_page">
 PDF sayfası
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Bölüm %1$d / %2$d
+</string>
+    <string name="epub_loading">
+Kitap yükleniyor&amp;#8230;
+</string>
+    <string name="epub_error_open">
+EPUB dosyası açılamadı
+</string>
+    <string name="epub_table_of_contents">
+İçindekiler
+</string>
+    <string name="epub_prev_chapter">
+Önceki bölüm
+</string>
+    <string name="epub_next_chapter">
+Sonraki bölüm
+</string>
+    <string name="epub_chapter_label">
+Bölüm
+</string>
     <string name="hide_tile">
 Karo Gizle
 </string>

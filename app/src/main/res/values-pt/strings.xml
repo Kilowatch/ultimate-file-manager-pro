@@ -4185,6 +4185,28 @@ Remover Favorito
     <string name="pdf_page">
 Página PDF
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Capítulo %1$d de %2$d
+</string>
+    <string name="epub_loading">
+Carregando livro&amp;#8230;
+</string>
+    <string name="epub_error_open">
+Não foi possível abrir o arquivo EPUB
+</string>
+    <string name="epub_table_of_contents">
+Índice
+</string>
+    <string name="epub_prev_chapter">
+Capítulo anterior
+</string>
+    <string name="epub_next_chapter">
+Próximo capítulo
+</string>
+    <string name="epub_chapter_label">
+Capítulo
+</string>
     <string name="hide_tile">
 Ocultar Bloco
 </string>

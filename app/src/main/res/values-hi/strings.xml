@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 PDF पेज
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+अध्याय %1$d का %2$d
+</string>
+    <string name="epub_loading">
+पुस्तक लोड हो रही है…
+</string>
+    <string name="epub_error_open">
+EPUB फ़ाइल खोली नहीं जा सकी
+</string>
+    <string name="epub_table_of_contents">
+विषय सूची
+</string>
+    <string name="epub_prev_chapter">
+पिछला अध्याय
+</string>
+    <string name="epub_next_chapter">
+अगला अध्याय
+</string>
+    <string name="epub_chapter_label">
+अध्याय
+</string>
     <string name="hide_tile">
 टाइल छिपाएं
 </string>

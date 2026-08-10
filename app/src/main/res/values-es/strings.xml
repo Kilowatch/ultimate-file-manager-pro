@@ -4185,6 +4185,28 @@ Eliminar favorito
     <string name="pdf_page">
 Página PDF
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Capítulo %1$d de %2$d
+</string>
+    <string name="epub_loading">
+Cargando libro&amp;#8230;
+</string>
+    <string name="epub_error_open">
+No se pudo abrir el archivo EPUB
+</string>
+    <string name="epub_table_of_contents">
+Tabla de contenido
+</string>
+    <string name="epub_prev_chapter">
+Capítulo anterior
+</string>
+    <string name="epub_next_chapter">
+Siguiente capítulo
+</string>
+    <string name="epub_chapter_label">
+Capítulo
+</string>
     <string name="hide_tile">
 Ocultar mosaico
 </string>

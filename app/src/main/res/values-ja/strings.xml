@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 PDFページ
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+第%1$d章（全%2$d章）
+</string>
+    <string name="epub_loading">
+書籍を読み込んでいます&amp;#8230;
+</string>
+    <string name="epub_error_open">
+EPUBファイルを開くことができませんでした
+</string>
+    <string name="epub_table_of_contents">
+目次
+</string>
+    <string name="epub_prev_chapter">
+前の章
+</string>
+    <string name="epub_next_chapter">
+次の章
+</string>
+    <string name="epub_chapter_label">
+章
+</string>
     <string name="hide_tile">
 タイルを非表示
 </string>

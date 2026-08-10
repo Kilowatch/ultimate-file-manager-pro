@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 Сторінка PDF
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Розділ %1$d з %2$d
+</string>
+    <string name="epub_loading">
+Завантаження книги&amp;#8230;
+</string>
+    <string name="epub_error_open">
+Не вдалося відкрити файл EPUB
+</string>
+    <string name="epub_table_of_contents">
+Зміст
+</string>
+    <string name="epub_prev_chapter">
+Попередній розділ
+</string>
+    <string name="epub_next_chapter">
+Наступний розділ
+</string>
+    <string name="epub_chapter_label">
+Розділ
+</string>
     <string name="hide_tile">
 Приховати плитку
 </string>

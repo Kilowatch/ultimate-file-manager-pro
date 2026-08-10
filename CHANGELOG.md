@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added `.m3u` and `.m3u8` playlist file support to built-in Text Editor with syntax highlighting for M3U directives.
+- Added built-in EPUB reader. Tapping any `.epub` file now opens it directly in UFM without requiring an external app. The viewer supports EPUB 2 and EPUB 3 formats, renders chapters in a WebView with previous/next chapter navigation and a table of contents, respects the app-wide font size preference, and switches to a dark background automatically when the device is in dark mode. Available on both mobile and Android TV. No third-party library was added — parsing uses the standard Android platform APIs.
 
 ### Fixed
 - Fixed instant sync triggering for SMB and SFTP servers when moving or copying files into local source folders.

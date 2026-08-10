@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 صفحة PDF
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+الفصل %1$d من %2$d
+</string>
+    <string name="epub_loading">
+جارٍ تحميل الكتاب&amp;#8230;
+</string>
+    <string name="epub_error_open">
+تعذّر فتح ملف EPUB
+</string>
+    <string name="epub_table_of_contents">
+جدول المحتويات
+</string>
+    <string name="epub_prev_chapter">
+الفصل السابق
+</string>
+    <string name="epub_next_chapter">
+الفصل التالي
+</string>
+    <string name="epub_chapter_label">
+الفصل
+</string>
     <string name="hide_tile">
 إخفاء البلاطة
 </string>

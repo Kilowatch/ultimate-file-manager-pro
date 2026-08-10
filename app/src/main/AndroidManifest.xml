@@ -769,6 +769,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".viewer.EpubViewerActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".viewer.ZipViewerActivity"
             android:exported="false" />
 

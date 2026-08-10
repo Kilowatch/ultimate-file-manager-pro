@@ -1488,6 +1488,14 @@
     <string name="favorite_icon">Favorite Icon</string>
     <string name="remove_favorite">Remove Favorite</string>
     <string name="pdf_page">PDF page</string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">Chapter %1$d of %2$d</string>
+    <string name="epub_loading">Loading book&#8230;</string>
+    <string name="epub_error_open">Could not open EPUB file</string>
+    <string name="epub_table_of_contents">Table of Contents</string>
+    <string name="epub_prev_chapter">Previous chapter</string>
+    <string name="epub_next_chapter">Next chapter</string>
+    <string name="epub_chapter_label">Chapter</string>
     <string name="hide_tile">Hide Tile</string>
     <string name="file_icon">File icon</string>
     <string name="blazingfast_browsing">⚡ Blazing-Fast Browsing</string>

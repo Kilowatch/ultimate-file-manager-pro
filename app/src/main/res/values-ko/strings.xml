@@ -4185,6 +4185,28 @@ ASS
     <string name="pdf_page">
 PDF 페이지
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+%2$d 중 %1$d장
+</string>
+    <string name="epub_loading">
+책을 불러오는 중&amp;#8230;
+</string>
+    <string name="epub_error_open">
+EPUB 파일을 열 수 없습니다.
+</string>
+    <string name="epub_table_of_contents">
+목차
+</string>
+    <string name="epub_prev_chapter">
+이전 장
+</string>
+    <string name="epub_next_chapter">
+다음 장
+</string>
+    <string name="epub_chapter_label">
+장
+</string>
     <string name="hide_tile">
 타일 숨기기
 </string>

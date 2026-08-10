@@ -4185,6 +4185,28 @@ Favorit entfernen
     <string name="pdf_page">
 PDF-Seite
 </string>
+    <!-- EPUB Viewer -->
+    <string name="epub_chapter_of">
+Kapitel %1$d von %2$d
+</string>
+    <string name="epub_loading">
+Buch wird geladen&amp;#8230;
+</string>
+    <string name="epub_error_open">
+EPUB-Datei konnte nicht geöffnet werden
+</string>
+    <string name="epub_table_of_contents">
+Inhaltsverzeichnis
+</string>
+    <string name="epub_prev_chapter">
+Vorheriges Kapitel
+</string>
+    <string name="epub_next_chapter">
+Nächstes Kapitel
+</string>
+    <string name="epub_chapter_label">
+Kapitel
+</string>
     <string name="hide_tile">
 Kachel ausblenden
 </string>
