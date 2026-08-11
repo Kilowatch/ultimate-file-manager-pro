@@ -477,7 +477,9 @@ object SmbShareClient {
                     }
                 }
 
-                val result = block(diskShare, basePath)
+                val result = diskShare.use { connectedShare ->
+                    block(connectedShare, basePath)
+                }
                 pooled.release()
                 return result
             } catch (e: Exception) {

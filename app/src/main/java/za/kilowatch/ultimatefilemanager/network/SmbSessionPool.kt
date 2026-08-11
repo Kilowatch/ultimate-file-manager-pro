@@ -31,8 +31,8 @@ import java.util.concurrent.TimeUnit
  */
 object SmbSessionPool {
 
-    /** Idle sessions are closed after 5 minutes of inactivity. */
-    private const val IDLE_TIMEOUT_MS = 5 * 60 * 1000L
+    /** Idle sessions are closed after 10 minutes of inactivity. */
+    private const val IDLE_TIMEOUT_MS = 10 * 60 * 1000L
 
     private class PoolEntry {
         var client:         SMBClient?  = null
@@ -86,7 +86,7 @@ object SmbSessionPool {
         synchronized(entry) {
             val existing = entry.session
             val idleMs   = if (entry.lastReleasedMs > 0) System.currentTimeMillis() - entry.lastReleasedMs else 0L
-            val isStale  = idleMs > 60_000L // SMB servers often drop idle sessions after 5-15m; 60s avoids unnecessary reconnects
+            val isStale  = idleMs >= IDLE_TIMEOUT_MS
 
             if (existing != null && !isStale && isAlive(existing)) {
                 entry.useCount++
