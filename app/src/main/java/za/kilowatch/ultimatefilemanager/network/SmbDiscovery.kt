@@ -10,6 +10,7 @@ import jcifs.smb.SmbFile
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.Properties
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -21,6 +22,21 @@ object SmbDiscovery {
     private const val SMB_PORT = 445
     private const val PROBE_TIMEOUT_MS = 600
     private const val MAX_THREADS = 32
+    private const val SHARE_CACHE_TTL_MS = 10 * 60 * 1000L
+
+    private data class ShareCacheKey(
+        val host: String,
+        val username: String,
+        val domain: String,
+        val passwordHash: Int
+    )
+
+    private data class CachedShares(
+        val names: List<String>,
+        val fetchedAtMs: Long
+    )
+
+    private val shareCache = ConcurrentHashMap<ShareCacheKey, CachedShares>()
 
     // ── Host discovery ─────────────────────────────────────────────────────────
 
@@ -100,6 +116,17 @@ object SmbDiscovery {
         password: String,
         domain: String
     ): List<String> {
+        val cacheKey = ShareCacheKey(
+            host = host.trim().lowercase(),
+            username = username.trim(),
+            domain = domain.trim(),
+            passwordHash = password.hashCode()
+        )
+        val now = System.currentTimeMillis()
+        shareCache[cacheKey]?.takeIf { now - it.fetchedAtMs < SHARE_CACHE_TTL_MS }?.let {
+            return it.names
+        }
+
         val props = Properties().apply {
             setProperty("jcifs.smb.client.dfs.disabled", "true")
             setProperty("jcifs.resolveOrder", "DNS")
@@ -124,7 +151,7 @@ object SmbDiscovery {
 
         val url = "smb://$host/"
         val smbFile = SmbFile(url, auth)
-        return smbFile.listFiles()
+        val shares = smbFile.listFiles()
             ?.mapNotNull { f ->
                 val n = f.name.trimEnd('/')
                 // Hide system / admin shares
@@ -135,5 +162,7 @@ object SmbDiscovery {
             }
             ?.sorted()
             ?: emptyList()
+        shareCache[cacheKey] = CachedShares(shares, now)
+        return shares
     }
 }
