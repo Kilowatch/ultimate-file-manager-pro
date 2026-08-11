@@ -2447,7 +2447,95 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall) {
+                    // 43. The main thread is parked inside the runtime's native-allocation
+                    //     registry notification while a RecyclerView measures its rows during
+                    //     a normal frame — e.g. top frame `dalvik.system.VMRuntime.
+                    //     notifyNativeAllocationsInternal` (a native method ART calls from
+                    //     `VMRuntime.notifyNativeAllocation` when the count of registered
+                    //     native allocations since the last GC crosses its threshold) under
+                    //     `libcore.util.NativeAllocationRegistry.registerNativeAllocation`,
+                    //     reached from a framework `Paint.<init>` (the tiny text-measurement
+                    //     Paint a TextView allocates every time it lays out) under
+                    //     `android.text.Layout.<init>`/`BoringLayout.<init>` under
+                    //     `TextView.makeSingleLayout` → `makeNewLayout` → `TextView.onMeasure`
+                    //     → `View.measure` → `LinearLayoutManager`/`RecyclerView.onLayout`,
+                    //     reached from a frame-draw traversal (`Choreographer.doFrame` →
+                    //     `ViewRootImpl.performTraversals` → `performLayout`) — reported from
+                    //     a vivo I2219, SDK 36, app 1.8.2-FOSS. `notifyNativeAllocationsInternal`
+                    //     is the runtime's bookkeeping for the *global* native-allocation
+                    //     counter, and it blocks when the heap is under pressure from
+                    //     concurrent native allocations — in this report a dozen
+                    //     `DefaultDispatcher-worker-*` threads are simultaneously inside the
+                    //     SAME native method doing `Bitmap.createBitmap` while Coil decodes
+                    //     AVIF/HEIF images (`com.radzivon.bartoshyk.avif.coder.HeifCoder.
+                    //     decodeSampled`) — so the >5 s block is a runtime/GC-side allocator
+                    //     stall the app cannot act on, and the main thread's own work is the
+                    //     µs-scale allocation of a text-measurement Paint, not app business
+                    //     logic. This is the `notifyNativeAllocationsInternal`-top variant of
+                    //     the already-filtered `LineBreaker.nComputeLineBreaks`-top
+                    //     RecyclerView text-layout report (filter 33), sampled one step into
+                    //     the runtime native-allocation registry instead of the line-break
+                    //     engine. The `AnrWatchdogThread` now treats a main-thread stack whose
+                    //     top frame is `VMRuntime.notifyNativeAllocationsInternal` (or the
+                    //     Java `notifyNativeAllocation` immediately below it), with a
+                    //     `NativeAllocationRegistry.registerNativeAllocation` frame, a
+                    //     `Paint.<init>` frame reached from a `TextView.makeNewLayout` /
+                    //     `makeSingleLayout` / `onMeasure` text-layout path, an
+                    //     `androidx.recyclerview.widget.*` frame and a frame-draw dispatch
+                    //     (`Choreographer.doFrame` / `ViewRootImpl.performLayout` /
+                    //     `performTraversals`), and no framework blocking primitive anywhere
+                    //     on the stack, as a false positive and resets its heartbeat instead
+                    //     of writing a report. Genuine freezes keep the main thread parked
+                    //     inside a blocking primitive (a lock, file/network/database I/O or
+                    //     binder frame), or reach the registry notification from app business
+                    //     logic that is NOT a Paint/text-measurement path inside a
+                    //     RecyclerView layout (e.g. the main thread itself allocating a large
+                    //     Bitmap, which surfaces as `Bitmap.createBitmap` below the registry
+                    //     frame, or a non-RecyclerView layout), and are still reported.
+                    val isNativeAllocationRegistryTextLayoutStall =
+                        topFrame?.className == "dalvik.system.VMRuntime" &&
+                        (topFrame?.methodName == "notifyNativeAllocationsInternal" ||
+                         topFrame?.methodName == "notifyNativeAllocation") &&
+                        mainStackTrace.any {
+                            it.className == "libcore.util.NativeAllocationRegistry" &&
+                                it.methodName == "registerNativeAllocation"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.graphics.Paint" && it.methodName == "<init>"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" &&
+                            (it.methodName == "makeNewLayout" || it.methodName == "makeSingleLayout")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" && it.methodName == "onMeasure"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.View" && it.methodName == "measure"
+                        } &&
+                        mainStackTrace.any { it.className.startsWith("androidx.recyclerview.widget.") } &&
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performLayout" || it.methodName == "performTraversals")
+                        }) &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in the
+                        // runtime's native-allocation registry notification.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
