@@ -17,15 +17,34 @@
         android:layout_marginEnd="12dp"
         android:importantForAccessibility="no" />
 
-    <TextView
-        android:id="@+id/txtResultName"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="@color/mobile_card_text_primary"
-        android:textSize="14sp"
-        android:maxLines="3"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtOriginalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif" />
+
+        <TextView
+            android:id="@+id/txtResultName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif" />
+
+    </LinearLayout>
 
 </LinearLayout>

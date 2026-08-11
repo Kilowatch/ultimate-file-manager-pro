@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `.m3u` and `.m3u8` playlist file support to built-in Text Editor with syntax highlighting for M3U directives.
 - Added built-in EPUB reader. Tapping any `.epub` file now opens it directly in UFM without requiring an external app. The viewer supports EPUB 2 and EPUB 3 formats, renders chapters in a WebView with previous/next chapter navigation and a table of contents, respects the app-wide font size preference, and switches to a dark background automatically when the device is in dark mode. Available on both mobile and Android TV. No third-party library was added — parsing uses the standard Android platform APIs.
 
+### Changed
+- Improved Batch Rename preview layout to display both original and modified filenames stacked vertically with a compact before → after layout, while automatically collapsing redundant original names when no change occurs.
+
 ### Fixed
 - Fixed list scroll position jumping to the top when a file or folder operation (rename, delete, paste, refresh) triggers a directory reload. The `RecyclerView` now preserves the exact scroll position across same-folder refreshes in all browser surfaces — local file browser (Activity and Twin Window Fragment), network/online browsers (SMB, FTP, SFTP, NFS, WebDAV, GDrive, OneDrive, Dropbox, etc. — Activity and Twin Window Fragment), on both mobile and Android TV. TV D-pad back-navigation focus restoration is unaffected.
 - Fixed folder picker mode handling in GIF Creator custom folder selection across StorageBrowserActivity, FileBrowserActivity, and NetworkBrowserActivity to suppress feature tiles and correctly display the "Use This Folder" FAB button.

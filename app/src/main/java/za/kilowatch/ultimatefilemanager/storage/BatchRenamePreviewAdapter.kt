@@ -35,6 +35,7 @@ class BatchRenamePreviewAdapter(
 
     inner class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
         private val imgIcon: android.widget.ImageView = itemView.findViewById(R.id.imgIcon)
+        private val txtOriginalName: android.widget.TextView = itemView.findViewById(R.id.txtOriginalName)
         private val txtResultName: android.widget.TextView = itemView.findViewById(R.id.txtResultName)
 
         fun bind(item: PreviewItem) {
@@ -42,14 +43,22 @@ class BatchRenamePreviewAdapter(
 
             val context = itemView.context
             val isError = item.resultingName.isEmpty()
+            val isNoChange = isError || item.originalName == item.resultingName
 
-            if (isError) {
-                // Pattern is empty — show original name as fallback so the list is never blank
+            if (isNoChange) {
+                // If there's no change (or error/empty pattern), show only one line without redundant duplication
+                txtOriginalName.visibility = android.view.View.GONE
                 txtResultName.text = item.originalName
-                txtResultName.setTypeface(txtResultName.typeface, android.graphics.Typeface.ITALIC)
+                txtResultName.setTypeface(
+                    txtResultName.typeface,
+                    if (isError) android.graphics.Typeface.ITALIC else android.graphics.Typeface.NORMAL
+                )
             } else {
-                txtResultName.text = item.resultingName
-                txtResultName.setTypeface(txtResultName.typeface, android.graphics.Typeface.NORMAL)
+                txtOriginalName.visibility = android.view.View.VISIBLE
+                txtOriginalName.text = item.originalName
+
+                txtResultName.text = "→ ${item.resultingName}"
+                txtResultName.setTypeface(txtResultName.typeface, android.graphics.Typeface.BOLD)
             }
 
             if (isTv) {
@@ -62,19 +71,23 @@ class BatchRenamePreviewAdapter(
 
                 itemView.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
+                        txtOriginalName.setTextColor(black)
                         txtResultName.setTextColor(black)
                         imgIcon.imageTintList = blackCsl
                     } else {
-                        txtResultName.setTextColor(if (isError) secondary else white)
+                        txtOriginalName.setTextColor(secondary)
+                        txtResultName.setTextColor(if (isNoChange) secondary else white)
                         imgIcon.imageTintList = accentCsl
                     }
                 }
 
                 val hasFocus = itemView.hasFocus()
-                txtResultName.setTextColor(if (hasFocus) black else (if (isError) secondary else white))
+                txtOriginalName.setTextColor(if (hasFocus) black else secondary)
+                txtResultName.setTextColor(if (hasFocus) black else (if (isNoChange) secondary else white))
                 imgIcon.imageTintList = if (hasFocus) blackCsl else accentCsl
             } else {
-                val colorRes = if (isError) R.color.mobile_text_secondary else R.color.mobile_card_text_primary
+                txtOriginalName.setTextColor(ContextCompat.getColor(context, R.color.mobile_text_secondary))
+                val colorRes = if (isNoChange) R.color.mobile_text_secondary else R.color.mobile_card_text_primary
                 txtResultName.setTextColor(ContextCompat.getColor(context, colorRes))
                 imgIcon.imageTintList = null
                 itemView.setOnFocusChangeListener(null)
