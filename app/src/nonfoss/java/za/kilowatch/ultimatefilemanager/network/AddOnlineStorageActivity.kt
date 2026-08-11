@@ -309,9 +309,13 @@ class AddOnlineStorageActivity : AppCompatActivity() {
                 }
             }
 
-            btnLearnMore.requestFocus()
         }
 
         dialog.show()
+
+        if (isTv) {
+            val btnOk = dialogView.findViewById<View>(R.id.btnGdriveScopeOk)
+            btnOk?.post { btnOk.requestFocus() }
+        }
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="560dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="32dp"
+    android:padding="20dp"
     android:background="@drawable/bg_dialog_glass">
 
     <TextView
@@ -12,21 +12,19 @@
         android:layout_height="wrap_content"
         android:text="@string/compress_image_complete"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:fontFamily="sans-serif-black"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="16dp" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginBottom="24dp"
-        android:focusable="true"
-        android:focusableInTouchMode="false"
-        android:background="@drawable/selector_tv_policy_scroll"
-        android:padding="6dp"
-        android:scrollbars="vertical">
+        android:layout_marginBottom="16dp"
+        android:focusable="false"
+        android:padding="4dp"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:id="@+id/layoutResults"
@@ -39,14 +37,14 @@
         android:id="@+id/btnClose"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="44dp"
         android:text="@string/close"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:fontFamily="sans-serif-black"
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:backgroundTint="@color/selector_tv_button_yellow"
         android:textColor="@color/selector_tv_button_text_yellow"
-        app:cornerRadius="16dp"
+        app:cornerRadius="12dp"
         android:focusable="true" />
 </LinearLayout>

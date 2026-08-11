@@ -49,6 +49,10 @@
         android:layout_marginTop="8dp"
         android:text="@string/notepad_select_folder"
         app:cornerRadius="12dp"
+        
+        
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
 
     <LinearLayout
@@ -64,6 +68,10 @@
             android:layout_height="44dp"
             android:text="@android:string/cancel"
             app:cornerRadius="12dp"
+            
+            
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             style="@style/Widget.Material3Expressive.Button.TextButton" />
 
         <com.google.android.material.button.MaterialButton
@@ -71,6 +79,10 @@
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
+            
+            
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/save"
             app:cornerRadius="12dp" />
     </LinearLayout>

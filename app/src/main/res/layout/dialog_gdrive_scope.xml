@@ -27,19 +27,26 @@
         android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/txtGdriveScopeMessage"
-        android:layout_width="wrap_content"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_sm"
-        android:text="@string/gdrive_premium_message"
-        android:textColor="@color/mobile_text_secondary"
-        android:textSize="14sp"
-        android:textAlignment="center"
-        android:autoLink="web"
-        android:textColorLink="?attr/colorSecondary"
-        android:linksClickable="true" />
+        android:maxHeight="240dp"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <TextView
+            android:id="@+id/txtGdriveScopeMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gdrive_premium_message"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:autoLink="web"
+            android:textColorLink="?attr/colorSecondary"
+            android:linksClickable="true" />
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +62,8 @@
             android:layout_height="wrap_content"
             android:text="@string/gdrive_scope_btn_cancel"
             android:textColor="@color/mobile_text_secondary"
+            
+            
             android:layout_marginEnd="@dimen/margin_md" />
 
         <com.google.android.material.button.MaterialButton
@@ -64,6 +73,8 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_ok"
             app:backgroundTint="?attr/colorSecondary"
+            
+            
             android:textColor="@android:color/white" />
     </LinearLayout>
 </LinearLayout>

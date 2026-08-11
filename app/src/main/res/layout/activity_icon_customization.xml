@@ -87,6 +87,10 @@
                 android:layout_marginEnd="6dp"
                 android:text="@string/export_pack"
                 android:textSize="13sp"
+                
+                
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:icon="@drawable/ic_export" />
 
             <com.google.android.material.button.MaterialButton
@@ -98,6 +102,10 @@
                 android:layout_marginStart="6dp"
                 android:text="@string/import_pack"
                 android:textSize="13sp"
+                
+                
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:icon="@drawable/ic_import_code" />
         </LinearLayout>
 
@@ -111,6 +119,10 @@
             android:textSize="13sp"
             app:strokeColor="?attr/colorError"
             android:textColor="?attr/colorError"
+            
+            
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             app:icon="@drawable/ic_refresh"
             app:iconTint="?attr/colorError" />
     </LinearLayout>

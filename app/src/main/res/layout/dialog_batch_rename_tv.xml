@@ -462,19 +462,18 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Action buttons -->
+    <!-- Action Buttons — Always visible at bottom -->
     <LinearLayout
-        android:id="@+id/layoutActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
             android:text="@string/batch_rename_cancel"
@@ -483,14 +482,13 @@
             android:insetBottom="0dp"
             android:focusable="true"
             android:nextFocusRight="@id/btnRename"
-            android:nextFocusUp="@id/recyclerPreview"
             android:textColor="@color/tv_button_text"
             style="@style/TvContinueButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRename"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:text="@string/batch_rename_confirm"
@@ -499,7 +497,6 @@
             android:insetBottom="0dp"
             android:focusable="true"
             android:nextFocusLeft="@id/btnCancel"
-            android:nextFocusUp="@id/recyclerPreview"
             android:textColor="@color/tv_button_text"
             style="@style/TvContinueButton" />
     </LinearLayout>

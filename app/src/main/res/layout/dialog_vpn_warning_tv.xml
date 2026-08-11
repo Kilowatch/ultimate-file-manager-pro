@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="28dp">
+        android:padding="20dp">
 
         <!-- Icon + Title row -->
         <LinearLayout
@@ -34,13 +34,13 @@
 
             <!-- Amber warning circle icon -->
             <FrameLayout
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@drawable/bg_warning_circle"
-                android:layout_marginEnd="16dp">
+                android:layout_marginEnd="14dp">
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_vpn_warning"
                     android:contentDescription="@null" />
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/vpn_warning_title"
                     android:textColor="@color/ufm_text_primary"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:fontFamily="sans-serif-black" />
 
                 <TextView
@@ -68,7 +68,7 @@
                     android:layout_marginTop="2dp"
                     android:text="@string/vpn_warning_subtitle"
                     android:textColor="@color/ufm_text_secondary"
-                    android:textSize="13sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -77,18 +77,18 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#33000000"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
         <!-- Body text -->
         <TextView
             android:id="@+id/txtVpnMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:text="@string/vpn_warning_message"
             android:textColor="@color/ufm_text_secondary"
-            android:textSize="14sp"
-            android:lineSpacingExtra="3dp"
-            android:layout_marginBottom="20dp" />
+            android:textSize="13sp"
+            android:lineSpacingExtra="2dp" />
 
         <!-- Action buttons — right-aligned, focusable for D-pad -->
         <LinearLayout
@@ -101,12 +101,14 @@
                 android:id="@+id/btnVpnContinue"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="44dp"
                 android:text="@string/vpn_warning_continue"
                 android:textColor="#FFFFA726"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 android:layout_marginEnd="12dp"
                 app:strokeColor="#FFFFA726"
                 app:cornerRadius="12dp" />
@@ -115,12 +117,14 @@
                 android:id="@+id/btnVpnClose"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="44dp"
                 android:text="@string/vpn_warning_close"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:focusable="true"
                 android:focusableInTouchMode="false"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:backgroundTint="#FFFFA726"
                 app:cornerRadius="12dp"
                 app:elevation="0dp" />

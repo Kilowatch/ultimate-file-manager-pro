@@ -230,7 +230,11 @@
                         android:id="@+id/btnSelectLocal"
                         style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="36dp"
+                        
+                        
+                        android:paddingVertical="4dp"
                         android:text="@string/select_folder"
                         android:textSize="13sp"
                         app:cornerRadius="8dp" />
@@ -281,7 +285,11 @@
                         android:id="@+id/btnBrowseRemote"
                         style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="36dp"
+                        
+                        
+                        android:paddingVertical="4dp"
                         android:text="@string/browse_remote"
                         android:textSize="13sp"
                         app:cornerRadius="8dp" />
@@ -318,6 +326,8 @@
                     android:textColor="@color/selector_protocol_text"
                     app:cornerRadius="10dp"
                     app:strokeColor="@color/mobile_glass_stroke"
+                    
+                    
                     android:insetTop="0dp"
                     android:insetBottom="0dp" />
 
@@ -335,6 +345,8 @@
                     android:textColor="@color/selector_protocol_text"
                     app:cornerRadius="10dp"
                     app:strokeColor="@color/mobile_glass_stroke"
+                    
+                    
                     android:insetTop="0dp"
                     android:insetBottom="0dp" />
             </LinearLayout>
@@ -352,6 +364,8 @@
                 android:textColor="@color/selector_protocol_text"
                 app:cornerRadius="10dp"
                 app:strokeColor="@color/mobile_glass_stroke"
+                
+                
                 android:insetTop="0dp"
                 android:insetBottom="0dp" />
 
@@ -562,6 +576,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="10dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
 
@@ -579,6 +595,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="10dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
                 </LinearLayout>
@@ -603,6 +621,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="10dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
 
@@ -620,6 +640,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="10dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
                 </LinearLayout>
@@ -712,6 +734,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="12dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
 
@@ -730,6 +754,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="12dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
 
@@ -748,6 +774,8 @@
                         android:textColor="@color/selector_protocol_text"
                         app:cornerRadius="12dp"
                         app:strokeColor="@color/mobile_glass_stroke"
+                        
+                        
                         android:insetTop="0dp"
                         android:insetBottom="0dp" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>

@@ -513,6 +513,10 @@
                         android:textColor="@android:color/white"
                         android:visibility="gone"
                         app:cornerRadius="12dp"
+                        
+                        
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
                         app:backgroundTint="?attr/colorPrimary" />
 
                     <!-- Reset to Default button -->
@@ -523,6 +527,10 @@
                         android:text="@string/auto_backup_reset_default"
                         android:visibility="gone"
                         style="@style/Widget.Material3Expressive.Button.TextButton"
+                        
+                        
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
                         android:textColor="?attr/colorPrimary" />
 
                 </LinearLayout>
@@ -550,6 +558,10 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/white"
                 app:cornerRadius="16dp"
+                
+                
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
                 app:backgroundTint="?attr/colorPrimary" />
 
             <!-- Progress Bar (hidden by default) -->

@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/bg_tv_glass_card"
-    android:padding="32dp">
+    android:padding="24dp">
 
     <!-- Header Icon -->
     <ImageView
@@ -19,7 +19,7 @@
         android:src="@drawable/ic_lock"
         android:tint="@color/tv_button_focused_yellow"
         android:contentDescription="@null"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="12dp" />
 
     <!-- Title -->
     <TextView
@@ -28,7 +28,7 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/policy_blocked_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:fontFamily="sans-serif-black" />
 
     <TextView
@@ -37,7 +37,7 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/policy_blocked_subtitle"
         android:textColor="@color/tv_button_focused_yellow"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textAllCaps="true"
         android:fontFamily="sans-serif-medium"
         android:layout_marginTop="4dp" />
@@ -46,21 +46,21 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/policy_blocked_message"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:gravity="center"
-        android:lineSpacingExtra="4dp" />
+        android:lineSpacingExtra="2dp" />
 
     <!-- Technical Details (Optional) -->
     <TextView
         android:id="@+id/txtPolicyDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:padding="10dp"
         android:background="#20FFFFFF"
         android:textColor="#80FFFFFF"
         android:textSize="12sp"
@@ -70,20 +70,18 @@
     <!-- OK Button (TV focusable) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnPolicyOk"
-        android:layout_width="200dp"
-        android:layout_height="56dp"
+        android:layout_width="180dp"
+        android:layout_height="44dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/btn_ok"
         android:textColor="@color/tv_text_primary"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:fontFamily="sans-serif-medium"
         app:backgroundTint="@color/tv_glass_white_10"
         app:cornerRadius="12dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         app:elevation="0dp"
-        android:focusable="true"
-        android:nextFocusUp="@+id/btnPolicyOk"
-        android:nextFocusDown="@+id/btnPolicyOk"
-        android:nextFocusLeft="@+id/btnPolicyOk"
-        android:nextFocusRight="@+id/btnPolicyOk" />
+        android:focusable="true" />
 
 </LinearLayout>

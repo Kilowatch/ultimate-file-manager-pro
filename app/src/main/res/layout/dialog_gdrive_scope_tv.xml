@@ -2,19 +2,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="600dp"
+    android:layout_width="560dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/margin_xl"
+    android:padding="20dp"
     android:background="@drawable/bg_glass_card"
     android:gravity="center">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:src="@drawable/ic_cloud"
         android:tint="@color/tv_button_focused_yellow"
-        android:layout_marginBottom="@dimen/margin_md" />
+        android:layout_marginBottom="8dp" />
 
     <TextView
         android:id="@+id/txtGdriveScopeTitle"
@@ -22,55 +22,60 @@
         android:layout_height="wrap_content"
         android:text="@string/gdrive_premium_title"
         android:textColor="@color/tv_text_primary"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/txtGdriveScopeMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_sm"
+        android:layout_marginTop="8dp"
         android:text="@string/gdrive_premium_message"
         android:textColor="@color/tv_text_secondary"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textAlignment="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_xl"
+        android:layout_marginTop="16dp"
         android:gravity="center">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGdriveScopeLearnMore"
             style="@style/TvContinueButton"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:paddingHorizontal="24dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="4dp"
             android:text="@string/gdrive_scope_btn_learn_more"
+            android:textSize="13sp"
             android:focusable="true"
-            android:layout_marginEnd="@dimen/margin_sm" />
+            android:layout_marginEnd="6dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGdriveScopeCancel"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:paddingHorizontal="24dp"
+            style="@style/TvContinueButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="4dp"
             android:text="@string/gdrive_scope_btn_cancel"
-            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp"
             android:focusable="true"
-            android:layout_marginEnd="@dimen/margin_sm" />
+            android:layout_marginEnd="6dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGdriveScopeOk"
             style="@style/TvContinueButton"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:paddingHorizontal="24dp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="4dp"
             android:text="@string/btn_ok"
+            android:textSize="13sp"
             android:focusable="true" />
     </LinearLayout>
 </LinearLayout>

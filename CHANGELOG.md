@@ -5,6 +5,13 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.3] — 2026-08-11
+
+### Fixed
+- Fixed button clipping and off-screen overflow on Google Drive and TV dialogs by adding scrollable containers and responsive button weighting.
+- Fixed vertical text truncation on "Select folder" and "Browse remote" buttons in Advanced Sync by adjusting Material 3 button insets and minimum heights.
+- Fixed layout clipping across SMB credentials, save dialogs, and settings activities under scaled fonts.
+
 ## [1.8.2] — 2026-08-07
 
 ### Added
