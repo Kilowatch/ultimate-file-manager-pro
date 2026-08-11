@@ -2535,7 +2535,67 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall) {
+                    // 44. The main thread is sampled at the parcel-write entry of a
+                    //     device-vendor (OEM) binder call to its own "trancare assist"
+                    //     service, made from the frame-skip Choreographer hook the vendor
+                    //     ROM injects into the frame-rendering pipeline — e.g. TECNO/
+                    //     Transsion's `com.transsion.hubcore.view.TranChoreographerImpl.
+                    //     skippedFrames` (the same Choreographer hook as filters 21 and 28)
+                    //     -> `com.transsion.hubsdk.trancare.trancareassist.
+                    //     ITranTrancareAssistManager$Stub$Proxy.compulateSkipperFrame`
+                    //     (the vendor AIDL proxy dispatching skipped-frame data to the
+                    //     ROM's trancare service) -> `android.os.Parcel.writeInterfaceToken`
+                    //     -> `android.os.Parcel.nativeWriteInterfaceToken` (top frame),
+                    //     under `android.view.Choreographer.doFrame` ->
+                    //     `Choreographer$FrameDisplayEventReceiver.run` (a vsync frame
+                    //     callback freshly dispatched to the main looper by
+                    //     `Handler.handleCallback`) (reported from a TECNO TECNO KJ5,
+                    //     SDK 33, app 1.8.1-FOSS — the same device and family that
+                    //     produced the already-filtered filter 28 `Slog.e`/
+                    //     `Log.println_native` frame-skip report, sampled at the
+                    //     binder-call phase instead of the logging phase). The sampled
+                    //     frame is the vendor hook writing the parcel interface token at
+                    //     the very START of its binder call — `nativeWriteInterfaceToken`
+                    //     is a µs-scale in-memory parcel-buffer write that cannot by
+                    //     itself occupy the main thread for 5 s (the blocking
+                    //     `transact()` follows only after the parcel is fully written,
+                    //     so a sample caught here is by definition not inside the binder
+                    //     round-trip), and a thread genuinely parked inside a >5 s block
+                    //     cannot be processing a freshly dispatched vsync frame callback
+                    //     at sample time — so the >5 s block occurred in a PREVIOUS
+                    //     main-looper message and this sample is the post-stall first
+                    //     frame after recovery, the same family as filters 10/20/21/22/28.
+                    //     The stack has zero `za.kilowatch.ultimatefilemanager` frames,
+                    //     and the vendor SDK's class names (`com.transsion.*`, injected
+                    //     by the TECNO ROM, not part of this app) are not
+                    //     platform-prefixed, so `isPureFrameworkStack` is false even
+                    //     though the wait is the same system-side class. A genuine
+                    //     freeze keeps the main thread inside app business logic — an
+                    //     app frame on the stack, or a top frame that is not a Parcel
+                    //     `writeInterfaceToken` under the vendor's `skippedFrames` (e.g.
+                    //     the app's own AIDL binder call, which carries the app's
+                    //     generated `$Stub$Proxy` frame above the parcel write) — and
+                    //     is still reported.
+                    val isVendorFrameSkipTrancareBinderStall =
+                        topFrame?.className == "android.os.Parcel" &&
+                        (topFrame?.methodName == "nativeWriteInterfaceToken" ||
+                         topFrame?.methodName == "writeInterfaceToken") &&
+                        mainStackTrace.any {
+                            it.className == "com.transsion.hubcore.view.TranChoreographerImpl" &&
+                            it.methodName == "skippedFrames"
+                        } &&
+                        mainStackTrace.any {
+                            it.className.startsWith("com.transsion.hubsdk.trancare.trancareassist.")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" && it.methodName == "handleCallback"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
