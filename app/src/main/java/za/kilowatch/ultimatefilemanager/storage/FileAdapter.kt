@@ -181,7 +181,6 @@ class FileAdapter(
             items.addAll(newFiles.map { ListItem.FileEntry(it) })
         }
 
-        exitSelectionMode()
         notifyDataSetChanged()
 
         // Pre-compute directory child counts and total folder sizes off the main thread

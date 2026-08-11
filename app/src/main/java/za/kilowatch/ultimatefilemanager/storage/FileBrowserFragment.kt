@@ -1677,6 +1677,17 @@ class FileBrowserFragment : Fragment() {
         val isNavigatingFolder = oldPath != null && oldPath != currentPath
         lastLoadedPath = currentPath
 
+        val isTv = DeviceUtils.isTvDevice(safeContext)
+
+        // Capture scroll position before reload so we can restore it after the
+        // notifyDataSetChanged() that fires inside updateAdapter. Only for same-folder
+        // refreshes on mobile (TV has its own scrollToPosition/requestFocus logic).
+        val lm = if (!isNavigatingFolder && !isTv) recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager else null
+        val savedPosition = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        val savedOffset = if (savedPosition != RecyclerView.NO_POSITION) {
+            lm?.findViewByPosition(savedPosition)?.top ?: 0
+        } else 0
+
         val updateAdapter = {
             if (isAdded) {
                 if (showAllAsIndexed != null) {
@@ -1686,6 +1697,13 @@ class FileBrowserFragment : Fragment() {
                 }
                 updateEmptyState(sorted.isEmpty())
                 updatePasteFab()
+                // Restore scroll position after the data change (mobile same-folder only)
+                if (savedPosition != RecyclerView.NO_POSITION) {
+                    recyclerFiles.post {
+                        (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                            ?.scrollToPositionWithOffset(savedPosition, savedOffset)
+                    }
+                }
             }
         }
 
@@ -1698,7 +1716,6 @@ class FileBrowserFragment : Fragment() {
             updateAdapter()
         }
 
-        val isTv = DeviceUtils.isTvDevice(safeContext)
         if (isTv) {
             val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
             arguments?.putBoolean(ARG_REQUEST_INITIAL_FOCUS, false)

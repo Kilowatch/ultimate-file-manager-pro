@@ -1001,13 +1001,34 @@ class FileBrowserActivity : AppCompatActivity() {
         val isNavigatingFolder = oldPath != null && oldPath != currentPath
         lastLoadedPath = currentPath
 
+        // Capture scroll position before reload so we can restore it after the
+        // notifyDataSetChanged() that fires inside action(). Only do this for
+        // same-folder refreshes (rename, delete, paste, etc.). When navigating
+        // into a new directory, let the list naturally start at position 0.
+        val lm = if (!isNavigatingFolder) recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager else null
+        val savedPosition = lm?.findFirstVisibleItemPosition() ?: RecyclerView.NO_POSITION
+        val savedOffset = if (savedPosition != RecyclerView.NO_POSITION) {
+            lm?.findViewByPosition(savedPosition)?.top ?: 0
+        } else 0
+
+        val updateAdapter = {
+            action()
+            // Restore scroll position after the data change (same-folder only)
+            if (savedPosition != RecyclerView.NO_POSITION) {
+                recyclerFiles.post {
+                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(savedPosition, savedOffset)
+                }
+            }
+        }
+
         if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
             val isForward = currentPath.length > (oldPath?.length ?: 0)
             za.kilowatch.ultimatefilemanager.util.AnimationHelper.animateFolderTransition(recyclerFiles, isForward) {
                 action()
             }
         } else {
-            action()
+            updateAdapter()
         }
     }
 

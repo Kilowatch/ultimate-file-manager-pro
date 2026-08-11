@@ -2539,10 +2539,26 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val isNavigatingFolder = oldPath != null && oldPath != currentPath
         lastLoadedPath = currentPath
 
+        // Capture scroll position before reload so we can restore it after the
+        // notifyDataSetChanged() that fires inside submitList. Only for same-folder
+        // refreshes on mobile (TV uses focus-based navigation, not scroll position).
+        val lm = if (!isNavigatingFolder && !isTv) recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager else null
+        val savedPosition = lm?.findFirstVisibleItemPosition() ?: androidx.recyclerview.widget.RecyclerView.NO_POSITION
+        val savedOffset = if (savedPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+            lm?.findViewByPosition(savedPosition)?.top ?: 0
+        } else 0
+
         val updateAdapter = {
             fileAdapter.submitList(displayFiles)
             progressBar.visibility = View.GONE
             if (displayFiles.isEmpty()) layoutEmpty.visibility = View.VISIBLE else recyclerFiles.visibility = View.VISIBLE
+            // Restore scroll position after the data change (mobile same-folder only)
+            if (savedPosition != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
+                recyclerFiles.post {
+                    (recyclerFiles.layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
+                        ?.scrollToPositionWithOffset(savedPosition, savedOffset)
+                }
+            }
         }
 
         if (isNavigatingFolder && ::recyclerFiles.isInitialized && za.kilowatch.ultimatefilemanager.util.AnimationHelper.areFolderTransitionsEnabled(this)) {
