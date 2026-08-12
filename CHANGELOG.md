@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.4] — 2026-08-11
 
 ### Added
-- A gear (Settings) icon in the mobile main-screen toolbar, to the left of the "+" button. Tapping it opens Settings directly; it hides during edit mode and is registered in the icon-customization picker under the Utility category.
+- A gear (Settings) icon in the top-right corner of the mobile main-screen toolbar, next to the "+" button. Tapping it opens Settings directly; it hides during edit mode and is registered in the icon-customization picker under the Utility category.
 
 ### Fixed
 - Fixed SMB browsing stalls and reconnect prompts by closing each per-operation share handle, coalescing and caching both server-mode share discovery and access checks for ten minutes, retaining healthy pooled sessions for a ten-minute idle window instead of forcing a reconnect after one minute, and failing over silently dropped pooled sockets within eight seconds.
