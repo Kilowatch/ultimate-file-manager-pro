@@ -2983,7 +2983,51 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall) {
+                    // 50. The main thread is blocked inside a synchronous binder call made
+                    //     by a bundled Google Play module Handler message — the Firebase
+                    //     Analytics / Google Analytics Measurement dynamite module
+                    //     (`com.google.android.gms.dynamite_measurementdynamite`, whose
+                    //     classes are R8-obfuscated to short names such as `m7.*` inside
+                    //     the dynamically loaded module) — e.g. `Handler.dispatchMessage`
+                    //     -> `m7.el.handleMessage` (the Measurement module's own
+                    //     main-looper Handler receiving one of its messages) ->
+                    //     `m7.ei.c` -> `m7.er.b` -> `m7.ep.a` -> `m7.es.m` ->
+                    //     `BinderProxy.transact` -> `transactNative` (top frame) —
+                    //     reported from a Xiaomi MiTV-AFMU0, SDK 34, app 1.8.3-GOOGLE.
+                    //     The >5 s block is the Google Play Services process's response
+                    //     latency to the Measurement module's synchronous binder
+                    //     transaction, which the app cannot act on. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames — the binder call is
+                    //     dispatched by the module's OWN non-platform Handler message, not
+                    //     app business logic. The module's obfuscated `m7.*` class names
+                    //     are not platform-prefixed, so `isPureFrameworkStack` is false
+                    //     even though the wait is the same system-side class; this is the
+                    //     binder-round-trip counterpart of the already-filtered GMS
+                    //     Measurement `Thread.<init>` construction shape (filter 27). The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `BinderProxy.transact`/`transactNative`, whose
+                    //     `Handler.dispatchMessage` frame's direct caller is a non-platform
+                    //     `handleMessage` (a bundled-library / Google Play module Handler),
+                    //     with no app frames anywhere, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the
+                    //     main thread inside app business logic — an app frame anywhere on
+                    //     the stack, a binder call dispatched by a framework or app
+                    //     Handler (whose `handleMessage` is platform- or app-prefixed), or
+                    //     a binder call not reached from a `Handler.dispatchMessage` at all
+                    //     — and are still reported.
+                    val isLibraryHandlerBinderStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.className == "android.os.Handler" && frame.methodName == "dispatchMessage" &&
+                            mainStackTrace.getOrNull(i - 1)?.let { handler ->
+                                handler.methodName == "handleMessage" &&
+                                PLATFORM_PREFIXES.none { handler.className.startsWith(it) }
+                            } == true
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
