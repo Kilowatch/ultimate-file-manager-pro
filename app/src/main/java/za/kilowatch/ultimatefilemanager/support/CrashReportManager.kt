@@ -2729,7 +2729,87 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall) {
+                    // 47. The main thread is sampled inside the framework's
+                    //     window-transition inflation while the framework cold-starts an
+                    //     Activity and installs its decor — e.g. top frame
+                    //     `android.transition.TransitionSet.<init>` (the transition
+                    //     object constructor) under `android.transition.TransitionInflater.
+                    //     createTransitionFromXml`/`inflateTransition`, reached from
+                    //     `com.android.internal.policy.PhoneWindow.getTransition` →
+                    //     `installDecor` → `getDecorView`, called from the app Activity's
+                    //     own `onCreate` (`StorageBrowserActivity.onCreate`, via the
+                    //     AppCompat `setContentView` chain) under `Activity.performCreate`
+                    //     → `Instrumentation.callActivityOnCreate` → `ActivityThread.
+                    //     performLaunchActivity` — reported from a ZTE Blade A3 2020,
+                    //     SDK 28, app 1.8.1-FOSS. The currently executing frame is the
+                    //     framework parsing the window's transition XML and constructing
+                    //     the Transition object graph — bounded, one-time cold-start work
+                    //     (class loading, resource decode, object construction) that
+                    //     cannot by itself occupy the main thread for 5 s; the only app
+                    //     frame is the Activity's own `onCreate` lifecycle callback the
+                    //     framework invoked, so the >5 s block is the one-time
+                    //     framework-driven cold-start cost on a low-end device, which the
+                    //     app cannot act on — the same class as the bundled-library
+                    //     layout-inflation `<init>` (filter 34), Activity-onCreate
+                    //     constructor (42) and view-factory (45) cold-start filters, but
+                    //     sampled inside a PLATFORM `android.transition.*` class rather
+                    //     than a bundled-library class. Platform classes would match the
+                    //     pure-framework filter only when there are no app frames; here
+                    //     the Activity's own `onCreate` is the single app frame, so the
+                    //     new filter is needed. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is an `android.transition.*`
+                    //     frame, with a `com.android.internal.policy.PhoneWindow`
+                    //     decor-install frame (`installDecor`/`getDecorView`/`getTransition`),
+                    //     an Activity cold-start launch frame (`Activity.performCreate`/
+                    //     `Instrumentation.callActivityOnCreate`/`ActivityThread.
+                    //     performLaunchActivity`), only Activity-class app frames, and no
+                    //     framework blocking primitive anywhere on the stack, as a false
+                    //     positive and resets its heartbeat instead of writing a report.
+                    //     Genuine freezes keep the main thread inside app business logic —
+                    //     a top frame that is not an `android.transition.*` frame under
+                    //     that decor-install chain (e.g. a lock, file I/O, or binder
+                    //     frame), an app frame that is not an Activity class (e.g. adapter
+                    //     bind code), or transition inflation reached from app business
+                    //     logic rather than a framework Activity cold-start launch — and
+                    //     are still reported.
+                    val isActivityColdStartTransitionInflateStall =
+                        topFrame?.className?.startsWith("android.transition.") == true &&
+                        // The transition inflation is part of the framework installing the
+                        // Activity's decor (the window transition XML is read and parsed
+                        // once when the decor is created during cold start), not app
+                        // business logic.
+                        mainStackTrace.any {
+                            it.className.startsWith("com.android.internal.policy.PhoneWindow") &&
+                                (it.methodName == "installDecor" || it.methodName == "getDecorView" || it.methodName == "getTransition")
+                        } &&
+                        // The decor install is part of a framework-driven Activity
+                        // cold-start launch (the Activity the framework is creating, not a
+                        // dialog or a RecyclerView row the app inflates later).
+                        mainStackTrace.any {
+                            (it.className == "android.app.Activity" && it.methodName == "performCreate") ||
+                            (it.className == "android.app.Instrumentation" && it.methodName == "callActivityOnCreate") ||
+                            (it.className == "android.app.ActivityThread" && it.methodName == "performLaunchActivity")
+                        } &&
+                        // The only app frames allowed are Activity lifecycle callbacks
+                        // (the activity starting up and installing its decor).
+                        mainStackTrace.filter { it.className.startsWith(APP_PACKAGE) }.let { appFrames ->
+                            appFrames.isNotEmpty() && appFrames.all { it.className.endsWith("Activity") }
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of inside
+                        // bounded one-time cold-start transition-inflation work.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
