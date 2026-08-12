@@ -9173,6 +9173,9 @@ Lautstärke aus
     <string name="icon_action_add">
 Hinzufügen
 </string>
+    <string name="icon_action_settings">
+Einstellungen
+</string>
     <string name="icon_action_close">
 Schließen
 </string>

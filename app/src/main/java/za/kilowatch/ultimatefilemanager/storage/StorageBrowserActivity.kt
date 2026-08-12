@@ -499,6 +499,7 @@ class StorageBrowserActivity : AppCompatActivity() {
     private var draggedItem: StorageItem? = null
 
     private var btnAddCustomTile: android.widget.ImageView? = null
+    private var btnSettingsGear: android.widget.ImageView? = null
 
     private var isEditMode = false
 
@@ -1066,6 +1067,27 @@ class StorageBrowserActivity : AppCompatActivity() {
                 setOnClickListener { showCreateCustomTileDialog() }
             }
             toolbar?.addView(btnAddCustomTile)
+            btnSettingsGear = ImageView(this).apply {
+                setImageResource(R.drawable.ic_gear)
+                contentDescription = getString(R.string.settings)
+                setPadding(pad, pad, pad, pad)
+                setBackgroundResource(R.drawable.bg_icon_circle_accent)
+                setColorFilter(getColor(R.color.mobile_icon_tint))
+                layoutParams = androidx.appcompat.widget.Toolbar.LayoutParams(
+                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
+                    androidx.appcompat.widget.Toolbar.LayoutParams.WRAP_CONTENT,
+                    android.view.Gravity.END
+                ).apply { this.marginEnd = margin }
+                setOnClickListener {
+                    startActivity(
+                        Intent(
+                            this@StorageBrowserActivity,
+                            za.kilowatch.ultimatefilemanager.settings.SettingsActivity::class.java
+                        )
+                    )
+                }
+            }
+            toolbar?.addView(btnSettingsGear)
         } else {
             val pad = (12 * density).toInt()
             val size = (48 * density).toInt()
@@ -2390,6 +2412,7 @@ class StorageBrowserActivity : AppCompatActivity() {
 
         // Hide "Create Custom Tile" button in edit mode
         btnAddCustomTile?.visibility = if (isEditMode) View.GONE else View.VISIBLE
+        btnSettingsGear?.visibility = if (isEditMode) View.GONE else View.VISIBLE
 
         if (isEditMode) {
             // In Edit Mode

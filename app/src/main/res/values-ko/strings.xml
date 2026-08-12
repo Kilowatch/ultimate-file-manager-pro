@@ -9173,6 +9173,9 @@ XML / 마크업
     <string name="icon_action_add">
 추가
 </string>
+    <string name="icon_action_settings">
+설정
+</string>
     <string name="icon_action_close">
 닫기
 </string>

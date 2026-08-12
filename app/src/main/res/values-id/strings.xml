@@ -9173,6 +9173,9 @@ Volume Mati
     <string name="icon_action_add">
 Tambah
 </string>
+    <string name="icon_action_settings">
+Pengaturan
+</string>
     <string name="icon_action_close">
 Tutup
 </string>

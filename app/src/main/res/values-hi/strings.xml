@@ -9173,6 +9173,9 @@ XML / मार्कअप
     <string name="icon_action_add">
 जोड़ें
 </string>
+    <string name="icon_action_settings">
+सेटिंग्स
+</string>
     <string name="icon_action_close">
 बंद करें
 </string>

@@ -405,6 +405,7 @@ class IconCustomizationActivity : AppCompatActivity() {
         categories.add(IconCategoryData(
             "utility", getString(R.string.category_utility), listOf(
                 IconItemData("action_add", getString(R.string.icon_action_add), R.drawable.ic_add, emptyList()),
+                IconItemData("action_settings", getString(R.string.icon_action_settings), R.drawable.ic_gear, emptyList()),
                 IconItemData("action_close", getString(R.string.icon_action_close), R.drawable.ic_close, emptyList()),
                 IconItemData("action_edit", getString(R.string.icon_action_edit), R.drawable.ic_edit, emptyList()),
                 IconItemData("action_refresh", getString(R.string.icon_action_refresh), R.drawable.ic_refresh, emptyList()),

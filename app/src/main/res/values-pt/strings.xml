@@ -9173,6 +9173,9 @@ Volume Desligado
     <string name="icon_action_add">
 Adicionar
 </string>
+    <string name="icon_action_settings">
+Configurações
+</string>
     <string name="icon_action_close">
 Fechar
 </string>

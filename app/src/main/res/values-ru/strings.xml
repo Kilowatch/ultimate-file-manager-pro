@@ -9173,6 +9173,9 @@ XML / Разметка
     <string name="icon_action_add">
 Добавить
 </string>
+    <string name="icon_action_settings">
+Настройки
+</string>
     <string name="icon_action_close">
 Закрыть
 </string>

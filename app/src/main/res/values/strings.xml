@@ -3212,6 +3212,7 @@
     <string name="icon_media_volume">Volume</string>
     <string name="icon_media_volume_off">Volume Off</string>
     <string name="icon_action_add">Add</string>
+    <string name="icon_action_settings">Settings</string>
     <string name="icon_action_close">Close</string>
     <string name="icon_action_edit">Edit</string>
     <string name="icon_action_refresh">Refresh</string>

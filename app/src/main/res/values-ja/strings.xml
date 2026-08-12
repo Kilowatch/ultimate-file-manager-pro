@@ -9173,6 +9173,9 @@ XML / マークアップ
     <string name="icon_action_add">
 追加
 </string>
+    <string name="icon_action_settings">
+設定
+</string>
     <string name="icon_action_close">
 閉じる
 </string>

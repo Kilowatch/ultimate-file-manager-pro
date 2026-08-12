@@ -9173,6 +9173,9 @@ Volume coupé
     <string name="icon_action_add">
 Ajouter
 </string>
+    <string name="icon_action_settings">
+Paramètres
+</string>
     <string name="icon_action_close">
 Fermer
 </string>

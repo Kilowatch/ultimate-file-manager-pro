@@ -172,7 +172,7 @@ class IconPackExportActivity : AppCompatActivity() {
         // Utility / Action (13)
         categories.add(CategorySelection(
             "utility", getString(R.string.category_utility),
-            listOf("action_add", "action_close", "action_edit", "action_refresh",
+            listOf("action_add", "action_settings", "action_close", "action_edit", "action_refresh",
                 "action_save", "action_paste", "action_undo", "action_duplicate",
                 "action_crop", "action_zoom_in", "action_zoom_out", "action_fit_screen",
                 "network_dlna")

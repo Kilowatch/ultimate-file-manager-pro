@@ -9185,6 +9185,9 @@ Volumen apagado
     <string name="icon_action_add">
 Agregar
 </string>
+    <string name="icon_action_settings">
+Ajustes
+</string>
     <string name="icon_action_close">
 Cerrar
 </string>

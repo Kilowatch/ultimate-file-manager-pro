@@ -9173,6 +9173,9 @@ XML / ترميز
     <string name="icon_action_add">
 إضافة
 </string>
+    <string name="icon_action_settings">
+الإعدادات
+</string>
     <string name="icon_action_close">
 إغلاق
 </string>
