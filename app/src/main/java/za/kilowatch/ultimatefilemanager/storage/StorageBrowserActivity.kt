@@ -1066,7 +1066,6 @@ class StorageBrowserActivity : AppCompatActivity() {
                 ).apply { this.marginEnd = margin }
                 setOnClickListener { showCreateCustomTileDialog() }
             }
-            toolbar?.addView(btnAddCustomTile)
             btnSettingsGear = ImageView(this).apply {
                 setImageResource(R.drawable.ic_gear)
                 contentDescription = getString(R.string.settings)
@@ -1088,6 +1087,7 @@ class StorageBrowserActivity : AppCompatActivity() {
                 }
             }
             toolbar?.addView(btnSettingsGear)
+            toolbar?.addView(btnAddCustomTile)
         } else {
             val pad = (12 * density).toInt()
             val size = (48 * density).toInt()
