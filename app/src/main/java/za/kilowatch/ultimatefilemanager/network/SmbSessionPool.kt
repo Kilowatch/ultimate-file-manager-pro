@@ -251,7 +251,7 @@ object SmbSessionPool {
         val soTimeoutSec = when {
             forWrite  -> 60L
             dedicated -> 0L // infinite — buffering/pausing must never kill the stream
-            else      -> 30L // pooled metadata — 30s timeout prevents idle packet reader teardowns
+            else      -> 8L  // pooled metadata timeout
         }
 
         // Transport timeout for dedicated streaming connections: use a large value
@@ -264,7 +264,7 @@ object SmbSessionPool {
         val transportTimeoutSec = when {
             forWrite  -> 60L
             dedicated -> 120L // generous — never fires during idle buffering
-            else      -> 30L  // pooled — generous request timeout
+            else      -> 8L   // pooled metadata timeout
         }
 
         val builder = SmbConfig.builder()

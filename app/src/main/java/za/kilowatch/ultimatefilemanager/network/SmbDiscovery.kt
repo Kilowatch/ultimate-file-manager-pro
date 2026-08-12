@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.network
 
 import android.content.Context
 import android.net.wifi.WifiManager
+import android.util.Log
 import jcifs.CIFSContext
 import jcifs.config.PropertyConfiguration
 import jcifs.context.BaseContext
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit
  */
 object SmbDiscovery {
 
+    private const val TAG = "SmbDiscovery"
     private const val SMB_PORT = 445
     private const val PROBE_TIMEOUT_MS = 600
     private const val MAX_THREADS = 32
@@ -37,6 +39,8 @@ object SmbDiscovery {
     )
 
     private val shareCache = ConcurrentHashMap<ShareCacheKey, CachedShares>()
+    private val accessibleShareCache = ConcurrentHashMap<ShareCacheKey, CachedShares>()
+    private val shareCacheLocks = ConcurrentHashMap<ShareCacheKey, Any>()
 
     // ── Host discovery ─────────────────────────────────────────────────────────
 
@@ -122,10 +126,21 @@ object SmbDiscovery {
             domain = domain.trim(),
             passwordHash = password.hashCode()
         )
-        val now = System.currentTimeMillis()
-        shareCache[cacheKey]?.takeIf { now - it.fetchedAtMs < SHARE_CACHE_TTL_MS }?.let {
-            return it.names
-        }
+        val cacheLock = shareCacheLocks.computeIfAbsent(cacheKey) { Any() }
+        return synchronized(cacheLock) {
+            val startedAtMs = System.currentTimeMillis()
+            val cached = shareCache[cacheKey]
+            if (cached != null && startedAtMs - cached.fetchedAtMs < SHARE_CACHE_TTL_MS) {
+                Log.d(
+                    TAG,
+                    "Share discovery cache hit: host=${cacheKey.host}, shares=${cached.names.size}, ageMs=${startedAtMs - cached.fetchedAtMs}"
+                )
+                return@synchronized cached.names
+            }
+            Log.d(
+                TAG,
+                "Share discovery cache miss: host=${cacheKey.host}, reason=${if (cached == null) "empty" else "expired"}"
+            )
 
         val props = Properties().apply {
             setProperty("jcifs.smb.client.dfs.disabled", "true")
@@ -151,7 +166,8 @@ object SmbDiscovery {
 
         val url = "smb://$host/"
         val smbFile = SmbFile(url, auth)
-        val shares = smbFile.listFiles()
+        val shares = try {
+            smbFile.listFiles()
             ?.mapNotNull { f ->
                 val n = f.name.trimEnd('/')
                 // Hide system / admin shares
@@ -161,8 +177,68 @@ object SmbDiscovery {
                 else n
             }
             ?.sorted()
-            ?: emptyList()
-        shareCache[cacheKey] = CachedShares(shares, now)
-        return shares
+                ?: emptyList()
+        } catch (e: Exception) {
+            Log.w(
+                TAG,
+                "Share discovery failed: host=${cacheKey.host}, durationMs=${System.currentTimeMillis() - startedAtMs}",
+                e
+            )
+            throw e
+        }
+            val completedAtMs = System.currentTimeMillis()
+            shareCache[cacheKey] = CachedShares(shares, completedAtMs)
+            Log.d(
+                TAG,
+                "Share discovery completed: host=${cacheKey.host}, shares=${shares.size}, durationMs=${completedAtMs - startedAtMs}"
+            )
+            shares
+        }
+    }
+
+    /**
+     * Lists only shares that the supplied credentials can open. Results are cached
+     * separately from raw share enumeration so returning to a server root does not
+     * repeat a connection test for every share.
+     */
+    fun listAccessibleShares(
+        host: String,
+        username: String,
+        password: String,
+        domain: String
+    ): List<String> {
+        val cacheKey = ShareCacheKey(
+            host = host.trim().lowercase(),
+            username = username.trim(),
+            domain = domain.trim(),
+            passwordHash = password.hashCode()
+        )
+        val cacheLock = shareCacheLocks.computeIfAbsent(cacheKey) { Any() }
+        return synchronized(cacheLock) {
+            val startedAtMs = System.currentTimeMillis()
+            val cached = accessibleShareCache[cacheKey]
+            if (cached != null && startedAtMs - cached.fetchedAtMs < SHARE_CACHE_TTL_MS) {
+                Log.d(
+                    TAG,
+                    "Accessible-share cache hit: host=${cacheKey.host}, shares=${cached.names.size}, ageMs=${startedAtMs - cached.fetchedAtMs}"
+                )
+                return@synchronized cached.names
+            }
+
+            Log.d(
+                TAG,
+                "Accessible-share cache miss: host=${cacheKey.host}, reason=${if (cached == null) "empty" else "expired"}"
+            )
+            val accessibleShares = listShares(host, username, password, domain).filter { shareName ->
+                SmbShareClient.isShareAccessible(host, shareName, username, password, domain)
+            }
+            val completedAtMs = System.currentTimeMillis()
+            accessibleShareCache[cacheKey] = CachedShares(accessibleShares, completedAtMs)
+            Log.d(
+                TAG,
+                "Accessible-share discovery completed: host=${cacheKey.host}, shares=${accessibleShares.size}, durationMs=${completedAtMs - startedAtMs}"
+            )
+            accessibleShares
+        }
     }
 }

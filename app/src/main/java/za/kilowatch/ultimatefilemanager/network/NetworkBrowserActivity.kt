@@ -2409,14 +2409,10 @@ class NetworkBrowserActivity : AppCompatActivity() {
      * Returns an empty list if the server is reachable but has no accessible shares.
      */
     private fun discoverServerShares(server: NetworkShare): List<NetworkFile> {
-        val allShares = SmbDiscovery.listShares(
+        val accessibleShares = SmbDiscovery.listAccessibleShares(
             server.host, server.username, server.password, server.domain
         )
-        return allShares.filter { shareName ->
-            SmbShareClient.isShareAccessible(
-                server.host, shareName, server.username, server.password, server.domain
-            )
-        }.map { shareName ->
+        return accessibleShares.map { shareName ->
             NetworkFile(
                 name = shareName,
                 path = "/$shareName",
