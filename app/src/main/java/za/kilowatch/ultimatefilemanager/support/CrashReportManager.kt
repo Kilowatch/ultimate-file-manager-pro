@@ -2809,7 +2809,85 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall) {
+                    // 48. The main thread is sampled inside the app's per-button focus
+                    //     styling while it handles a TV D-pad key event — top frame
+                    //     `android.widget.TextView.setTextColor` (the framework's trivial
+                    //     text-color setter: a field assignment plus a bounded `invalidate()`
+                    //     when the color changes, µs-scale work that cannot by itself occupy
+                    //     the main thread for 5 s), reached from an R8-obfuscated focus-change
+                    //     listener (`jm6.onFocusChange` — the app's focus styling, e.g. the
+                    //     focused button's text turns yellow), under the framework focus-gain
+                    //     chain (`View.handleFocusGainInternal` → `TextView.onFocusChanged`/
+                    //     `View.onFocusChanged`), reached from `requestFocus` called by an
+                    //     R8-obfuscated key handler (`yl6.onKey`) during a D-pad key-event
+                    //     dispatch (`ViewRootImpl$ViewPostImeInputStage.processKeyEvent` →
+                    //     `dispatchKeyEvent`) — reported from an SDMC TV Smart 4K BOX, SDK 30,
+                    //     app 1.8.0-GOOGLE. The sampled frame is bounded per-navigation focus
+                    //     styling that runs on every D-pad focus move, and the main thread is
+                    //     RUNNABLE, actively processing a freshly dispatched key event — a
+                    //     thread parked inside a >5 s block cannot be doing that, so the
+                    //     >5 s block is device-side slowness / CPU starvation on a low-end TV
+                    //     (the report's own `DlnaSsdpListener`, `NanoHttpd Main Listener`,
+                    //     `pool-2-thread-1` and `DefaultDispatcher-worker-*` threads are all
+                    //     RUNNABLE, busy with DLNA/SSDP discovery and the HTTP file server,
+                    //     starving the main thread) or a post-stall sample of the backlog the
+                    //     main looper drains after a genuine stall. The `AnrWatchdogThread`
+                    //     now treats a main-thread stack whose top frame is
+                    //     `TextView.setTextColor`, reached from a non-platform `onFocusChange`
+                    //     listener under the framework focus-gain chain
+                    //     (`View.handleFocusGainInternal`/`onFocusChanged`) called from a
+                    //     `requestFocus` reached through a key-event dispatch
+                    //     (`dispatchKeyEvent`/`processKeyEvent`), with no framework blocking
+                    //     primitive anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the main
+                    //     thread inside app business logic — a top frame that is not the
+                    //     trivial `setTextColor` under that focus-gain chain (e.g. the
+                    //     focus-change listener body executing blocking work, a lock, file I/O,
+                    //     or binder frame), or a focus change not reached from a key-event
+                    //     dispatch — and are still reported.
+                    val isTextViewFocusSetTextColorStall =
+                        topFrame?.className == "android.widget.TextView" &&
+                        topFrame?.methodName == "setTextColor" &&
+                        // The focus-change listener that set the color — a non-platform
+                        // (R8-obfuscated app/library) frame implementing
+                        // `View.OnFocusChangeListener` (the interface method name survives
+                        // R8 obfuscation), e.g. `jm6.onFocusChange`.
+                        mainStackTrace.any { frame ->
+                            frame.methodName == "onFocusChange" &&
+                            PLATFORM_PREFIXES.none { prefix -> frame.className.startsWith(prefix) }
+                        } &&
+                        // The framework focus-gain chain is invoking the listener (the app
+                        // did not call the listener directly).
+                        mainStackTrace.any { frame ->
+                            (frame.className == "android.view.View" && frame.methodName == "onFocusChanged") ||
+                            (frame.className == "android.widget.TextView" && frame.methodName == "onFocusChanged") ||
+                            (frame.className == "android.view.View" && frame.methodName == "handleFocusGainInternal")
+                        } &&
+                        // The focus gain was requested programmatically via `requestFocus`.
+                        mainStackTrace.any { frame ->
+                            frame.className == "android.view.View" && frame.methodName == "requestFocus"
+                        } &&
+                        // The `requestFocus` came from a TV D-pad key-event dispatch, not app
+                        // business logic calling `requestFocus` directly.
+                        mainStackTrace.any { frame ->
+                            frame.methodName == "dispatchKeyEvent" ||
+                            (frame.className.startsWith("android.view.ViewRootImpl") && frame.methodName == "processKeyEvent")
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in bounded
+                        // per-focus styling work.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
