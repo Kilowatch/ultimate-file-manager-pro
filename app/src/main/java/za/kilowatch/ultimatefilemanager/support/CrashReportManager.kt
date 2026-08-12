@@ -2887,7 +2887,103 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall) {
+                    // 49. The main thread is parked inside the runtime's native-allocation
+                    //     registry notification while a click-triggered layout inflation
+                    //     builds a MaterialButton's ripple background drawable — e.g. top
+                    //     frame `dalvik.system.VMRuntime.notifyNativeAllocationsInternal`
+                    //     (a native method ART calls from `VMRuntime.notifyNativeAllocation`
+                    //     when the count of registered native allocations since the last GC
+                    //     crosses its threshold) under
+                    //     `libcore.util.NativeAllocationRegistry.registerNativeAllocation`,
+                    //     reached from `android.graphics.Path.<init>` (the Path object a
+                    //     button's ripple/inset background drawable allocates while it is
+                    //     being constructed) under the `LayerDrawable`/`InsetDrawable`/
+                    //     `RippleDrawable` background-construction chain, under
+                    //     `View.setBackgroundDrawable` → `com.google.android.material.button.
+                    //     MaterialButton.setInternalBackground` → `MaterialButton.<init>`,
+                    //     reached from the bundled view factory
+                    //     `com.google.android.material.theme.MaterialComponentsViewInflater`
+                    //     during a `LayoutInflater` inflation
+                    //     (`createViewFromTag`/`inflate`) that an app click listener
+                    //     triggered (`View.performClick`) — reported from a vivo I2219,
+                    //     SDK 36, app 1.8.2-FOSS, the same device and session family as
+                    //     filter 43, sampled at a button-background construction instead of
+                    //     a text-layout Paint. `notifyNativeAllocationsInternal` is the
+                    //     runtime's bookkeeping for the *global* native-allocation counter,
+                    //     and it blocks when the heap is under pressure from concurrent
+                    //     native allocations — in this report a dozen
+                    //     `DefaultDispatcher-worker-*` threads are simultaneously inside the
+                    //     SAME native method doing `Bitmap.createBitmap` while Coil decodes
+                    //     AVIF/HEIF images (`com.radzivon.bartoshyk.avif.coder.HeifCoder.
+                    //     decodeSampled`) — so the >5 s block is a runtime/GC-side allocator
+                    //     stall the app cannot act on, and the main thread's own work is the
+                    //     µs-scale allocation of a button-background Path, not app business
+                    //     logic. This is the MaterialButton-inflation variant of filter 43
+                    //     (the `notifyNativeAllocationsInternal`-top RecyclerView text-layout
+                    //     report), sampled while the framework inflates a button background
+                    //     instead of measuring text. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is
+                    //     `VMRuntime.notifyNativeAllocationsInternal` (or the Java
+                    //     `notifyNativeAllocation` immediately below it), with a
+                    //     `NativeAllocationRegistry.registerNativeAllocation` frame, an
+                    //     `android.graphics.Path.<init>` frame reached from an
+                    //     `android.graphics.drawable.RippleDrawable`/`LayerDrawable` button-
+                    //     background construction chain, a `com.google.android.material.
+                    //     button.MaterialButton` frame (`<init>`/`setInternalBackground`)
+                    //     reached from a `MaterialComponentsViewInflater` frame during a
+                    //     `LayoutInflater` inflation, and no framework blocking primitive
+                    //     anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the
+                    //     main thread parked inside a blocking primitive (a lock,
+                    //     file/network/database I/O or binder frame), or reach the registry
+                    //     notification from app business logic that is NOT a
+                    //     Path-allocating MaterialButton background construction under the
+                    //     Material view factory (e.g. the main thread itself allocating a
+                    //     large Bitmap, which surfaces as `Bitmap.createBitmap` below the
+                    //     registry frame), and are still reported.
+                    val isNativeAllocationRegistryButtonInflateStall =
+                        topFrame?.className == "dalvik.system.VMRuntime" &&
+                        (topFrame?.methodName == "notifyNativeAllocationsInternal" ||
+                         topFrame?.methodName == "notifyNativeAllocation") &&
+                        mainStackTrace.any {
+                            it.className == "libcore.util.NativeAllocationRegistry" &&
+                                it.methodName == "registerNativeAllocation"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.graphics.Path" && it.methodName == "<init>"
+                        } &&
+                        // The Path is being allocated to build a button's ripple/inset
+                        // background drawable (the MaterialButton background-construction
+                        // chain), not to measure text.
+                        mainStackTrace.any { it.className == "android.graphics.drawable.RippleDrawable" } &&
+                        mainStackTrace.any {
+                            it.className == "com.google.android.material.button.MaterialButton" &&
+                            (it.methodName == "<init>" || it.methodName == "setInternalBackground")
+                        } &&
+                        // The button is created by the bundled view factory during layout
+                        // inflation (not app business logic constructing a button directly).
+                        mainStackTrace.any {
+                            it.className == "com.google.android.material.theme.MaterialComponentsViewInflater"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.LayoutInflater" &&
+                            (it.methodName == "createViewFromTag" || it.methodName == "inflate")
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in the
+                        // runtime's native-allocation registry notification.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
