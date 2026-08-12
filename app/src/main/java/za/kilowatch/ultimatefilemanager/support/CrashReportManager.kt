@@ -2671,7 +2671,65 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall) {
+                    // 46. The main thread is sampled inside a HONOR/Huawei vendor
+                    //     framework class initializer while the main looper dispatches a
+                    //     framework message through the ROM's real-time-scheduling
+                    //     factory — e.g. top frame `android.iawareperf.RtgSched.<clinit>`
+                    //     (HONOR's "iaware" Real-Time Scheduling class loading for the
+                    //     first time; its static initializer resolves the vendor's RT-sched
+                    //     configuration, which can stall on a slow or busy HONOR device),
+                    //     under `com.hihonor.common.HnFrameworkFactoryImpl.
+                    //     getHwRtgSchedImpl` -> `android.common.HwFrameworkFactory.
+                    //     getHwRtgSchedInstance`, reached from `android.app.
+                    //     ActivityThread$H.handleMessage` (the main looper dispatching an
+                    //     ActivityThread framework message) — reported from a HONOR
+                    //     PTP-N49, SDK 36, app 1.7.7-GOOGLE. The currently executing
+                    //     frame is the vendor ROM's own one-time class initializer (class
+                    //     loading / vendor service resolution) that the app cannot act
+                    //     on; the stack has zero `za.kilowatch.ultimatefilemanager`
+                    //     frames, and the only non-platform frame is the vendor's own
+                    //     `com.hihonor.*` factory (`com.hihonor.common` is injected by
+                    //     the HONOR ROM and is not platform-prefixed, so the
+                    //     pure-framework filter did not match). The `AnrWatchdogThread`
+                    //     now treats a main-thread stack whose top frame is `<clinit>`
+                    //     on an `android.iawareperf.*`/`com.hihonor.*` (HONOR/Huawei)
+                    //     class, containing a `com.hihonor.*` frame, a
+                    //     `getHwRtgSched*`/`HwFrameworkFactory` vendor factory frame and
+                    //     an `ActivityThread$H.handleMessage` frame, with no app frames,
+                    //     as a false positive and resets its heartbeat instead of writing
+                    //     a report. Genuine freezes keep the main thread inside app
+                    //     business logic — an app frame on the stack, or a top frame
+                    //     that is not a HONOR/Huawei vendor `<clinit>` under that factory
+                    //     chain (e.g. a lock, file I/O, or binder frame) — and are still
+                    //     reported.
+                    val isVendorRtgSchedClassInitStall =
+                        topFrame?.methodName == "<clinit>" &&
+                        topFrame?.className?.let { className ->
+                            className.startsWith("android.iawareperf.") ||
+                                className.startsWith("com.hihonor.")
+                        } == true &&
+                        // A HONOR/Huawei ROM class is on the stack (the only
+                        // non-platform frame — injected by the HONOR ROM, not part of
+                        // this app).
+                        mainStackTrace.any { it.className.startsWith("com.hihonor.") } &&
+                        // The vendor's real-time-scheduling factory chain that loads the
+                        // RtgSched class on the main thread (the ROM's own factory, not
+                        // app code).
+                        mainStackTrace.any {
+                            it.methodName.contains("getHwRtgSched") ||
+                                it.className.startsWith("android.common.HwFrameworkFactory") ||
+                                it.className.startsWith("com.hihonor.common.HnFrameworkFactoryImpl")
+                        } &&
+                        // The factory is invoked from the main looper dispatching an
+                        // ActivityThread framework message (a framework-driven path the
+                        // app cannot trigger).
+                        mainStackTrace.any {
+                            it.className.startsWith("android.app.ActivityThread\$H") &&
+                                it.methodName == "handleMessage"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
