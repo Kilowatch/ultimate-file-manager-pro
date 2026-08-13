@@ -46,7 +46,7 @@ val ALL_BUILTIN_ICONS = intArrayOf(
     // Toolbar / Actions
     R.drawable.ic_add, R.drawable.ic_gear, R.drawable.ic_create_new, R.drawable.ic_close, R.drawable.ic_edit, R.drawable.ic_refresh,
     R.drawable.ic_save, R.drawable.ic_paste, R.drawable.ic_copy, R.drawable.ic_move,
-    R.drawable.ic_rename, R.drawable.ic_share, R.drawable.ic_check, R.drawable.ic_compress, R.drawable.ic_extract,
+    R.drawable.ic_rename, R.drawable.ic_share, R.drawable.ic_check, R.drawable.ic_invert_selection, R.drawable.ic_compress, R.drawable.ic_extract,
     R.drawable.ic_compress_image, R.drawable.ic_gif, R.drawable.ic_copy_encrypt, R.drawable.ic_move_encrypt,
     R.drawable.ic_eye, R.drawable.ic_eye_off, R.drawable.ic_undo, R.drawable.ic_duplicate, R.drawable.ic_duplicate_finder,
     R.drawable.ic_crop, R.drawable.ic_zoom_in, R.drawable.ic_zoom_out, R.drawable.ic_fit_screen,

@@ -79,6 +79,24 @@ class RecycleBinAdapter(
         onSelectionChanged()
     }
 
+    /**
+     * Drops any selected IDs that are no longer present in [current] (e.g. an entry was
+     * auto-deleted or restored elsewhere while the app was backgrounded). Called before
+     * [submitList] so the selection bar count reflects only still-existing entries.
+     */
+    fun pruneSelection(current: List<RecycleBinEntity>) {
+        if (selectedIds.isEmpty()) return
+        val currentIds = current.mapTo(HashSet<Long>()) { it.id }
+        val before = selectedIds.size
+        selectedIds.retainAll(currentIds)
+        if (selectedIds.isEmpty()) {
+            selectionMode = false
+        }
+        if (selectedIds.size != before) {
+            onSelectionChanged()
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layout = if (isTv) R.layout.item_recycle_bin_tv else R.layout.item_recycle_bin
         val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)

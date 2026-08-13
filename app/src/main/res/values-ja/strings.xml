@@ -529,6 +529,9 @@ DCIM
     <string name="action_select_all">
 すべて選択
 </string>
+    <string name="action_invert_selection">
+選択を反転
+</string>
     <string name="action_deselect_all">
 すべて選択解除
 </string>
@@ -1719,6 +1722,27 @@ UFMスライドショー
 </string>
     <string name="batch_rename_error_provider_unavailable">
 ストレージプロバイダーが利用できません。一部のアイテムの名前を変更できませんでした。
+</string>
+    <string name="batch_rename_col_current_name">
+現在の名前
+</string>
+    <string name="batch_rename_col_new_name">
+新しい名前
+</string>
+    <string name="batch_rename_unchanged">
+変更なし
+</string>
+    <string name="batch_rename_conflict_duplicate">
+重複した名前
+</string>
+    <string name="batch_rename_conflict_invalid">
+無効な名前
+</string>
+    <string name="batch_rename_conflict_collision">
+名前は既に存在します
+</string>
+    <string name="batch_rename_warning_collisions">
+新しい名前のうち%1$dは既に存在するため、名前を変更できません。
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ OK
 </string>
     <string name="deleting_from_archive">
 アーカイブから削除中...
+</string>
+    <string name="archive_item_options">
+オプション
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / マークアップ
 </string>
     <string name="icon_toolbar_select_all">
 すべて選択
+</string>
+    <string name="icon_toolbar_invert_selection">
+選択を反転
 </string>
     <string name="icon_toolbar_compress">
 圧縮

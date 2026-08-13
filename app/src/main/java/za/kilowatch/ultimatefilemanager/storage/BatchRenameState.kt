@@ -54,8 +54,22 @@ data class PreviewItem(
     val originalName: String,
     /** Resolved resulting name after pattern substitution. */
     val resultingName: String,
-    /** True for folders, false for files. */
-    val isFolder: Boolean,
-    /** Drawable resource ID for the file/folder icon. */
-    val iconRes: Int
+    /** 1-based sequence number matching execution order. */
+    val index: Int,
+    /** Conflict affecting this row, or null when the rename is clean. */
+    val conflict: PreviewConflict?
 )
+
+/**
+ * A problem detected in a preview row's resulting name.
+ *
+ * [isBlocking] conflicts (DUPLICATE / INVALID_CHARS) disable the Rename button;
+ * [COLLISION] only warns the user before committing.
+ */
+enum class PreviewConflict {
+    DUPLICATE,
+    INVALID_CHARS,
+    COLLISION;
+
+    val isBlocking: Boolean get() = this != COLLISION
+}

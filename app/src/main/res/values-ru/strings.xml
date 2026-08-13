@@ -529,6 +529,9 @@ DCIM
     <string name="action_select_all">
 Выбрать всё
 </string>
+    <string name="action_invert_selection">
+Инвертировать выделение
+</string>
     <string name="action_deselect_all">
 Снять выделение
 </string>
@@ -1719,6 +1722,27 @@ UFM Slide Show
 </string>
     <string name="batch_rename_error_provider_unavailable">
 Поставщик хранилища недоступен. Не удалось переименовать некоторые элементы.
+</string>
+    <string name="batch_rename_col_current_name">
+Текущее имя
+</string>
+    <string name="batch_rename_col_new_name">
+Новое имя
+</string>
+    <string name="batch_rename_unchanged">
+без изменений
+</string>
+    <string name="batch_rename_conflict_duplicate">
+Дубликат имени
+</string>
+    <string name="batch_rename_conflict_invalid">
+Недопустимое имя
+</string>
+    <string name="batch_rename_conflict_collision">
+Имя уже существует
+</string>
+    <string name="batch_rename_warning_collisions">
+%1$d из новых имен уже существуют и не могут быть переименованы.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ NFSv4
 </string>
     <string name="deleting_from_archive">
 Удаление из архива...
+</string>
+    <string name="archive_item_options">
+Параметры
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / Разметка
 </string>
     <string name="icon_toolbar_select_all">
 Выбрать всё
+</string>
+    <string name="icon_toolbar_invert_selection">
+Инвертировать выделение
 </string>
     <string name="icon_toolbar_compress">
 Сжать

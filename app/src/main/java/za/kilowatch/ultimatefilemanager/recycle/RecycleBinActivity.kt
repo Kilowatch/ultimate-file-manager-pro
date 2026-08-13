@@ -111,6 +111,7 @@ class RecycleBinActivity : AppCompatActivity() {
             RecycleBinManager.validateEntries()
             RecycleBinManager.getAllFlow().collectLatest { entries ->
                 allEntries = entries
+                adapter.pruneSelection(entries)
                 adapter.submitList(entries)
                 updateEmptyState(entries.isEmpty())
                 updateTrashSize()

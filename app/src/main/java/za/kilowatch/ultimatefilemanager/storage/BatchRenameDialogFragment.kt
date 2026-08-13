@@ -21,12 +21,10 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -45,7 +43,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  *
  * Created via [newInstance] with a list of [BatchRenameItem].
  */
-class BatchRenameDialogFragment : BottomSheetDialogFragment() {
+class BatchRenameDialogFragment : DialogFragment() {
 
     private lateinit var viewModel: BatchRenameViewModel
     private var isTv = false
@@ -85,11 +83,7 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isTv = DeviceUtils.isTvDevice(requireContext())
-        if (isTv) {
-            setStyle(STYLE_NORMAL, R.style.UFM_Dialog)
-        } else {
-            setStyle(STYLE_NORMAL, R.style.TransparentBottomSheetDialog)
-        }
+        setStyle(STYLE_NORMAL, R.style.UFM_Dialog)
 
         val cacheKey = arguments?.getString(ARG_ITEMS_CACHE_KEY)
         val items: List<BatchRenameItem> = cacheKey?.let { BatchRenameItemsCache.peek(it) } ?: emptyList()
@@ -163,10 +157,11 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
                 window.setGravity(Gravity.CENTER)
             }
         } else {
-            // Full-screen bottom sheet on mobile
-            (dialog as? BottomSheetDialog)?.behavior?.apply {
-                state = BottomSheetBehavior.STATE_EXPANDED
-                skipCollapsed = true
+            // Full-window dialog on mobile
+            dialog.window?.apply {
+                setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+                setDimAmount(0f)
             }
         }
     }
@@ -274,11 +269,6 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
                     insertToken(token)
                 } else {
                     removeToken(token)
-                }
-                when (chipId) {
-                    R.id.chipYear -> viewModel.toggleYearOption()
-                    R.id.chipMonth -> viewModel.toggleMonthOption()
-                    R.id.chipDay -> viewModel.toggleDayOption()
                 }
             }
         }
@@ -609,13 +599,21 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
             // Count folders and files
             val folderCount = state.items.count { it.isDirectory }
             val fileCount = state.items.size - folderCount
+            val collisionCount = state.previewItems.count { it.conflict == PreviewConflict.COLLISION }
+
+            val confirmMessage = if (collisionCount > 0) {
+                getString(R.string.batch_rename_confirm_body, folderCount, fileCount) +
+                    "\n\n" + getString(R.string.batch_rename_warning_collisions, collisionCount)
+            } else {
+                getString(R.string.batch_rename_confirm_body, folderCount, fileCount)
+            }
 
             MaterialAlertDialogBuilder(
                 requireContext(),
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
             )
                 .setTitle(getString(R.string.batch_rename_confirm_title))
-                .setMessage(getString(R.string.batch_rename_confirm_body, folderCount, fileCount))
+                .setMessage(confirmMessage)
                 .setNegativeButton(getString(R.string.batch_rename_confirm_cancel), null)
                 .setPositiveButton(getString(R.string.batch_rename_confirm_accept)) { _, _ ->
                     executeRename(state)
@@ -680,12 +678,26 @@ class BatchRenameDialogFragment : BottomSheetDialogFragment() {
                 view?.findViewById<View>(R.id.cardDateControls)?.visibility =
                     if (hasDateSelection) View.VISIBLE else View.GONE
 
-                view?.findViewById<View>(R.id.tilYear)?.visibility =
-                    if (state.hasYearToken) View.VISIBLE else View.GONE
-                view?.findViewById<View>(R.id.tilMonth)?.visibility =
-                    if (state.hasMonthToken) View.VISIBLE else View.GONE
-                view?.findViewById<View>(R.id.tilDay)?.visibility =
-                    if (state.hasDayToken) View.VISIBLE else View.GONE
+                val tilYear = view?.findViewById<View>(R.id.tilYear)
+                val tilMonth = view?.findViewById<View>(R.id.tilMonth)
+                val tilDay = view?.findViewById<View>(R.id.tilDay)
+
+                tilYear?.visibility = if (state.hasYearToken) View.VISIBLE else View.GONE
+                tilMonth?.visibility = if (state.hasMonthToken) View.VISIBLE else View.GONE
+                tilDay?.visibility = if (state.hasDayToken) View.VISIBLE else View.GONE
+
+                val visibleDateFields = listOfNotNull(
+                    if (state.hasYearToken) tilYear else null,
+                    if (state.hasMonthToken) tilMonth else null,
+                    if (state.hasDayToken) tilDay else null
+                )
+                val gapPx = (6 * resources.displayMetrics.density).toInt()
+                visibleDateFields.forEachIndexed { index, field ->
+                    val params = field.layoutParams as? LinearLayout.LayoutParams ?: return@forEachIndexed
+                    params.leftMargin = 0
+                    params.rightMargin = if (index < visibleDateFields.size - 1) gapPx else 0
+                    field.layoutParams = params
+                }
 
                 // Disable $F when $E is active
                 val isExtActive = state.useCustomExtension

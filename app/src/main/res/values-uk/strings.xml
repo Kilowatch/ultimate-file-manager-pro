@@ -529,6 +529,9 @@ DCIM
     <string name="action_select_all">
 Вибрати все
 </string>
+    <string name="action_invert_selection">
+Інвертувати вибір
+</string>
     <string name="action_deselect_all">
 Скасувати вибір усього
 </string>
@@ -1719,6 +1722,27 @@ UFM Slide Show
 </string>
     <string name="batch_rename_error_provider_unavailable">
 Сховище недоступне. Деякі елементи не вдалося перейменувати.
+</string>
+    <string name="batch_rename_col_current_name">
+Поточна назва
+</string>
+    <string name="batch_rename_col_new_name">
+Нова назва
+</string>
+    <string name="batch_rename_unchanged">
+без змін
+</string>
+    <string name="batch_rename_conflict_duplicate">
+Дублікат назви
+</string>
+    <string name="batch_rename_conflict_invalid">
+Недійсна назва
+</string>
+    <string name="batch_rename_conflict_collision">
+Назва вже існує
+</string>
+    <string name="batch_rename_warning_collisions">
+%1$d із нових назв уже існують і не можуть бути перейменовані.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ OK
 </string>
     <string name="deleting_from_archive">
 Видалення з архіву...
+</string>
+    <string name="archive_item_options">
+Параметри
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / Розмітка
 </string>
     <string name="icon_toolbar_select_all">
 Вибрати все
+</string>
+    <string name="icon_toolbar_invert_selection">
+Інвертувати вибір
 </string>
     <string name="icon_toolbar_compress">
 Стиснути

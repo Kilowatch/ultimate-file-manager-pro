@@ -395,6 +395,13 @@ class NetworkBrowserFragment : Fragment() {
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
             val context = context ?: return@setOnClickListener
 
+            // 0. Invert Selection
+            if (pm.isIconEnabled(context, pm.KEY_INVERT_SELECTION)) {
+                list.add(FileToolsBottomSheet.ActionItem("invert_selection", getString(R.string.action_invert_selection), R.drawable.ic_invert_selection, "toolbar_invert_selection") {
+                    fileAdapter.invertSelection()
+                })
+            }
+
             // 1. Copy
             if (pm.isIconEnabled(context, pm.KEY_COPY)) {
                 list.add(FileToolsBottomSheet.ActionItem("copy", getString(R.string.action_copy), R.drawable.ic_copy, "toolbar_copy") {

@@ -2,9 +2,14 @@ package za.kilowatch.ultimatefilemanager.storage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for [BatchRenameDialogFragment] and [BatchRenameTvActivity].
@@ -21,6 +26,10 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
 
     // Guard against re-entrant TextWatcher callbacks during programmatic EditText changes.
     var suppressTextWatcher = false
+
+    // Async collision-detection job (debounced + cancelled on every rebuild).
+    private var collisionJob: Job? = null
+    private var collisionGeneration = 0
 
     private val _state = MutableStateFlow(BatchRenameState(items = initialItems))
     val state: StateFlow<BatchRenameState> = _state
@@ -153,9 +162,9 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
         val hasPaddedNumber = currentText.contains("###") || currentText.contains(TOKEN_PADDING)
         val hasName = currentText.contains("\$N") || currentText.contains("\$name") || currentText.contains("{name}") || currentText.contains("%N") || currentText.contains(TOKEN_ORIGINAL)
         val hasFullName = currentText.contains("\$F") || currentText.contains("\$fullname") || currentText.contains("{fullname}") || currentText.contains("%F")
-        val hasYear = currentText.contains("\$Y") || _state.value.hasYearToken
-        val hasMonth = currentText.contains("\$M") || _state.value.hasMonthToken
-        val hasDay = currentText.contains("\$D") || _state.value.hasDayToken
+        val hasYear = currentText.contains("\$Y")
+        val hasMonth = currentText.contains("\$M")
+        val hasDay = currentText.contains("\$D")
 
         _state.update {
             it.copy(
@@ -206,7 +215,7 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
             null
         }
 
-        val previews = s.items.mapIndexed { index, item ->
+        val resolvedNames = s.items.mapIndexed { index, item ->
             val counter = index + 1
 
             val resolvedName = BatchRenamePatternResolver.resolve(
@@ -231,7 +240,7 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
                 hasLower = s.hasLowerToken
             )
 
-            val fullResult = BatchRenamePatternResolver.appendExtension(
+            BatchRenamePatternResolver.appendExtension(
                 resolvedName = resolvedName,
                 item = item,
                 pattern = pattern,
@@ -239,26 +248,61 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
                 customExtension = s.customExtension,
                 hasUpper = s.hasUpperToken,
                 hasLower = s.hasLowerToken
-            )
+            ).ifEmpty { "" }
+        }
 
+        val nameConflicts = BatchRenameConflictDetector.nameConflicts(resolvedNames)
+
+        val previews = s.items.mapIndexed { index, item ->
             PreviewItem(
                 originalName = item.fullName,
-                resultingName = fullResult.ifEmpty { "" },
-                isFolder = item.isDirectory,
-                iconRes = if (item.isDirectory) {
-                    za.kilowatch.ultimatefilemanager.R.drawable.ic_folder
-                } else {
-                    za.kilowatch.ultimatefilemanager.R.drawable.ic_file
-                }
+                resultingName = resolvedNames[index],
+                index = index + 1,
+                conflict = nameConflicts[index]
             )
         }
+
+        val hasBlockingConflict = previews.any { it.conflict?.isBlocking == true }
 
         _state.update {
             it.copy(
                 previewItems = previews,
-                isRenameEnabled = isRenameEnabled,
+                isRenameEnabled = isRenameEnabled && !hasBlockingConflict,
                 patternError = patternError
             )
+        }
+
+        scheduleCollisionDetection()
+    }
+
+    /**
+     * Re-run collision detection asynchronously (debounced) and merge COLLISION
+     * flags into the preview. Cancels the previous job and discards stale results
+     * via a generation token.
+     */
+    private fun scheduleCollisionDetection() {
+        collisionJob?.cancel()
+
+        val generation = ++collisionGeneration
+        val items = _state.value.items
+        val resolvedNames = _state.value.previewItems.map { it.resultingName }
+
+        collisionJob = viewModelScope.launch(Dispatchers.IO) {
+            delay(250)
+            val collisions = BatchRenameConflictDetector.detectCollisions(items, resolvedNames)
+            if (generation != collisionGeneration) return@launch
+
+            _state.update { state ->
+                val updated = state.previewItems.map { item ->
+                    val collision = collisions[item.index - 1]
+                    if (item.conflict == null && collision != null) {
+                        item.copy(conflict = collision)
+                    } else {
+                        item
+                    }
+                }
+                state.copy(previewItems = updated)
+            }
         }
     }
 
@@ -274,9 +318,9 @@ class BatchRenameViewModel(private val initialItems: List<BatchRenameItem>) : Vi
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(BatchRenameViewModel::class.java)) {
-                val sorted = items.sortedWith(compareByDescending<BatchRenameItem> { it.isDirectory }
-                    .thenBy { items.indexOf(it) })
-                return BatchRenameViewModel(sorted) as T
+                // Keep items in source-list order (the order they were listed where
+                // selected); the preview and execution both follow this order.
+                return BatchRenameViewModel(items) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

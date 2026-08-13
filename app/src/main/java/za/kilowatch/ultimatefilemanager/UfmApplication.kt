@@ -104,6 +104,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         // provider setup above ran.
         za.kilowatch.ultimatefilemanager.util.Analytics.init(this)
         instance = this
+        za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache.registerBackgroundCleanup()
         Log.d(TAG, "Starting global UfmApplication...")
 
         // Initialize managers that are required immediately on startup (avoid race conditions)
@@ -247,6 +248,9 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
 
             // 4. Purge old temporary files from cache
             purgeOldCacheFiles()
+
+            // 4b. Sweep orphaned in-archive preview directories left by a crash/force-kill.
+            za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache.sweepOrphans(this@UfmApplication)
 
             // 4. Pre-warm AdbManager — runs EncryptedSharedPreferences + Keystore IPC here,
             //    on a background thread, so TerminalActivity.getInstance() returns instantly

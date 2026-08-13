@@ -16,6 +16,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_HIDE = "pref_icon_hide"
     const val KEY_UNHIDE = "pref_icon_unhide"
     const val KEY_SELECT_ALL = "pref_icon_select_all"
+    const val KEY_INVERT_SELECTION = "pref_icon_invert_selection"
     const val KEY_COMPRESS = "pref_icon_compress"
     const val KEY_EXTRACT = "pref_icon_extract"
     const val KEY_DELETE = "pref_icon_delete"

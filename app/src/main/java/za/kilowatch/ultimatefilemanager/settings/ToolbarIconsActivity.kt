@@ -69,7 +69,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
 
         data class IconItem(val iconResId: Int, val nameResId: Int, val prefKey: String)
 
-        val items = listOf(
+        val items = mutableListOf(
             IconItem(R.drawable.ic_create_new, R.string.cd_create_new, ToolbarIconsPreferenceManager.KEY_CREATE_NEW),
             IconItem(R.drawable.ic_copy, R.string.action_copy, ToolbarIconsPreferenceManager.KEY_COPY),
             IconItem(R.drawable.ic_move, R.string.action_move, ToolbarIconsPreferenceManager.KEY_MOVE),
@@ -96,6 +96,13 @@ class ToolbarIconsActivity : AppCompatActivity() {
             IconItem(R.drawable.ic_wallpaper_lock, R.string.action_set_lock_wallpaper, ToolbarIconsPreferenceManager.KEY_SET_LOCK_WALLPAPER),
             IconItem(R.drawable.ic_gif, R.string.action_create_gif, ToolbarIconsPreferenceManager.KEY_CREATE_GIF)
         )
+
+        if (!isTv) {
+            items.add(
+                items.indexOfFirst { it.prefKey == ToolbarIconsPreferenceManager.KEY_SELECT_ALL } + 1,
+                IconItem(R.drawable.ic_invert_selection, R.string.action_invert_selection, ToolbarIconsPreferenceManager.KEY_INVERT_SELECTION)
+            )
+        }
 
 
         for (item in items) {
@@ -125,6 +132,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 ToolbarIconsPreferenceManager.KEY_PROTECT -> "toolbar_protect"
                 ToolbarIconsPreferenceManager.KEY_UNPROTECT -> "toolbar_unprotect"
                 ToolbarIconsPreferenceManager.KEY_SELECT_ALL -> "toolbar_select_all"
+                ToolbarIconsPreferenceManager.KEY_INVERT_SELECTION -> "toolbar_invert_selection"
                 ToolbarIconsPreferenceManager.KEY_COMPRESS -> "toolbar_compress"
                 ToolbarIconsPreferenceManager.KEY_IMAGE_COMPRESS -> "toolbar_image_compress"
                 ToolbarIconsPreferenceManager.KEY_CREATE_GIF -> "toolbar_create_gif"

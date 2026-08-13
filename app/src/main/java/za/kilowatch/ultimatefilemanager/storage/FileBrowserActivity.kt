@@ -439,7 +439,7 @@ class FileBrowserActivity : AppCompatActivity() {
         // Refresh file list so files created/modified in child activities
         // (image viewer, text viewer, etc.) appear immediately on return
         if (::currentDir.isInitialized) {
-            loadDirectory(currentDir)
+            loadDirectory(currentDir, preserveSelection = true)
         }
         // Show/hide paste FAB based on clipboard state or picker modes
         updatePasteFab()
@@ -1855,6 +1855,13 @@ class FileBrowserActivity : AppCompatActivity() {
 
             val list = mutableListOf<FileToolsBottomSheet.ActionItem>()
             val pm = za.kilowatch.ultimatefilemanager.settings.ToolbarIconsPreferenceManager
+
+            // 0. Invert Selection
+            if (pm.isIconEnabled(this, pm.KEY_INVERT_SELECTION)) {
+                list.add(FileToolsBottomSheet.ActionItem("invert_selection", getString(R.string.action_invert_selection), R.drawable.ic_invert_selection, "toolbar_invert_selection") {
+                    fileAdapter.invertSelection()
+                })
+            }
 
             // 1. Copy
             if (pm.isIconEnabled(this, pm.KEY_COPY)) {
@@ -4051,7 +4058,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadDirectory(directory: File) {
+    private fun loadDirectory(directory: File, preserveSelection: Boolean = false) {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
 
         // Clear file selection highlight when navigating directories
@@ -4081,8 +4088,9 @@ class FileBrowserActivity : AppCompatActivity() {
         currentDir = directory
         updateBreadcrumbs()
 
-        // Exit selection mode when navigating
-        if (fileAdapter.isSelectionMode) {
+        // Exit selection mode when navigating or after an operation. Preserve it only
+        // when reloading the same directory on resume (background/foreground).
+        if (fileAdapter.isSelectionMode && !preserveSelection) {
             fileAdapter.exitSelectionMode()
         }
 

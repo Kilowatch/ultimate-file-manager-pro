@@ -529,6 +529,9 @@ DCIM
     <string name="action_select_all">
 सभी चुनें
 </string>
+    <string name="action_invert_selection">
+चयन उलटें
+</string>
     <string name="action_deselect_all">
 सभी का चयन हटाएँ
 </string>
@@ -1719,6 +1722,27 @@ UFM स्लाइड शो
 </string>
     <string name="batch_rename_error_provider_unavailable">
 स्टोरेज प्रदाता अनुपलब्ध। कुछ आइटमों का नाम नहीं बदला जा सका।
+</string>
+    <string name="batch_rename_col_current_name">
+वर्तमान नाम
+</string>
+    <string name="batch_rename_col_new_name">
+नया नाम
+</string>
+    <string name="batch_rename_unchanged">
+अपरिवर्तित
+</string>
+    <string name="batch_rename_conflict_duplicate">
+डुप्लीकेट नाम
+</string>
+    <string name="batch_rename_conflict_invalid">
+अमान्य नाम
+</string>
+    <string name="batch_rename_conflict_collision">
+नाम पहले से मौजूद है
+</string>
+    <string name="batch_rename_warning_collisions">
+नए नामों में से %1$d पहले से मौजूद हैं और नामांतरित नहीं किए जा सकते।
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ UFM रंग कोड
 </string>
     <string name="deleting_from_archive">
 आर्काइव से हटाया जा रहा है...
+</string>
+    <string name="archive_item_options">
+विकल्प
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / मार्कअप
 </string>
     <string name="icon_toolbar_select_all">
 सभी चुनें
+</string>
+    <string name="icon_toolbar_invert_selection">
+चयन उलटें
 </string>
     <string name="icon_toolbar_compress">
 संपीड़ित करें

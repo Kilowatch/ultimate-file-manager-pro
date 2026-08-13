@@ -529,6 +529,9 @@ Esta pasta está vazia
     <string name="action_select_all">
 Selecionar Tudo
 </string>
+    <string name="action_invert_selection">
+Inverter seleção
+</string>
     <string name="action_deselect_all">
 Desmarcar Tudo
 </string>
@@ -1719,6 +1722,27 @@ Continuar Editando
 </string>
     <string name="batch_rename_error_provider_unavailable">
 Provedor de armazenamento indisponível. Não foi possível renomear alguns itens.
+</string>
+    <string name="batch_rename_col_current_name">
+Nome atual
+</string>
+    <string name="batch_rename_col_new_name">
+Novo nome
+</string>
+    <string name="batch_rename_unchanged">
+inalterado
+</string>
+    <string name="batch_rename_conflict_duplicate">
+Nome duplicado
+</string>
+    <string name="batch_rename_conflict_invalid">
+Nome inválido
+</string>
+    <string name="batch_rename_conflict_collision">
+O nome já existe
+</string>
+    <string name="batch_rename_warning_collisions">
+%1$d dos novos nomes já existem e não podem ser renomeados.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ Movendo para fora do arquivo...
 </string>
     <string name="deleting_from_archive">
 Excluindo do arquivo...
+</string>
+    <string name="archive_item_options">
+Opções
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ Exibir
 </string>
     <string name="icon_toolbar_select_all">
 Selecionar Tudo
+</string>
+    <string name="icon_toolbar_invert_selection">
+Inverter seleção
 </string>
     <string name="icon_toolbar_compress">
 Comprimir

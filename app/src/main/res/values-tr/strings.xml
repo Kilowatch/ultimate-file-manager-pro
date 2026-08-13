@@ -529,6 +529,9 @@ Bu klasör boş
     <string name="action_select_all">
 Tümünü Seç
 </string>
+    <string name="action_invert_selection">
+Seçimi Ters Çevir
+</string>
     <string name="action_deselect_all">
 Tümünün Seçimini Kaldır
 </string>
@@ -1719,6 +1722,27 @@ Düzenlemeye Devam Et
 </string>
     <string name="batch_rename_error_provider_unavailable">
 Depolama sağlayıcısı kullanılamıyor. Bazı öğeler yeniden adlandırılamadı.
+</string>
+    <string name="batch_rename_col_current_name">
+Mevcut ad
+</string>
+    <string name="batch_rename_col_new_name">
+Yeni ad
+</string>
+    <string name="batch_rename_unchanged">
+Değişmedi
+</string>
+    <string name="batch_rename_conflict_duplicate">
+Yinelenen ad
+</string>
+    <string name="batch_rename_conflict_invalid">
+Geçersiz ad
+</string>
+    <string name="batch_rename_conflict_collision">
+Ad zaten mevcut
+</string>
+    <string name="batch_rename_warning_collisions">
+Yeni adlardan %1$d tanesi zaten mevcut ve yeniden adlandırılamaz.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ Arşivden çıkartılıyor...
 </string>
     <string name="deleting_from_archive">
 Arşivden siliniyor...
+</string>
+    <string name="archive_item_options">
+Seçenekler
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ Göster
 </string>
     <string name="icon_toolbar_select_all">
 Tümünü Seç
+</string>
+    <string name="icon_toolbar_invert_selection">
+Seçimi Ters Çevir
 </string>
     <string name="icon_toolbar_compress">
 Sıkıştır

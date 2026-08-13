@@ -3,47 +3,139 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="56dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="4dp">
 
-    <ImageView
-        android:id="@+id/imgIcon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="12dp"
-        android:importantForAccessibility="no" />
-
+    <!-- Big Outer CardView Container -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/cardPreview"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="top"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp">
 
+        <!-- Sequence number bubble -->
         <TextView
-            android:id="@+id/txtOriginalName"
-            android:layout_width="match_parent"
+            android:id="@+id/txtIndex"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif" />
+            android:minWidth="30dp"
+            android:minHeight="30dp"
+            android:paddingHorizontal="8dp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_index_bubble"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:importantForAccessibility="no" />
 
-        <TextView
-            android:id="@+id/txtResultName"
-            android:layout_width="match_parent"
+        <!-- Vertical column for Section 1 card, Section 2 card, and Tag -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textColor="@color/mobile_card_text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Small Inner Card 1: Current Name -->
+            <LinearLayout
+                android:id="@+id/cardOriginal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:id="@+id/txtSectionOriginalLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/batch_rename_col_current_name"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="10sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true"
+                    android:fontFamily="sans-serif-medium" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:scrollbars="none"
+                    android:overScrollMode="never">
+
+                    <TextView
+                        android:id="@+id/txtOriginalName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif" />
+                </HorizontalScrollView>
+            </LinearLayout>
+
+            <!-- Small Inner Card 2: New Name -->
+            <LinearLayout
+                android:id="@+id/cardNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/txtSectionNewLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/batch_rename_col_new_name"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="10sp"
+                android:letterSpacing="0.05"
+                android:textAllCaps="true"
+                android:fontFamily="sans-serif-medium" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:scrollbars="none"
+                android:overScrollMode="never">
+
+                <TextView
+                    android:id="@+id/txtResultName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-medium" />
+            </HorizontalScrollView>
+            </LinearLayout>
+
+            <!-- Conflict Tag / Badge (Inside main card, below Section 2, aligned left) -->
+            <TextView
+                android:id="@+id/txtConflictBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="6dp"
+                android:layout_marginStart="2dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone"
+                android:importantForAccessibility="no" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

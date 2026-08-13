@@ -529,6 +529,9 @@ NAS المنزلي
     <string name="action_select_all">
 تحديد الكل
 </string>
+    <string name="action_invert_selection">
+عكس التحديد
+</string>
     <string name="action_deselect_all">
 إلغاء تحديد الكل
 </string>
@@ -1719,6 +1722,27 @@ APKs
 </string>
     <string name="batch_rename_error_provider_unavailable">
 موفر التخزين غير متاح. تعذر إعادة تسمية بعض العناصر.
+</string>
+    <string name="batch_rename_col_current_name">
+الاسم الحالي
+</string>
+    <string name="batch_rename_col_new_name">
+الاسم الجديد
+</string>
+    <string name="batch_rename_unchanged">
+بدون تغيير
+</string>
+    <string name="batch_rename_conflict_duplicate">
+اسم مكرر
+</string>
+    <string name="batch_rename_conflict_invalid">
+اسم غير صالح
+</string>
+    <string name="batch_rename_conflict_collision">
+الاسم موجود بالفعل
+</string>
+    <string name="batch_rename_warning_collisions">
+%1$d من الأسماء الجديدة موجودة بالفعل ولا يمكن إعادة تسميتها.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ NFSv4
 </string>
     <string name="deleting_from_archive">
 جارٍ الحذف من الأرشيف...
+</string>
+    <string name="archive_item_options">
+الخيارات
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / ترميز
 </string>
     <string name="icon_toolbar_select_all">
 تحديد الكل
+</string>
+    <string name="icon_toolbar_invert_selection">
+عكس التحديد
 </string>
     <string name="icon_toolbar_compress">
 ضغط

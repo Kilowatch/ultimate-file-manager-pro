@@ -505,6 +505,7 @@ class IconCustomizationActivity : AppCompatActivity() {
             IconItemData("toolbar_hide", getString(R.string.icon_toolbar_hide), R.drawable.ic_eye_off, emptyList()),
             IconItemData("toolbar_unhide", getString(R.string.icon_toolbar_unhide), R.drawable.ic_eye, emptyList()),
             IconItemData("toolbar_select_all", getString(R.string.icon_toolbar_select_all), R.drawable.ic_check, emptyList()),
+            IconItemData("toolbar_invert_selection", getString(R.string.icon_toolbar_invert_selection), R.drawable.ic_invert_selection, emptyList()),
             IconItemData("toolbar_compress", getString(R.string.icon_toolbar_compress), R.drawable.ic_compress, emptyList()),
             IconItemData("toolbar_image_compress", getString(R.string.icon_toolbar_image_compress), R.drawable.ic_compress_image, emptyList()),
             IconItemData("toolbar_create_gif", getString(R.string.icon_toolbar_create_gif), R.drawable.ic_gif, emptyList()),

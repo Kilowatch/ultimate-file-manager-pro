@@ -144,12 +144,13 @@ class NetworkFileAdapter(
         files.addAll(filesCopy)
         this.searchBasePath = searchBasePath
         childCountCache.clear()
-        // Clean up selection if files were removed by a directory reload.
-        // If retainAll drops any items (e.g. the server returned different metadata
-        // for the same file), fire onSelectionChanged so the toolbar reflects the
-        // real selection count rather than going stale.
+        // Clean up selection if files were removed by a directory reload. Key on the
+        // remote `path` only — a file whose metadata changed (size/mtime) is the same
+        // item and must stay selected. If anything is dropped, fire onSelectionChanged
+        // so the toolbar reflects the real selection count rather than going stale.
         val prevSelectionSize = selectedFiles.size
-        selectedFiles.retainAll(files.toSet())
+        val presentPaths = files.mapTo(HashSet<String>()) { it.path }
+        selectedFiles.removeAll { it.path !in presentPaths }
         if (selectedFiles.size != prevSelectionSize) {
             onSelectionChanged(selectedFiles.size)
         }
@@ -243,7 +244,7 @@ class NetworkFileAdapter(
         }
     }
     
-    fun getSelectedFiles(): List<NetworkFile> = selectedFiles.toList()
+    fun getSelectedFiles(): List<NetworkFile> = files.filter { it in selectedFiles }
 
     fun hasAnySelectedProtected(context: Context, shareId: String): Boolean = selectedFiles.any { za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
     fun hasAnySelectedUnprotected(context: Context, shareId: String): Boolean = selectedFiles.any { !za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager.isProtected(context, it.path, shareId) }
@@ -253,6 +254,15 @@ class NetworkFileAdapter(
     
     fun selectAll() {
         selectedFiles.addAll(files)
+        longPressAnchorIndex = RecyclerView.NO_POSITION
+        notifyItemRangeChanged(0, itemCount)
+        onSelectionChanged(selectedFiles.size)
+    }
+
+    fun invertSelection() {
+        files.forEach { f ->
+            if (f in selectedFiles) selectedFiles.remove(f) else selectedFiles.add(f)
+        }
         longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedFiles.size)

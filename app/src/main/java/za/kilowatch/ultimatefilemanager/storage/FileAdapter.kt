@@ -153,7 +153,8 @@ class FileAdapter(
         val filesCopy = newFiles.toList()
         files.clear()
         files.addAll(filesCopy)
-        
+        longPressAnchorIndex = RecyclerView.NO_POSITION
+
         this.indexedPaths.clear()
         this.indexedPaths.addAll(indexedPaths)
         
@@ -208,6 +209,21 @@ class FileAdapter(
         }
 
         notifyDataSetChanged()
+
+        // Re-apply selection by stable identifier after the fresh listing lands, and
+        // silently drop any selected path that is no longer present (deleted, moved,
+        // filtered out, or otherwise removed). This keeps selection intact across a
+        // background/foreground reload, while navigation/operation reloads — which
+        // already cleared selection before reaching here — remain unaffected.
+        if (isSelectionMode) {
+            val stillPresent = files.mapTo(HashSet<String>()) { it.absolutePath }
+            selectedPaths.retainAll(stillPresent)
+            if (selectedPaths.isEmpty()) {
+                isSelectionMode = false
+                longPressAnchorIndex = RecyclerView.NO_POSITION
+            }
+            onSelectionChanged(selectedPaths.size)
+        }
 
         // Pre-compute directory child counts and total folder sizes off the main thread
         childCountJob?.cancel()
@@ -320,6 +336,17 @@ class FileAdapter(
 
     /** Whether every item is currently selected. */
     fun isAllSelected(): Boolean = files.isNotEmpty() && selectedPaths.size == files.size
+
+    /** Invert the current selection over the visible listing, staying in selection mode. */
+    fun invertSelection() {
+        files.forEach {
+            val path = it.absolutePath
+            if (path in selectedPaths) selectedPaths.remove(path) else selectedPaths.add(path)
+        }
+        longPressAnchorIndex = RecyclerView.NO_POSITION
+        notifyItemRangeChanged(0, itemCount)
+        onSelectionChanged(selectedPaths.size)
+    }
 
     /** Deselect all while staying in selection mode. */
     fun deselectAll() {

@@ -26,6 +26,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.archive.ArchiveItemOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
+import za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -59,6 +60,8 @@ class ZipViewerActivity : AppCompatActivity() {
     private var currentPath = "" // Current directory within the ZIP
     private var allEntries = listOf<FileHeader>()
     private var archivePassword: String? = null
+    private val extractedFiles = mutableMapOf<String, File>()
+    private var focusedItem: ZipItem? = null
 
     private var pendingExtractHeader: FileHeader? = null
     private var pendingTargetItem: ZipItem? = null
@@ -149,6 +152,19 @@ class ZipViewerActivity : AppCompatActivity() {
                     btnExtractAll.setTextColor(defaultBtnText)
                 }
             }
+
+            // "Options" action for the focused entry (TV has no long-press).
+            val btnOptions = findViewById<MaterialButton>(R.id.btnOptions)
+            btnOptions.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    btnOptions.backgroundTintList = yellowColor
+                    btnOptions.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+                } else {
+                    btnOptions.backgroundTintList = defaultBtnBg
+                    btnOptions.setTextColor(defaultBtnText)
+                }
+            }
+            btnOptions.setOnClickListener { focusedItem?.let { showItemOptions(it) } }
 
             val scrollContainer = findViewById<View>(R.id.scrollContainer)
             scrollContainer?.setOnKeyListener { _, keyCode, event ->
@@ -347,6 +363,56 @@ class ZipViewerActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
     }
 
+    /** Extracts a single entry to the session cache and opens it in the built-in viewer. */
+    private fun previewItem(item: ZipItem) {
+        val source = sourceFile ?: return
+        val entryPath = item.entry?.fileName ?: return
+        val entryName = entryPath.substringAfterLast("/")
+
+        // Reuse an already-extracted copy from this session when available.
+        extractedFiles[entryPath]?.let { cached ->
+            if (cached.exists() && cached.isFile) {
+                FileViewerRouter.openFile(this, cached)
+                return
+            }
+        }
+
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val session = ArchivePreviewCache.sessionDir(this@ZipViewerActivity)
+                val outDir = File(session, "entry_${extractedFiles.size}")
+                val res = ArchiveManager.extractArchiveEntry(source, entryPath, outDir, archivePassword)
+                if (res.isFailure) {
+                    outDir.deleteRecursively()
+                    withContext(Dispatchers.Main) {
+                        progressBar.visibility = View.GONE
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                    return@launch
+                }
+                val tempFile = outDir.listFiles()?.firstOrNull { it.isFile } ?: File(outDir, entryName)
+                if (!tempFile.exists()) {
+                    withContext(Dispatchers.Main) {
+                        progressBar.visibility = View.GONE
+                        showSnackbar(getString(R.string.archive_operation_failed, "Unknown error"))
+                    }
+                    return@launch
+                }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    extractedFiles[entryPath] = tempFile
+                    FileViewerRouter.openFile(this@ZipViewerActivity, tempFile)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
     private fun launchDestPicker() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
@@ -519,6 +585,7 @@ class ZipViewerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         try { zipFile?.close() } catch (_: Exception) { }
+        ArchivePreviewCache.purgeSession()
     }
 
     private fun showSnackbar(message: String) {
@@ -583,7 +650,7 @@ class ZipViewerActivity : AppCompatActivity() {
                 } else 0
                 holder.txtInfo.text = getString(R.string.size_compressed_ratio_saved, size, compressed, ratio)
                 holder.itemView.setOnClickListener {
-                    showItemOptions(item)
+                    previewItem(item)
                 }
                 holder.itemView.setOnLongClickListener {
                     showItemOptions(item)
@@ -603,6 +670,7 @@ class ZipViewerActivity : AppCompatActivity() {
 
                 holder.itemView.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
+                        focusedItem = item
                         holder.txtName.setTextColor(black)
                         holder.txtInfo.setTextColor(black)
                         holder.icon.imageTintList = blackCsl

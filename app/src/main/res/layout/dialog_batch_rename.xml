@@ -1,573 +1,560 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_sheet_glass"
-    android:fillViewport="true">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_mobile_gradient">
 
+    <!-- Header: Icon + Title + Help -->
     <LinearLayout
-        android:id="@+id/layoutRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp">
 
-        <!-- Drag handle -->
-        <View
-            android:layout_width="40dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_drag_handle" />
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_rename"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null"
+            android:layout_marginEnd="10dp" />
 
-        <!-- Header: Icon + Title -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="16dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_rename"
-                app:tint="?attr/colorPrimary"
-                android:contentDescription="@null"
-                android:layout_marginEnd="10dp" />
-
-            <TextView
-                android:id="@+id/txtTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/batch_rename_title"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="18sp"
-                android:fontFamily="sans-serif-medium" />
-
-            <ImageView
-                android:id="@+id/btnHelp"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:padding="4dp"
-                android:src="@drawable/ic_help"
-                app:tint="?attr/colorPrimary"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/batch_rename_help_title"
-                android:focusable="true" />
-        </LinearLayout>
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="12dp" />
-
-        <!-- Pattern EditText -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilPattern"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            app:hintTextColor="@color/mobile_text_secondary"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPattern"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/batch_rename_hint"
-                android:singleLine="true"
-                android:textColor="@color/ufm_text_primary"
-                android:textColorHint="@color/mobile_text_secondary"
-                android:textSize="16sp"
-                android:paddingVertical="12dp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Token Chips Bar -->
-        <HorizontalScrollView
-            android:id="@+id/scrollTokens"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:scrollbars="none"
-            android:overScrollMode="never">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupTokens"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:singleLine="true">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="#"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPaddedNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="###"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$N"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipFullName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$F"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$Y"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$M"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipDay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$D"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipUpper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$U"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipLower"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$L"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipExt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$E"
-                    android:checkable="true"
-                    style="@style/Widget.Material3.Chip.Filter" />
-
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
-
-        <!-- Inline error text -->
         <TextView
-            android:id="@+id/txtPatternError"
-            android:layout_width="match_parent"
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="12sp"
-            android:visibility="gone"
-            android:layout_marginTop="4dp" />
+            android:layout_weight="1"
+            android:text="@string/batch_rename_title"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium" />
 
-        <!-- Replace Text -> With Row -->
-        <LinearLayout
-            android:id="@+id/layoutReplaceControls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp">
+        <ImageView
+            android:id="@+id/btnHelp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_help"
+            app:tint="?attr/colorPrimary"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/batch_rename_help_title"
+            android:focusable="true" />
+    </LinearLayout>
 
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorOutlineVariant"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="12dp" />
+
+    <!-- Controls (fixed, always fully visible) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+            <!-- Pattern EditText -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilReplaceText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                app:hintTextColor="@color/mobile_text_secondary"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtReplaceText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/batch_rename_replace_text_hint"
-                    android:singleLine="true"
-                    android:textColor="@color/ufm_text_primary"
-                    android:textColorHint="@color/mobile_text_secondary"
-                    android:textSize="14sp"
-                    android:paddingVertical="10dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilReplaceWith"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                app:hintTextColor="@color/mobile_text_secondary"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtReplaceWith"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/batch_rename_replace_with_hint"
-                    android:singleLine="true"
-                    android:textColor="@color/ufm_text_primary"
-                    android:textColorHint="@color/mobile_text_secondary"
-                    android:textSize="14sp"
-                    android:paddingVertical="10dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <!-- Custom Extension CardView (initially GONE) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardExtensionControls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp"
-            app:cardBackgroundColor="@color/bg_glass_card">
-
-            <LinearLayout
-                android:id="@+id/layoutExtensionControls"
+                android:id="@+id/tilPattern"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                app:hintTextColor="@color/mobile_text_secondary"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilExtension"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtPattern"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                    android:hint="@string/batch_rename_hint"
+                    android:singleLine="true"
+                    android:textColor="@color/ufm_text_primary"
+                    android:textColorHint="@color/mobile_text_secondary"
+                    android:textSize="16sp"
+                    android:paddingVertical="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtExtension"
+            <!-- Token Chips Bar -->
+            <HorizontalScrollView
+                android:id="@+id/scrollTokens"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none"
+                android:overScrollMode="never">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroupTokens"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="#"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPaddedNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="###"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$N"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFullName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$F"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$Y"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$M"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$D"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipUpper"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$U"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipLower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$L"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipExt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$E"
+                        android:checkable="true"
+                        style="@style/Widget.Material3.Chip.Filter" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <!-- Inline error text -->
+            <TextView
+                android:id="@+id/txtPatternError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:visibility="gone"
+                android:layout_marginTop="4dp" />
+
+            <!-- Custom Date Options CardView (initially GONE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardDateControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/bg_glass_card">
+
+                <LinearLayout
+                    android:id="@+id/layoutDateControls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilYear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/mobile_text_secondary"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtYear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Year (e.g. 2026)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:textSize="13sp"
+                            android:paddingVertical="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/mobile_text_secondary"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Month (e.g. 08)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:textSize="13sp"
+                            android:paddingVertical="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:hintTextColor="@color/mobile_text_secondary"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtDay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Day (e.g. 06)"
+                            android:singleLine="true"
+                            android:inputType="number"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:textSize="13sp"
+                            android:paddingVertical="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Custom Extension CardView (initially GONE) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExtensionControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/bg_glass_card">
+
+                <LinearLayout
+                    android:id="@+id/layoutExtensionControls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilExtension"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/batch_rename_custom_ext_hint"
-                        android:singleLine="true"
-                        android:textColor="@color/ufm_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary"
-                        android:textSize="14sp"
-                        android:paddingVertical="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        app:hintTextColor="@color/mobile_text_secondary"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
-        <!-- Custom Date Options CardView (initially GONE) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardDateControls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp"
-            app:cardBackgroundColor="@color/bg_glass_card">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtExtension"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/batch_rename_custom_ext_hint"
+                            android:singleLine="true"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textColorHint="@color/mobile_text_secondary"
+                            android:textSize="14sp"
+                            android:paddingVertical="10dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
+            <!-- Replace Text -> With Row -->
             <LinearLayout
-                android:id="@+id/layoutDateControls"
+                android:id="@+id/layoutReplaceControls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilYear"
+                    android:id="@+id/tilReplaceText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="4dp"
-                    android:visibility="gone"
+                    android:layout_marginEnd="6dp"
                     app:hintTextColor="@color/mobile_text_secondary"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtYear"
+                        android:id="@+id/edtReplaceText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Year (e.g. 2026)"
+                        android:hint="@string/batch_rename_replace_text_hint"
                         android:singleLine="true"
-                        android:inputType="number"
                         android:textColor="@color/ufm_text_primary"
                         android:textColorHint="@color/mobile_text_secondary"
-                        android:textSize="13sp"
-                        android:paddingVertical="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilMonth"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="2dp"
-                    android:visibility="gone"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtMonth"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Month (e.g. 08)"
-                        android:singleLine="true"
-                        android:inputType="number"
-                        android:textColor="@color/ufm_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary"
-                        android:textSize="13sp"
-                        android:paddingVertical="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilDay"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="4dp"
-                    android:visibility="gone"
-                    app:hintTextColor="@color/mobile_text_secondary"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtDay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Day (e.g. 06)"
-                        android:singleLine="true"
-                        android:inputType="number"
-                        android:textColor="@color/ufm_text_primary"
-                        android:textColorHint="@color/mobile_text_secondary"
-                        android:textSize="13sp"
-                        android:paddingVertical="10dp" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Option toggle buttons -->
-        <LinearLayout
-            android:id="@+id/layoutOptions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:gravity="center">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnToggleOriginal"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="@string/batch_rename_option_original"
-                android:textSize="13sp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:cornerRadius="24dp"
-                style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnTogglePadding"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="@string/batch_rename_option_padding"
-                android:textSize="13sp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:cornerRadius="24dp"
-                style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
-        </LinearLayout>
-
-        <!-- Padding controls row (initially GONE) -->
-        <LinearLayout
-            android:id="@+id/layoutPaddingControls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:visibility="gone">
-
-            <!-- Padding Length Column -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginEnd="8dp">
-
-                <TextView
-                    android:id="@+id/txtPaddingLengthLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batch_rename_padding_length_label"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="6dp" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:hintEnabled="false"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtPaddingLength"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:maxLength="1"
-                        android:text="3"
-                        android:textColor="@color/ufm_text_primary"
                         android:textSize="14sp"
-                        android:gravity="center"
-                        android:paddingVertical="12dp" />
+                        android:paddingVertical="10dp" />
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- Starting Number Column -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="8dp">
-
-                <TextView
-                    android:id="@+id/txtPaddingStartLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batch_rename_padding_start_label"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="6dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/tilReplaceWith"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:hintEnabled="false"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:hintTextColor="@color/mobile_text_secondary"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtPaddingStart"
+                        android:id="@+id/edtReplaceWith"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:text="1"
+                        android:hint="@string/batch_rename_replace_with_hint"
+                        android:singleLine="true"
                         android:textColor="@color/ufm_text_primary"
+                        android:textColorHint="@color/mobile_text_secondary"
                         android:textSize="14sp"
-                        android:gravity="center"
-                        android:paddingVertical="12dp" />
+                        android:paddingVertical="10dp" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- Preview header -->
-        <TextView
-            android:id="@+id/txtPreviewHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/batch_rename_preview_header"
-            android:textColor="@color/ufm_text_primary"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif-medium" />
+            <!-- Option toggle buttons -->
+            <LinearLayout
+                android:id="@+id/layoutOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center">
 
-        <!-- Preview list -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerPreview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="120dp"
-            android:layout_marginHorizontal="4dp"
-            android:layout_marginTop="8dp"
-            android:clipToPadding="false"
-            android:paddingBottom="8dp" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleOriginal"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/batch_rename_option_original"
+                    android:textSize="13sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="24dp"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
 
-        <!-- Action buttons -->
-        <LinearLayout
-            android:id="@+id/layoutActions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:gravity="center">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnTogglePadding"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/batch_rename_option_padding"
+                    android:textSize="13sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    app:cornerRadius="24dp"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
+            </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancel"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="@string/batch_rename_cancel"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                app:cornerRadius="16dp"
-                android:textColor="?attr/colorPrimary"
-                app:strokeColor="?attr/colorPrimary"
-                style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
+            <!-- Padding controls row (initially GONE) -->
+            <LinearLayout
+                android:id="@+id/layoutPaddingControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:visibility="gone">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRename"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="@string/batch_rename_confirm"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                style="@style/ContinueButton" />
-        </LinearLayout>
+                <!-- Padding Length Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginEnd="8dp">
 
+                    <TextView
+                        android:id="@+id/txtPaddingLengthLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/batch_rename_padding_length_label"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintEnabled="false"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPaddingLength"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:maxLength="1"
+                            android:text="3"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:paddingVertical="12dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Starting Number Column -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:id="@+id/txtPaddingStartLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/batch_rename_padding_start_label"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintEnabled="false"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPaddingStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="1"
+                            android:textColor="@color/ufm_text_primary"
+                            android:textSize="14sp"
+                            android:gravity="center"
+                            android:paddingVertical="12dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+    <!-- Preview header -->
+    <TextView
+        android:id="@+id/txtPreviewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/batch_rename_preview_header"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium" />
+
+    <!-- Preview list (dominant, independently scrolling) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerPreview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:id="@+id/layoutActions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="@string/batch_rename_cancel"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="16dp"
+            android:textColor="?attr/colorPrimary"
+            app:strokeColor="?attr/colorPrimary"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRename"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="@string/batch_rename_confirm"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            style="@style/ContinueButton" />
+    </LinearLayout>
+
+</LinearLayout>

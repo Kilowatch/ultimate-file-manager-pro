@@ -190,6 +190,7 @@
 
     <!-- Selection Actions -->
     <string name="action_select_all">Select All</string>
+    <string name="action_invert_selection">Invert Selection</string>
     <string name="action_deselect_all">Deselect All</string>
     <string name="action_clear_selection">Clear selection</string>
     <string name="action_delete">Delete</string>
@@ -605,6 +606,13 @@
     <string name="batch_rename_back_discard_confirm">Discard</string>
     <string name="batch_rename_back_discard_cancel">Keep Editing</string>
     <string name="batch_rename_error_provider_unavailable">Storage provider unavailable. Could not rename some items.</string>
+    <string name="batch_rename_col_current_name">Current name</string>
+    <string name="batch_rename_col_new_name">New name</string>
+    <string name="batch_rename_unchanged">unchanged</string>
+    <string name="batch_rename_conflict_duplicate">Duplicate name</string>
+    <string name="batch_rename_conflict_invalid">Invalid name</string>
+    <string name="batch_rename_conflict_collision">Name already exists</string>
+    <string name="batch_rename_warning_collisions">%1$d of the new names already exist and may not be renamed.</string>
 
     <string name="toast_hidden_success">%1$d item(s) hidden</string>
     <string name="toast_unhidden_success">%1$d item(s) unhidden</string>
@@ -1164,6 +1172,7 @@
     <string name="archive_operation_failed">Archive operation failed: %1$s</string>
     <string name="moving_out">Moving out of archive...</string>
     <string name="deleting_from_archive">Deleting from archive...</string>
+    <string name="archive_item_options">Options</string>
 
     <!-- Main Menu Layout Settings -->
     <string name="settings_main_menu_layout_title">Main Menu Layout</string>
@@ -3169,6 +3178,7 @@
     <string name="icon_toolbar_hide">Hide</string>
     <string name="icon_toolbar_unhide">Unhide</string>
     <string name="icon_toolbar_select_all">Select All</string>
+    <string name="icon_toolbar_invert_selection">Invert Selection</string>
     <string name="icon_toolbar_compress">Compress</string>
     <string name="icon_toolbar_image_compress">Compress Image</string>
     <string name="icon_toolbar_delete">Delete</string>

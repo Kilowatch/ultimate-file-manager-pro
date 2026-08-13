@@ -529,6 +529,9 @@ Home NAS
     <string name="action_select_all">
 모두 선택
 </string>
+    <string name="action_invert_selection">
+선택 반전
+</string>
     <string name="action_deselect_all">
 모두 선택 해제
 </string>
@@ -1719,6 +1722,27 @@ UFM 슬라이드 쇼
 </string>
     <string name="batch_rename_error_provider_unavailable">
 저장소 제공자를 사용할 수 없습니다. 일부 항목의 이름을 바꿀 수 없습니다.
+</string>
+    <string name="batch_rename_col_current_name">
+현재 이름
+</string>
+    <string name="batch_rename_col_new_name">
+새 이름
+</string>
+    <string name="batch_rename_unchanged">
+변경되지 않음
+</string>
+    <string name="batch_rename_conflict_duplicate">
+중복된 이름
+</string>
+    <string name="batch_rename_conflict_invalid">
+잘못된 이름
+</string>
+    <string name="batch_rename_conflict_collision">
+이미 존재하는 이름
+</string>
+    <string name="batch_rename_warning_collisions">
+새 이름 중 %1$d개는 이미 존재하므로 이름을 바꿀 수 없습니다.
 </string>
 
     <string name="toast_hidden_success">
@@ -3243,6 +3267,9 @@ UFM 색상 코드
 </string>
     <string name="deleting_from_archive">
 아카이브에서 삭제 중...
+</string>
+    <string name="archive_item_options">
+옵션
 </string>
 
     <!-- Main Menu Layout Settings -->
@@ -9047,6 +9074,9 @@ XML / 마크업
 </string>
     <string name="icon_toolbar_select_all">
 모두 선택
+</string>
+    <string name="icon_toolbar_invert_selection">
+선택 반전
 </string>
     <string name="icon_toolbar_compress">
 압축

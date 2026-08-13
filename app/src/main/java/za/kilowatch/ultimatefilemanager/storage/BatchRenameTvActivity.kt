@@ -443,13 +443,21 @@ class BatchRenameTvActivity : AppCompatActivity() {
 
             val folderCount = state.items.count { it.isDirectory }
             val fileCount = state.items.size - folderCount
+            val collisionCount = state.previewItems.count { it.conflict == PreviewConflict.COLLISION }
+
+            val confirmMessage = if (collisionCount > 0) {
+                getString(R.string.batch_rename_confirm_body, folderCount, fileCount) +
+                    "\n\n" + getString(R.string.batch_rename_warning_collisions, collisionCount)
+            } else {
+                getString(R.string.batch_rename_confirm_body, folderCount, fileCount)
+            }
 
             MaterialAlertDialogBuilder(
                 this,
                 com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
             )
                 .setTitle(getString(R.string.batch_rename_confirm_title))
-                .setMessage(getString(R.string.batch_rename_confirm_body, folderCount, fileCount))
+                .setMessage(confirmMessage)
                 .setNegativeButton(getString(R.string.batch_rename_confirm_cancel), null)
                 .setPositiveButton(getString(R.string.batch_rename_confirm_accept)) { _, _ ->
                     executeRename(state)
@@ -502,12 +510,26 @@ class BatchRenameTvActivity : AppCompatActivity() {
                 findViewById<View>(R.id.cardDateControls)?.visibility =
                     if (hasDateSelection) View.VISIBLE else View.GONE
 
-                findViewById<View>(R.id.tilYear)?.visibility =
-                    if (state.hasYearToken) View.VISIBLE else View.GONE
-                findViewById<View>(R.id.tilMonth)?.visibility =
-                    if (state.hasMonthToken) View.VISIBLE else View.GONE
-                findViewById<View>(R.id.tilDay)?.visibility =
-                    if (state.hasDayToken) View.VISIBLE else View.GONE
+                val tilYear = findViewById<View>(R.id.tilYear)
+                val tilMonth = findViewById<View>(R.id.tilMonth)
+                val tilDay = findViewById<View>(R.id.tilDay)
+
+                tilYear?.visibility = if (state.hasYearToken) View.VISIBLE else View.GONE
+                tilMonth?.visibility = if (state.hasMonthToken) View.VISIBLE else View.GONE
+                tilDay?.visibility = if (state.hasDayToken) View.VISIBLE else View.GONE
+
+                val visibleDateFields = listOfNotNull(
+                    if (state.hasYearToken) tilYear else null,
+                    if (state.hasMonthToken) tilMonth else null,
+                    if (state.hasDayToken) tilDay else null
+                )
+                val gapPx = (8 * resources.displayMetrics.density).toInt()
+                visibleDateFields.forEachIndexed { index, field ->
+                    val params = field.layoutParams as? LinearLayout.LayoutParams ?: return@forEachIndexed
+                    params.leftMargin = 0
+                    params.rightMargin = if (index < visibleDateFields.size - 1) gapPx else 0
+                    field.layoutParams = params
+                }
 
                 val isExtActive = state.useCustomExtension
                 btnToggleOriginal.isEnabled = !isExtActive

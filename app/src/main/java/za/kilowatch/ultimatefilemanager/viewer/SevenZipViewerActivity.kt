@@ -30,6 +30,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZMethod
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.archive.ArchiveItemOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
+import za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -62,6 +63,8 @@ class SevenZipViewerActivity : AppCompatActivity() {
     private var allEntries = listOf<SevenZArchiveEntry>()
     private var allEntryInfos = listOf<ArchiveManager.ArchiveEntryInfo>()
     private var archivePassword: String? = null
+    private val extractedFiles = mutableMapOf<String, File>()
+    private var focusedItem: SevenZipItem? = null
 
     private var pendingExtractEntry: SevenZArchiveEntry? = null
     private var pendingTargetItem: SevenZipItem? = null
@@ -154,6 +157,19 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 btnExtractAll.setTextColor(defaultBtnText)
             }
         }
+
+        // "Options" action for the focused entry (TV has no long-press).
+        val btnOptions = findViewById<MaterialButton>(R.id.btnOptions)
+        btnOptions.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                btnOptions.backgroundTintList = yellowColor
+                btnOptions.setTextColor(getColor(R.color.tv_button_focused_yellow_text))
+            } else {
+                btnOptions.backgroundTintList = defaultBtnBg
+                btnOptions.setTextColor(defaultBtnText)
+            }
+        }
+        btnOptions.setOnClickListener { focusedItem?.let { showItemOptions(it) } }
     }
 
     private fun navigateBack() {
@@ -380,6 +396,56 @@ class SevenZipViewerActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, ArchiveItemOptionsDialog.TAG)
     }
 
+    /** Extracts a single entry to the session cache and opens it in the built-in viewer. */
+    private fun previewItem(item: SevenZipItem) {
+        val source = sourceFile ?: return
+        val entryPath = item.entryInfo?.name ?: item.entry?.name ?: return
+        val entryName = entryPath.substringAfterLast("/")
+
+        // Reuse an already-extracted copy from this session when available.
+        extractedFiles[entryPath]?.let { cached ->
+            if (cached.exists() && cached.isFile) {
+                FileViewerRouter.openFile(this, cached)
+                return
+            }
+        }
+
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val session = ArchivePreviewCache.sessionDir(this@SevenZipViewerActivity)
+                val outDir = File(session, "entry_${extractedFiles.size}")
+                val res = ArchiveManager.extractArchiveEntry(source, entryPath, outDir, archivePassword)
+                if (res.isFailure) {
+                    outDir.deleteRecursively()
+                    withContext(Dispatchers.Main) {
+                        progressBar.visibility = View.GONE
+                        showSnackbar(getString(R.string.archive_operation_failed, res.exceptionOrNull()?.message ?: "Unknown error"))
+                    }
+                    return@launch
+                }
+                val tempFile = outDir.listFiles()?.firstOrNull { it.isFile } ?: File(outDir, entryName)
+                if (!tempFile.exists()) {
+                    withContext(Dispatchers.Main) {
+                        progressBar.visibility = View.GONE
+                        showSnackbar(getString(R.string.archive_operation_failed, "Unknown error"))
+                    }
+                    return@launch
+                }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    extractedFiles[entryPath] = tempFile
+                    FileViewerRouter.openFile(this@SevenZipViewerActivity, tempFile)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                }
+            }
+        }
+    }
+
     private fun launchDestPicker() {
         val dialog = ExtractLocationDialog()
         dialog.setOnSetLocation {
@@ -547,6 +613,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         try { sevenZipFile?.close() } catch (_: Exception) {}
+        ArchivePreviewCache.purgeSession()
     }
 
     private fun showSnackbar(message: String) {
@@ -591,10 +658,32 @@ class SevenZipViewerActivity : AppCompatActivity() {
                 val rawSize = item.entryInfo?.uncompressedSize ?: item.entry?.size ?: 0L
                 val size = Formatter.formatFileSize(this@SevenZipViewerActivity, rawSize)
                 holder.txtInfo.text = size
-                holder.itemView.setOnClickListener { showItemOptions(item) }
+                holder.itemView.setOnClickListener { previewItem(item) }
                 holder.itemView.setOnLongClickListener {
                     showItemOptions(item)
                     true
+                }
+            }
+
+            // TV focus: yellow highlight + track focused entry for the Options button.
+            if (DeviceUtils.isTvDevice(holder.itemView.context)) {
+                val black = holder.itemView.context.getColor(R.color.tv_button_focused_yellow_text)
+                val primaryColor = holder.itemView.context.getColor(R.color.mobile_text_primary)
+                val secondaryColor = holder.itemView.context.getColor(R.color.mobile_text_secondary)
+                val iconColor = holder.itemView.context.getColor(R.color.mobile_icon_tint)
+                val blackCsl = android.content.res.ColorStateList.valueOf(black)
+                val iconCsl = android.content.res.ColorStateList.valueOf(iconColor)
+                holder.itemView.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        focusedItem = item
+                        holder.txtName.setTextColor(black)
+                        holder.txtInfo.setTextColor(black)
+                        holder.icon.imageTintList = blackCsl
+                    } else {
+                        holder.txtName.setTextColor(primaryColor)
+                        holder.txtInfo.setTextColor(secondaryColor)
+                        holder.icon.imageTintList = iconCsl
+                    }
                 }
             }
         }
