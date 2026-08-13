@@ -168,7 +168,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_skip_previous"
+                android:src="@drawable/ic_skip_back"
+                android:contentDescription="@string/player_skip_back_content_desc"
                 app:tint="?android:attr/textColorPrimary" />
 
             <ImageButton
@@ -185,7 +186,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_skip_next"
+                android:src="@drawable/ic_skip_forward"
+                android:contentDescription="@string/player_skip_forward_content_desc"
                 app:tint="?android:attr/textColorPrimary" />
         </LinearLayout>
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Professional pill toast for player control feedback. Background is styled in code (PlayerToastHelper). -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toastText"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="12dp"
+    android:gravity="center"
+    android:textColor="@android:color/white"
+    android:textSize="14sp"
+    android:textStyle="bold"
+    android:maxWidth="320dp" />

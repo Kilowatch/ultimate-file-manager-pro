@@ -189,7 +189,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- Buttons Row — compact layout to prevent landscape cutoff -->
+        <!-- Primary transport row: prev · << · play/pause · >> · next -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -200,30 +200,21 @@
             android:clipToPadding="false">
 
             <ImageButton
-                android:id="@+id/btnAudioTrack"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_audio_track"
-                android:contentDescription="@string/audio_track"
-                app:tint="@android:color/white" />
-
-            <ImageButton
-                android:id="@+id/btnShuffle"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="2dp"
-                android:background="?selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_shuffle"
-                app:tint="@android:color/white" />
-
-            <ImageButton
                 android:id="@+id/btnPrev"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_skip_previous"
+                app:tint="@android:color/white" />
+
+            <ImageButton
+                android:id="@+id/btnSkipBack"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="6dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_skip_back"
+                android:contentDescription="@string/player_skip_back_content_desc"
                 app:tint="@android:color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -239,27 +230,66 @@
                 app:fabSize="mini" />
 
             <ImageButton
+                android:id="@+id/btnSkipForward"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginEnd="6dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_skip_forward"
+                android:contentDescription="@string/player_skip_forward_content_desc"
+                app:tint="@android:color/white" />
+
+            <ImageButton
                 android:id="@+id/btnNext"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_skip_next"
+                app:tint="@android:color/white" />
+
+        </LinearLayout>
+
+        <!-- Secondary controls row: shuffle · repeat · audio track · subtitles -->
+        <LinearLayout
+            android:id="@+id/secondaryControlsRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_shuffle"
                 app:tint="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/btnRepeat"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_repeat"
+                app:tint="@android:color/white" />
+
+            <ImageButton
+                android:id="@+id/btnAudioTrack"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="2dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_audio_track"
+                android:contentDescription="@string/audio_track"
                 app:tint="@android:color/white" />
 
             <ImageButton
                 android:id="@+id/btnSubtitles"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
+                android:layout_marginStart="2dp"
                 android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_subtitles"
                 android:contentDescription="@string/subtitles"

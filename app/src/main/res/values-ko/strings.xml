@@ -9935,6 +9935,89 @@ PiP(화면 속 화면)
     <string name="settings_resume_playback_subtitle_off">
 중단 후 일시 정지 유지
 </string>
+    <string name="settings_skip_length_title">
+건너뛰기 시간
+</string>
+    <string name="skip_length_option_3s">
+3초
+</string>
+    <string name="skip_length_option_5s">
+5초
+</string>
+    <string name="skip_length_option_10s">
+10초
+</string>
+    <string name="skip_length_option_20s">
+20초
+</string>
+    <string name="skip_length_option_30s">
+30초
+</string>
+    <string name="skip_length_option_disable">
+사용 안 함
+</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">
+재생 속도
+</string>
+    <string name="player_speed_toast">
+%1$s 배속
+</string>
+    <string name="player_skip_forward_toast">
+&gt;&gt; %1$s
+</string>
+    <string name="player_skip_backward_toast">
+&lt;&lt; %1$s
+</string>
+    <string name="player_toast_play">
+재생
+</string>
+    <string name="player_toast_pause">
+일시 정지
+</string>
+    <string name="player_toast_next">
+다음
+</string>
+    <string name="player_toast_previous">
+이전
+</string>
+    <string name="player_toast_shuffle_on">
+셔플 켜기
+</string>
+    <string name="player_toast_shuffle_off">
+셔플 끄기
+</string>
+    <string name="player_toast_repeat_on">
+반복 켜기
+</string>
+    <string name="player_toast_repeat_off">
+반복 끄기
+</string>
+    <string name="player_toast_audio_track">
+오디오 트랙
+</string>
+    <string name="player_toast_subtitles">
+자막
+</string>
+    <string name="player_toast_mute">
+음소거
+</string>
+    <string name="player_toast_unmute">
+음소거 해제
+</string>
+    <string name="player_toast_fullscreen_enter">
+전체 화면
+</string>
+    <string name="player_toast_fullscreen_exit">
+전체 화면 종료
+</string>
+    <string name="player_skip_back_content_desc">
+뒤로 건너뛰기
+</string>
+    <string name="player_skip_forward_content_desc">
+앞으로 건너뛰기
+</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">

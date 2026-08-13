@@ -30,6 +30,7 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.session.MediaSession
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.*
+import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -302,6 +303,33 @@ class UFMPlaybackService : Service() {
         player?.seekTo(position)
     }
 
+    /** Seek by a relative delta (ms), clamped to [0, duration]. */
+    fun seekBy(deltaMs: Long) {
+        val p = player ?: return
+        val target = (p.currentPosition + deltaMs).coerceIn(0L, p.duration.coerceAtLeast(0L))
+        p.seekTo(target)
+    }
+
+    /** Skip forward by the configured skip length (no-op when disabled). */
+    fun skipForward() {
+        val ms = PlayerPreferencesManager.getSkipLengthMs(this)
+        if (ms > 0) seekBy(ms)
+    }
+
+    /** Skip backward by the configured skip length (no-op when disabled). */
+    fun skipBackward() {
+        val ms = PlayerPreferencesManager.getSkipLengthMs(this)
+        if (ms > 0) seekBy(-ms)
+    }
+
+    /** Set playback speed for the current track. */
+    fun setPlaybackSpeed(speed: Float) {
+        player?.setPlaybackSpeed(speed)
+    }
+
+    /** Current playback speed (defaults to 1.0x). */
+    fun getPlaybackSpeed(): Float = player?.playbackParameters?.speed ?: 1.0f
+
     fun skipToNext() {
         val nextIdx = queueManager.nextIndex(isShuffle) ?: return
         queueManager.currentIndex = nextIdx
@@ -404,6 +432,7 @@ class UFMPlaybackService : Service() {
         p.setMediaSource(mediaSource)
         p.prepare()
         p.playWhenReady = true
+        p.setPlaybackSpeed(1.0f)  // reset speed per track
         p.play()
 
         // Request audio focus

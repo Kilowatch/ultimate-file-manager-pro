@@ -9935,6 +9935,89 @@ URL сервера
     <string name="settings_resume_playback_subtitle_off">
 Остаётся на паузе после прерывания
 </string>
+    <string name="settings_skip_length_title">
+Длина пропуска
+</string>
+    <string name="skip_length_option_3s">
+3 с
+</string>
+    <string name="skip_length_option_5s">
+5 с
+</string>
+    <string name="skip_length_option_10s">
+10 с
+</string>
+    <string name="skip_length_option_20s">
+20 с
+</string>
+    <string name="skip_length_option_30s">
+30 с
+</string>
+    <string name="skip_length_option_disable">
+Отключено
+</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">
+Скорость воспроизведения
+</string>
+    <string name="player_speed_toast">
+%1$s скорость
+</string>
+    <string name="player_skip_forward_toast">
+&gt;&gt; %1$s
+</string>
+    <string name="player_skip_backward_toast">
+&lt;&lt; %1$s
+</string>
+    <string name="player_toast_play">
+Воспроизвести
+</string>
+    <string name="player_toast_pause">
+Пауза
+</string>
+    <string name="player_toast_next">
+Следующий
+</string>
+    <string name="player_toast_previous">
+Предыдущий
+</string>
+    <string name="player_toast_shuffle_on">
+Перемешать вкл.
+</string>
+    <string name="player_toast_shuffle_off">
+Перемешать выкл.
+</string>
+    <string name="player_toast_repeat_on">
+Повтор вкл.
+</string>
+    <string name="player_toast_repeat_off">
+Повтор выкл.
+</string>
+    <string name="player_toast_audio_track">
+Аудиодорожка
+</string>
+    <string name="player_toast_subtitles">
+Субтитры
+</string>
+    <string name="player_toast_mute">
+Выключить звук
+</string>
+    <string name="player_toast_unmute">
+Включить звук
+</string>
+    <string name="player_toast_fullscreen_enter">
+Во весь экран
+</string>
+    <string name="player_toast_fullscreen_exit">
+Выйти из полноэкранного режима
+</string>
+    <string name="player_skip_back_content_desc">
+Перемотка назад
+</string>
+    <string name="player_skip_forward_content_desc">
+Перемотка вперёд
+</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">

@@ -3486,6 +3486,35 @@
     <string name="settings_resume_playback_title">Resume after interruption</string>
     <string name="settings_resume_playback_subtitle_on">Auto-resumes after calls</string>
     <string name="settings_resume_playback_subtitle_off">Stays paused after interruption</string>
+    <string name="settings_skip_length_title">Skip length</string>
+    <string name="skip_length_option_3s">3s</string>
+    <string name="skip_length_option_5s">5s</string>
+    <string name="skip_length_option_10s">10s</string>
+    <string name="skip_length_option_20s">20s</string>
+    <string name="skip_length_option_30s">30s</string>
+    <string name="skip_length_option_disable">Disable</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">Playback speed</string>
+    <string name="player_speed_toast">%1$s speed</string>
+    <string name="player_skip_forward_toast">&gt;&gt; %1$s</string>
+    <string name="player_skip_backward_toast">&lt;&lt; %1$s</string>
+    <string name="player_toast_play">Play</string>
+    <string name="player_toast_pause">Pause</string>
+    <string name="player_toast_next">Next</string>
+    <string name="player_toast_previous">Previous</string>
+    <string name="player_toast_shuffle_on">Shuffle on</string>
+    <string name="player_toast_shuffle_off">Shuffle off</string>
+    <string name="player_toast_repeat_on">Repeat on</string>
+    <string name="player_toast_repeat_off">Repeat off</string>
+    <string name="player_toast_audio_track">Audio track</string>
+    <string name="player_toast_subtitles">Subtitles</string>
+    <string name="player_toast_mute">Mute</string>
+    <string name="player_toast_unmute">Unmute</string>
+    <string name="player_toast_fullscreen_enter">Fullscreen</string>
+    <string name="player_toast_fullscreen_exit">Exit fullscreen</string>
+    <string name="player_skip_back_content_desc">Skip back</string>
+    <string name="player_skip_forward_content_desc">Skip forward</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">Play</string>

@@ -9935,6 +9935,89 @@ URL-адреса сервера
     <string name="settings_resume_playback_subtitle_off">
 Залишається на паузі після переривання
 </string>
+    <string name="settings_skip_length_title">
+Крок перемотування
+</string>
+    <string name="skip_length_option_3s">
+3 с
+</string>
+    <string name="skip_length_option_5s">
+5 с
+</string>
+    <string name="skip_length_option_10s">
+10 с
+</string>
+    <string name="skip_length_option_20s">
+20 с
+</string>
+    <string name="skip_length_option_30s">
+30 с
+</string>
+    <string name="skip_length_option_disable">
+Вимкнути
+</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">
+Швидкість відтворення
+</string>
+    <string name="player_speed_toast">
+Швидкість %1$s
+</string>
+    <string name="player_skip_forward_toast">
+&gt;&gt; %1$s
+</string>
+    <string name="player_skip_backward_toast">
+&lt;&lt; %1$s
+</string>
+    <string name="player_toast_play">
+Відтворити
+</string>
+    <string name="player_toast_pause">
+Пауза
+</string>
+    <string name="player_toast_next">
+Далі
+</string>
+    <string name="player_toast_previous">
+Попередній
+</string>
+    <string name="player_toast_shuffle_on">
+Перемішування увімкнено
+</string>
+    <string name="player_toast_shuffle_off">
+Перемішування вимкнено
+</string>
+    <string name="player_toast_repeat_on">
+Повтор увімкнено
+</string>
+    <string name="player_toast_repeat_off">
+Повтор вимкнено
+</string>
+    <string name="player_toast_audio_track">
+Аудіодоріжка
+</string>
+    <string name="player_toast_subtitles">
+Субтитри
+</string>
+    <string name="player_toast_mute">
+Вимкнути звук
+</string>
+    <string name="player_toast_unmute">
+Увімкнути звук
+</string>
+    <string name="player_toast_fullscreen_enter">
+Повний екран
+</string>
+    <string name="player_toast_fullscreen_exit">
+Вийти з повного екрана
+</string>
+    <string name="player_skip_back_content_desc">
+Перемотати назад
+</string>
+    <string name="player_skip_forward_content_desc">
+Перемотати вперед
+</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">

@@ -9935,6 +9935,89 @@ Box
     <string name="settings_resume_playback_subtitle_off">
 中断後は一時停止したまま
 </string>
+    <string name="settings_skip_length_title">
+スキップ時間
+</string>
+    <string name="skip_length_option_3s">
+3秒
+</string>
+    <string name="skip_length_option_5s">
+5秒
+</string>
+    <string name="skip_length_option_10s">
+10秒
+</string>
+    <string name="skip_length_option_20s">
+20秒
+</string>
+    <string name="skip_length_option_30s">
+30秒
+</string>
+    <string name="skip_length_option_disable">
+無効
+</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">
+再生速度
+</string>
+    <string name="player_speed_toast">
+%1$s倍速
+</string>
+    <string name="player_skip_forward_toast">
+&gt;&gt; %1$s
+</string>
+    <string name="player_skip_backward_toast">
+&lt;&lt; %1$s
+</string>
+    <string name="player_toast_play">
+再生
+</string>
+    <string name="player_toast_pause">
+一時停止
+</string>
+    <string name="player_toast_next">
+次へ
+</string>
+    <string name="player_toast_previous">
+前へ
+</string>
+    <string name="player_toast_shuffle_on">
+シャッフルオン
+</string>
+    <string name="player_toast_shuffle_off">
+シャッフルオフ
+</string>
+    <string name="player_toast_repeat_on">
+リピートオン
+</string>
+    <string name="player_toast_repeat_off">
+リピートオフ
+</string>
+    <string name="player_toast_audio_track">
+音声トラック
+</string>
+    <string name="player_toast_subtitles">
+字幕
+</string>
+    <string name="player_toast_mute">
+ミュート
+</string>
+    <string name="player_toast_unmute">
+ミュート解除
+</string>
+    <string name="player_toast_fullscreen_enter">
+全画面
+</string>
+    <string name="player_toast_fullscreen_exit">
+全画面を終了
+</string>
+    <string name="player_skip_back_content_desc">
+スキップバック
+</string>
+    <string name="player_skip_forward_content_desc">
+スキップフォワード
+</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">

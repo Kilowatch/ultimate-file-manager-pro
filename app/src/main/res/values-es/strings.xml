@@ -9947,6 +9947,89 @@ Se reanuda automáticamente después de llamadas
     <string name="settings_resume_playback_subtitle_off">
 Permanece en pausa después de interrupción
 </string>
+    <string name="settings_skip_length_title">
+Duración de salto
+</string>
+    <string name="skip_length_option_3s">
+3s
+</string>
+    <string name="skip_length_option_5s">
+5s
+</string>
+    <string name="skip_length_option_10s">
+10s
+</string>
+    <string name="skip_length_option_20s">
+20s
+</string>
+    <string name="skip_length_option_30s">
+30s
+</string>
+    <string name="skip_length_option_disable">
+Desactivar
+</string>
+
+    <!-- UFM Media Player — Speed & Skip Toasts -->
+    <string name="player_speed_title">
+Velocidad de reproducción
+</string>
+    <string name="player_speed_toast">
+Velocidad %1$s
+</string>
+    <string name="player_skip_forward_toast">
+&gt;&gt; %1$s
+</string>
+    <string name="player_skip_backward_toast">
+&lt;&lt; %1$s
+</string>
+    <string name="player_toast_play">
+Reproducir
+</string>
+    <string name="player_toast_pause">
+Pausa
+</string>
+    <string name="player_toast_next">
+Siguiente
+</string>
+    <string name="player_toast_previous">
+Anterior
+</string>
+    <string name="player_toast_shuffle_on">
+Aleatorio activado
+</string>
+    <string name="player_toast_shuffle_off">
+Aleatorio desactivado
+</string>
+    <string name="player_toast_repeat_on">
+Repetir activado
+</string>
+    <string name="player_toast_repeat_off">
+Repetir desactivado
+</string>
+    <string name="player_toast_audio_track">
+Pista de audio
+</string>
+    <string name="player_toast_subtitles">
+Subtítulos
+</string>
+    <string name="player_toast_mute">
+Silenciar
+</string>
+    <string name="player_toast_unmute">
+Activar sonido
+</string>
+    <string name="player_toast_fullscreen_enter">
+Pantalla completa
+</string>
+    <string name="player_toast_fullscreen_exit">
+Salir de pantalla completa
+</string>
+    <string name="player_skip_back_content_desc">
+Retroceder
+</string>
+    <string name="player_skip_forward_content_desc">
+Avanzar
+</string>
 
     <!-- UFM Media Player — Mini-Player -->
     <string name="mini_player_play_content_desc">

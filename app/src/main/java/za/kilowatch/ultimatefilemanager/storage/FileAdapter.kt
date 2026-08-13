@@ -107,6 +107,23 @@ class FileAdapter(
     private val childCountCache = mutableMapOf<String, Int>()
     private val folderSizeCache = mutableMapOf<String, Long>()
     private var childCountJob: Job? = null
+
+    /**
+     * Per-path snapshot of each listed file's metadata (isDirectory / size / lastModified),
+     * taken once in [submitList] / [appendList]. The RecyclerView bind path must never
+     * re-run `File.stat()` on the main thread — on slow TV storage (or under heavy
+     * background file I/O) those per-row stats accumulated past the 5s ANR threshold
+     * (sampled at `java.io.UnixFileSystem.getBooleanAttributes0` inside a
+     * `LinearLayoutManager` layout). The cache is only touched on the main thread, so no
+     * synchronisation is needed.
+     */
+    private data class FileMeta(val isDirectory: Boolean, val size: Long, val lastModified: Long)
+
+    private var fileMetaCache = mutableMapOf<String, FileMeta>()
+
+    private fun File.isDirectoryCached(): Boolean = fileMetaCache[absolutePath]?.isDirectory ?: isDirectory
+    private fun File.lengthCached(): Long = fileMetaCache[absolutePath]?.size ?: length()
+    private fun File.lastModifiedCached(): Long = fileMetaCache[absolutePath]?.lastModified ?: lastModified()
     
     var focusedPath: String? = null
         set(value) {
@@ -148,10 +165,19 @@ class FileAdapter(
         this.storageLabels.putAll(storageLabels)
         this.searchBasePath = searchBasePath
 
+        // Snapshot each file's metadata (isDirectory / size / lastModified) once, so the
+        // RecyclerView bind path below never re-runs File.stat() on the main thread. The
+        // same snapshot is reused for the folders-first / date-grouping ordering here.
+        val metaSnapshot = HashMap<String, FileMeta>(filesCopy.size)
+        for (f in filesCopy) {
+            metaSnapshot[f.absolutePath] = FileMeta(f.isDirectory, f.length(), f.lastModified())
+        }
+        fileMetaCache = metaSnapshot
+
         items.clear()
         if (isGroupedByDate) {
-            val folders = newFiles.filter { it.isDirectory }
-            val fileList = newFiles.filter { !it.isDirectory }
+            val folders = filesCopy.filter { it.isDirectoryCached() }
+            val fileList = filesCopy.filter { !it.isDirectoryCached() }
             
             // Add folders first, ungrouped
             items.addAll(folders.map { ListItem.FileEntry(it) })
@@ -163,7 +189,7 @@ class FileAdapter(
             // Group only files by date
             val grouped = fileList.groupBy {
                 val cal = java.util.Calendar.getInstance()
-                cal.timeInMillis = it.lastModified()
+                cal.timeInMillis = it.lastModifiedCached()
                 Pair(cal.get(java.util.Calendar.YEAR), cal.get(java.util.Calendar.MONTH))
             }.toSortedMap(compareByDescending<Pair<Int, Int>> { it.first }.thenByDescending { it.second })
             
@@ -178,14 +204,14 @@ class FileAdapter(
                 }
             }
         } else {
-            items.addAll(newFiles.map { ListItem.FileEntry(it) })
+            items.addAll(filesCopy.map { ListItem.FileEntry(it) })
         }
 
         notifyDataSetChanged()
 
         // Pre-compute directory child counts and total folder sizes off the main thread
         childCountJob?.cancel()
-        val dirs = newFiles.filter { it.isDirectory }
+        val dirs = filesCopy.filter { it.isDirectoryCached() }
         if (dirs.isNotEmpty()) {
             val ctx = attachedContext
             @OptIn(DelicateCoroutinesApi::class)
@@ -235,6 +261,11 @@ class FileAdapter(
         if (newFiles.isEmpty()) return
         val startPos = items.size
         files.addAll(newFiles)
+        // The appended files aren't in the metadata cache yet — snapshot them so the
+        // bind path doesn't fall back to File.stat() on the main thread.
+        for (f in newFiles) {
+            fileMetaCache[f.absolutePath] = FileMeta(f.isDirectory, f.length(), f.lastModified())
+        }
         if (isGroupedByDate) {
             // For grouped mode, rebuild the full list (rare in category mode, but safe)
             submitList(files.toList(), indexedPaths.toSet(), hiddenPaths.toSet(), showAllAsIndexed, storageLabels.toMap(), searchBasePath)
@@ -491,7 +522,7 @@ class FileAdapter(
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
-            val isThumbnail = !file.isDirectory && showThumbnails && (isImage || isVideo || isApk)
+            val isThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk)
 
             // Cancel any in-flight Coil request or video-frame extraction from a previous bind.
             coilDisposable?.dispose()
@@ -586,7 +617,7 @@ class FileAdapter(
             stopPulse()
             imgIcon.imageTintList = null
             imgIcon.scaleType = if (isGrid) {
-                if (file.isDirectory || isApk || (!isImage && !isVideo)) {
+                if (file.isDirectoryCached() || isApk || (!isImage && !isVideo)) {
                     ImageView.ScaleType.FIT_CENTER
                 } else {
                     ImageView.ScaleType.CENTER_CROP
@@ -601,7 +632,7 @@ class FileAdapter(
             imgIcon.setPadding(0, 0, 0, 0)
             iconContainer?.setBackgroundResource(0)
 
-            if (file.isDirectory) {
+            if (file.isDirectoryCached()) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
                 val tintColor = if (isTv) {
                     DefaultIconColorManager.getTvIconTint(context)
@@ -620,9 +651,9 @@ class FileAdapter(
                     } else null
 
                     val baseInfo = if (sizeText != null) {
-                        "$itemsText · $sizeText · ${formatDate(context, file.lastModified())}"
+                        "$itemsText · $sizeText · ${formatDate(context, file.lastModifiedCached())}"
                     } else {
-                        "$itemsText · ${formatDate(context, file.lastModified())}"
+                        "$itemsText · ${formatDate(context, file.lastModifiedCached())}"
                     }
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseInfo" else baseInfo
@@ -655,11 +686,11 @@ class FileAdapter(
                     isDisplayingThumbnail = true
                     loadListThumbnail(file, isImage, isApk)
 
-                    val baseDate = formatDate(context, file.lastModified())
+                    val baseDate = formatDate(context, file.lastModifiedCached())
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseDate" else baseDate
                     txtInfo.text = if (relativePath != null) "$relativePath\n$detailedInfo" else detailedInfo
-                    txtSize.text = Formatter.formatFileSize(context, file.length())
+                    txtSize.text = Formatter.formatFileSize(context, file.lengthCached())
                     txtSize.visibility = View.VISIBLE
                 } else if (!isGrid) {
                     // ── Normal icon mode (list) ───────────────────────────────
@@ -671,11 +702,11 @@ class FileAdapter(
                         DefaultIconColorManager.getMobileIconTint(context)
                     }
                     imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
-                    val baseDate = formatDate(context, file.lastModified())
+                    val baseDate = formatDate(context, file.lastModifiedCached())
                     val storage = storageLabels[file.absolutePath]
                     val detailedInfo = if (storage != null) "$storage · $baseDate" else baseDate
                     txtInfo.text = if (relativePath != null) "$relativePath\n$detailedInfo" else detailedInfo
-                    txtSize.text = Formatter.formatFileSize(context, file.length())
+                    txtSize.text = Formatter.formatFileSize(context, file.lengthCached())
                     txtSize.visibility = View.VISIBLE
                 } else {
                     if (showThumbnails && (isImage || isVideo || isApk)) {
@@ -1266,7 +1297,7 @@ class FileAdapter(
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
-            val hasThumbnail = !file.isDirectory && showThumbnails && (isImage || isVideo || isApk)
+            val hasThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk)
 
             updateTextColorForDrawable(imgIcon.drawable, hasThumbnail && imgIcon.drawable != null && imgIcon.tag == file.absolutePath)
         }

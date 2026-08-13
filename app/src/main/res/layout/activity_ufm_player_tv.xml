@@ -193,7 +193,7 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-        <!-- Buttons Row -->
+        <!-- Primary transport row: prev · << · play/pause · >> · next -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,46 +203,50 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnAudioTrack"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginEnd="24dp"
-                android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_audio_track"
-                android:focusable="true"
-                android:nextFocusRight="@+id/btnShuffle" />
-
-            <ImageButton
-                android:id="@+id/btnShuffle"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:background="@drawable/tv_button_selector"
-                android:src="@drawable/ic_shuffle"
-                android:focusable="true"
-                android:nextFocusLeft="@+id/btnAudioTrack"
-                android:nextFocusRight="@+id/btnPrev" />
-
-            <ImageButton
                 android:id="@+id/btnPrev"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginStart="24dp"
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_previous"
                 android:focusable="true"
-                android:nextFocusLeft="@+id/btnShuffle"
-                android:nextFocusRight="@+id/btnPlayPause" />
+                android:nextFocusRight="@+id/btnSkipBack"
+                android:nextFocusDown="@+id/btnShuffle" />
+
+            <ImageButton
+                android:id="@+id/btnSkipBack"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_skip_back"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnPrev"
+                android:nextFocusRight="@+id/btnPlayPause"
+                android:nextFocusDown="@+id/btnShuffle" />
 
             <ImageButton
                 android:id="@+id/btnPlayPause"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_marginHorizontal="32dp"
+                android:layout_marginHorizontal="16dp"
                 android:src="@drawable/ic_pause"
                 android:background="@drawable/tv_button_selector_primary"
                 android:focusable="true"
-                android:nextFocusLeft="@+id/btnPrev"
-                android:nextFocusRight="@+id/btnNext" />
+                android:nextFocusLeft="@+id/btnSkipBack"
+                android:nextFocusRight="@+id/btnSkipForward"
+                android:nextFocusDown="@+id/btnRepeat" />
+
+            <ImageButton
+                android:id="@+id/btnSkipForward"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_skip_forward"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnPlayPause"
+                android:nextFocusRight="@+id/btnNext"
+                android:nextFocusDown="@+id/btnSubtitles" />
 
             <ImageButton
                 android:id="@+id/btnNext"
@@ -251,8 +255,30 @@
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_skip_next"
                 android:focusable="true"
-                android:nextFocusLeft="@+id/btnPlayPause"
-                android:nextFocusRight="@+id/btnRepeat" />
+                android:nextFocusLeft="@+id/btnSkipForward"
+                android:nextFocusDown="@+id/btnSubtitles" />
+
+        </LinearLayout>
+
+        <!-- Secondary controls row: shuffle · repeat · audio track · subtitles -->
+        <LinearLayout
+            android:id="@+id/secondaryControlsRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_shuffle"
+                android:focusable="true"
+                android:nextFocusRight="@+id/btnRepeat"
+                android:nextFocusUp="@+id/btnSkipBack" />
 
             <ImageButton
                 android:id="@+id/btnRepeat"
@@ -262,8 +288,21 @@
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_repeat"
                 android:focusable="true"
-                android:nextFocusLeft="@+id/btnNext"
-                android:nextFocusRight="@+id/btnSubtitles" />
+                android:nextFocusLeft="@+id/btnShuffle"
+                android:nextFocusRight="@+id/btnAudioTrack"
+                android:nextFocusUp="@+id/btnPlayPause" />
+
+            <ImageButton
+                android:id="@+id/btnAudioTrack"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="24dp"
+                android:background="@drawable/tv_button_selector"
+                android:src="@drawable/ic_audio_track"
+                android:focusable="true"
+                android:nextFocusLeft="@+id/btnRepeat"
+                android:nextFocusRight="@+id/btnSubtitles"
+                android:nextFocusUp="@+id/btnPlayPause" />
 
             <ImageButton
                 android:id="@+id/btnSubtitles"
@@ -273,7 +312,8 @@
                 android:background="@drawable/tv_button_selector"
                 android:src="@drawable/ic_subtitles"
                 android:focusable="true"
-                android:nextFocusLeft="@+id/btnRepeat" />
+                android:nextFocusLeft="@+id/btnAudioTrack"
+                android:nextFocusUp="@+id/btnSkipForward" />
 
         </LinearLayout>
     </LinearLayout>

@@ -71,6 +71,7 @@ class SettingsActivity : AppCompatActivity() {
     // Media Player settings
     private var switchBackgroundVideoMode: SwitchMaterial? = null
     private var txtBackgroundVideoSubtitle: TextView? = null
+    private var txtSkipLengthSubtitle: TextView? = null
     private var switchMiniPlayer: SwitchMaterial? = null
     private var txtMiniPlayerSubtitle: TextView? = null
     private var switchResumeAfterInterruption: SwitchMaterial? = null
@@ -387,6 +388,14 @@ class SettingsActivity : AppCompatActivity() {
             switchResumeAfterInterruption?.setOnCheckedChangeListener(null)
         }
 
+        // Skip Length (forward/back seek)
+        val cardSkipLength = findViewById<MaterialCardView?>(R.id.cardSkipLength)
+        if (cardSkipLength != null) {
+            txtSkipLengthSubtitle = findViewById(R.id.txtSkipLengthSubtitle)
+            updateSkipLengthSubtitle()
+            cardSkipLength.setOnClickListener { showSkipLengthDialog() }
+        }
+
         // Breadcrumbs toggle (mobile only)
         val cardBreadcrumbs = findViewById<MaterialCardView?>(R.id.cardBreadcrumbs)
         if (cardBreadcrumbs != null) {
@@ -561,6 +570,7 @@ class SettingsActivity : AppCompatActivity() {
             findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardBackgroundVideoMode)?.let { setupTvCardFocus(it) }
+            findViewById<MaterialCardView?>(R.id.cardSkipLength)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
             findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
@@ -863,6 +873,7 @@ class SettingsActivity : AppCompatActivity() {
             sw.isChecked = enabled
             updateResumeAfterInterruptionSubtitle(enabled)
         }
+        updateSkipLengthSubtitle()
 
         // Refresh Breadcrumbs subtitle
         switchBreadcrumbs?.let { sw ->
@@ -1212,6 +1223,30 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSkipLengthSubtitle() {
+        txtSkipLengthSubtitle?.text = PlayerPreferencesManager.formatSkipLabel(this)
+    }
+
+    private fun showSkipLengthDialog() {
+        val labels = PlayerPreferencesManager.skipOptionLabels(this)
+        val currentSeconds = PlayerPreferencesManager.getSkipLengthSeconds(this)
+        val checkedIndex = when (currentSeconds) {
+            PlayerPreferencesManager.SKIP_DISABLED -> labels.size - 1
+            else -> PlayerPreferencesManager.SKIP_OPTIONS.indexOf(currentSeconds).coerceAtLeast(0)
+        }
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setTitle(R.string.settings_skip_length_title)
+            .setSingleChoiceItems(labels, checkedIndex) { dialog, which ->
+                val seconds = if (which == labels.size - 1) PlayerPreferencesManager.SKIP_DISABLED
+                              else PlayerPreferencesManager.SKIP_OPTIONS[which]
+                PlayerPreferencesManager.setSkipLengthSeconds(this, seconds)
+                updateSkipLengthSubtitle()
+                dialog.dismiss()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
     private fun toggleMiniPlayer() {
         val sw = switchMiniPlayer ?: return
         val newValue = !sw.isChecked
@@ -1410,6 +1445,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardBackgroundVideoMode, "settings_background_video", R.drawable.ic_play),
             CardIcon(R.id.cardMiniPlayer, "settings_mini_player", R.drawable.ic_list_view_custom),
             CardIcon(R.id.cardResumeAfterInterruption, "settings_resume_interruption", R.drawable.ic_phone),
+            CardIcon(R.id.cardSkipLength, "settings_skip_length", R.drawable.ic_skip_forward),
             CardIcon(R.id.cardAnalytics, "settings_analytics", R.drawable.ic_tune),
             CardIcon(R.id.cardScrollingText, "settings_scrolling_text", R.drawable.ic_font_size),
             CardIcon(R.id.cardGridIndicators, "settings_grid_indicators", R.drawable.ic_view_list),

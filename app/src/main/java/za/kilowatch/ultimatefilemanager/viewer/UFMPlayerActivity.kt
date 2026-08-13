@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.view.GestureDetector
 import android.view.View
 import android.view.WindowManager
 import android.view.View.GONE
@@ -111,6 +112,8 @@ class UFMPlayerActivity : AppCompatActivity() {
     private lateinit var topBar: View
     private lateinit var btnAudioTrack: ImageButton
     private lateinit var btnSubtitles: ImageButton
+    private lateinit var btnSkipBack: ImageButton
+    private lateinit var btnSkipForward: ImageButton
     private lateinit var subtitleView: SubtitleView
     private lateinit var trackSheetLayout: View
     private lateinit var trackSheetList: LinearLayout
@@ -199,6 +202,14 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var isTracking = false
+
+    private val speedGestureDetector by lazy {
+        GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: android.view.MotionEvent) {
+                showSpeedSheet()
+            }
+        })
+    }
 
     // ── Service Binding ──────────────────────────────────────────────
 
@@ -483,6 +494,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        updateSkipButtonVisibility()
         isPiP = false
         if (playbackService?.isPlaying == true) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -649,6 +661,8 @@ class UFMPlayerActivity : AppCompatActivity() {
         topBar = findViewById(R.id.topBar)
         btnAudioTrack = findViewById(R.id.btnAudioTrack)
         btnSubtitles = findViewById(R.id.btnSubtitles)
+        btnSkipBack = findViewById(R.id.btnSkipBack)
+        btnSkipForward = findViewById(R.id.btnSkipForward)
         subtitleView = findViewById(R.id.subtitleView)
         trackSheetLayout = findViewById(R.id.trackSheetLayout)
         trackSheetList = findViewById(R.id.trackSheetList)
@@ -731,32 +745,63 @@ class UFMPlayerActivity : AppCompatActivity() {
             resetHideTimer()
             playbackService?.toggle()
             updatePlayPauseIcon()
+            val playing = playbackService?.isPlaying == true
+            PlayerToastHelper.show(this, getString(if (playing) R.string.player_toast_play else R.string.player_toast_pause))
         }
 
-        btnNext.setOnClickListener { resetHideTimer(); playbackService?.skipToNext() }
-        btnPrev.setOnClickListener { resetHideTimer(); playbackService?.skipToPrev() }
+        btnNext.setOnClickListener {
+            resetHideTimer()
+            playbackService?.skipToNext()
+            PlayerToastHelper.show(this, getString(R.string.player_toast_next))
+        }
+
+        btnPrev.setOnClickListener {
+            resetHideTimer()
+            playbackService?.skipToPrev()
+            PlayerToastHelper.show(this, getString(R.string.player_toast_previous))
+        }
+
+        btnSkipBack.setOnClickListener {
+            resetHideTimer()
+            playbackService?.skipBackward()
+            PlayerToastHelper.show(this, getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+        }
+
+        btnSkipForward.setOnClickListener {
+            resetHideTimer()
+            playbackService?.skipForward()
+            PlayerToastHelper.show(this, getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+        }
 
         btnShuffle.setOnClickListener {
             resetHideTimer()
             playbackService?.toggleShuffle()
-            updateAlpha(btnShuffle, playbackService?.isShuffle ?: false)
+            val on = playbackService?.isShuffle ?: false
+            updateAlpha(btnShuffle, on)
+            PlayerToastHelper.show(this, getString(if (on) R.string.player_toast_shuffle_on else R.string.player_toast_shuffle_off))
         }
 
         btnRepeat.setOnClickListener {
             resetHideTimer()
             playbackService?.toggleRepeat()
-            updateAlpha(btnRepeat, playbackService?.isRepeat ?: false)
+            val on = playbackService?.isRepeat ?: false
+            updateAlpha(btnRepeat, on)
+            PlayerToastHelper.show(this, getString(if (on) R.string.player_toast_repeat_on else R.string.player_toast_repeat_off))
         }
 
         btnAudioTrack.setOnClickListener {
             resetHideTimer()
             toggleTrackSheet(MODE_AUDIO)
+            PlayerToastHelper.show(this, getString(R.string.player_toast_audio_track))
         }
 
         btnSubtitles.setOnClickListener {
             resetHideTimer()
             toggleTrackSheet(MODE_SUBTITLE)
+            PlayerToastHelper.show(this, getString(R.string.player_toast_subtitles))
         }
+
+        updateSkipButtonVisibility()
 
         // ── Queue Drawer Button in Controls Row ────────────────────
         // Find a place for the queue toggle — add to btnSubtitles' parent
@@ -832,6 +877,23 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSkipButtonVisibility() {
+        if (!::btnSkipBack.isInitialized) return
+        val enabled = PlayerPreferencesManager.isSkipEnabled(this)
+        btnSkipBack.visibility = if (enabled) View.VISIBLE else View.GONE
+        btnSkipForward.visibility = if (enabled) View.VISIBLE else View.GONE
+    }
+
+    private fun showSpeedSheet() {
+        if (DeviceUtils.isTvDevice(this)) return
+        if (playbackService?.isPlaying != true) return
+        val current = playbackService?.getPlaybackSpeed() ?: 1.0f
+        PlaybackSpeedBottomSheet.newInstance(current) { speed ->
+            playbackService?.setPlaybackSpeed(speed)
+            PlayerToastHelper.show(this, getString(R.string.player_speed_toast, "${speed}x"))
+        }.show(supportFragmentManager, PlaybackSpeedBottomSheet.TAG)
+    }
+
     private fun updatePlayPauseIcon() {
         val isPlaying = playbackService?.isPlaying ?: false
         val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
@@ -890,6 +952,7 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
             resetHideTimer()
         }
+        event?.let { speedGestureDetector.onTouchEvent(it) }
         return super.onTouchEvent(event)
     }
 

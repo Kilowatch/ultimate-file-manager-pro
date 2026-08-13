@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import za.kilowatch.ultimatefilemanager.R
 
 enum class BackgroundVideoMode(val value: String) {
     PIP("pip"),
@@ -23,6 +24,7 @@ object PlayerPreferencesManager {
     private const val KEY_BACKGROUND_VIDEO_MODE = "background_video_mode"
     private const val KEY_MINI_PLAYER_ENABLED = "mini_player_enabled"
     private const val KEY_RESUME_AFTER_INTERRUPTION = "resume_after_interruption"
+    private const val KEY_SKIP_LENGTH = "skip_length_seconds"
 
     // ── Background Video Mode ───────────────────────────────────────
 
@@ -77,5 +79,61 @@ object PlayerPreferencesManager {
             .edit()
             .putBoolean(KEY_RESUME_AFTER_INTERRUPTION, enabled)
             .apply()
+    }
+
+    // ── Skip Length (forward/back seek) ─────────────────────────────
+
+    /** Sentinel value for "Disable" — hides the forward/back skip controls. */
+    const val SKIP_DISABLED = -1
+
+    /** Default skip length in seconds (matches the previous hardcoded 10s). */
+    const val DEFAULT_SKIP_SECONDS = 10
+
+    /** Selectable skip durations in seconds (excluding Disable). */
+    val SKIP_OPTIONS = intArrayOf(3, 5, 10, 20, 30)
+
+    fun getSkipLengthSeconds(context: Context): Int {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_SKIP_LENGTH, DEFAULT_SKIP_SECONDS)
+    }
+
+    fun isSkipEnabled(context: Context): Boolean =
+        getSkipLengthSeconds(context) != SKIP_DISABLED
+
+    fun setSkipLengthSeconds(context: Context, seconds: Int) {
+        val value = if (seconds == SKIP_DISABLED || seconds in SKIP_OPTIONS) seconds else DEFAULT_SKIP_SECONDS
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putInt(KEY_SKIP_LENGTH, value)
+            .apply()
+    }
+
+    /** Current skip length in milliseconds (0 when disabled). */
+    fun getSkipLengthMs(context: Context): Long {
+        val seconds = getSkipLengthSeconds(context)
+        return if (seconds == SKIP_DISABLED) 0L else seconds * 1000L
+    }
+
+    /** Skip-length option labels for the settings dialog: "3s", "5s", …, "Disable". */
+    fun skipOptionLabels(context: Context): Array<String> = arrayOf(
+        context.getString(R.string.skip_length_option_3s),
+        context.getString(R.string.skip_length_option_5s),
+        context.getString(R.string.skip_length_option_10s),
+        context.getString(R.string.skip_length_option_20s),
+        context.getString(R.string.skip_length_option_30s),
+        context.getString(R.string.skip_length_option_disable)
+    )
+
+    /** Human-readable label for the current setting, e.g. "10s" or "Disable". */
+    fun formatSkipLabel(context: Context): String {
+        val res = when (getSkipLengthSeconds(context)) {
+            3 -> R.string.skip_length_option_3s
+            5 -> R.string.skip_length_option_5s
+            20 -> R.string.skip_length_option_20s
+            30 -> R.string.skip_length_option_30s
+            SKIP_DISABLED -> R.string.skip_length_option_disable
+            else -> R.string.skip_length_option_10s
+        }
+        return context.getString(res)
     }
 }

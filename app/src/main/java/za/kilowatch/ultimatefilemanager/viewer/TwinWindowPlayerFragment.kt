@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.GestureDetector
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -29,6 +30,7 @@ import androidx.media3.ui.PlayerView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
+import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.settings.SideBySideVideoPreferenceManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import java.io.File
@@ -195,10 +197,16 @@ class TwinWindowPlayerFragment : Fragment() {
                 }
             } else false
         }
+        val speedDetector = GestureDetector(requireContext(), object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                showSpeedSheet()
+            }
+        })
         view.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 resetHideTimer()
             }
+            speedDetector.onTouchEvent(event)
             false
         }
         bindViews(view)
@@ -242,31 +250,41 @@ class TwinWindowPlayerFragment : Fragment() {
         btnFullscreen.setOnClickListener {
             isFullscreen = !isFullscreen
             onToggleFullscreen?.invoke(paneIndex, isFullscreen)
+            PlayerToastHelper.show(requireContext(), getString(if (isFullscreen) R.string.player_toast_fullscreen_enter else R.string.player_toast_fullscreen_exit))
         }
 
         btnRepeat.setOnClickListener {
             isRepeat = !isRepeat
             updateRepeatIcon()
             resetHideTimer()
+            PlayerToastHelper.show(requireContext(), getString(if (isRepeat) R.string.player_toast_repeat_on else R.string.player_toast_repeat_off))
         }
 
-        btnPlayPause.setOnClickListener { togglePlayPause() }
+        btnPlayPause.setOnClickListener {
+            togglePlayPause()
+            val playing = player?.isPlaying == true
+            PlayerToastHelper.show(requireContext(), getString(if (playing) R.string.player_toast_play else R.string.player_toast_pause))
+        }
 
         btnRewind.setOnClickListener {
             player?.let { p ->
-                val pos = (p.currentPosition - 10000).coerceAtLeast(0L)
+                val ms = PlayerPreferencesManager.getSkipLengthMs(requireContext())
+                val pos = (p.currentPosition - ms).coerceAtLeast(0L)
                 p.seekTo(pos)
                 updateSeek()
                 resetHideTimer()
+                PlayerToastHelper.show(requireContext(), getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(requireContext())))
             }
         }
 
         btnForward.setOnClickListener {
             player?.let { p ->
-                val pos = (p.currentPosition + 10000).coerceAtMost(p.duration.coerceAtLeast(0L))
+                val ms = PlayerPreferencesManager.getSkipLengthMs(requireContext())
+                val pos = (p.currentPosition + ms).coerceAtMost(p.duration.coerceAtLeast(0L))
                 p.seekTo(pos)
                 updateSeek()
                 resetHideTimer()
+                PlayerToastHelper.show(requireContext(), getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(requireContext())))
             }
         }
 
@@ -275,7 +293,12 @@ class TwinWindowPlayerFragment : Fragment() {
             player?.volume = if (isMuted) 0f else (volumeSeekBar.progress / 100f)
             updateMuteIcon()
             resetHideTimer()
+            PlayerToastHelper.show(requireContext(), getString(if (isMuted) R.string.player_toast_mute else R.string.player_toast_unmute))
         }
+
+        val skipEnabled = PlayerPreferencesManager.isSkipEnabled(requireContext())
+        btnRewind.visibility = if (skipEnabled) View.VISIBLE else View.GONE
+        btnForward.visibility = if (skipEnabled) View.VISIBLE else View.GONE
 
         volumeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -400,6 +423,7 @@ class TwinWindowPlayerFragment : Fragment() {
                     handler.post {
                         if (isRepeat) {
                             isRepeatingPlayback = true
+                            newPlayer.setPlaybackSpeed(1.0f)
                             newPlayer.seekTo(0)
                             newPlayer.play()
                         } else {
@@ -484,6 +508,18 @@ class TwinWindowPlayerFragment : Fragment() {
             }
             updatePlayPauseIcon()
         }
+    }
+
+    private fun showSpeedSheet() {
+        if (isTv) return
+        val p = player ?: return
+        if (!p.isPlaying) return
+        PlaybackSpeedBottomSheet.newInstance(p.playbackParameters.speed) { speed ->
+            p.setPlaybackSpeed(speed)
+            context?.let { ctx ->
+                PlayerToastHelper.show(ctx, ctx.getString(R.string.player_speed_toast, "${speed}x"))
+            }
+        }.show(parentFragmentManager, PlaybackSpeedBottomSheet.TAG)
     }
 
     private fun updatePlayPauseIcon() {
