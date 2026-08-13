@@ -3045,7 +3045,118 @@ object CrashReportManager {
                             } == true
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall) {
+                    // 51. The main thread is sampled reading a compiled XML drawable
+                    //     asset from the APK while a main-looper Runnable inflates a
+                    //     layout whose plain framework view constructor loads its
+                    //     background drawable — e.g. top frame
+                    //     `android.content.res.AssetManager.nativeOpenXmlAsset` (the
+                    //     native compiled-XML asset open), under `openXmlBlockAsset` →
+                    //     `ResourcesImpl.loadXmlResourceParser` → `loadXmlDrawable` →
+                    //     `loadDrawableForCookie` → `loadDrawable` →
+                    //     `Resources.loadDrawable`, reached from
+                    //     `TypedArray.getDrawableForDensity`/`getDrawable` (the view
+                    //     constructor reading its `background` attribute) under
+                    //     `android.view.View.<init>` → `ViewGroup.<init>` →
+                    //     `android.widget.FrameLayout.<init>`, created via the
+                    //     framework `LayoutInflater` (`createView`/`createViewFromTag`/
+                    //     `rInflate`/`inflate`), invoked from an R8-obfuscated
+                    //     non-platform `run()` (`so3.run`, a Runnable dispatched to the
+                    //     main looper) sitting directly on `android.os.Handler.
+                    //     handleCallback` → `dispatchMessage` → `Looper.loopOnce` →
+                    //     `ActivityThread.main` — reported from a SkyworthDigital UHD
+                    //     Google TV STB, SDK 34, app 1.8.1-GOOGLE. This is the
+                    //     main-looper-Runnable layout-inflation counterpart of the
+                    //     already-filtered RecyclerView-checkbox row-inflation read
+                    //     (filter 40): instead of `Resources.getXml` reached from an
+                    //     `AppCompatCheckBox.<init>` under a `RecyclerView.onLayout`
+                    //     frame-draw traversal, the read here is a `loadXmlDrawable`
+                    //     parse of a small compiled XML drawable (a plain FrameLayout's
+                    //     themed background) reached from a `TypedArray.getDrawable`
+                    //     in a framework view constructor, under a `LayoutInflater`
+                    //     inflation the app posted to the main looper as a Runnable.
+                    //     The work is a single bounded native asset read of a small
+                    //     compiled XML drawable that a view constructor runs while the
+                    //     framework inflates the layout — it cannot by itself occupy
+                    //     the main thread for 5 s, and the main looper is demonstrably
+                    //     processing a freshly dispatched message (`Handler.handleCallback`
+                    //     directly below the Runnable's `run()`), which a thread parked
+                    //     inside a >5 s block cannot do, so the >5 s block is
+                    //     device-side slowness / CPU starvation on the low-end TV (the
+                    //     report's own `DlnaSsdpListener`, `NanoHttpd Main Listener`,
+                    //     `sshd-SshServer`, `DefaultDispatcher-worker-*` and
+                    //     `arch_disk_io_*` threads are all RUNNABLE) or a post-stall
+                    //     sample of the backlog the main looper drains after a genuine
+                    //     stall. The `AnrWatchdogThread` now treats a main-thread stack
+                    //     whose top frame is `AssetManager.nativeOpenXmlAsset`/
+                    //     `openXmlBlockAsset`, with a `ResourcesImpl.loadXmlDrawable`
+                    //     frame, a `TypedArray.getDrawable`/`getDrawableForDensity`
+                    //     frame, a `View.<init>`/`ViewGroup.<init>`/`FrameLayout.<init>`
+                    //     view-construction frame, a `LayoutInflater` frame, a
+                    //     non-platform `run()` sitting directly on `Handler.handleCallback`,
+                    //     and no framework blocking primitive anywhere on the stack, as a
+                    //     false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread parked inside a
+                    //     blocking primitive (a lock, file/network/database I/O, or
+                    //     binder frame), reach the asset read from a bitmap-decode path
+                    //     (`ResourcesImpl.loadBitmapDrawable`/`BitmapFactory`/`Bitmap.
+                    //     createBitmap` — heavy decoding, not a bounded XML parse), or
+                    //     inflate from a frame-draw traversal rather than a main-looper
+                    //     Runnable (the RecyclerView/Choreographer shape, filter 40) —
+                    //     and are still reported.
+                    val isHandlerInflateXmlDrawableStall =
+                        topFrame?.className == "android.content.res.AssetManager" &&
+                        (topFrame?.methodName == "nativeOpenXmlAsset" || topFrame?.methodName == "openXmlBlockAsset") &&
+                        // The read is a compiled-XML drawable parse (bounded), NOT a
+                        // bitmap decode — a genuine freeze that reaches the read via
+                        // `loadBitmapDrawable`/`BitmapFactory`/`Bitmap.createBitmap`
+                        // would not have this frame.
+                        mainStackTrace.any {
+                            it.className == "android.content.res.ResourcesImpl" && it.methodName == "loadXmlDrawable"
+                        } &&
+                        // The drawable is being read from the view's styleable attributes
+                        // (the `background` attribute) while a framework view constructor
+                        // builds the view.
+                        mainStackTrace.any {
+                            it.className == "android.content.res.TypedArray" &&
+                            (it.methodName == "getDrawableForDensity" || it.methodName == "getDrawable")
+                        } &&
+                        mainStackTrace.any {
+                            (it.className == "android.view.View" ||
+                             it.className == "android.view.ViewGroup" ||
+                             it.className == "android.widget.FrameLayout") && it.methodName == "<init>"
+                        } &&
+                        // The view is being created by the framework LayoutInflater during
+                        // layout inflation.
+                        mainStackTrace.any {
+                            it.className == "android.view.LayoutInflater" &&
+                            (it.methodName == "createView" || it.methodName == "createViewFromTag" ||
+                             it.methodName == "rInflate" || it.methodName == "inflate")
+                        } &&
+                        // The inflation is dispatched by a main-looper Runnable — a
+                        // non-platform (R8-obfuscated) `run()` sitting directly on
+                        // `Handler.handleCallback`.
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.methodName == "run" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            mainStackTrace.getOrNull(i + 1)?.let { next ->
+                                next.className == "android.os.Handler" && next.methodName == "handleCallback"
+                            } == true
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in a
+                        // bounded per-layout asset read.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
