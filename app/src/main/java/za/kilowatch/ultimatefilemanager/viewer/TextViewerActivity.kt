@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.EditorInsets
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
@@ -1122,7 +1123,7 @@ class TextViewerActivity : AppCompatActivity() {
         }
         val sheetEntries = zip.entries().toList()
             .filter { it.name.startsWith("xl/worksheets/sheet") && it.name.endsWith(".xml") }
-            .sortedBy { it.name }
+            .sortedWith(NaturalSort.byName { it.name })
         for ((sheetIdx, sheetEntry) in sheetEntries.withIndex()) {
             sb.appendLine(getString(R.string.sheet_sheetidx_1))
             sb.appendLine()

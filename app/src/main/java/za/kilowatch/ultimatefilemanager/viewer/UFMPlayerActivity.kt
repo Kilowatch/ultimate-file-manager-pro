@@ -71,6 +71,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.PlayerPreferencesManager
 import za.kilowatch.ultimatefilemanager.settings.BackgroundVideoMode
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.util.ArrayList
 import kotlinx.coroutines.Dispatchers
@@ -1041,7 +1042,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         if (matched.isEmpty()) return emptyList()
 
-        return matched.sortedBy { it.name }.mapIndexed { index, file ->
+        return matched.sortedWith(NaturalSort.byName { it.name }).mapIndexed { index, file ->
             val ext = file.extension.lowercase()
             val langCode = inferSubtitleLanguage(file.nameWithoutExtension, videoBaseName)
             val langDisplay = languageCodeToDisplay(langCode)

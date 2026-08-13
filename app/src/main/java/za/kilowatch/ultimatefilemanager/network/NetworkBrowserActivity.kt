@@ -51,6 +51,7 @@ import za.kilowatch.ultimatefilemanager.storage.BatchRenameDialogFragment
 import za.kilowatch.ultimatefilemanager.storage.BatchRenameTvActivity
 import za.kilowatch.ultimatefilemanager.storage.FileToolsBottomSheet
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
@@ -2451,7 +2452,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
         // Apply sort — folders first, then sort within groups
         val secondaryComparator: java.util.Comparator<NetworkFile> = when (sortMode) {
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { it.name }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
@@ -2466,7 +2467,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f1.path, share.id)
             val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f2.path, share.id)
             if (p1 && p2) {
-                f1.name.compareTo(f2.name, ignoreCase = true)
+                NaturalSort.naturalCompare(f1.name, f2.name)
             } else if (p1) {
                 -1
             } else if (p2) {

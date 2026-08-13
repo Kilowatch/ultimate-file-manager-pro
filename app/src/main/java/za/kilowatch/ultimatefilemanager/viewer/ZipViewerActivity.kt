@@ -33,6 +33,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import net.lingala.zip4j.ZipFile
@@ -294,7 +295,7 @@ class ZipViewerActivity : AppCompatActivity() {
         }
 
         // Sort: directories first, then alphabetically
-        items.sortWith(compareBy<ZipItem> { !it.isDirectory }.thenBy { it.name.lowercase() })
+        items.sortWith(compareBy<ZipItem> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
 
         if (items.isEmpty()) {
             layoutEmpty.visibility = View.VISIBLE

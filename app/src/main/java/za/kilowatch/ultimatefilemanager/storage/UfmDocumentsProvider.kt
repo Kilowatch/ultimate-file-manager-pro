@@ -32,6 +32,7 @@ import za.kilowatch.ultimatefilemanager.network.DlnaShareClient
 import java.io.File
 import java.io.IOException
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import android.system.ErrnoException
 import android.system.OsConstants
 import kotlinx.coroutines.runBlocking
@@ -246,7 +247,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                 rawFiles.filter { !HiddenFilesManager.isJunkOrHidden(it.name) }
             }
             visibleFiles.sortedWith(
-                compareBy({ !it.isDirectory }, { it.name.lowercase() })
+                compareBy<NetworkFile> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name }
             ).forEach { includeNetworkFile(result, share, it) }
         } else {
             try {
@@ -266,7 +267,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         rawFiles.filter { !HiddenFilesManager.isJunkOrHidden(it.name) && it.absolutePath !in hiddenPaths }
                     }
                     visibleFiles.sortedWith(
-                        compareBy({ !it.isDirectory }, { it.name.lowercase() })
+                        compareBy<File> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name }
                     ).forEach { includeFile(result, it) }
                 }
             } catch (e: Exception) {

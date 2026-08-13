@@ -33,6 +33,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.DataFormatter
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.settings.GridIndicatorsPreferenceManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import java.io.File
@@ -613,7 +614,7 @@ class SpreadsheetViewerActivity : AppCompatActivity() {
             // 3. Extract worksheet sheets
             val sheetEntries = zip.entries().toList()
                 .filter { it.name.startsWith("xl/worksheets/sheet") && it.name.endsWith(".xml") }
-                .sortedBy { it.name }
+                .sortedWith(NaturalSort.byName { it.name })
 
             val rowPattern = Regex("""<row[^>]*>(.*?)</row>""", RegexOption.DOT_MATCHES_ALL)
             val cellPattern = Regex("""<c\s+[^>]*?(?:t="([^"]*)")?[^>]*>(?:.*?<v>([^<]*)</v>)?.*?</c>""", RegexOption.DOT_MATCHES_ALL)

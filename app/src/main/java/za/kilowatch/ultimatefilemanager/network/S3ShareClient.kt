@@ -10,6 +10,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -599,7 +600,7 @@ object S3ShareClient {
             files.add(NetworkFile(name = name, path = key, isDirectory = false, size = size, lastModified = lastMod))
         }
 
-        return files.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
+        return files.sortedWith(compareBy<NetworkFile> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
     }
 
     private fun extractXmlTag(xml: String, tag: String): String? =

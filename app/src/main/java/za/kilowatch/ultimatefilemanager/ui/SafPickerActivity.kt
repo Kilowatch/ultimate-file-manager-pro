@@ -32,6 +32,7 @@ import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
 import za.kilowatch.ultimatefilemanager.network.ShareType
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 
@@ -303,7 +304,7 @@ class SafPickerActivity : AppCompatActivity() {
         val items = mutableListOf<PickerItem>()
         val files = file.listFiles()?.toList() ?: emptyList()
         
-        files.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
+        files.sortedWith(compareBy<File> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
             .forEach { f ->
                 val showFile = !isTreeAction || f.isDirectory
                 val matchesMime = f.isDirectory || mimeMatchesAny(f.name)
@@ -356,7 +357,7 @@ class SafPickerActivity : AppCompatActivity() {
                     ShareType.DLNA -> DlnaShareClient.listFiles(share, path)
                 }
                 
-                val items = files.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
+                val items = files.sortedWith(compareBy<NetworkFile> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
                     .filter { (!isTreeAction || it.isDirectory) && (it.isDirectory || mimeMatchesAny(it.name)) }
                     .map { f ->
                         PickerItem(

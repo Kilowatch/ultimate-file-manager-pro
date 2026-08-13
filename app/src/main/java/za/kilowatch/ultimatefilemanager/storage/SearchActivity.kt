@@ -38,6 +38,7 @@ import kotlin.coroutines.resume
 import kotlinx.coroutines.*
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.FileSearchEngine
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
@@ -529,7 +530,7 @@ class SearchActivity : AppCompatActivity() {
 
                     (indexedResults + unindexedResults)
                         .distinctBy { it.absolutePath }
-                        .sortedBy { it.name.lowercase() }
+                        .sortedWith(NaturalSort.byName { it.name })
                         .take(PAGE_SIZE)
                 }
             } catch (e: Exception) {
@@ -618,7 +619,7 @@ class SearchActivity : AppCompatActivity() {
                         .forEach { found.add(it) }
                 } catch (_: Exception) { }
             }
-            found.sortedBy { it.name.lowercase() }
+            found.sortedWith(NaturalSort.byName { it.name })
         }
     }
 

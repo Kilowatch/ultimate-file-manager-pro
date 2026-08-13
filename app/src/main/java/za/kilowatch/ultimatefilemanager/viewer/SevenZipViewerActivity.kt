@@ -37,6 +37,7 @@ import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import java.io.File
 import java.util.Locale
@@ -325,7 +326,7 @@ class SevenZipViewerActivity : AppCompatActivity() {
             }
         }
 
-        items.sortWith(compareBy<SevenZipItem> { !it.isDirectory }.thenBy { it.name.lowercase() })
+        items.sortWith(compareBy<SevenZipItem> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
 
         if (items.isEmpty()) {
             layoutEmpty.visibility = View.VISIBLE

@@ -77,6 +77,7 @@ import za.kilowatch.ultimatefilemanager.settings.ControlsTimeoutManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.io.FileOutputStream
@@ -292,7 +293,7 @@ class SlideShowActivity : AppCompatActivity() {
                 f.isFile && !f.name.startsWith(".") &&
                 (f.extension.lowercase() in FileViewerRouter.IMAGE_EXTENSIONS ||
                  f.extension.lowercase() in FileViewerRouter.VIDEO_EXTENSIONS)
-            }?.sortedBy { it.name } ?: emptyList()
+            }?.sortedWith(NaturalSort.byName { it.name }) ?: emptyList()
             playlist = ArrayList(scanned.map { it.absolutePath })
             if (playlist.isEmpty()) playlist.add(initialPath)
         }

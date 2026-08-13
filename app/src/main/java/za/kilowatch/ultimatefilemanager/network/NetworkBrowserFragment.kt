@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.TwinWindowActivity
@@ -1908,7 +1909,7 @@ class NetworkBrowserFragment : Fragment() {
             filtered
         }
         val secondaryComparator: Comparator<NetworkFile> = when (sortMode) {
-            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: NetworkFile -> f.name }
+            za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { f: NetworkFile -> f.name }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { f: NetworkFile -> if (f.isDirectory) 0L else f.size }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.DATE -> compareBy { f: NetworkFile -> f.lastModified }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: NetworkFile -> f.name.substringAfterLast('.', "") }
@@ -1916,11 +1917,11 @@ class NetworkBrowserFragment : Fragment() {
         val orderedComparator = if (sortOrder == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.DESC) secondaryComparator.reversed() else secondaryComparator
         
         val customComparator = Comparator<NetworkFile> { f1, f2 ->
-            val ctx = context ?: return@Comparator f1.name.compareTo(f2.name, ignoreCase = true)
+            val ctx = context ?: return@Comparator NaturalSort.naturalCompare(f1.name, f2.name)
             val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f1.path, share.id)
             val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(ctx.applicationContext, f2.path, share.id)
             if (p1 && p2) {
-                f1.name.compareTo(f2.name, ignoreCase = true)
+                NaturalSort.naturalCompare(f1.name, f2.name)
             } else if (p1) {
                 -1
             } else if (p2) {

@@ -249,7 +249,7 @@ interface FileIndexDao {
      */
     @Query("""
         SELECT * FROM file_index
-        WHERE (:namePattern IS NULL OR filename LIKE :namePattern)
+        WHERE (:namePattern IS NULL OR filename LIKE :namePattern ESCAPE '\')
         AND (:extension IS NULL OR extension = :extension)
         AND (:mimePrefix IS NULL OR mimeType LIKE :mimePrefix)
         AND (:minSize IS NULL OR size >= :minSize)
@@ -271,6 +271,32 @@ interface FileIndexDao {
         sinceDate: Long?,
         folderPrefix: String?,
         storageId: String,
+        exactName: String,
+        limit: Int,
+        offset: Int
+    ): List<FileIndex>
+
+    /**
+     * Literal filename substring search for special-character terms.
+     * [pattern] is an already-escaped `%...%` LIKE pattern (the wildcards
+     * `%`, `_` and the escape char `\` are escaped), matched case-insensitively
+     * (ASCII) via `ESCAPE '\'`. Used by FileSearchEngine.searchSmart when the
+     * plain-text term is not FTS-safe.
+     */
+    @Query("""
+        SELECT * FROM file_index
+        WHERE filename LIKE :pattern ESCAPE '\'
+        AND storageId LIKE :storageId
+        AND (:folderPrefix IS NULL OR folderPath LIKE :folderPrefix)
+        ORDER BY
+            CASE WHEN filename = :exactName THEN 0 ELSE 1 END,
+            lastModified DESC
+        LIMIT :limit OFFSET :offset
+    """)
+    suspend fun searchByFilenameLiteral(
+        pattern: String,
+        storageId: String,
+        folderPrefix: String?,
         exactName: String,
         limit: Int,
         offset: Int

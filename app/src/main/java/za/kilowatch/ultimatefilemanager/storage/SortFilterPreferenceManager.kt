@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import java.security.MessageDigest
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 
 /**
  * Centralised persistence for sort & filter preferences.
@@ -389,7 +390,7 @@ object SortFilterPreferenceManager {
         directoriesFirst: Boolean = false
     ): Comparator<java.io.File> {
         val secondaryComparator: Comparator<java.io.File> = when (state.sortMode) {
-            SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: java.io.File -> f.name }
+            SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { f: java.io.File -> f.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { f: java.io.File -> if (f.isDirectory) 0L else f.length() }
             SortFilterSheet.SortMode.DATE -> compareBy { f: java.io.File -> f.lastModified() }
             SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: java.io.File -> f.extension }
@@ -401,7 +402,7 @@ object SortFilterPreferenceManager {
                 val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f1.absolutePath)
                 val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f2.absolutePath)
                 if (p1 && p2) {
-                    f1.name.compareTo(f2.name, ignoreCase = true)
+                    NaturalSort.naturalCompare(f1.name, f2.name)
                 } else if (p1) {
                     -1
                 } else if (p2) {
@@ -441,7 +442,7 @@ object SortFilterPreferenceManager {
         directoriesFirst: Boolean = false
     ): Comparator<za.kilowatch.ultimatefilemanager.network.NetworkFile> {
         val secondaryComparator: Comparator<za.kilowatch.ultimatefilemanager.network.NetworkFile> = when (state.sortMode) {
-            SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.name }
+            SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { it.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
             SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
             SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
@@ -453,7 +454,7 @@ object SortFilterPreferenceManager {
                 val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f1.path, shareId)
                 val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(context.applicationContext, f2.path, shareId)
                 if (p1 && p2) {
-                    f1.name.compareTo(f2.name, ignoreCase = true)
+                    NaturalSort.naturalCompare(f1.name, f2.name)
                 } else if (p1) {
                     -1
                 } else if (p2) {

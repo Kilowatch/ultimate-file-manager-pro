@@ -20,6 +20,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import java.io.File
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -148,7 +149,7 @@ class VaultFolderPickerActivity : AppCompatActivity() {
         val children = try {
             dir.listFiles()
                 ?.filter { it.canRead() }
-                ?.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
+                ?.sortedWith(compareBy<File> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
         } catch (_: Exception) {
             emptyList()
         } ?: emptyList()

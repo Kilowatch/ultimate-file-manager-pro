@@ -44,6 +44,7 @@ import za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor
 import za.kilowatch.ultimatefilemanager.indexing.UfmIndexingDatabase
 import za.kilowatch.ultimatefilemanager.sync.advanced.InstantSyncWatcher
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
@@ -4330,7 +4331,7 @@ class FileBrowserActivity : AppCompatActivity() {
         }
 
         val secondaryComparator: Comparator<File> = when (sortMode) {
-            SortFilterSheet.SortMode.NAME -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.name }
+            SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { f: File -> f.name }
             SortFilterSheet.SortMode.SIZE -> compareBy { f: File -> if (f.isDirectory) 0L else f.length() }
             SortFilterSheet.SortMode.DATE -> compareBy { f: File -> f.lastModified() }
             SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { f: File -> f.extension }
@@ -4341,7 +4342,7 @@ class FileBrowserActivity : AppCompatActivity() {
             val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(applicationContext, f1.absolutePath)
             val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(applicationContext, f2.absolutePath)
             if (p1 && p2) {
-                f1.name.compareTo(f2.name, ignoreCase = true)
+                NaturalSort.naturalCompare(f1.name, f2.name)
             } else if (p1) {
                 -1
             } else if (p2) {

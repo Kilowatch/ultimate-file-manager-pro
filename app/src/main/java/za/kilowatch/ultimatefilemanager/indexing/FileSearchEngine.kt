@@ -83,7 +83,7 @@ class FileSearchEngine(
             val rawResults = when {
                 // Has structured filters → use parameterised query per ext/type and OR-merge
                 parsed.hasFilters() -> {
-                    val namePat = if (exact.isNotEmpty()) "%$exact%" else null
+                    val namePat = if (exact.isNotEmpty()) "%${escapeLike(exact)}%" else null
 
                     // Build all combinations of (extension?, mimePrefix?) to query
                     // If neither list has values, pass null for both (covers size/date-only filters)
@@ -121,25 +121,37 @@ class FileSearchEngine(
                 }
 
 
-                // Plain text → FTS
+                // Plain text → FTS (safe terms) or literal LIKE (special chars)
                 exact.isNotEmpty() -> {
-                    // Escape special FTS chars and append * for prefix search
-                    val ftsTerm = exact.replace("\"", "\"\"") + "*"
-                    if (folderScope != null) {
-                        dao.searchFtsInFolder(
-                            ftsQuery     = ftsTerm,
-                            folderPrefix = "$folderScope%",
+                    if (isFtsSafe(exact)) {
+                        // Escape special FTS chars and append * for prefix search
+                        val ftsTerm = exact.replace("\"", "\"\"") + "*"
+                        if (folderScope != null) {
+                            dao.searchFtsInFolder(
+                                ftsQuery     = ftsTerm,
+                                folderPrefix = "$folderScope%",
+                                storageId    = sid,
+                                limit        = limit,
+                                offset       = offset
+                            )
+                        } else {
+                            dao.searchFts(
+                                ftsQuery  = ftsTerm,
+                                storageId = sid,
+                                exactName = exact,
+                                limit     = limit,
+                                offset    = offset
+                            )
+                        }
+                    } else {
+                        // Special characters: literal case-insensitive substring match
+                        dao.searchByFilenameLiteral(
+                            pattern      = "%${escapeLike(exact)}%",
                             storageId    = sid,
+                            folderPrefix = folderScope?.let { "$it%" },
+                            exactName    = exact,
                             limit        = limit,
                             offset       = offset
-                        )
-                    } else {
-                        dao.searchFts(
-                            ftsQuery  = ftsTerm,
-                            storageId = sid,
-                            exactName = exact,
-                            limit     = limit,
-                            offset    = offset
                         )
                     }
                 }
@@ -526,6 +538,25 @@ class FileSearchEngine(
     }
 
     // ============ UTILITIES ============
+
+    /**
+     * True if [term] is safe to pass to the FTS4 MATCH parser — i.e. it contains
+     * only ASCII letters, ASCII digits, and whitespace. Any other character
+     * (punctuation, symbols, non-ASCII letters) would be treated as an FTS
+     * operator or stripped by the `simple` tokenizer, so such terms must go
+     * through the literal LIKE path instead.
+     */
+    private fun isFtsSafe(term: String): Boolean =
+        term.all { it in 'a'..'z' || it in 'A'..'Z' || it in '0'..'9' || it.isWhitespace() }
+
+    /**
+     * Escape a literal string for use inside a `LIKE ... ESCAPE '\'` pattern:
+     * escape the escape character first, then the wildcards `%` and `_`.
+     */
+    private fun escapeLike(term: String): String =
+        term.replace("\\", "\\\\")
+            .replace("%", "\\%")
+            .replace("_", "\\_")
 
     /**
      * Convert wildcard pattern to SQL LIKE pattern.

@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import za.kilowatch.ultimatefilemanager.UfmApplication
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
+import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -603,7 +604,7 @@ object WebDavShareClient {
             GoRoLog.e(TAG, "parsePropfindResponse failed", e)
         }
 
-        return files.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
+        return files.sortedWith(compareBy<NetworkFile> { !it.isDirectory }.thenBy(NaturalSort.order) { it.name })
     }
 
     /** Parses RFC 1123 date strings like "Mon, 27 Apr 2026 12:00:00 GMT" → epoch ms */
