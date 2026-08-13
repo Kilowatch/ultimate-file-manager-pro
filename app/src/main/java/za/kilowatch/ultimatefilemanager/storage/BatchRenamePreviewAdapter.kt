@@ -57,18 +57,19 @@ class BatchRenamePreviewAdapter(
 
             txtIndex.text = item.index.toString()
 
-            val isUnchanged = item.resultingName == item.originalName
+            val hasValue = !item.resultingName.isNullOrBlank()
+            val isChanged = hasValue && item.resultingName != item.originalName
             txtOriginalName.text = item.originalName
 
-            if (isUnchanged) {
-                cardNew.visibility = View.GONE
-            } else {
+            if (isChanged) {
                 txtResultName.text = buildHighlighted(context, item.originalName, item.resultingName)
                 cardNew.visibility = View.VISIBLE
+            } else {
+                cardNew.visibility = View.GONE
             }
 
             bindConflictBadge(context, item.conflict)
-            applyColors(context, isUnchanged)
+            applyColors(context, !isChanged)
 
             val density = context.resources.displayMetrics.density
 
