@@ -2306,7 +2306,15 @@ object CrashReportManager {
                     //     doFrame` under a `Choreographer.doFrame` vsync dispatch
                     //     (`Choreographer$FrameDisplayEventReceiver.run` under
                     //     `Handler.handleCallback`) — reported from an OPPO CPH1937, SDK
-                    //     30, app 1.8.1-GOOGLE. The app chains its animations from the
+                    //     30, app 1.8.1-GOOGLE. A second report from a TCL Smart TV Pro,
+                    //     SDK 31, app 1.8.0-GOOGLE, sampled the same chain one frame
+                    //     earlier: its top frame is `java.util.HashMap$KeySet.iterator`
+                    //     under `ViewPropertyAnimator.animatePropertyBy` — the creation
+                    //     of the iterator over the running-animators map
+                    //     (`mAnimatorMap.keySet()`) that `animatePropertyBy` uses to
+                    //     cancel a running animation on the property before starting the
+                    //     next one, a single tiny object allocation that is likewise
+                    //     µs-scale. The app chains its animations from the
                     //     end-listener (e.g. a repeating fade/pulse: when one alpha
                     //     animation ends, the listener starts the next `.alpha()`
                     //     animation), which is bounded per-frame UI work — `getValue` is
@@ -2321,7 +2329,10 @@ object CrashReportManager {
                     //     threads are all RUNNABLE) or a post-stall sample of the
                     //     backlog the main looper drains after a genuine stall. The
                     //     `AnrWatchdogThread` now treats a main-thread stack whose top
-                    //     frame is a `ViewPropertyAnimator` method, with a
+                    //     frame is a `ViewPropertyAnimator` method (or the
+                    //     `java.util.HashMap$KeySet.iterator` creation directly above
+                    //     `ViewPropertyAnimator.animatePropertyBy` at the same chain's
+                    //     entry), with a
                     //     `ViewPropertyAnimator$AnimatorEventListener.onAnimationEnd`
                     //     dispatch from a `ValueAnimator.endAnimation` reached through
                     //     the `AnimationHandler`/`Choreographer` vsync frame, a
@@ -2339,8 +2350,15 @@ object CrashReportManager {
                     val alphaFrameIdx = mainStackTrace.indexOfFirst {
                         it.className == "android.view.ViewPropertyAnimator" && it.methodName == "alpha"
                     }
+                    val topIsViewPropertyAnimatorMethod =
+                        topFrame?.className == "android.view.ViewPropertyAnimator" ||
+                        (topFrame?.className == "java.util.HashMap\$KeySet" &&
+                         topFrame?.methodName == "iterator" &&
+                         mainStackTrace.getOrNull(1)?.className == "android.view.ViewPropertyAnimator" &&
+                         mainStackTrace.getOrNull(1)?.methodName == "animatePropertyBy")
+
                     val isViewPropertyAnimatorChainingStall =
-                        topFrame?.className == "android.view.ViewPropertyAnimator" &&
+                        topIsViewPropertyAnimatorMethod &&
                         mainStackTrace.any {
                             it.className == "android.view.ViewPropertyAnimator" && it.methodName == "animateProperty"
                         } &&
