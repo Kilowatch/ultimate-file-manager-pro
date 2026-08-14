@@ -3520,6 +3520,7 @@ class FileServer(
             val broadcastIntent = Intent(context, InstallReceiver::class.java).apply {
                 action = InstallReceiver.ACTION_INSTALL_COMPLETE
                 putExtra("jobId", jobId)
+                putExtra("fileName", archiveFile.name)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context, sessionId, broadcastIntent,
@@ -3653,6 +3654,7 @@ class FileServer(
             val broadcastIntent = Intent(context, InstallReceiver::class.java).apply {
                 action = InstallReceiver.ACTION_INSTALL_COMPLETE
                 putExtra("jobId", "")
+                putExtra("fileName", file.name)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context, sessionId, broadcastIntent,

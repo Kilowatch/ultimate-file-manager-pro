@@ -470,6 +470,12 @@ Ubin Sistem Server File
     <string name="settings_file_server_tiles_subtitle">
 Konfigurasi ubin Pengaturan Cepat untuk FTP dan sFTP
 </string>
+    <string name="open_file_server_card_title">
+Buka Server File
+</string>
+    <string name="open_file_server_card_subtitle">
+Kelola server aktif, profil, dan konfigurasi
+</string>
     <string name="settings_ftp_tile_title">
 Ubin FTP
 </string>
@@ -4024,6 +4030,39 @@ Instalasi APK
 </string>
     <string name="notif_channel_apk_install_desc">
 Meminta Anda untuk mengonfirmasi instalasi APK dari manajer file jarak jauh
+</string>
+    <string name="installation_successful">
+Instalasi Berhasil
+</string>
+    <string name="installation_successful_desc">
+%1$s berhasil diinstal.
+</string>
+    <string name="install_error_signature_mismatch">
+Pembaruan gagal: Ketidakcocokan tanda tangan. Tanda tangan paket tidak cocok dengan versi aplikasi yang terpasang saat ini.
+</string>
+    <string name="install_error_incompatible">
+Instalasi gagal: Paket tidak kompatibel dengan arsitektur perangkat atau versi Android Anda.
+</string>
+    <string name="install_error_storage">
+Instalasi gagal: Ruang penyimpanan tidak mencukupi.
+</string>
+    <string name="install_error_invalid">
+Instalasi gagal: File paket tidak valid atau rusak.
+</string>
+    <string name="install_error_blocked">
+Instalasi diblokir oleh Play Protect atau keamanan sistem.
+</string>
+    <string name="install_error_aborted">
+Instalasi dibatalkan.
+</string>
+    <string name="install_error_generic">
+Instalasi gagal: %1$s
+</string>
+    <string name="btn_open_app">
+Buka
+</string>
+    <string name="btn_dismiss">
+Tutup
 </string>
     <string name="error_no_apk_in_xapk">
 Tidak ada file APK yang ditemukan di dalam XAPK

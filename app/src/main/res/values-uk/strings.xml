@@ -470,6 +470,12 @@ IP: %1$s
     <string name="settings_file_server_tiles_subtitle">
 Налаштувати плитки швидких налаштувань для FTP та SFTP
 </string>
+    <string name="open_file_server_card_title">
+Відкрити файловий сервер
+</string>
+    <string name="open_file_server_card_subtitle">
+Керування активними серверами, профілями та конфігурацією
+</string>
     <string name="settings_ftp_tile_title">
 Плитка FTP
 </string>
@@ -4024,6 +4030,39 @@ APK готовий до встановлення
 </string>
     <string name="notif_channel_apk_install_desc">
 Запитує підтвердження встановлення APK з віддаленого файлового менеджера
+</string>
+    <string name="installation_successful">
+Встановлення успішне
+</string>
+    <string name="installation_successful_desc">
+%1$s успішно встановлено.
+</string>
+    <string name="install_error_signature_mismatch">
+Не вдалося оновити: не збігається підпис. Підпис пакета не збігається з поточною встановленою версією цього застосунку.
+</string>
+    <string name="install_error_incompatible">
+Не вдалося встановити: пакет несумісний з архітектурою вашого пристрою або версією Android.
+</string>
+    <string name="install_error_storage">
+Не вдалося встановити: недостатньо вільного місця.
+</string>
+    <string name="install_error_invalid">
+Не вдалося встановити: недійсний або пошкоджений файл пакета.
+</string>
+    <string name="install_error_blocked">
+Встановлення заблоковано Play Protect або системною безпекою.
+</string>
+    <string name="install_error_aborted">
+Встановлення скасовано.
+</string>
+    <string name="install_error_generic">
+Не вдалося встановити: %1$s
+</string>
+    <string name="btn_open_app">
+Відкрити
+</string>
+    <string name="btn_dismiss">
+Закрити
 </string>
     <string name="error_no_apk_in_xapk">
 Всередині XAPK не знайдено APK-файлів

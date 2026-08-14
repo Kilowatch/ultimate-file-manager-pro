@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,6 +28,7 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.archive.ArchiveItemOptionsDialog
 import za.kilowatch.ultimatefilemanager.archive.ArchiveManager
 import za.kilowatch.ultimatefilemanager.archive.ArchivePreviewCache
+import za.kilowatch.ultimatefilemanager.archive.ArchiveToolsBottomSheet
 import za.kilowatch.ultimatefilemanager.archive.ExtractLocationDialog
 import za.kilowatch.ultimatefilemanager.archive.PasswordPromptDialog
 import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
@@ -54,6 +56,7 @@ class ZipViewerActivity : AppCompatActivity() {
     private lateinit var txtBreadcrumb: TextView
     private lateinit var btnExtractAll: MaterialButton
     private lateinit var layoutEmpty: View
+    private var fabArchiveTools: ExtendedFloatingActionButton? = null
 
     private var zipFile: ZipFile? = null
     private var sourceFile: File? = null
@@ -62,9 +65,11 @@ class ZipViewerActivity : AppCompatActivity() {
     private var archivePassword: String? = null
     private val extractedFiles = mutableMapOf<String, File>()
     private var focusedItem: ZipItem? = null
+    private val selectedZipItems = mutableSetOf<ZipItem>()
 
     private var pendingExtractHeader: FileHeader? = null
     private var pendingTargetItem: ZipItem? = null
+    private var pendingSelectedZipItems: List<ZipItem> = emptyList()
     private var pendingExtractAll: Boolean = false
     private var pendingOpMode: ExtractOpMode = ExtractOpMode.EXTRACT_ALL
 
@@ -80,14 +85,19 @@ class ZipViewerActivity : AppCompatActivity() {
             if (pendingExtractAll || pendingOpMode == ExtractOpMode.EXTRACT_ALL) {
                 doExtractAll(destDir)
             } else if (pendingOpMode == ExtractOpMode.MOVE_OUT_SINGLE) {
-                pendingTargetItem?.let { doMoveOutSingleItem(it, destDir) }
+                if (pendingSelectedZipItems.isNotEmpty()) {
+                    doMoveOutMultipleItems(pendingSelectedZipItems, destDir)
+                } else pendingTargetItem?.let { doMoveOutSingleItem(it, destDir) }
             } else {
-                pendingExtractHeader?.let { doExtractSingleFile(it, destDir) }
+                if (pendingSelectedZipItems.isNotEmpty()) {
+                    doExtractMultipleItems(pendingSelectedZipItems, destDir)
+                } else pendingExtractHeader?.let { doExtractSingleFile(it, destDir) }
                     ?: pendingTargetItem?.let { doExtractSingleItem(it, destDir) }
             }
         }
         pendingExtractHeader = null
         pendingTargetItem = null
+        pendingSelectedZipItems = emptyList()
         pendingExtractAll = false
     }
 
@@ -116,6 +126,9 @@ class ZipViewerActivity : AppCompatActivity() {
         txtBreadcrumb = findViewById(R.id.txtBreadcrumb)
         btnExtractAll = findViewById(R.id.btnExtractAll)
         layoutEmpty = findViewById(R.id.layoutEmpty)
+        fabArchiveTools = findViewById(R.id.fabArchiveTools)
+
+        fabArchiveTools?.setOnClickListener { showArchiveToolsBottomSheet() }
 
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { navigateBack() }
 
@@ -164,7 +177,17 @@ class ZipViewerActivity : AppCompatActivity() {
                     btnOptions.setTextColor(defaultBtnText)
                 }
             }
-            btnOptions.setOnClickListener { focusedItem?.let { showItemOptions(it) } }
+            btnOptions.setOnClickListener {
+                val target = selectedZipItems.firstOrNull() ?: focusedItem
+                if (target != null) {
+                    if (!selectedZipItems.contains(target)) {
+                        selectedZipItems.clear()
+                        selectedZipItems.add(target)
+                        updateFabVisibility()
+                    }
+                    showArchiveToolsBottomSheet()
+                }
+            }
 
             val scrollContainer = findViewById<View>(R.id.scrollContainer)
             scrollContainer?.setOnKeyListener { _, keyCode, event ->
@@ -187,7 +210,9 @@ class ZipViewerActivity : AppCompatActivity() {
     }
 
     private fun navigateBack() {
-        if (currentPath.isNotEmpty()) {
+        if (selectedZipItems.isNotEmpty()) {
+            clearSelection()
+        } else if (currentPath.isNotEmpty()) {
             // Go up one directory — Zip4j uses forward slashes
             val parent = if (currentPath.contains("/")) {
                 currentPath.substringBeforeLast("/")
@@ -280,6 +305,7 @@ class ZipViewerActivity : AppCompatActivity() {
     }
 
     private fun displayEntries() {
+        clearSelection()
         // Update breadcrumb
         txtBreadcrumb.text = if (currentPath.isEmpty()) "/" else "/$currentPath/"
         txtBreadcrumb.visibility = View.VISIBLE
@@ -320,6 +346,185 @@ class ZipViewerActivity : AppCompatActivity() {
             layoutEmpty.visibility = View.GONE
             recyclerEntries.visibility = View.VISIBLE
             recyclerEntries.adapter = ZipAdapter(items)
+        }
+    }
+
+    private fun toggleSelection(item: ZipItem) {
+        if (selectedZipItems.contains(item)) {
+            selectedZipItems.remove(item)
+        } else {
+            selectedZipItems.add(item)
+        }
+        updateFabVisibility()
+        recyclerEntries.adapter?.notifyDataSetChanged()
+    }
+
+    private fun clearSelection() {
+        selectedZipItems.clear()
+        updateFabVisibility()
+        recyclerEntries.adapter?.notifyDataSetChanged()
+    }
+
+    private fun updateFabVisibility() {
+        fabArchiveTools?.visibility = if (selectedZipItems.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun showArchiveToolsBottomSheet() {
+        val items = selectedZipItems.toList()
+        if (items.isEmpty()) return
+
+        val actions = mutableListOf<ArchiveToolsBottomSheet.ActionItem>()
+
+        // 1. Extract to... (Copy Out)
+        actions.add(
+            ArchiveToolsBottomSheet.ActionItem(
+                id = "extract_to",
+                label = getString(R.string.action_copy_out),
+                defaultIconRes = R.drawable.ic_export,
+                customIconId = "toolbar_copy_out"
+            ) {
+                pendingSelectedZipItems = items
+                pendingExtractAll = false
+                pendingOpMode = ExtractOpMode.COPY_SINGLE
+                launchDestPicker()
+            }
+        )
+
+        // 2. Move out of archive
+        actions.add(
+            ArchiveToolsBottomSheet.ActionItem(
+                id = "move_out",
+                label = getString(R.string.action_move_out),
+                defaultIconRes = R.drawable.ic_move,
+                customIconId = "toolbar_move_out"
+            ) {
+                pendingSelectedZipItems = items
+                pendingExtractAll = false
+                pendingOpMode = ExtractOpMode.MOVE_OUT_SINGLE
+                launchDestPicker()
+            }
+        )
+
+        // 3. Delete from archive
+        actions.add(
+            ArchiveToolsBottomSheet.ActionItem(
+                id = "delete_from_archive",
+                label = getString(R.string.action_delete_from_archive),
+                defaultIconRes = R.drawable.ic_delete,
+                customIconId = "toolbar_delete"
+            ) {
+                confirmDeleteZipItems(items)
+            }
+        )
+
+        val title = if (items.size == 1) items.first().name else getString(R.string.selection_count, items.size)
+        val sheet = ArchiveToolsBottomSheet.newInstance(actions, title = title)
+        sheet.show(supportFragmentManager, ArchiveToolsBottomSheet.TAG)
+    }
+
+    private fun doExtractMultipleItems(items: List<ZipItem>, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            var successCount = 0
+            try {
+                for (item in items) {
+                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val res = ArchiveManager.extractZipEntry(file, entryPath, destDir, archivePassword)
+                    if (res.isSuccess) successCount++
+                }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (successCount > 0) {
+                        showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
+                    } else {
+                        showSnackbar(getString(R.string.archive_extract_error))
+                    }
+                    clearSelection()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                    clearSelection()
+                }
+            }
+        }
+    }
+
+    private fun doMoveOutMultipleItems(items: List<ZipItem>, destDir: File) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            var successCount = 0
+            try {
+                for (item in items) {
+                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val res = ArchiveManager.moveZipEntry(file, entryPath, destDir, archivePassword)
+                    if (res.isSuccess) successCount++
+                }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (successCount > 0) {
+                        showSnackbar(getString(R.string.archive_extract_success, destDir.absolutePath))
+                        loadZip(file)
+                    } else {
+                        showSnackbar(getString(R.string.archive_operation_failed, "Failed to move items"))
+                    }
+                    clearSelection()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                    clearSelection()
+                }
+            }
+        }
+    }
+
+    private fun confirmDeleteZipItems(items: List<ZipItem>) {
+        val msg = if (items.size == 1) {
+            getString(R.string.confirm_delete_archive_entry_msg, items.first().name)
+        } else {
+            getString(R.string.selection_count, items.size)
+        }
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_delete_archive_entry_title)
+            .setMessage(msg)
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                doDeleteZipItems(items)
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun doDeleteZipItems(items: List<ZipItem>) {
+        val file = sourceFile ?: return
+        progressBar.visibility = View.VISIBLE
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                var deletedAny = false
+                for (item in items) {
+                    val entryPath = item.entry?.fileName ?: (if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}")
+                    val res = ArchiveManager.deleteZipEntry(file, entryPath, archivePassword)
+                    if (res.isSuccess) deletedAny = true
+                }
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    if (deletedAny) {
+                        showSnackbar(getString(R.string.archive_delete_success, if (items.size == 1) items.first().name else "${items.size} items"))
+                        loadZip(file)
+                    }
+                    clearSelection()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                    showSnackbar(getString(R.string.archive_operation_failed, e.message ?: "Unknown error"))
+                    clearSelection()
+                }
+            }
         }
     }
 
@@ -624,18 +829,35 @@ class ZipViewerActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: VH, position: Int) {
             val item = items[position]
             val context = holder.itemView.context
-            
+            val isSelected = selectedZipItems.contains(item)
+
             holder.txtName.text = item.name
+
+            if (isSelected) {
+                holder.itemView.setBackgroundColor(androidx.core.content.ContextCompat.getColor(context, R.color.ufm_selection_highlight))
+            } else {
+                val typedValue = android.util.TypedValue()
+                context.theme.resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true)
+                holder.itemView.setBackgroundResource(typedValue.resourceId)
+            }
+
+            holder.icon.setOnClickListener {
+                toggleSelection(item)
+            }
 
             if (item.isDirectory) {
                 holder.icon.setImageResource(R.drawable.ic_folder)
                 holder.txtInfo.setText(R.string.folder)
                 holder.itemView.setOnClickListener {
-                    currentPath = if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}"
-                    displayEntries()
+                    if (selectedZipItems.isNotEmpty()) {
+                        toggleSelection(item)
+                    } else {
+                        currentPath = if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}"
+                        displayEntries()
+                    }
                 }
                 holder.itemView.setOnLongClickListener {
-                    showItemOptions(item)
+                    toggleSelection(item)
                     true
                 }
             } else {
@@ -650,10 +872,14 @@ class ZipViewerActivity : AppCompatActivity() {
                 } else 0
                 holder.txtInfo.text = getString(R.string.size_compressed_ratio_saved, size, compressed, ratio)
                 holder.itemView.setOnClickListener {
-                    previewItem(item)
+                    if (selectedZipItems.isNotEmpty()) {
+                        toggleSelection(item)
+                    } else {
+                        previewItem(item)
+                    }
                 }
                 holder.itemView.setOnLongClickListener {
-                    showItemOptions(item)
+                    toggleSelection(item)
                     true
                 }
             }
@@ -664,7 +890,7 @@ class ZipViewerActivity : AppCompatActivity() {
                 val primaryColor = context.getColor(R.color.mobile_text_primary)
                 val secondaryColor = context.getColor(R.color.mobile_text_secondary)
                 val iconColor = context.getColor(R.color.mobile_icon_tint)
-                
+
                 val blackCsl = android.content.res.ColorStateList.valueOf(black)
                 val iconCsl = android.content.res.ColorStateList.valueOf(iconColor)
 

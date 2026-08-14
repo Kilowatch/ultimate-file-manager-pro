@@ -470,6 +470,12 @@ Tuiles système du serveur de fichiers
     <string name="settings_file_server_tiles_subtitle">
 Configurer les tuiles de réglages rapides pour FTP et SFTP
 </string>
+    <string name="open_file_server_card_title">
+Ouvrir le serveur de fichiers
+</string>
+    <string name="open_file_server_card_subtitle">
+Gérer les serveurs actifs, les profils et la configuration
+</string>
     <string name="settings_ftp_tile_title">
 Tuile FTP
 </string>
@@ -4024,6 +4030,39 @@ Installation APK
 </string>
     <string name="notif_channel_apk_install_desc">
 Vous invite à confirmer les installations APK depuis le gestionnaire de fichiers distant
+</string>
+    <string name="installation_successful">
+Installation réussie
+</string>
+    <string name="installation_successful_desc">
+%1$s a été installé avec succès.
+</string>
+    <string name="install_error_signature_mismatch">
+Échec de la mise à jour : incompatibilité de signature. La signature du paquet ne correspond pas à la version actuellement installée de cette application.
+</string>
+    <string name="install_error_incompatible">
+Échec de l\'installation : le paquet est incompatible avec l\'architecture de votre appareil ou la version d\'Android.
+</string>
+    <string name="install_error_storage">
+Échec de l\'installation : espace de stockage insuffisant.
+</string>
+    <string name="install_error_invalid">
+Échec de l\'installation : fichier de paquet invalide ou corrompu.
+</string>
+    <string name="install_error_blocked">
+Installation bloquée par Play Protect ou la sécurité du système.
+</string>
+    <string name="install_error_aborted">
+Installation annulée.
+</string>
+    <string name="install_error_generic">
+Échec de l\'installation : %1$s
+</string>
+    <string name="btn_open_app">
+Ouvrir
+</string>
+    <string name="btn_dismiss">
+Fermer
 </string>
     <string name="error_no_apk_in_xapk">
 Aucun fichier APK trouvé dans XAPK

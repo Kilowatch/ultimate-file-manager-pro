@@ -460,6 +460,12 @@
             android:name=".remote.InstallReceiver"
             android:exported="false" />
 
+        <!-- Install Result Dialog Activity -->
+        <activity
+            android:name=".ui.InstallResultActivity"
+            android:theme="@style/Theme.UFM.Translucent"
+            android:exported="false" />
+
         <!-- Main Activity (future file browser) -->
         <activity
             android:name=".MainActivity"

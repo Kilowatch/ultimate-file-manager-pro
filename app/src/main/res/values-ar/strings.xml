@@ -470,6 +470,12 @@ IP: %1$s
     <string name="settings_file_server_tiles_subtitle">
 تكوين بلاطات الإعدادات السريعة لـ FTP و sFTP
 </string>
+    <string name="open_file_server_card_title">
+افتح خادم الملفات
+</string>
+    <string name="open_file_server_card_subtitle">
+إدارة الخوادم النشطة والملفات الشخصية والإعدادات
+</string>
     <string name="settings_ftp_tile_title">
 بلاطة FTP
 </string>
@@ -4024,6 +4030,39 @@ APK جاهز للتثبيت
 </string>
     <string name="notif_channel_apk_install_desc">
 يطلب منك تأكيد تثبيت APK من مدير الملفات البعيد
+</string>
+    <string name="installation_successful">
+تم التثبيت بنجاح
+</string>
+    <string name="installation_successful_desc">
+تم تثبيت %1$s بنجاح.
+</string>
+    <string name="install_error_signature_mismatch">
+فشل التحديث: عدم تطابق التوقيع. لا يتطابق توقيع الحزمة مع الإصدار المثبت حاليًا من هذا التطبيق.
+</string>
+    <string name="install_error_incompatible">
+فشل التثبيت: الحزمة غير متوافقة مع بنية جهازك أو إصدار Android.
+</string>
+    <string name="install_error_storage">
+فشل التثبيت: مساحة التخزين غير كافية.
+</string>
+    <string name="install_error_invalid">
+فشل التثبيت: ملف الحزمة غير صالح أو تالف.
+</string>
+    <string name="install_error_blocked">
+تم حظر التثبيت بواسطة Play Protect أو أمان النظام.
+</string>
+    <string name="install_error_aborted">
+تم إلغاء التثبيت.
+</string>
+    <string name="install_error_generic">
+فشل التثبيت: %1$s
+</string>
+    <string name="btn_open_app">
+فتح
+</string>
+    <string name="btn_dismiss">
+إغلاق
 </string>
     <string name="error_no_apk_in_xapk">
 لم يتم العثور على ملفات APK داخل XAPK

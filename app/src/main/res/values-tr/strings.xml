@@ -470,6 +470,12 @@ Dosya Sunucusu Sistem Kutucukları
     <string name="settings_file_server_tiles_subtitle">
 FTP ve SFTP için Hızlı Ayarlar kutucuklarını yapılandırın
 </string>
+    <string name="open_file_server_card_title">
+Dosya Sunucusunu Aç
+</string>
+    <string name="open_file_server_card_subtitle">
+Etkin sunucuları, profilleri ve yapılandırmayı yönet
+</string>
     <string name="settings_ftp_tile_title">
 FTP Kutucuğu
 </string>
@@ -4024,6 +4030,39 @@ APK Yükleme
 </string>
     <string name="notif_channel_apk_install_desc">
 Uzak dosya yöneticisinden APK yüklemelerini onaylamanızı ister
+</string>
+    <string name="installation_successful">
+Kurulum Başarılı
+</string>
+    <string name="installation_successful_desc">
+%1$s başarıyla kuruldu.
+</string>
+    <string name="install_error_signature_mismatch">
+Güncelleme başarısız: İmza uyuşmazlığı. Paket imzası, bu uygulamanın şu anda yüklü sürümüyle eşleşmiyor.
+</string>
+    <string name="install_error_incompatible">
+Kurulum başarısız: Paket, cihaz mimariniz veya Android sürümünüzle uyumlu değil.
+</string>
+    <string name="install_error_storage">
+Kurulum başarısız: Yetersiz depolama alanı.
+</string>
+    <string name="install_error_invalid">
+Kurulum başarısız: Geçersiz veya bozuk paket dosyası.
+</string>
+    <string name="install_error_blocked">
+Kurulum, Play Protect veya sistem güvenliği tarafından engellendi.
+</string>
+    <string name="install_error_aborted">
+Kurulum iptal edildi.
+</string>
+    <string name="install_error_generic">
+Kurulum başarısız: %1$s
+</string>
+    <string name="btn_open_app">
+Aç
+</string>
+    <string name="btn_dismiss">
+Kapat
 </string>
     <string name="error_no_apk_in_xapk">
 XAPK içinde APK dosyası bulunamadı

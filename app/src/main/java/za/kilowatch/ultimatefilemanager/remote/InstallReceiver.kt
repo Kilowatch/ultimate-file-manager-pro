@@ -79,6 +79,27 @@ class InstallReceiver : BroadcastReceiver() {
         // Dismiss the install-prompt notification now that the result is known.
         cancelInstallNotification(context)
 
+        // Launch InstallResultActivity and post notification for final install status
+        val statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE)
+        val extraPackage = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME)
+            ?: intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME)
+            ?: ""
+        val packageName = intent.getStringExtra("packageName")?.takeIf { it.isNotBlank() } ?: extraPackage
+        val appName = intent.getStringExtra("appName") ?: ""
+        val fileName = intent.getStringExtra("fileName") ?: ""
+
+        val resultIntent = za.kilowatch.ultimatefilemanager.ui.InstallResultActivity.createIntent(
+            context, status, statusMessage, packageName, appName, fileName
+        )
+
+        try {
+            context.startActivity(resultIntent)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to start InstallResultActivity: ${e.message}")
+        }
+
+        showInstallResultNotification(context, status, packageName, appName, fileName, resultIntent)
+
         // Clean up XAPK extraction dir (non-empty jobId = XAPK job).
         if (jobId.isNotEmpty()) {
             val xapkDir = File(context.cacheDir, "xapk_temp/$jobId")
@@ -120,6 +141,74 @@ class InstallReceiver : BroadcastReceiver() {
         Log.d(TAG, "Install-prompt notification posted")
     }
 
+    private fun showInstallResultNotification(
+        context: Context,
+        status: Int,
+        packageName: String,
+        appName: String,
+        fileName: String,
+        resultIntent: Intent
+    ) {
+        ensureNotificationChannel(context)
+
+        val pi = PendingIntent.getActivity(
+            context,
+            RESULT_NOTIF_REQUEST_CODE,
+            resultIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        )
+
+        val displayName = when {
+            appName.isNotBlank() -> appName
+            fileName.isNotBlank() -> fileName
+            packageName.isNotBlank() -> packageName
+            else -> context.getString(R.string.app_name)
+        }
+
+        val isSuccess = (status == PackageInstaller.STATUS_SUCCESS)
+
+        val title = if (isSuccess) {
+            context.getString(R.string.installation_successful)
+        } else {
+            context.getString(R.string.installation_failed)
+        }
+
+        val text = if (isSuccess) {
+            context.getString(R.string.installation_successful_desc, displayName)
+        } else {
+            when (status) {
+                PackageInstaller.STATUS_FAILURE_CONFLICT ->
+                    context.getString(R.string.install_error_signature_mismatch)
+                PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ->
+                    context.getString(R.string.install_error_incompatible)
+                PackageInstaller.STATUS_FAILURE_STORAGE ->
+                    context.getString(R.string.install_error_storage)
+                PackageInstaller.STATUS_FAILURE_INVALID ->
+                    context.getString(R.string.install_error_invalid)
+                PackageInstaller.STATUS_FAILURE_BLOCKED ->
+                    context.getString(R.string.install_error_blocked)
+                PackageInstaller.STATUS_FAILURE_ABORTED ->
+                    context.getString(R.string.install_error_aborted)
+                else -> context.getString(R.string.install_error_generic, displayName)
+            }
+        }
+
+        val iconRes = if (isSuccess) android.R.drawable.stat_sys_download_done else android.R.drawable.ic_dialog_alert
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(iconRes)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(text))
+            .setPriority(if (isSuccess) NotificationCompat.PRIORITY_DEFAULT else NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pi)
+            .build()
+
+        notifManager(context).notify(RESULT_NOTIF_ID, notification)
+        Log.d(TAG, "Install result notification posted (isSuccess=$isSuccess)")
+    }
+
     private fun cancelInstallNotification(context: Context) {
         notifManager(context).cancel(NOTIF_ID)
     }
@@ -142,10 +231,12 @@ class InstallReceiver : BroadcastReceiver() {
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     companion object {
-        private const val TAG               = "InstallReceiver"
-        private const val CHANNEL_ID        = "ufm_apk_install"
-        private const val NOTIF_ID          = 0x4150_4B00  // "APK\0" in hex
-        private const val NOTIF_REQUEST_CODE = 0x4150_4B01
+        private const val TAG                    = "InstallReceiver"
+        private const val CHANNEL_ID             = "ufm_apk_install"
+        private const val NOTIF_ID               = 0x4150_4B00  // "APK\0" in hex
+        private const val NOTIF_REQUEST_CODE      = 0x4150_4B01
+        private const val RESULT_NOTIF_ID        = 0x4150_4B02
+        private const val RESULT_NOTIF_REQUEST_CODE = 0x4150_4B03
 
         /** Action fired by PackageInstaller on session completion. */
         const val ACTION_INSTALL_COMPLETE = "za.kilowatch.ultimatefilemanager.INSTALL_COMPLETE"

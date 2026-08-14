@@ -470,6 +470,12 @@ IP: %1$s
     <string name="settings_file_server_tiles_subtitle">
 FTP और sFTP के लिए त्वरित सेटिंग्स टाइलें कॉन्फ़िगर करें
 </string>
+    <string name="open_file_server_card_title">
+फ़ाइल सर्वर खोलें
+</string>
+    <string name="open_file_server_card_subtitle">
+सक्रिय सर्वर, प्रोफ़ाइल और कॉन्फ़िगरेशन प्रबंधित करें
+</string>
     <string name="settings_ftp_tile_title">
 FTP टाइल
 </string>
@@ -4024,6 +4030,39 @@ APK इंस्टॉलेशन
 </string>
     <string name="notif_channel_apk_install_desc">
 रिमोट फ़ाइल मैनेजर से APK इंस्टॉलेशन की पुष्टि करने के लिए संकेत देता है
+</string>
+    <string name="installation_successful">
+स्थापना सफल
+</string>
+    <string name="installation_successful_desc">
+%1$s को सफलतापूर्वक स्थापित किया गया।
+</string>
+    <string name="install_error_signature_mismatch">
+अपडेट विफल: हस्ताक्षर बेमेल। पैकेज का हस्ताक्षर इस ऐप के वर्तमान स्थापित संस्करण से मेल नहीं खाता।
+</string>
+    <string name="install_error_incompatible">
+स्थापना विफल: पैकेज आपके डिवाइस की आर्किटेक्चर या Android संस्करण के साथ संगत नहीं है।
+</string>
+    <string name="install_error_storage">
+स्थापना विफल: अपर्याप्त संग्रहण स्थान।
+</string>
+    <string name="install_error_invalid">
+स्थापना विफल: अमान्य या दूषित पैकेज फ़ाइल।
+</string>
+    <string name="install_error_blocked">
+Play Protect या सिस्टम सुरक्षा द्वारा स्थापना अवरुद्ध की गई।
+</string>
+    <string name="install_error_aborted">
+स्थापना रद्द की गई।
+</string>
+    <string name="install_error_generic">
+स्थापना विफल: %1$s
+</string>
+    <string name="btn_open_app">
+खोलें
+</string>
+    <string name="btn_dismiss">
+खारिज करें
 </string>
     <string name="error_no_apk_in_xapk">
 XAPK के अंदर कोई APK फ़ाइल नहीं मिली

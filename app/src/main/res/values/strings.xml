@@ -167,6 +167,8 @@
     <string name="file_server_tiles_screen_subtitle">Enable or disable Quick Settings panel tiles</string>
     <string name="settings_file_server_tiles_title">File Server System Tiles</string>
     <string name="settings_file_server_tiles_subtitle">Configure Quick Settings tiles for FTP and sFTP</string>
+    <string name="open_file_server_card_title">Open File Server</string>
+    <string name="open_file_server_card_subtitle">Manage active servers, profiles, and configuration</string>
     <string name="settings_ftp_tile_title">FTP Tile</string>
     <string name="settings_ftp_tile_subtitle_on">Enabled — tile available</string>
     <string name="settings_ftp_tile_subtitle_off">Disabled — tile hidden</string>
@@ -1434,6 +1436,17 @@
     <string name="notif_apk_ready_desc">Tap to confirm installation on your device.</string>
     <string name="notif_channel_apk_install_name">APK Installation</string>
     <string name="notif_channel_apk_install_desc">Prompts you to confirm APK installations from the remote file manager</string>
+    <string name="installation_successful">Installation Successful</string>
+    <string name="installation_successful_desc">%1$s was installed successfully.</string>
+    <string name="install_error_signature_mismatch">Update failed: Signature mismatch. The package signature does not match the currently installed version of this app.</string>
+    <string name="install_error_incompatible">Installation failed: Package is incompatible with your device architecture or Android version.</string>
+    <string name="install_error_storage">Installation failed: Insufficient storage space.</string>
+    <string name="install_error_invalid">Installation failed: Invalid or corrupted package file.</string>
+    <string name="install_error_blocked">Installation blocked by Play Protect or system security.</string>
+    <string name="install_error_aborted">Installation canceled.</string>
+    <string name="install_error_generic">Installation failed: %1$s</string>
+    <string name="btn_open_app">Open</string>
+    <string name="btn_dismiss">Dismiss</string>
     <string name="error_no_apk_in_xapk">No APK files found inside XAPK</string>
     <string name="error_no_splits_extracted">No APK splits extracted from XAPK</string>
     <string name="error_missing_path">Missing path</string>

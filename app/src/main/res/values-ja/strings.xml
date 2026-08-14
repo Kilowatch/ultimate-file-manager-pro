@@ -470,6 +470,12 @@ IP: %1$s
     <string name="settings_file_server_tiles_subtitle">
 FTPおよびSFTPのクイック設定タイルを構成
 </string>
+    <string name="open_file_server_card_title">
+ファイルサーバーを開く
+</string>
+    <string name="open_file_server_card_subtitle">
+アクティブなサーバー、プロファイル、および設定を管理
+</string>
     <string name="settings_ftp_tile_title">
 FTPタイル
 </string>
@@ -4024,6 +4030,39 @@ APKインストール
 </string>
     <string name="notif_channel_apk_install_desc">
 リモートファイルマネージャーからのAPKインストール確認を促します
+</string>
+    <string name="installation_successful">
+インストール成功
+</string>
+    <string name="installation_successful_desc">
+%1$s は正常にインストールされました。
+</string>
+    <string name="install_error_signature_mismatch">
+アップデートに失敗しました：署名が一致しません。パッケージの署名が現在インストールされているこのアプリのバージョンと一致しません。
+</string>
+    <string name="install_error_incompatible">
+インストールに失敗しました：パッケージがお使いのデバイスのアーキテクチャまたはAndroidバージョンと互換性がありません。
+</string>
+    <string name="install_error_storage">
+インストールに失敗しました：ストレージの空き容量が不足しています。
+</string>
+    <string name="install_error_invalid">
+インストールに失敗しました：パッケージファイルが無効または破損しています。
+</string>
+    <string name="install_error_blocked">
+Play Protectまたはシステムセキュリティにより、インストールがブロックされました。
+</string>
+    <string name="install_error_aborted">
+インストールはキャンセルされました。
+</string>
+    <string name="install_error_generic">
+インストールに失敗しました：%1$s
+</string>
+    <string name="btn_open_app">
+開く
+</string>
+    <string name="btn_dismiss">
+閉じる
 </string>
     <string name="error_no_apk_in_xapk">
 XAPK内にAPKファイルが見つかりません

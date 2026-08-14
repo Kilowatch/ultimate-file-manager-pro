@@ -470,6 +470,12 @@ Mosaicos del sistema del servidor de archivos
     <string name="settings_file_server_tiles_subtitle">
 Configurar mosaicos de ajustes rápidos para FTP y SFTP
 </string>
+    <string name="open_file_server_card_title">
+Abrir servidor de archivos
+</string>
+    <string name="open_file_server_card_subtitle">
+Administrar servidores activos, perfiles y configuración
+</string>
     <string name="settings_ftp_tile_title">
 Mosaico FTP
 </string>
@@ -4024,6 +4030,39 @@ Instalación de APK
 </string>
     <string name="notif_channel_apk_install_desc">
 Te solicita confirmar instalaciones de APK desde el administrador de archivos remoto
+</string>
+    <string name="installation_successful">
+Instalación exitosa
+</string>
+    <string name="installation_successful_desc">
+%1$s se instaló correctamente.
+</string>
+    <string name="install_error_signature_mismatch">
+Error de actualización: Las firmas no coinciden. La firma del paquete no coincide con la versión actualmente instalada de esta aplicación.
+</string>
+    <string name="install_error_incompatible">
+Error de instalación: El paquete es incompatible con la arquitectura del dispositivo o la versión de Android.
+</string>
+    <string name="install_error_storage">
+Error de instalación: Espacio de almacenamiento insuficiente.
+</string>
+    <string name="install_error_invalid">
+Error de instalación: Archivo de paquete no válido o dañado.
+</string>
+    <string name="install_error_blocked">
+Instalación bloqueada por Play Protect o la seguridad del sistema.
+</string>
+    <string name="install_error_aborted">
+Instalación cancelada.
+</string>
+    <string name="install_error_generic">
+Error de instalación: %1$s
+</string>
+    <string name="btn_open_app">
+Abrir
+</string>
+    <string name="btn_dismiss">
+Descartar
 </string>
     <string name="error_no_apk_in_xapk">
 No se encontraron archivos APK dentro de XAPK

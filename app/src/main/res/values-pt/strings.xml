@@ -470,6 +470,12 @@ Blocos do Sistema do Servidor de Arquivos
     <string name="settings_file_server_tiles_subtitle">
 Configurar blocos de Configurações Rápidas para FTP e sFTP
 </string>
+    <string name="open_file_server_card_title">
+Abrir Servidor de Arquivos
+</string>
+    <string name="open_file_server_card_subtitle">
+Gerenciar servidores ativos, perfis e configuração
+</string>
     <string name="settings_ftp_tile_title">
 Bloco FTP
 </string>
@@ -4024,6 +4030,39 @@ Instalação de APK
 </string>
     <string name="notif_channel_apk_install_desc">
 Solicita confirmação de instalações de APK do gerenciador de arquivos remoto
+</string>
+    <string name="installation_successful">
+Instalação bem-sucedida
+</string>
+    <string name="installation_successful_desc">
+%1$s foi instalado com sucesso.
+</string>
+    <string name="install_error_signature_mismatch">
+Falha na atualização: assinatura incompatível. A assinatura do pacote não corresponde à versão atualmente instalada deste aplicativo.
+</string>
+    <string name="install_error_incompatible">
+Falha na instalação: o pacote é incompatível com a arquitetura do seu dispositivo ou com a versão do Android.
+</string>
+    <string name="install_error_storage">
+Falha na instalação: espaço de armazenamento insuficiente.
+</string>
+    <string name="install_error_invalid">
+Falha na instalação: arquivo de pacote inválido ou corrompido.
+</string>
+    <string name="install_error_blocked">
+Instalação bloqueada pelo Play Protect ou pela segurança do sistema.
+</string>
+    <string name="install_error_aborted">
+Instalação cancelada.
+</string>
+    <string name="install_error_generic">
+Falha na instalação: %1$s
+</string>
+    <string name="btn_open_app">
+Abrir
+</string>
+    <string name="btn_dismiss">
+Dispensar
 </string>
     <string name="error_no_apk_in_xapk">
 Nenhum arquivo APK encontrado dentro do XAPK

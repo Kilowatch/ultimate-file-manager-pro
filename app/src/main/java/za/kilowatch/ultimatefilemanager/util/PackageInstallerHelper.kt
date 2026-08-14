@@ -37,9 +37,20 @@ object PackageInstallerHelper {
                 file.inputStream().use { it.copyTo(out) }
             }
 
+            val pkgInfo = context.packageManager.getPackageArchiveInfo(file.absolutePath, 0)
+            val packageName = pkgInfo?.packageName ?: ""
+            val appName = pkgInfo?.applicationInfo?.let { appInfo ->
+                appInfo.sourceDir = file.absolutePath
+                appInfo.publicSourceDir = file.absolutePath
+                context.packageManager.getApplicationLabel(appInfo).toString()
+            } ?: ""
+
             val broadcastIntent = Intent(context, InstallReceiver::class.java).apply {
                 action = InstallReceiver.ACTION_INSTALL_COMPLETE
                 putExtra("jobId", "")
+                putExtra("fileName", file.name)
+                putExtra("appName", appName)
+                putExtra("packageName", packageName)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context, sessionId, broadcastIntent,
@@ -127,9 +138,23 @@ object PackageInstallerHelper {
                     }
                 }
 
+                val baseApkFile = apkFiles.firstOrNull { it.name.equals("base.apk", ignoreCase = true) } ?: apkFiles.firstOrNull()
+                val pkgInfo = baseApkFile?.let { context.packageManager.getPackageArchiveInfo(it.absolutePath, 0) }
+                val packageName = pkgInfo?.packageName ?: ""
+                val appName = baseApkFile?.let { file ->
+                    pkgInfo?.applicationInfo?.let { appInfo ->
+                        appInfo.sourceDir = file.absolutePath
+                        appInfo.publicSourceDir = file.absolutePath
+                        context.packageManager.getApplicationLabel(appInfo).toString()
+                    }
+                } ?: ""
+
                 val broadcastIntent = Intent(context, InstallReceiver::class.java).apply {
                     action = InstallReceiver.ACTION_INSTALL_COMPLETE
                     putExtra("jobId", jobId)
+                    putExtra("fileName", archiveFile.name)
+                    putExtra("appName", appName)
+                    putExtra("packageName", packageName)
                 }
                 val pendingIntent = PendingIntent.getBroadcast(
                     context, sessionId, broadcastIntent,

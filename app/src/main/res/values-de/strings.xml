@@ -470,6 +470,12 @@ Dateiserver-Systemkacheln
     <string name="settings_file_server_tiles_subtitle">
 Schnelleinstellungskacheln für FTP und SFTP konfigurieren
 </string>
+    <string name="open_file_server_card_title">
+Dateiserver öffnen
+</string>
+    <string name="open_file_server_card_subtitle">
+Aktive Server, Profile und Konfiguration verwalten
+</string>
     <string name="settings_ftp_tile_title">
 FTP-Kachel
 </string>
@@ -4024,6 +4030,39 @@ APK-Installation
 </string>
     <string name="notif_channel_apk_install_desc">
 Fordert Sie auf, APK-Installationen vom Remote-Dateimanager zu bestätigen
+</string>
+    <string name="installation_successful">
+Installation erfolgreich
+</string>
+    <string name="installation_successful_desc">
+%1$s wurde erfolgreich installiert.
+</string>
+    <string name="install_error_signature_mismatch">
+Update fehlgeschlagen: Signaturkonflikt. Die Paketsignatur stimmt nicht mit der derzeit installierten Version dieser App überein.
+</string>
+    <string name="install_error_incompatible">
+Installation fehlgeschlagen: Das Paket ist mit der Architektur Ihres Geräts oder der Android-Version nicht kompatibel.
+</string>
+    <string name="install_error_storage">
+Installation fehlgeschlagen: Nicht genügend Speicherplatz.
+</string>
+    <string name="install_error_invalid">
+Installation fehlgeschlagen: Ungültige oder beschädigte Paketdatei.
+</string>
+    <string name="install_error_blocked">
+Installation wurde durch Play Protect oder die Systemsicherheit blockiert.
+</string>
+    <string name="install_error_aborted">
+Installation abgebrochen.
+</string>
+    <string name="install_error_generic">
+Installation fehlgeschlagen: %1$s
+</string>
+    <string name="btn_open_app">
+Öffnen
+</string>
+    <string name="btn_dismiss">
+Schließen
 </string>
     <string name="error_no_apk_in_xapk">
 Keine APK-Dateien in XAPK gefunden

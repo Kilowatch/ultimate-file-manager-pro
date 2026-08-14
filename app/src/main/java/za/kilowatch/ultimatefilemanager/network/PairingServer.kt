@@ -1055,6 +1055,7 @@ class PairingServer(
             val broadcastIntent = Intent(context, InstallReceiver::class.java).apply {
                 action = "za.kilowatch.ultimatefilemanager.INSTALL_COMPLETE"
                 putExtra("jobId", jobId)
+                putExtra("fileName", archiveFile.name)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context, sessionId, broadcastIntent,

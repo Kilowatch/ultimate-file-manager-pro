@@ -123,4 +123,19 @@
             android:textSize="15sp" />
     </LinearLayout>
 
+    <!-- Archive Tools FAB -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabArchiveTools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_md"
+        android:text="@string/action_tools"
+        android:textColor="?attr/colorOnPrimary"
+        app:icon="@drawable/ic_settings"
+        app:iconTint="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

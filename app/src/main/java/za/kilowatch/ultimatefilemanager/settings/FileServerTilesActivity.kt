@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.server.FtpServerProfileRepository
+import za.kilowatch.ultimatefilemanager.server.ServerHostActivity
 import za.kilowatch.ultimatefilemanager.widget.FtpTileService
 import za.kilowatch.ultimatefilemanager.server.DlnaServerPrefs
 import za.kilowatch.ultimatefilemanager.widget.DlnaTileService
@@ -51,6 +53,12 @@ class FileServerTilesActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView>(R.id.btnBack)
         btnBack.setOnClickListener { finish() }
+
+        // Open File Server Activity
+        val cardOpenFileServer = findViewById<MaterialCardView>(R.id.cardOpenFileServer)
+        cardOpenFileServer.setOnClickListener {
+            startActivity(Intent(this, ServerHostActivity::class.java))
+        }
 
         // FTP Tile
         val cardFtpTile = findViewById<MaterialCardView>(R.id.cardFtpTile)
