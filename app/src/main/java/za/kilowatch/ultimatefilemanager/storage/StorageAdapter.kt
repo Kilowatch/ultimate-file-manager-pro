@@ -25,6 +25,23 @@ import za.kilowatch.ultimatefilemanager.ui.CircularProgressView
 import za.kilowatch.ultimatefilemanager.network.ShareType
 
 /**
+ * Sets a tile icon from a resource ID, tolerating stale persisted IDs — e.g. a
+ * custom-tile icon saved before its drawable was renamed or removed by resource
+ * shrinking. Never crashes: falls back to the default folder icon.
+ */
+private fun ImageView.safeSetIcon(resId: Int) {
+    if (resId == 0) {
+        setImageResource(R.drawable.ic_folder)
+        return
+    }
+    try {
+        setImageResource(resId)
+    } catch (_: Exception) {
+        setImageResource(R.drawable.ic_folder)
+    }
+}
+
+/**
  * RecyclerView adapter for the main StorageBrowser screen.
  *
  * @param isTv           Whether to use the TV tile layout.
@@ -550,7 +567,7 @@ class StorageAdapter(
                 progressBar.visibility   = View.GONE
                 txtNewBadge?.visibility  = View.GONE
 
-                imgIcon.setImageResource(item.iconRes)
+                imgIcon.safeSetIcon(item.iconRes)
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
                 txtCapacity.text = when {
@@ -620,7 +637,7 @@ class StorageAdapter(
                     progressBar.visibility = View.GONE
                 }
 
-                imgIcon.setImageResource(item.iconRes)
+                imgIcon.safeSetIcon(item.iconRes)
                 applyCustomIcon(item, imgIcon)
                 txtLabel.text = item.label
 

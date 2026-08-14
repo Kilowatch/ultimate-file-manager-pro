@@ -2639,11 +2639,9 @@ class StorageBrowserActivity : AppCompatActivity() {
         val existingData = if (isEdit) {
             CustomTileManager.loadCustomTiles(this).find { it.id == editTileId }
         } else null
-        if (isEdit && existingData != null) {
-            selectedCustomTileIconRes = existingData.iconRes
-        } else {
-            selectedCustomTileIconRes = R.drawable.ic_folder
-        }
+        // A custom tile with no (or an unresolvable) saved icon falls back to the
+        // default folder icon instead of passing a stale resource ID to setImageResource.
+        selectedCustomTileIconRes = existingData?.iconRes?.takeIf { it != 0 } ?: R.drawable.ic_folder
 
         if (isTv) {
             showCreateCustomTileDialogTv(isEdit, existingData)
@@ -3012,7 +3010,7 @@ class StorageBrowserActivity : AppCompatActivity() {
             storageItems.add(StorageItem(
                 id = ct.id,
                 label = ct.title,
-                iconRes = ct.iconRes,
+                iconRes = if (ct.iconRes != 0) ct.iconRes else R.drawable.ic_folder,
                 totalBytes = 0,
                 usedBytes = 0,
                 mountPath = "",

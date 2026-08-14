@@ -31,7 +31,9 @@ object CustomTileManager {
         val title: String,
         val subtitle: String,
         val iconRes: Int,
-        val showInFolderPicker: Boolean = false
+        val showInFolderPicker: Boolean = false,
+        /** Build-stable drawable entry name (e.g. "ic_folder"); null for legacy raw-ID entries. */
+        val iconResName: String? = null
     )
 
     // ------------------------------------------------------------------ //
@@ -43,15 +45,20 @@ object CustomTileManager {
 
     /** Save (create or update) a custom tile. */
     fun saveCustomTile(context: Context, data: CustomTileData) {
-        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val existing = loadCustomTiles(context).toMutableList()
-        val idx = existing.indexOfFirst { it.id == data.id }
+        // Persist the icon by its build-stable entry name so the tile keeps the
+        // intended icon across app updates (raw resource IDs shift between builds).
+        val resolved = data.copy(
+            iconResName = data.iconResName
+                ?: TileIconManager.resolveResName(context, data.iconRes)
+        )
+        val idx = existing.indexOfFirst { it.id == resolved.id }
         if (idx >= 0) {
-            existing[idx] = data
+            existing[idx] = resolved
         } else {
-            existing.add(data)
+            existing.add(resolved)
         }
-        prefs.edit().putString(KEY_META, serializeMeta(existing)).apply()
+        persistTiles(context, existing)
     }
 
     /** Load all custom tiles. */
@@ -60,19 +67,62 @@ object CustomTileManager {
             .getString(KEY_META, null) ?: return emptyList()
         return try {
             val arr = JSONArray(raw)
-            (0 until arr.length()).map { i ->
+            var needsMigration = false
+            val result = (0 until arr.length()).map { i ->
                 val obj = arr.getJSONObject(i)
-                CustomTileData(
-                    id = obj.getString("id"),
-                    title = obj.getString("title"),
-                    subtitle = obj.optString("subtitle", ""),
-                    iconRes = obj.optInt("iconRes", 0),
-                    showInFolderPicker = obj.optBoolean("showInFolderPicker", false)
-                )
+                val id = obj.getString("id")
+                val title = obj.getString("title")
+                val subtitle = obj.optString("subtitle", "")
+                val showInFolderPicker = obj.optBoolean("showInFolderPicker", false)
+
+                // Prefer the build-stable name (new format); legacy raw numeric IDs
+                // are resolved to a name here and rewritten so future reads are safe.
+                val storedName = obj.optString("iconResName").takeIf { it.isNotEmpty() }
+                val iconRes: Int
+                val iconResName: String?
+                if (storedName != null) {
+                    iconRes = TileIconManager.resolveResId(context, storedName)
+                    if (iconRes != 0) {
+                        iconResName = storedName
+                    } else {
+                        // Stored name no longer resolves (drawable removed) — drop it.
+                        iconResName = null
+                        needsMigration = true
+                    }
+                } else {
+                    val legacyRes = obj.optInt("iconRes", 0)
+                    if (legacyRes != 0) {
+                        val name = TileIconManager.resolveResName(context, legacyRes)
+                        if (name != null) {
+                            iconRes = TileIconManager.resolveResId(context, name)
+                            iconResName = name
+                            needsMigration = true
+                        } else {
+                            // Stale / unknown resource ID — drop the icon override safely.
+                            iconRes = 0
+                            iconResName = null
+                            needsMigration = true
+                        }
+                    } else {
+                        iconRes = 0
+                        iconResName = null
+                    }
+                }
+                CustomTileData(id, title, subtitle, iconRes, showInFolderPicker, iconResName)
             }
+            if (needsMigration) persistTiles(context, result)
+            result
         } catch (_: Exception) {
             emptyList()
         }
+    }
+
+    /** Persists the tile metadata JSON. */
+    private fun persistTiles(context: Context, tiles: List<CustomTileData>) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_META, serializeMeta(tiles))
+            .apply()
     }
 
     /** Delete a custom tile and all its associated data. */
@@ -184,6 +234,7 @@ object CustomTileManager {
             obj.put("title", tile.title)
             obj.put("subtitle", tile.subtitle)
             obj.put("iconRes", tile.iconRes)
+            if (!tile.iconResName.isNullOrEmpty()) obj.put("iconResName", tile.iconResName)
             obj.put("showInFolderPicker", tile.showInFolderPicker)
 
             // Child tiles in order
@@ -244,9 +295,21 @@ object CustomTileManager {
             val tileId = obj.getString("id")
             val title = obj.getString("title")
             val subtitle = obj.optString("subtitle", "")
-            val iconRes = obj.optInt("iconRes", 0)
+            // Prefer the build-stable name; fall back to resolving the legacy raw ID.
+            val rawResName = obj.optString("iconResName").takeIf { it.isNotEmpty() }
+            val rawIconRes = obj.optInt("iconRes", 0)
+            val iconRes = when {
+                rawResName != null -> TileIconManager.resolveResId(context, rawResName)
+                rawIconRes != 0 -> {
+                    val n = TileIconManager.resolveResName(context, rawIconRes)
+                    if (n != null) TileIconManager.resolveResId(context, n) else 0
+                }
+                else -> 0
+            }
 
-            metaList.add(CustomTileData(tileId, title, subtitle, iconRes, obj.optBoolean("showInFolderPicker", false)))
+            metaList.add(
+                CustomTileData(tileId, title, subtitle, iconRes, obj.optBoolean("showInFolderPicker", false), rawResName)
+            )
             restoredTileIds.add(tileId)
 
             // Restore children and their order
@@ -338,6 +401,7 @@ object CustomTileManager {
             obj.put("title", tile.title)
             obj.put("subtitle", tile.subtitle)
             obj.put("iconRes", tile.iconRes)
+            if (!tile.iconResName.isNullOrEmpty()) obj.put("iconResName", tile.iconResName)
             obj.put("showInFolderPicker", tile.showInFolderPicker)
             arr.put(obj)
         }
