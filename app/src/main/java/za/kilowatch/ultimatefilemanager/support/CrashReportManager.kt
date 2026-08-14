@@ -3156,7 +3156,108 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall) {
+                    // 52. The main thread is sampled at the ENTRY of a one-time static
+                    //     class initializer (`<clinit>`) while the framework dispatches
+                    //     window insets during a normal frame-draw traversal — e.g. top
+                    //     frame `jv9.<clinit>` (the static-init of an R8-obfuscated
+                    //     non-platform, non-app class), reached from
+                    //     `kn9.onApplyWindowInsets` (the app/bundled-library
+                    //     edge-to-edge insets listener, also R8-obfuscated — the app
+                    //     registers it on its views to apply edge-to-edge window
+                    //     insets) under the framework insets-dispatch chain
+                    //     (`android.view.View.dispatchApplyWindowInsets` →
+                    //     `ViewGroup.dispatchApplyWindowInsets`/
+                    //     `ViewGroup.newDispatchApplyWindowInsets` →
+                    //     `ViewRootImpl.dispatchApplyInsets`), under
+                    //     `ViewRootImpl.performTraversals` reached from a freshly
+                    //     dispatched vsync frame callback (`Choreographer.doFrame` →
+                    //     `Choreographer$FrameDisplayEventReceiver.run` →
+                    //     `android.os.Handler.handleCallback`) — reported from an onn.
+                    //     Streaming Device 4K pro, SDK 34, app 1.8.1-GOOGLE. The
+                    //     currently executing frame is the entry of a static class
+                    //     initializer — bounded one-time class-loading / static-field-init
+                    //     work that cannot by itself occupy the main thread for 5 s, and
+                    //     the main looper is demonstrably processing a freshly dispatched
+                    //     vsync frame callback at sample time, which a thread parked
+                    //     inside a >5 s block cannot do — so the >5 s block is
+                    //     device-side slowness / CPU starvation on the low-end streaming
+                    //     device (the report's own `DlnaSsdpListener`, `NanoHttpd Main
+                    //     Listener`, `pool-2-thread-1`, `p96 www.kilowatch.co.za` and
+                    //     `queued-work-looper` threads are all RUNNABLE, busy with
+                    //     DLNA/SSDP discovery, the HTTP file server, a socket read to the
+                    //     Kilowatch server and a slow `SharedPreferencesImpl.writeToFile`
+                    //     disk sync, starving the main thread) or a post-stall sample of
+                    //     the backlog the main looper drains after a genuine stall. This
+                    //     is the static-class-initializer counterpart of the cold-start
+                    //     `<init>` filters (34/42/45/47), but sampled at a class init
+                    //     (`<clinit>`) inside an insets-dispatch frame traversal rather
+                    //     than a constructor during an Activity cold-start launch — none
+                    //     of those filters match because there is no `Activity.performCreate`/
+                    //     `LayoutInflater` cold-start frame here. The `AnrWatchdogThread`
+                    //     now treats a main-thread stack whose top frame is `<clinit>` on
+                    //     a non-platform, non-app class, with a non-platform
+                    //     `onApplyWindowInsets` frame, a framework insets-dispatch frame,
+                    //     a frame-draw traversal frame (`ViewRootImpl.performTraversals`/
+                    //     `doTraversal`/`performLayout`), a `Choreographer.doFrame` frame,
+                    //     a `Handler.handleCallback` frame, and no framework blocking
+                    //     primitive anywhere on the stack, as a false positive and resets
+                    //     its heartbeat instead of writing a report. Genuine freezes keep
+                    //     the main thread parked inside a blocking primitive (a lock,
+                    //     file/network/database I/O or binder frame), run the static
+                    //     initializer's body doing blocking work (which surfaces the
+                    //     blocking frame BELOW `<clinit>` rather than `<clinit>` itself
+                    //     at top), run a non-obfuscated app class's `<clinit>` (whose
+                    //     class name starts with the app package), or reach the class
+                    //     init from app business logic rather than a framework
+                    //     insets-dispatch within a frame-draw traversal — and are still
+                    //     reported.
+                    val isInsetsDispatchClassInitStall =
+                        topFrame?.methodName == "<clinit>" &&
+                        topFrame?.className?.let { c ->
+                            PLATFORM_PREFIXES.none { c.startsWith(it) } && !c.startsWith(APP_PACKAGE)
+                        } == true &&
+                        // The class init is triggered by an insets listener the app or a
+                        // bundled library registered on a view (edge-to-edge handling),
+                        // not by app business logic.
+                        mainStackTrace.any {
+                            it.methodName == "onApplyWindowInsets" &&
+                            PLATFORM_PREFIXES.none { prefix -> it.className.startsWith(prefix) }
+                        } &&
+                        // The listener is dispatched from the framework insets dispatch.
+                        mainStackTrace.any {
+                            it.methodName == "dispatchApplyWindowInsets" ||
+                            it.methodName == "newDispatchApplyWindowInsets" ||
+                            it.methodName == "dispatchApplyInsets"
+                        } &&
+                        // ... which runs inside a normal frame-draw traversal of a freshly
+                        // dispatched vsync frame callback.
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performTraversals" ||
+                             it.methodName == "doTraversal" ||
+                             it.methodName == "performLayout")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" && it.methodName == "handleCallback"
+                        } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in a
+                        // bounded static class initializer at its entry.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
