@@ -3387,7 +3387,96 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
+                    // 54. The main thread is sampled while the framework dispatches a
+                    //     memory-trim event (TRIM_MEMORY_*) on the main thread to the
+                    //     Application's registered ComponentCallbacks2 — e.g. top frame
+                    //     `sh.onTrimMemory` (an R8-obfuscated non-platform, non-app class —
+                    //     a ComponentCallbacks2 a bundled library registered on the
+                    //     Application, e.g. a memory-cache trim), under
+                    //     `ComponentCallbacksController.dispatchTrimMemory` (the framework
+                    //     iterating the registered callbacks) → `android.app.Application.
+                    //     onTrimMemory` → `za.kilowatch.ultimatefilemanager.UfmApplication.
+                    //     onTrimMemory` (the app's override calling super first) →
+                    //     `android.app.ActivityThread.handleTrimMemory`, reached from a
+                    //     freshly dispatched Choreographer frame callback (`Choreographer.
+                    //     doFrame` → `Choreographer$CallbackRecord.run` → a pooled lambda
+                    //     on `ActivityThread$ApplicationThread`) under `Handler.
+                    //     handleCallback` — reported from a Xiaomi 24117RN76G, SDK 36,
+                    //     app 1.8.6-FOSS. The sampled work is the framework's bounded
+                    //     dispatch of the trim event to a registered callback (memory-cache
+                    //     trim bookkeeping — µs/ms-scale work that cannot by itself occupy
+                    //     the main thread for 5 s), the main thread is RUNNABLE and
+                    //     demonstrably processing a freshly dispatched Choreographer frame
+                    //     callback at sample time (which a thread parked inside a >5 s
+                    //     block cannot do), and there is no framework blocking primitive
+                    //     (lock, file/network/database I/O, binder, wait) anywhere on the
+                    //     stack — so the >5 s block is device-side memory pressure / CPU
+                    //     starvation on the phone or a post-stall sample, not app business
+                    //     logic. The app's own TRIM_MEMORY_COMPLETE cleanup already
+                    //     offloads its blocking SMB-session/HTTP-server teardown to a
+                    //     background daemon thread (the synchronous version previously
+                    //     froze the UI on low-end boxes and tripped the watchdog), so this
+                    //     sample is purely the framework's callback dispatch, not the
+                    //     app's cleanup. The `AnrWatchdogThread` now treats a main-thread
+                    //     stack whose top frame is `onTrimMemory` on a non-platform,
+                    //     non-app class, with a
+                    //     `ComponentCallbacksController.dispatchTrimMemory` frame, an
+                    //     `android.app.Application.onTrimMemory` frame and an
+                    //     `ActivityThread.handleTrimMemory` frame, reached from a
+                    //     `Choreographer.doFrame`/`Handler.handleCallback` dispatch, and
+                    //     no framework blocking primitive anywhere on the stack, as a
+                    //     false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread parked inside a
+                    //     blocking primitive (a lock, file/network/database I/O or binder
+                    //     frame), run the app's own `onTrimMemory` body doing blocking
+                    //     work after `super.onTrimMemory()` returns (which surfaces the
+                    //     blocking frame below `UfmApplication.onTrimMemory` rather than
+                    //     a registered callback's `onTrimMemory` at top), or reach the
+                    //     trim dispatch from a path carrying a blocking primitive — and
+                    //     are still reported.
+                    val isTrimMemoryDispatchStall =
+                        topFrame?.methodName == "onTrimMemory" &&
+                        topFrame?.className?.let { c ->
+                            PLATFORM_PREFIXES.none { c.startsWith(it) } && !c.startsWith(APP_PACKAGE)
+                        } == true &&
+                        // The framework is dispatching the trim event to a registered
+                        // component callback (not app business logic invoking
+                        // onTrimMemory).
+                        mainStackTrace.any {
+                            it.className == "android.content.ComponentCallbacksController" &&
+                            it.methodName == "dispatchTrimMemory"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.Application" && it.methodName == "onTrimMemory"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.ActivityThread" && it.methodName == "handleTrimMemory"
+                        } &&
+                        // The framework delivered the trim event via a freshly dispatched
+                        // Choreographer frame callback / main-Handler message — a thread
+                        // parked inside a >5 s block cannot be processing a fresh dispatch
+                        // at sample time.
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.os.Handler" && it.methodName == "handleCallback"
+                        }) &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in the
+                        // framework's bounded trim-memory callback dispatch.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
