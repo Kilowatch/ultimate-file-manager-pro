@@ -45,11 +45,11 @@ app/google-services.json
 Keys/
 screenshots/
 # Amazon store files
-Amazon/
+/Amazon/
 scripts/
 server/
 URL/
-Amazon Store/
+/Amazon Store/
 WEBSITE/
 
 # ── 🔴 SENSITIVE: Signing Configuration ──────────────────────

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Amazon-flavour manifest overlay.
+    This file is merged ONLY into amazonDebug / amazonRelease variants.
+    It registers the Amazon IAP ResponseReceiver and declares the package
+    queries required by API 30+ to communicate with the Amazon Appstore
+    and the Amazon App Tester during development.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Required for Android API 30+ package-visibility rules.
+        Allows the app to query the Amazon App Tester (for sandbox testing)
+        and the Amazon Appstore (com.amazon.venezia, the live store).
+    -->
+    <queries>
+        <package android:name="com.amazon.sdktestclient" />
+        <package android:name="com.amazon.venezia" />
+    </queries>
+
+    <application>
+
+        <!--
+            Amazon IAP ResponseReceiver.
+            The Amazon Appstore SDK broadcasts purchase/product intents to this
+            receiver. It is never used directly in app code — the PurchasingListener
+            callbacks in AmazonBillingManager handle all responses.
+
+            android:exported="true"  is required (targeting API 31+).
+            android:permission       restricts broadcasts to the Appstore only.
+        -->
+        <receiver
+            android:name="com.amazon.device.iap.ResponseReceiver"
+            android:exported="true"
+            android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY">
+            <intent-filter>
+                <action android:name="com.amazon.inapp.purchasing.NOTIFY" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>
