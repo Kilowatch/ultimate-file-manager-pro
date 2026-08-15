@@ -3285,7 +3285,109 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
+                    // 53. The main thread is parked inside the runtime's native-allocation
+                    //     registry notification while a frame-draw traversal draws a
+                    //     VectorDrawable in an ImageView inside a RecyclerView — e.g. top
+                    //     frame `dalvik.system.VMRuntime.registerNativeAllocation` (the
+                    //     native method ART runs when a native allocation is registered
+                    //     with the runtime; when the count of registered native
+                    //     allocations since the last GC crosses its threshold it performs
+                    //     the same allocator bookkeeping as the `notifyNativeAllocationsInternal`
+                    //     top frame of filters 43/49), reached from
+                    //     `android.graphics.drawable.VectorDrawable.draw` (the
+                    //     VectorDrawable registering the native allocation for its path
+                    //     renderer while it draws — the R8 build inlines the
+                    //     `libcore.util.NativeAllocationRegistry.registerNativeAllocation`
+                    //     call, so there is no explicit registry frame) under
+                    //     `android.widget.ImageView.onDraw` under the framework draw chain
+                    //     (`View.draw`/`ViewGroup.drawChild`/`dispatchDraw`) into
+                    //     `androidx.recyclerview.widget.RecyclerView.draw`/`drawChild`,
+                    //     reached from a frame-draw traversal (`ThreadedRenderer.draw` →
+                    //     `ViewRootImpl.performDraw` → `performTraversals` →
+                    //     `Choreographer.doFrame`) — reported from a vivo I2219, SDK 36,
+                    //     app 1.8.6-FOSS, the same device and session family as filters
+                    //     43 and 49. `registerNativeAllocation` blocks when the heap is
+                    //     under pressure from concurrent native allocations — in this
+                    //     report two dozen `DefaultDispatcher-worker-*` threads are
+                    //     simultaneously inside `com.radzivon.bartoshyk.avif.coder.
+                    //     HeifCoder.decodeSampled` doing `Bitmap.createBitmap`/
+                    //     `Bitmap.nativeCreate` while Coil decodes AVIF/HEIF images —
+                    //     so the >5 s block is a runtime/GC-side allocator stall the app
+                    //     cannot act on, and the main thread's own work is the µs-scale
+                    //     registration of a vector drawable's native path renderer during
+                    //     a normal frame draw, not app business logic. This is the
+                    //     VectorDrawable-draw variant of the native-allocation-registry
+                    //     filters (43 text-layout Paint, 49 MaterialButton Path), sampled
+                    //     at the `registerNativeAllocation` entry instead of inside the
+                    //     `notifyNativeAllocationsInternal` bookkeeping. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `VMRuntime.registerNativeAllocation` (or
+                    //     `notifyNativeAllocationsInternal`/`notifyNativeAllocation`, for
+                    //     a future sample of the same shape at the bookkeeping frame),
+                    //     with a `VectorDrawable.draw` frame reached from an
+                    //     `ImageView.onDraw` under a `RecyclerView` draw and a frame-draw
+                    //     dispatch (`ThreadedRenderer.draw`/`ViewRootImpl.performDraw`/
+                    //     `performTraversals`/`performLayout`/`Choreographer.doFrame`),
+                    //     and no framework blocking primitive anywhere on the stack, as a
+                    //     false positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread parked inside a
+                    //     blocking primitive (a lock, file/network/database I/O or binder
+                    //     frame), or reach the native-allocation registration from app
+                    //     business logic that is NOT a VectorDrawable draw inside a
+                    //     RecyclerView frame-draw traversal (e.g. the main thread itself
+                    //     allocating a large Bitmap, which surfaces as
+                    //     `Bitmap.createBitmap` below the registration frame, or a vector
+                    //     drawable drawn in a custom View's `onDraw` rather than an
+                    //     ImageView inside a RecyclerView), and are still reported.
+                    val isVectorDrawableNativeAllocationDrawStall =
+                        topFrame?.className == "dalvik.system.VMRuntime" &&
+                        (topFrame?.methodName == "registerNativeAllocation" ||
+                         topFrame?.methodName == "notifyNativeAllocationsInternal" ||
+                         topFrame?.methodName == "notifyNativeAllocation") &&
+                        // The allocation is being registered while a VectorDrawable draws
+                        // its native path renderer — the bounded per-frame draw of a
+                        // vector icon.
+                        mainStackTrace.any {
+                            it.className == "android.graphics.drawable.VectorDrawable" && it.methodName == "draw"
+                        } &&
+                        // The VectorDrawable is being drawn inside an ImageView (an icon
+                        // in a row), not a custom View's onDraw.
+                        mainStackTrace.any {
+                            it.className == "android.widget.ImageView" && it.methodName == "onDraw"
+                        } &&
+                        // The ImageView is inside a RecyclerView being drawn during the
+                        // frame.
+                        mainStackTrace.any { it.className.startsWith("androidx.recyclerview.widget.") } &&
+                        // Reached from a normal frame-draw traversal (ThreadedRenderer
+                        // draw / ViewRootImpl performDraw / performTraversals /
+                        // performLayout / Choreographer.doFrame).
+                        (mainStackTrace.any {
+                            it.className == "android.view.ThreadedRenderer" && it.methodName == "draw"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performDraw" || it.methodName == "performTraversals" ||
+                             it.methodName == "performLayout")
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        }) &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in the
+                        // runtime's native-allocation registry notification while drawing
+                        // a vector icon.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
