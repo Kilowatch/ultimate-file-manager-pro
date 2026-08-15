@@ -3126,6 +3126,9 @@ UFM रंग कोड
     <string name="compress_destination">
 गंतव्य चुनें
 </string>
+    <string name="compress_use_current_folder">
+वर्तमान फ़ोल्डर का उपयोग करें
+</string>
     <string name="compress_btn_start">
 संपीड़ित करें
 </string>

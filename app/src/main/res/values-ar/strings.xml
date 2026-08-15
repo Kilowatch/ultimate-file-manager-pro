@@ -3126,6 +3126,9 @@ NFSv4
     <string name="compress_destination">
 اختر الوجهة
 </string>
+    <string name="compress_use_current_folder">
+استخدام المجلد الحالي
+</string>
     <string name="compress_btn_start">
 ضغط
 </string>

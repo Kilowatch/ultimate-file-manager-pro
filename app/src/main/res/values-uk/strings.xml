@@ -3126,6 +3126,9 @@ OK
     <string name="compress_destination">
 Виберіть призначення
 </string>
+    <string name="compress_use_current_folder">
+Використовувати поточну папку
+</string>
     <string name="compress_btn_start">
 Стиснути
 </string>

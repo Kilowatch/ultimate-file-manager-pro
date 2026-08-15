@@ -3126,6 +3126,9 @@ Parolalar eşleşmiyor
     <string name="compress_destination">
 Hedef Seç
 </string>
+    <string name="compress_use_current_folder">
+Geçerli klasörü kullan
+</string>
     <string name="compress_btn_start">
 Sıkıştır
 </string>

@@ -3126,6 +3126,9 @@ A senha é muito curta (mín. 4 caracteres)
     <string name="compress_destination">
 Selecionar Destino
 </string>
+    <string name="compress_use_current_folder">
+Usar pasta atual
+</string>
     <string name="compress_btn_start">
 Comprimir
 </string>

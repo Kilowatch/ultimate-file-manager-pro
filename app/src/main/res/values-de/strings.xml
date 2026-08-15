@@ -3126,6 +3126,9 @@ Passwort ist zu kurz (min. 4 Zeichen)
     <string name="compress_destination">
 Ziel auswählen
 </string>
+    <string name="compress_use_current_folder">
+Aktuellen Ordner verwenden
+</string>
     <string name="compress_btn_start">
 Komprimieren
 </string>

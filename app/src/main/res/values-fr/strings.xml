@@ -3126,6 +3126,9 @@ Le mot de passe est trop court (min 4 caractères)
     <string name="compress_destination">
 Sélectionner la destination
 </string>
+    <string name="compress_use_current_folder">
+Utiliser le dossier actuel
+</string>
     <string name="compress_btn_start">
 Compresser
 </string>

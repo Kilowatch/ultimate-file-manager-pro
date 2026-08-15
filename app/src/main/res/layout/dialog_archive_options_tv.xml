@@ -222,6 +222,20 @@
 
     </LinearLayout>
 
+    <!-- Use current folder toggle -->
+    <CheckBox
+        android:id="@+id/switchUseCurrentFolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/compress_use_current_folder"
+        android:textColor="@color/selector_tv_button_text"
+        android:buttonTint="@color/tv_accent"
+        android:checked="true"
+        android:focusable="true"
+        android:background="@drawable/selector_tv_button"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp" />
+
     <!-- Buttons row — Compress left, Cancel right -->
     <LinearLayout
         android:layout_width="match_parent"

@@ -3126,6 +3126,9 @@ UFM 색상 코드
     <string name="compress_destination">
 대상 선택
 </string>
+    <string name="compress_use_current_folder">
+현재 폴더 사용
+</string>
     <string name="compress_btn_start">
 압축
 </string>

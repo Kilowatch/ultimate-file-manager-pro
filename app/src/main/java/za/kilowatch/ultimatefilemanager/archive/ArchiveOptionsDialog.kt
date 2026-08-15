@@ -20,9 +20,9 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  */
 class ArchiveOptionsDialog : DialogFragment() {
 
-    private var onConfirm: ((String, ArchiveManager.Format, String?) -> Unit)? = null
+    private var onConfirm: ((String, ArchiveManager.Format, String?, Boolean) -> Unit)? = null
 
-    fun setOnConfirm(listener: (String, ArchiveManager.Format, String?) -> Unit) {
+    fun setOnConfirm(listener: (String, ArchiveManager.Format, String?, Boolean) -> Unit) {
         this.onConfirm = listener
     }
 
@@ -77,6 +77,7 @@ class ArchiveOptionsDialog : DialogFragment() {
         val cgFormat = view.findViewById<com.google.android.material.chip.ChipGroup>(R.id.cgFormat)
         val edtFilename = view.findViewById<EditText>(R.id.edtFilename)
         val switchPassword = view.findViewById<CompoundButton>(R.id.switchPassword)
+        val switchUseCurrentFolder = view.findViewById<CompoundButton>(R.id.switchUseCurrentFolder)
         val layoutPasswordFields = view.findViewById<View>(R.id.layoutPasswordFields)
         val edtPassword = view.findViewById<EditText>(R.id.edtPassword)
         val edtConfirmPassword = view.findViewById<EditText>(R.id.edtConfirmPassword)
@@ -151,7 +152,8 @@ class ArchiveOptionsDialog : DialogFragment() {
                 password = p1
             }
 
-            onConfirm?.invoke(filename, selectedFormat, password)
+            val useCurrentFolder = switchUseCurrentFolder?.isChecked ?: true
+            onConfirm?.invoke(filename, selectedFormat, password, useCurrentFolder)
             dismiss()
         }
     }

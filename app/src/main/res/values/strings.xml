@@ -1122,6 +1122,7 @@
     <string name="compress_password_mismatch">Passwords do not match</string>
     <string name="compress_password_too_short">Password is too short (min 4 chars)</string>
     <string name="compress_destination">Select Destination</string>
+    <string name="compress_use_current_folder">Use current folder</string>
     <string name="compress_btn_start">Compress</string>
     <string name="compress_filename_label">Archive Filename</string>
     <string name="compress_filename_hint">Enter archive name</string>

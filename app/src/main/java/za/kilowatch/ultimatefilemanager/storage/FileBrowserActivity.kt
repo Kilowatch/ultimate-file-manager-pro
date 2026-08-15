@@ -4759,14 +4759,18 @@ class FileBrowserActivity : AppCompatActivity() {
      */
     private fun showArchiveOptions(files: List<File>) {
         val dialog = ArchiveOptionsDialog()
-        dialog.setOnConfirm { filename, format, password ->
-            // Stash so folderPickerLauncher can reach them for network destinations
-            pendingCompressSourceFiles = files
-            pendingCompressFileName    = filename
-            pendingCompressFormat      = format
-            pendingCompressPassword    = password
-            pickDestinationFolder { destDir ->
-                performCompression(files, destDir, filename, format, password)
+        dialog.setOnConfirm { filename, format, password, useCurrentFolder ->
+            if (useCurrentFolder) {
+                performCompression(files, currentDir, filename, format, password)
+            } else {
+                // Stash so folderPickerLauncher can reach them for network destinations
+                pendingCompressSourceFiles = files
+                pendingCompressFileName    = filename
+                pendingCompressFormat      = format
+                pendingCompressPassword    = password
+                pickDestinationFolder { destDir ->
+                    performCompression(files, destDir, filename, format, password)
+                }
             }
         }
         dialog.show(supportFragmentManager, "ArchiveOptions")

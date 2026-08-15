@@ -2707,13 +2707,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun showArchiveOptions(files: List<NetworkFile>) {
         val dialog = ArchiveOptionsDialog()
-        dialog.setOnConfirm { filename, format, password ->
-            // Stash params then open the storage/destination picker
-            pendingCompressSourceFiles = files
-            pendingCompressFileName    = filename
-            pendingCompressFormat      = format
-            pendingCompressPassword    = password
-            pickDestinationFolder()
+        dialog.setOnConfirm { filename, format, password, useCurrentFolder ->
+            if (useCurrentFolder) {
+                performNetworkCompression(files, CompressDest.Network(share, currentPath), filename, format, password)
+            } else {
+                // Stash params then open the storage/destination picker
+                pendingCompressSourceFiles = files
+                pendingCompressFileName    = filename
+                pendingCompressFormat      = format
+                pendingCompressPassword    = password
+                pickDestinationFolder()
+            }
         }
         dialog.show(supportFragmentManager, "ArchiveOptions")
     }
@@ -2841,6 +2845,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) {
                             dialog.dismiss()
                             fileAdapter.exitSelectionMode()
+                            loadDirectory()
                             showPremiumSnackbar(getString(R.string.compression_completed_archivename_destsharename, archiveName, dest.share.name))
                         }
                     }

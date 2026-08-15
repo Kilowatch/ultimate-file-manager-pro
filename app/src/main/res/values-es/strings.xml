@@ -3126,6 +3126,9 @@ La contraseña es demasiado corta (mín. 4 caracteres)
     <string name="compress_destination">
 Seleccionar destino
 </string>
+    <string name="compress_use_current_folder">
+Usar carpeta actual
+</string>
     <string name="compress_btn_start">
 Comprimir
 </string>

@@ -220,6 +220,17 @@
         android:paddingTop="12dp"
         android:paddingBottom="16dp">
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switchUseCurrentFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/compress_use_current_folder"
+            android:textColor="@color/ufm_text_primary"
+            android:checked="true"
+            app:thumbTint="?attr/colorPrimary"
+            app:trackTint="@color/ufm_primary_light"
+            android:layout_marginBottom="12dp" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStart"
             android:layout_width="match_parent"

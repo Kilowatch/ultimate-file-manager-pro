@@ -3126,6 +3126,9 @@ NFSv4
     <string name="compress_destination">
 Выберите место назначения
 </string>
+    <string name="compress_use_current_folder">
+Использовать текущую папку
+</string>
     <string name="compress_btn_start">
 Сжать
 </string>

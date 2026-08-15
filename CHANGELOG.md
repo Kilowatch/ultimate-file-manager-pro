@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.7] — 2026-08-15
 
 ### Added
+- **Compress to Current Folder** — Added a "Use current folder" toggle switch (on by default) to the archive compression options dialog on Mobile and Android TV. When enabled, compressing selected files or folders instantly creates the archive directly inside the active directory without requiring destination folder selection. If unchecked, it maintains the existing folder picker workflow to choose custom local or network destinations.
 - **"Keep Both" Folder Collision Handling** — Improved folder copy and move behavior across Local, Network (SMB, FTP, SFTP, NFS, TV Share), and Cloud Storage (Google Drive, Microsoft OneDrive, Dropbox, AWS S3, iDrive E2, WebDAV, rclone) on Mobile and Android TV. When pasting or moving a folder to a destination where a folder with the same name exists, the conflict dialog is now presented at the folder level. Choosing "Keep Both" auto-increments the target directory name (e.g., `Folder (1)`) and transfers all source contents into the newly renamed, isolated folder instead of merging. "Overwrite" maintains standard merge behavior, "Skip" skips the entire folder, and "Cancel" cancels the transfer. Supported in both Single-Pane and Dual-Pane (Twin Window) transfer modes.
 
 ## [1.8.6] — 2026-08-14

@@ -3126,6 +3126,9 @@ OK
     <string name="compress_destination">
 保存先を選択
 </string>
+    <string name="compress_use_current_folder">
+現在のフォルダーを使用
+</string>
     <string name="compress_btn_start">
 圧縮
 </string>

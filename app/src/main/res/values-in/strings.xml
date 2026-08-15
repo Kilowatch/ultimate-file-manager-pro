@@ -3126,6 +3126,9 @@ Kata sandi terlalu pendek (min 4 karakter)
     <string name="compress_destination">
 Pilih Tujuan
 </string>
+    <string name="compress_use_current_folder">
+Gunakan folder saat ini
+</string>
     <string name="compress_btn_start">
 Kompres
 </string>
