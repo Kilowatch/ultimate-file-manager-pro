@@ -10634,6 +10634,41 @@ Slaytlar arası süre
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Arşivi Çıkar
+</string>
+    <string name="extract_to_current_folder">
+Geçerli Klasöre Çıkar
+</string>
+    <string name="extract_current_folder_desc">
+Dosyaları doğrudan bu klasöre çıkar
+</string>
+    <string name="extract_to_new_folder">
+Yeni Klasöre Çıkar
+</string>
+    <string name="extract_to_new_folder_desc">
+Yeni bir klasör oluştur ve dosyaları içine çıkar
+</string>
+    <string name="extract_new_folder_title">
+Yeni Klasöre Çıkar
+</string>
+    <string name="extract_new_folder_hint">
+Klasör adı
+</string>
+    <string name="extract_select_folder">
+Çıkar ve Klasör Seç
+</string>
+    <string name="extract_select_folder_desc">
+Dosyaları çıkar ve \\\'Buraya Çıkar\\\' düğmesini kullanarak hedefi seç.
+</string>
+    <string name="extract_staged_snackbar">
+Dosyalar çıkarıldı. Hedef klasöre git ve \\\'Buraya Çıkar\\\' düğmesine dokun.
+</string>
+    <string name="extract_move_success">
+%1$d öğe başarıyla çıkarıldı.
+</string>
 </resources>
 
 

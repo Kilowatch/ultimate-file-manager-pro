@@ -10634,6 +10634,41 @@ GIFクリエイター設定
     <string name="gif_creator_slide_interval_value">
 %1$.1f秒
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+アーカイブを解凍
+</string>
+    <string name="extract_to_current_folder">
+現在のフォルダーに解凍
+</string>
+    <string name="extract_current_folder_desc">
+ファイルをこのフォルダーに直接解凍
+</string>
+    <string name="extract_to_new_folder">
+新しいフォルダーに解凍
+</string>
+    <string name="extract_to_new_folder_desc">
+新しいフォルダーを作成し、その中にファイルを解凍
+</string>
+    <string name="extract_new_folder_title">
+新しいフォルダーに解凍
+</string>
+    <string name="extract_new_folder_hint">
+フォルダー名
+</string>
+    <string name="extract_select_folder">
+解凍してフォルダーを選択
+</string>
+    <string name="extract_select_folder_desc">
+ファイルを解凍し、「ここに解凍」ボタンで保存先を選択
+</string>
+    <string name="extract_staged_snackbar">
+ファイルが解凍されました。保存先に移動して「ここに解凍」をタップしてください。
+</string>
+    <string name="extract_move_success">
+%1$d項目を正常に解凍しました
+</string>
 </resources>
 
 

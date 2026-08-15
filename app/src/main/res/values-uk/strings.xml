@@ -10634,6 +10634,41 @@ GIF успішно створено
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Розпакувати архів
+</string>
+    <string name="extract_to_current_folder">
+Розпакувати в поточну папку
+</string>
+    <string name="extract_current_folder_desc">
+Розпакувати файли безпосередньо в цю папку
+</string>
+    <string name="extract_to_new_folder">
+Розпакувати в нову папку
+</string>
+    <string name="extract_to_new_folder_desc">
+Створити нову папку та розпакувати файли в неї
+</string>
+    <string name="extract_new_folder_title">
+Розпакувати в нову папку
+</string>
+    <string name="extract_new_folder_hint">
+Назва папки
+</string>
+    <string name="extract_select_folder">
+Розпакувати і вибрати папку
+</string>
+    <string name="extract_select_folder_desc">
+Розпакуйте файли та виберіть призначення за допомогою кнопки «Розпакувати тут»
+</string>
+    <string name="extract_staged_snackbar">
+Файли розпаковано. Перейдіть до призначення та натисніть «Розпакувати тут».
+</string>
+    <string name="extract_move_success">
+Розпаковано успішно: %1$d
+</string>
 </resources>
 
 

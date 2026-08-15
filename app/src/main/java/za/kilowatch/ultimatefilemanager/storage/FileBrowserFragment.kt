@@ -1777,8 +1777,13 @@ class FileBrowserFragment : Fragment() {
         val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
 
         if (total > 0) {
-            val label = "${getString(R.string.action_paste)} ($total)"
-            fab.text = label
+            if (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT) {
+                fab.text = "${getString(R.string.extract_here)} ($total)"
+                fab.setIconResource(R.drawable.ic_extract)
+            } else {
+                fab.text = "${getString(R.string.action_paste)} ($total)"
+                fab.setIconResource(R.drawable.ic_paste)
+            }
             fab.visibility = View.VISIBLE
         } else {
             fab.visibility = View.GONE
@@ -2480,7 +2485,82 @@ class FileBrowserFragment : Fragment() {
     fun getStorageType() = storageType
 
     private fun performExtractHere(files: List<File>) {
+        showExtractOptions(files)
+    }
+
+    private fun showExtractOptions(files: List<File>) {
         val archives = files.filter { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+        if (archives.isEmpty()) return
+
+        val dialog = za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.newInstance(archives.map { it.name })
+        dialog.setOnExtractHere {
+            performExtract(archives, isSelectFolderMode = false)
+        }
+        dialog.setOnExtractToNewFolder {
+            promptExtractToNewFolder(archives)
+        }
+        dialog.setOnExtractAndSelectFolder {
+            performExtract(archives, isSelectFolderMode = true)
+        }
+        dialog.show(parentFragmentManager, za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.TAG)
+    }
+
+    private fun promptExtractToNewFolder(archives: List<File>) {
+        val ctx = context ?: return
+        if (archives.isEmpty()) return
+        val defaultName = if (archives.size == 1) archives.first().name.substringBeforeLast('.') else "Extracted"
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+
+        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) ctx.getColor(R.color.tv_text_hint) else ctx.getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) ctx.getColor(R.color.tv_button_focused_yellow) else ctx.getColor(R.color.ufm_primary)
+
+        val container = android.widget.LinearLayout(ctx).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val editText = android.widget.EditText(ctx).apply {
+            hint = getString(R.string.extract_new_folder_hint)
+            setText(defaultName)
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+
+        MaterialAlertDialogBuilder(ctx, dialogTheme)
+            .setTitle(getString(R.string.extract_new_folder_title))
+            .setIcon(R.drawable.ic_folder)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    android.widget.Toast.makeText(ctx, getString(R.string.new_folder_empty), android.widget.Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
+                } else {
+                    File(currentDir, name)
+                }
+                if (!newDir.exists()) {
+                    newDir.mkdirs()
+                }
+                performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+            }
+            .show()
+    }
+
+    private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
         if (archives.isEmpty()) return
 
         fileAdapter.exitSelectionMode()
@@ -2496,19 +2576,23 @@ class FileBrowserFragment : Fragment() {
 
             var extractedCount = 0
             var lastError: Exception? = null
+            val tempExtractDir = if (isSelectFolderMode) {
+                File(ctx.cacheDir, "extract_temp_${System.currentTimeMillis()}").apply { mkdirs() }
+            } else null
 
             withContext(Dispatchers.IO) {
                 for (archive in archives) {
                     var password: String? = null
                     var success = false
                     var attempts = 0
+                    val targetDest = tempExtractDir ?: customDestFolder ?: (archive.parentFile ?: currentDir)
 
                     while (!success && attempts < 3) {
                         val act = activity ?: break
                         val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
                             ctx,
                             archive,
-                            archive.parentFile ?: currentDir,
+                            targetDest,
                             password,
                             onProgress = {},
                             onConflict = { file, isFolder, destSizeBytes, applyToAllRef ->
@@ -2559,12 +2643,31 @@ class FileBrowserFragment : Fragment() {
             }
 
             progressDialog.dismiss()
-            loadDirectory(currentDir)
 
-            if (extractedCount > 0) {
-                android.widget.Toast.makeText(ctx, getString(R.string.extract_success, extractedCount), android.widget.Toast.LENGTH_SHORT).show()
-            } else if (lastError != null) {
-                android.widget.Toast.makeText(ctx, getString(R.string.extract_error, lastError?.message ?: "Extraction failed"), android.widget.Toast.LENGTH_SHORT).show()
+            if (isSelectFolderMode && tempExtractDir != null) {
+                if (extractedCount > 0) {
+                    val extractedFiles = tempExtractDir.listFiles()?.toList() ?: emptyList()
+                    if (extractedFiles.isNotEmpty()) {
+                        za.kilowatch.ultimatefilemanager.storage.FileClipboard.setExtract(extractedFiles, tempExtractDir)
+                        updatePasteFab()
+                        android.widget.Toast.makeText(ctx, R.string.extract_staged_snackbar, android.widget.Toast.LENGTH_LONG).show()
+                    } else {
+                        tempExtractDir.deleteRecursively()
+                        android.widget.Toast.makeText(ctx, getString(R.string.extract_error, "No files extracted"), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    tempExtractDir.deleteRecursively()
+                    if (lastError != null) {
+                        android.widget.Toast.makeText(ctx, getString(R.string.extract_error, lastError?.message ?: "Extraction failed"), android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                loadDirectory(currentDir)
+                if (extractedCount > 0) {
+                    android.widget.Toast.makeText(ctx, getString(R.string.extract_success, extractedCount), android.widget.Toast.LENGTH_SHORT).show()
+                } else if (lastError != null) {
+                    android.widget.Toast.makeText(ctx, getString(R.string.extract_error, lastError?.message ?: "Extraction failed"), android.widget.Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

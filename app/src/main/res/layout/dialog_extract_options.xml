@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mobile Extract Options Dialog — BottomSheet style.
+  Background uses bg_bottom_sheet which is ?attr/colorSurface → fully theme-aware.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/ufm_text_secondary"
+        android:alpha="0.3"
+        android:clipToOutline="true" />
+
+    <!-- Icon -->
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_extract"
+        app:tint="?attr/colorPrimary"
+        android:contentDescription="@null" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/extract_options_title"
+        android:textColor="@color/ufm_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="6dp" />
+
+    <!-- Subtitle / Archive Name -->
+    <TextView
+        android:id="@+id/txtSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ufm_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingBottom="20dp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="20dp">
+
+        <!-- Option 1: Extract to Current Folder -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExtractHere"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/extract_to_current_folder"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_folder"
+            app:iconTint="@android:color/white"
+            app:iconGravity="textStart"
+            android:backgroundTint="?attr/colorPrimary"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Option 2: Extract to New Folder -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExtractToNewFolder"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/extract_to_new_folder"
+            android:textColor="?attr/colorPrimary"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_folder"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1.5dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Option 3: Extract & Select Folder -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExtractAndSelectFolder"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="@string/extract_select_folder"
+            android:textColor="?attr/colorPrimary"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_extract"
+            app:iconTint="?attr/colorPrimary"
+            app:iconGravity="textStart"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="1.5dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Cancel -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:textColor="@color/ufm_text_secondary" />
+
+    </LinearLayout>
+
+</LinearLayout>

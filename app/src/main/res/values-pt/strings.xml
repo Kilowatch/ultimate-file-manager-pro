@@ -10634,6 +10634,41 @@ Tempo entre slides
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Extrair arquivo
+</string>
+    <string name="extract_to_current_folder">
+Extrair para a pasta atual
+</string>
+    <string name="extract_current_folder_desc">
+Extrair arquivos diretamente para esta pasta
+</string>
+    <string name="extract_to_new_folder">
+Extrair para nova pasta
+</string>
+    <string name="extract_to_new_folder_desc">
+Criar uma nova pasta e extrair arquivos nela
+</string>
+    <string name="extract_new_folder_title">
+Extrair para nova pasta
+</string>
+    <string name="extract_new_folder_hint">
+Nome da pasta
+</string>
+    <string name="extract_select_folder">
+Extrair e selecionar pasta
+</string>
+    <string name="extract_select_folder_desc">
+Extrair arquivos e escolher o destino usando o botão Extrair Aqui
+</string>
+    <string name="extract_staged_snackbar">
+Arquivos extraídos. Navegue até o destino e toque em Extrair Aqui.
+</string>
+    <string name="extract_move_success">
+%1$d item(ns) extraído(s) com sucesso
+</string>
 </resources>
 
 

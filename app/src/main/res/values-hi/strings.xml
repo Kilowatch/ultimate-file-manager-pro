@@ -10634,6 +10634,41 @@ GIF निर्माता सेटिंग्स
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+संग्रह निकालें
+</string>
+    <string name="extract_to_current_folder">
+वर्तमान फ़ोल्डर में निकालें
+</string>
+    <string name="extract_current_folder_desc">
+फ़ाइलों को सीधे इस फ़ोल्डर में निकालें
+</string>
+    <string name="extract_to_new_folder">
+नए फ़ोल्डर में निकालें
+</string>
+    <string name="extract_to_new_folder_desc">
+नया फ़ोल्डर बनाएं और उसमें फ़ाइलें निकालें
+</string>
+    <string name="extract_new_folder_title">
+नए फ़ोल्डर में निकालें
+</string>
+    <string name="extract_new_folder_hint">
+फ़ोल्डर का नाम
+</string>
+    <string name="extract_select_folder">
+निकालें और फ़ोल्डर चुनें
+</string>
+    <string name="extract_select_folder_desc">
+फ़ाइलें निकालें और \'यहां निकालें\' बटन का उपयोग करके गंतव्य चुनें
+</string>
+    <string name="extract_staged_snackbar">
+फ़ाइलें निकाली गईं। गंतव्य पर जाएं और \'यहां निकालें\' पर टैप करें।
+</string>
+    <string name="extract_move_success">
+%1$d आइटम सफलतापूर्वक निकाले गए
+</string>
 </resources>
 
 

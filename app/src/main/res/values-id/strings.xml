@@ -10634,6 +10634,41 @@ Waktu antar slide
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Ekstrak Arsip
+</string>
+    <string name="extract_to_current_folder">
+Ekstrak ke Folder Saat Ini
+</string>
+    <string name="extract_current_folder_desc">
+Ekstrak file langsung ke folder ini
+</string>
+    <string name="extract_to_new_folder">
+Ekstrak ke Folder Baru
+</string>
+    <string name="extract_to_new_folder_desc">
+Buat folder baru dan ekstrak file ke dalamnya
+</string>
+    <string name="extract_new_folder_title">
+Ekstrak ke Folder Baru
+</string>
+    <string name="extract_new_folder_hint">
+Nama folder
+</string>
+    <string name="extract_select_folder">
+Ekstrak &amp; Pilih Folder
+</string>
+    <string name="extract_select_folder_desc">
+Ekstrak file dan pilih tujuan menggunakan tombol Ekstrak di Sini
+</string>
+    <string name="extract_staged_snackbar">
+File diekstrak. Telusuri tujuan dan ketuk Ekstrak di Sini.
+</string>
+    <string name="extract_move_success">
+Berhasil mengekstrak %1$d item
+</string>
 </resources>
 
 

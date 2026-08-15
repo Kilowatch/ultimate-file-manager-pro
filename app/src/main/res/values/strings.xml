@@ -3747,6 +3747,19 @@
     <string name="action_change">Change</string>
     <string name="gif_creator_slide_interval_label">Time between slides</string>
     <string name="gif_creator_slide_interval_value">%1$.1fs</string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">Extract Archive</string>
+    <string name="extract_to_current_folder">Extract to Current Folder</string>
+    <string name="extract_current_folder_desc">Extract files directly into this folder</string>
+    <string name="extract_to_new_folder">Extract to New Folder</string>
+    <string name="extract_to_new_folder_desc">Create a new folder and extract files into it</string>
+    <string name="extract_new_folder_title">Extract to New Folder</string>
+    <string name="extract_new_folder_hint">Folder name</string>
+    <string name="extract_select_folder">Extract &amp; Select Folder</string>
+    <string name="extract_select_folder_desc">Extract files and choose destination using the Extract Here button</string>
+    <string name="extract_staged_snackbar">Files extracted. Browse to destination and tap Extract Here.</string>
+    <string name="extract_move_success">Extracted %1$d item(s) successfully</string>
 </resources>
 
 

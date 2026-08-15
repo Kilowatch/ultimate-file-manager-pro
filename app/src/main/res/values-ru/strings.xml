@@ -10634,6 +10634,41 @@ GIF успешно создан
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Извлечь архив
+</string>
+    <string name="extract_to_current_folder">
+Извлечь в текущую папку
+</string>
+    <string name="extract_current_folder_desc">
+Извлечь файлы прямо в эту папку
+</string>
+    <string name="extract_to_new_folder">
+Извлечь в новую папку
+</string>
+    <string name="extract_to_new_folder_desc">
+Создать новую папку и извлечь в неё файлы
+</string>
+    <string name="extract_new_folder_title">
+Извлечь в новую папку
+</string>
+    <string name="extract_new_folder_hint">
+Имя папки
+</string>
+    <string name="extract_select_folder">
+Извлечь и выбрать папку
+</string>
+    <string name="extract_select_folder_desc">
+Извлеките файлы и выберите место назначения с помощью кнопки «Извлечь сюда»
+</string>
+    <string name="extract_staged_snackbar">
+Файлы извлечены. Перейдите к месту назначения и нажмите «Извлечь сюда»
+</string>
+    <string name="extract_move_success">
+Успешно извлечено %1$d элемент(ов)
+</string>
 </resources>
 
 

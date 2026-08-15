@@ -2179,7 +2179,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         android.util.Log.e("PasteFeature", "NetworkBrowser updatePasteFab - netCount:$netCount, localCount:$localCount, readOnly:${share.readOnly}, isTv:$isTv, total:$total")
         
         if (total > 0) {
-            fabPaste.text = "${getString(R.string.action_paste)} ($total)"
+            if (localCount > 0 && za.kilowatch.ultimatefilemanager.storage.FileClipboard.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
+                fabPaste.text = "${getString(R.string.extract_here)} ($total)"
+                fabPaste.setIconResource(R.drawable.ic_extract)
+            } else {
+                fabPaste.text = "${getString(R.string.action_paste)} ($total)"
+                fabPaste.setIconResource(R.drawable.ic_paste)
+            }
             fabPaste.visibility = if (isTv) View.GONE else View.VISIBLE
         } else {
             fabPaste.visibility = View.GONE
@@ -2958,6 +2964,72 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun performNetworkExtractHere(archives: List<NetworkFile>) {
+        showNetworkExtractOptions(archives)
+    }
+
+    private fun showNetworkExtractOptions(archives: List<NetworkFile>) {
+        if (archives.isEmpty()) return
+        val dialog = za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.newInstance(archives.map { it.name })
+        dialog.setOnExtractHere {
+            performNetworkExtract(archives, customDestPath = null, isSelectFolderMode = false)
+        }
+        dialog.setOnExtractToNewFolder {
+            promptNetworkExtractToNewFolder(archives)
+        }
+        dialog.setOnExtractAndSelectFolder {
+            performNetworkExtract(archives, customDestPath = null, isSelectFolderMode = true)
+        }
+        dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.TAG)
+    }
+
+    private fun promptNetworkExtractToNewFolder(archives: List<NetworkFile>) {
+        if (archives.isEmpty()) return
+        val defaultName = if (archives.size == 1) archives.first().name.substringBeforeLast('.') else "Extracted"
+        val isOnTv = DeviceUtils.isTvDevice(this)
+
+        val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val editText = android.widget.EditText(this).apply {
+            hint = getString(R.string.extract_new_folder_hint)
+            setText(defaultName)
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+
+        MaterialAlertDialogBuilder(this, dialogTheme)
+            .setTitle(getString(R.string.extract_new_folder_title))
+            .setIcon(R.drawable.ic_folder)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    showPremiumSnackbar(getString(R.string.new_folder_empty))
+                    return@setPositiveButton
+                }
+                val remoteTarget = if (currentPath.isEmpty()) name else "$currentPath/$name"
+                performNetworkExtract(archives, customDestPath = remoteTarget, isSelectFolderMode = false)
+            }
+            .show()
+    }
+
+    private fun performNetworkExtract(archives: List<NetworkFile>, customDestPath: String? = null, isSelectFolderMode: Boolean) {
         if (archives.isEmpty()) return
         fileAdapter.exitSelectionMode()
 
@@ -2991,7 +3063,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val tempExtractDir = File(cacheDir, "net_extract_${System.currentTimeMillis()}")
             tempExtractDir.mkdirs()
 
+            if (customDestPath != null) {
+                try {
+                    when(share.type) {
+                        ShareType.SMB          -> SmbShareClient.mkdir(share, customDestPath)
+                        ShareType.FTP          -> FtpShareClient.mkdir(share, customDestPath)
+                        ShareType.TV           -> TvShareClient.mkdir(share, customDestPath)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, customDestPath)
+                        ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, customDestPath)
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, customDestPath)
+                        ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, customDestPath)
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, customDestPath)
+                        ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, customDestPath)
+                        ShareType.NFS          -> NfsShareClient.mkdir(share, customDestPath)
+                        ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
+                    }
+                } catch (_: Exception) {}
+            }
+
             try {
+                var extractedCount = 0
+                val stagedFiles = mutableListOf<File>()
+
                 for ((index, netArchive) in archives.withIndex()) {
                     withContext(Dispatchers.Main) {
                         statusText.text = getString(R.string.downloading_netfilename, netArchive.name)
@@ -3002,8 +3095,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     val tempArchiveFile = downloadNetworkEntry(netArchive, tempExtractDir)
 
                     // 2. Extract locally into subfolder
-                    val localExtractedDir = File(tempExtractDir, "extracted_${netArchive.name.substringBeforeLast('.')}")
-                    localExtractedDir.mkdirs()
+                    val localExtractedDir = File(tempExtractDir, "extracted_${netArchive.name.substringBeforeLast('.')}").apply { mkdirs() }
 
                     withContext(Dispatchers.Main) {
                         statusText.text = getString(R.string.archive_extracting)
@@ -3025,46 +3117,63 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         throw extractRes.exceptionOrNull() ?: Exception("Extraction failed")
                     }
 
-                    // 3. Upload extracted items to network share at currentPath
-                    withContext(Dispatchers.Main) {
-                        statusText.text = getString(R.string.uploading_to_sharename, share.name)
-                    }
-
-                    val itemsToUpload = localExtractedDir.listFiles() ?: emptyArray()
-                    for ((itemIndex, item) in itemsToUpload.withIndex()) {
-                        val remoteDestPath = if (currentPath.isEmpty()) item.name else "$currentPath/${item.name}"
-                        uploadLocalEntryToNetwork(item, remoteDestPath)
-                        withContext(Dispatchers.Main) {
-                            dialogProgress.progress = 60 + (((itemIndex + 1).toFloat() / itemsToUpload.size) * 40).toInt()
-                        }
-                    }
-
-                    // Clean up local temp for this archive
+                    extractedCount++
                     tempArchiveFile.delete()
-                    localExtractedDir.deleteRecursively()
+
+                    if (isSelectFolderMode) {
+                        val items = localExtractedDir.listFiles() ?: emptyArray()
+                        stagedFiles.addAll(items)
+                    } else {
+                        // 3. Upload extracted items to network share at currentPath or customDestPath
+                        withContext(Dispatchers.Main) {
+                            statusText.text = getString(R.string.uploading_to_sharename, share.name)
+                        }
+
+                        val itemsToUpload = localExtractedDir.listFiles() ?: emptyArray()
+                        val baseUploadPath = customDestPath ?: currentPath
+                        for ((itemIndex, item) in itemsToUpload.withIndex()) {
+                            val remoteDestPath = if (baseUploadPath.isEmpty()) item.name else "$baseUploadPath/${item.name}"
+                            uploadLocalEntryToNetwork(item, remoteDestPath)
+                            withContext(Dispatchers.Main) {
+                                dialogProgress.progress = 60 + (((itemIndex + 1).toFloat() / itemsToUpload.size) * 40).toInt()
+                            }
+                        }
+
+                        localExtractedDir.deleteRecursively()
+                    }
                 }
 
                 withContext(Dispatchers.Main) {
                     dialog.dismiss()
-                    showPremiumSnackbar(getString(R.string.extract_success))
-                    loadDirectory()
+                    if (isSelectFolderMode) {
+                        if (stagedFiles.isNotEmpty()) {
+                            za.kilowatch.ultimatefilemanager.storage.FileClipboard.setExtract(stagedFiles, tempExtractDir)
+                            updatePasteFab()
+                            showPremiumSnackbar(getString(R.string.extract_staged_snackbar))
+                        } else {
+                            tempExtractDir.deleteRecursively()
+                            showPremiumSnackbar(getString(R.string.extract_error, "No files extracted"))
+                        }
+                    } else {
+                        tempExtractDir.deleteRecursively()
+                        showPremiumSnackbar(getString(R.string.extract_success, extractedCount))
+                        loadDirectory()
+                    }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     dialog.dismiss()
+                    tempExtractDir.deleteRecursively()
                     val msg = e.message ?: "Unknown error"
                     showPremiumSnackbar(getString(R.string.extract_error, msg))
                     loadDirectory()
                 }
-            } finally {
-                tempExtractDir.deleteRecursively()
             }
         }
 
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             job.cancel()
             dialog.dismiss()
-            showPremiumSnackbar(getString(R.string.archive_extract_error))
         }
     }
 
@@ -3642,6 +3751,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val hasNet = NetworkClipboard.hasItems()
         val hasLocal = za.kilowatch.ultimatefilemanager.storage.FileClipboard.hasItems()
         if (!hasNet && !hasLocal) return
+        val isExtractOperation = (hasLocal && za.kilowatch.ultimatefilemanager.storage.FileClipboard.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT)
 
 
 
@@ -4163,7 +4273,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE && !isCancelledByUser) {
+                        if ((op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) && !isCancelledByUser) {
                             try { source.deleteRecursively() } catch(_: Exception) {}
                             FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, effectiveDest)
                         } else if (!isCancelledByUser) {
@@ -4198,7 +4308,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                                 { conn -> currentTransferConnection = conn }
                             )
                             currentTransferConnection = null
-                            if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE) {
+                            if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
                                 // Zero-byte guard: query remote dest size before deleting local source
                                 val remoteSize = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.getRemoteFileSize(share, finalPath)
                                 if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
@@ -4237,19 +4347,12 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 isTransferring = false
                 dialog.dismiss()
                 
-                if (isQuickTransferPickerMode) {
-                    val result = Intent().apply {
-                        putExtra("QT_SUCCESS_COUNT", successCount)
-                        putExtra("QT_FAIL_COUNT", failCount)
-                    }
-                    setResult(RESULT_OK, result)
-                    finish()
-                    return@withContext
-                }
-
                 updatePasteFab()
                 loadDirectory()
-                if (failCount == 0 && successCount > 0) showPremiumSnackbar(getString(R.string.paste_success, successCount))
+                if (failCount == 0 && successCount > 0) {
+                    if (isExtractOperation) showPremiumSnackbar(getString(R.string.extract_move_success, successCount))
+                    else showPremiumSnackbar(getString(R.string.paste_success, successCount))
+                }
                 else if (failCount > 0) {
                     val detail = lastErrorMessage?.let { "\n$it" } ?: ""
                     showPremiumSnackbar(getString(R.string.paste_error) + detail)

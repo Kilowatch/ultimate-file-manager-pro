@@ -1851,10 +1851,11 @@ class TwinWindowActivity : AppCompatActivity() {
         if (!hasNet && !hasLocal) return
 
         val clipboardItems = mutableListOf<Any>()
+        val isExtract = (!hasNet && hasLocal && za.kilowatch.ultimatefilemanager.storage.FileClipboard.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT)
         val isMove = if (hasNet) {
             za.kilowatch.ultimatefilemanager.network.NetworkClipboard.operation == za.kilowatch.ultimatefilemanager.network.NetworkClipboard.Operation.MOVE
         } else {
-            za.kilowatch.ultimatefilemanager.storage.FileClipboard.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE
+            za.kilowatch.ultimatefilemanager.storage.FileClipboard.operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || isExtract
         }
 
         if (hasLocal) {
@@ -1864,7 +1865,7 @@ class TwinWindowActivity : AppCompatActivity() {
             clipboardItems.addAll(za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files)
         }
 
-        val actionLabel = if (isMove) getString(R.string.action_move) else getString(R.string.action_copy)
+        val actionLabel = if (isExtract) getString(R.string.extract_here) else if (isMove) getString(R.string.action_move) else getString(R.string.action_copy)
         val destName = getDestName(targetFragment)
         val message = getString(R.string.actionlabel_filessize_items_to_destname, actionLabel, clipboardItems.size, destName)
 

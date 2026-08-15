@@ -791,6 +791,70 @@ class SearchActivity : AppCompatActivity() {
     private fun performExtractHere(file: File) {
         if (!za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(file)) return
 
+        val dialog = za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.newInstance(listOf(file.name))
+        dialog.setOnExtractHere {
+            performExtract(file, isSelectFolderMode = false)
+        }
+        dialog.setOnExtractToNewFolder {
+            promptExtractToNewFolder(file)
+        }
+        dialog.setOnExtractAndSelectFolder {
+            performExtract(file, isSelectFolderMode = true)
+        }
+        dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.TAG)
+    }
+
+    private fun promptExtractToNewFolder(file: File) {
+        val defaultName = file.name.substringBeforeLast('.')
+        val isOnTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+
+        val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val editText = android.widget.EditText(this).apply {
+            hint = getString(R.string.extract_new_folder_hint)
+            setText(defaultName)
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+
+        MaterialAlertDialogBuilder(this, dialogTheme)
+            .setTitle(getString(R.string.extract_new_folder_title))
+            .setIcon(R.drawable.ic_folder)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    showSnackbar(getString(R.string.new_folder_empty))
+                    return@setPositiveButton
+                }
+                val parent = file.parentFile ?: filesDir
+                val newDir = File(parent, name)
+                if (!newDir.exists()) {
+                    newDir.mkdirs()
+                }
+                performExtract(file, customDestFolder = newDir, isSelectFolderMode = false)
+            }
+            .show()
+    }
+
+    private fun performExtract(file: File, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
         scope.launch(Dispatchers.Main) {
             val progressDialog = MaterialAlertDialogBuilder(this@SearchActivity, R.style.UFM_Dialog)
                 .setTitle(R.string.extract_progress_title)
@@ -803,13 +867,17 @@ class SearchActivity : AppCompatActivity() {
             var success = false
             var attempts = 0
             var lastError: Exception? = null
+            val tempExtractDir = if (isSelectFolderMode) {
+                File(cacheDir, "extract_temp_${System.currentTimeMillis()}").apply { mkdirs() }
+            } else null
+            val targetDest = tempExtractDir ?: customDestFolder ?: (file.parentFile ?: filesDir)
 
             withContext(Dispatchers.IO) {
                 while (!success && attempts < 3) {
                     val result = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.extract(
                         this@SearchActivity,
                         file,
-                        file.parentFile ?: filesDir,
+                        targetDest,
                         password,
                         onProgress = {},
                         onConflict = { conflictFile, isFolder, destSizeBytes, applyToAllRef ->
@@ -857,10 +925,29 @@ class SearchActivity : AppCompatActivity() {
 
             progressDialog.dismiss()
 
-            if (success) {
-                showSnackbar(getString(R.string.extract_success, 1))
-            } else if (lastError != null) {
-                showSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+            if (isSelectFolderMode && tempExtractDir != null) {
+                if (success) {
+                    val extractedFiles = tempExtractDir.listFiles()?.toList() ?: emptyList()
+                    if (extractedFiles.isNotEmpty()) {
+                        za.kilowatch.ultimatefilemanager.storage.FileClipboard.setExtract(extractedFiles, tempExtractDir)
+                        android.widget.Toast.makeText(this@SearchActivity, R.string.extract_staged_snackbar, android.widget.Toast.LENGTH_LONG).show()
+                        finish()
+                    } else {
+                        tempExtractDir.deleteRecursively()
+                        showSnackbar(getString(R.string.extract_error, "No files extracted"))
+                    }
+                } else {
+                    tempExtractDir.deleteRecursively()
+                    if (lastError != null) {
+                        showSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+                    }
+                }
+            } else {
+                if (success) {
+                    showSnackbar(getString(R.string.extract_success, 1))
+                } else if (lastError != null) {
+                    showSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+                }
             }
         }
     }

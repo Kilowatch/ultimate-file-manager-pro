@@ -10634,6 +10634,41 @@ GIF 생성 설정
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+압축 파일 풀기
+</string>
+    <string name="extract_to_current_folder">
+현재 폴더에 풀기
+</string>
+    <string name="extract_current_folder_desc">
+이 폴더에 파일을 직접 압축 풀기
+</string>
+    <string name="extract_to_new_folder">
+새 폴더에 풀기
+</string>
+    <string name="extract_to_new_folder_desc">
+새 폴더를 만들고 그 안에 파일을 압축 풀기
+</string>
+    <string name="extract_new_folder_title">
+새 폴더에 풀기
+</string>
+    <string name="extract_new_folder_hint">
+폴더 이름
+</string>
+    <string name="extract_select_folder">
+압축 풀기 및 폴더 선택
+</string>
+    <string name="extract_select_folder_desc">
+파일을 압축 풀고 여기에 풀기 버튼으로 대상을 선택하세요.
+</string>
+    <string name="extract_staged_snackbar">
+파일이 압축 풀렸습니다. 대상 폴더로 이동한 후 여기에 풀기를 누르세요.
+</string>
+    <string name="extract_move_success">
+%1$d개 항목을 성공적으로 압축 풀었습니다.
+</string>
 </resources>
 
 

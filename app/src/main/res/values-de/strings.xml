@@ -10634,6 +10634,41 @@ Zeit zwischen den Folien
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Archiv extrahieren
+</string>
+    <string name="extract_to_current_folder">
+In den aktuellen Ordner extrahieren
+</string>
+    <string name="extract_current_folder_desc">
+Dateien direkt in diesen Ordner extrahieren
+</string>
+    <string name="extract_to_new_folder">
+In einen neuen Ordner extrahieren
+</string>
+    <string name="extract_to_new_folder_desc">
+Einen neuen Ordner erstellen und Dateien hinein extrahieren
+</string>
+    <string name="extract_new_folder_title">
+In einen neuen Ordner extrahieren
+</string>
+    <string name="extract_new_folder_hint">
+Ordnername
+</string>
+    <string name="extract_select_folder">
+Extrahieren und Ordner auswählen
+</string>
+    <string name="extract_select_folder_desc">
+Dateien extrahieren und das Ziel über die Schaltfläche \\\'Hier extrahieren\\\' auswählen
+</string>
+    <string name="extract_staged_snackbar">
+Dateien extrahiert. Navigiere zum Ziel und tippe auf \\\'Hier extrahieren\\\'.
+</string>
+    <string name="extract_move_success">
+%1$d Element(e) erfolgreich extrahiert
+</string>
 </resources>
 
 

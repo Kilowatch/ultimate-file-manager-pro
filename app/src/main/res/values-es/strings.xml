@@ -10646,6 +10646,41 @@ Tiempo entre diapositivas
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+Extraer archivo
+</string>
+    <string name="extract_to_current_folder">
+Extraer en la carpeta actual
+</string>
+    <string name="extract_current_folder_desc">
+Extraer archivos directamente en esta carpeta
+</string>
+    <string name="extract_to_new_folder">
+Extraer en carpeta nueva
+</string>
+    <string name="extract_to_new_folder_desc">
+Crear una carpeta nueva y extraer archivos en ella
+</string>
+    <string name="extract_new_folder_title">
+Extraer en carpeta nueva
+</string>
+    <string name="extract_new_folder_hint">
+Nombre de la carpeta
+</string>
+    <string name="extract_select_folder">
+Extraer y seleccionar carpeta
+</string>
+    <string name="extract_select_folder_desc">
+Extraer archivos y elegir el destino con el botón Extraer aquí
+</string>
+    <string name="extract_staged_snackbar">
+Archivos extraídos. Navega al destino y toca Extraer aquí.
+</string>
+    <string name="extract_move_success">
+Se extrajeron %1$d archivo(s) correctamente
+</string>
 </resources>
 
 

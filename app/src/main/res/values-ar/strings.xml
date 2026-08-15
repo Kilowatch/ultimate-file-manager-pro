@@ -10634,6 +10634,41 @@ Box
     <string name="gif_creator_slide_interval_value">
 %1$.1fs
 </string>
+
+    <!-- Extract Options Dialog -->
+    <string name="extract_options_title">
+استخراج الأرشيف
+</string>
+    <string name="extract_to_current_folder">
+استخراج إلى المجلد الحالي
+</string>
+    <string name="extract_current_folder_desc">
+استخراج الملفات مباشرة إلى هذا المجلد
+</string>
+    <string name="extract_to_new_folder">
+استخراج إلى مجلد جديد
+</string>
+    <string name="extract_to_new_folder_desc">
+إنشاء مجلد جديد واستخراج الملفات إليه
+</string>
+    <string name="extract_new_folder_title">
+استخراج إلى مجلد جديد
+</string>
+    <string name="extract_new_folder_hint">
+اسم المجلد
+</string>
+    <string name="extract_select_folder">
+استخراج وتحديد المجلد
+</string>
+    <string name="extract_select_folder_desc">
+استخراج الملفات واختيار الوجهة باستخدام زر استخراج هنا
+</string>
+    <string name="extract_staged_snackbar">
+تم استخراج الملفات. تصفح إلى الوجهة وانقر على استخراج هنا
+</string>
+    <string name="extract_move_success">
+تم استخراج %1$d عنصر بنجاح
+</string>
 </resources>
 
 

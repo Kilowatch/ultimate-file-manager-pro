@@ -3267,8 +3267,13 @@ class FileBrowserActivity : AppCompatActivity() {
         val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
 
         if (total > 0) {
-            val label = "${getString(R.string.action_paste)} ($total)"
-            fabPaste.text = label
+            if (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT) {
+                fabPaste.text = "${getString(R.string.extract_here)} ($total)"
+                fabPaste.setIconResource(R.drawable.ic_extract)
+            } else {
+                fabPaste.text = "${getString(R.string.action_paste)} ($total)"
+                fabPaste.setIconResource(R.drawable.ic_paste)
+            }
             fabPaste.visibility = View.VISIBLE
         } else {
             fabPaste.visibility = View.GONE
@@ -3545,6 +3550,7 @@ class FileBrowserActivity : AppCompatActivity() {
         val hasLocal = FileClipboard.hasItems()
         val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
         if (!hasLocal && !hasNet) return
+        val isExtractOperation = (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT)
 
 
 
@@ -3747,7 +3753,7 @@ class FileBrowserActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE) {
+                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
                             try { 
                                 if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
@@ -3798,7 +3804,7 @@ class FileBrowserActivity : AppCompatActivity() {
                             if (pendingIndices.size >= 50) flushIndices()
                         }
 
-                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE) {
+                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
                             // Zero-byte guard: only delete source if destination has data
                             if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                                     writtenDest.length(), source.length(), source.name)) {
@@ -4073,7 +4079,10 @@ class FileBrowserActivity : AppCompatActivity() {
                 loadDirectory(currentDir)
                 InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
                 
-                if (failCount == 0 && successCount > 0) showPremiumSnackbar(getString(R.string.paste_success, successCount))
+                if (failCount == 0 && successCount > 0) {
+                    if (isExtractOperation) showPremiumSnackbar(getString(R.string.extract_move_success, successCount))
+                    else showPremiumSnackbar(getString(R.string.paste_success, successCount))
+                }
                 else if (failCount > 0) showPremiumSnackbar(getString(R.string.paste_error))
             }
             } finally {
@@ -4666,7 +4675,81 @@ class FileBrowserActivity : AppCompatActivity() {
     }
 
     private fun performExtractHere(files: List<File>) {
+        showExtractOptions(files)
+    }
+
+    private fun showExtractOptions(files: List<File>) {
         val archives = files.filter { ArchiveManager.isSupportedArchive(it) }
+        if (archives.isEmpty()) return
+
+        val dialog = za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.newInstance(archives.map { it.name })
+        dialog.setOnExtractHere {
+            performExtract(archives, isSelectFolderMode = false)
+        }
+        dialog.setOnExtractToNewFolder {
+            promptExtractToNewFolder(archives)
+        }
+        dialog.setOnExtractAndSelectFolder {
+            performExtract(archives, isSelectFolderMode = true)
+        }
+        dialog.show(supportFragmentManager, za.kilowatch.ultimatefilemanager.archive.ExtractOptionsDialog.TAG)
+    }
+
+    private fun promptExtractToNewFolder(archives: List<File>) {
+        if (archives.isEmpty()) return
+        val defaultName = if (archives.size == 1) archives.first().name.substringBeforeLast('.') else "Extracted"
+        val isOnTv = DeviceUtils.isTvDevice(this)
+
+        val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
+        val textColorPrimary = if (isOnTv) getColor(R.color.tv_text_primary) else getColor(R.color.ufm_text_primary)
+        val textColorHint = if (isOnTv) getColor(R.color.tv_text_hint) else getColor(R.color.ufm_text_hint)
+        val accentColor = if (isOnTv) getColor(R.color.tv_button_focused_yellow) else getColor(R.color.ufm_primary)
+
+        val container = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(64, 32, 64, 16)
+            setBackgroundColor(bgColor)
+        }
+
+        val editText = android.widget.EditText(this).apply {
+            hint = getString(R.string.extract_new_folder_hint)
+            setText(defaultName)
+            selectAll()
+            setSingleLine(true)
+            setTextColor(textColorPrimary)
+            setHintTextColor(textColorHint)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(accentColor)
+            requestFocus()
+        }
+        container.addView(editText)
+
+        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+
+        MaterialAlertDialogBuilder(this, dialogTheme)
+            .setTitle(getString(R.string.extract_new_folder_title))
+            .setIcon(R.drawable.ic_folder)
+            .setView(container)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.extract_to_new_folder)) { _, _ ->
+                val name = editText.text.toString().trim()
+                if (name.isEmpty()) {
+                    showPremiumSnackbar(getString(R.string.new_folder_empty))
+                    return@setPositiveButton
+                }
+                val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
+                } else {
+                    File(currentDir, name)
+                }
+                if (!newDir.exists()) {
+                    newDir.mkdirs()
+                }
+                performExtract(archives, customDestFolder = newDir, isSelectFolderMode = false)
+            }
+            .show()
+    }
+
+    private fun performExtract(archives: List<File>, customDestFolder: File? = null, isSelectFolderMode: Boolean) {
         if (archives.isEmpty()) return
 
         fileAdapter.exitSelectionMode()
@@ -4681,18 +4764,22 @@ class FileBrowserActivity : AppCompatActivity() {
 
             var extractedCount = 0
             var lastError: Exception? = null
+            val tempExtractDir = if (isSelectFolderMode) {
+                File(cacheDir, "extract_temp_${System.currentTimeMillis()}").apply { mkdirs() }
+            } else null
 
             withContext(Dispatchers.IO) {
                 for (archive in archives) {
                     var password: String? = null
                     var success = false
                     var attempts = 0
+                    val targetDest = tempExtractDir ?: customDestFolder ?: (archive.parentFile ?: currentDir)
 
                     while (!success && attempts < 3) {
                         val result = ArchiveManager.extract(
                             this@FileBrowserActivity,
                             archive,
-                            archive.parentFile ?: currentDir,
+                            targetDest,
                             password,
                             onProgress = {},
                             onConflict = { file, isFolder, destSizeBytes, applyToAllRef ->
@@ -4743,12 +4830,31 @@ class FileBrowserActivity : AppCompatActivity() {
             }
 
             progressDialog.dismiss()
-            loadDirectory(currentDir)
 
-            if (extractedCount > 0) {
-                showPremiumSnackbar(getString(R.string.extract_success, extractedCount))
-            } else if (lastError != null) {
-                showPremiumSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+            if (isSelectFolderMode && tempExtractDir != null) {
+                if (extractedCount > 0) {
+                    val extractedFiles = tempExtractDir.listFiles()?.toList() ?: emptyList()
+                    if (extractedFiles.isNotEmpty()) {
+                        FileClipboard.setExtract(extractedFiles, tempExtractDir)
+                        updatePasteFab()
+                        showPremiumSnackbar(getString(R.string.extract_staged_snackbar))
+                    } else {
+                        tempExtractDir.deleteRecursively()
+                        showPremiumSnackbar(getString(R.string.extract_error, "No files extracted"))
+                    }
+                } else {
+                    tempExtractDir.deleteRecursively()
+                    if (lastError != null) {
+                        showPremiumSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+                    }
+                }
+            } else {
+                loadDirectory(currentDir)
+                if (extractedCount > 0) {
+                    showPremiumSnackbar(getString(R.string.extract_success, extractedCount))
+                } else if (lastError != null) {
+                    showPremiumSnackbar(getString(R.string.extract_error, lastError?.message ?: "Extraction failed"))
+                }
             }
         }
     }
