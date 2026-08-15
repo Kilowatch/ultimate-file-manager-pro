@@ -1532,7 +1532,7 @@ Zaten mevcut
 \\\"%1$s\\\" hedefte zaten mevcut.
 </string>
     <string name="conflict_message_folder">
-\\\"%1$s\\\" klasörü zaten mevcut. İçerikler birleştirilecek ve çakışmalar ayrı ayrı çözülecek.
+Hedefte \"%1$s\" klasörü zaten mevcut.
 </string>
     <string name="conflict_overwrite">
 Üzerine Yaz

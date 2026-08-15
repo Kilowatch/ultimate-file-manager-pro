@@ -1110,17 +1110,43 @@ class TwinWindowActivity : AppCompatActivity() {
                                 }
                                 // ── Generic File handling (non-AppItem) ────────────────────────
                                 if (actualItem.isDirectory) {
-                                    destBase.mkdirs()
+                                    val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                                    else destBase.exists()
+
+                                    var effectiveDest = destBase
+                                    if (hasConflict) {
+                                        val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                                this@TwinWindowActivity, itemName, true, -1L, applyToAllRef
+                                            ).also { if (applyToAllRef[0]) globalAction = it }
+                                        }
+                                        when (resolvedAction) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                                isCancelled = true
+                                                throw CancellationException()
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(File(currentDestPath), itemName)
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                                effectiveDest = destBase
+                                            }
+                                        }
+                                    }
+
+                                    effectiveDest.mkdirs()
                                     // Index the new folder immediately
                                     if (storageId.isNotEmpty() && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                        pendingIndices.add(metadataExtractor.extractMetadata(destBase, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
+                                        pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
                                         if (pendingIndices.size >= 50) flushIndices()
                                     }
                                     val children = actualItem.listFiles()
                                     if (children != null) {
                                         for (child in children) { 
                                             if (isCancelled) break
-                                            processItem(child, destBase.absolutePath) 
+                                            processItem(child, effectiveDest.absolutePath) 
                                         }
                                     }
                                     if (isMove && !isCancelled && item !is AppItem) { 
@@ -1132,9 +1158,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                             }
                                             za.kilowatch.ultimatefilemanager.UfmApplication.indexingRepository.deleteTreeFromIndex(actualItem.absolutePath)
                                         } catch (_: Exception) {} 
-                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, destBase.absolutePath)
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, effectiveDest.absolutePath)
                                     } else if (!isCancelled && item !is AppItem) {
-                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, destBase.absolutePath)
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, effectiveDest.absolutePath)
                                     }
                                 } else {
                                     val hasConflict = destBase.exists()
@@ -1183,7 +1209,37 @@ class TwinWindowActivity : AppCompatActivity() {
                                 }
                             } else if (actualItem is NetworkFile && srcShare != null) {
                                 if (actualItem.isDirectory) {
-                                    destBase.mkdirs()
+                                    val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                                        za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                                    else destBase.exists()
+
+                                    var effectiveDest = destBase
+                                    if (hasConflict) {
+                                        val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                                this@TwinWindowActivity, itemName, true, -1L, applyToAllRef
+                                            ).also { if (applyToAllRef[0]) globalAction = it }
+                                        }
+                                        when (resolvedAction) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                                isCancelled = true
+                                                throw CancellationException()
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(File(currentDestPath), itemName)
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                                effectiveDest = destBase
+                                            }
+                                        }
+                                    }
+
+                                    effectiveDest.mkdirs()
+                                    if (storageId.isNotEmpty() && !UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                                        pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor.HashAlgorithm.NONE))
+                                        if (pendingIndices.size >= 50) flushIndices()
+                                    }
                                     val children = when(srcShare.type) {
                                         ShareType.SMB -> SmbShareClient.listFiles(srcShare, actualItem.path)
                                         ShareType.FTP -> FtpShareClient.listFiles(srcShare, actualItem.path)
@@ -1199,9 +1255,10 @@ class TwinWindowActivity : AppCompatActivity() {
                                     }
                                     for (child in children) {
                                         if (isCancelled) break
-                                        processItem(child, destBase.absolutePath) 
+                                        processItem(child, effectiveDest.absolutePath) 
                                     }
                                     if (isMove && !isCancelled) { try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {} }
+                                    FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, effectiveDest.absolutePath)
                                 } else {
                                     val hasConflict = destBase.exists()
                                     val resolvedAction = if (hasConflict) {
@@ -1277,29 +1334,71 @@ class TwinWindowActivity : AppCompatActivity() {
 
                             if (actualItem is File) {
                                 if (actualItem.isDirectory) {
+                                    val conflictData = try {
+                                        val list = when(dstShare.type) {
+                                            ShareType.SMB -> SmbShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.FTP -> FtpShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.TV -> TvShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.DROPBOX -> DropboxShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.WEBDAV -> WebDavShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.NFS -> NfsShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.DLNA -> DlnaShareClient.listFiles(dstShare, currentDestPath)
+                                        }
+                                        Pair(za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, list), list)
+                                    } catch(_: Exception) { Pair(false, emptyList<NetworkFile>()) }
+
+                                    val hasConflict = conflictData.first
+                                    val destChildren = conflictData.second
+
+                                    var effectiveDest = targetPath
+                                    if (hasConflict) {
+                                        val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                                this@TwinWindowActivity, itemName, true, -1L, applyToAllRef
+                                            ).also { if (applyToAllRef[0]) globalAction = it }
+                                        }
+                                        when (resolvedAction) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                                isCancelled = true
+                                                throw CancellationException()
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(currentDestPath, itemName, destChildren, isFolder = true)
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                                effectiveDest = targetPath
+                                            }
+                                        }
+                                    }
+
                                     try {
                                         when(dstShare.type) {
-                                            ShareType.SMB -> SmbShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.FTP -> FtpShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.TV -> TvShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.DROPBOX -> DropboxShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.WEBDAV -> WebDavShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.NFS -> NfsShareClient.mkdir(dstShare, targetPath)
+                                            ShareType.SMB -> SmbShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.FTP -> FtpShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.TV -> TvShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.DROPBOX -> DropboxShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.WEBDAV -> WebDavShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.NFS -> NfsShareClient.mkdir(dstShare, effectiveDest)
                                             ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                         }
                                     } catch(e: Exception) {
-                                        za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "mkdir failed for targetPath=$targetPath: ${e.message}", e)
+                                        za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "mkdir failed for effectiveDest=$effectiveDest: ${e.message}", e)
                                     }
                                     val children = actualItem.listFiles()
                                     if (children != null) {
                                         for (child in children) { 
                                             if (isCancelled) break
                                             coroutineContext.ensureActive()
-                                            processItemNet(child, targetPath) 
+                                            processItemNet(child, effectiveDest) 
                                         }
                                     }
                                     if (isMove && !isCancelled && item !is AppItem) {
@@ -1310,9 +1409,9 @@ class TwinWindowActivity : AppCompatActivity() {
                                                 actualItem.delete()
                                             }
                                         } catch (_: Exception) {}
-                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, targetPath)
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.absolutePath, effectiveDest)
                                     } else if (!isCancelled && item !is AppItem) {
-                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, targetPath)
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.absolutePath, effectiveDest)
                                     }
                                 } else {
                                     // Conflict check against currentFiles (memory-only where possible, but here we just re-list or use an empty list for simplicity in common cases)
@@ -1379,26 +1478,68 @@ class TwinWindowActivity : AppCompatActivity() {
                                 }
                             } else if (actualItem is NetworkFile && srcShare != null) {
                                 if (actualItem.isDirectory) {
+                                    val conflictData = try {
+                                        val list = when(dstShare.type) {
+                                            ShareType.SMB -> SmbShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.FTP -> FtpShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.TV -> TvShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.DROPBOX -> DropboxShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.WEBDAV -> WebDavShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.NFS -> NfsShareClient.listFiles(dstShare, currentDestPath)
+                                            ShareType.DLNA -> DlnaShareClient.listFiles(dstShare, currentDestPath)
+                                        }
+                                        Pair(za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, list), list)
+                                    } catch(_: Exception) { Pair(false, emptyList<NetworkFile>()) }
+
+                                    val hasConflict = conflictData.first
+                                    val destChildren = conflictData.second
+
+                                    var effectiveDest = targetPath
+                                    if (hasConflict) {
+                                        val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                                this@TwinWindowActivity, itemName, true, -1L, applyToAllRef
+                                            ).also { if (applyToAllRef[0]) globalAction = it }
+                                        }
+                                        when (resolvedAction) {
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                                isCancelled = true
+                                                throw CancellationException()
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> return
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                                effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(currentDestPath, itemName, destChildren, isFolder = true)
+                                            }
+                                            za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                                effectiveDest = targetPath
+                                            }
+                                        }
+                                    }
+
                                     try {
                                         when(dstShare.type) {
-                                            ShareType.SMB -> SmbShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.FTP -> FtpShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.TV -> TvShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(dstShare, targetPath)
-                                            ShareType.DROPBOX -> DropboxShareClient.mkdir(dstShare, targetPath)
-                                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(dstShare, targetPath)
-                                        ShareType.WEBDAV -> WebDavShareClient.mkdir(dstShare, targetPath)
-                                        ShareType.NFS -> NfsShareClient.mkdir(dstShare, targetPath)
-                                        ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                                            ShareType.SMB -> SmbShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.FTP -> FtpShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.TV -> TvShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.ONEDRIVE -> OnedriveShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.DROPBOX -> DropboxShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.WEBDAV -> WebDavShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.NFS -> NfsShareClient.mkdir(dstShare, effectiveDest)
+                                            ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                                        }
+                                    } catch(e: Exception) {
+                                        za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "mkdir failed for effectiveDest=$effectiveDest: ${e.message}", e)
                                     }
-                                } catch(e: Exception) {
-                                    za.kilowatch.ultimatefilemanager.util.GoRoLog.e("TwinWindow", "mkdir failed for targetPath=$targetPath: ${e.message}", e)
-                                }
-                                val children = when(srcShare.type) {
-                                    ShareType.SMB -> SmbShareClient.listFiles(srcShare, actualItem.path)
-                                    ShareType.FTP -> FtpShareClient.listFiles(srcShare, actualItem.path)
+                                    val children = when(srcShare.type) {
+                                        ShareType.SMB -> SmbShareClient.listFiles(srcShare, actualItem.path)
+                                        ShareType.FTP -> FtpShareClient.listFiles(srcShare, actualItem.path)
                                         ShareType.TV -> TvShareClient.listFiles(srcShare, actualItem.path)
                                         ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(srcShare, actualItem.path)
                                         ShareType.ONEDRIVE -> OnedriveShareClient.listFiles(srcShare, actualItem.path)
@@ -1412,13 +1553,13 @@ class TwinWindowActivity : AppCompatActivity() {
                                     for (child in children) { 
                                         if (isCancelled) break
                                         coroutineContext.ensureActive()
-                                        processItemNet(child, targetPath) 
+                                        processItemNet(child, effectiveDest) 
                                     }
                                     if (isMove && !isCancelled) {
                                         try { TransferConflictHelper.deleteNetworkDirRecursively(srcShare, actualItem.path) } catch (_: Exception) {}
-                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, targetPath)
+                                        FileTagsManager.onPathMoved(this@TwinWindowActivity, actualItem.path, effectiveDest)
                                     } else if (!isCancelled) {
-                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, targetPath)
+                                        FileTagsManager.onPathCopied(this@TwinWindowActivity, actualItem.path, effectiveDest)
                                     }
                                 } else {
                                     val conflictData = try {

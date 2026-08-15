@@ -1532,7 +1532,7 @@ Sudah ada
 \"%1$s\" sudah ada di tujuan.
 </string>
     <string name="conflict_message_folder">
-Folder \"%1$s\" sudah ada. Konten akan digabungkan dan konflik diselesaikan secara individual.
+Folder \"%1$s\" sudah ada di lokasi tujuan.
 </string>
     <string name="conflict_overwrite">
 Timpa

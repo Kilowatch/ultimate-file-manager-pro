@@ -1532,7 +1532,7 @@ Ya existe
 «%1$s» ya existe en el destino.
 </string>
     <string name="conflict_message_folder">
-La carpeta «%1$s» ya existe. Los contenidos se fusionarán y los conflictos se resolverán individualmente.
+La carpeta \"%1$s\" ya existe en el destino.
 </string>
     <string name="conflict_overwrite">
 Sobrescribir

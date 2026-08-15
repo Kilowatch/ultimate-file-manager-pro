@@ -1532,7 +1532,7 @@ APK
 宛先に「%1$s」は既に存在します。
 </string>
     <string name="conflict_message_folder">
-フォルダ「%1$s」は既に存在します。コンテンツはマージされ、競合は個別に解決されます。
+フォルダー「%1$s」は保存先に既に存在します。
 </string>
     <string name="conflict_overwrite">
 上書き

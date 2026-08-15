@@ -5,9 +5,11 @@ All notable changes to **Ultimate File Manager Pro (FOSS Edition)** are document
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8.7] — 2026-08-14
- 
- 
+## [1.8.7] — 2026-08-15
+
+### Added
+- **"Keep Both" Folder Collision Handling** — Improved folder copy and move behavior across Local, Network (SMB, FTP, SFTP, NFS, TV Share), and Cloud Storage (Google Drive, Microsoft OneDrive, Dropbox, AWS S3, iDrive E2, WebDAV, rclone) on Mobile and Android TV. When pasting or moving a folder to a destination where a folder with the same name exists, the conflict dialog is now presented at the folder level. Choosing "Keep Both" auto-increments the target directory name (e.g., `Folder (1)`) and transfers all source contents into the newly renamed, isolated folder instead of merging. "Overwrite" maintains standard merge behavior, "Skip" skips the entire folder, and "Cancel" cancels the transfer. Supported in both Single-Pane and Dual-Pane (Twin Window) transfer modes.
+
 ## [1.8.6] — 2026-08-14
 
 ### Fixed

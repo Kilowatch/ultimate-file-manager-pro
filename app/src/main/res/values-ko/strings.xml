@@ -1532,7 +1532,7 @@ APK
 \"%1$s\"이(가) 대상에 이미 존재합니다.
 </string>
     <string name="conflict_message_folder">
-폴더 \"%1$s\"이(가) 이미 존재합니다. 내용이 병합되고 충돌이 개별적으로 해결됩니다.
+대상 위치에 \"%1$s\" 폴더가 이미 존재합니다.
 </string>
     <string name="conflict_overwrite">
 덮어쓰기

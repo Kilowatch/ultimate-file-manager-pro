@@ -544,7 +544,7 @@
     <!-- Transfer Conflict Resolution -->
     <string name="conflict_title">Already exists</string>
     <string name="conflict_message_file">"%1$s" already exists at the destination.</string>
-    <string name="conflict_message_folder">Folder "%1$s" already exists. Contents will be merged and conflicts resolved individually.</string>
+    <string name="conflict_message_folder">Folder "%1$s" already exists at the destination.</string>
     <string name="conflict_overwrite">Overwrite</string>
     <string name="conflict_skip">Skip</string>
     <string name="conflict_keep_both">Keep Both</string>

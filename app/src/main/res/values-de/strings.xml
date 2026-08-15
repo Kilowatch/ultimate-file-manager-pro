@@ -1532,7 +1532,7 @@ Bereits vorhanden
 „%1$s“ ist am Zielort bereits vorhanden.
 </string>
     <string name="conflict_message_folder">
-Ordner „%1$s“ ist bereits vorhanden. Der Inhalt wird zusammengeführt und Konflikte werden einzeln gelöst.
+Der Ordner \"%1$s\" ist am Zielort bereits vorhanden.
 </string>
     <string name="conflict_overwrite">
 Überschreiben

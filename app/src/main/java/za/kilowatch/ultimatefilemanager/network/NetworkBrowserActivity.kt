@@ -3821,38 +3821,64 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     android.util.Log.d("ServerModePaste", "processNetItem: srcShare.isServerMode=${srcShare.isServerMode} srcShare.remotePath='${srcShare.remotePath}' share.isServerMode=${share.isServerMode} share.remotePath='${share.remotePath}' currentDest='$currentDest' cleanDest='$cleanDest' targetPath='$targetPath' itemName='$itemName' source.path='${source.path}'")
 
                     if (source.isDirectory) {
-                        if (srcShare.id == share.id && op == NetworkClipboard.Operation.MOVE) {
+                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)
+                        var effectiveDest = targetPath
+                        if (hasConflict) {
+                            val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@NetworkBrowserActivity, itemName, true, -1L, applyToAllRef
+                                ).also { if (applyToAllRef[0]) globalAction = it }
+                            }
+                            when (resolvedAction) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                    isCancelledByUser = true
+                                    throw kotlinx.coroutines.CancellationException()
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                    successCount++
+                                    return
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren, isFolder = true)
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                    effectiveDest = targetPath
+                                }
+                            }
+                        }
+
+                        if (srcShare.id == share.id && op == NetworkClipboard.Operation.MOVE && (!hasConflict || effectiveDest != targetPath)) {
                             // OPTIMIZATION: Same-share directory move
                             updateProgress(itemName, 0, 0, fileIndex, totalFiles) // Directory doesn't have "size" for progress
                             when (share.type) {
-                                ShareType.SMB          -> SmbShareClient.rename(share, source.path, targetPath)
-                                ShareType.FTP          -> FtpShareClient.rename(share, source.path, targetPath)
-                                ShareType.TV           -> TvShareClient.rename(share, source.path, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, source.path, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.rename(share, source.path, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, source.path, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.rename(share, source.path, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, source.path, targetPath)
-                                ShareType.WEBDAV                      -> WebDavShareClient.rename(share, source.path, targetPath)
-                                ShareType.NFS                         -> NfsShareClient.rename(share, source.path, targetPath)
+                                ShareType.SMB          -> SmbShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.FTP          -> FtpShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.TV           -> TvShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.DROPBOX      -> DropboxShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.WEBDAV                      -> WebDavShareClient.rename(share, source.path, effectiveDest)
+                                ShareType.NFS                         -> NfsShareClient.rename(share, source.path, effectiveDest)
                                 ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                             }
-                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, targetPath)
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, effectiveDest)
                             return // Move is complete
                         }
 
                         try {
                             when(share.type) {
-                                ShareType.SMB          -> SmbShareClient.mkdir(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.mkdir(share, targetPath)
-                                ShareType.TV           -> TvShareClient.mkdir(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, targetPath)
-                                ShareType.WEBDAV                      -> WebDavShareClient.mkdir(share, targetPath)
-                                ShareType.NFS                         -> NfsShareClient.mkdir(share, targetPath)
+                                ShareType.SMB          -> SmbShareClient.mkdir(share, effectiveDest)
+                                ShareType.FTP          -> FtpShareClient.mkdir(share, effectiveDest)
+                                ShareType.TV           -> TvShareClient.mkdir(share, effectiveDest)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, effectiveDest)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, effectiveDest)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, effectiveDest)
+                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, effectiveDest)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, effectiveDest)
+                                ShareType.WEBDAV                      -> WebDavShareClient.mkdir(share, effectiveDest)
+                                ShareType.NFS                         -> NfsShareClient.mkdir(share, effectiveDest)
                                 ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                             }
                         } catch(_: Exception) {}
@@ -3873,24 +3899,24 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
                         val newDestChildren = try {
                             when(share.type) {
-                                ShareType.SMB          -> SmbShareClient.listFiles(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.listFiles(share, targetPath)
-                                ShareType.TV           -> TvShareClient.listFiles(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, targetPath)
-                                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, targetPath)
-                                ShareType.NFS                         -> NfsShareClient.listFiles(share, targetPath)
-                                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, targetPath)
+                                ShareType.SMB          -> SmbShareClient.listFiles(share, effectiveDest)
+                                ShareType.FTP          -> FtpShareClient.listFiles(share, effectiveDest)
+                                ShareType.TV           -> TvShareClient.listFiles(share, effectiveDest)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, effectiveDest)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, effectiveDest)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, effectiveDest)
+                                ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, effectiveDest)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, effectiveDest)
+                                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, effectiveDest)
+                                ShareType.NFS                         -> NfsShareClient.listFiles(share, effectiveDest)
+                                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, effectiveDest)
                             }
                         } catch(_: Exception) { emptyList() }
 
                         for (child in children) {
                             if (isCancelledByUser) break
                             try {
-                                processNetItem(srcShare, child, op, targetPath, newDestChildren) 
+                                processNetItem(srcShare, child, op, effectiveDest, newDestChildren) 
                             } catch (e: Exception) {
                                 if (isCancelledByUser) throw CancellationException()
                                 android.util.Log.e("PasteFeature", "Error processing net item child ${child.name}: ${e.message}")
@@ -3900,9 +3926,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         
                         if (op == NetworkClipboard.Operation.MOVE && !isCancelledByUser) {
                             try { za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.deleteNetworkDirRecursively(srcShare, source.path) } catch(_: Exception) {}
-                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, targetPath)
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.path, effectiveDest)
                         } else if (!isCancelledByUser) {
-                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.path, targetPath)
+                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.path, effectiveDest)
                         }
                     } else {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)
@@ -4059,46 +4085,72 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     val targetPath = if (cleanDest.isEmpty() || cleanDest == "/") itemName else "${cleanDest.trimEnd('/')}/$itemName"
 
                     if (source.isDirectory) {
+                        val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)
+                        var effectiveDest = targetPath
+                        if (hasConflict) {
+                            val resolvedAction = globalAction ?: withContext(Dispatchers.Main) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@NetworkBrowserActivity, itemName, true, -1L, applyToAllRef
+                                ).also { if (applyToAllRef[0]) globalAction = it }
+                            }
+                            when (resolvedAction) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> {
+                                    isCancelledByUser = true
+                                    throw CancellationException()
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                    successCount++
+                                    return
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueNetworkPath(cleanDest, itemName, destChildren, isFolder = true)
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                    effectiveDest = targetPath
+                                }
+                            }
+                        }
+
                         try {
                             when(share.type) {
-                                ShareType.SMB          -> SmbShareClient.mkdir(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.mkdir(share, targetPath)
-                                ShareType.TV           -> TvShareClient.mkdir(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, targetPath)
-                                ShareType.WEBDAV                      -> WebDavShareClient.mkdir(share, targetPath)
-                                ShareType.NFS                         -> NfsShareClient.mkdir(share, targetPath)
+                                ShareType.SMB          -> SmbShareClient.mkdir(share, effectiveDest)
+                                ShareType.FTP          -> FtpShareClient.mkdir(share, effectiveDest)
+                                ShareType.TV           -> TvShareClient.mkdir(share, effectiveDest)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, effectiveDest)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, effectiveDest)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, effectiveDest)
+                                ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, effectiveDest)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, effectiveDest)
+                                ShareType.WEBDAV                      -> WebDavShareClient.mkdir(share, effectiveDest)
+                                ShareType.NFS                         -> NfsShareClient.mkdir(share, effectiveDest)
                                 ShareType.DLNA                        -> throw UnsupportedOperationException("DLNA is read-only")
                             }
                         } catch(e: Exception) {
-                            android.util.Log.e("PasteFeature", "mkdir failed for targetPath=$targetPath: ${e.message}", e)
+                            android.util.Log.e("PasteFeature", "mkdir failed for effectiveDest=$effectiveDest: ${e.message}", e)
                         }
 
                         val children = source.listFiles()
                         
                         val newDestChildren = try {
                             when(share.type) {
-                                ShareType.SMB          -> SmbShareClient.listFiles(share, targetPath)
-                                ShareType.FTP          -> FtpShareClient.listFiles(share, targetPath)
-                                ShareType.TV           -> TvShareClient.listFiles(share, targetPath)
-                                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, targetPath)
-                                ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, targetPath)
-                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, targetPath)
-                                ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, targetPath)
-                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, targetPath)
-                                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, targetPath)
-                                ShareType.NFS                         -> NfsShareClient.listFiles(share, targetPath)
-                                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, targetPath)
+                                ShareType.SMB          -> SmbShareClient.listFiles(share, effectiveDest)
+                                ShareType.FTP          -> FtpShareClient.listFiles(share, effectiveDest)
+                                ShareType.TV           -> TvShareClient.listFiles(share, effectiveDest)
+                                ShareType.SFTP, ShareType.SCP -> SshShareClient.listFiles(share, effectiveDest)
+                                ShareType.ONEDRIVE     -> OnedriveShareClient.listFiles(share, effectiveDest)
+                                ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.listFiles(share, effectiveDest)
+                                ShareType.DROPBOX      -> DropboxShareClient.listFiles(share, effectiveDest)
+                                ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.listFiles(share, effectiveDest)
+                                ShareType.WEBDAV                      -> WebDavShareClient.listFiles(share, effectiveDest)
+                                ShareType.NFS                         -> NfsShareClient.listFiles(share, effectiveDest)
+                                ShareType.DLNA                        -> DlnaShareClient.listFiles(share, effectiveDest)
                             }
                         } catch(_: Exception) { emptyList() }
 
                         if (children != null) {
                             for (child in children) { 
                                 try {
-                                    processLocalItem(child, op, targetPath, newDestChildren) 
+                                    processLocalItem(child, op, effectiveDest, newDestChildren) 
                                 } catch (e: Exception) {
                                     if (isCancelledByUser) throw CancellationException()
                                     android.util.Log.e("PasteFeature", "Error processing local item child ${child.name}: ${e.message}")
@@ -4108,9 +4160,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         }
                         if (op == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE && !isCancelledByUser) {
                             try { source.deleteRecursively() } catch(_: Exception) {}
-                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, targetPath)
+                            FileTagsManager.onPathMoved(this@NetworkBrowserActivity, source.absolutePath, effectiveDest)
                         } else if (!isCancelledByUser) {
-                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.absolutePath, targetPath)
+                            FileTagsManager.onPathCopied(this@NetworkBrowserActivity, source.absolutePath, effectiveDest)
                         }
                     } else {
                         val hasConflict = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.networkFileExists(itemName, destChildren)

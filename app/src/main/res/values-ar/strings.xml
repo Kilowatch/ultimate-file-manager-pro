@@ -1532,7 +1532,7 @@ APKs
 \"%1$s\" موجود بالفعل في الوجهة.
 </string>
     <string name="conflict_message_folder">
-المجلد \"%1$s\" موجود بالفعل. سيتم دمج المحتويات وحل التعارضات بشكل فردي.
+المجلد \"%1$s\" موجود بالفعل في الوجهة.
 </string>
     <string name="conflict_overwrite">
 استبدال

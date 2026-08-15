@@ -32,7 +32,7 @@ import java.io.FileOutputStream
  *  - Never truncate any existing file to 0 bytes under any code path.
  *  - All overwrites use write-to-temp-then-atomic-rename.
  *  - Source files are only deleted AFTER a verified successful copy+rename.
- *  - Folders are silently merged; only individual file conflicts trigger dialogs.
+ *  - Folder collisions prompt conflict resolution; "Keep Both" generates a separate unique folder.
  */
 object TransferConflictHelper {
 
@@ -564,17 +564,30 @@ object TransferConflictHelper {
         return candidate
     }
 
-    /** Generates a unique remote path by appending " (1)", " (2)" … */
-    fun uniqueNetworkPath(parentPath: String, name: String, knownFiles: List<NetworkFile>): String {
-        val ext  = if (name.contains('.')) ".${name.substringAfterLast('.')}" else ""
-        val base = if (name.contains('.')) name.substringBeforeLast('.') else name
+    /** Generates a unique local folder path by appending " (1)", " (2)" … */
+    fun uniqueLocalFolder(dir: File, name: String): File {
         var counter = 1
-        var candidate = name
+        var candidate = File(dir, "$name ($counter)")
+        while (if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(candidate.absolutePath))
+                   za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(candidate.absolutePath)
+               else candidate.exists()) {
+            counter++
+            candidate = File(dir, "$name ($counter)")
+        }
+        return candidate
+    }
+
+    /** Generates a unique remote path by appending " (1)", " (2)" … */
+    fun uniqueNetworkPath(parentPath: String, name: String, knownFiles: List<NetworkFile>, isFolder: Boolean = false): String {
+        val ext  = if (!isFolder && name.contains('.')) ".${name.substringAfterLast('.')}" else ""
+        val base = if (!isFolder && name.contains('.')) name.substringBeforeLast('.') else name
+        var counter = if (isFolder) 2 else 1
+        var candidate = if (isFolder) "$name (1)" else name
         while (networkFileExists(candidate, knownFiles)) {
             candidate = "$base ($counter)$ext"
             counter++
         }
-        return if (parentPath.isEmpty()) candidate else "$parentPath/$candidate"
+        return if (parentPath.isEmpty() || parentPath == "/") candidate else "${parentPath.trimEnd('/')}/$candidate"
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

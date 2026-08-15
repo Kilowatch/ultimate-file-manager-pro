@@ -3697,11 +3697,39 @@ class FileBrowserActivity : AppCompatActivity() {
 
                 suspend fun processLocalItem(source: java.io.File, destBase: java.io.File) {
                         if (source.isDirectory) {
+                            val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                            else destBase.exists()
+
+                            var effectiveDest = destBase
+                            if (hasConflict) {
+                                val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                        this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
+                                    ).also { if (applyToAllRef[0]) globalAction = it }
+                                }
+                                when (resolvedAction) {
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                        successCount++
+                                        return
+                                    }
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                        effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                            destBase.parentFile ?: effectiveDestDir, source.name
+                                        )
+                                    }
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                        effectiveDest = destBase
+                                    }
+                                }
+                            }
+
                             try {
-                                if (!destBase.exists()) destBase.mkdirs()
+                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
                                 // Index the new folder immediately
                                 if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                    pendingIndices.add(metadataExtractor.extractMetadata(destBase, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                                    pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                                     if (pendingIndices.size >= 50) flushIndices()
                                 }
                             } catch (_: Exception) {}
@@ -3710,7 +3738,7 @@ class FileBrowserActivity : AppCompatActivity() {
                         if (children != null) {
                             for (child in children) { 
                                 try {
-                                    processLocalItem(child, java.io.File(destBase, child.name)) 
+                                    processLocalItem(child, java.io.File(effectiveDest, child.name)) 
                                 } catch (e: kotlinx.coroutines.CancellationException) {
                                     throw e
                                 } catch (e: Exception) {
@@ -3728,9 +3756,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                 }
                                 UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
                             } catch (_: Exception) {}
-                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, destBase.absolutePath)
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.absolutePath, effectiveDest.absolutePath)
                         } else {
-                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, destBase.absolutePath)
+                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.absolutePath, effectiveDest.absolutePath)
                         }
                     } else {
                         fileIndex++
@@ -3868,11 +3896,39 @@ class FileBrowserActivity : AppCompatActivity() {
 
                     suspend fun processNetItem(source: za.kilowatch.ultimatefilemanager.network.NetworkFile, destBase: java.io.File) {
                         if (source.isDirectory) {
+                            val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                            else destBase.exists()
+
+                            var effectiveDest = destBase
+                            if (hasConflict) {
+                                val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                        this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
+                                    ).also { if (applyToAllRef[0]) globalAction = it }
+                                }
+                                when (resolvedAction) {
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                        successCount++
+                                        return
+                                    }
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                        effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                            destBase.parentFile ?: currentDir, source.name
+                                        )
+                                    }
+                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                        effectiveDest = destBase
+                                    }
+                                }
+                            }
+
                             try {
-                                if (!destBase.exists()) destBase.mkdirs()
+                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
                                 // Index the new folder immediately
                                 if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                    pendingIndices.add(metadataExtractor.extractMetadata(destBase, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                                    pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                                     if (pendingIndices.size >= 50) flushIndices()
                                 }
                             } catch (_: Exception) {}
@@ -3894,7 +3950,7 @@ class FileBrowserActivity : AppCompatActivity() {
                                     if (isCancelled) break
                                     coroutineContext.ensureActive()
                                     try {
-                                        processNetItem(child, java.io.File(destBase, child.name))
+                                        processNetItem(child, java.io.File(effectiveDest, child.name))
                                     } catch (e: kotlinx.coroutines.CancellationException) {
                                         throw e
                                     } catch (e: Exception) {
@@ -3919,9 +3975,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                         za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                     }
                                 } catch (_: Exception) {}
-                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, destBase.absolutePath)
+                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
                             } else {
-                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, destBase.absolutePath)
+                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
                             }
                         } else {
                             fileIndex++

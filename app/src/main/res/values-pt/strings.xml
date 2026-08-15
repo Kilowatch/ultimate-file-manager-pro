@@ -1532,7 +1532,7 @@ Já existe
 \"%1$s\" já existe no destino.
 </string>
     <string name="conflict_message_folder">
-A pasta \"%1$s\" já existe. Os conteúdos serão mesclados e os conflitos resolvidos individualmente.
+A pasta \"%1$s\" já existe no destino.
 </string>
     <string name="conflict_overwrite">
 Substituir

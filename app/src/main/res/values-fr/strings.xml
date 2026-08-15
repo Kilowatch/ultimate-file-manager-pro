@@ -1532,7 +1532,7 @@ Existe déjà
 \\\"%1$s\\\" existe déjà à la destination.
 </string>
     <string name="conflict_message_folder">
-Le dossier \\\"%1$s\\\" existe déjà. Les contenus seront fusionnés et les conflits résolus individuellement.
+Le dossier \"%1$s\" existe déjà à la destination.
 </string>
     <string name="conflict_overwrite">
 Remplacer
