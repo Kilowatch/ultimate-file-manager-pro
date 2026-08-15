@@ -1725,7 +1725,11 @@ class TwinWindowActivity : AppCompatActivity() {
             val dao = db.fileIndexDao()
             val metadataExtractor = za.kilowatch.ultimatefilemanager.indexing.MetadataExtractor(this@TwinWindowActivity)
             
-            val actualFiles: List<File> = directory.listFiles()?.toList() ?: emptyList<File>()
+            val actualFiles: List<File> = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+            } else {
+                directory.listFiles()?.toList() ?: emptyList<File>()
+            }
             val actualFilePaths = actualFiles.map { it.absolutePath }.toSet()
             
             val fileIndices = actualFiles.map { 

@@ -929,8 +929,12 @@ class OverviewTabFragment : AnalyzerTabFragment() {
                 progress = ((folder.totalSize.toFloat() / maxSizeFolder) * 1000).toInt()
             }
             itemView.setOnClickListener {
+                val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(folder.folderPath)
                 startActivity(Intent(requireContext(), FileBrowserActivity::class.java).apply {
-                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, folder.folderPath)
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, folder.folderPath)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                 })
             }
             folderContainer?.addView(itemView)
@@ -1007,11 +1011,14 @@ class LargeFilesTabFragment : AnalyzerTabFragment() {
         makeRecycler(v, R.id.recyclerAnalyzerList).adapter =
             AnalyzerLargeFileAdapter(report.largeFiles, isTv) { file ->
                 // Open file via FileBrowserActivity at its folder
+                val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.folderPath)
                 startActivity(Intent(requireContext(), FileBrowserActivity::class.java).apply {
-                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, file.folderPath)
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, file.folderPath)
                     putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.path)
-                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, report.storageId)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, report.storageId.ifEmpty { sid })
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, (activity as? StorageAnalyzerActivity)?.getSelectedDriveLabel() ?: "")
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                 })
             }
     }
@@ -1069,11 +1076,14 @@ class JunkOldTabFragment : AnalyzerTabFragment() {
         if (!report.isIndexed) return
         makeRecycler(v, R.id.recyclerAnalyzerList).adapter =
             AnalyzerJunkOldAdapter(requireContext(), report.junkReport.files, report.oldFiles, isTv) { file ->
+                val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.folderPath)
                 startActivity(Intent(requireContext(), FileBrowserActivity::class.java).apply {
-                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, file.folderPath)
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, file.folderPath)
                     putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.path)
-                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, report.storageId)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, report.storageId.ifEmpty { sid })
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, (activity as? StorageAnalyzerActivity)?.getSelectedDriveLabel() ?: "")
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                 })
             }
     }

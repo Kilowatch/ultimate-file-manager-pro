@@ -157,19 +157,27 @@ class BookmarkWidgetProvider : AppWidgetProvider() {
 
                     // ── Local folder ──
                     isFolder -> {
+                        val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(path)
                         Intent(context, FileBrowserActivity::class.java).apply {
-                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH,     path)
+                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH,     volumeRoot)
+                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH,   path)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL,  label)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_ID,     sid)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE,   stype)
                         }
                     }
 
                     // ── Local file — open parent folder and highlight the file ──
                     else -> {
                         val parentPath = File(path).parent ?: path
+                        val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(parentPath)
                         Intent(context, FileBrowserActivity::class.java).apply {
-                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH,    parentPath)
+                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH,    volumeRoot)
+                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH,  parentPath)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, label)
                             putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH,    path)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_ID,    sid)
+                            putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE,  stype)
                         }
                     }
                 }

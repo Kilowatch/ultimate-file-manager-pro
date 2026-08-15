@@ -598,9 +598,14 @@ class CustomTileActivity : AppCompatActivity() {
                     finish()
                     return
                 }
+                val favPath = item.favoritePath ?: ""
+                val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(favPath)
                 val intent = Intent(this, FileBrowserActivity::class.java).apply {
-                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
+                    putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                    putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, favPath)
                     putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                    putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                     applyPickerExtras()
                 }
                 if (isAnyPickerActive) pickerResultLauncher.launch(intent) else startActivity(intent)

@@ -16,6 +16,9 @@ class ShizukuFile(
     }
     override fun canRead(): Boolean = true
     override fun canWrite(): Boolean = true
+    override fun list(): Array<String>? {
+        return listFiles()?.map { it.name }?.toTypedArray()
+    }
     override fun listFiles(): Array<java.io.File>? {
         return ShizukuShellWrapper.listFiles(absolutePath).toTypedArray()
     }

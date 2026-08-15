@@ -213,7 +213,8 @@ class FileBrowserFragment : Fragment() {
 
         var mount = arguments?.getString(ARG_MOUNT_PATH) ?: ""
         var label = arguments?.getString(ARG_STORAGE_LABEL) ?: internalLabel
-        if (mount.isEmpty() || !File(mount).exists()) {
+        val isMountProtected = ShizukuShellWrapper.isProtectedPath(mount)
+        if (mount.isEmpty() || (!isMountProtected && !File(mount).exists())) {
             mount = internalPath
             label = internalLabel
         }
@@ -225,8 +226,28 @@ class FileBrowserFragment : Fragment() {
         isTwinWindow = arguments?.getBoolean(ARG_IS_TWIN_WINDOW, false) == true
 
         val initialPath = arguments?.getString(ARG_INITIAL_PATH)
+        val isInitProtected = !initialPath.isNullOrEmpty() && ShizukuShellWrapper.isProtectedPath(initialPath)
+        val initExists = if (isInitProtected) {
+            if (ShizukuShellWrapper.canUseShizukuForPath(initialPath!!)) ShizukuShellWrapper.exists(initialPath) else true
+        } else {
+            !initialPath.isNullOrEmpty() && File(initialPath).exists()
+        }
+
         currentDir = when {
-            !initialPath.isNullOrEmpty() && File(initialPath).exists() -> File(initialPath)
+            initExists -> {
+                if (isInitProtected && ShizukuShellWrapper.canUseShizukuForPath(initialPath!!)) {
+                    val pName = initialPath.substringAfterLast("/")
+                    val pParent = initialPath.substringBeforeLast("/", "")
+                    ShizukuFile(pParent, pName, true)
+                } else {
+                    File(initialPath!!)
+                }
+            }
+            isMountProtected && ShizukuShellWrapper.canUseShizukuForPath(rootPath) -> {
+                val pName = rootPath.substringAfterLast("/")
+                val pParent = rootPath.substringBeforeLast("/", "")
+                ShizukuFile(pParent, pName, true)
+            }
             File(rootPath).exists() -> File(rootPath)
             else -> {
                 rootPath = internalPath
@@ -1559,14 +1580,29 @@ class FileBrowserFragment : Fragment() {
         val internalLabel = getString(R.string.storage_internal)
 
         var targetDir = directory
-        if (!targetDir.exists()) {
-            if (rootPath.isNotEmpty() && File(rootPath).exists()) {
+        val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(targetDir.absolutePath)
+        val canUseShizuku = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)
+        val dirExists = if (isProtected) {
+            if (canUseShizuku) {
+                if (targetDir is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) true else za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(targetDir.absolutePath)
+            } else {
+                true
+            }
+        } else {
+            targetDir.exists()
+        }
+        if (!dirExists) {
+            if (rootPath.isNotEmpty() && (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(rootPath) || File(rootPath).exists())) {
                 targetDir = File(rootPath)
             } else {
                 rootPath = internalPath
                 storageLabel = internalLabel
                 targetDir = File(internalPath)
             }
+        } else if (isProtected && canUseShizuku && targetDir !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
+            val pName = targetDir.name
+            val pParent = targetDir.parent ?: ""
+            targetDir = za.kilowatch.ultimatefilemanager.storage.ShizukuFile(pParent, pName, true)
         }
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
@@ -1602,14 +1638,14 @@ class FileBrowserFragment : Fragment() {
         }
 
         currentDir = targetDir
-        val displayTitle = if (labelPrefix.isNotEmpty()) "$labelPrefix${if (directory.absolutePath == rootPath) storageLabel else directory.name}" 
-                          else if (directory.absolutePath == rootPath) storageLabel else directory.name
+        val displayTitle = if (labelPrefix.isNotEmpty()) "$labelPrefix${if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name}" 
+                          else if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name
         view?.findViewById<TextView>(R.id.txtTvTitle)?.text = displayTitle
         val displaySubtitle = if (isTwinWindow) {
-            val rel = directory.absolutePath.removePrefix(rootPath)
+            val rel = targetDir.absolutePath.removePrefix(rootPath)
             if (rel.isEmpty()) "/" else rel
         } else {
-            directory.absolutePath
+            targetDir.absolutePath
         }
         view?.findViewById<TextView>(R.id.txtTvSubtitle)?.text = displaySubtitle
         view?.findViewById<TextView>(R.id.txtSubtitle)?.text = displaySubtitle
@@ -1623,10 +1659,10 @@ class FileBrowserFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
-                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
                 } else {
-                    directory.listFiles()?.toList() ?: emptyList()
+                    targetDir.listFiles()?.toList() ?: emptyList()
                 }
                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                 val sorted = sortAndFilterFiles(visibleFiles)
@@ -1639,15 +1675,15 @@ class FileBrowserFragment : Fragment() {
                 try {
                     val db = UfmIndexingDatabase.getInstance(requireContext().applicationContext)
                     val dao = db.fileIndexDao()
-                    dao.getFilesInFolderFlow(directory.absolutePath).collectLatest { fileIndices ->
+                    dao.getFilesInFolderFlow(targetDir.absolutePath).collectLatest { fileIndices ->
                         withContext(Dispatchers.IO) {
                             val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
                             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
                             if (fileIndices.isEmpty()) {
-                                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+                                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
                                 } else {
-                                    directory.listFiles()?.toList() ?: emptyList()
+                                    targetDir.listFiles()?.toList() ?: emptyList()
                                 }
                                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
@@ -1655,7 +1691,21 @@ class FileBrowserFragment : Fragment() {
                                     submitAdapterList(sorted, false, hiddenPaths)
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
+                                val files = fileIndices.map { index ->
+                                    if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(index.path)) {
+                                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(
+                                            parentPath = index.folderPath,
+                                            docName = index.filename,
+                                            isDir = index.isDirectory,
+                                            docLength = index.size,
+                                            docLastModified = index.lastModified
+                                        )
+                                    } else {
+                                        File(index.path)
+                                    }
+                                }.filter { file ->
+                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
+                                }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList(sorted, true, hiddenPaths)
@@ -1672,7 +1722,7 @@ class FileBrowserFragment : Fragment() {
         
         // Background sync to ensure index matches filesystem
         lifecycleScope.launch(Dispatchers.IO) {
-            syncFolderWithIndex(directory)
+            syncFolderWithIndex(targetDir)
         }
     }
 
@@ -1796,7 +1846,11 @@ class FileBrowserFragment : Fragment() {
             val db = UfmIndexingDatabase.getInstance(requireContext().applicationContext)
             val dao = db.fileIndexDao()
             val metadataExtractor = MetadataExtractor(requireContext())
-            val actualFiles = directory.listFiles()?.toList() ?: emptyList()
+            val actualFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+            } else {
+                directory.listFiles()?.toList() ?: emptyList()
+            }
             val actualFilePaths = actualFiles.map { it.absolutePath }.toSet()
             
             val fileIndices = actualFiles.map { 

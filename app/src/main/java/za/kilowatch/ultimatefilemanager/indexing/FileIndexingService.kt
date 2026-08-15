@@ -272,8 +272,13 @@ class FileIndexingService(
             }
             if (deletedPrefixes.any { path.startsWith(it) }) continue
 
-            val file = java.io.File(path)
-            val fileExists = file.exists()
+            val file = File(path)
+            val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(path)
+            val fileExists = if (isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(path)
+            } else {
+                file.exists()
+            }
             val parentReadable = file.parentFile?.canRead() == true
 
             // --- Scoped-storage guard -------------------------------------------
@@ -283,15 +288,20 @@ class FileIndexingService(
             // Directory enumeration (listFiles/list) is NOT blocked the same way,
             // so we use parentFile.list() as a secondary truth-check.
             // Only proceed with deletion when BOTH agree the path is gone.
-            val trulyGone = if (!fileExists && parentReadable) {
-                val listedByParent = file.parentFile?.list()?.contains(file.name) == true
-                if (listedByParent) {
-                    false
+            // If parent is unreadable via standard Java IO or protected, skip deletion.
+            val trulyGone = if (isProtected) {
+                if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(path)) {
+                    !fileExists
                 } else {
-                    true
+                    false // Shizuku not active - preserve existing index
                 }
+            } else if (!fileExists && parentReadable) {
+                val listedByParent = file.parentFile?.list()?.contains(file.name) == true
+                !listedByParent
+            } else if (!fileExists && !parentReadable) {
+                false // exists=false but parent unreadable → skip deletion
             } else {
-                !fileExists  // exists=true → keep; exists=false but parent unreadable → skip
+                false // exists=true → keep
             }
 
             if (trulyGone) {

@@ -1934,11 +1934,12 @@ class StorageBrowserActivity : AppCompatActivity() {
                             }
                         }
                     } else {
+                        val favPath = item.favoritePath ?: ""
+                        val (sid, stype, volumeRoot) = IndexingRepository.resolveStorageForPath(favPath)
                         Intent(this, FileBrowserActivity::class.java).apply {
-                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, item.favoritePath)
+                            putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                            putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, favPath)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, item.label)
-                            
-                            val (sid, stype) = IndexingRepository.resolveStorageForPath(item.favoritePath ?: "")
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
                             putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                         }

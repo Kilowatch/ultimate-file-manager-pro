@@ -346,7 +346,8 @@ class FileBrowserActivity : AppCompatActivity() {
         val internalLabel = getString(R.string.storage_internal)
 
         rootPath = intent.getStringExtra(EXTRA_MOUNT_PATH) ?: internalPath
-        if (rootPath.isEmpty() || !File(rootPath).exists()) {
+        val isRootProtected = ShizukuShellWrapper.isProtectedPath(rootPath)
+        if (rootPath.isEmpty() || (!isRootProtected && !File(rootPath).exists())) {
             rootPath = internalPath
             storageLabel = internalLabel
             storageId = "internal"
@@ -356,7 +357,13 @@ class FileBrowserActivity : AppCompatActivity() {
             storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: if (rootPath.contains("emulated")) "internal" else "external"
             storageType = intent.getStringExtra(EXTRA_STORAGE_TYPE) ?: if (rootPath.contains("emulated")) "internal" else "external"
         }
-        currentDir = File(rootPath)
+        currentDir = if (isRootProtected && ShizukuShellWrapper.canUseShizukuForPath(rootPath)) {
+            val pName = rootPath.substringAfterLast("/")
+            val pParent = rootPath.substringBeforeLast("/", "")
+            ShizukuFile(pParent, pName, true)
+        } else {
+            File(rootPath)
+        }
         
         // ANR Watchdog Verification Snippet: Simulates a 6-second main-thread freeze when opening local storage
         // Uncomment the line below to test genuine ANR detection:
@@ -366,9 +373,20 @@ class FileBrowserActivity : AppCompatActivity() {
         // If an initial subfolder was provided (e.g. from closing twin window), navigate there
         val initialPath = intent.getStringExtra(EXTRA_INITIAL_PATH)
         if (!initialPath.isNullOrEmpty()) {
-            val initialFile = File(initialPath)
-            if (initialFile.exists() && initialFile.absolutePath.startsWith(rootPath)) {
-                currentDir = initialFile
+            val isInitProtected = ShizukuShellWrapper.isProtectedPath(initialPath)
+            val initExists = if (isInitProtected) {
+                if (ShizukuShellWrapper.canUseShizukuForPath(initialPath)) ShizukuShellWrapper.exists(initialPath) else true
+            } else {
+                File(initialPath).exists()
+            }
+            if (initExists && initialPath.startsWith(rootPath)) {
+                currentDir = if (isInitProtected && ShizukuShellWrapper.canUseShizukuForPath(initialPath)) {
+                    val pName = initialPath.substringAfterLast("/")
+                    val pParent = initialPath.substringBeforeLast("/", "")
+                    ShizukuFile(pParent, pName, true)
+                } else {
+                    File(initialPath)
+                }
             }
         }
 
@@ -4126,6 +4144,15 @@ class FileBrowserActivity : AppCompatActivity() {
     private fun loadDirectory(directory: File, preserveSelection: Boolean = false) {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
 
+        val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(directory.absolutePath)
+        val targetDir = if (isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath) && directory !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
+            val pName = directory.name
+            val pParent = directory.parent ?: ""
+            za.kilowatch.ultimatefilemanager.storage.ShizukuFile(pParent, pName, true)
+        } else {
+            directory
+        }
+
         // Clear file selection highlight when navigating directories
         if (isSupportAttachmentPicker) {
             selectedKeyFilePath = null
@@ -4134,9 +4161,9 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
         lifecycleScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-            val state = SortFilterPreferenceManager.loadForPath(this@FileBrowserActivity, directory.absolutePath)
+            val state = SortFilterPreferenceManager.loadForPath(this@FileBrowserActivity, targetDir.absolutePath)
                 ?: SortFilterPreferenceManager.loadGlobal(this@FileBrowserActivity)
-            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(this@FileBrowserActivity, directory.absolutePath)
+            val hasFolderOverride = SortFilterPreferenceManager.hasFolderOverride(this@FileBrowserActivity, targetDir.absolutePath)
             val viewModeToApply = state.viewMode ?: ViewModeManager.load(this@FileBrowserActivity)
             kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
                 sortMode  = state.sortMode
@@ -4150,7 +4177,7 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
-        currentDir = directory
+        currentDir = targetDir
         updateBreadcrumbs()
 
         // Exit selection mode when navigating or after an operation. Preserve it only
@@ -4161,13 +4188,13 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // Update toolbar (mobile) or TV header views
         val title = if (isCategoryMode) (categoryName ?: storageLabel) else {
-             if (directory.absolutePath == rootPath) storageLabel else directory.name
+             if (targetDir.absolutePath == rootPath) storageLabel else targetDir.name
         }
         toolbar.title = title
-        toolbar.subtitle = if (isCategoryMode) getString(R.string.files_on_storagelabel) else directory.absolutePath
+        toolbar.subtitle = if (isCategoryMode) getString(R.string.files_on_storagelabel) else targetDir.absolutePath
         // TV header views (null-safe: only present in TV layout)
         findViewById<android.widget.TextView>(R.id.txtTvTitle)?.text = title
-        findViewById<android.widget.TextView>(R.id.txtTvSubtitle)?.text = if (isCategoryMode) getString(R.string.files_on_storagelabel, storageLabel) else directory.absolutePath
+        findViewById<android.widget.TextView>(R.id.txtTvSubtitle)?.text = if (isCategoryMode) getString(R.string.files_on_storagelabel, storageLabel) else targetDir.absolutePath
 
         if (isCategoryMode) {
             // Hide "New Folder" and "Paste" in category mode
@@ -4280,17 +4307,17 @@ class FileBrowserActivity : AppCompatActivity() {
                 val db = UfmIndexingDatabase.getInstance(applicationContext)
                 val dao = db.fileIndexDao()
                 
-                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
+                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                     coroutineContext.ensureActive()
-                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
                 } else {
                     coroutineContext.ensureActive()
-                    directory.listFiles()?.toList() ?: emptyList()
+                    targetDir.listFiles()?.toList() ?: emptyList()
                 }
                 
                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
 
-                val indexedPaths = try { dao.getIndexedPathsInFolder(directory.absolutePath).toSet() } catch (e: Exception) { emptySet<String>() }
+                val indexedPaths = try { dao.getIndexedPathsInFolder(targetDir.absolutePath).toSet() } catch (e: Exception) { emptySet<String>() }
                 val sorted = sortAndFilterFiles(visibleFiles)
                 withContext(Dispatchers.Main) {
                     submitAdapterList {
@@ -4305,19 +4332,19 @@ class FileBrowserActivity : AppCompatActivity() {
                 try {
                     val db = UfmIndexingDatabase.getInstance(applicationContext)
                     val dao = db.fileIndexDao()
-                    dao.getFilesInFolderFlow(directory.absolutePath).collectLatest { fileIndices ->
+                    dao.getFilesInFolderFlow(targetDir.absolutePath).collectLatest { fileIndices ->
                         withContext(Dispatchers.IO) {
                             val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
                             val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(applicationContext).hiddenFileDao().getAllPaths().toSet()
 
                             if (fileIndices.isEmpty()) {
                                 // Fallback to filesystem if DB has no entries yet
-                                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
+                                val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                                     coroutineContext.ensureActive()
-                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+                                    za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
                                 } else {
                                     coroutineContext.ensureActive()
-                                    directory.listFiles()?.toList() ?: emptyList()
+                                    targetDir.listFiles()?.toList() ?: emptyList()
                                 }
                                 val visibleFiles = rawFiles.filter { isFileVisible(it, showHidden, hiddenPaths) }
                                 val sorted = sortAndFilterFiles(visibleFiles)
@@ -4329,7 +4356,21 @@ class FileBrowserActivity : AppCompatActivity() {
                                     }
                                 }
                             } else {
-                                val files = fileIndices.map { File(it.path) }.filter { it.exists() && isFileVisible(it, showHidden, hiddenPaths) }
+                                val files = fileIndices.map { index ->
+                                    if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(index.path)) {
+                                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(
+                                            parentPath = index.folderPath,
+                                            docName = index.filename,
+                                            isDir = index.isDirectory,
+                                            docLength = index.size,
+                                            docLastModified = index.lastModified
+                                        )
+                                    } else {
+                                        File(index.path)
+                                    }
+                                }.filter { file ->
+                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
+                                }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
                                     submitAdapterList {
@@ -4354,7 +4395,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
         // Background sync to ensure index matches filesystem
         lifecycleScope.launch(Dispatchers.IO) {
-            syncFolderWithIndex(directory)
+            syncFolderWithIndex(targetDir)
         }
     }
 

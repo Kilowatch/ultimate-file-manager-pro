@@ -252,9 +252,13 @@ class SearchActivity : AppCompatActivity() {
             isTv = isTv,
             onItemClick = { file, _ ->
                 if (file.isDirectory) {
+                    val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(file.absolutePath)
                     val intent = Intent(this, FileBrowserActivity::class.java).apply {
-                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, file.absolutePath)
+                        putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                        putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, file.absolutePath)
                         putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, file.name)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                        putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
                     }
                     startActivity(intent)
                 } else {
@@ -638,10 +642,14 @@ class SearchActivity : AppCompatActivity() {
         options.add(getString(R.string.action_open_folder))
         actions.add {
             val parentDir = file.parentFile ?: return@add
+            val (sid, stype, volumeRoot) = za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(parentDir.absolutePath)
             val intent = Intent(this, FileBrowserActivity::class.java).apply {
-                putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, parentDir.absolutePath)
+                putExtra(FileBrowserActivity.EXTRA_MOUNT_PATH, volumeRoot)
+                putExtra(FileBrowserActivity.EXTRA_INITIAL_PATH, parentDir.absolutePath)
                 putExtra(FileBrowserActivity.EXTRA_STORAGE_LABEL, parentDir.name)
                 putExtra(FileBrowserActivity.EXTRA_FOCUS_PATH, file.absolutePath)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_ID, sid)
+                putExtra(FileBrowserActivity.EXTRA_STORAGE_TYPE, stype)
             }
             startActivity(intent)
         }
