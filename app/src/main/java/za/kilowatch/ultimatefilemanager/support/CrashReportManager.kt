@@ -2510,6 +2510,19 @@ object CrashReportManager {
                     //     RecyclerView layout (e.g. the main thread itself allocating a large
                     //     Bitmap, which surfaces as `Bitmap.createBitmap` below the registry
                     //     frame, or a non-RecyclerView layout), and are still reported.
+                    //     A follow-up report from the same device family (a vivo I2219,
+                    //     SDK 36, app 1.8.6-FOSS) samples the identical runtime
+                    //     native-allocation registry notification but one allocation further
+                    //     down the same text-layout chain: the registered allocation is
+                    //     `android.graphics.text.TextLayoutHelper.<init>` (reached from
+                    //     `TextLayoutHelper$Builder.build` under `android.text.Layout.
+                    //     initTextLayoutHelper`/`BoringLayout.init`/`replaceOrMake` under
+                    //     `TextView.makeSingleLayout`/`makeNewLayout`), and the text layout is
+                    //     entered from a `TextView.setText` → `checkForRelayout` relayout (a
+                    //     RecyclerView row binding its row text) rather than an `onMeasure`
+                    //     pass — the same µs-scale per-row text layout, so the filter below
+                    //     also accepts a `TextLayoutHelper.<init>` allocation source and a
+                    //     setText/checkForRelayout text-layout entry.
                     val isNativeAllocationRegistryTextLayoutStall =
                         topFrame?.className == "dalvik.system.VMRuntime" &&
                         (topFrame?.methodName == "notifyNativeAllocationsInternal" ||
@@ -2518,19 +2531,34 @@ object CrashReportManager {
                             it.className == "libcore.util.NativeAllocationRegistry" &&
                                 it.methodName == "registerNativeAllocation"
                         } &&
+                        // The allocation source is a framework text-layout object — either
+                        // the text-measurement Paint or the TextLayoutHelper a TextView
+                        // allocates while laying out a row (both register a native
+                        // allocation) — reached from a TextView text-layout path.
                         mainStackTrace.any {
-                            it.className == "android.graphics.Paint" && it.methodName == "<init>"
+                            (it.className == "android.graphics.Paint" && it.methodName == "<init>") ||
+                            (it.className == "android.graphics.text.TextLayoutHelper" && it.methodName == "<init>")
                         } &&
                         mainStackTrace.any {
                             it.className == "android.widget.TextView" &&
                             (it.methodName == "makeNewLayout" || it.methodName == "makeSingleLayout")
                         } &&
-                        mainStackTrace.any {
-                            it.className == "android.widget.TextView" && it.methodName == "onMeasure"
-                        } &&
-                        mainStackTrace.any {
-                            it.className == "android.view.View" && it.methodName == "measure"
-                        } &&
+                        // The text layout is entered either from a measure pass during the
+                        // frame (TextView.onMeasure -> View.measure) or from a setText-triggered
+                        // relayout (TextView.setText -> checkForRelayout -> makeNewLayout) — both
+                        // are the same bounded per-frame row text layout inside a RecyclerView.
+                        (
+                            (mainStackTrace.any {
+                                it.className == "android.widget.TextView" && it.methodName == "onMeasure"
+                            } && mainStackTrace.any {
+                                it.className == "android.view.View" && it.methodName == "measure"
+                            }) ||
+                            (mainStackTrace.any {
+                                it.className == "android.widget.TextView" && it.methodName == "setText"
+                            } && mainStackTrace.any {
+                                it.className == "android.widget.TextView" && it.methodName == "checkForRelayout"
+                            })
+                        ) &&
                         mainStackTrace.any { it.className.startsWith("androidx.recyclerview.widget.") } &&
                         (mainStackTrace.any {
                             it.className == "android.view.Choreographer" && it.methodName == "doFrame"
