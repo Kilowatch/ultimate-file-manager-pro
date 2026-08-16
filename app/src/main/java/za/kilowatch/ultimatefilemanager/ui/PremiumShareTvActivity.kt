@@ -103,10 +103,15 @@ class PremiumShareTvActivity : AppCompatActivity() {
         txtWebUrl.text = url
         txtPinCode.text = WebShareServer.pin
 
-        // Generate and display QR Code
-        val qrBitmap = QrCodeUtils.generateQrCode(url, 512)
-        if (qrBitmap != null) {
-            imgQrCode.setImageBitmap(qrBitmap)
+        // Generate and display QR Code off the main thread — QR generation is
+        // CPU-heavy and froze the main thread >5 s on low-end TVs during onCreate.
+        lifecycleScope.launch(Dispatchers.Default) {
+            val qrBitmap = QrCodeUtils.generateQrCode(url, 512)
+            withContext(Dispatchers.Main) {
+                if (qrBitmap != null) {
+                    imgQrCode.setImageBitmap(qrBitmap)
+                }
+            }
         }
 
         registerNetworkCallback()
@@ -148,9 +153,14 @@ class PremiumShareTvActivity : AppCompatActivity() {
                 val proto = if (WebShareServer.sslPort > 0) "https" else "http"
                 val url = "$proto://$ip:$port"
                 txtWebUrl.text = url
-                val qr = QrCodeUtils.generateQrCode(url, 512)
-                if (qr != null) {
-                    imgQrCode.setImageBitmap(qr)
+                // Regenerate the QR off the main thread (see setupWebShareMode).
+                lifecycleScope.launch(Dispatchers.Default) {
+                    val qr = QrCodeUtils.generateQrCode(url, 512)
+                    withContext(Dispatchers.Main) {
+                        if (qr != null) {
+                            imgQrCode.setImageBitmap(qr)
+                        }
+                    }
                 }
             }
         }
