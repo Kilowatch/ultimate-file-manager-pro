@@ -69,12 +69,20 @@ class AdbRemoteForegroundService : Service() {
         Log.d(TAG, "Service created")
         createNotificationChannel()
         val notification = buildNotification(getString(R.string.adb_remote_notification_connecting))
-        ServiceCompat.startForeground(
-            this,
-            NOTIFICATION_ID,
-            notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
-        )
+        try {
+            ServiceCompat.startForeground(
+                this,
+                NOTIFICATION_ID,
+                notification,
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE
+            )
+        } catch (e: Exception) {
+            // A SecurityException here (e.g. the connectedDevice FGS permission missing on some
+            // variant/device) would otherwise crash the whole process in onCreate(). Degrade
+            // gracefully: log and stop the service — the ADB remote UI drives the connection.
+            Log.e(TAG, "startForeground failed — stopping ADB remote service", e)
+            stopSelf()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
