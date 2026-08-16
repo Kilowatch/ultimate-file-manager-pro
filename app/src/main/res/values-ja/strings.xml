@@ -10155,6 +10155,99 @@ UFMプレーヤー設定
     <string name="properties_title">
 プロパティ
 </string>
+    <string name="properties_calculating_size">
+サイズを計算中…
+</string>
+    <string name="properties_multiple_items_title">
+%1$d 個の項目を選択中
+</string>
+    <string name="properties_selection_title">
+選択項目のプロパティ
+</string>
+    <string name="properties_folder_title">
+フォルダのプロパティ
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d 個のファイル、%2$d 個のフォルダ
+</string>
+    <string name="properties_item_count_files_only">
+%1$d 個のファイル
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d 個のフォルダ
+</string>
+    <string name="properties_empty_folder">
+空のフォルダ
+</string>
+    <string name="properties_label_type">
+ファイルの種類:
+</string>
+    <string name="properties_label_type_general">
+種類:
+</string>
+    <string name="properties_label_opens_with">
+開くアプリ:
+</string>
+    <string name="properties_label_location">
+場所:
+</string>
+    <string name="properties_label_size">
+サイズ:
+</string>
+    <string name="properties_label_contains">
+内容:
+</string>
+    <string name="properties_label_dimensions">
+寸法:
+</string>
+    <string name="properties_label_modified">
+更新日時:
+</string>
+    <string name="properties_label_attributes">
+属性:
+</string>
+    <string name="properties_attr_read_only">
+読み取り専用
+</string>
+    <string name="properties_attr_read_write">
+読み取り / 書き込み
+</string>
+    <string name="properties_attr_hidden">
+非表示
+</string>
+    <string name="properties_attr_protected">
+保護
+</string>
+    <string name="properties_attr_pinned">
+固定
+</string>
+    <string name="properties_type_folder">
+フォルダ
+</string>
+    <string name="properties_type_multiple">
+複数の種類
+</string>
+    <string name="properties_viewer_photo">
+UFM Photo Viewer
+</string>
+    <string name="properties_viewer_player">
+UFM Player
+</string>
+    <string name="properties_viewer_text">
+UFM Text Viewer
+</string>
+    <string name="properties_viewer_archive">
+UFM Archive Viewer
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF Viewer
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Spreadsheet Viewer
+</string>
+    <string name="properties_viewer_default">
+デフォルトアプリ
+</string>
     <string name="edit_tags_title">
 タグを編集
 </string>
@@ -10668,6 +10761,23 @@ GIFクリエイター設定
 </string>
     <string name="extract_move_success">
 %1$d項目を正常に解凍しました
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+ファイルを開いています…
+</string>
+    <string name="error_cannot_open_file">
+ファイルを開けません
+</string>
+    <string name="open_in_ufm">
+UFMで開く
+</string>
+    <string name="view_as_text">
+テキストとして表示
+</string>
+    <string name="browse_storage">
+ストレージを参照
 </string>
 </resources>
 

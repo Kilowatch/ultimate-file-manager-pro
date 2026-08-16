@@ -903,23 +903,9 @@ class FileBrowserFragment : Fragment() {
 
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
-            if (selected.size == 1 && !selected.first().isDirectory) {
-                val file = selected.first()
-                val sheet = FilePropertiesBottomSheet.newInstance(
-                    filePath = file.absolutePath,
-                    isDirectory = false,
-                    size = file.length(),
-                    lastModified = file.lastModified(),
-                    isNetwork = false
-                )
+            if (selected.isNotEmpty()) {
+                val sheet = FilePropertiesBottomSheet.newInstanceForLocalFiles(selected)
                 sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
-            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
-                val filePaths = selected.map { it.absolutePath }
-                val context = context ?: return@setOnClickListener
-                FileTagsManager.showMultiFileTagDialog(context, filePaths) {
-                    fileAdapter.exitSelectionMode()
-                    loadDirectory(currentDir)
-                }
             }
         }
 
@@ -1204,16 +1190,9 @@ class FileBrowserFragment : Fragment() {
             }
 
             // 14. Properties
-            if (count == 1 && !selected.first().isDirectory) {
-                val file = selected.first()
+            if (count > 0) {
                 list.add(FileToolsBottomSheet.ActionItem("properties", getString(R.string.action_properties), R.drawable.ic_about, "toolbar_properties") {
-                    val sheet = FilePropertiesBottomSheet.newInstance(
-                        filePath = file.absolutePath,
-                        isDirectory = false,
-                        size = file.length(),
-                        lastModified = file.lastModified(),
-                        isNetwork = false
-                    )
+                    val sheet = FilePropertiesBottomSheet.newInstanceForLocalFiles(selected)
                     sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
                 })
             }

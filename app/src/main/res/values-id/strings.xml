@@ -10155,6 +10155,99 @@ Properti
     <string name="properties_title">
 Properti
 </string>
+    <string name="properties_calculating_size">
+Menghitung ukuran\\u2026
+</string>
+    <string name="properties_multiple_items_title">
+%1$d item terpilih
+</string>
+    <string name="properties_selection_title">
+Properti Pilihan
+</string>
+    <string name="properties_folder_title">
+Properti Folder
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d file, %2$d folder
+</string>
+    <string name="properties_item_count_files_only">
+%1$d file
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d folder
+</string>
+    <string name="properties_empty_folder">
+Folder kosong
+</string>
+    <string name="properties_label_type">
+Jenis file:
+</string>
+    <string name="properties_label_type_general">
+Jenis:
+</string>
+    <string name="properties_label_opens_with">
+Dibuka dengan:
+</string>
+    <string name="properties_label_location">
+Lokasi:
+</string>
+    <string name="properties_label_size">
+Ukuran:
+</string>
+    <string name="properties_label_contains">
+Berisi:
+</string>
+    <string name="properties_label_dimensions">
+Dimensi:
+</string>
+    <string name="properties_label_modified">
+Diubah:
+</string>
+    <string name="properties_label_attributes">
+Atribut:
+</string>
+    <string name="properties_attr_read_only">
+Hanya baca
+</string>
+    <string name="properties_attr_read_write">
+Baca / Tulis
+</string>
+    <string name="properties_attr_hidden">
+Tersembunyi
+</string>
+    <string name="properties_attr_protected">
+Dilindungi
+</string>
+    <string name="properties_attr_pinned">
+Disematkan
+</string>
+    <string name="properties_type_folder">
+Folder file
+</string>
+    <string name="properties_type_multiple">
+Beberapa Jenis
+</string>
+    <string name="properties_viewer_photo">
+UFM Photo Viewer
+</string>
+    <string name="properties_viewer_player">
+UFM Player
+</string>
+    <string name="properties_viewer_text">
+UFM Text Viewer
+</string>
+    <string name="properties_viewer_archive">
+UFM Archive Viewer
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF Viewer
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Spreadsheet Viewer
+</string>
+    <string name="properties_viewer_default">
+Aplikasi default
+</string>
     <string name="edit_tags_title">
 Edit Tag
 </string>
@@ -10668,6 +10761,23 @@ File diekstrak. Telusuri tujuan dan ketuk Ekstrak di Sini.
 </string>
     <string name="extract_move_success">
 Berhasil mengekstrak %1$d item
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+Membuka file\\u2026
+</string>
+    <string name="error_cannot_open_file">
+Tidak dapat membuka file
+</string>
+    <string name="open_in_ufm">
+Buka di UFM
+</string>
+    <string name="view_as_text">
+Lihat sebagai Teks
+</string>
+    <string name="browse_storage">
+Jelajahi Penyimpanan
 </string>
 </resources>
 

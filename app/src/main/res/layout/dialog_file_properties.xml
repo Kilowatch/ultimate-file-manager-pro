@@ -12,117 +12,347 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Top row: Date/Time -->
-        <TextView
-            android:id="@+id/txtDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            tools:text="Saturday, 4 July 2026 • 12:34 pm" />
-
-        <!-- Filename -->
-        <TextView
-            android:id="@+id/txtFilename"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"
-            tools:text="Screenshot_20260704_123423_Ultimate File Manager Pro.jpg" />
-
-        <!-- Directory Path -->
-        <TextView
-            android:id="@+id/txtDirectory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            android:layout_marginBottom="20dp"
-            tools:text="/Internal storage/DCIM/Screenshots" />
-
-        <!-- Album/Folder title (Large) -->
-        <TextView
-            android:id="@+id/txtFolderTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"
-            tools:text="Screenshots" />
-
-        <!-- File details: Size | Resolution | Megapixels -->
-        <TextView
-            android:id="@+id/txtFileDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            android:layout_marginBottom="24dp"
-            tools:text="249 KB  |  1440x2992  |  4MP" />
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/dividerHorizontal"
-            android:layout_marginBottom="20dp" />
-
-        <!-- Tags Title + Edit Pen -->
+        <!-- Top Header: Icon + Name & Subtitle -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_icon_circle"
+                android:layout_marginEnd="16dp">
+
+                <ImageView
+                    android:id="@+id/imgPropertiesIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder"
+                    app:tint="?android:attr/textColorPrimary" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtFilename"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:ellipsize="middle"
+                    android:singleLine="false"
+                    android:maxLines="2"
+                    tools:text="Document_2026.pdf" />
+
+                <TextView
+                    android:id="@+id/txtTypeSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="13sp"
+                    android:layout_marginTop="2dp"
+                    tools:text="PDF Document (.pdf)" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider 1 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginBottom="16dp" />
+
+        <!-- General Info Section (Grid/Table style rows) -->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <!-- Type of File Row -->
+            <TableRow
+                android:id="@+id/rowType"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/lblType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_type"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtTypeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="JPEG image (.jpg)" />
+            </TableRow>
+
+            <!-- Opens With Row -->
+            <TableRow
+                android:id="@+id/rowOpensWith"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_opens_with"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtOpensWithValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="UFM Photo Viewer" />
+            </TableRow>
+
+            <!-- Location Row -->
+            <TableRow
+                android:id="@+id/rowLocation"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_location"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtLocationValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="/storage/emulated/0/DCIM/Screenshots" />
+            </TableRow>
+
+            <!-- Size Row -->
+            <TableRow
+                android:id="@+id/rowSize"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_size"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtSizeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="249 KB (255,420 bytes)" />
+            </TableRow>
+
+            <!-- Contains Row (Folders / Multi Selection) -->
+            <TableRow
+                android:id="@+id/rowContains"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_contains"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtContainsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="142 Files, 18 Folders" />
+            </TableRow>
+
+            <!-- Dimensions Row (Images) -->
+            <TableRow
+                android:id="@+id/rowDimensions"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_dimensions"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtDimensionsValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="1440 x 2992 (4.3 MP)" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Divider 2 -->
+        <View
+            android:id="@+id/dividerDates"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Timestamps Section -->
+        <TableLayout
+            android:id="@+id/tableTimestamps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1">
+
+            <TableRow
+                android:id="@+id/rowModified"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/properties_label_modified"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:paddingEnd="16dp" />
+
+                <TextView
+                    android:id="@+id/txtModifiedValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="14sp"
+                    tools:text="Saturday, 4 July 2026, 12:34:56 PM" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Divider 3: Attributes -->
+        <View
+            android:id="@+id/dividerAttributes"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Attributes Section -->
+        <LinearLayout
+            android:id="@+id/layoutAttributes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tags"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:text="@string/properties_label_attributes"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                android:layout_marginEnd="16dp" />
 
-            <View
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgAttributes"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/btnEditTags"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
-                android:background="@drawable/bg_icon_circle"
-                android:src="@drawable/ic_edit"
-                android:contentDescription="Edit Tags"
-                app:tint="?android:attr/textColorPrimary"
-                android:clickable="true"
-                android:focusable="true" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:chipSpacingHorizontal="6dp"
+                app:chipSpacingVertical="4dp" />
         </LinearLayout>
 
-        <!-- Tag pills flow/container -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/cgTags"
+        <!-- Tags Section Container -->
+        <LinearLayout
+            android:id="@+id/layoutTagsSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:chipSpacingHorizontal="8dp"
-            app:chipSpacingVertical="4dp" />
+            android:orientation="vertical">
 
-        <!-- No tags placeholder -->
-        <TextView
-            android:id="@+id/txtNoTags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="No tags added yet"
-            android:textColor="?android:attr/textColorSecondary"
-            android:textSize="14sp"
-            android:fontStyle="italic"
-            android:visibility="gone" />
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/dividerHorizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Tags Title + Edit Pen -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/btnEditTags"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:padding="6dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:src="@drawable/ic_edit"
+                    android:contentDescription="Edit Tags"
+                    app:tint="?android:attr/textColorPrimary"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Tag pills flow/container -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/cgTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingHorizontal="8dp"
+                app:chipSpacingVertical="4dp" />
+
+            <!-- No tags placeholder -->
+            <TextView
+                android:id="@+id/txtNoTags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No tags added yet"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="14sp"
+                android:fontStyle="italic"
+                android:visibility="gone" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

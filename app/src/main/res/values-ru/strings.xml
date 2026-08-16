@@ -10155,6 +10155,99 @@ URL сервера
     <string name="properties_title">
 Свойства
 </string>
+    <string name="properties_calculating_size">
+Вычисление размера…
+</string>
+    <string name="properties_multiple_items_title">
+Выбрано %1$d элементов
+</string>
+    <string name="properties_selection_title">
+Свойства выделения
+</string>
+    <string name="properties_folder_title">
+Свойства папки
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d файлов, %2$d папок
+</string>
+    <string name="properties_item_count_files_only">
+%1$d файлов
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d папок
+</string>
+    <string name="properties_empty_folder">
+Пустая папка
+</string>
+    <string name="properties_label_type">
+Тип файла:
+</string>
+    <string name="properties_label_type_general">
+Тип:
+</string>
+    <string name="properties_label_opens_with">
+Открывать с помощью:
+</string>
+    <string name="properties_label_location">
+Расположение:
+</string>
+    <string name="properties_label_size">
+Размер:
+</string>
+    <string name="properties_label_contains">
+Содержит:
+</string>
+    <string name="properties_label_dimensions">
+Размеры:
+</string>
+    <string name="properties_label_modified">
+Изменен:
+</string>
+    <string name="properties_label_attributes">
+Атрибуты:
+</string>
+    <string name="properties_attr_read_only">
+Только для чтения
+</string>
+    <string name="properties_attr_read_write">
+Чтение / Запись
+</string>
+    <string name="properties_attr_hidden">
+Скрытый
+</string>
+    <string name="properties_attr_protected">
+Защищенный
+</string>
+    <string name="properties_attr_pinned">
+Закрепленный
+</string>
+    <string name="properties_type_folder">
+Папка с файлами
+</string>
+    <string name="properties_type_multiple">
+Несколько типов
+</string>
+    <string name="properties_viewer_photo">
+UFM Просмотр фотографий
+</string>
+    <string name="properties_viewer_player">
+UFM Проигрыватель
+</string>
+    <string name="properties_viewer_text">
+UFM Просмотр текста
+</string>
+    <string name="properties_viewer_archive">
+UFM Просмотр архивов
+</string>
+    <string name="properties_viewer_pdf">
+UFM Просмотр PDF
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Просмотр таблиц
+</string>
+    <string name="properties_viewer_default">
+Приложение по умолчанию
+</string>
     <string name="edit_tags_title">
 Редактировать теги
 </string>
@@ -10668,6 +10761,23 @@ GIF успешно создан
 </string>
     <string name="extract_move_success">
 Успешно извлечено %1$d элемент(ов)
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+Открытие файла…
+</string>
+    <string name="error_cannot_open_file">
+Не удалось открыть файл
+</string>
+    <string name="open_in_ufm">
+Открыть в UFM
+</string>
+    <string name="view_as_text">
+Просмотреть как текст
+</string>
+    <string name="browse_storage">
+Обзор хранилища
 </string>
 </resources>
 

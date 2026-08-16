@@ -10155,6 +10155,99 @@ Box
     <string name="properties_title">
 الخصائص
 </string>
+    <string name="properties_calculating_size">
+جارٍ حساب الحجم…
+</string>
+    <string name="properties_multiple_items_title">
+%1$d عناصر محددة
+</string>
+    <string name="properties_selection_title">
+خصائص التحديد
+</string>
+    <string name="properties_folder_title">
+خصائص المجلد
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d ملفات، %2$d مجلدات
+</string>
+    <string name="properties_item_count_files_only">
+%1$d ملفات
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d مجلدات
+</string>
+    <string name="properties_empty_folder">
+مجلد فارغ
+</string>
+    <string name="properties_label_type">
+نوع الملف:
+</string>
+    <string name="properties_label_type_general">
+النوع:
+</string>
+    <string name="properties_label_opens_with">
+يُفتح بواسطة:
+</string>
+    <string name="properties_label_location">
+الموقع:
+</string>
+    <string name="properties_label_size">
+الحجم:
+</string>
+    <string name="properties_label_contains">
+يحتوي على:
+</string>
+    <string name="properties_label_dimensions">
+الأبعاد:
+</string>
+    <string name="properties_label_modified">
+آخر تعديل:
+</string>
+    <string name="properties_label_attributes">
+السمات:
+</string>
+    <string name="properties_attr_read_only">
+للقراءة فقط
+</string>
+    <string name="properties_attr_read_write">
+قراءة / كتابة
+</string>
+    <string name="properties_attr_hidden">
+مخفي
+</string>
+    <string name="properties_attr_protected">
+محمي
+</string>
+    <string name="properties_attr_pinned">
+مثبت
+</string>
+    <string name="properties_type_folder">
+مجلد
+</string>
+    <string name="properties_type_multiple">
+أنواع متعددة
+</string>
+    <string name="properties_viewer_photo">
+UFM Photo Viewer
+</string>
+    <string name="properties_viewer_player">
+UFM Player
+</string>
+    <string name="properties_viewer_text">
+UFM Text Viewer
+</string>
+    <string name="properties_viewer_archive">
+UFM Archive Viewer
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF Viewer
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Spreadsheet Viewer
+</string>
+    <string name="properties_viewer_default">
+التطبيق الافتراضي
+</string>
     <string name="edit_tags_title">
 تحرير العلامات
 </string>
@@ -10668,6 +10761,23 @@ Box
 </string>
     <string name="extract_move_success">
 تم استخراج %1$d عنصر بنجاح
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+جارٍ فتح الملف…
+</string>
+    <string name="error_cannot_open_file">
+تعذر فتح الملف
+</string>
+    <string name="open_in_ufm">
+فتح في UFM
+</string>
+    <string name="view_as_text">
+عرض كنص
+</string>
+    <string name="browse_storage">
+تصفح التخزين
 </string>
 </resources>
 

@@ -10155,6 +10155,99 @@ UFM Oynatıcı Ayarları
     <string name="properties_title">
 Özellikler
 </string>
+    <string name="properties_calculating_size">
+Boyut hesaplanıyor…
+</string>
+    <string name="properties_multiple_items_title">
+%1$d öğe seçildi
+</string>
+    <string name="properties_selection_title">
+Seçim Özellikleri
+</string>
+    <string name="properties_folder_title">
+Klasör Özellikleri
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d dosya, %2$d klasör
+</string>
+    <string name="properties_item_count_files_only">
+%1$d dosya
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d klasör
+</string>
+    <string name="properties_empty_folder">
+Boş klasör
+</string>
+    <string name="properties_label_type">
+Dosya türü:
+</string>
+    <string name="properties_label_type_general">
+Tür:
+</string>
+    <string name="properties_label_opens_with">
+Şununla açılır:
+</string>
+    <string name="properties_label_location">
+Konum:
+</string>
+    <string name="properties_label_size">
+Boyut:
+</string>
+    <string name="properties_label_contains">
+İçerik:
+</string>
+    <string name="properties_label_dimensions">
+Boyutlar:
+</string>
+    <string name="properties_label_modified">
+Değiştirilme:
+</string>
+    <string name="properties_label_attributes">
+Öznitelikler:
+</string>
+    <string name="properties_attr_read_only">
+Salt okunur
+</string>
+    <string name="properties_attr_read_write">
+Okuma / Yazma
+</string>
+    <string name="properties_attr_hidden">
+Gizli
+</string>
+    <string name="properties_attr_protected">
+Korumalı
+</string>
+    <string name="properties_attr_pinned">
+Sabitlenmiş
+</string>
+    <string name="properties_type_folder">
+Dosya klasörü
+</string>
+    <string name="properties_type_multiple">
+Birden çok tür
+</string>
+    <string name="properties_viewer_photo">
+UFM Fotoğraf Görüntüleyici
+</string>
+    <string name="properties_viewer_player">
+UFM Oynatıcı
+</string>
+    <string name="properties_viewer_text">
+UFM Metin Görüntüleyici
+</string>
+    <string name="properties_viewer_archive">
+UFM Arşiv Görüntüleyici
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF Görüntüleyici
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Elektronik Tablo Görüntüleyici
+</string>
+    <string name="properties_viewer_default">
+Varsayılan Uygulama
+</string>
     <string name="edit_tags_title">
 Etiketleri Düzenle
 </string>
@@ -10668,6 +10761,23 @@ Dosyalar çıkarıldı. Hedef klasöre git ve \\\'Buraya Çıkar\\\' düğmesine
 </string>
     <string name="extract_move_success">
 %1$d öğe başarıyla çıkarıldı.
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+Dosya açılıyor…
+</string>
+    <string name="error_cannot_open_file">
+Dosya açılamıyor
+</string>
+    <string name="open_in_ufm">
+UFM ile Aç
+</string>
+    <string name="view_as_text">
+Metin Olarak Görüntüle
+</string>
+    <string name="browse_storage">
+Depolamayı Gözat
 </string>
 </resources>
 

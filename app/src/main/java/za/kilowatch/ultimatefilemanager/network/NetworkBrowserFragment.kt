@@ -365,23 +365,9 @@ class NetworkBrowserFragment : Fragment() {
         
         fabProperties?.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
-            if (selected.size == 1 && !selected.first().isDirectory) {
-                val file = selected.first()
-                val sheet = FilePropertiesBottomSheet.newInstance(
-                    filePath = file.path,
-                    isDirectory = false,
-                    size = file.size,
-                    lastModified = file.lastModified,
-                    isNetwork = true
-                )
+            if (selected.isNotEmpty()) {
+                val sheet = FilePropertiesBottomSheet.newInstanceForNetworkFiles(selected, currentPath)
                 sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
-            } else if (selected.size > 1 && selected.all { !it.isDirectory }) {
-                val filePaths = selected.map { it.path }
-                val context = context ?: return@setOnClickListener
-                FileTagsManager.showMultiFileTagDialog(context, filePaths) {
-                    fileAdapter.exitSelectionMode()
-                    loadDirectory()
-                }
             }
         }
 
@@ -556,16 +542,9 @@ class NetworkBrowserFragment : Fragment() {
             }
 
             // 14. Properties
-            if (count == 1 && !selected.first().isDirectory) {
-                val file = selected.first()
+            if (count > 0) {
                 list.add(FileToolsBottomSheet.ActionItem("properties", getString(R.string.action_properties), R.drawable.ic_about, "toolbar_properties") {
-                    val sheet = FilePropertiesBottomSheet.newInstance(
-                        filePath = file.path,
-                        isDirectory = false,
-                        size = file.size,
-                        lastModified = file.lastModified,
-                        isNetwork = true
-                    )
+                    val sheet = FilePropertiesBottomSheet.newInstanceForNetworkFiles(selected, currentPath)
                     sheet.show(parentFragmentManager, FilePropertiesBottomSheet.TAG)
                 })
             }

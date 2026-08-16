@@ -10155,6 +10155,99 @@ Propriedades
     <string name="properties_title">
 Propriedades
 </string>
+    <string name="properties_calculating_size">
+Calculando tamanho…
+</string>
+    <string name="properties_multiple_items_title">
+%1$d itens selecionados
+</string>
+    <string name="properties_selection_title">
+Propriedades da seleção
+</string>
+    <string name="properties_folder_title">
+Propriedades da pasta
+</string>
+    <string name="properties_item_count_files_folders">
+%1$d arquivos, %2$d pastas
+</string>
+    <string name="properties_item_count_files_only">
+%1$d arquivos
+</string>
+    <string name="properties_item_count_folders_only">
+%1$d pastas
+</string>
+    <string name="properties_empty_folder">
+Pasta vazia
+</string>
+    <string name="properties_label_type">
+Tipo de arquivo:
+</string>
+    <string name="properties_label_type_general">
+Tipo:
+</string>
+    <string name="properties_label_opens_with">
+Abrir com:
+</string>
+    <string name="properties_label_location">
+Local:
+</string>
+    <string name="properties_label_size">
+Tamanho:
+</string>
+    <string name="properties_label_contains">
+Contém:
+</string>
+    <string name="properties_label_dimensions">
+Dimensões:
+</string>
+    <string name="properties_label_modified">
+Modificado:
+</string>
+    <string name="properties_label_attributes">
+Atributos:
+</string>
+    <string name="properties_attr_read_only">
+Somente leitura
+</string>
+    <string name="properties_attr_read_write">
+Leitura / Escrita
+</string>
+    <string name="properties_attr_hidden">
+Oculto
+</string>
+    <string name="properties_attr_protected">
+Protegido
+</string>
+    <string name="properties_attr_pinned">
+Fixado
+</string>
+    <string name="properties_type_folder">
+Pasta de arquivos
+</string>
+    <string name="properties_type_multiple">
+Vários tipos
+</string>
+    <string name="properties_viewer_photo">
+UFM Photo Viewer
+</string>
+    <string name="properties_viewer_player">
+UFM Player
+</string>
+    <string name="properties_viewer_text">
+UFM Text Viewer
+</string>
+    <string name="properties_viewer_archive">
+UFM Archive Viewer
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF Viewer
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM Spreadsheet Viewer
+</string>
+    <string name="properties_viewer_default">
+Aplicativo padrão
+</string>
     <string name="edit_tags_title">
 Editar Tags
 </string>
@@ -10668,6 +10761,23 @@ Arquivos extraídos. Navegue até o destino e toque em Extrair Aqui.
 </string>
     <string name="extract_move_success">
 %1$d item(ns) extraído(s) com sucesso
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+Abrindo arquivo…
+</string>
+    <string name="error_cannot_open_file">
+Não foi possível abrir o arquivo
+</string>
+    <string name="open_in_ufm">
+Abrir no UFM
+</string>
+    <string name="view_as_text">
+Visualizar como texto
+</string>
+    <string name="browse_storage">
+Explorar armazenamento
 </string>
 </resources>
 

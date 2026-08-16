@@ -10155,6 +10155,99 @@ UFM 플레이어 설정
     <string name="properties_title">
 속성
 </string>
+    <string name="properties_calculating_size">
+크기 계산 중…
+</string>
+    <string name="properties_multiple_items_title">
+%1$d개 항목 선택됨
+</string>
+    <string name="properties_selection_title">
+선택 항목 속성
+</string>
+    <string name="properties_folder_title">
+폴더 속성
+</string>
+    <string name="properties_item_count_files_folders">
+파일 %1$d개, 폴더 %2$d개
+</string>
+    <string name="properties_item_count_files_only">
+파일 %1$d개
+</string>
+    <string name="properties_item_count_folders_only">
+폴더 %1$d개
+</string>
+    <string name="properties_empty_folder">
+빈 폴더
+</string>
+    <string name="properties_label_type">
+파일 종류:
+</string>
+    <string name="properties_label_type_general">
+종류:
+</string>
+    <string name="properties_label_opens_with">
+연결 프로그램:
+</string>
+    <string name="properties_label_location">
+위치:
+</string>
+    <string name="properties_label_size">
+크기:
+</string>
+    <string name="properties_label_contains">
+포함:
+</string>
+    <string name="properties_label_dimensions">
+해상도:
+</string>
+    <string name="properties_label_modified">
+수정일:
+</string>
+    <string name="properties_label_attributes">
+속성:
+</string>
+    <string name="properties_attr_read_only">
+읽기 전용
+</string>
+    <string name="properties_attr_read_write">
+읽기/쓰기
+</string>
+    <string name="properties_attr_hidden">
+숨김
+</string>
+    <string name="properties_attr_protected">
+보호됨
+</string>
+    <string name="properties_attr_pinned">
+고정됨
+</string>
+    <string name="properties_type_folder">
+파일 폴더
+</string>
+    <string name="properties_type_multiple">
+여러 유형
+</string>
+    <string name="properties_viewer_photo">
+UFM 사진 뷰어
+</string>
+    <string name="properties_viewer_player">
+UFM 플레이어
+</string>
+    <string name="properties_viewer_text">
+UFM 텍스트 뷰어
+</string>
+    <string name="properties_viewer_archive">
+UFM 압축 파일 뷰어
+</string>
+    <string name="properties_viewer_pdf">
+UFM PDF 뷰어
+</string>
+    <string name="properties_viewer_spreadsheet">
+UFM 스프레드시트 뷰어
+</string>
+    <string name="properties_viewer_default">
+기본 앱
+</string>
     <string name="edit_tags_title">
 태그 편집
 </string>
@@ -10668,6 +10761,23 @@ GIF 생성 설정
 </string>
     <string name="extract_move_success">
 %1$d개 항목을 성공적으로 압축 풀었습니다.
+</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">
+파일 여는 중…
+</string>
+    <string name="error_cannot_open_file">
+파일을 열 수 없습니다
+</string>
+    <string name="open_in_ufm">
+UFM으로 열기
+</string>
+    <string name="view_as_text">
+텍스트로 보기
+</string>
+    <string name="browse_storage">
+저장소 찾아보기
 </string>
 </resources>
 
