@@ -1918,6 +1918,11 @@ Ihr Feedback hilft uns, die App zu verbessern, und unterstützt direkt die Weite
 \n
 Hätten Sie einen Moment Zeit, um eine Bewertung bei Google Play zu hinterlassen?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Ihr Feedback hilft uns, uns zu verbessern, und unterstützt direkt die Entwicklung der App.\n
+\n
+Könnten Sie sich einen Moment Zeit nehmen, um im Amazon Appstore eine Bewertung zu hinterlassen?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Bewertung ist auf Amazon-Geräten noch nicht verfügbar — vielen Dank für Ihre Geduld!
@@ -2212,7 +2217,10 @@ Entwickler unterstützen ☕
 Wählen Sie Ihren Espresso
 </string>
     <string name="tip_jar_loading">
-Preise von Google Play werden geladen...
+Preise werden geladen…
+</string>
+    <string name="tip_jar_loading_play">
+Preise von Google Play werden geladen…
 </string>
     <string name="tip_jar_transparency">
 UFM wurde völlig kostenlos und ohne Werbung entwickelt und wird das auch immer bleiben. Trinkgeld ist völlig optional – es hilft einfach, den Kaffee am Fließen zu halten und neue Funktionen zu bringen! ☕

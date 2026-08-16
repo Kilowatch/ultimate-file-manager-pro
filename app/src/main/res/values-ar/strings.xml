@@ -1918,6 +1918,11 @@ APKs
 \n
 هل يمكنك تخصيص لحظة لترك تقييم على Google Play؟
 </string>
+    <string name="rate_us_screen_body_amazon">
+تساعدنا ملاحظاتك على التحسين وتدعم تطوير التطبيق بشكل مباشر.\n
+\n
+هل يمكنك أن تأخذ لحظة لترك تقييم على Amazon Appstore؟
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 التقييم غير متوفر بعد على أجهزة Amazon — شكراً لصبرك!
@@ -2212,7 +2217,10 @@ SMB3 فقط (آمن حديث)
 اختر إسبرسو الخاص بك
 </string>
     <string name="tip_jar_loading">
-جارٍ تحميل الأسعار من Google Play...
+جارٍ تحميل الأسعار…
+</string>
+    <string name="tip_jar_loading_play">
+جارٍ تحميل الأسعار من Google Play…
 </string>
     <string name="tip_jar_transparency">
 تم بناء UFM ليكون مجانيًا تمامًا بدون إعلانات، وسيبقى كذلك دائمًا. البقشيش اختياري تمامًا — فهو ببساطة يساعد في استمرار تدفق القهوة وظهور ميزات جديدة! ☕

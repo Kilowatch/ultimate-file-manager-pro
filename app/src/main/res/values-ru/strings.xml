@@ -1918,6 +1918,11 @@ New File.txt
 \n
 Не могли бы вы уделить минутку и оставить отзыв в Google Play?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Ваш отзыв помогает нам становиться лучше и напрямую поддерживает развитие приложения.\n
+\n
+Не могли бы вы уделить минутку и оставить отзыв в Amazon Appstore?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Оценка пока недоступна на устройствах Amazon — спасибо за терпение!
@@ -2212,7 +2217,10 @@ DLNA
 Выберите свой эспрессо
 </string>
     <string name="tip_jar_loading">
-Загрузка цен из Google Play...
+Загрузка цен…
+</string>
+    <string name="tip_jar_loading_play">
+Загрузка цен из Google Play…
 </string>
     <string name="tip_jar_transparency">
 UFM создан полностью бесплатным без рекламы и останется таким навсегда. Чаевые совершенно необязательны — они просто помогают поддерживать поток кофе и появление новых функций! ☕

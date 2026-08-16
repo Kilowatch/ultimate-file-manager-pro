@@ -1918,6 +1918,11 @@ Tus comentarios nos ayudan a mejorar y apoyan directamente el desarrollo de la a
 \n
 ¿Podrías tomarte un momento para dejar una reseña en Google Play?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Tus comentarios nos ayudan a mejorar y apoyan directamente el desarrollo de la aplicación.\n
+\n
+¿Podrías tomarte un momento para dejar una reseña en Amazon Appstore?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 La calificación aún no está disponible en dispositivos Amazon — ¡gracias por tu paciencia!
@@ -2212,7 +2217,10 @@ Apoya al desarrollador ☕
 Elige tu expreso
 </string>
     <string name="tip_jar_loading">
-Cargando precios desde Google Play...
+Cargando precios…
+</string>
+    <string name="tip_jar_loading_play">
+Cargando precios desde Google Play…
 </string>
     <string name="tip_jar_transparency">
 UFM se creó para ser completamente gratuito y sin anuncios, y siempre lo será. La propina es opcional: solo ayuda a mantener el café y las nuevas funciones en marcha. ☕

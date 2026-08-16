@@ -685,6 +685,7 @@
     <string name="rate_us_subtitle">Enjoying the app?</string>
     <string name="rate_us_screen_title">Enjoying Ultimate File Manager Pro?</string>
     <string name="rate_us_screen_body">Your feedback helps us improve and directly supports the development of the app.\n\nCould you take a moment to leave a review on Google Play?</string>
+    <string name="rate_us_screen_body_amazon">Your feedback helps us improve and directly supports the development of the app.\n\nCould you take a moment to leave a review on the Amazon Appstore?</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">Rating is not yet available on Amazon devices — thank you for your patience!</string>
     <string name="rate_us_button_play">Rate on Google Play</string>
@@ -791,7 +792,8 @@
     <string name="tip_jar_community_contributions">Community contributions this month</string>
     <string name="tip_jar_subtitle">Fuel the developer ☕</string>
     <string name="tip_jar_header_sub">Pick your espresso</string>
-    <string name="tip_jar_loading">Loading prices from Google Play...</string>
+    <string name="tip_jar_loading">Loading prices…</string>
+    <string name="tip_jar_loading_play">Loading prices from Google Play…</string>
     <string name="tip_jar_transparency">UFM was built to be completely free with no ads, and will always stay that way. Tipping is entirely optional — it simply helps keep the coffee flowing and new features coming! ☕</string>
     <string name="tip_jar_ristretto_title">Ristretto Shot</string>
     <string name="tip_jar_ristretto_desc">Unlocked! You\'re a true supporter.</string>

@@ -1918,6 +1918,11 @@ Geri bildiriminiz gelişmemize yardımcı olur ve uygulamanın geliştirilmesini
 \n
 Google Play\'de bir inceleme bırakmak için bir dakikanızı ayırır mısınız?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Geri bildirimleriniz uygulamayı geliştirmemize yardımcı olur ve uygulamanın geliştirilmesini doğrudan destekler.\n
+\n
+Amazon Appstore\\\'da bir değerlendirme bırakmak için bir dakikanızı ayırır mısınız?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Amazon cihazlarında derecelendirme henüz kullanılamıyor — sabrınız için teşekkürler!
@@ -2212,7 +2217,10 @@ Geliştiriciyi destekle ☕
 Espressonuzu seçin
 </string>
     <string name="tip_jar_loading">
-Google Play\'den fiyatlar yükleniyor...
+Fiyatlar yükleniyor…
+</string>
+    <string name="tip_jar_loading_play">
+Google Play\\\'den fiyatlar yükleniyor…
 </string>
     <string name="tip_jar_transparency">
 UFM tamamen ücretsiz ve reklamsız olarak yapıldı ve her zaman böyle kalacak. Bahşiş tamamen isteğe bağlıdır — sadece kahvenin taze kalmasına ve yeni özelliklerin gelmesine yardımcı olur! ☕

@@ -1918,6 +1918,11 @@ Vos commentaires nous aident à nous améliorer et soutiennent directement le d�
 \n
 Pourriez-vous prendre un moment pour laisser un avis sur Google Play ?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Vos retours nous aident à nous améliorer et soutiennent directement le développement de l\\\'application.\n
+\n
+Pourriez-vous prendre un moment pour laisser un avis sur l\\\'Amazon Appstore ?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 La notation n\\\'est pas encore disponible sur les appareils Amazon — merci de votre patience !
@@ -2212,7 +2217,10 @@ Soutenir le développeur ☕
 Choisissez votre expresso
 </string>
     <string name="tip_jar_loading">
-Chargement des prix depuis Google Play...
+Chargement des prix…
+</string>
+    <string name="tip_jar_loading_play">
+Chargement des prix depuis Google Play…
 </string>
     <string name="tip_jar_transparency">
 UFM a été conçu pour être totalement gratuit sans publicité, et le restera toujours. Le pourboire est entièrement facultatif — il permet simplement de garder le café bien chaud et les nouvelles fonctionnalités en route ! ☕

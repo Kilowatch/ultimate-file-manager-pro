@@ -77,15 +77,17 @@ class RateUsActivity : AppCompatActivity() {
         
         btnBack?.setOnClickListener { finish() }
 
-        // Rate Us Button
+        // Body text & Rate Us Button
+        val txtBody = findViewById<android.widget.TextView?>(R.id.txtRateUsBody)
         val btnRateUs = findViewById<MaterialButton>(R.id.btnRateUs)
         val isAmazon = DeviceUtils.isAmazonDevice(this)
 
-        // Show the correct store label
-        btnRateUs.text = if (isAmazon) {
-            getString(R.string.rate_us_button_amazon)
+        if (isAmazon) {
+            txtBody?.text = getString(R.string.rate_us_screen_body_amazon)
+            btnRateUs.text = getString(R.string.rate_us_button_amazon)
         } else {
-            getString(R.string.rate_us_button_play)
+            txtBody?.text = getString(R.string.rate_us_screen_body)
+            btnRateUs.text = getString(R.string.rate_us_button_play)
         }
 
         if (isTv) {

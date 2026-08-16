@@ -34,6 +34,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
     private lateinit var txtBeansPrice: TextView
 
     private lateinit var txtThankYou: TextView
+    private var txtLoading: TextView? = null
     private var isTv = false
 
     override fun attachBaseContext(newBase: android.content.Context) {
@@ -77,6 +78,11 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         setupViews()
 
         if (BuildConfig.AMAZON_IAP_ENABLED) {
+            txtLoading?.text = getString(R.string.tip_jar_loading_amazon)
+            txtLoading?.visibility = View.VISIBLE
+            // Keep buttons enabled & focusable by default so Fire TV D-pad navigation works immediately
+            setButtonsEnabled(true)
+
             amazonBillingManager = AmazonBillingManager(
                 context = this,
                 onPurchaseSuccess = { sku ->
@@ -87,25 +93,26 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
                 },
                 onProductsLoaded = {
                     if (!isFinishing && !isDestroyed) {
+                        txtLoading?.visibility = View.GONE
                         updateButtonPrices()
                         setButtonsEnabled(true)
                     }
                 },
                 onError = { msg ->
                     if (!isFinishing && !isDestroyed) {
+                        txtLoading?.visibility = View.GONE
                         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
                     }
                 }
             )
             amazonBillingManager.register(this)
             if (amazonBillingManager.hasCachedProducts()) {
+                txtLoading?.visibility = View.GONE
                 updateButtonPrices()
-                setButtonsEnabled(true)
-            } else {
-                setButtonsEnabled(false)
             }
         } else {
             setButtonsEnabled(false)
+            txtLoading?.visibility = View.GONE
             txtThankYou.visibility = View.VISIBLE
             txtThankYou.text = getString(R.string.billing_unavailable_amazon_msg)
         }
@@ -155,18 +162,28 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         txtBeansPrice = findViewById(R.id.txtBeansPrice)
 
         txtThankYou = findViewById(R.id.txtThankYou)
+        txtLoading = findViewById(R.id.txtTipLoading)
 
         // Setup click listeners
         btnEspresso.setOnClickListener { triggerPurchase(AmazonBillingManager.SKU_ESPRESSO) }
         btnLatte.setOnClickListener { triggerPurchase(AmazonBillingManager.SKU_LATTE) }
         btnBeans.setOnClickListener { triggerPurchase(AmazonBillingManager.SKU_BEANS) }
 
-        // Setup TV focus listeners
+        // Setup TV focus listeners & navigation chain
         if (isTv) {
             val whiteCsl = ColorStateList.valueOf(android.graphics.Color.WHITE)
             val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
 
+            btnBack.nextFocusDownId = R.id.btnEspresso
+            btnEspresso.nextFocusUpId = R.id.btnBack
+            btnEspresso.nextFocusDownId = R.id.btnLatte
+            btnLatte.nextFocusUpId = R.id.btnEspresso
+            btnLatte.nextFocusDownId = R.id.btnBeans
+            btnBeans.nextFocusUpId = R.id.btnLatte
+
             listOf(btnEspresso, btnLatte, btnBeans).forEach { button ->
+                button.isFocusable = true
+                button.isClickable = true
                 button.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         button.backgroundTintList = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))

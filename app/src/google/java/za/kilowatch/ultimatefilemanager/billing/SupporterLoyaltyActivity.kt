@@ -167,6 +167,7 @@ class SupporterLoyaltyActivity : AppCompatActivity() {
         
         txtThankYou  = findViewById(R.id.txtThankYou)
         txtLoading   = findViewById(R.id.txtTipLoading)
+        txtLoading.text = getString(R.string.tip_jar_loading_play)
         coffeeIcon   = findViewById(R.id.imgCoffeeTv)
         if (coffeeIcon == null) {
             coffeeIcon = window.decorView.findViewWithTag("coffeeIcon")

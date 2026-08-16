@@ -1918,6 +1918,11 @@ UFM Slide Show
 \n
 Чи не могли б ви знайти хвилинку, щоб залишити відгук у Google Play?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Ваш відгук допомагає нам покращуватися та безпосередньо підтримує розробку застосунку.\n
+\n
+Чи не могли б ви приділити хвилинку, щоб залишити відгук в Amazon Appstore?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Оцінка ще недоступна на пристроях Amazon — дякуємо за терпіння!
@@ -2212,7 +2217,10 @@ DLNA
 Оберіть свій еспресо
 </string>
     <string name="tip_jar_loading">
-Завантаження цін з Google Play...
+Завантаження цін…
+</string>
+    <string name="tip_jar_loading_play">
+Завантаження цін з Google Play…
 </string>
     <string name="tip_jar_transparency">
 UFM створено повністю безкоштовним без реклами, і таким він залишиться назавжди. Чаєві — це суто добровільно, вони просто допомагають підтримувати потік кави та нових функцій! ☕

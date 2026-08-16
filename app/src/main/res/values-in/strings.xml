@@ -1918,6 +1918,11 @@ Masukan Anda membantu kami meningkatkan dan secara langsung mendukung pengembang
 \n
 Bisakah Anda meluangkan waktu untuk meninggalkan ulasan di Google Play?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Umpan balik Anda membantu kami meningkatkan dan secara langsung mendukung pengembangan aplikasi.\n
+\n
+Bisakah Anda meluangkan waktu sejenak untuk memberikan ulasan di Amazon Appstore?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Rating belum tersedia di perangkat Amazon — terima kasih atas kesabaran Anda!
@@ -2212,7 +2217,10 @@ Dukung pengembang ☕
 Pilih espresso Anda
 </string>
     <string name="tip_jar_loading">
-Memuat harga dari Google Play...
+Memuat harga…
+</string>
+    <string name="tip_jar_loading_play">
+Memuat harga dari Google Play…
 </string>
     <string name="tip_jar_transparency">
 UFM dibuat sepenuhnya gratis tanpa iklan, dan akan tetap seperti itu. Memberi tip sepenuhnya opsional — ini hanya membantu menjaga kopi tetap mengalir dan fitur baru terus hadir! ☕

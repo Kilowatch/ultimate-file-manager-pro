@@ -1918,6 +1918,11 @@ Seu feedback nos ajuda a melhorar e apoia diretamente o desenvolvimento do aplic
 \n
 Você poderia dedicar um momento para deixar uma avaliação no Google Play?
 </string>
+    <string name="rate_us_screen_body_amazon">
+Seu feedback nos ajuda a melhorar e apoia diretamente o desenvolvimento do aplicativo.\n
+\n
+Você poderia dedicar um momento para deixar uma avaliação na Amazon Appstore?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 A avaliação ainda não está disponível em dispositivos Amazon — obrigado pela sua paciência!
@@ -2212,7 +2217,10 @@ Apoie o desenvolvedor ☕
 Escolha seu café
 </string>
     <string name="tip_jar_loading">
-Carregando preços do Google Play...
+Carregando preços…
+</string>
+    <string name="tip_jar_loading_play">
+Carregando preços do Google Play…
 </string>
     <string name="tip_jar_transparency">
 O UFM foi construído para ser completamente gratuito e sem anúncios, e sempre será assim. Dar gorjeta é totalmente opcional — apenas ajuda a manter o café fluindo e novos recursos chegando! ☕

@@ -61,6 +61,7 @@ release.properties
 # may later hold secrets, so never commit it.
 .env
 *.env
+generate_release_summary.py
 
 # ── 🔴 Non-FOSS: Compiled Release & Distribution Files ───────
 app/store/

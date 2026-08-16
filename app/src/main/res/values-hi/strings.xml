@@ -1918,6 +1918,11 @@ New File.txt
 \n
 क्या आप Google Play पर एक समीक्षा छोड़ने के लिए कुछ समय निकाल सकते हैं?
 </string>
+    <string name="rate_us_screen_body_amazon">
+आपकी प्रतिक्रिया से हमें सुधार करने में मदद मिलती है और यह सीधे ऐप के विकास का समर्थन करती है।\n
+\n
+क्या आप Amazon Appstore पर समीक्षा देने के लिए कुछ समय निकाल सकते हैं?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Amazon उपकरणों पर रेटिंग अभी उपलब्ध नहीं है — धैर्य के लिए धन्यवाद!
@@ -2212,7 +2217,10 @@ SMB प्रोटोकॉल संस्करण (केवल SMB)
 अपनी एस्प्रेसो चुनें
 </string>
     <string name="tip_jar_loading">
-Google Play से मूल्य लोड हो रहे हैं...
+मूल्य लोड हो रहे हैं…
+</string>
+    <string name="tip_jar_loading_play">
+Google Play से मूल्य लोड हो रहे हैं…
 </string>
     <string name="tip_jar_transparency">
 UFM पूरी तरह से मुफ़्त बनाया गया था और हमेशा ऐसा ही रहेगा। टिप देना पूरी तरह से ऐच्छिक है — यह बस कॉफी का प्रवाह बनाए रखने और नई सुविधाएँ लाने में मदद करता है! ☕

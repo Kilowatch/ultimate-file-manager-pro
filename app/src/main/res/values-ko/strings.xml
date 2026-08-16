@@ -1918,6 +1918,11 @@ Ultimate File Manager Pro가 마음에 드시나요?
 \n
 잠시 시간을 내어 Google Play에 리뷰를 남겨주시겠습니까?
 </string>
+    <string name="rate_us_screen_body_amazon">
+여러분의 피드백은 앱 개선과 개발에 직접적으로 도움이 됩니다.\n
+\n
+잠시 시간을 내어 아마존 앱스토어에 리뷰를 남겨 주시겠어요?
+</string>
     <!-- Amazon Store rating strings -->
     <string name="rating_unavailable_amazon_msg">
 Amazon 기기에서는 아직 평가를 사용할 수 없습니다 — 인내심을 가져주셔서 감사합니다!
@@ -2212,7 +2217,10 @@ SMB3 전용 (최신 보안)
 에스프레소 선택
 </string>
     <string name="tip_jar_loading">
-Google Play에서 가격 로딩 중...
+가격을 불러오는 중…
+</string>
+    <string name="tip_jar_loading_play">
+Google Play에서 가격을 불러오는 중…
 </string>
     <string name="tip_jar_transparency">
 UFM은 완전 무료이며 광고가 없도록 만들어졌으며, 앞으로도 그럴 것입니다. 팁은 전적으로 선택 사항입니다. 커피가 끊이지 않고 새로운 기능이 계속 나오도록 도와줄 뿐입니다! ☕
