@@ -10779,6 +10779,26 @@ UFM Spreadsheet Viewer
     <string name="browse_storage">
 تصفح التخزين
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+مجلد النظام المحمي
+</string>
+    <string name="protected_folder_desc">
+يقيّد Android 11+ الوصول إلى مجلدات Android/data وAndroid/obb. فعّل الوصول الموسّع أو امنح إذن المجلد لعرض المحتويات.
+</string>
+    <string name="protected_folder_btn_shizuku">
+فعّل الوصول الموسّع
+</string>
+    <string name="protected_folder_btn_saf">
+منح الوصول إلى المجلد (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+تم منح إذن الوصول للمجلد
+</string>
+    <string name="protected_folder_saf_denied">
+لم يتم منح إذن الوصول للمجلد
+</string>
 </resources>
 
 

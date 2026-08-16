@@ -10779,6 +10779,26 @@ UFM으로 열기
     <string name="browse_storage">
 저장소 찾아보기
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+보호된 시스템 폴더
+</string>
+    <string name="protected_folder_desc">
+Android 11+에서는 Android/data 및 Android/obb 폴더에 대한 접근이 제한됩니다. 콘텐츠를 보려면 고급 접근 권한을 활성화하거나 폴더 권한을 부여하세요.
+</string>
+    <string name="protected_folder_btn_shizuku">
+고급 접근 권한 활성화
+</string>
+    <string name="protected_folder_btn_saf">
+폴더 접근 권한 부여 (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+폴더 접근 권한이 부여되었습니다.
+</string>
+    <string name="protected_folder_saf_denied">
+폴더 접근 권한이 부여되지 않았습니다.
+</string>
 </resources>
 
 

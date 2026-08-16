@@ -120,6 +120,42 @@ class FileBrowserFragment : Fragment() {
         }
     }
 
+    private val safTreeLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val uri = result.data?.data
+            if (uri != null) {
+                val ctx = context ?: return@registerForActivityResult
+                try {
+                    val takeFlags = (result.data?.flags ?: 0) and (
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    val flagsToUse = if (takeFlags != 0) takeFlags else (
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    ctx.contentResolver.takePersistableUriPermission(uri, flagsToUse)
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(ctx, currentDir.absolutePath, uri)
+                    android.widget.Toast.makeText(ctx, R.string.protected_folder_saf_success, android.widget.Toast.LENGTH_SHORT).show()
+                    loadDirectory(currentDir)
+                } catch (e: Exception) {
+                    android.util.Log.e("FileBrowserFragment", "Failed to persist SAF tree uri: ${e.message}")
+                }
+            }
+        } else {
+            context?.let { android.widget.Toast.makeText(it, R.string.protected_folder_saf_denied, android.widget.Toast.LENGTH_SHORT).show() }
+        }
+    }
+
+    private fun launchSafTreePicker(path: String) {
+        try {
+            val intent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createDocumentTreeIntent(path)
+            safTreeLauncher.launch(intent)
+        } catch (e: Exception) {
+            context?.let { android.widget.Toast.makeText(it, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show() }
+        }
+    }
+
 
     
     private var btnSearchToggle: ImageView? = null
@@ -228,7 +264,9 @@ class FileBrowserFragment : Fragment() {
         val initialPath = arguments?.getString(ARG_INITIAL_PATH)
         val isInitProtected = !initialPath.isNullOrEmpty() && ShizukuShellWrapper.isProtectedPath(initialPath)
         val initExists = if (isInitProtected) {
-            if (ShizukuShellWrapper.canUseShizukuForPath(initialPath!!)) ShizukuShellWrapper.exists(initialPath) else true
+            if (ShizukuShellWrapper.canUseShizukuForPath(initialPath!!)) ShizukuShellWrapper.exists(initialPath)
+            else if (context != null && SafTreeManager.hasTreePermissionForPath(requireContext(), initialPath)) SafTreeManager.exists(requireContext(), initialPath)
+            else true
         } else {
             !initialPath.isNullOrEmpty() && File(initialPath).exists()
         }
@@ -239,6 +277,10 @@ class FileBrowserFragment : Fragment() {
                     val pName = initialPath.substringAfterLast("/")
                     val pParent = initialPath.substringBeforeLast("/", "")
                     ShizukuFile(pParent, pName, true)
+                } else if (isInitProtected && context != null && SafTreeManager.hasTreePermissionForPath(requireContext(), initialPath!!)) {
+                    val pName = initialPath.substringAfterLast("/")
+                    val pParent = initialPath.substringBeforeLast("/", "")
+                    SafFile(pParent, pName, true)
                 } else {
                     File(initialPath!!)
                 }
@@ -247,6 +289,11 @@ class FileBrowserFragment : Fragment() {
                 val pName = rootPath.substringAfterLast("/")
                 val pParent = rootPath.substringBeforeLast("/", "")
                 ShizukuFile(pParent, pName, true)
+            }
+            isMountProtected && context != null && SafTreeManager.hasTreePermissionForPath(requireContext(), rootPath) -> {
+                val pName = rootPath.substringAfterLast("/")
+                val pParent = rootPath.substringBeforeLast("/", "")
+                SafFile(pParent, pName, true)
             }
             File(rootPath).exists() -> File(rootPath)
             else -> {
@@ -1561,9 +1608,13 @@ class FileBrowserFragment : Fragment() {
         var targetDir = directory
         val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(targetDir.absolutePath)
         val canUseShizuku = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)
+        val hasSafTree = isProtected && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, targetDir.absolutePath)
+
         val dirExists = if (isProtected) {
             if (canUseShizuku) {
                 if (targetDir is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) true else za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(targetDir.absolutePath)
+            } else if (hasSafTree) {
+                if (targetDir is za.kilowatch.ultimatefilemanager.storage.SafFile) true else za.kilowatch.ultimatefilemanager.storage.SafTreeManager.exists(ctx, targetDir.absolutePath)
             } else {
                 true
             }
@@ -1582,6 +1633,10 @@ class FileBrowserFragment : Fragment() {
             val pName = targetDir.name
             val pParent = targetDir.parent ?: ""
             targetDir = za.kilowatch.ultimatefilemanager.storage.ShizukuFile(pParent, pName, true)
+        } else if (isProtected && hasSafTree && targetDir !is za.kilowatch.ultimatefilemanager.storage.SafFile) {
+            val pName = targetDir.name
+            val pParent = targetDir.parent ?: ""
+            targetDir = za.kilowatch.ultimatefilemanager.storage.SafFile(pParent, pName, true)
         }
 
         // Load folder-specific sort settings (or fall back to global) on IO thread
@@ -1640,6 +1695,8 @@ class FileBrowserFragment : Fragment() {
                 val hiddenPaths = za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase.getInstance(requireContext().applicationContext).hiddenFileDao().getAllPaths().toSet()
                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
+                } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), targetDir.absolutePath)) {
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(requireContext(), targetDir.absolutePath)
                 } else {
                     targetDir.listFiles()?.toList() ?: emptyList()
                 }
@@ -1661,6 +1718,8 @@ class FileBrowserFragment : Fragment() {
                             if (fileIndices.isEmpty()) {
                                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
+                                } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), targetDir.absolutePath)) {
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(requireContext(), targetDir.absolutePath)
                                 } else {
                                     targetDir.listFiles()?.toList() ?: emptyList()
                                 }
@@ -1679,11 +1738,19 @@ class FileBrowserFragment : Fragment() {
                                             docLength = index.size,
                                             docLastModified = index.lastModified
                                         )
+                                    } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(requireContext(), index.path)) {
+                                        za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                            parentPath = index.folderPath,
+                                            docName = index.filename,
+                                            isDir = index.isDirectory,
+                                            docLength = index.size,
+                                            docLastModified = index.lastModified
+                                        )
                                     } else {
                                         File(index.path)
                                     }
                                 }.filter { file ->
-                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
+                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file is za.kilowatch.ultimatefilemanager.storage.SafFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
                                 }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
@@ -2808,6 +2875,30 @@ class FileBrowserFragment : Fragment() {
             layoutEmpty.visibility = View.VISIBLE
             recyclerFiles.visibility = View.GONE
             lottieEmptyFolder?.playAnimation()
+
+            val ctx = context
+            val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(currentDir.absolutePath)
+            val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)
+            val hasSaf = isProtected && ctx != null && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(ctx, currentDir.absolutePath)
+
+            val layoutProtected = view?.findViewById<View>(R.id.layoutProtectedPrompt)
+            val txtEmptyFolder = view?.findViewById<View>(R.id.txtEmptyFolder)
+            if (isProtected && !canUseShizuku && !hasSaf && ctx != null) {
+                val isTv = DeviceUtils.isTvDevice(ctx)
+                layoutProtected?.visibility = View.VISIBLE
+                txtEmptyFolder?.visibility = View.GONE
+                view?.findViewById<View>(R.id.btnEnableElevated)?.setOnClickListener {
+                    val intent = if (isTv) Intent(ctx, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
+                                 else Intent(ctx, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
+                    startActivity(intent)
+                }
+                view?.findViewById<View>(R.id.btnGrantSaf)?.setOnClickListener {
+                    launchSafTreePicker(currentDir.absolutePath)
+                }
+            } else {
+                layoutProtected?.visibility = View.GONE
+                txtEmptyFolder?.visibility = View.VISIBLE
+            }
         } else {
             layoutEmpty.visibility = View.GONE
             recyclerFiles.visibility = View.VISIBLE

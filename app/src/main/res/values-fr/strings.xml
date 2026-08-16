@@ -10779,6 +10779,26 @@ Afficher comme texte
     <string name="browse_storage">
 Explorer le stockage
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Dossier système protégé
+</string>
+    <string name="protected_folder_desc">
+Android 11+ restreint l\\\'accès aux dossiers Android/data et Android/obb. Activez l\\\'accès élevé ou accordez l\\\'autorisation d\\\'accès au dossier pour voir son contenu.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Activer l\\\'accès élevé
+</string>
+    <string name="protected_folder_btn_saf">
+Accorder l\\\'accès au dossier (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Accès au dossier accordé
+</string>
+    <string name="protected_folder_saf_denied">
+L\\\'accès au dossier n\\\'a pas été accordé
+</string>
 </resources>
 
 

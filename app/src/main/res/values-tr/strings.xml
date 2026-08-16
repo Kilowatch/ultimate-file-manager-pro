@@ -10779,6 +10779,26 @@ Metin Olarak Görüntüle
     <string name="browse_storage">
 Depolamayı Gözat
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Korumalı Sistem Klasörü
+</string>
+    <string name="protected_folder_desc">
+Android 11+, Android/data ve Android/obb klasörlerine erişimi kısıtlar. İçerikleri görüntülemek için Yükseltilmiş Erişimi etkinleştirin veya klasör izni verin.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Yükseltilmiş Erişimi Etkinleştir
+</string>
+    <string name="protected_folder_btn_saf">
+Klasör Erişimi Ver (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Klasör erişimi verildi
+</string>
+    <string name="protected_folder_saf_denied">
+Klasör erişimi verilmedi
+</string>
 </resources>
 
 

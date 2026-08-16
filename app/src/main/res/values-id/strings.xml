@@ -10779,6 +10779,26 @@ Lihat sebagai Teks
     <string name="browse_storage">
 Jelajahi Penyimpanan
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Folder Sistem yang Dilindungi
+</string>
+    <string name="protected_folder_desc">
+Android 11+ membatasi akses ke folder Android/data dan Android/obb. Aktifkan Akses yang Ditingkatkan atau berikan izin folder untuk melihat isinya.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Aktifkan Akses yang Ditingkatkan
+</string>
+    <string name="protected_folder_btn_saf">
+Beri Akses Folder (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Akses folder telah diberikan
+</string>
+    <string name="protected_folder_saf_denied">
+Akses folder tidak diberikan
+</string>
 </resources>
 
 

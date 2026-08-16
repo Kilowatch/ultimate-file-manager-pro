@@ -3798,6 +3798,14 @@
     <string name="open_in_ufm">Open in UFM</string>
     <string name="view_as_text">View as Text</string>
     <string name="browse_storage">Browse Storage</string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">Protected System Folder</string>
+    <string name="protected_folder_desc">Android 11+ restricts access to Android/data and Android/obb folders. Enable Elevated Access or grant folder permission to view contents.</string>
+    <string name="protected_folder_btn_shizuku">Enable Elevated Access</string>
+    <string name="protected_folder_btn_saf">Grant Folder Access (SAF)</string>
+    <string name="protected_folder_saf_success">Folder access granted</string>
+    <string name="protected_folder_saf_denied">Folder access was not granted</string>
 </resources>
 
 

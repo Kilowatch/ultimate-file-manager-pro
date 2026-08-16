@@ -10791,6 +10791,26 @@ Ver como texto
     <string name="browse_storage">
 Explorar almacenamiento
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Carpeta protegida del sistema
+</string>
+    <string name="protected_folder_desc">
+Android 11+ restringe el acceso a las carpetas Android/data y Android/obb. Habilita el Acceso Elevado u otorga permiso de carpeta para ver el contenido.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Habilitar Acceso Elevado
+</string>
+    <string name="protected_folder_btn_saf">
+Otorgar Acceso a la Carpeta (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Acceso a la carpeta otorgado
+</string>
+    <string name="protected_folder_saf_denied">
+No se otorgó acceso a la carpeta
+</string>
 </resources>
 
 

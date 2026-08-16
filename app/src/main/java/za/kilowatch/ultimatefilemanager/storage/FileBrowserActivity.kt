@@ -226,6 +226,41 @@ class FileBrowserActivity : AppCompatActivity() {
         pendingCompressPassword    = null
     }
 
+    private val safTreeLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val uri = result.data?.data
+            if (uri != null) {
+                try {
+                    val takeFlags = (result.data?.flags ?: 0) and (
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    val flagsToUse = if (takeFlags != 0) takeFlags else (
+                        android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                    )
+                    contentResolver.takePersistableUriPermission(uri, flagsToUse)
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.saveTreePermission(this, currentDir.absolutePath, uri)
+                    android.widget.Toast.makeText(this, R.string.protected_folder_saf_success, android.widget.Toast.LENGTH_SHORT).show()
+                    loadDirectory(currentDir)
+                } catch (e: Exception) {
+                    android.util.Log.e("FileBrowser", "Failed to persist SAF tree uri: ${e.message}")
+                }
+            }
+        } else {
+            android.widget.Toast.makeText(this, R.string.protected_folder_saf_denied, android.widget.Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun launchSafTreePicker(path: String) {
+        try {
+            val intent = za.kilowatch.ultimatefilemanager.storage.SafTreeManager.createDocumentTreeIntent(path)
+            safTreeLauncher.launch(intent)
+        } catch (e: Exception) {
+            android.widget.Toast.makeText(this, "Could not launch folder picker: ${e.message}", android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
+
     companion object {
         const val EXTRA_MOUNT_PATH = "extra_mount_path"
         const val EXTRA_STORAGE_LABEL = "extra_storage_label"
@@ -361,6 +396,10 @@ class FileBrowserActivity : AppCompatActivity() {
             val pName = rootPath.substringAfterLast("/")
             val pParent = rootPath.substringBeforeLast("/", "")
             ShizukuFile(pParent, pName, true)
+        } else if (isRootProtected && SafTreeManager.hasTreePermissionForPath(this, rootPath)) {
+            val pName = rootPath.substringAfterLast("/")
+            val pParent = rootPath.substringBeforeLast("/", "")
+            SafFile(pParent, pName, true)
         } else {
             File(rootPath)
         }
@@ -375,7 +414,9 @@ class FileBrowserActivity : AppCompatActivity() {
         if (!initialPath.isNullOrEmpty()) {
             val isInitProtected = ShizukuShellWrapper.isProtectedPath(initialPath)
             val initExists = if (isInitProtected) {
-                if (ShizukuShellWrapper.canUseShizukuForPath(initialPath)) ShizukuShellWrapper.exists(initialPath) else true
+                if (ShizukuShellWrapper.canUseShizukuForPath(initialPath)) ShizukuShellWrapper.exists(initialPath)
+                else if (SafTreeManager.hasTreePermissionForPath(this, initialPath)) SafTreeManager.exists(this, initialPath)
+                else true
             } else {
                 File(initialPath).exists()
             }
@@ -384,6 +425,10 @@ class FileBrowserActivity : AppCompatActivity() {
                     val pName = initialPath.substringAfterLast("/")
                     val pParent = initialPath.substringBeforeLast("/", "")
                     ShizukuFile(pParent, pName, true)
+                } else if (isInitProtected && SafTreeManager.hasTreePermissionForPath(this, initialPath)) {
+                    val pName = initialPath.substringAfterLast("/")
+                    val pParent = initialPath.substringBeforeLast("/", "")
+                    SafFile(pParent, pName, true)
                 } else {
                     File(initialPath)
                 }
@@ -4125,10 +4170,17 @@ class FileBrowserActivity : AppCompatActivity() {
         if (isTransferring) return   // Don't refresh while a copy/move is in progress
 
         val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(directory.absolutePath)
-        val targetDir = if (isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath) && directory !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
+        val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)
+        val hasSafTree = isProtected && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, directory.absolutePath)
+
+        val targetDir = if (canUseShizuku && directory !is za.kilowatch.ultimatefilemanager.storage.ShizukuFile) {
             val pName = directory.name
             val pParent = directory.parent ?: ""
             za.kilowatch.ultimatefilemanager.storage.ShizukuFile(pParent, pName, true)
+        } else if (hasSafTree && directory !is za.kilowatch.ultimatefilemanager.storage.SafFile) {
+            val pName = directory.name
+            val pParent = directory.parent ?: ""
+            za.kilowatch.ultimatefilemanager.storage.SafFile(pParent, pName, true)
         } else {
             directory
         }
@@ -4290,6 +4342,9 @@ class FileBrowserActivity : AppCompatActivity() {
                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                     coroutineContext.ensureActive()
                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
+                } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, targetDir.absolutePath)) {
+                    coroutineContext.ensureActive()
+                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@FileBrowserActivity, targetDir.absolutePath)
                 } else {
                     coroutineContext.ensureActive()
                     targetDir.listFiles()?.toList() ?: emptyList()
@@ -4322,6 +4377,9 @@ class FileBrowserActivity : AppCompatActivity() {
                                 val rawFiles = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(targetDir.absolutePath)) {
                                     coroutineContext.ensureActive()
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(targetDir.absolutePath)
+                                } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, targetDir.absolutePath)) {
+                                    coroutineContext.ensureActive()
+                                    za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@FileBrowserActivity, targetDir.absolutePath)
                                 } else {
                                     coroutineContext.ensureActive()
                                     targetDir.listFiles()?.toList() ?: emptyList()
@@ -4345,11 +4403,19 @@ class FileBrowserActivity : AppCompatActivity() {
                                             docLength = index.size,
                                             docLastModified = index.lastModified
                                         )
+                                    } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@FileBrowserActivity, index.path)) {
+                                        za.kilowatch.ultimatefilemanager.storage.SafFile(
+                                            parentPath = index.folderPath,
+                                            docName = index.filename,
+                                            isDir = index.isDirectory,
+                                            docLength = index.size,
+                                            docLastModified = index.lastModified
+                                        )
                                     } else {
                                         File(index.path)
                                     }
                                 }.filter { file ->
-                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
+                                    (file is za.kilowatch.ultimatefilemanager.storage.ShizukuFile || file is za.kilowatch.ultimatefilemanager.storage.SafFile || file.exists()) && isFileVisible(file, showHidden, hiddenPaths)
                                 }
                                 val sorted = sortAndFilterFiles(files)
                                 withContext(Dispatchers.Main) {
@@ -5456,6 +5522,29 @@ class FileBrowserActivity : AppCompatActivity() {
             layoutEmpty.visibility = View.VISIBLE
             recyclerFiles.visibility = View.GONE
             lottieEmptyFolder?.playAnimation()
+
+            val isProtected = za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.isProtectedPath(currentDir.absolutePath)
+            val canUseShizuku = isProtected && za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)
+            val hasSaf = isProtected && za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this, currentDir.absolutePath)
+
+            val layoutProtected = findViewById<View>(R.id.layoutProtectedPrompt)
+            val txtEmptyFolder = findViewById<View>(R.id.txtEmptyFolder)
+            if (isProtected && !canUseShizuku && !hasSaf) {
+                layoutProtected?.visibility = View.VISIBLE
+                txtEmptyFolder?.visibility = View.GONE
+                findViewById<View>(R.id.btnEnableElevated)?.setOnClickListener {
+                    val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+                    val intent = if (isTv) Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuTvActivity::class.java)
+                                 else Intent(this, za.kilowatch.ultimatefilemanager.ui.ShizukuActivity::class.java)
+                    startActivity(intent)
+                }
+                findViewById<View>(R.id.btnGrantSaf)?.setOnClickListener {
+                    launchSafTreePicker(currentDir.absolutePath)
+                }
+            } else {
+                layoutProtected?.visibility = View.GONE
+                txtEmptyFolder?.visibility = View.VISIBLE
+            }
         } else {
             layoutEmpty.visibility = View.GONE
             recyclerFiles.visibility = View.VISIBLE

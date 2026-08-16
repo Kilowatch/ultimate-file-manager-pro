@@ -10779,6 +10779,26 @@ Als Text anzeigen
     <string name="browse_storage">
 Speicher durchsuchen
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Geschützter Systemordner
+</string>
+    <string name="protected_folder_desc">
+Android 11+ schränkt den Zugriff auf die Ordner Android/data und Android/obb ein. Aktivieren Sie den erweiterten Zugriff oder erteilen Sie die Ordnerberechtigung, um Inhalte anzuzeigen.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Erweiterten Zugriff aktivieren
+</string>
+    <string name="protected_folder_btn_saf">
+Ordnerzugriff gewähren (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Ordnerzugriff gewährt
+</string>
+    <string name="protected_folder_saf_denied">
+Ordnerzugriff wurde nicht gewährt
+</string>
 </resources>
 
 

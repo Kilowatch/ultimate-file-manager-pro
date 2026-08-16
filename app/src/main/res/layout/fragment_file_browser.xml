@@ -777,6 +777,7 @@
             app:lottie_loop="true" />
 
         <TextView
+            android:id="@+id/txtEmptyFolder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_sm"
@@ -784,6 +785,52 @@
             android:textColor="?attr/colorOnSurfaceVariant"
             android:textSize="15sp"
             android:textAlignment="center" />
+
+        <LinearLayout
+            android:id="@+id/layoutProtectedPrompt"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_md"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/txtProtectedTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/protected_folder_title"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/txtProtectedDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/protected_folder_desc"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="13sp"
+                android:textAlignment="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnableElevated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/protected_folder_btn_shizuku"
+                app:icon="@drawable/ic_shield_protected" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGrantSaf"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="@string/protected_folder_btn_saf" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

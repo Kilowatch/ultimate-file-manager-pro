@@ -10779,6 +10779,26 @@ GIF успішно створено
     <string name="browse_storage">
 Огляд сховища
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Захищена системна папка
+</string>
+    <string name="protected_folder_desc">
+Android 11+ обмежує доступ до папок Android/data та Android/obb. Увімкніть розширений доступ або надайте дозвіл на доступ до папки, щоб переглянути вміст.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Увімкнути розширений доступ
+</string>
+    <string name="protected_folder_btn_saf">
+Надати доступ до папки (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Доступ до папки надано
+</string>
+    <string name="protected_folder_saf_denied">
+Доступ до папки не надано
+</string>
 </resources>
 
 

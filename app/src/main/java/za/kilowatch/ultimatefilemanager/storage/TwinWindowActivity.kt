@@ -1727,6 +1727,8 @@ class TwinWindowActivity : AppCompatActivity() {
             
             val actualFiles: List<File> = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(directory.absolutePath)) {
                 za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.listFiles(directory.absolutePath)
+            } else if (za.kilowatch.ultimatefilemanager.storage.SafTreeManager.hasTreePermissionForPath(this@TwinWindowActivity, directory.absolutePath)) {
+                za.kilowatch.ultimatefilemanager.storage.SafTreeManager.listFiles(this@TwinWindowActivity, directory.absolutePath)
             } else {
                 directory.listFiles()?.toList() ?: emptyList<File>()
             }

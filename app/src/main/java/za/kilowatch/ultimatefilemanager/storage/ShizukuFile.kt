@@ -9,8 +9,8 @@ class ShizukuFile(
 ) : java.io.File(parentPath, docName) {
     override fun isDirectory(): Boolean = isDir
     override fun isFile(): Boolean = !isDir
-    override fun length(): Long = docLength
-    override fun lastModified(): Long = docLastModified
+    override fun length(): Long = if (docLength > 0L) docLength else ShizukuShellWrapper.getFileSize(absolutePath)
+    override fun lastModified(): Long = if (docLastModified > 0L) docLastModified else ShizukuShellWrapper.getLastModified(absolutePath)
     override fun exists(): Boolean {
         return ShizukuShellWrapper.exists(absolutePath)
     }

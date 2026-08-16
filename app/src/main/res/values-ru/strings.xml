@@ -10779,6 +10779,26 @@ GIF успешно создан
     <string name="browse_storage">
 Обзор хранилища
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Защищенная системная папка
+</string>
+    <string name="protected_folder_desc">
+Android 11+ ограничивает доступ к папкам Android/data и Android/obb. Включите расширенный доступ или предоставьте разрешение на доступ к папке, чтобы просмотреть содержимое.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Включить расширенный доступ
+</string>
+    <string name="protected_folder_btn_saf">
+Предоставить доступ к папке (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Доступ к папке предоставлен
+</string>
+    <string name="protected_folder_saf_denied">
+Доступ к папке не был предоставлен
+</string>
 </resources>
 
 

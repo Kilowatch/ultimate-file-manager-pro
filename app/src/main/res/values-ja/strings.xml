@@ -10779,6 +10779,26 @@ UFMで開く
     <string name="browse_storage">
 ストレージを参照
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+保護されたシステムフォルダ
+</string>
+    <string name="protected_folder_desc">
+Android 11以降では、Android/dataおよびAndroid/obbフォルダへのアクセスが制限されています。内容を表示するには、昇格アクセスを有効にするか、フォルダのアクセス権限を許可してください。
+</string>
+    <string name="protected_folder_btn_shizuku">
+昇格アクセスを有効にする
+</string>
+    <string name="protected_folder_btn_saf">
+フォルダアクセスを許可（SAF）
+</string>
+    <string name="protected_folder_saf_success">
+フォルダアクセスが許可されました
+</string>
+    <string name="protected_folder_saf_denied">
+フォルダアクセスが許可されませんでした
+</string>
 </resources>
 
 

@@ -10779,6 +10779,26 @@ UFM में खोलें
     <string name="browse_storage">
 स्टोरेज ब्राउज़ करें
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+संरक्षित सिस्टम फ़ोल्डर
+</string>
+    <string name="protected_folder_desc">
+एंड्रॉइड 11+ Android/data और Android/obb फ़ोल्डरों तक पहुंच प्रतिबंधित करता है। सामग्री देखने के लिए उन्नत पहुंच सक्षम करें या फ़ोल्डर एक्सेस दें।
+</string>
+    <string name="protected_folder_btn_shizuku">
+उन्नत पहुंच सक्षम करें
+</string>
+    <string name="protected_folder_btn_saf">
+फ़ोल्डर एक्सेस दें (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+फ़ोल्डर एक्सेस दिया गया
+</string>
+    <string name="protected_folder_saf_denied">
+फ़ोल्डर एक्सेस नहीं दिया गया
+</string>
 </resources>
 
 

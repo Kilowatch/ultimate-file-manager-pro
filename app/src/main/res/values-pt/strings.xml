@@ -10779,6 +10779,26 @@ Visualizar como texto
     <string name="browse_storage">
 Explorar armazenamento
 </string>
+
+    <!-- Protected Folder & SAF Access Guidance -->
+    <string name="protected_folder_title">
+Pasta de sistema protegida
+</string>
+    <string name="protected_folder_desc">
+O Android 11+ restringe o acesso às pastas Android/data e Android/obb. Ative o Acesso Elevado ou conceda permissão de pasta para visualizar o conteúdo.
+</string>
+    <string name="protected_folder_btn_shizuku">
+Ativar Acesso Elevado
+</string>
+    <string name="protected_folder_btn_saf">
+Conceder Acesso à Pasta (SAF)
+</string>
+    <string name="protected_folder_saf_success">
+Acesso à pasta concedido
+</string>
+    <string name="protected_folder_saf_denied">
+O acesso à pasta não foi concedido
+</string>
 </resources>
 
 
