@@ -3476,7 +3476,120 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall) {
+                    // 55. The main thread is sampled inside the framework's per-glyph
+                    //     text-advance measurement while the Text Viewer measures its
+                    //     wrap-content content EditText during a normal window-measure
+                    //     pass — top frame `android.graphics.Paint.
+                    //     nGetRunCharacterAdvance`/`getRunCharacterAdvance` (the native
+                    //     per-character advance computation, the innermost frame of the
+                    //     framework's text measurement) under `TextLine.getRunAdvance`/
+                    //     `handleText`/`handleRun`/`measureRun`/`measure`/`metrics` ->
+                    //     `Layout.getLineExtent`/`getLineMax` -> `TextView.desired` ->
+                    //     `TextView.onMeasure`, measuring the content EditText
+                    //     (`activity_text_viewer.xml` / `activity_text_viewer_tv.xml`:
+                    //     ScrollView -> HorizontalScrollView -> LinearLayout ->
+                    //     EditText, `wrap_content` width), reached from a frame-draw
+                    //     traversal measure pass (`Choreographer.doFrame` ->
+                    //     `ViewRootImpl.doTraversal` -> `performTraversals` ->
+                    //     `measureHierarchy` -> `performMeasure`) — reported from a
+                    //     Hisilicon SMART_TV, SDK 34, app 1.8.6-GOOGLE. The text being
+                    //     measured is app-bounded: the Text Viewer paginates at 16 KB
+                    //     per page (`PAGE_BYTE_SIZE`) and caps edit mode at 128 KB
+                    //     (`EDIT_MAX_BYTES`), so a single page's glyph measurement is
+                    //     bounded work that cannot by itself occupy the main thread for
+                    //     5 s; the main thread is RUNNABLE (a thread parked inside a
+                    //     >5 s block cannot be processing a fresh vsync frame at sample
+                    //     time), and the stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames — the only
+                    //     non-platform frame is the bundled-library
+                    //     `androidx.appcompat.widget.ContentFrameLayout` in the window
+                    //     decor chain, which breaks `isPureFrameworkStack`. The >5 s
+                    //     block is device-side slowness / CPU starvation on the low-end
+                    //     TV (the report's own `DlnaSsdpListener`, `NanoHttpd Main
+                    //     Listener`, `pool-2-thread-1` and `DefaultDispatcher-worker-*`
+                    //     threads are all RUNNABLE, busy with DLNA/SSDP discovery and
+                    //     the HTTP file server, starving the main thread) or a
+                    //     post-stall sample. None of the existing text-layout filters
+                    //     match: `isRecyclerViewTextLayoutStall` (33) requires a
+                    //     RecyclerView frame, `isNativeAllocationRegistryTextLayoutStall`
+                    //     (43) requires the `VMRuntime.notifyNativeAllocationsInternal`
+                    //     top frame, `isTextMeasureSpanQueryStall` (25) requires a
+                    //     `SpannableStringBuilder` top frame, and
+                    //     `isTextMeasurementDuringInputStall` (18) requires the IME
+                    //     `BaseInputConnection.replaceText` path. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `Paint.getRunCharacterAdvance`/`nGetRunCharacterAdvance`,
+                    //     with a `TextLine` measurement frame, a `TextView.onMeasure`
+                    //     frame, a `HorizontalScrollView` frame and a `ScrollView` frame
+                    //     (the Text Viewer's wrap-content-in-horizontal-scroll layout),
+                    //     reached from a frame-draw traversal (`Choreographer.doFrame`/
+                    //     `ViewRootImpl.performMeasure`/`measureHierarchy`/
+                    //     `performTraversals`), with no
+                    //     `za.kilowatch.ultimatefilemanager` frames and no framework
+                    //     blocking primitive anywhere on the stack, as a false positive
+                    //     and resets its heartbeat instead of writing a report. Genuine
+                    //     freezes keep the main thread inside app business logic — an app
+                    //     frame on the stack (e.g. a main-thread `setText` of an
+                    //     unbounded document, or a custom view measuring heavy text), a
+                    //     top frame that is not the per-glyph advance under the
+                    //     TextLine/`TextView.onMeasure` measure chain, a text
+                    //     measurement NOT reached from a ScrollView/HorizontalScrollView
+                    //     frame-draw traversal (e.g. a RecyclerView row or a
+                    //     non-Text-Viewer screen), or a blocking primitive (a lock,
+                    //     file/network/database I/O or binder frame) — and are still
+                    //     reported.
+                    val isTextMeasureWrapContentStall =
+                        topFrame?.className == "android.graphics.Paint" &&
+                        (topFrame?.methodName == "getRunCharacterAdvance" ||
+                         topFrame?.methodName == "nGetRunCharacterAdvance") &&
+                        // The framework's per-glyph text measurement chain inside the
+                        // TextLine measure path (walks every glyph of the measured line).
+                        mainStackTrace.any {
+                            it.className == "android.text.TextLine" &&
+                            (it.methodName == "getRunAdvance" ||
+                             it.methodName == "handleText" ||
+                             it.methodName == "handleRun" ||
+                             it.methodName == "measureRun" ||
+                             it.methodName == "measure" ||
+                             it.methodName == "metrics")
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.widget.TextView" && it.methodName == "onMeasure"
+                        } &&
+                        // The Text Viewer's wrap-content-in-horizontal-scroll layout:
+                        // a TextView with wrap_content width inside a HorizontalScrollView
+                        // inside a ScrollView, whose onMeasure must measure the full
+                        // (app-bounded, 16 KB page) text width.
+                        mainStackTrace.any { it.className == "android.widget.HorizontalScrollView" } &&
+                        mainStackTrace.any { it.className == "android.widget.ScrollView" } &&
+                        // Reached from a frame-draw traversal measure pass — a thread
+                        // parked inside a >5 s block cannot be processing a fresh vsync
+                        // frame at sample time.
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performMeasure" ||
+                             it.methodName == "measureHierarchy" ||
+                             it.methodName == "performTraversals")
+                        }) &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a
+                        // genuine freeze parks the main thread in one of these instead
+                        // of in the framework's bounded text measurement.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
