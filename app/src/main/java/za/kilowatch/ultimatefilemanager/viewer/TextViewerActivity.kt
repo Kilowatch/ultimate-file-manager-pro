@@ -531,6 +531,19 @@ class TextViewerActivity : AppCompatActivity() {
             // If this file was opened from a network share, upload the saved content back
             // (the bridge callback handles its own threading — runs the upload on IO internally)
             runCatching { NetworkSaveBridge.onFileSaved?.invoke(targetFile) }
+
+            // If this file was opened from an external content provider URI, write changes back
+            val contentUriStr = intent.getStringExtra(FileViewerRouter.EXTRA_CONTENT_URI)
+            if (contentUriStr != null && targetFile.absolutePath == originalFilePath) {
+                runCatching {
+                    val uri = android.net.Uri.parse(contentUriStr)
+                    contentResolver.openOutputStream(uri, "wt")?.use { outStream ->
+                        targetFile.inputStream().use { inputStream ->
+                            inputStream.copyTo(outStream)
+                        }
+                    }
+                }
+            }
             withContext(Dispatchers.Main) {
                 Toast.makeText(this@TextViewerActivity,
                     getString(R.string.file_saved, targetFile.name), Toast.LENGTH_SHORT).show()

@@ -225,9 +225,25 @@ object FileViewerRouter {
      * If [transitionView] is non-null and the target is [ImageViewerActivity],
      * launches with a shared element transition for a premium feel.
      */
-    private fun openInBuiltInViewer(context: Context, file: File, transitionView: android.view.View? = null) {
+    fun openInBuiltInViewer(
+        context: Context,
+        file: File,
+        transitionView: android.view.View? = null,
+        contentUri: Uri? = null,
+        startInEditMode: Boolean = false,
+        isExternal: Boolean = false
+    ) {
         val ext = file.extension.lowercase()
         val isImage = ext in IMAGE_EXTENSIONS
+
+        // If user explicitly configured UFM Player as default for media, route to it
+        if ((ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) &&
+            DefaultOpenManager.getDefaultAction(context, ext, isNetwork = false) == DefaultOpenManager.Action.PLAYER
+        ) {
+            openInPlayer(context, file)
+            return
+        }
+
         val intent = when (ext) {
             in IMAGE_EXTENSIONS -> Intent(context, ImageViewerActivity::class.java)
             in PDF_EXTENSIONS   -> Intent(context, PdfViewerActivity::class.java)
@@ -251,7 +267,7 @@ object FileViewerRouter {
                 textViewerIntent(context)
             in PACKAGE_EXTENSIONS ->
                 Intent(context, za.kilowatch.ultimatefilemanager.ui.PackageInstallerActivity::class.java).apply {
-                    data = Uri.fromFile(file)
+                    data = contentUri ?: Uri.fromFile(file)
                 }
             // Dot-config dotfiles (e.g. .env, .htaccess) have a misleading or
             // empty extension, so route them to the text viewer by filename.
@@ -263,6 +279,15 @@ object FileViewerRouter {
         }
         intent.putExtra(EXTRA_FILE_PATH, file.absolutePath)
         intent.putExtra(EXTRA_FILE_NAME, file.name)
+        if (contentUri != null) {
+            intent.putExtra(EXTRA_CONTENT_URI, contentUri.toString())
+        }
+        if (startInEditMode) {
+            intent.putExtra(EXTRA_START_IN_EDIT_MODE, true)
+        }
+        if (isExternal) {
+            intent.putExtra(EXTRA_IS_EXTERNAL_OPEN, true)
+        }
 
         // Shared element transition — only for images and only when a source view is provided
         if (isImage && transitionView != null && context is android.app.Activity) {
@@ -782,4 +807,8 @@ object FileViewerRouter {
     const val EXTRA_TRANSITION_NAME = "extra_transition_name"
     /** When true, [TextViewerActivity] starts in edit mode immediately. */
     const val EXTRA_START_IN_EDIT_MODE = "extra_start_in_edit_mode"
+    /** Optional original content:// URI when file was opened from external app / provider. */
+    const val EXTRA_CONTENT_URI = "extra_content_uri"
+    /** Indicates the viewer was opened from an external application. */
+    const val EXTRA_IS_EXTERNAL_OPEN = "extra_is_external_open"
 }

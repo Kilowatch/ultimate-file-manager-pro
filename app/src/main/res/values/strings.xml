@@ -3760,6 +3760,13 @@
     <string name="extract_select_folder_desc">Extract files and choose destination using the Extract Here button</string>
     <string name="extract_staged_snackbar">Files extracted. Browse to destination and tap Extract Here.</string>
     <string name="extract_move_success">Extracted %1$d item(s) successfully</string>
+
+    <!-- Universal Open With -->
+    <string name="opening_file">Opening file…</string>
+    <string name="error_cannot_open_file">Unable to open file</string>
+    <string name="open_in_ufm">Open in UFM</string>
+    <string name="view_as_text">View as Text</string>
+    <string name="browse_storage">Browse Storage</string>
 </resources>
 
 
