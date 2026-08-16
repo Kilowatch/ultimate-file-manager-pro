@@ -3589,7 +3589,92 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall) {
+                    // 56. The main thread is sampled at the construction of a
+                    //     `java.util.concurrent.LinkedBlockingQueue` while a freshly
+                    //     dispatched main-looper Runnable starts running — top frame
+                    //     `java.util.concurrent.LinkedBlockingQueue.<init>` (the bounded
+                    //     constructor that sets the queue's capacity fields and allocates
+                    //     its sentinel head Node — the no-arg constructor at line 245
+                    //     delegates to the `int capacity` constructor at line 255, so the
+                    //     sample can carry one or two `<init>` frames), under `cw.run` (an
+                    //     R8-obfuscated non-platform Runnable) sitting directly on
+                    //     `android.os.Handler.handleCallback` → `dispatchMessage` →
+                    //     `Looper.loopOnce` → `Looper.loop` → `ActivityThread.main`,
+                    //     thread state RUNNABLE — reported from a Xiaomi 23053RN02Y,
+                    //     SDK 35, app 1.8.0-GOOGLE. A `LinkedBlockingQueue.<init>` is a
+                    //     µs-scale bounded object allocation that cannot by itself occupy
+                    //     the main thread for 5 s, and the main looper is demonstrably
+                    //     processing a freshly dispatched message at sample time
+                    //     (`Handler.handleCallback` directly below the Runnable's
+                    //     `run()`), which a thread parked inside a >5 s block cannot do —
+                    //     so the >5 s block is device-side slowness / CPU starvation on
+                    //     the phone (the report's own `DlnaSsdpListener`, `NanoHttpd Main
+                    //     Listener`, `DefaultDispatcher-worker-*` and HTTP-server threads
+                    //     are all RUNNABLE, busy with DLNA/SSDP discovery and the HTTP
+                    //     file server, starving the main thread) or a post-stall sample
+                    //     of the backlog the main looper drains after a genuine stall.
+                    //     The sampled frame is a PLATFORM `java.*` class, so
+                    //     `isFreshRunBodyEntryStall` (filter 37, which requires a
+                    //     non-platform top frame) does not match; and the obfuscated
+                    //     `run()` is not platform-prefixed, so `isPureFrameworkStack`
+                    //     does not match either. The `AnrWatchdogThread` now treats a
+                    //     main-thread stack whose top frame is `LinkedBlockingQueue.
+                    //     <init>`, whose `run()` is a non-platform method sitting
+                    //     directly on `Handler.handleCallback`, with no
+                    //     `Handler.postDelayed` frame (the watchdog-heartbeat re-post
+                    //     shape, already handled by `tickerJustRan`) and no framework
+                    //     blocking primitive anywhere on the stack, as a false positive
+                    //     and resets its heartbeat instead of writing a report. Genuine
+                    //     freezes keep the main thread inside blocking work — a
+                    //     lock/`wait`/`park`, a `BinderProxy.transact`, a
+                    //     file/network/database I/O frame, or a top frame that is not
+                    //     the trivial queue constructor under that freshly-dispatched
+                    //     `run()` (e.g. app business logic draining the queue or
+                    //     allocating it in a loop) — and are still reported.
+                    val isLinkedBlockingQueueFreshRunInitStall =
+                        topFrame?.className == "java.util.concurrent.LinkedBlockingQueue" &&
+                        topFrame?.methodName == "<init>" &&
+                        run {
+                            // Find the non-platform run() sitting directly on
+                            // Handler.handleCallback — the freshly dispatched main-looper
+                            // Runnable whose entry the sample caught.
+                            val runIndex = mainStackTrace.withIndex().firstOrNull { (i, frame) ->
+                                frame.methodName == "run" &&
+                                PLATFORM_PREFIXES.none { p -> frame.className.startsWith(p) } &&
+                                mainStackTrace.getOrNull(i + 1)?.className == "android.os.Handler" &&
+                                mainStackTrace.getOrNull(i + 1)?.methodName == "handleCallback"
+                            }?.index
+                            runIndex != null &&
+                            // Everything above the run() is the LinkedBlockingQueue
+                            // constructor delegation chain (one or two <init> frames) —
+                            // the sampled work is purely the bounded queue construction,
+                            // no other code between the dispatch and the sample.
+                            mainStackTrace.take(runIndex).all { frame ->
+                                frame.className == "java.util.concurrent.LinkedBlockingQueue" &&
+                                    frame.methodName == "<init>"
+                            } &&
+                            // Exclude the watchdog-heartbeat re-post shape (which
+                            // carries a Handler.postDelayed frame and is already handled
+                            // by `tickerJustRan`).
+                            mainStackTrace.none {
+                                it.className == "android.os.Handler" && it.methodName == "postDelayed"
+                            } &&
+                            // No framework blocking primitive anywhere on the stack — a
+                            // genuine freeze parks the main thread in one of these
+                            // instead of at a freshly-entered bounded queue construction.
+                            mainStackTrace.none { frame ->
+                                (frame.className == "android.os.BinderProxy" &&
+                                 (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                                (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                                frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                                frame.className.startsWith("java.io.") ||
+                                frame.className.startsWith("libcore.io.") ||
+                                frame.className.startsWith("java.net.") ||
+                                frame.className.startsWith("android.database.")
+                            }
+                        }
+
+                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
