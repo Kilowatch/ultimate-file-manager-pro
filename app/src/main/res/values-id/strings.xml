@@ -5636,6 +5636,42 @@ Papan Klip (1 item)
     <string name="clipboard_n_items">
 Papan Klip (%1$d item)
 </string>
+    <string name="clipboard_slots_title">
+Papan klip (%1$d slot, %2$d item)
+</string>
+    <string name="clipboard_slot_created">
+%1$d item ditambahkan ke papan klip (slot %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Papan klip hampir penuh — 1 slot tersisa
+</string>
+    <string name="clipboard_full_paste_first">
+Papan klip penuh — tempel atau kosongkan slot terlebih dahulu
+</string>
+    <string name="clipboard_add_or_new_title">
+Tambahkan ke slot yang ada atau slot baru?
+</string>
+    <string name="clipboard_add_to_slot">
+Tambahkan ke \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+Slot baru
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d file
+</string>
+    <string name="clipboard_combined_slot">
+Gabungan (%1$d item)
+</string>
+    <string name="paste_this_slot">
+Tempel slot ini
+</string>
+    <string name="remove_slot">
+Hapus slot
+</string>
+    <string name="paste_all_slots">
+Tempel semua slot di sini
+</string>
     <string name="opening_filename">
 Membuka %1$s…
 </string>

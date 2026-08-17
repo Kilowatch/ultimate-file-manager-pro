@@ -657,15 +657,13 @@ class SearchActivity : AppCompatActivity() {
         // Copy
         options.add(getString(R.string.action_copy))
         actions.add {
-            FileClipboard.set(listOf(file), FileClipboard.Operation.COPY)
-            showSnackbar(getString(R.string.clipboard_copied, 1))
+            handleCopyOrCut(file, isMove = false)
         }
 
         // Move
         options.add(getString(R.string.action_move))
         actions.add {
-            FileClipboard.set(listOf(file), FileClipboard.Operation.MOVE)
-            showSnackbar(getString(R.string.clipboard_cut, 1))
+            handleCopyOrCut(file, isMove = true)
         }
 
         // Rename
@@ -719,6 +717,101 @@ class SearchActivity : AppCompatActivity() {
             com.google.android.material.R.id.alertTitle
         ) ?: dialog.findViewById(resources.getIdentifier("alertTitle", "id", "android"))
         titleView?.setTextColor(white)
+    }
+
+    private fun handleCopyOrCut(file: File, isMove: Boolean) {
+        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
+        val recentSlot = FileClipboard.getRecentSlot()
+        if (recentSlot == null) {
+            FileClipboard.pushLocalSlot(listOf(file), op, file.parent ?: "")
+            showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, 1))
+        } else {
+            val isTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
+            val layoutRes = if (isTv) R.layout.dialog_clipboard_add_or_new_tv else R.layout.dialog_clipboard_add_or_new
+            val itemLayoutRes = if (isTv) R.layout.item_clipboard_slot_choice_tv else R.layout.item_clipboard_slot_choice
+            val dialogView = layoutInflater.inflate(layoutRes, null)
+            val txtSubtitle = dialogView.findViewById<android.widget.TextView>(R.id.txtAddOrNewSubtitle)
+            val recyclerSlots = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerExistingSlots)
+            val btnNewSlot = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnNewSlot)
+            val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelAddOrNew)
+
+            txtSubtitle.text = getString(R.string.clipboard_slots_title, FileClipboard.slots.size, FileClipboard.totalItemCount())
+
+            val dialog: android.app.Dialog = if (isTv) {
+                MaterialAlertDialogBuilder(this)
+                    .setView(dialogView)
+                    .create()
+            } else {
+                com.google.android.material.bottomsheet.BottomSheetDialog(this).apply {
+                    setContentView(dialogView)
+                }
+            }
+
+            recyclerSlots.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+            class SlotChoiceViewHolder(val v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+                val txtLabel: android.widget.TextView = v.findViewById(R.id.txtSlotLabel)
+                val txtSummary: android.widget.TextView = v.findViewById(R.id.txtSlotSummary)
+                val card: View = v.findViewById(R.id.cardSlotChoice)
+            }
+
+            val slotsList = FileClipboard.slots
+            recyclerSlots.adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<SlotChoiceViewHolder>() {
+                override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): SlotChoiceViewHolder {
+                    val view = layoutInflater.inflate(itemLayoutRes, parent, false)
+                    return SlotChoiceViewHolder(view)
+                }
+
+                override fun getItemCount(): Int = slotsList.size
+
+                override fun onBindViewHolder(holder: SlotChoiceViewHolder, position: Int) {
+                    val slot = slotsList.getOrNull(position) ?: return
+                    holder.txtLabel.text = slot.label
+                    val fileSummary = slot.items.take(3).joinToString(", ") { it.name }
+                    holder.txtSummary.text = "${slot.totalCount} item(s) • $fileSummary"
+
+                    if (isTv) {
+                        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+                        val yellowText = getColor(R.color.tv_button_focused_yellow_text)
+                        val whiteText = getColor(R.color.tv_text_primary)
+                        holder.card.isFocusable = true
+                        holder.card.isFocusableInTouchMode = true
+                        holder.card.setOnFocusChangeListener { _, hasFocus ->
+                            holder.card.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                            holder.txtLabel.setTextColor(if (hasFocus) yellowText else whiteText)
+                        }
+                    }
+
+                    holder.card.setOnClickListener {
+                        dialog.dismiss()
+                        FileClipboard.addLocalToSlot(slot.id, listOf(file), op)
+                        showSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, 1))
+                    }
+                }
+            }
+
+            btnNewSlot.setOnClickListener {
+                dialog.dismiss()
+                if (FileClipboard.isFull) {
+                    android.widget.Toast.makeText(this, R.string.clipboard_full_paste_first, android.widget.Toast.LENGTH_SHORT).show()
+                } else {
+                    FileClipboard.pushLocalSlot(listOf(file), op, file.parent ?: "")
+                    if (FileClipboard.slots.size == 9) {
+                        android.widget.Toast.makeText(this, R.string.clipboard_warning_one_slot_left, android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                    showSnackbar(getString(R.string.clipboard_slot_created, 1, FileClipboard.slots.size))
+                }
+            }
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            if (isTv) {
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            }
+            dialog.show()
+        }
     }
 
     private fun showRenameDialog(file: File) {

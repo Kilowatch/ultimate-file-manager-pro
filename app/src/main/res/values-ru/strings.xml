@@ -5636,6 +5636,42 @@ SCP-ресурс: %1$s (%2$s)
     <string name="clipboard_n_items">
 Буфер обмена (%1$d элементов)
 </string>
+    <string name="clipboard_slots_title">
+Буфер обмена (%1$d слотов, %2$d элементов)
+</string>
+    <string name="clipboard_slot_created">
+В буфер обмена добавлено %1$d элемент(ов) (слот %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Буфер обмена почти заполнен — остался 1 слот
+</string>
+    <string name="clipboard_full_paste_first">
+Буфер обмена заполнен — сначала вставьте или очистите слот
+</string>
+    <string name="clipboard_add_or_new_title">
+Добавить в существующий или новый слот?
+</string>
+    <string name="clipboard_add_to_slot">
+Добавить в \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+Новый слот
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d файл(ов)
+</string>
+    <string name="clipboard_combined_slot">
+Объединено (%1$d элементов)
+</string>
+    <string name="paste_this_slot">
+Вставить этот слот
+</string>
+    <string name="remove_slot">
+Удалить слот
+</string>
+    <string name="paste_all_slots">
+Вставить все слоты сюда
+</string>
     <string name="opening_filename">
 Открытие %1$s…
 </string>

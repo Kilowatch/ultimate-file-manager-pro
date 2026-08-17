@@ -5636,6 +5636,42 @@ Portapapeles (1 elemento)
     <string name="clipboard_n_items">
 Portapapeles (%1$d elementos)
 </string>
+    <string name="clipboard_slots_title">
+Portapapeles (%1$d espacios, %2$d elementos)
+</string>
+    <string name="clipboard_slot_created">
+%1$d elemento(s) añadidos al portapapeles (espacio %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Portapapeles casi lleno — queda 1 espacio
+</string>
+    <string name="clipboard_full_paste_first">
+Portapapeles lleno — pega o vacía un espacio primero
+</string>
+    <string name="clipboard_add_or_new_title">
+¿Añadir a un espacio existente o nuevo?
+</string>
+    <string name="clipboard_add_to_slot">
+Añadir a \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+Nuevo espacio
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d archivo(s)
+</string>
+    <string name="clipboard_combined_slot">
+Combinado (%1$d elementos)
+</string>
+    <string name="paste_this_slot">
+Pegar este espacio
+</string>
+    <string name="remove_slot">
+Eliminar espacio
+</string>
+    <string name="paste_all_slots">
+Pegar todos los espacios aquí
+</string>
     <string name="opening_filename">
 Abriendo %1$s…
 </string>

@@ -5636,6 +5636,42 @@ Pano (1 öge)
     <string name="clipboard_n_items">
 Pano (%1$d öge)
 </string>
+    <string name="clipboard_slots_title">
+Pano (%1$d slot, %2$d öğe)
+</string>
+    <string name="clipboard_slot_created">
+%1$d öğe panoya eklendi (slot %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Pano neredeyse dolu — 1 slot kaldı
+</string>
+    <string name="clipboard_full_paste_first">
+Pano dolu — önce bir slotu yapıştır veya temizle
+</string>
+    <string name="clipboard_add_or_new_title">
+Mevcut slota mı yoksa yeni slota mı ekleyelim?
+</string>
+    <string name="clipboard_add_to_slot">
+\"%1$s\" slota ekle
+</string>
+    <string name="clipboard_new_slot">
+Yeni slot
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d dosya
+</string>
+    <string name="clipboard_combined_slot">
+Birleşik (%1$d öğe)
+</string>
+    <string name="paste_this_slot">
+Bu slotu yapıştır
+</string>
+    <string name="remove_slot">
+Slotu kaldır
+</string>
+    <string name="paste_all_slots">
+Tüm slotları buraya yapıştır
+</string>
     <string name="opening_filename">
 %1$s açılıyor…
 </string>

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@drawable/bg_bottom_sheet">
+    android:padding="28dp"
+    android:background="@drawable/bg_dialog_glass">
 
     <!-- Header -->
     <LinearLayout
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="16dp">
+        android:paddingBottom="12dp">
 
         <ImageView
             android:layout_width="28dp"
@@ -32,30 +32,60 @@
             android:text="@string/clipboard"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textColor="@color/tv_text_primary" />
+
+        <!-- Clear all button in Header -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClearClipboard"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="@string/clear_all"
+            android:textColor="@color/ufm_denied"
+            android:textSize="13sp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="@color/ufm_denied"
+            app:iconSize="16dp"
+            app:strokeColor="#55FF5252"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="12dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
     </LinearLayout>
 
-    <!-- Divider -->
-    <View
+    <!-- Slot Tabs (visible when more than 1 slot) -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabClipboardSlots"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant" />
-
-    <!-- List of clipboard items — fixed height so RecyclerView recycling is active -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerClipboard"
-        android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:nestedScrollingEnabled="true"
-        android:overScrollMode="never"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:layout_height="44dp"
+        android:visibility="gone"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@color/tv_button_focused_yellow"
+        app:tabTextColor="@color/tv_text_secondary"
+        app:tabSelectedTextColor="@color/tv_text_primary" />
 
     <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorOutlineVariant"
+        android:background="#33FFFFFF"
+        android:layout_marginTop="4dp" />
+
+    <!-- ViewPager2 for slot items -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vpClipboardSlots"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:nestedScrollingEnabled="true" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#33FFFFFF"
         android:layout_marginBottom="16dp" />
 
     <!-- Action Buttons Row -->
@@ -63,32 +93,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="center_vertical">
 
-        <!-- Clear all button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnClearClipboard"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+        <!-- Slot actions group (Remove Slot + Paste This Slot) -->
+        <LinearLayout
+            android:id="@+id/layoutSlotActions"
             android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:layout_marginEnd="12dp"
-            android:text="@string/clear_all"
-            android:textColor="@color/ufm_denied"
-            android:textSize="15sp"
-            android:focusable="true"
-            android:focusableInTouchMode="true" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
-        <!-- Paste Here Button -->
+            <!-- Remove Slot button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRemoveSlot"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="140dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/remove_slot"
+                android:textColor="@color/ufm_denied"
+                android:textSize="14sp"
+                app:icon="@drawable/ic_delete"
+                app:iconTint="@color/ufm_denied"
+                app:iconSize="18dp"
+                app:strokeColor="#55FF5252"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="14dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <!-- Paste This Slot button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPasteSlot"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:minWidth="150dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/paste_this_slot"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="14sp"
+                app:icon="@drawable/ic_paste"
+                app:iconSize="18dp"
+                app:strokeColor="#33FFFFFF"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingHorizontal="14dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Paste All / Paste Here Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPasteHere"
             style="@style/Widget.Material3.Button"
             android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:text="@string/paste_here"
-            android:textSize="15sp"
+            android:layout_height="48dp"
+            android:minWidth="160dp"
+            android:text="@string/paste_all_slots"
+            android:textSize="14sp"
+            android:textStyle="bold"
             android:focusable="true"
             android:focusableInTouchMode="true"
             app:icon="@drawable/ic_paste"
+            app:iconSize="18dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="16dp"
             app:backgroundTint="?attr/colorPrimary" />
     </LinearLayout>
 

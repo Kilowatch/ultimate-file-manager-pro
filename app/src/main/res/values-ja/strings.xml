@@ -5636,6 +5636,42 @@ SCP 共有: %1$s (%2$s)
     <string name="clipboard_n_items">
 クリップボード (%1$d 項目)
 </string>
+    <string name="clipboard_slots_title">
+クリップボード（スロット %1$d、アイテム %2$d）
+</string>
+    <string name="clipboard_slot_created">
+%1$d 個のアイテムをクリップボードに追加しました（スロット %2$d）
+</string>
+    <string name="clipboard_warning_one_slot_left">
+クリップボードがほぼ満杯です — 残り 1 スロット
+</string>
+    <string name="clipboard_full_paste_first">
+クリップボードが満杯です — 先にスロットを貼り付けるかクリアしてください
+</string>
+    <string name="clipboard_add_or_new_title">
+既存のスロットまたは新しいスロットに追加しますか？
+</string>
+    <string name="clipboard_add_to_slot">
+\"%1$s\"に追加
+</string>
+    <string name="clipboard_new_slot">
+新しいスロット
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d ファイル
+</string>
+    <string name="clipboard_combined_slot">
+結合（%1$d アイテム）
+</string>
+    <string name="paste_this_slot">
+このスロットを貼り付け
+</string>
+    <string name="remove_slot">
+スロットを削除
+</string>
+    <string name="paste_all_slots">
+すべてのスロットをここに貼り付け
+</string>
     <string name="opening_filename">
 %1$s を開いています…
 </string>

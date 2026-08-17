@@ -5636,6 +5636,42 @@ SCP शेयर: %1$s (%2$s)
     <string name="clipboard_n_items">
 क्लिपबोर्ड (%1$d आइटम)
 </string>
+    <string name="clipboard_slots_title">
+क्लिपबोर्ड (%1$d स्लॉट, %2$d आइटम)
+</string>
+    <string name="clipboard_slot_created">
+%1$d आइटम क्लिपबोर्ड में जोड़े गए (स्लॉट %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+क्लिपबोर्ड लगभग भरा है — 1 स्लॉट शेष
+</string>
+    <string name="clipboard_full_paste_first">
+क्लिपबोर्ड भरा है — पहले एक स्लॉट पेस्ट करें या साफ़ करें
+</string>
+    <string name="clipboard_add_or_new_title">
+मौजूदा या नए स्लॉट में जोड़ें?
+</string>
+    <string name="clipboard_add_to_slot">
+\"%1$s\" में जोड़ें
+</string>
+    <string name="clipboard_new_slot">
+नया स्लॉट
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d फ़ाइल
+</string>
+    <string name="clipboard_combined_slot">
+संयुक्त (%1$d आइटम)
+</string>
+    <string name="paste_this_slot">
+इस स्लॉट को पेस्ट करें
+</string>
+    <string name="remove_slot">
+स्लॉट हटाएँ
+</string>
+    <string name="paste_all_slots">
+सभी स्लॉट यहाँ पेस्ट करें
+</string>
     <string name="opening_filename">
 %1$s खोल रहा है…
 </string>

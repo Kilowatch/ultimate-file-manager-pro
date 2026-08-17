@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Modern Glassmorphic Dialog for Android TV "Add to slot or Create new slot".
+  Shows all existing slots (up to 10) in a scrollable list.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="680dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
+
+    <!-- Icon -->
+    <ImageView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_paste"
+        app:tint="@color/tv_button_focused_yellow"
+        android:contentDescription="@null" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtAddOrNewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clipboard_add_or_new_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Subtitle / Active Slot Name -->
+    <TextView
+        android:id="@+id/txtAddOrNewSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Scrollable list of existing slots -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerExistingSlots"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Action Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Cancel -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelAddOrNew"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:text="@string/cancel"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:strokeColor="#33FFFFFF"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+        <!-- Create New Slot (Primary) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNewSlot"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1.4"
+            android:text="@string/clipboard_new_slot"
+            android:textColor="@color/tv_button_focused_yellow_text"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconSize="18dp"
+            app:iconTint="@color/tv_button_focused_yellow_text"
+            app:backgroundTint="@color/tv_button_focused_yellow"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

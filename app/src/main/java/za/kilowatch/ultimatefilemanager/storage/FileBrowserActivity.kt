@@ -981,6 +981,113 @@ class FileBrowserActivity : AppCompatActivity() {
         quickTransferLauncher.launch(intent)
     }
 
+    private fun handleCopyOrCut(selected: List<File>, isMove: Boolean) {
+        if (selected.isEmpty()) return
+        if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
+            launchQuickTransferPicker(selected, isMove = isMove)
+            return
+        }
+
+        val op = if (isMove) FileClipboard.Operation.MOVE else FileClipboard.Operation.COPY
+        val recentSlot = FileClipboard.getRecentSlot()
+
+        if (recentSlot == null) {
+            FileClipboard.pushLocalSlot(selected, op, currentDir.absolutePath)
+            fileAdapter.exitSelectionMode()
+            showPremiumSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, selected.size))
+            updatePasteFab()
+        } else {
+            fileAdapter.exitSelectionMode()
+            val isOnTv = DeviceUtils.isTvDevice(this)
+            val layoutRes = if (isOnTv) R.layout.dialog_clipboard_add_or_new_tv else R.layout.dialog_clipboard_add_or_new
+            val itemLayoutRes = if (isOnTv) R.layout.item_clipboard_slot_choice_tv else R.layout.item_clipboard_slot_choice
+            val dialogView = layoutInflater.inflate(layoutRes, null)
+            val txtSubtitle = dialogView.findViewById<android.widget.TextView>(R.id.txtAddOrNewSubtitle)
+            val recyclerSlots = dialogView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerExistingSlots)
+            val btnNewSlot = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnNewSlot)
+            val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelAddOrNew)
+
+            txtSubtitle.text = getString(R.string.clipboard_slots_title, FileClipboard.slots.size, FileClipboard.totalItemCount())
+
+            val dialog: android.app.Dialog = if (isOnTv) {
+                MaterialAlertDialogBuilder(this)
+                    .setView(dialogView)
+                    .create()
+            } else {
+                com.google.android.material.bottomsheet.BottomSheetDialog(this).apply {
+                    setContentView(dialogView)
+                }
+            }
+
+            recyclerSlots.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+            class SlotChoiceViewHolder(val v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+                val txtLabel: android.widget.TextView = v.findViewById(R.id.txtSlotLabel)
+                val txtSummary: android.widget.TextView = v.findViewById(R.id.txtSlotSummary)
+                val card: View = v.findViewById(R.id.cardSlotChoice)
+            }
+
+            val slotsList = FileClipboard.slots
+            recyclerSlots.adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<SlotChoiceViewHolder>() {
+                override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): SlotChoiceViewHolder {
+                    val view = layoutInflater.inflate(itemLayoutRes, parent, false)
+                    return SlotChoiceViewHolder(view)
+                }
+
+                override fun getItemCount(): Int = slotsList.size
+
+                override fun onBindViewHolder(holder: SlotChoiceViewHolder, position: Int) {
+                    val slot = slotsList.getOrNull(position) ?: return
+                    holder.txtLabel.text = slot.label
+                    val fileSummary = slot.items.take(3).joinToString(", ") { it.name }
+                    holder.txtSummary.text = "${slot.totalCount} item(s) • $fileSummary"
+
+                    if (isOnTv) {
+                        val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                        val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
+                        val yellowText = getColor(R.color.tv_button_focused_yellow_text)
+                        val whiteText = getColor(R.color.tv_text_primary)
+                        holder.card.isFocusable = true
+                        holder.card.isFocusableInTouchMode = true
+                        holder.card.setOnFocusChangeListener { _, hasFocus ->
+                            holder.card.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                            holder.txtLabel.setTextColor(if (hasFocus) yellowText else whiteText)
+                        }
+                    }
+
+                    holder.card.setOnClickListener {
+                        dialog.dismiss()
+                        FileClipboard.addLocalToSlot(slot.id, selected, op)
+                        showPremiumSnackbar(getString(if (isMove) R.string.clipboard_cut else R.string.clipboard_copied, selected.size))
+                        updatePasteFab()
+                    }
+                }
+            }
+
+            btnNewSlot.setOnClickListener {
+                dialog.dismiss()
+                if (FileClipboard.isFull) {
+                    android.widget.Toast.makeText(this, R.string.clipboard_full_paste_first, android.widget.Toast.LENGTH_SHORT).show()
+                } else {
+                    FileClipboard.pushLocalSlot(selected, op, currentDir.absolutePath)
+                    if (FileClipboard.slots.size == 9) {
+                        android.widget.Toast.makeText(this, R.string.clipboard_warning_one_slot_left, android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                    showPremiumSnackbar(getString(R.string.clipboard_slot_created, selected.size, FileClipboard.slots.size))
+                    updatePasteFab()
+                }
+            }
+
+            btnCancel.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            if (isOnTv) {
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            }
+            dialog.show()
+        }
+    }
+
     /**
      * Handles the result from the Quick Transfer destination picker.
      * Temporarily sets the clipboard to the pending files, swaps [currentDir] to
@@ -1630,30 +1737,12 @@ class FileBrowserActivity : AppCompatActivity() {
 
         btnCopy.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
-            if (selected.isNotEmpty()) {
-                if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
-                    launchQuickTransferPicker(selected, isMove = false)
-                } else {
-                    FileClipboard.set(selected, FileClipboard.Operation.COPY)
-                    fileAdapter.exitSelectionMode()
-                    showPremiumSnackbar(getString(R.string.clipboard_copied, selected.size))
-                    updatePasteFab()
-                }
-            }
+            handleCopyOrCut(selected, isMove = false)
         }
 
         btnMove.setOnClickListener {
             val selected = fileAdapter.getSelectedFiles()
-            if (selected.isNotEmpty()) {
-                if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
-                    launchQuickTransferPicker(selected, isMove = true)
-                } else {
-                    FileClipboard.set(selected, FileClipboard.Operation.MOVE)
-                    fileAdapter.exitSelectionMode()
-                    showPremiumSnackbar(getString(R.string.clipboard_cut, selected.size))
-                    updatePasteFab()
-                }
-            }
+            handleCopyOrCut(selected, isMove = true)
         }
 
         btnRename.setOnClickListener {
@@ -1916,28 +2005,14 @@ class FileBrowserActivity : AppCompatActivity() {
             // 1. Copy
             if (pm.isIconEnabled(this, pm.KEY_COPY)) {
                 list.add(FileToolsBottomSheet.ActionItem("copy", getString(R.string.action_copy), R.drawable.ic_copy, "toolbar_copy") {
-                    if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
-                        launchQuickTransferPicker(selected, isMove = false)
-                    } else {
-                        FileClipboard.set(selected, FileClipboard.Operation.COPY)
-                        fileAdapter.exitSelectionMode()
-                        showPremiumSnackbar(getString(R.string.clipboard_copied, selected.size))
-                        updatePasteFab()
-                    }
+                    handleCopyOrCut(selected, isMove = false)
                 })
             }
 
             // 2. Move (Cut)
             if (pm.isIconEnabled(this, pm.KEY_MOVE)) {
                 list.add(FileToolsBottomSheet.ActionItem("move", getString(R.string.action_move), R.drawable.ic_move, "toolbar_move") {
-                    if (za.kilowatch.ultimatefilemanager.settings.QuickTransferPreferenceManager.isEnabled(this)) {
-                        launchQuickTransferPicker(selected, isMove = true)
-                    } else {
-                        FileClipboard.set(selected, FileClipboard.Operation.MOVE)
-                        fileAdapter.exitSelectionMode()
-                        showPremiumSnackbar(getString(R.string.clipboard_cut, selected.size))
-                        updatePasteFab()
-                    }
+                    handleCopyOrCut(selected, isMove = true)
                 })
             }
 
@@ -3305,12 +3380,10 @@ class FileBrowserActivity : AppCompatActivity() {
             return
         }
 
-        val hasLocal = FileClipboard.hasItems()
-        val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
-        val total = (if (hasLocal) FileClipboard.files.size else 0) + (if (hasNet) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
+        val total = FileClipboard.totalItemCount()
 
         if (total > 0) {
-            if (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT) {
+            if (FileClipboard.slots.any { it.isExtract }) {
                 fabPaste.text = "${getString(R.string.extract_here)} ($total)"
                 fabPaste.setIconResource(R.drawable.ic_extract)
             } else {
@@ -3439,48 +3512,30 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showClipboardSheet() {
         val isOnTv = DeviceUtils.isTvDevice(this)
+        if (!FileClipboard.hasItems()) return
 
-        data class ClipEntry(val name: String, val isMove: Boolean, val isNetwork: Boolean,
-                             val netFile: za.kilowatch.ultimatefilemanager.network.NetworkFile? = null,
-                             val localFile: java.io.File? = null)
-
-        fun buildEntries(): MutableList<ClipEntry> {
-            val list = mutableListOf<ClipEntry>()
-            for (e in za.kilowatch.ultimatefilemanager.network.NetworkClipboard.entries)
-                list.add(ClipEntry(e.file.name, e.operation == za.kilowatch.ultimatefilemanager.network.NetworkClipboard.Operation.MOVE, true, netFile = e.file))
-            for (e in FileClipboard.entries)
-                list.add(ClipEntry(e.file.name, e.operation == FileClipboard.Operation.MOVE, false, localFile = e.file))
-            return list
-        }
-
-        // Start with an empty list — the dialog opens immediately while entries load in the background
-        var entries = mutableListOf<ClipEntry>()
         val colorCopy = getColor(R.color.ufm_primary)
         val colorCut = getColor(R.color.ufm_denied)
 
-        // Choose layout & item based on TV vs mobile
         val layoutRes = if (isOnTv) R.layout.dialog_clipboard_tv else R.layout.bottom_sheet_clipboard
         val itemLayoutRes = if (isOnTv) R.layout.item_clipboard_entry_tv else R.layout.item_clipboard_entry
         val contentView = layoutInflater.inflate(layoutRes, null)
 
-        val recycler = contentView.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerClipboard)
+        val tabLayout = contentView.findViewById<com.google.android.material.tabs.TabLayout>(R.id.tabClipboardSlots)
+        val viewPager = contentView.findViewById<androidx.viewpager2.widget.ViewPager2>(R.id.vpClipboardSlots)
         val btnPasteHere = contentView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPasteHere)
+        val btnPasteSlot = contentView.findViewById<com.google.android.material.button.MaterialButton?>(R.id.btnPasteSlot)
+        val btnRemoveSlot = contentView.findViewById<com.google.android.material.button.MaterialButton?>(R.id.btnRemoveSlot)
         val btnClearAll = contentView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnClearClipboard)
         val txtTitle = contentView.findViewById<android.widget.TextView>(R.id.txtClipboardTitle)
+        val layoutSlotActions = contentView.findViewById<View?>(R.id.layoutSlotActions)
 
-        // Title always reflects the real total from the singletons, not the loaded list size
-        fun realTotal() = (if (FileClipboard.hasItems()) FileClipboard.files.size else 0) +
-                (if (za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files.size else 0)
-
-        fun updateTitle() {
-            val n = realTotal()
-            txtTitle.text = if (n == 1) getString(R.string.clipboard_1_file) else getString(R.string.clipboard_total_files, n)
+        if (isOnTv) {
+            viewPager.isUserInputEnabled = false
         }
-        updateTitle()
 
-        // Create the dialog — AlertDialog on TV (centered), BottomSheetDialog on mobile
         val dialog: android.app.Dialog = if (isOnTv) {
-            com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(this)
                 .setView(contentView)
                 .create()
         } else {
@@ -3489,67 +3544,127 @@ class FileBrowserActivity : AppCompatActivity() {
             }
         }
 
-        val adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
-            inner class VH(val v: android.view.View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v)
-            override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int) =
-                VH(layoutInflater.inflate(itemLayoutRes, parent, false))
-            override fun getItemCount() = entries.size
-            override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
-                val entry = entries[position]
-                val v = holder.itemView
-                val txtOp = v.findViewById<android.widget.TextView>(R.id.txtOperation)
-                val txtName = v.findViewById<android.widget.TextView>(R.id.txtFileName)
-                val btnRemove = v.findViewById<android.widget.ImageView>(R.id.btnRemoveClipboard)
+        fun updateUI() {
+            val slots = FileClipboard.slots
+            val total = FileClipboard.totalItemCount()
+            if (slots.isEmpty() || total == 0) {
+                dialog.dismiss()
+                updatePasteFab()
+                return
+            }
 
-                txtOp.text = if (entry.isMove) "CUT" else "COPY"
-                (txtOp.background as? android.graphics.drawable.GradientDrawable)?.setColor(
-                    if (entry.isMove) colorCut else colorCopy
-                )
-                txtName.text = entry.name
+            if (slots.size <= 1) {
+                txtTitle.text = if (total == 1) getString(R.string.clipboard_1_file) else getString(R.string.clipboard_total_files, total)
+                tabLayout.visibility = View.GONE
+                btnPasteHere.text = getString(R.string.paste_here)
+                layoutSlotActions?.visibility = View.GONE
+            } else {
+                txtTitle.text = getString(R.string.clipboard_slots_title, slots.size, total)
+                tabLayout.visibility = View.VISIBLE
+                btnPasteHere.text = getString(R.string.paste_all_slots)
+                layoutSlotActions?.visibility = View.VISIBLE
+            }
+            updatePasteFab()
+        }
 
-                // TV: yellow tint on focus for remove button
-                if (isOnTv) {
-                    val yellowTint = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-                    val redTint = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_denied))
-                    btnRemove.setOnFocusChangeListener { _, hasFocus ->
-                        btnRemove.imageTintList = if (hasFocus) yellowTint else redTint
+        class SlotItemViewHolder(val v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v)
+
+        class SlotPageViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+            val recycler: androidx.recyclerview.widget.RecyclerView = view.findViewById(R.id.recyclerSlotItems)
+        }
+
+        val pagerAdapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<SlotPageViewHolder>() {
+            override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): SlotPageViewHolder {
+                val v = layoutInflater.inflate(R.layout.item_clipboard_slot_page, parent, false)
+                return SlotPageViewHolder(v)
+            }
+
+            override fun getItemCount(): Int = FileClipboard.slots.size
+
+            override fun onBindViewHolder(holder: SlotPageViewHolder, position: Int) {
+                val slot = FileClipboard.slots.getOrNull(position) ?: return
+                val itemsRecycler = holder.recycler
+                itemsRecycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@FileBrowserActivity)
+
+                itemsRecycler.adapter = object : androidx.recyclerview.widget.RecyclerView.Adapter<SlotItemViewHolder>() {
+                    override fun onCreateViewHolder(p: android.view.ViewGroup, vt: Int) =
+                        SlotItemViewHolder(layoutInflater.inflate(itemLayoutRes, p, false))
+
+                    override fun getItemCount() = slot.items.size
+
+                    override fun onBindViewHolder(h: SlotItemViewHolder, itemPos: Int) {
+                        val item = slot.items.getOrNull(itemPos) ?: return
+                        val v = h.itemView
+                        val txtOp = v.findViewById<android.widget.TextView>(R.id.txtOperation)
+                        val txtName = v.findViewById<android.widget.TextView>(R.id.txtFileName)
+                        val btnRemove = v.findViewById<android.widget.ImageView>(R.id.btnRemoveClipboard)
+
+                        val isMove = item.operation == FileClipboard.Operation.MOVE
+                        txtOp.text = when (item.operation) {
+                            FileClipboard.Operation.MOVE -> "CUT"
+                            FileClipboard.Operation.COPY -> "COPY"
+                            FileClipboard.Operation.EXTRACT -> "EXTRACT"
+                        }
+                        (txtOp.background as? android.graphics.drawable.GradientDrawable)?.setColor(
+                            if (isMove) colorCut else colorCopy
+                        )
+
+                        val prefix = if (item is FileClipboard.ClipItem.Remote) "[Remote] " else ""
+                        txtName.text = "$prefix${item.name}"
+
+                        if (isOnTv) {
+                            val yellowTint = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                            val redTint = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_denied))
+                            btnRemove.setOnFocusChangeListener { _, hasFocus ->
+                                btnRemove.imageTintList = if (hasFocus) yellowTint else redTint
+                            }
+                        }
+
+                        btnRemove.setOnClickListener {
+                            FileClipboard.removeItem(slot.id, item)
+                            updateUI()
+                            notifyDataSetChanged()
+                            viewPager.adapter?.notifyDataSetChanged()
+                        }
                     }
                 }
-
-                btnRemove.setOnClickListener {
-                    if (entry.isNetwork && entry.netFile != null) za.kilowatch.ultimatefilemanager.network.NetworkClipboard.remove(entry.netFile)
-                    else if (!entry.isNetwork && entry.localFile != null) FileClipboard.remove(entry.localFile)
-                    entries = buildEntries()
-                    notifyDataSetChanged()
-                    updateTitle()
-                    updatePasteFab()
-                    if (entries.isEmpty()) dialog.dismiss()
-                }
             }
         }
 
-        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
-        recycler.adapter = adapter
+        viewPager.adapter = pagerAdapter
 
-        // Load entries off the main thread — avoids ANR for large clipboards (5000+ files)
-        lifecycleScope.launch(kotlinx.coroutines.Dispatchers.Main) {
-            val loaded = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Default) {
-                buildEntries()
-            }
-            if (dialog.isShowing) {
-                entries = loaded
-                adapter.notifyDataSetChanged()
-                updateTitle()
-            }
-        }
+        com.google.android.material.tabs.TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            val slot = FileClipboard.slots.getOrNull(position)
+            tab.text = slot?.let { "${it.label} (${it.totalCount})" } ?: "Slot ${position + 1}"
+        }.attach()
+
+        updateUI()
 
         btnPasteHere.setOnClickListener {
             dialog.dismiss()
             performPaste()
         }
 
+        btnPasteSlot?.setOnClickListener {
+            val currentPos = viewPager.currentItem
+            val slot = FileClipboard.slots.getOrNull(currentPos)
+            if (slot != null) {
+                dialog.dismiss()
+                performPaste(targetSlotId = slot.id)
+            }
+        }
+
+        btnRemoveSlot?.setOnClickListener {
+            val currentPos = viewPager.currentItem
+            val slot = FileClipboard.slots.getOrNull(currentPos)
+            if (slot != null) {
+                FileClipboard.removeSlot(slot.id)
+                updateUI()
+                pagerAdapter.notifyDataSetChanged()
+            }
+        }
+
         btnClearAll.setOnClickListener {
-            za.kilowatch.ultimatefilemanager.network.NetworkClipboard.clear()
             FileClipboard.clear()
             updatePasteFab()
             dialog.dismiss()
@@ -3570,6 +3685,20 @@ class FileBrowserActivity : AppCompatActivity() {
                 btnPasteHere.iconTint = android.content.res.ColorStateList.valueOf(blackText)
             }
 
+            btnPasteSlot?.isFocusable = true
+            btnPasteSlot?.isFocusableInTouchMode = true
+            btnPasteSlot?.setOnFocusChangeListener { _, hasFocus ->
+                btnPasteSlot.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                btnPasteSlot.setTextColor(if (hasFocus) blackText else getColor(R.color.tv_text_primary))
+            }
+
+            btnRemoveSlot?.isFocusable = true
+            btnRemoveSlot?.isFocusableInTouchMode = true
+            btnRemoveSlot?.setOnFocusChangeListener { _, hasFocus ->
+                btnRemoveSlot.backgroundTintList = if (hasFocus) yellowCsl else glassCsl
+                btnRemoveSlot.setTextColor(if (hasFocus) blackText else getColor(R.color.ufm_denied))
+            }
+
             btnClearAll.isFocusable = true
             btnClearAll.isFocusableInTouchMode = true
             btnClearAll.setOnFocusChangeListener { _, hasFocus ->
@@ -3580,22 +3709,21 @@ class FileBrowserActivity : AppCompatActivity() {
 
         dialog.show()
 
-        // TV: set dialog width for TV screens
         if (isOnTv) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
             dialog.window?.setLayout(
-                (resources.displayMetrics.widthPixels * 0.5).toInt(),
+                (resources.displayMetrics.widthPixels * 0.75).toInt().coerceAtLeast((680 * resources.displayMetrics.density).toInt()),
                 android.view.WindowManager.LayoutParams.WRAP_CONTENT
             )
         }
     }
 
-    private fun performPaste() {
-        val hasLocal = FileClipboard.hasItems()
-        val hasNet = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.hasItems()
-        if (!hasLocal && !hasNet) return
-        val isExtractOperation = (hasLocal && FileClipboard.operation == FileClipboard.Operation.EXTRACT)
-
-
+    private fun performPaste(targetSlotId: Long? = null) {
+        val targetSlots = if (targetSlotId != null) FileClipboard.slots.filter { it.id == targetSlotId } else FileClipboard.slots
+        if (targetSlots.isEmpty()) return
+        val hasLocal = targetSlots.any { it.hasLocal }
+        val hasNet = targetSlots.any { it.hasRemote }
+        val isExtractOperation = targetSlots.any { it.isExtract }
 
         // ── Build progress dialog ──────────────────────────────────────
         val dialogView = android.widget.LinearLayout(this).apply {
@@ -3638,14 +3766,12 @@ class FileBrowserActivity : AppCompatActivity() {
             .setTitle(R.string.transferring_files)
             .setView(dialogView)
             .setCancelable(false)
-            .setNegativeButton(R.string.cancel, null)  // listener set after show()
+            .setNegativeButton(R.string.cancel, null)
             .create()
         dialog.show()
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
             isCancelled = true
             transferJob?.cancel()
-            // Close the raw TCP connection directly — this immediately kills the socket and
-            // aborts the blocking SMB write with no 15-second timeout wait.
             runCatching { currentTransferConnection?.close() }
             currentTransferConnection = null
             currentTransferStreams?.let { (inp, out) ->
@@ -3653,9 +3779,6 @@ class FileBrowserActivity : AppCompatActivity() {
                 runCatching { inp?.close() }
                 currentTransferStreams = null
             }
-            // Clean up the incomplete destination file — on the IO dispatcher so the
-            // blocking File.delete() (native remove syscall) can't freeze the main
-            // thread (reported from a KTC JVC 2K TV, SDK 34, app 1.8.0-GOOGLE).
             currentTransferDestFile?.let { f ->
                 currentTransferDestFile = null
                 lifecycleScope.launch(Dispatchers.IO) {
@@ -3673,7 +3796,6 @@ class FileBrowserActivity : AppCompatActivity() {
             isTransferring = false
             za.kilowatch.ultimatefilemanager.util.TransferService.stop(this)
             dialog.dismiss()
-            
             loadDirectory(currentDir)
         }
 
@@ -3688,106 +3810,94 @@ class FileBrowserActivity : AppCompatActivity() {
                         if (totalBytes > 0) {
                             dialogProgress.progress = ((bytesCopied * 1000L) / totalBytes).toInt()
                         }
-                    } catch (_: Exception) { /* UI update failed during lifecycle transition — ignore */ }
+                    } catch (_: Exception) {}
                 }
-            } catch (_: Exception) { /* Activity might be finishing — ignore */ }
+            } catch (_: Exception) {}
         }
 
-        // WakeLock + WifiLock are now held by TransferService for the full transfer duration.
-        // The service acquires them in onStartCommand and releases them in onDestroy,
-        // keeping CPU and Wi-Fi alive regardless of Activity lifecycle.
         isTransferring = true
         za.kilowatch.ultimatefilemanager.util.TransferService.start(this)
         transferJob = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO + kotlinx.coroutines.SupervisorJob()).launch {
             try {
-            var successCount = 0
-            var failCount = 0
-            
-            val db = UfmIndexingDatabase.getInstance(this@FileBrowserActivity)
-            val dao = db.fileIndexDao()
-            val metadataExtractor = MetadataExtractor(this@FileBrowserActivity)
-            val pendingIndices = mutableListOf<FileIndex>()
+                var successCount = 0
+                var failCount = 0
 
-            suspend fun flushIndices() {
-                if (pendingIndices.isNotEmpty()) {
-                    dao.insertAll(pendingIndices.toList())
-                    pendingIndices.clear()
-                }
-            }
-            // Pre-count total files (expand directories to get accurate count)
-            var totalFiles = 0
-            if (hasLocal) {
-                for (e in FileClipboard.entries) {
-                    if (e.file.isDirectory) totalFiles += za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.countLocalFiles(e.file)
-                    else totalFiles++
-                }
-            }
-            if (hasNet) {
-                for (source in za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files) {
-                    if (source.isDirectory) {
-                        // We don't pre-count network dirs to avoid extra network calls; use entry count
-                        totalFiles++
-                    } else totalFiles++
-                }
-            }
-            var fileIndex = 0
+                val db = UfmIndexingDatabase.getInstance(this@FileBrowserActivity)
+                val dao = db.fileIndexDao()
+                val metadataExtractor = MetadataExtractor(this@FileBrowserActivity)
+                val pendingIndices = mutableListOf<FileIndex>()
 
-            // ── Local-to-local paste ──
-            if (hasLocal) {
-                // Capture the Quick Transfer destination (if set) as an immutable local val.
-                // This is essential: performPaste() is async, and handleQuickTransferResult
-                // never modifies currentDir anymore, so quickTransferDestDir is the only
-                // correct way to pass the chosen destination into this coroutine.
+                suspend fun flushIndices() {
+                    if (pendingIndices.isNotEmpty()) {
+                        dao.insertAll(pendingIndices.toList())
+                        pendingIndices.clear()
+                    }
+                }
+
+                // Pre-count total files
+                var totalFiles = 0
+                for (slot in targetSlots) {
+                    for (item in slot.items) {
+                        when (item) {
+                            is FileClipboard.ClipItem.Local -> {
+                                if (item.file.isDirectory) totalFiles += za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.countLocalFiles(item.file)
+                                else totalFiles++
+                            }
+                            is FileClipboard.ClipItem.Remote -> {
+                                totalFiles++
+                            }
+                        }
+                    }
+                }
+                var fileIndex = 0
+
                 val effectiveDestDir = quickTransferDestDir ?: currentDir
-                val sources = FileClipboard.files
-                val operation = FileClipboard.operation
                 val applyToAllRef = booleanArrayOf(false)
                 var globalAction: za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction? = null
 
-                suspend fun processLocalItem(source: java.io.File, destBase: java.io.File) {
-                        if (source.isDirectory) {
-                            val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
-                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
-                            else destBase.exists()
+                suspend fun processLocalItem(source: java.io.File, destBase: java.io.File, operation: FileClipboard.Operation) {
+                    if (source.isDirectory) {
+                        val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                        else destBase.exists()
 
-                            var effectiveDest = destBase
-                            if (hasConflict) {
-                                val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                        this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
-                                    ).also { if (applyToAllRef[0]) globalAction = it }
+                        var effectiveDest = destBase
+                        if (hasConflict) {
+                            val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
+                                ).also { if (applyToAllRef[0]) globalAction = it }
+                            }
+                            when (resolvedAction) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                    successCount++
+                                    return
                                 }
-                                when (resolvedAction) {
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
-                                        successCount++
-                                        return
-                                    }
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                        effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
-                                            destBase.parentFile ?: effectiveDestDir, source.name
-                                        )
-                                    }
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                        effectiveDest = destBase
-                                    }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                        destBase.parentFile ?: effectiveDestDir, source.name
+                                    )
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                    effectiveDest = destBase
                                 }
                             }
+                        }
 
-                            try {
-                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
-                                // Index the new folder immediately
-                                if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                    pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                                    if (pendingIndices.size >= 50) flushIndices()
-                                }
-                            } catch (_: Exception) {}
-                        
+                        try {
+                            if (!effectiveDest.exists()) effectiveDest.mkdirs()
+                            if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                                pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                                if (pendingIndices.size >= 50) flushIndices()
+                            }
+                        } catch (_: Exception) {}
+
                         val children = source.listFiles()
                         if (children != null) {
-                            for (child in children) { 
+                            for (child in children) {
                                 try {
-                                    processLocalItem(child, java.io.File(effectiveDest, child.name)) 
+                                    processLocalItem(child, java.io.File(effectiveDest, child.name), operation)
                                 } catch (e: kotlinx.coroutines.CancellationException) {
                                     throw e
                                 } catch (e: Exception) {
@@ -3796,12 +3906,12 @@ class FileBrowserActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
-                            try { 
+                        if (operation == FileClipboard.Operation.MOVE || operation == FileClipboard.Operation.EXTRACT) {
+                            try {
                                 if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
                                     za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.delete(source.absolutePath)
                                 } else {
-                                    source.delete() 
+                                    source.delete()
                                 }
                                 UfmApplication.indexingRepository.deleteTreeFromIndex(source.absolutePath)
                             } catch (_: Exception) {}
@@ -3830,10 +3940,6 @@ class FileBrowserActivity : AppCompatActivity() {
 
                         val sourceSize = source.length()
                         updateProgress(source.name, 0, sourceSize, fileIndex, totalFiles)
-                        // Resolve the final destination before copying. For KEEP_BOTH this
-                        // produces a unique name (e.g. "photo (1).jpg") so copyLocalToLocalAtomic
-                        // never receives a same-as-source path and the self-copy guard cannot
-                        // silently swallow the operation.
                         val finalDest = if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH)
                             za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFile(destBase.parentFile!!, destBase.name)
                         else destBase
@@ -3841,14 +3947,12 @@ class FileBrowserActivity : AppCompatActivity() {
                             updateProgress(source.name, c, t, fileIndex, totalFiles)
                         }
 
-                        // Index incrementally
                         if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
                             pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
                             if (pendingIndices.size >= 50) flushIndices()
                         }
 
-                        if (operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.MOVE || operation == za.kilowatch.ultimatefilemanager.storage.FileClipboard.Operation.EXTRACT) {
-                            // Zero-byte guard: only delete source if destination has data
+                        if (operation == FileClipboard.Operation.MOVE || operation == FileClipboard.Operation.EXTRACT) {
                             if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
                                     writtenDest.length(), source.length(), source.name)) {
                                 if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(source.absolutePath)) {
@@ -3866,268 +3970,255 @@ class FileBrowserActivity : AppCompatActivity() {
                     }
                 }
 
+                suspend fun processNetItem(source: za.kilowatch.ultimatefilemanager.network.NetworkFile, destBase: java.io.File, share: za.kilowatch.ultimatefilemanager.network.NetworkShare, operation: FileClipboard.Operation) {
+                    if (source.isDirectory) {
+                        val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
+                            za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
+                        else destBase.exists()
 
-                    // Process items with per-file error isolation
-                    for (entry in FileClipboard.entries) {
-                        coroutineContext.ensureActive()
-                        try {
-                            // Note: processLocalItem currently uses global 'operation' for simplicity, 
-                            // but we could pass entry.operation here if needed for mixed batches.
-                            processLocalItem(entry.file, File(effectiveDestDir, entry.file.name))
-                        } catch (e: CancellationException) {
-                            throw e 
-                        } catch (e: Exception) {
-                            failCount++
-                        }
-                    }
-                    flushIndices()
-                    FileClipboard.clear()
-                    quickTransferDestDir = null   // consumed; clear so normal paste is unaffected
-                }
-
-            // ── Network-to-local paste ──
-            if (hasNet) {
-                val sources = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files
-                val operation = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.operation
-                val sourceShareId = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.sourceShareId
-                var share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@FileBrowserActivity).getById(sourceShareId)
-                // Server-mode shares need remotePath from the clipboard entry
-                val sourceRemotePath = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.sourceRemotePath
-                if (share?.isServerMode == true && sourceRemotePath.isNotEmpty()) {
-                    share = share.copy(remotePath = sourceRemotePath)
-                }
-
-                if (share == null) {
-                    val pairedDevice = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@FileBrowserActivity).getPairedDevice(sourceShareId)
-                    if (pairedDevice != null && pairedDevice.isConnected) {
-                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                            id = pairedDevice.deviceId,
-                            name = pairedDevice.name,
-                            type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
-                            host = pairedDevice.lastIp,
-                            port = pairedDevice.lastPort
-                        )
-                    }
-                }
-                
-                if (share == null) {
-                    val onlineStorage = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@FileBrowserActivity).getById(sourceShareId)
-                    if (onlineStorage != null) {
-                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
-                            id = onlineStorage.id,
-                            name = onlineStorage.displayName,
-                            type = when (onlineStorage.provider) {
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
-                            },
-                            host = when (onlineStorage.provider) {
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
-                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
-                            },
-                            username = when (onlineStorage.provider) {
-                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> onlineStorage.id
-                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
-                            },
-                            password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
-                            readOnly = false
-                        )
-                    }
-                }
-
-                if (share != null) {
-                    val applyToAllRef = booleanArrayOf(false)
-                    var globalAction: za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction? = null
-
-                    suspend fun processNetItem(source: za.kilowatch.ultimatefilemanager.network.NetworkFile, destBase: java.io.File) {
-                        if (source.isDirectory) {
-                            val hasConflict = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(destBase.absolutePath))
-                                za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.exists(destBase.absolutePath)
-                            else destBase.exists()
-
-                            var effectiveDest = destBase
-                            if (hasConflict) {
-                                val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                        this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
-                                    ).also { if (applyToAllRef[0]) globalAction = it }
+                        var effectiveDest = destBase
+                        if (hasConflict) {
+                            val resolvedAction = globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@FileBrowserActivity, source.name, true, -1L, applyToAllRef
+                                ).also { if (applyToAllRef[0]) globalAction = it }
+                            }
+                            when (resolvedAction) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
+                                    successCount++
+                                    return
                                 }
-                                when (resolvedAction) {
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL -> throw CancellationException()
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP -> {
-                                        successCount++
-                                        return
-                                    }
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
-                                        effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
-                                            destBase.parentFile ?: currentDir, source.name
-                                        )
-                                    }
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
-                                        effectiveDest = destBase
-                                    }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH -> {
+                                    effectiveDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.uniqueLocalFolder(
+                                        destBase.parentFile ?: currentDir, source.name
+                                    )
+                                }
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.OVERWRITE -> {
+                                    effectiveDest = destBase
                                 }
                             }
+                        }
 
+                        try {
+                            if (!effectiveDest.exists()) effectiveDest.mkdirs()
+                            if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                                pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                                if (pendingIndices.size >= 50) flushIndices()
+                            }
+                        } catch (_: Exception) {}
+
+                        val children = when (share.type) {
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, source.path)
+                            za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                        }
+                        for (child in children) {
+                            if (isCancelled) break
+                            coroutineContext.ensureActive()
                             try {
-                                if (!effectiveDest.exists()) effectiveDest.mkdirs()
-                                // Index the new folder immediately
-                                if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                    pendingIndices.add(metadataExtractor.extractMetadata(effectiveDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                                    if (pendingIndices.size >= 50) flushIndices()
+                                processNetItem(child, java.io.File(effectiveDest, child.name), share, operation)
+                            } catch (e: kotlinx.coroutines.CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                if (isCancelled) throw CancellationException()
+                                android.util.Log.e("PasteFeature", "Error processing net child ${child.name}: ${e.message}")
+                                failCount++
+                            }
+                        }
+                        if (operation == FileClipboard.Operation.MOVE) {
+                            try {
+                                when (share.type) {
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteDir(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteDir(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteDir(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, true)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
                                 }
                             } catch (_: Exception) {}
-                            
-                            val children = when (share.type) {
-                                za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.listFiles(share, source.path)
-                                za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
+                        } else {
+                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
+                        }
+                    } else {
+                        fileIndex++
+                        val hasConflict = destBase.exists()
+                        val resolvedAction = if (hasConflict) {
+                            globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
+                                    this@FileBrowserActivity, source.name, false, destBase.length(), applyToAllRef
+                                ).also { if (applyToAllRef[0]) globalAction = it }
                             }
-                            for (child in children) {
-                                    if (isCancelled) break
-                                    coroutineContext.ensureActive()
+                        } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
+
+                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL) throw CancellationException()
+                        if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) {
+                            successCount++
+                            return
+                        }
+
+                        updateProgress(source.name, 0, source.size, fileIndex, totalFiles)
+                        val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.downloadNetworkToLocalAtomic(
+                            share, source, destBase, resolvedAction,
+                            onProgress = { c, t -> updateProgress(source.name, c, t, fileIndex, totalFiles) },
+                            onConnectionReady = { conn -> currentTransferConnection = conn }
+                        )
+                        currentTransferConnection = null
+
+                        if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
+                            pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
+                            if (pendingIndices.size >= 50) flushIndices()
+                        }
+
+                        if (operation == FileClipboard.Operation.MOVE) {
+                            if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
+                                    writtenDest.length(), source.size, source.name)) {
+                                when (share.type) {
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, false)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(share, source.path)
+                                    za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                                }
+                            }
+                            FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
+                        } else {
+                            FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
+                        }
+                        successCount++
+                    }
+                }
+
+                // Process target slots
+                for (slot in targetSlots) {
+                    for (item in slot.items) {
+                        coroutineContext.ensureActive()
+                        when (item) {
+                            is FileClipboard.ClipItem.Local -> {
+                                try {
+                                    processLocalItem(item.file, java.io.File(effectiveDestDir, item.file.name), item.operation)
+                                } catch (e: CancellationException) {
+                                    throw e
+                                } catch (e: Exception) {
+                                    failCount++
+                                }
+                            }
+                            is FileClipboard.ClipItem.Remote -> {
+                                var share = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(this@FileBrowserActivity).getById(item.sourceShareId)
+                                if (share?.isServerMode == true && item.sourceRemotePath.isNotEmpty()) {
+                                    share = share.copy(remotePath = item.sourceRemotePath)
+                                }
+                                if (share == null) {
+                                    val pairedDevice = za.kilowatch.ultimatefilemanager.network.PairingManager.getInstance(this@FileBrowserActivity).getPairedDevice(item.sourceShareId)
+                                    if (pairedDevice != null && pairedDevice.isConnected) {
+                                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                            id = pairedDevice.deviceId,
+                                            name = pairedDevice.name,
+                                            type = za.kilowatch.ultimatefilemanager.network.ShareType.TV,
+                                            host = pairedDevice.lastIp,
+                                            port = pairedDevice.lastPort
+                                        )
+                                    }
+                                }
+                                if (share == null) {
+                                    val onlineStorage = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this@FileBrowserActivity).getById(item.sourceShareId)
+                                    if (onlineStorage != null) {
+                                        share = za.kilowatch.ultimatefilemanager.network.NetworkShare(
+                                            id = onlineStorage.id,
+                                            name = onlineStorage.displayName,
+                                            type = when (onlineStorage.provider) {
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV
+                                            },
+                                            host = when (onlineStorage.provider) {
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUrl ?: onlineStorage.email else onlineStorage.s3Endpoint ?: onlineStorage.email
+                                            },
+                                            username = when (onlineStorage.provider) {
+                                                za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> onlineStorage.id
+                                                else -> if (onlineStorage.isWebDavProvider) onlineStorage.webDavUsername ?: "" else onlineStorage.s3AccessKey ?: ""
+                                            },
+                                            password = if (onlineStorage.isWebDavProvider) onlineStorage.webDavPassword ?: "" else onlineStorage.s3SecretKey ?: "",
+                                            readOnly = false
+                                        )
+                                    }
+                                }
+
+                                if (share != null) {
                                     try {
-                                        processNetItem(child, java.io.File(effectiveDest, child.name))
+                                        processNetItem(item.file, java.io.File(currentDir, item.file.name), share, item.operation)
                                     } catch (e: kotlinx.coroutines.CancellationException) {
                                         throw e
                                     } catch (e: Exception) {
                                         if (isCancelled) throw CancellationException()
-                                        android.util.Log.e("PasteFeature", "Error processing net child ${child.name}: ${e.message}")
                                         failCount++
                                     }
+                                } else {
+                                    failCount++
                                 }
-                            if (operation == za.kilowatch.ultimatefilemanager.network.NetworkClipboard.Operation.MOVE) {
-                                try {
-                                    when (share.type) {
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteDir(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteDir(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteDir(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, true)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteDir(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-                                    }
-                                } catch (_: Exception) {}
-                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
-                            } else {
-                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, effectiveDest.absolutePath)
                             }
-                        } else {
-                            fileIndex++
-                            val hasConflict = destBase.exists()
-                            val resolvedAction = if (hasConflict) {
-                                globalAction ?: kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-                                    za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.showConflictDialog(
-                                        this@FileBrowserActivity, source.name, false, destBase.length(), applyToAllRef
-                                    ).also { if (applyToAllRef[0]) globalAction = it }
-                                }
-                            } else za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.KEEP_BOTH
-
-                            if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.CANCEL) throw CancellationException()
-                            if (resolvedAction == za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.ConflictAction.SKIP) {
-                                successCount++
-                                return
-                            }
-
-                            updateProgress(source.name, 0, source.size, fileIndex, totalFiles)
-                            val writtenDest = za.kilowatch.ultimatefilemanager.util.TransferConflictHelper.downloadNetworkToLocalAtomic(
-                                share, source, destBase, resolvedAction,
-                                onProgress = { c, t -> updateProgress(source.name, c, t, fileIndex, totalFiles) },
-                                onConnectionReady = { conn -> currentTransferConnection = conn }
-                            )
-                            currentTransferConnection = null
-                            
-                            // Index incrementally
-                            if (!UfmApplication.indexingRepository.hasUserDeclinedIndexing(storageId)) {
-                                pendingIndices.add(metadataExtractor.extractMetadata(writtenDest, storageId, storageType, MetadataExtractor.HashAlgorithm.NONE))
-                                if (pendingIndices.size >= 50) flushIndices()
-                            }
-
-                            if (operation == za.kilowatch.ultimatefilemanager.network.NetworkClipboard.Operation.MOVE) {
-                                // Zero-byte guard: only delete network source if local destination has data
-                                if (za.kilowatch.ultimatefilemanager.util.FileTransferGuard.requireSourceSafeToDelete(
-                                        writtenDest.length(), source.size, source.name)) {
-                                    when (share.type) {
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.SMB -> za.kilowatch.ultimatefilemanager.network.SmbShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.FTP -> za.kilowatch.ultimatefilemanager.network.FtpShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.TV  -> za.kilowatch.ultimatefilemanager.network.TvShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.SFTP, za.kilowatch.ultimatefilemanager.network.ShareType.SCP -> za.kilowatch.ultimatefilemanager.network.SshShareClient.delete(share, source.path, false)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.ONEDRIVE -> za.kilowatch.ultimatefilemanager.network.OnedriveShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.GOOGLE_DRIVE -> za.kilowatch.ultimatefilemanager.network.GoogleDriveShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.DROPBOX -> za.kilowatch.ultimatefilemanager.network.DropboxShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.AWS_S3, za.kilowatch.ultimatefilemanager.network.ShareType.IDRIVE_E2 -> za.kilowatch.ultimatefilemanager.network.S3ShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.WEBDAV -> za.kilowatch.ultimatefilemanager.network.WebDavShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.NFS -> za.kilowatch.ultimatefilemanager.network.NfsShareClient.deleteFile(share, source.path)
-                                        za.kilowatch.ultimatefilemanager.network.ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
-                                    }
-                                }
-                                FileTagsManager.onPathMoved(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
-                            } else {
-                                FileTagsManager.onPathCopied(this@FileBrowserActivity, source.path, writtenDest.absolutePath)
-                            }
-                            successCount++
-
                         }
                     }
+                    FileClipboard.removeSlot(slot.id)
+                }
 
-                    // Process items with per-file error isolation
-                    val sources = za.kilowatch.ultimatefilemanager.network.NetworkClipboard.files
-                    for (source in sources) {
-                        try {
-                            processNetItem(source, java.io.File(currentDir, source.name))
-                        } catch (e: kotlinx.coroutines.CancellationException) {
-                            throw CancellationException() // Bubbles to outer finally for cleanup
-                        } catch (e: Exception) {
-                            if (isCancelled) throw CancellationException()
-                            failCount++
+                if (targetSlotId == null) {
+                    FileClipboard.clear()
+                }
+                quickTransferDestDir = null
+                flushIndices()
+
+                withContext(Dispatchers.Main) {
+                    isTransferring = false
+                    dialog.dismiss()
+
+                    if (isQuickTransferPickerMode) {
+                        val result = Intent().apply {
+                            putExtra(RESULT_SELECTED_LOCAL_PATH, quickTransferDestDir?.absolutePath ?: currentDir.absolutePath)
+                            putExtra("QT_SUCCESS_COUNT", successCount)
+                            putExtra("QT_FAIL_COUNT", failCount)
                         }
+                        setResult(RESULT_OK, result)
+                        finish()
+                        return@withContext
                     }
-                    za.kilowatch.ultimatefilemanager.network.NetworkClipboard.clear()
-                }
-            } // closes if (hasNet)
 
-            withContext(Dispatchers.Main) {
-                isTransferring = false
-                dialog.dismiss()
-                flushIndices() // Final flush for network items if any
-                
-                if (isQuickTransferPickerMode) {
-                    val result = Intent().apply { 
-                        putExtra(RESULT_SELECTED_LOCAL_PATH, quickTransferDestDir?.absolutePath ?: currentDir.absolutePath)
-                        putExtra("QT_SUCCESS_COUNT", successCount)
-                        putExtra("QT_FAIL_COUNT", failCount)
+                    updatePasteFab()
+                    loadDirectory(currentDir)
+                    InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
+
+                    if (failCount == 0 && successCount > 0) {
+                        if (isExtractOperation) showPremiumSnackbar(getString(R.string.extract_move_success, successCount))
+                        else showPremiumSnackbar(getString(R.string.paste_success, successCount))
+                    } else if (failCount > 0) {
+                        showPremiumSnackbar(getString(R.string.paste_error))
                     }
-                    setResult(RESULT_OK, result)
-                    finish()
-                    return@withContext
                 }
-
-                updatePasteFab()
-                loadDirectory(currentDir)
-                InstantSyncWatcher.notifyDirectoryChanged(this@FileBrowserActivity, currentDir.absolutePath)
-                
-                if (failCount == 0 && successCount > 0) {
-                    if (isExtractOperation) showPremiumSnackbar(getString(R.string.extract_move_success, successCount))
-                    else showPremiumSnackbar(getString(R.string.paste_success, successCount))
-                }
-                else if (failCount > 0) showPremiumSnackbar(getString(R.string.paste_error))
-            }
             } finally {
                 isTransferring = false
                 za.kilowatch.ultimatefilemanager.util.TransferService.stop(this@FileBrowserActivity)

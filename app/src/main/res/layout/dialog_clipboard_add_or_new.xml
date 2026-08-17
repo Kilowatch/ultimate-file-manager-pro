@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Modern Glassmorphic BottomSheet Dialog for "Add to slot or Create new slot".
+  Shows all existing slots (up to 10) in a scrollable list.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bottom_sheet"
+    android:paddingBottom="20dp">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Icon -->
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_paste"
+        app:tint="?attr/colorPrimary"
+        android:contentDescription="@null" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtAddOrNewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clipboard_add_or_new_title"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="19sp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:paddingBottom="2dp" />
+
+    <!-- Subtitle / Slot status -->
+    <TextView
+        android:id="@+id/txtAddOrNewSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:paddingHorizontal="28dp"
+        android:paddingBottom="12dp" />
+
+    <!-- Scrollable list of existing slots -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerExistingSlots"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="240dp"
+        android:nestedScrollingEnabled="true"
+        android:scrollbars="vertical" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="10dp">
+
+        <!-- Option: Create New Slot -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNewSlot"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/clipboard_new_slot"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconSize="20dp"
+            app:backgroundTint="?attr/colorPrimary"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Option: Cancel -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelAddOrNew"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/cancel"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textAllCaps="false"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -5636,6 +5636,42 @@ ROOT
     <string name="clipboard_n_items">
 الحافظة (%1$d عناصر)
 </string>
+    <string name="clipboard_slots_title">
+الحافظة (%1$d خانة، %2$d عنصر)
+</string>
+    <string name="clipboard_slot_created">
+تمت إضافة %1$d عنصر إلى الحافظة (الخانة %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+الحافظة ممتلئة تقريبًا — تبقّت خانة واحدة
+</string>
+    <string name="clipboard_full_paste_first">
+الحافظة ممتلئة — قم باللصق أو فرّغ خانة أولاً
+</string>
+    <string name="clipboard_add_or_new_title">
+إضافة إلى خانة موجودة أم خانة جديدة؟
+</string>
+    <string name="clipboard_add_to_slot">
+إضافة إلى \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+خانة جديدة
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d ملف
+</string>
+    <string name="clipboard_combined_slot">
+مدمج (%1$d عنصر)
+</string>
+    <string name="paste_this_slot">
+لصق هذه الخانة
+</string>
+    <string name="remove_slot">
+إزالة الخانة
+</string>
+    <string name="paste_all_slots">
+لصق جميع الخانات هنا
+</string>
     <string name="opening_filename">
 جارٍ فتح %1$s…
 </string>

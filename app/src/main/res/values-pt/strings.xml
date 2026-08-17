@@ -5636,6 +5636,42 @@ Falha ao criptografar arquivos
     <string name="clipboard_n_items">
 Área de transferência (%1$d itens)
 </string>
+    <string name="clipboard_slots_title">
+Área de transferência (%1$d espaços, %2$d itens)
+</string>
+    <string name="clipboard_slot_created">
+%1$d item(ns) adicionado(s) à área de transferência (espaço %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Área de transferência quase cheia — resta 1 espaço
+</string>
+    <string name="clipboard_full_paste_first">
+Área de transferência cheia — cole ou limpe um espaço primeiro
+</string>
+    <string name="clipboard_add_or_new_title">
+Adicionar a um espaço existente ou novo?
+</string>
+    <string name="clipboard_add_to_slot">
+Adicionar a \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+Novo espaço
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d arquivo(s)
+</string>
+    <string name="clipboard_combined_slot">
+Combinado (%1$d itens)
+</string>
+    <string name="paste_this_slot">
+Colar este espaço
+</string>
+    <string name="remove_slot">
+Remover espaço
+</string>
+    <string name="paste_all_slots">
+Colar todos os espaços aqui
+</string>
     <string name="opening_filename">
 Abrindo %1$s…
 </string>

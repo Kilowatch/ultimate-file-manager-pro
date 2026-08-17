@@ -5636,6 +5636,42 @@ TV로 전송
     <string name="clipboard_n_items">
 클립보드 (%1$d개 항목)
 </string>
+    <string name="clipboard_slots_title">
+클립보드 (슬롯 %1$d개, 항목 %2$d개)
+</string>
+    <string name="clipboard_slot_created">
+%1$d개 항목이 클립보드에 추가됨 (슬롯 %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+클립보드가 거의 가득 참 — 남은 슬롯 1개
+</string>
+    <string name="clipboard_full_paste_first">
+클립보드가 가득 참 — 먼저 슬롯을 붙여넣기하거나 비우세요
+</string>
+    <string name="clipboard_add_or_new_title">
+기존 슬롯 또는 새 슬롯에 추가하시겠습니까?
+</string>
+    <string name="clipboard_add_to_slot">
+\"%1$s\"에 추가
+</string>
+    <string name="clipboard_new_slot">
+새 슬롯
+</string>
+    <string name="clipboard_slot_header">
+%1$s — 파일 %2$d개
+</string>
+    <string name="clipboard_combined_slot">
+결합됨 (항목 %1$d개)
+</string>
+    <string name="paste_this_slot">
+이 슬롯 붙여넣기
+</string>
+    <string name="remove_slot">
+슬롯 삭제
+</string>
+    <string name="paste_all_slots">
+여기에 모든 슬롯 붙여넣기
+</string>
     <string name="opening_filename">
 %1$s 열기 중…
 </string>

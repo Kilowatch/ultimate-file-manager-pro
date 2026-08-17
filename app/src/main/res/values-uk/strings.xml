@@ -5636,6 +5636,42 @@ PIN-код сховища
     <string name="clipboard_n_items">
 Буфер обміну (%1$d елементів)
 </string>
+    <string name="clipboard_slots_title">
+Буфер обміну (%1$d слотів, %2$d елементів)
+</string>
+    <string name="clipboard_slot_created">
+Додано %1$d елемент(ів) у буфер обміну (слот %2$d)
+</string>
+    <string name="clipboard_warning_one_slot_left">
+Буфер обміну майже заповнений — залишився 1 слот
+</string>
+    <string name="clipboard_full_paste_first">
+Буфер обміну заповнений — спочатку вставте або очистіть слот
+</string>
+    <string name="clipboard_add_or_new_title">
+Додати до наявного чи нового слота?
+</string>
+    <string name="clipboard_add_to_slot">
+Додати до \"%1$s\"
+</string>
+    <string name="clipboard_new_slot">
+Новий слот
+</string>
+    <string name="clipboard_slot_header">
+%1$s — %2$d файл(ів)
+</string>
+    <string name="clipboard_combined_slot">
+Об\\\'єднано (%1$d елементів)
+</string>
+    <string name="paste_this_slot">
+Вставити цей слот
+</string>
+    <string name="remove_slot">
+Видалити слот
+</string>
+    <string name="paste_all_slots">
+Вставити всі слоти сюди
+</string>
     <string name="opening_filename">
 Відкриття %1$s…
 </string>
