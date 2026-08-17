@@ -3674,7 +3674,95 @@ object CrashReportManager {
                             }
                         }
 
-                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall) {
+                    // 57. The main thread is sampled while the framework saves an
+                    //     Activity's instance state during a normal Activity stop —
+                    //     top frame `android.os.BaseBundle.unparcel` (the parcel-parse
+                    //     that `Bundle.putBundle` performs on the saved-instance-state
+                    //     bundle; on the AndroidX path `ComponentActivity.
+                    //     onSaveInstanceState` -> `SavedStateRegistry.performSave` ->
+                    //     `outState.putBundle(...)`, and on an app Activity's own save
+                    //     path the app's `onSaveInstanceState` override calling
+                    //     `outState.putBundle(...)`), under `Bundle.putBundle` -> an
+                    //     R8-obfuscated non-platform `onSaveInstanceState` override
+                    //     (the app or bundled-library Activity) ->
+                    //     `android.app.Activity.performSaveInstanceState` ->
+                    //     `Instrumentation.callActivityOnSaveInstanceState` ->
+                    //     `ActivityThread.callActivityOnSaveInstanceState`/
+                    //     `callActivityOnStop`/`performStopActivityInner`/
+                    //     `handleStopActivity` -> `servertransaction.StopActivityItem.
+                    //     execute`, thread state RUNNABLE — reported from a Google
+                    //     Pixel 6a, SDK 37, app 1.8.4-GOOGLE. The sampled work is the
+                    //     bounded unparcel of the saved-state bundle during the
+                    //     framework-driven stop-save: `unparcel` is O(saved-state
+                    //     size) bookkeeping the framework runs on every Activity
+                    //     stop, the app's own saved state is small (search-query
+                    //     strings, mode strings, boolean flags — the app has no
+                    //     `putBundle` call and no large Parcelable in its saved
+                    //     state), and the main thread is RUNNABLE, so the frame
+                    //     cannot by itself occupy the main thread for 5 s on a
+                    //     normally-provisioned phone; the >5 s block is device-side
+                    //     slowness / CPU starvation or a post-stall sample of the
+                    //     backlog the main looper drains after a genuine stall. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose
+                    //     top frame is `BaseBundle.unparcel`, with a `Bundle.
+                    //     putBundle` frame, a non-platform `onSaveInstanceState`
+                    //     override frame, an `android.app.Activity.
+                    //     performSaveInstanceState` frame and an `ActivityThread`
+                    //     stop-lifecycle frame (or a `servertransaction.
+                    //     StopActivityItem` frame), with no
+                    //     `za.kilowatch.ultimatefilemanager` frames and no framework
+                    //     blocking primitive anywhere on the stack, as a false
+                    //     positive and resets its heartbeat instead of writing a
+                    //     report. Genuine freezes keep the main thread inside
+                    //     blocking work — a lock/`wait`/`park`, a
+                    //     `BinderProxy.transact`, a file/network/database I/O frame,
+                    //     an unobfuscated app frame on the stack, or saved-state
+                    //     work reached from app business logic outside the
+                    //     framework's Activity-stop save (e.g. an app-constructed
+                    //     huge Parcelable whose own write path blocks, which
+                    //     surfaces as a Parcel write frame, not a `putBundle`
+                    //     unparcel) — and are still reported.
+                    val isSaveInstanceStateUnparcelStall =
+                        topFrame?.className == "android.os.BaseBundle" &&
+                        topFrame?.methodName == "unparcel" &&
+                        mainStackTrace.any {
+                            it.className == "android.os.Bundle" && it.methodName == "putBundle"
+                        } &&
+                        // The Activity's own onSaveInstanceState override — app or
+                        // bundled library (R8 keeps the framework-override method name).
+                        mainStackTrace.any { frame ->
+                            frame.methodName == "onSaveInstanceState" &&
+                            PLATFORM_PREFIXES.none { p -> frame.className.startsWith(p) }
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.app.Activity" && it.methodName == "performSaveInstanceState"
+                        } &&
+                        // Reached from the framework's Activity-stop save lifecycle,
+                        // not app business logic.
+                        mainStackTrace.any {
+                            (it.className == "android.app.ActivityThread" &&
+                             (it.methodName == "callActivityOnSaveInstanceState" ||
+                              it.methodName == "callActivityOnStop" ||
+                              it.methodName == "performStopActivityInner" ||
+                              it.methodName == "handleStopActivity")) ||
+                            it.className == "android.app.servertransaction.StopActivityItem"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a
+                        // genuine freeze parks the main thread in one of these instead
+                        // of in the bounded saved-state unparcel.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
