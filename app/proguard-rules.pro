@@ -385,3 +385,12 @@
 -keep class com.squareup.gifencoder.** { *; }
 -keepclassmembers class com.squareup.gifencoder.** { *; }
 -dontwarn com.squareup.gifencoder.**
+
+# ── BuildConfig ─────────────────────────────────────────────────────────────
+# Keep BuildConfig class and static fields so runtime accesses across the app
+# (GoRoLog, OAuth clients, crash reporting, flavor checks) never throw NoClassDefFoundError.
+-keep class za.kilowatch.ultimatefilemanager.BuildConfig { *; }
+-keepclassmembers class za.kilowatch.ultimatefilemanager.BuildConfig {
+    public static <fields>;
+}
+

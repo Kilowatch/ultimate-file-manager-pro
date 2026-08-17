@@ -275,8 +275,8 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                 pairingServer = PairingServer(this)
                 pairingServer?.startSecure()
                 Log.d(TAG, "Global PairingServer started successfully (HTTPS)")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start global PairingServer", e)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to start global PairingServer", t)
             }
         }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
 
@@ -285,10 +285,11 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
             try {
                 NetworkHttpProxyServer.start()
                 Log.d(TAG, "NetworkHttpProxyServer started")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start NetworkHttpProxyServer", e)
+            } catch (t: Throwable) {
+                Log.e(TAG, "Failed to start NetworkHttpProxyServer", t)
             }
         }.apply { name = "ufm-http-proxy-init"; isDaemon = true; start() }
+
 
         // Start ANR watchdog after super.onCreate() — main looper must exist first
         CrashReportManager.installAnrWatchdog(this)

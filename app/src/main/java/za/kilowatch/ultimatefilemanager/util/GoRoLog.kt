@@ -11,8 +11,16 @@ object GoRoLog {
     private const val DEFAULT_TAG = "GoRoLog"
     private const val PREFIX = "🚀 [GoRo] "
 
+    private val isDebug: Boolean by lazy {
+        try {
+            BuildConfig.DEBUG
+        } catch (_: Throwable) {
+            false
+        }
+    }
+
     fun d(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) Log.d(tag, "$PREFIX$message", throwable)
+        if (isDebug) Log.d(tag, "$PREFIX$message", throwable)
     }
     fun d(message: String, throwable: Throwable? = null) = d(DEFAULT_TAG, message, throwable)
 
@@ -22,7 +30,7 @@ object GoRoLog {
     fun e(message: String, throwable: Throwable? = null) = e(DEFAULT_TAG, message, throwable)
 
     fun i(tag: String, message: String, throwable: Throwable? = null) {
-        if (BuildConfig.DEBUG) Log.i(tag, "$PREFIX$message", throwable)
+        if (isDebug) Log.i(tag, "$PREFIX$message", throwable)
     }
     fun i(message: String, throwable: Throwable? = null) = i(DEFAULT_TAG, message, throwable)
 
@@ -31,3 +39,4 @@ object GoRoLog {
     }
     fun w(message: String, throwable: Throwable? = null) = w(DEFAULT_TAG, message, throwable)
 }
+
