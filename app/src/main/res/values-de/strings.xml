@@ -10843,6 +10843,32 @@ Ordnerzugriff gewährt
     <string name="protected_folder_saf_denied">
 Ordnerzugriff wurde nicht gewährt
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Diashow-Geschwindigkeit
+</string>
+    <string name="slideshow_interval_dialog_title">
+Diashow-Intervall
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+Möchten Sie \\\"%1$s\\\" wirklich löschen?
+</string>
+    <string name="delete_photo_title">
+Foto löschen
+</string>
+    <string name="item_deleted">
+%1$s gelöscht
+</string>
+    <string name="item_moved_to_recycle_bin">
+\\\"%1$s\\\" in den Papierkorb verschoben
+</string>
+    <string name="menu_more_options">
+Weitere Optionen
+</string>
 </resources>
 
 

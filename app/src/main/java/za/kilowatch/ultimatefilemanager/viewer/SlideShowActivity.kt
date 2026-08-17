@@ -19,6 +19,7 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -28,11 +29,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import za.kilowatch.ultimatefilemanager.UfmApplication
+import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
+import za.kilowatch.ultimatefilemanager.recycle.RecycleBinManager
+import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
+import za.kilowatch.ultimatefilemanager.settings.ProtectedFilesManager
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -131,7 +139,6 @@ class SlideShowActivity : AppCompatActivity() {
         override fun run() {
             if (isSlideshowPlaying) {
                 navigateNext()
-                handler.postDelayed(this, slideshowIntervalMs)
             }
         }
     }
@@ -185,6 +192,9 @@ class SlideShowActivity : AppCompatActivity() {
         override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
             GoRoLog.e("SlideShowPlayer", "Playback error: ${error.message}", error)
             Toast.makeText(this@SlideShowActivity, "Playback error: ${error.localizedMessage}", Toast.LENGTH_LONG).show()
+            if (isSlideshowPlaying) {
+                handler.postDelayed({ navigateNext() }, 2000)
+            }
         }
     }
 
@@ -262,6 +272,16 @@ class SlideShowActivity : AppCompatActivity() {
                     basePaddingBottom + sb.bottom
                 )
             }
+            val layoutPhotoActions = findViewById<View>(R.id.layoutPhotoActions)
+            if (layoutPhotoActions != null) {
+                val basePaddingBottom = (12 * resources.displayMetrics.density).toInt()
+                layoutPhotoActions.setPadding(
+                    layoutPhotoActions.paddingLeft,
+                    layoutPhotoActions.paddingTop,
+                    layoutPhotoActions.paddingRight,
+                    basePaddingBottom + sb.bottom
+                )
+            }
             WindowInsetsCompat.CONSUMED
         }
 
@@ -334,6 +354,15 @@ class SlideShowActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnCropToggle)?.setOnClickListener { toggleCropMode() }
         findViewById<View>(R.id.btnImageSave)?.setOnClickListener { saveImage() }
 
+        // Delete and Rename actions
+        findViewById<View>(R.id.btnRename)?.setOnClickListener { showRenameDialog() }
+        findViewById<View>(R.id.btnDelete)?.setOnClickListener { showDeleteConfirmation() }
+        findViewById<View>(R.id.btnRenameTv)?.setOnClickListener { showRenameDialog() }
+        findViewById<View>(R.id.btnDeleteTv)?.setOnClickListener { showDeleteConfirmation() }
+
+        // More options menu (3 dots)
+        findViewById<View>(R.id.btnMore)?.setOnClickListener { showOverflowMenu(it) }
+
         // PDF dialog
         findViewById<View>(R.id.btnConvertToPdf)?.setOnClickListener { showConvertToPdfDialog() }
 
@@ -345,22 +374,19 @@ class SlideShowActivity : AppCompatActivity() {
     }
 
     private fun setupSlideshowControls() {
-        val txtInterval = findViewById<TextView>(R.id.txtSlideshowInterval)
         val txtIntervalTv = findViewById<TextView>(R.id.txtSlideshowIntervalTv)
-        val seekBarInterval = findViewById<SeekBar>(R.id.seekBarSlideshowInterval)
-        val btnPlayPauseImg = findViewById<ImageButton>(R.id.btnSlideshowPlayPause)
         val btnPlayPauseTv = findViewById<View>(R.id.btnSlideshowPlayPauseTv)
         val imgPlayPauseTv = findViewById<ImageView>(R.id.imgSlideshowPlayPauseTv)
         val btnDecTv = findViewById<View>(R.id.btnSlideshowDecTv)
         val btnIncTv = findViewById<View>(R.id.btnSlideshowIncTv)
+        val btnSlideshowPlayPause = findViewById<View>(R.id.btnSlideshowPlayPause)
+        val imgSlideshowPlayPause = findViewById<ImageView>(R.id.imgSlideshowPlayPause)
 
         fun updateIntervalDisplay() {
             val sec = 0.5f + slideshowStep * 0.5f
             val text = String.format(java.util.Locale.US, "%.1fs", sec)
-            txtInterval?.text = text
             txtIntervalTv?.text = text
-            seekBarInterval?.progress = slideshowStep
-            if (isSlideshowPlaying) {
+            if (isSlideshowPlaying && isCurrentImage()) {
                 handler.removeCallbacks(slideshowRunnable)
                 handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
             }
@@ -369,29 +395,24 @@ class SlideShowActivity : AppCompatActivity() {
         fun toggleSlideshowPlayPause() {
             isSlideshowPlaying = !isSlideshowPlaying
             val iconRes = if (isSlideshowPlaying) R.drawable.ic_pause else R.drawable.ic_play
-            btnPlayPauseImg?.setImageResource(iconRes)
+            imgSlideshowPlayPause?.setImageResource(iconRes)
             imgPlayPauseTv?.setImageResource(iconRes)
             handler.removeCallbacks(slideshowRunnable)
             if (isSlideshowPlaying) {
-                handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+                if (isCurrentImage()) {
+                    handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+                } else if (isCurrentItemVideo()) {
+                    player?.let { p ->
+                        if (!p.isPlaying) p.play()
+                    }
+                }
             }
         }
 
         updateIntervalDisplay()
 
-        btnPlayPauseImg?.setOnClickListener { toggleSlideshowPlayPause() }
+        btnSlideshowPlayPause?.setOnClickListener { toggleSlideshowPlayPause() }
         btnPlayPauseTv?.setOnClickListener { toggleSlideshowPlayPause() }
-
-        seekBarInterval?.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    slideshowStep = progress.coerceIn(0, 9)
-                    updateIntervalDisplay()
-                }
-            }
-            override fun onStartTrackingTouch(sb: SeekBar?) {}
-            override fun onStopTrackingTouch(sb: SeekBar?) {}
-        })
 
         btnDecTv?.setOnClickListener {
             slideshowStep = (slideshowStep - 1).coerceAtLeast(0)
@@ -506,16 +527,20 @@ class SlideShowActivity : AppCompatActivity() {
         wire(R.id.btnDrawToggleTv) { toggleDrawMode() }
         wire(R.id.btnCropToggleTv) { toggleCropMode() }
         wire(R.id.btnImageSaveTv) { saveImage() }
+        wire(R.id.btnRename) { showRenameDialog() }
+        wire(R.id.btnDelete) { showDeleteConfirmation() }
 
-        // Back button TV focus states
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
-        btnBack?.setOnFocusChangeListener { _, hasFocus ->
-            btnBack.setColorFilter(if (hasFocus) blackIcon else iconTint)
+        // Header buttons TV focus states
+        fun wireHeaderButton(btnId: Int) {
+            val btn = findViewById<ImageView>(btnId) ?: return
+            btn.setOnFocusChangeListener { _, hasFocus ->
+                btn.setColorFilter(if (hasFocus) blackIcon else iconTint)
+            }
         }
-        val btnConvertToPdf = findViewById<ImageView>(R.id.btnConvertToPdf)
-        btnConvertToPdf?.setOnFocusChangeListener { _, hasFocus ->
-            btnConvertToPdf.setColorFilter(if (hasFocus) blackIcon else iconTint)
-        }
+        wireHeaderButton(R.id.btnBack)
+        wireHeaderButton(R.id.btnConvertToPdf)
+        wireHeaderButton(R.id.btnRenameTv)
+        wireHeaderButton(R.id.btnDeleteTv)
     }
 
     private fun getActiveViewHolder(): RecyclerView.ViewHolder? {
@@ -540,32 +565,33 @@ class SlideShowActivity : AppCompatActivity() {
 
         // Stop video playback on swipe
         resetPlayer()
-        if (isSlideshowPlaying) {
-            handler.removeCallbacks(slideshowRunnable)
+        handler.removeCallbacks(slideshowRunnable)
+        if (isSlideshowPlaying && isImage) {
             handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
         }
 
-        // Set action button visibilities in toolbar (Hide PDF & Edit buttons for GIF files)
-        val editActions = listOf(
-            R.id.btnRotateLeft, R.id.btnRotateRight,
-            R.id.btnDrawToggle, R.id.btnCropToggle, R.id.btnImageSave, R.id.btnConvertToPdf
-        )
-        editActions.forEach { id ->
-            findViewById<View>(id)?.visibility = if (isImage && !isGif && !isTv) View.VISIBLE else View.GONE
-        }
-
-        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
+        val layoutPhotoActions = findViewById<View>(R.id.layoutPhotoActions)
         if (isTv) {
             findViewById<View>(R.id.btnConvertToPdf)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnRenameTv)?.visibility = if (isImage) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnDeleteTv)?.visibility = View.VISIBLE
             findViewById<View>(R.id.btnDrawToggleTv)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
             findViewById<View>(R.id.btnCropToggleTv)?.visibility = if (isImage && !isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnImageSaveTv)?.visibility = if (isImage) View.VISIBLE else View.GONE
             tvImageControlBar?.visibility = if (isImage && controlsVisible) View.VISIBLE else View.GONE
             controlsLayout.visibility = if (isVideo && controlsVisible) View.VISIBLE else View.GONE
-            imageSlideshowBar?.visibility = View.GONE
+            layoutPhotoActions?.visibility = View.GONE
         } else {
             controlsLayout.visibility = if (isVideo && controlsVisible) View.VISIBLE else View.GONE
-            imageSlideshowBar?.visibility = if (isImage && controlsVisible) View.VISIBLE else View.GONE
+            layoutPhotoActions?.visibility = if (isImage && controlsVisible) View.VISIBLE else View.GONE
             tvImageControlBar?.visibility = View.GONE
+
+            // Hide edit/draw & rotate for GIF files on mobile
+            findViewById<View>(R.id.btnDrawToggle)?.visibility = if (!isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnCropToggle)?.visibility = if (!isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnRotateLeft)?.visibility = if (!isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnRotateRight)?.visibility = if (!isGif) View.VISIBLE else View.GONE
+            findViewById<View>(R.id.btnImageSave)?.visibility = if (!isGif) View.VISIBLE else View.GONE
         }
 
         if (isImage) {
@@ -903,12 +929,12 @@ class SlideShowActivity : AppCompatActivity() {
         val isVideo = ext in FileViewerRouter.VIDEO_EXTENSIONS
         val isImage = ext in FileViewerRouter.IMAGE_EXTENSIONS
 
-        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
+        val layoutPhotoActions = findViewById<View>(R.id.layoutPhotoActions)
         if (isImage && !isTv) {
-            imageSlideshowBar?.visibility = View.VISIBLE
-            imageSlideshowBar?.alpha = 1f
+            layoutPhotoActions?.visibility = View.VISIBLE
+            layoutPhotoActions?.alpha = 1f
         } else {
-            imageSlideshowBar?.visibility = View.GONE
+            layoutPhotoActions?.visibility = View.GONE
         }
 
         if (isVideo) {
@@ -949,10 +975,294 @@ class SlideShowActivity : AppCompatActivity() {
         tvImageControlBar?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
             tvImageControlBar?.visibility = View.GONE
         }
-        val imageSlideshowBar = findViewById<View>(R.id.imageSlideshowBar)
-        imageSlideshowBar?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
-            imageSlideshowBar.visibility = View.GONE
+        val layoutPhotoActions = findViewById<View>(R.id.layoutPhotoActions)
+        layoutPhotoActions?.animate()?.alpha(0f)?.setDuration(250)?.withEndAction {
+            layoutPhotoActions.visibility = View.GONE
         }
+    }
+
+    private fun showDeleteConfirmation() {
+        val position = viewPager.currentItem
+        val path = playlist.getOrNull(position) ?: return
+        val fileName = path.substringAfterLast("/")
+        val file = File(path)
+        val isLocal = shareId.isEmpty() && shareHost.isEmpty()
+
+        if (isLocal) {
+            val isProtected = ProtectedFilesManager.isOrContainsProtected(this, path)
+            if (isProtected) {
+                ProtectedFilesManager.showProtectedDeleteDialog(this, isTv)
+                return
+            }
+
+            val recycleEnabled = RecycleBinManager.isEnabled
+            val titleRes = if (recycleEnabled) R.string.move_to_bin else R.string.delete_title
+            val msg = if (recycleEnabled) {
+                getString(R.string.recycle_bin_move_confirm, 1)
+            } else {
+                getString(R.string.delete_single_confirm, fileName)
+            }
+            val btnConfirmRes = if (recycleEnabled) R.string.move_to_bin else R.string.delete_confirm
+
+            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+                .setTitle(getString(titleRes))
+                .setMessage(msg)
+                .setIcon(R.drawable.ic_delete)
+                .setNegativeButton(getString(R.string.delete_cancel), null)
+                .setPositiveButton(getString(btnConfirmRes)) { _, _ ->
+                    performDeleteLocal(file, position, recycleEnabled)
+                }
+                .show()
+        } else {
+            MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+                .setTitle(getString(R.string.delete_title))
+                .setMessage(getString(R.string.delete_single_confirm, fileName))
+                .setIcon(R.drawable.ic_delete)
+                .setNegativeButton(getString(R.string.delete_cancel), null)
+                .setPositiveButton(getString(R.string.delete_confirm)) { _, _ ->
+                    performDeleteNetwork(path, position)
+                }
+                .show()
+        }
+    }
+
+    private fun performDeleteLocal(file: File, position: Int, recycleEnabled: Boolean) {
+        val fileName = file.name
+        val filePath = file.absolutePath
+        lifecycleScope.launch(Dispatchers.IO) {
+            val success = if (recycleEnabled) {
+                val (storageId, storageType, _) = IndexingRepository.resolveStorageForPath(filePath)
+                RecycleBinManager.moveToTrash(this@SlideShowActivity, file, storageType, storageId, storageId)
+            } else {
+                file.delete()
+            }
+
+            if (success) {
+                UfmApplication.indexingRepository.deleteTreeFromIndex(filePath)
+            }
+
+            withContext(Dispatchers.Main) {
+                if (success) {
+                    val feedback = if (recycleEnabled) {
+                        getString(R.string.item_moved_to_recycle_bin, fileName)
+                    } else {
+                        getString(R.string.item_deleted, fileName)
+                    }
+                    Toast.makeText(this@SlideShowActivity, feedback, Toast.LENGTH_SHORT).show()
+                    onItemDeleted(position)
+                } else {
+                    Toast.makeText(this@SlideShowActivity, R.string.delete_error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun performDeleteNetwork(path: String, position: Int) {
+        val fileName = path.substringAfterLast("/")
+        lifecycleScope.launch(Dispatchers.IO) {
+            var success = false
+            try {
+                val share = NetworkShareRepository.getInstance(this@SlideShowActivity).getById(shareId)
+                    ?: NetworkShare(
+                        id = shareId,
+                        host = shareHost,
+                        name = shareName,
+                        type = ShareType.valueOf(provider)
+                    )
+                when (share.type) {
+                    ShareType.SMB -> SmbShareClient.deleteFile(share, path)
+                    ShareType.FTP -> FtpShareClient.deleteFile(share, path)
+                    ShareType.TV  -> TvShareClient.deleteFile(share, path)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.delete(share, path, false)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.deleteFile(share, path)
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.deleteFile(share, path)
+                    ShareType.DROPBOX -> DropboxShareClient.deleteFile(share, path)
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.deleteFile(share, path)
+                    ShareType.WEBDAV -> WebDavShareClient.deleteFile(share, path)
+                    ShareType.NFS -> NfsShareClient.deleteFile(share, path)
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+                success = true
+            } catch (e: Exception) {
+                GoRoLog.e("SlideShowActivity", "Failed to delete network file: $path", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                if (success) {
+                    Toast.makeText(this@SlideShowActivity, getString(R.string.item_deleted, fileName), Toast.LENGTH_SHORT).show()
+                    onItemDeleted(position)
+                } else {
+                    Toast.makeText(this@SlideShowActivity, R.string.delete_error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun onItemDeleted(position: Int) {
+        val path = playlist.getOrNull(position)
+        if (path != null) {
+            sizesMap.remove(path)
+        }
+        val adapter = viewPager.adapter as? SlideShowAdapter
+        adapter?.removeItem(position)
+
+        if (playlist.isEmpty()) {
+            finish()
+        } else {
+            val nextPos = position.coerceAtMost(playlist.size - 1)
+            viewPager.setCurrentItem(nextPos, false)
+            updatePageState(nextPos)
+        }
+    }
+
+    private fun showRenameDialog() {
+        val position = viewPager.currentItem
+        val path = playlist.getOrNull(position) ?: return
+        val currentFileName = path.substringAfterLast("/")
+        val isLocal = shareId.isEmpty() && shareHost.isEmpty()
+        val file = File(path)
+
+        val editText = EditText(this).apply {
+            setText(currentFileName)
+            val dotIndex = currentFileName.lastIndexOf('.')
+            if (dotIndex > 0) {
+                setSelection(0, dotIndex)
+            } else {
+                selectAll()
+            }
+            setPadding(64, 32, 64, 32)
+        }
+
+        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.rename_title))
+            .setView(editText)
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .setPositiveButton(getString(R.string.rename_confirm)) { _, _ ->
+                val newName = editText.text.toString().trim()
+                if (newName.isNotEmpty() && newName != currentFileName) {
+                    if (isLocal) {
+                        performRenameLocal(file, newName, position)
+                    } else {
+                        performRenameNetwork(path, newName, position)
+                    }
+                }
+            }
+            .show()
+    }
+
+    private fun performRenameLocal(file: File, newName: String, position: Int) {
+        val newFile = File(file.parent, newName)
+        if (newFile.exists()) {
+            Toast.makeText(this, R.string.rename_error, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val success = file.renameTo(newFile)
+            if (success) {
+                FileTagsManager.onPathMoved(this@SlideShowActivity, file.absolutePath, newFile.absolutePath)
+                UfmApplication.indexingRepository.deleteTreeFromIndex(file.absolutePath)
+            }
+            withContext(Dispatchers.Main) {
+                if (success) {
+                    val adapter = viewPager.adapter as? SlideShowAdapter
+                    adapter?.updateItem(position, newFile.absolutePath)
+                    txtTitle.text = newName
+                    Toast.makeText(this@SlideShowActivity, R.string.rename_success, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@SlideShowActivity, R.string.rename_error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun performRenameNetwork(path: String, newName: String, position: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            var success = false
+            val parentPath = path.substringBeforeLast('/', "")
+            val targetPath = if (parentPath.isEmpty()) newName else "$parentPath/$newName"
+            try {
+                val share = NetworkShareRepository.getInstance(this@SlideShowActivity).getById(shareId)
+                    ?: NetworkShare(
+                        id = shareId,
+                        host = shareHost,
+                        name = shareName,
+                        type = ShareType.valueOf(provider)
+                    )
+                when (share.type) {
+                    ShareType.SMB -> SmbShareClient.rename(share, path, targetPath)
+                    ShareType.FTP -> FtpShareClient.rename(share, path, targetPath)
+                    ShareType.TV  -> TvShareClient.rename(share, path, targetPath)
+                    ShareType.SFTP, ShareType.SCP -> SshShareClient.rename(share, path, targetPath)
+                    ShareType.ONEDRIVE -> OnedriveShareClient.rename(share, path, targetPath)
+                    ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.rename(share, path, targetPath)
+                    ShareType.DROPBOX -> DropboxShareClient.rename(share, path, targetPath)
+                    ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.rename(share, path, targetPath)
+                    ShareType.WEBDAV -> WebDavShareClient.rename(share, path, targetPath, false)
+                    ShareType.NFS -> NfsShareClient.rename(share, path, targetPath)
+                    ShareType.DLNA -> throw UnsupportedOperationException("DLNA is read-only")
+                }
+                success = true
+            } catch (e: Exception) {
+                GoRoLog.e("SlideShowActivity", "Failed to rename network file: $path", e)
+            }
+
+            withContext(Dispatchers.Main) {
+                if (success) {
+                    val adapter = viewPager.adapter as? SlideShowAdapter
+                    adapter?.updateItem(position, targetPath)
+                    txtTitle.text = newName
+                    Toast.makeText(this@SlideShowActivity, R.string.rename_success, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@SlideShowActivity, R.string.rename_error, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun showSlideshowSpeedDialog() {
+        val speeds = arrayOf("0.5s", "1.0s", "1.5s", "2.0s", "2.5s", "3.0s", "3.5s", "4.0s", "4.5s", "5.0s")
+        val currentSelection = slideshowStep.coerceIn(0, 9)
+
+        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(getString(R.string.slideshow_speed_title))
+            .setSingleChoiceItems(speeds, currentSelection) { dialog, which ->
+                slideshowStep = which
+                val sec = 0.5f + slideshowStep * 0.5f
+                val txtIntervalTv = findViewById<TextView>(R.id.txtSlideshowIntervalTv)
+                txtIntervalTv?.text = String.format(java.util.Locale.US, "%.1fs", sec)
+                Toast.makeText(this, getString(R.string.slideshow_interval_seconds, sec), Toast.LENGTH_SHORT).show()
+                if (isSlideshowPlaying && isCurrentImage()) {
+                    handler.removeCallbacks(slideshowRunnable)
+                    handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(getString(R.string.delete_cancel), null)
+            .show()
+    }
+
+    private fun showOverflowMenu(anchor: View) {
+        val popup = PopupMenu(this, anchor)
+        val position = viewPager.currentItem
+        val path = playlist.getOrNull(position) ?: return
+        val ext = path.substringAfterLast('.', "").lowercase()
+        val isImage = ext in FileViewerRouter.IMAGE_EXTENSIONS
+        val isLocal = shareId.isEmpty() && shareHost.isEmpty()
+
+        if (isImage && isLocal && ext != "gif") {
+            popup.menu.add(0, 1, 0, getString(R.string.pdf_convert_title))
+        }
+        popup.menu.add(0, 2, 1, getString(R.string.slideshow_speed_title))
+
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> showConvertToPdfDialog()
+                2 -> showSlideshowSpeedDialog()
+            }
+            true
+        }
+        popup.show()
     }
 
     private fun resetHideTimer() {
@@ -966,6 +1276,12 @@ class SlideShowActivity : AppCompatActivity() {
         val path = playlist.getOrNull(viewPager.currentItem) ?: return false
         val ext = path.substringAfterLast('.', "").lowercase()
         return ext in FileViewerRouter.VIDEO_EXTENSIONS
+    }
+
+    private fun isCurrentImage(): Boolean {
+        val path = playlist.getOrNull(viewPager.currentItem) ?: return false
+        val ext = path.substringAfterLast('.', "").lowercase()
+        return ext in FileViewerRouter.IMAGE_EXTENSIONS
     }
 
     private fun isVideoPlaying(): Boolean {
@@ -1043,6 +1359,14 @@ class SlideShowActivity : AppCompatActivity() {
             hideControls()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (isSlideshowPlaying && isCurrentImage()) {
+            handler.removeCallbacks(slideshowRunnable)
+            handler.postDelayed(slideshowRunnable, slideshowIntervalMs)
         }
     }
 
@@ -1275,6 +1599,21 @@ class SlideShowAdapter(
 
     override fun getItemCount(): Int = playlist.size
 
+    fun removeItem(position: Int) {
+        if (position in 0 until playlist.size) {
+            playlist.removeAt(position)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, playlist.size - position)
+        }
+    }
+
+    fun updateItem(position: Int, newPath: String) {
+        if (position in 0 until playlist.size) {
+            playlist[position] = newPath
+            notifyItemChanged(position)
+        }
+    }
+
     // Image Page ViewHolder
     class ImageViewHolder(
         itemView: View,
@@ -1386,7 +1725,6 @@ class SlideShowAdapter(
                         ShareType.DROPBOX -> DropboxShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.WEBDAV                      -> WebDavShareClient.openInputStream(share, fileRemotePath).first
-                        ShareType.WEBDAV                     -> WebDavShareClient.openInputStream(share, fileRemotePath).first
                         ShareType.NFS                         -> NfsShareClient.openInputStream(share, fileRemotePath)
                         ShareType.DLNA                        -> DlnaShareClient.openInputStream(share, fileRemotePath)
                     }

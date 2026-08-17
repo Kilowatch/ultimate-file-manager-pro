@@ -10843,6 +10843,32 @@ Android 11以降では、Android/dataおよびAndroid/obbフォルダへのア�
     <string name="protected_folder_saf_denied">
 フォルダアクセスが許可されませんでした
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+スライドショーの速度
+</string>
+    <string name="slideshow_interval_dialog_title">
+スライドショーの間隔
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1f秒
+</string>
+    <string name="delete_single_confirm">
+「%1$s」を削除してもよろしいですか？
+</string>
+    <string name="delete_photo_title">
+写真を削除
+</string>
+    <string name="item_deleted">
+「%1$s」を削除しました
+</string>
+    <string name="item_moved_to_recycle_bin">
+「%1$s」をゴミ箱に移動しました
+</string>
+    <string name="menu_more_options">
+その他のオプション
+</string>
 </resources>
 
 

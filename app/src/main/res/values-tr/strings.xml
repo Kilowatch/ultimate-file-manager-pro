@@ -10843,6 +10843,32 @@ Klasör erişimi verildi
     <string name="protected_folder_saf_denied">
 Klasör erişimi verilmedi
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Slayt Gösterisi Hızı
+</string>
+    <string name="slideshow_interval_dialog_title">
+Slayt Gösterisi Aralığı
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+\"%1$s\" öğesini silmek istediğinize emin misiniz?
+</string>
+    <string name="delete_photo_title">
+Fotoğrafı Sil
+</string>
+    <string name="item_deleted">
+%1$s silindi
+</string>
+    <string name="item_moved_to_recycle_bin">
+\"%1$s\" öğesi Geri Dönüşüm Kutusu\\\'na taşındı
+</string>
+    <string name="menu_more_options">
+Daha fazla seçenek
+</string>
 </resources>
 
 

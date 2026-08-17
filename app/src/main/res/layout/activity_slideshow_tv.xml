@@ -53,6 +53,34 @@
             android:visibility="gone"
             app:tint="@color/tv_icon_tint" />
 
+        <ImageView
+            android:id="@+id/btnRenameTv"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_rename"
+            android:contentDescription="@string/rename_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            app:tint="@color/tv_icon_tint" />
+
+        <ImageView
+            android:id="@+id/btnDeleteTv"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="@string/delete_title"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn"
+            app:tint="@color/tv_icon_tint" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -469,6 +497,50 @@
                 android:layout_height="28dp"
                 android:src="@drawable/ic_save"
                 android:contentDescription="@string/btn_draw_save"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Rename (TV Control Bar) -->
+        <LinearLayout
+            android:id="@+id/btnRename"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_rename"
+                android:contentDescription="@string/rename_title"
+                android:focusable="false"
+                app:tint="@color/tv_icon_tint" />
+        </LinearLayout>
+
+        <!-- Delete (TV Control Bar) -->
+        <LinearLayout
+            android:id="@+id/btnDelete"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:background="@drawable/selector_tv_media_btn">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="@string/delete_title"
                 android:focusable="false"
                 app:tint="@color/tv_icon_tint" />
         </LinearLayout>

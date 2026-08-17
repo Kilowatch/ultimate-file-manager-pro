@@ -10843,6 +10843,32 @@ UFM में खोलें
     <string name="protected_folder_saf_denied">
 फ़ोल्डर एक्सेस नहीं दिया गया
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+स्लाइडशो गति
+</string>
+    <string name="slideshow_interval_dialog_title">
+स्लाइडशो अंतराल
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+क्या आप वाकई \"%1$s\" को हटाना चाहते हैं?
+</string>
+    <string name="delete_photo_title">
+फ़ोटो हटाएं
+</string>
+    <string name="item_deleted">
+%1$s हटा दिया गया
+</string>
+    <string name="item_moved_to_recycle_bin">
+\"%1$s\" को रीसायकल बिन में ले जाया गया
+</string>
+    <string name="menu_more_options">
+अधिक विकल्प
+</string>
 </resources>
 
 

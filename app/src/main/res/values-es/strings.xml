@@ -10855,6 +10855,32 @@ Acceso a la carpeta otorgado
     <string name="protected_folder_saf_denied">
 No se otorgó acceso a la carpeta
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Velocidad de la presentación
+</string>
+    <string name="slideshow_interval_dialog_title">
+Intervalo de la presentación
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+¿Seguro que quieres eliminar \"%1$s\"?
+</string>
+    <string name="delete_photo_title">
+Eliminar foto
+</string>
+    <string name="item_deleted">
+Se eliminó %1$s
+</string>
+    <string name="item_moved_to_recycle_bin">
+Se movió \"%1$s\" a la papelera
+</string>
+    <string name="menu_more_options">
+Más opciones
+</string>
 </resources>
 
 

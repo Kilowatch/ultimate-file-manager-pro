@@ -10843,6 +10843,32 @@ Accès au dossier accordé
     <string name="protected_folder_saf_denied">
 L\\\'accès au dossier n\\\'a pas été accordé
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Vitesse du diaporama
+</string>
+    <string name="slideshow_interval_dialog_title">
+Intervalle du diaporama
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+Êtes-vous sûr de vouloir supprimer \"%1$s\" ?
+</string>
+    <string name="delete_photo_title">
+Supprimer la photo
+</string>
+    <string name="item_deleted">
+%1$s supprimé
+</string>
+    <string name="item_moved_to_recycle_bin">
+Déplacé \"%1$s\" vers la corbeille
+</string>
+    <string name="menu_more_options">
+Plus d\\\'options
+</string>
 </resources>
 
 

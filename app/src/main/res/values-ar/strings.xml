@@ -10843,6 +10843,32 @@ UFM Spreadsheet Viewer
     <string name="protected_folder_saf_denied">
 لم يتم منح إذن الوصول للمجلد
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+سرعة عرض الشرائح
+</string>
+    <string name="slideshow_interval_dialog_title">
+الفاصل الزمني لعرض الشرائح
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+هل أنت متأكد من رغبتك في حذف \"%1$s\"؟
+</string>
+    <string name="delete_photo_title">
+حذف الصورة
+</string>
+    <string name="item_deleted">
+تم حذف %1$s
+</string>
+    <string name="item_moved_to_recycle_bin">
+تم نقل \"%1$s\" إلى سلة المحذوفات
+</string>
+    <string name="menu_more_options">
+مزيد من الخيارات
+</string>
 </resources>
 
 

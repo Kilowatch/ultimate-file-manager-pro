@@ -32,11 +32,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button -->
         <FrameLayout
+            android:id="@+id/btnBack"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="@drawable/bg_icon_circle_accent"
-            android:id="@+id/btnBack"
             android:clickable="true"
             android:focusable="true">
 
@@ -48,30 +49,14 @@
                 app:tint="@android:color/white" />
         </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:id="@+id/btnConvertToPdf"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_file_pdf"
-                app:tint="@android:color/white" />
-        </FrameLayout>
-
+        <!-- Title & Info -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="@dimen/margin_md"
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -95,104 +80,42 @@
                 tools:text="3840 × 2160  •  2.4 MB" />
         </LinearLayout>
 
-        <!-- Image Action Buttons -->
-        <!-- Rotate Left -->
+        <!-- Slideshow Play / Pause Button in Header -->
         <FrameLayout
-            android:id="@+id/btnRotateLeft"
+            android:id="@+id/btnSlideshowPlayPause"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle"
             android:layout_marginEnd="8dp"
-            android:visibility="gone"
+            android:background="@drawable/bg_icon_circle_accent"
             android:clickable="true"
             android:focusable="true">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:id="@+id/imgSlideshowPlayPause"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_rotate_left"
-                android:contentDescription="@string/rotate_left"
-                app:tint="@color/mobile_icon_tint" />
+                android:src="@drawable/ic_play"
+                android:contentDescription="@string/slideshow_play_pause"
+                app:tint="@android:color/white" />
         </FrameLayout>
 
-        <!-- Rotate Right -->
+        <!-- More Options (3-dots Overflow Menu) -->
         <FrameLayout
-            android:id="@+id/btnRotateRight"
+            android:id="@+id/btnMore"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="@drawable/bg_icon_circle"
-            android:visibility="gone"
             android:clickable="true"
             android:focusable="true">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_rotate_right"
-                android:contentDescription="@string/rotate_right"
+                android:src="@drawable/ic_more_vert"
+                android:contentDescription="@string/menu_more_options"
                 app:tint="@color/mobile_icon_tint" />
-        </FrameLayout>
-
-        <!-- Draw toggle -->
-        <FrameLayout
-            android:id="@+id/btnDrawToggle"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_edit"
-                android:contentDescription="@string/btn_draw_toggle"
-                app:tint="@android:color/white" />
-        </FrameLayout>
-
-        <!-- Crop toggle -->
-        <FrameLayout
-            android:id="@+id/btnCropToggle"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_crop"
-                android:contentDescription="@string/btn_crop_toggle"
-                app:tint="@android:color/white" />
-        </FrameLayout>
-
-        <!-- Image Save -->
-        <FrameLayout
-            android:id="@+id/btnImageSave"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_save"
-                android:contentDescription="@string/btn_draw_save"
-                app:tint="@android:color/white" />
         </FrameLayout>
 
     </LinearLayout>
@@ -300,13 +223,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Image Slideshow Control Bar (Bottom) for mobile -->
+    <!-- Modern Photo Action Bar (Bottom) for mobile -->
     <LinearLayout
-        android:id="@+id/imageSlideshowBar"
+        android:id="@+id/layoutPhotoActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
         android:background="#CC000000"
@@ -316,40 +239,154 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Play / Pause Slideshow Button -->
-        <ImageButton
-            android:id="@+id/btnSlideshowPlayPause"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:src="@drawable/ic_play"
-            android:contentDescription="@string/slideshow_play_pause"
-            app:tint="@android:color/white" />
-
-        <!-- Slideshow Interval Label -->
-        <TextView
-            android:id="@+id/txtSlideshowInterval"
+        <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:textColor="@android:color/white"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            tools:text="2.5s" />
+            android:scrollbars="none"
+            android:overScrollMode="never">
 
-        <!-- Slideshow Interval SeekBar (0.5s to 5.0s, 9 steps, max=9) -->
-        <androidx.appcompat.widget.AppCompatSeekBar
-            android:id="@+id/seekBarSlideshowInterval"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:max="9"
-            android:progress="4"
-            android:splitTrack="false"
-            android:thumbTint="?attr/colorPrimary"
-            android:progressTint="?attr/colorPrimary" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Rotate Left -->
+                <FrameLayout
+                    android:id="@+id/btnRotateLeft"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_rotate_left"
+                        android:contentDescription="@string/rotate_left"
+                        app:tint="@color/mobile_icon_tint" />
+                </FrameLayout>
+
+                <!-- Rotate Right -->
+                <FrameLayout
+                    android:id="@+id/btnRotateRight"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_rotate_right"
+                        android:contentDescription="@string/rotate_right"
+                        app:tint="@color/mobile_icon_tint" />
+                </FrameLayout>
+
+                <!-- Draw / Markup Toggle -->
+                <FrameLayout
+                    android:id="@+id/btnDrawToggle"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle_accent"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_edit"
+                        android:contentDescription="@string/btn_draw_toggle"
+                        app:tint="@android:color/white" />
+                </FrameLayout>
+
+                <!-- Crop Toggle -->
+                <FrameLayout
+                    android:id="@+id/btnCropToggle"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle_accent"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_crop"
+                        android:contentDescription="@string/btn_crop_toggle"
+                        app:tint="@android:color/white" />
+                </FrameLayout>
+
+                <!-- Image Save (Always shown on action bar for images) -->
+                <FrameLayout
+                    android:id="@+id/btnImageSave"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle_accent"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_save"
+                        android:contentDescription="@string/btn_draw_save"
+                        app:tint="@android:color/white" />
+                </FrameLayout>
+
+                <!-- Rename -->
+                <FrameLayout
+                    android:id="@+id/btnRename"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_rename"
+                        android:contentDescription="@string/rename_title"
+                        app:tint="@color/mobile_icon_tint" />
+                </FrameLayout>
+
+                <!-- Delete -->
+                <FrameLayout
+                    android:id="@+id/btnDelete"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_icon_circle"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_delete"
+                        android:contentDescription="@string/delete_title"
+                        app:tint="@color/mobile_icon_tint" />
+                </FrameLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

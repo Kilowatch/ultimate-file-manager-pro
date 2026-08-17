@@ -10843,6 +10843,32 @@ Android 11+ обмежує доступ до папок Android/data та Androi
     <string name="protected_folder_saf_denied">
 Доступ до папки не надано
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Швидкість слайд-шоу
+</string>
+    <string name="slideshow_interval_dialog_title">
+Інтервал слайд-шоу
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+Ви впевнені, що хочете видалити \"%1$s\"?
+</string>
+    <string name="delete_photo_title">
+Видалити фото
+</string>
+    <string name="item_deleted">
+Видалено %1$s
+</string>
+    <string name="item_moved_to_recycle_bin">
+Переміщено \"%1$s\" до кошика
+</string>
+    <string name="menu_more_options">
+Більше параметрів
+</string>
 </resources>
 
 

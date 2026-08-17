@@ -3820,6 +3820,16 @@
     <string name="protected_folder_btn_saf">Grant Folder Access (SAF)</string>
     <string name="protected_folder_saf_success">Folder access granted</string>
     <string name="protected_folder_saf_denied">Folder access was not granted</string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">Slideshow Speed</string>
+    <string name="slideshow_interval_dialog_title">Slideshow Interval</string>
+    <string name="slideshow_interval_seconds">%1$.1fs</string>
+    <string name="delete_single_confirm">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="delete_photo_title">Delete Photo</string>
+    <string name="item_deleted">Deleted %1$s</string>
+    <string name="item_moved_to_recycle_bin">Moved \"%1$s\" to Recycle Bin</string>
+    <string name="menu_more_options">More options</string>
 </resources>
 
 

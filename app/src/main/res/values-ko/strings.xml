@@ -10843,6 +10843,32 @@ Android 11+에서는 Android/data 및 Android/obb 폴더에 대한 접근이 제
     <string name="protected_folder_saf_denied">
 폴더 접근 권한이 부여되지 않았습니다.
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+슬라이드쇼 속도
+</string>
+    <string name="slideshow_interval_dialog_title">
+슬라이드쇼 간격
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+정말로 \\\"%1$s\\\"을(를) 삭제하시겠습니까?
+</string>
+    <string name="delete_photo_title">
+사진 삭제
+</string>
+    <string name="item_deleted">
+%1$s을(를) 삭제했습니다.
+</string>
+    <string name="item_moved_to_recycle_bin">
+\\\"%1$s\\\"을(를) 휴지통으로 이동했습니다.
+</string>
+    <string name="menu_more_options">
+추가 옵션
+</string>
 </resources>
 
 

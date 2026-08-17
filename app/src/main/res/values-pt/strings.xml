@@ -10843,6 +10843,32 @@ Acesso à pasta concedido
     <string name="protected_folder_saf_denied">
 O acesso à pasta não foi concedido
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Velocidade do slideshow
+</string>
+    <string name="slideshow_interval_dialog_title">
+Intervalo do slideshow
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+Tem certeza de que deseja excluir \"%1$s\"?
+</string>
+    <string name="delete_photo_title">
+Excluir foto
+</string>
+    <string name="item_deleted">
+%1$s excluído
+</string>
+    <string name="item_moved_to_recycle_bin">
+Movido \"%1$s\" para a lixeira
+</string>
+    <string name="menu_more_options">
+Mais opções
+</string>
 </resources>
 
 

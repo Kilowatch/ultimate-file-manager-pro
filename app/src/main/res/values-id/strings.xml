@@ -10843,6 +10843,32 @@ Akses folder telah diberikan
     <string name="protected_folder_saf_denied">
 Akses folder tidak diberikan
 </string>
+
+    <!-- Slide Show Strings -->
+    <string name="slideshow_speed_title">
+Kecepatan Slideshow
+</string>
+    <string name="slideshow_interval_dialog_title">
+Interval Slideshow
+</string>
+    <string name="slideshow_interval_seconds">
+%1$.1fs
+</string>
+    <string name="delete_single_confirm">
+Apakah Anda yakin ingin menghapus \"%1$s\"?
+</string>
+    <string name="delete_photo_title">
+Hapus Foto
+</string>
+    <string name="item_deleted">
+%1$s telah dihapus
+</string>
+    <string name="item_moved_to_recycle_bin">
+\"%1$s\" dipindahkan ke Tempat Sampah
+</string>
+    <string name="menu_more_options">
+Opsi lainnya
+</string>
 </resources>
 
 
