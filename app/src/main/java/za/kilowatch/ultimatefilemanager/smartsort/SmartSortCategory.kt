@@ -10,12 +10,12 @@ enum class SmartSortCategory(
     PHOTOS(
         folderName = "UFM Photos",
         displayNameResId = R.string.smart_sort_category_photos,
-        extensions = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif", "avif", "jxl")
+        extensions = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
     ),
     VIDEOS(
         folderName = "UFM Videos",
         displayNameResId = R.string.smart_sort_category_videos,
-        extensions = setOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v")
+        extensions = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
     ),
     AUDIO(
         folderName = "UFM Audio",

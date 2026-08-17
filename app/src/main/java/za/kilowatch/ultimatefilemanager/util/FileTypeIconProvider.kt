@@ -27,15 +27,19 @@ object FileTypeIconProvider {
     fun iconForExtension(ext: String): Int = when (ext.lowercase().trimStart('.')) {
 
         // ── Images ────────────────────────────────────────────────────────────
-        "jpg", "jpeg", "png", "gif", "bmp", "webp",
-        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "jxl", "raw",
-        "cr2", "nef", "arw", "dng" ->
+        "jpg", "jpeg", "png", "apng", "gif", "bmp", "webp",
+        "heic", "heif", "hif", "svg", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
+        "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm", "wmf", "emf", "tga", "targa", "dds",
+        "psd", "psb", "ai", "xcf", "kra", "clip", "mpo", "jps", "pns",
+        "raw", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2",
+        "raf", "rw2", "orf", "pef", "ptx", "srw", "x3f", "erf", "kdc", "dcr", "k25", "mrw", "mos" ->
             R.drawable.ic_file_image
 
         // ── Video ─────────────────────────────────────────────────────────────
         "mp4", "mkv", "avi", "mov", "wmv", "flv",
-        "webm", "3gp", "m4v", "ts", "m2ts", "vob",
-        "mpg", "mpeg", "rmvb", "asf", "divx", "xvid" ->
+        "webm", "3gp", "3g2", "3gp2", "m4v", "qt", "ts", "m2ts", "mts", "m2t", "tp", "trp", "vob", "evo",
+        "mpg", "mpeg", "mpe", "m1v", "m2v", "mpv", "rm", "rmvb", "asf", "wm", "divx", "xvid",
+        "mjpeg", "mjpg", "mjp", "f4v", "ogv", "ogm", "mxf", "dv", "mk3d" ->
             R.drawable.ic_file_video
 
         // ── Audio ─────────────────────────────────────────────────────────────
@@ -200,13 +204,17 @@ object FileTypeIconProvider {
     fun fileTypeIdForFile(file: File): String = fileTypeIdForExtension(file.extension)
 
     fun fileTypeIdForExtension(ext: String): String = when (ext.lowercase().trimStart('.')) {
-        "jpg", "jpeg", "png", "gif", "bmp", "webp",
-        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "jxl", "raw",
-        "cr2", "nef", "arw", "dng" -> "file_image"
+        "jpg", "jpeg", "png", "apng", "gif", "bmp", "webp",
+        "heic", "heif", "hif", "svg", "tiff", "tif", "ico", "cur", "ani", "avif", "avifs", "jxl", "hdr", "exr",
+        "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm", "wmf", "emf", "tga", "targa", "dds",
+        "psd", "psb", "ai", "xcf", "kra", "clip", "mpo", "jps", "pns",
+        "raw", "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2",
+        "raf", "rw2", "orf", "pef", "ptx", "srw", "x3f", "erf", "kdc", "dcr", "k25", "mrw", "mos" -> "file_image"
 
         "mp4", "mkv", "avi", "mov", "wmv", "flv",
-        "webm", "3gp", "m4v", "ts", "m2ts", "vob",
-        "mpg", "mpeg", "rmvb", "asf", "divx", "xvid" -> "file_video"
+        "webm", "3gp", "3g2", "3gp2", "m4v", "qt", "ts", "m2ts", "mts", "m2t", "tp", "trp", "vob", "evo",
+        "mpg", "mpeg", "mpe", "m1v", "m2v", "mpv", "rm", "rmvb", "asf", "wm", "divx", "xvid",
+        "mjpeg", "mjpg", "mjp", "f4v", "ogv", "ogm", "mxf", "dv", "mk3d" -> "file_video"
 
         "mp3", "wav", "flac", "aac", "ogg", "m4a",
         "opus", "wma", "mid", "midi", "aiff", "aif",

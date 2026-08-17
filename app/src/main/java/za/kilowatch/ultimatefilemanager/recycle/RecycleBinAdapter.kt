@@ -214,9 +214,9 @@ class RecycleBinAdapter(
                         itemView.context, R.drawable.ic_photo_video
                     )?.asImage()
 
-                    val isImage = ext in setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif", "avif", "jxl")
+                    val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                     val isApk = ext in setOf("apk", "xapk", "apks")
-                    val isVideo = ext in setOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v")
+                    val isVideo = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
                     when {
                         isImage -> {
@@ -264,7 +264,9 @@ class RecycleBinAdapter(
                     imgFileIcon.setImageResource(iconRes)
                 }
             } else {
-                val isMedia = ext in setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif", "avif", "jxl") || ext in setOf("apk", "xapk", "apks")
+                val isMedia = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS ||
+                    ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS ||
+                    ext in setOf("apk", "xapk", "apks")
                 if (isMedia) {
                     imgFileIcon.imageTintList = null
                     imgFileIcon.scaleType = ImageView.ScaleType.CENTER_CROP

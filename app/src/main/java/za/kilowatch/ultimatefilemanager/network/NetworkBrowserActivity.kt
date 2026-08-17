@@ -5481,13 +5481,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     inStream.use { inp -> cacheFile.outputStream().use { out -> inp.copyTo(out) } }
 
                     // Resolve MIME type from extension
-                    var mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-                    if (mime == null || mime == "*/*") {
-                        mime = when (ext) {
-                            "mkv", "mp4", "avi", "mov", "webm", "ts" -> "video/*"
-                            "mp3", "flac", "wav", "m4a", "ogg", "aac" -> "audio/*"
-                            "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "avif" -> "image/*"
-                            "pdf" -> "application/pdf"
+                    var mime = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
+                    if (mime == "application/octet-stream" || mime == "*/*") {
+                        mime = when {
+                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext) -> "video/*"
+                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext) -> "audio/*"
+                            ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS -> "image/*"
+                            ext == "pdf" -> "application/pdf"
                             else -> "*/*"
                         }
                     }
@@ -5653,13 +5653,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     }
                 } else {
                     // Direct Stream — no local cache
-                    var mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-                    if (mime == null || mime == "*/*") {
-                        mime = when (ext) {
-                            "mkv", "mp4", "avi", "mov", "webm", "ts" -> "video/*"
-                            "mp3", "flac", "wav", "m4a", "ogg", "aac" -> "audio/*"
-                            "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "avif" -> "image/*"
-                            "pdf" -> "application/pdf"
+                    var mime = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
+                    if (mime == "application/octet-stream" || mime == "*/*") {
+                        mime = when {
+                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isVideo(ext) -> "video/*"
+                            za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.isAudio(ext) -> "audio/*"
+                            ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS -> "image/*"
+                            ext == "pdf" -> "application/pdf"
                             else -> "*/*"
                         }
                     }

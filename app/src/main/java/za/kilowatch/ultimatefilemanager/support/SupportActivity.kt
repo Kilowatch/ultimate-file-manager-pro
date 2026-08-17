@@ -728,30 +728,8 @@ class SupportActivity : AppCompatActivity() {
 
     // ─── Helpers ────────────────────────────────────────────────
 
-    private fun guessMediaType(extension: String): String {
-        return when (extension.lowercase()) {
-            "jpg", "jpeg" -> "image/jpeg"
-            "png" -> "image/png"
-            "gif" -> "image/gif"
-            "webp" -> "image/webp"
-            "bmp" -> "image/bmp"
-            "mp4" -> "video/mp4"
-            "pdf" -> "application/pdf"
-            "zip" -> "application/zip"
-            "gz", "gzip" -> "application/gzip"
-            "rar" -> "application/vnd.rar"
-            "7z" -> "application/x-7z-compressed"
-            "tar" -> "application/x-tar"
-            "txt" -> "text/plain"
-            "log" -> "text/plain"
-            "html", "htm" -> "text/html"
-            "json" -> "application/json"
-            "xml" -> "application/xml"
-            "csv" -> "text/csv"
-            "apk" -> "application/vnd.android.package-archive"
-            else -> "application/octet-stream"
-        }
-    }
+    private fun guessMediaType(extension: String): String =
+        za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(extension)
 
     companion object {
         private const val SUPPORT_ENDPOINT = "https://www.kilowatch.co.za/UFM/api/support.php"

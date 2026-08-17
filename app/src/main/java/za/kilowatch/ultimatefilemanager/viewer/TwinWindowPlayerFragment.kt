@@ -392,7 +392,8 @@ class TwinWindowPlayerFragment : Fragment() {
                 val dataSourceFactory = DataSource.Factory {
                     UfmMedia3DataSource(share, filePath)
                 }
-                val mediaSource = DefaultMediaSourceFactory(dataSourceFactory)
+                val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
+                val mediaSource = DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                     .createMediaSource(MediaItem.fromUri(
                         android.net.Uri.parse("ufm://${filePath.replace(" ", "%20")}")
                     ))
@@ -406,8 +407,11 @@ class TwinWindowPlayerFragment : Fragment() {
             }
         } else {
             // Local file
-            val mediaItem = MediaItem.fromUri(Uri.fromFile(File(filePath)))
-            newPlayer.setMediaItem(mediaItem)
+            val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
+            val dataSourceFactory = androidx.media3.datasource.DefaultDataSource.Factory(requireContext())
+            val mediaSource = DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
+                .createMediaSource(MediaItem.fromUri(Uri.fromFile(File(filePath))))
+            newPlayer.setMediaSource(mediaSource)
             newPlayer.prepare()
         }
         player = newPlayer

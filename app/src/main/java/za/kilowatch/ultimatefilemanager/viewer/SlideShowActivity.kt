@@ -638,10 +638,11 @@ class SlideShowActivity : AppCompatActivity() {
 
         Thread {
             try {
+                val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
                 val mediaSource = if (isLocal) {
                     val localFile = File(path)
                     val dataSourceFactory = DefaultDataSource.Factory(context)
-                    DefaultMediaSourceFactory(dataSourceFactory)
+                    DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                         .createMediaSource(MediaItem.fromUri(Uri.fromFile(localFile)))
                 } else {
                     var share = NetworkShareRepository.getInstance(context).getById(shareId)
@@ -673,10 +674,10 @@ class SlideShowActivity : AppCompatActivity() {
                                 if (token.isNotEmpty()) mapOf("Authorization" to "Bearer $token") else emptyMap()
                             )
                             .setUserAgent(Util.getUserAgent(context, "UFM"))
-                        DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(url)))
+                        DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory).createMediaSource(MediaItem.fromUri(Uri.parse(url)))
                     } else if (provider == "NFS") {
                         val ext = path.substringAfterLast('.').lowercase()
-                        val mime = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "video/mp4"
+                        val mime = za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
                         val fileSize = sizesMap[path] ?: 0L
                         val proxyUrl = NetworkHttpProxyServer.register(share, path, mime, fileSize)
                         val okhttpClient = okhttp3.OkHttpClient.Builder()
@@ -685,10 +686,10 @@ class SlideShowActivity : AppCompatActivity() {
                             .build()
                         val dataSourceFactory = OkHttpDataSource.Factory(okhttpClient)
                             .setUserAgent(Util.getUserAgent(context, "UFM"))
-                        DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse(proxyUrl)))
+                        DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory).createMediaSource(MediaItem.fromUri(Uri.parse(proxyUrl)))
                     } else {
                         val dataSourceFactory = DataSource.Factory { UfmMedia3DataSource(share, path) }
-                        DefaultMediaSourceFactory(dataSourceFactory).createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${path.replace(" ", "%20")}")))
+                        DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory).createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${path.replace(" ", "%20")}")))
                     }
                 }
 
@@ -1682,7 +1683,27 @@ class SlideShowAdapter(
                         }
                     },
                     onError = {
-                        progressBar.visibility = View.GONE
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val bmp = try {
+                                val exif = android.media.ExifInterface(file.absolutePath)
+                                exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
+                                    android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                                } ?: za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                            } catch (_: Throwable) {
+                                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                            }
+                            withContext(Dispatchers.Main) {
+                                progressBar.visibility = View.GONE
+                                if (bmp != null) {
+                                    imageView.setImageBitmap(bmp)
+                                    val w = bmp.width
+                                    val h = bmp.height
+                                    imageView.post {
+                                        zoomTouchListener?.setImageDimensions(w, h)
+                                    }
+                                }
+                            }
+                        }
                     }
                 )
                 .build()

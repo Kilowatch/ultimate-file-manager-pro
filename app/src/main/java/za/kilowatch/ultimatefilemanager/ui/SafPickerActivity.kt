@@ -61,7 +61,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 
-private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
 /**
  * A custom document picker for UFM.
@@ -575,7 +575,7 @@ class SafPickerActivity : AppCompatActivity() {
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
                 val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty()) File(item.path) else null
                 val ext = file?.extension?.lowercase() ?: ""
-                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+                val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
                 val canShowThumb = showThumbnails && file != null && (isImage || isVideo)
 

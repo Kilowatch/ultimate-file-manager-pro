@@ -39,10 +39,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
          */
         private val extractionSemaphore = Semaphore(3)
 
-        val VIDEO_EXTENSIONS = setOf(
-            "mp4", "mkv", "avi", "mov", "m4v", "3gp", "webm", "wmv", "vob", "ogv",
-            "ts", "m2ts", "mts", "flv", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid"
-        )
+        val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
         /**
          * Containers where MediaMetadataRetriever is known to hang / OOM on HDR content
@@ -121,7 +118,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         }
 
         val ext = networkFile.name.substringAfterLast('.', "").lowercase()
-        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+        val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
         val isApk = ext in listOf("apk", "xapk", "apks")
 
@@ -265,7 +262,18 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                     }
                                     finalBitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size, sampledOptions)
                                     if (finalBitmap == null) {
-                                        val rawBmp = decodeAvifBitmap(imageBytes)
+                                        val exifBmp = try {
+                                            val exif = android.media.ExifInterface(java.io.ByteArrayInputStream(imageBytes))
+                                            exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
+                                                val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
+                                                val sampledOpts = BitmapFactory.Options().apply {
+                                                    inSampleSize = calculateInSampleSize(opts, THUMB_MAX_PX, THUMB_MAX_PX)
+                                                }
+                                                BitmapFactory.decodeByteArray(bytes, 0, bytes.size, sampledOpts)
+                                            }
+                                        } catch (_: Exception) { null }
+                                        val rawBmp = exifBmp ?: decodeAvifBitmap(imageBytes)
                                         finalBitmap = rawBmp?.let { scaleBitmap(it) }
                                         rawBmp?.takeIf { it !== finalBitmap }?.recycle()
                                     }

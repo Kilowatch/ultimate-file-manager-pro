@@ -412,18 +412,20 @@ class UFMPlaybackService : Service() {
             }
 
                 // Strip server-mode prefix to avoid duplicated path segments (e.g. "MM/MM/file.mp4")
+            val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
             val cleanPath = stripSharePrefix(share, item.path)
             val dataSourceFactory = DataSource.Factory {
                 UfmMedia3DataSource(share, cleanPath, item.fileSize)
             }
-            androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
+            androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                 .createMediaSource(MediaItem.fromUri(Uri.parse("ufm://${item.path.replace(" ", "%20")}")))
         } else {
             // Local file
             val localUri = Uri.parse(item.path)
             GoRoLog.i("UFMPlaybackService", "playCurrent: local file uri=$localUri")
+            val extractorsFactory = za.kilowatch.ultimatefilemanager.media.UfmExtractorsFactory()
             val dataSourceFactory = DefaultDataSource.Factory(this)
-            androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory)
+            androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSourceFactory, extractorsFactory)
                 .createMediaSource(MediaItem.fromUri(localUri))
         }
 

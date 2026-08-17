@@ -185,9 +185,8 @@ class MetadataExtractor(private val context: Context) {
         return when {
             file.isDirectory -> "application/x-directory"
             else -> {
-                val extension = MimeTypeMap.getFileExtensionFromUrl(file.absolutePath)
-                MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
-                    ?: "application/octet-stream"
+                val ext = getFileExtension(file.name)
+                za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
             }
         }
     }

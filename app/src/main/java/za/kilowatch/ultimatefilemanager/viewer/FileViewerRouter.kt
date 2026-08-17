@@ -98,16 +98,22 @@ object FileViewerRouter {
         "png", "apng",
         // Animated
         "gif", "webp",
-        // Modern compressed
-        "heic", "heif", "avif", "jxl",
-        // Legacy
-        "bmp", "ico",
+        // Modern compressed & HDR
+        "heic", "heif", "hif", "avif", "avifs", "jxl", "hdr", "exr",
+        // Legacy & Bitmaps
+        "bmp", "ico", "cur", "ani", "wbmp", "pcx", "pbm", "pgm", "ppm", "pnm",
         // Vector
-        "svg",
-        // Professional
-        "tiff", "tif",
-        // RAW (routed to viewer; decoded where Android/Coil supports it)
-        "dng", "cr2", "nef", "arw"
+        "svg", "wmf", "emf",
+        // Professional & Textures
+        "tiff", "tif", "tga", "targa", "dds",
+        // Design & Graphics projects
+        "psd", "psb", "ai", "xcf", "kra", "clip",
+        // Stereoscopic 3D
+        "mpo", "jps", "pns",
+        // Camera RAW (routed to viewer; decoded where Android/Coil/Exif supports it)
+        "dng", "cr2", "cr3", "crw", "nef", "nrw", "arw", "srf", "sr2",
+        "raf", "rw2", "orf", "pef", "ptx", "srw", "x3f", "erf",
+        "kdc", "dcr", "k25", "mrw", "mos", "raw"
     )
 
     // ── PDF ──────────────────────────────────────────────────────────────────
@@ -127,7 +133,20 @@ object FileViewerRouter {
 
     // ── Video ─────────────────────────────────────────────────────────────────
     val VIDEO_EXTENSIONS = setOf(
-        "mp4", "mkv", "avi", "mov", "wmv", "webm", "flv", "3gp", "ts"
+        // Standard Web & Media containers
+        "mp4", "mkv", "avi", "mov", "wmv", "webm", "flv", "3gp", "ts",
+        // Motion JPEG
+        "mjpeg", "mjpg", "mjp",
+        // Apple & Mobile video
+        "m4v", "qt", "3g2", "3gp2",
+        // Camcorder & Transport streams
+        "m2ts", "mts", "m2t", "tp", "trp",
+        // DVD & MPEG streams
+        "vob", "evo", "mpg", "mpeg", "mpe", "m1v", "m2v", "mpv",
+        // Flash, Ogg & Windows Media
+        "f4v", "ogv", "ogm", "rm", "rmvb", "asf", "wm",
+        // Professional, Broadcast & Camcorder
+        "mxf", "dv", "divx", "xvid", "mk3d"
     )
 
     /** All extensions this router can handle internally. */
@@ -236,11 +255,8 @@ object FileViewerRouter {
         val ext = file.extension.lowercase()
         val isImage = ext in IMAGE_EXTENSIONS
 
-        // If user explicitly configured UFM Player as default for media, route to it
-        if ((ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) &&
-            DefaultOpenManager.getDefaultAction(context, ext, isNetwork = false) == DefaultOpenManager.Action.PLAYER
-        ) {
-            openInPlayer(context, file)
+        if (ext in AUDIO_EXTENSIONS || ext in VIDEO_EXTENSIONS) {
+            openInPlayer(context, file, contentUri, isExternal)
             return
         }
 
@@ -250,18 +266,6 @@ object FileViewerRouter {
             in EPUB_EXTENSIONS  -> Intent(context, EpubViewerActivity::class.java)
             "zip" -> Intent(context, ZipViewerActivity::class.java)
             "7z", in ZIP_EXTENSIONS -> Intent(context, SevenZipViewerActivity::class.java)
-            in AUDIO_EXTENSIONS, in VIDEO_EXTENSIONS -> {
-                // Keep the original MediaPlayerActivity path for built-in viewer
-                // (the UFM Media Player with background playback is available
-                // through the Open With dialog's "UFM Media Player" button or
-                // when it's set as the default via DefaultOpenManager.Action.PLAYER,
-                // both of which route through openInPlayer()).
-                // For network files, NetworkBrowserActivity.startUfmPlayer()
-                // handles credentials properly.
-                Intent(context, MediaPlayerActivity::class.java).apply {
-                    putExtra(FileViewerRouter.EXTRA_IS_VIDEO, ext !in AUDIO_EXTENSIONS)
-                }
-            }
             in SPREADSHEET_EXTENSIONS -> Intent(context, SpreadsheetViewerActivity::class.java)
             in TEXT_EXTENSIONS, in DAT_EXTENSIONS, in OFFICE_OOXML_EXTENSIONS, in OFFICE_LEGACY_EXTENSIONS ->
                 textViewerIntent(context)
@@ -311,7 +315,12 @@ object FileViewerRouter {
      * Opens the file in UFMPlayerActivity (ExoPlayer) with a playlist built from the
      * parent directory's media files. Supports both local and network files.
      */
-    private fun openInPlayer(context: Context, file: File) {
+    fun openInPlayer(
+        context: Context,
+        file: File,
+        contentUri: Uri? = null,
+        isExternal: Boolean = false
+    ) {
         val ext = file.extension.lowercase()
         if (ext !in AUDIO_EXTENSIONS && ext !in VIDEO_EXTENSIONS) return
 
@@ -339,6 +348,8 @@ object FileViewerRouter {
             putExtra("initialPath", file.absolutePath)
             putExtra("playlistCacheKey", cacheKey)
             putExtra("playlistDir", file.parent ?: "") // fallback scan dir
+            if (contentUri != null) putExtra(EXTRA_CONTENT_URI, contentUri.toString())
+            if (isExternal) putExtra(EXTRA_IS_EXTERNAL_OPEN, true)
         }
         context.startActivity(intent)
     }

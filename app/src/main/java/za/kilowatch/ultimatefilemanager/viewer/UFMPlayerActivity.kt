@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.viewer
 
+import java.io.File
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
 import android.app.PendingIntent
@@ -203,6 +204,7 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     private val handler = Handler(Looper.getMainLooper())
     private var isTracking = false
+    private var mjpegPlayer: za.kilowatch.ultimatefilemanager.media.MjpegPlayerHelper? = null
 
     private val speedGestureDetector by lazy {
         GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -443,9 +445,11 @@ class UFMPlayerActivity : AppCompatActivity() {
         shareUsername = intent.getStringExtra("shareUsername") ?: ""
         shareName = intent.getStringExtra("shareName") ?: ""
         provider = intent.getStringExtra("provider") ?: ""
-        initialFileSize = intent.getLongExtra("initialSize", 0L)
-        val initialPath = intent.getStringExtra("initialPath") ?:
-            intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: ""
+        val initialPath = intent.getStringExtra("initialPath")
+            ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH)
+            ?: intent.data?.path
+            ?: intent.dataString
+            ?: ""
         remotePathExtra = intent.getStringExtra(
             za.kilowatch.ultimatefilemanager.network.NetworkBrowserActivity.EXTRA_REMOTE_PATH
         ) ?: ""
@@ -479,14 +483,80 @@ class UFMPlayerActivity : AppCompatActivity() {
             }
         })
 
-        // Store resolved playlist for UFMPlaybackService under a separate key, because
-        // PlaylistCache.take() is destructive — the entry above was already consumed.
-        val serviceCacheKey = PlaylistCache.put(playlist)
-        intent.putExtra("serviceCacheKey", serviceCacheKey)
+        val fileName = initialPath.substringAfterLast('/')
+        txtTitle.text = if (fileName.isNotEmpty()) fileName else "Media Title"
 
-        // Start & bind to the playback service
-        UFMPlaybackService.start(this, intent)
-        bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        val ext = initialPath.substringAfterLast('.', "").lowercase()
+        val isMjpeg = ext in setOf("mjpeg", "mjpg", "mjp")
+        if (isMjpeg) {
+            audioPoster.visibility = View.VISIBLE
+            audioPoster.scaleType = ImageView.ScaleType.FIT_CENTER
+            playerView.visibility = View.GONE
+            audioPlaceholder.visibility = View.GONE
+            audioPosterScrim.visibility = View.GONE
+            loadingSpinner.visibility = View.VISIBLE
+
+            lifecycleScope.launch(Dispatchers.IO) {
+                val isLocal = shareId.isEmpty() && shareHost.isEmpty() && provider.isEmpty()
+                val ds: za.kilowatch.ultimatefilemanager.media.MjpegDataSource? = if (isLocal) {
+                    val f = File(initialPath)
+                    if (f.exists()) za.kilowatch.ultimatefilemanager.media.FileMjpegDataSource(f) else null
+                } else {
+                    val isServerMode = intent.getBooleanExtra("isServerMode", false)
+                    val rawShare = buildPlaybackNetworkShare(shareId, shareHost, shareUsername, shareName, provider, remotePathExtra, isServerMode)
+                    if (rawShare != null) {
+                        val (share, subPath) = resolveEffectiveShareAndPath(rawShare, remotePathExtra, initialPath)
+                        val ra = when (share.type) {
+                            ShareType.SMB -> SmbShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.FTP -> FtpShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.SFTP, ShareType.SCP -> SshShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.NFS -> NfsShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.DLNA -> DlnaShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.WEBDAV -> WebDavShareClient.openRandomAccessFile(share, subPath, initialFileSize)
+                            ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.ONEDRIVE -> OnedriveShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.DROPBOX -> DropboxShareClient.openRandomAccessFile(share, subPath)
+                            ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.openRandomAccessFile(share, subPath)
+                            else -> null
+                        }
+                        if (ra != null) za.kilowatch.ultimatefilemanager.media.RemoteMjpegDataSource(ra) else null
+                    } else null
+                }
+
+                if (ds == null) {
+                    withContext(Dispatchers.Main) {
+                        loadingSpinner.visibility = View.GONE
+                        PlayerToastHelper.show(this@UFMPlayerActivity, "Playback error")
+                    }
+                    return@launch
+                }
+
+                val player = za.kilowatch.ultimatefilemanager.media.MjpegPlayerHelper(
+                    dataSource = ds,
+                    onFrameRendered = { currentMs, totalMs ->
+                        if (!isTracking) {
+                            seekBar.max = totalMs.toInt()
+                            seekBar.progress = currentMs.toInt()
+                            updateTimeLabels(currentMs.toInt(), totalMs.toInt())
+                        }
+                    },
+                    onPlaybackStateChanged = { _ ->
+                        updatePlayPauseIcon()
+                    }
+                )
+                mjpegPlayer = player
+
+                withContext(Dispatchers.Main) {
+                    loadingSpinner.visibility = View.GONE
+                    player.start(audioPoster, lifecycleScope)
+                    updatePlayPauseIcon()
+                }
+            }
+        } else {
+            // Start & bind to the playback service
+            UFMPlaybackService.start(this, intent)
+            bindService(Intent(this, UFMPlaybackService::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
+        }
 
         if (isTv) {
             btnPlayPause.requestFocus()
@@ -497,6 +567,11 @@ class UFMPlayerActivity : AppCompatActivity() {
         super.onResume()
         updateSkipButtonVisibility()
         isPiP = false
+        val ext = (intent.getStringExtra("initialPath") ?: intent.getStringExtra(FileViewerRouter.EXTRA_FILE_PATH) ?: "").substringAfterLast('.', "").lowercase()
+        if (ext in setOf("mjpeg", "mjpg", "mjp") || mjpegPlayer != null) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            return
+        }
         if (playbackService?.isPlaying == true) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             playerView.keepScreenOn = true
@@ -514,6 +589,8 @@ class UFMPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        mjpegPlayer?.pause()
+        updatePlayPauseIcon()
         // Never detach player here — PiP lifecycle handles surface transitions
         // Player stays attached so the PiP window and Activity surface stay linked
     }
@@ -528,6 +605,8 @@ class UFMPlayerActivity : AppCompatActivity() {
             unbindService(serviceConnection)
             bound = false
         }
+        mjpegPlayer?.release()
+        mjpegPlayer = null
         playbackService = null
         player = null
         playerView.player = null
@@ -715,14 +794,18 @@ class UFMPlayerActivity : AppCompatActivity() {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    val dur = playbackService?.duration ?: 0L
+                    val dur = mjpegPlayer?.totalDurationMs ?: (playbackService?.duration ?: 0L)
                     updateTimeLabels(progress, if (dur > 0) dur.toInt() else 0)
                 }
             }
             override fun onStartTrackingTouch(sb: SeekBar?) { isTracking = true }
             override fun onStopTrackingTouch(sb: SeekBar?) {
                 isTracking = false
-                playbackService?.seekTo(sb?.progress?.toLong() ?: 0L)
+                if (mjpegPlayer != null) {
+                    mjpegPlayer?.seekTo(sb?.progress?.toLong() ?: 0L, audioPoster)
+                } else {
+                    playbackService?.seekTo(sb?.progress?.toLong() ?: 0L)
+                }
                 resetHideTimer()
             }
         })
@@ -744,6 +827,13 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnPlayPause.setOnClickListener {
             resetHideTimer()
+            if (mjpegPlayer != null) {
+                mjpegPlayer?.toggle(audioPoster, lifecycleScope)
+                updatePlayPauseIcon()
+                val playing = mjpegPlayer?.isPlaying == true
+                PlayerToastHelper.show(this, getString(if (playing) R.string.player_toast_play else R.string.player_toast_pause))
+                return@setOnClickListener
+            }
             playbackService?.toggle()
             updatePlayPauseIcon()
             val playing = playbackService?.isPlaying == true
@@ -764,12 +854,26 @@ class UFMPlayerActivity : AppCompatActivity() {
 
         btnSkipBack.setOnClickListener {
             resetHideTimer()
+            if (mjpegPlayer != null) {
+                val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
+                val target = (mjpegPlayer?.currentPositionMs ?: 0L) - skipMs
+                mjpegPlayer?.seekTo(target.coerceAtLeast(0L), audioPoster)
+                PlayerToastHelper.show(this, getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+                return@setOnClickListener
+            }
             playbackService?.skipBackward()
             PlayerToastHelper.show(this, getString(R.string.player_skip_backward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
         }
 
         btnSkipForward.setOnClickListener {
             resetHideTimer()
+            if (mjpegPlayer != null) {
+                val skipMs = PlayerPreferencesManager.getSkipLengthMs(this)
+                val target = (mjpegPlayer?.currentPositionMs ?: 0L) + skipMs
+                mjpegPlayer?.seekTo(target.coerceAtMost(mjpegPlayer?.totalDurationMs ?: 0L), audioPoster)
+                PlayerToastHelper.show(this, getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
+                return@setOnClickListener
+            }
             playbackService?.skipForward()
             PlayerToastHelper.show(this, getString(R.string.player_skip_forward_toast, PlayerPreferencesManager.formatSkipLabel(this)))
         }
@@ -896,7 +1000,7 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun updatePlayPauseIcon() {
-        val isPlaying = playbackService?.isPlaying ?: false
+        val isPlaying = mjpegPlayer?.isPlaying ?: (playbackService?.isPlaying ?: false)
         val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
         if (btnPlayPause is FloatingActionButton) {
             (btnPlayPause as FloatingActionButton).setImageResource(icon)
@@ -923,6 +1027,8 @@ class UFMPlayerActivity : AppCompatActivity() {
     }
 
     private fun stopPlaybackAndFinish() {
+        mjpegPlayer?.release()
+        mjpegPlayer = null
         if (bound) {
             playbackService?.unregisterCallback()
             try {
@@ -932,6 +1038,97 @@ class UFMPlayerActivity : AppCompatActivity() {
         }
         stopService(Intent(this, UFMPlaybackService::class.java))
         finish()
+    }
+
+    private fun buildPlaybackNetworkShare(
+        shareId: String?,
+        shareHost: String?,
+        shareUsername: String?,
+        shareName: String?,
+        provider: String,
+        remotePathFromIntent: String? = null,
+        isServerMode: Boolean = false
+    ): NetworkShare? {
+        if (!shareId.isNullOrEmpty()) {
+            val repo = NetworkShareRepository.getInstance(this)
+            val repoShare = repo.getAll().firstOrNull { it.id == shareId }
+            if (repoShare != null) {
+                return if (repoShare.isServerMode && !remotePathFromIntent.isNullOrEmpty()) {
+                    repoShare.copy(remotePath = remotePathFromIntent)
+                } else repoShare
+            }
+
+            val onlineRepo = za.kilowatch.ultimatefilemanager.network.OnlineStorageRepository.getInstance(this)
+            val online = onlineRepo.getById(shareId)
+            if (online != null) {
+                return NetworkShare(
+                    id = online.id,
+                    name = online.displayName,
+                    type = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.ONEDRIVE -> ShareType.ONEDRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.GOOGLE_DRIVE -> ShareType.GOOGLE_DRIVE
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.DROPBOX -> ShareType.DROPBOX
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.AWS_S3 -> ShareType.AWS_S3
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.IDRIVE_E2 -> ShareType.IDRIVE_E2
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.WEBDAV -> ShareType.WEBDAV
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> ShareType.WEBDAV
+                    },
+                    host = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE ->
+                            za.kilowatch.ultimatefilemanager.network.RCloneShareClient.RCLONE_HOST_MARKER
+                        else -> if (online.isWebDavProvider) online.webDavUrl ?: online.email
+                                else online.s3Endpoint ?: online.email
+                    },
+                    username = when (online.provider) {
+                        za.kilowatch.ultimatefilemanager.network.OnlineStorageProvider.RCLONE -> online.id
+                        else -> if (online.isWebDavProvider) online.webDavUsername ?: ""
+                                else online.s3AccessKey ?: ""
+                    },
+                    password = if (online.isWebDavProvider) online.webDavPassword ?: ""
+                              else online.s3SecretKey ?: "",
+                    readOnly = false
+                )
+            }
+        }
+
+        val type = try { ShareType.valueOf(provider) } catch (_: Exception) { return null }
+        return NetworkShare(
+            id = shareId ?: "",
+            name = shareName ?: "",
+            host = shareHost ?: "",
+            username = shareUsername ?: "",
+            type = type,
+            remotePath = remotePathFromIntent ?: "",
+            port = 0,
+            isServerMode = isServerMode
+        )
+    }
+
+    private fun resolveEffectiveShareAndPath(
+        share: NetworkShare,
+        remotePathOverride: String?,
+        path: String
+    ): Pair<NetworkShare, String> {
+        if (share.type == ShareType.SMB && share.isServerMode) {
+            val basePath = when {
+                !remotePathOverride.isNullOrEmpty() -> remotePathOverride
+                share.remotePath.isNotEmpty() -> share.remotePath
+                else -> {
+                    val trimmed = path.trimStart('/')
+                    if (trimmed.contains('/')) "/" + trimmed.substringBefore('/') else "/$trimmed"
+                }
+            }
+            val effectiveShare = share.copy(remotePath = basePath)
+            val prefix = basePath.trimStart('/')
+            val clean = path.trimStart('/')
+            val subPath = when {
+                clean.startsWith("$prefix/") -> clean.removePrefix("$prefix/")
+                clean == prefix              -> ""
+                else                         -> clean
+            }
+            return Pair(effectiveShare, subPath)
+        }
+        return Pair(share, path)
     }
 
     override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {

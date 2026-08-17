@@ -355,8 +355,8 @@ class SortFilterSheet : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "SortFilterSheet"
 
-        val IMAGE_EXTENSIONS = setOf("jpg", "jpeg", "png", "gif", "bmp", "webp", "svg", "heic", "heif", "avif", "jxl")
-        val VIDEO_EXTENSIONS = setOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v")
+        val IMAGE_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+        val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
         val AUDIO_EXTENSIONS = setOf("mp3", "wav", "aac", "flac", "ogg", "wma", "m4a", "opus")
         val DOCUMENT_EXTENSIONS = setOf(
             "pdf", "doc", "docx", "docm", "dot", "dotx", "dotm",

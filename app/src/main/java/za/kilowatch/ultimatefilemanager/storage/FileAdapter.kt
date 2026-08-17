@@ -38,7 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
 sealed class ListItem {
     data class Header(val year: Int, val month: Int, val count: Int, val isCollapsed: Boolean = false) : ListItem()
@@ -545,7 +545,7 @@ class FileAdapter(
             val isGrid = ViewModeManager.isGrid(viewMode)
 
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
@@ -688,7 +688,7 @@ class FileAdapter(
                 }
             } else {
                 val ext = file.extension.lowercase()
-                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+                val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
                 val isVideo = ext in VIDEO_EXTENSIONS
                 val isApk = ext in listOf("apk", "xapk", "apks")
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
@@ -941,13 +941,32 @@ class FileAdapter(
             val placeholderImage = ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)?.asImage()
 
             if (isImage) {
-                // Coil can decode images natively — fast path.
+                // Coil can decode standard images natively. For RAW/specialized images that Coil
+                // cannot decode directly, fallback to Exif embedded preview or FFmpeg frame extraction.
+                imgIcon.tag = file.absolutePath
                 coilDisposable = imgIcon.load(file) {
                     crossfade(200)
                     allowHardware(false)
                     scale(Scale.FILL)
                     placeholder(placeholderImage)
                     error(placeholderImage)
+                    listener(
+                        onError = { _, _ ->
+                            if (imgIcon.tag == file.absolutePath) {
+                                @OptIn(DelicateCoroutinesApi::class)
+                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                    val bmp = extractRawOrImageThumbnail(file, 512)
+                                    if (bmp != null) {
+                                        withContext(Dispatchers.Main) {
+                                            if (imgIcon.tag == file.absolutePath) {
+                                                imgIcon.setImageBitmap(bmp)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    )
                 }
             } else if (isApk) {
                 // APK / XAPK / APKS: extract the app icon via the shared helper
@@ -1119,7 +1138,7 @@ class FileAdapter(
          */
         private fun loadThumbnail(file: File) {
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
 
@@ -1145,6 +1164,7 @@ class FileAdapter(
             val placeholderImage = ContextCompat.getDrawable(itemView.context, R.drawable.ic_photo_video)?.asImage()
 
             if (isImage) {
+                imgIcon.tag = file.absolutePath
                 coilDisposable = imgIcon.load(file) {
                     crossfade(150)
                     allowHardware(false)
@@ -1154,6 +1174,22 @@ class FileAdapter(
                     listener(
                         onSuccess = { _, _ ->
                             updateTextColorForDrawable(imgIcon.drawable, true)
+                        },
+                        onError = { _, _ ->
+                            if (imgIcon.tag == file.absolutePath) {
+                                @OptIn(DelicateCoroutinesApi::class)
+                                videoJob = GlobalScope.launch(Dispatchers.IO) {
+                                    val bmp = extractRawOrImageThumbnail(file, 512)
+                                    if (bmp != null) {
+                                        withContext(Dispatchers.Main) {
+                                            if (imgIcon.tag == file.absolutePath) {
+                                                imgIcon.setImageBitmap(bmp)
+                                                updateTextColorForDrawable(imgIcon.drawable, true)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     )
                 }
@@ -1320,13 +1356,34 @@ class FileAdapter(
 
         private fun applyGridTextColor(file: File) {
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
             val hasThumbnail = !file.isDirectoryCached() && showThumbnails && (isImage || isVideo || isApk)
 
             updateTextColorForDrawable(imgIcon.drawable, hasThumbnail && imgIcon.drawable != null && imgIcon.tag == file.absolutePath)
+        }
+
+        private fun extractRawOrImageThumbnail(file: File, maxDim: Int): android.graphics.Bitmap? {
+            return try {
+                val exif = android.media.ExifInterface(file.absolutePath)
+                val exifBmp = exif.thumbnailBitmap
+                if (exifBmp != null) return exifBmp
+                val bytes = exif.thumbnailBytes
+                if (bytes != null) {
+                    val opts = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                    android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size, opts)
+                    val sampledOpts = android.graphics.BitmapFactory.Options().apply {
+                        inSampleSize = maxOf(1, maxOf(opts.outWidth, opts.outHeight) / maxDim)
+                    }
+                    android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size, sampledOpts)
+                } else {
+                    za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, maxDim, maxDim)
+                }
+            } catch (_: Throwable) {
+                za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, maxDim, maxDim)
+            }
         }
     }
 }

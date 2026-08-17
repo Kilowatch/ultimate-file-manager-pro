@@ -521,7 +521,7 @@ class NetworkFileAdapter(
             val isGrid = ViewModeManager.isGrid(viewMode)
 
             val ext = file.name.substringAfterLast('.', "").lowercase()
-            val imageExts = setOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
             val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts
             val isThumbnail = !file.isDirectory && isEnabled && isMedia
@@ -828,7 +828,7 @@ class NetworkFileAdapter(
             imgIcon.tag = file.path
             
             val ext = file.name.substringAfterLast('.', "").lowercase()
-            val imageExts = setOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
             // VIDEO_EXTENSIONS is the single authoritative list shared with NetworkThumbnailCacheManager
             val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts
@@ -1022,7 +1022,7 @@ class NetworkFileAdapter(
 
         private fun applyGridTextColor(file: NetworkFile) {
             val ext = file.name.substringAfterLast('.', "").lowercase()
-            val imageExts = setOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+            val imageExts = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
             val apkExts   = setOf("apk", "xapk", "apks")
             val isEnabled = NetworkThumbnailPreferenceManager.isEnabled(context)
             val isMedia = ext in imageExts || ext in za.kilowatch.ultimatefilemanager.settings.NetworkThumbnailCacheManager.VIDEO_EXTENSIONS || ext in apkExts

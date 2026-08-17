@@ -40,7 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager
 import za.kilowatch.ultimatefilemanager.settings.HiddenFilesDatabase
 
-private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "avi", "mov", "wmv", "flv", "webm", "3gp", "m4v", "ts", "m2ts", "vob", "mpg", "mpeg", "rmvb", "asf", "divx", "xvid")
+private val VIDEO_EXTENSIONS = za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
 
 /**
  * Exposes UFM's storage volumes AND configured network shares (SMB/FTP) through the
@@ -613,7 +613,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val file = File(absPath)
         if (!file.exists() || !file.isFile) return null
         val ext = file.extension.lowercase()
-        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
+        val isImage = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
         val isVideo = ext in VIDEO_EXTENSIONS
         if (!isImage && !isVideo) return null
 
@@ -635,7 +635,23 @@ class UfmDocumentsProvider : DocumentsProvider() {
                         inSampleSize = maxOf(1, minOf(outWidth, outHeight) / maxDim)
                         inJustDecodeBounds = false
                     }
-                    android.graphics.BitmapFactory.decodeFile(absPath, opts)
+                    var decoded = android.graphics.BitmapFactory.decodeFile(absPath, opts)
+                    if (decoded == null) {
+                        decoded = try {
+                            val exif = android.media.ExifInterface(absPath)
+                            exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
+                                val bOpts = android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bOpts)
+                                val maxDim = maxOf(hint.x, hint.y).coerceAtLeast(64)
+                                bOpts.inSampleSize = maxOf(1, minOf(bOpts.outWidth, bOpts.outHeight) / maxDim)
+                                bOpts.inJustDecodeBounds = false
+                                android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bOpts)
+                            } ?: za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(absPath, 0, hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64))
+                        } catch (_: Exception) {
+                            za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(absPath, 0, hint.x.coerceAtLeast(64), hint.y.coerceAtLeast(64))
+                        }
+                    }
+                    decoded
                 }
             } else {
                 // Video thumbnail
@@ -1033,7 +1049,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
             // Advertise thumbnail support for images and videos so picker apps
             // (e.g. Projectivity) know they can call openDocumentThumbnail()
             val ext = file.extension.lowercase()
-            val hasThumbnail = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl") || ext in VIDEO_EXTENSIONS
+            val hasThumbnail = ext in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS || ext in VIDEO_EXTENSIONS
             if (hasThumbnail) flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
         }
         return flags
@@ -1041,7 +1057,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
 
     private fun getMimeType(fileName: String): String {
         val ext = fileName.substringAfterLast('.', "").lowercase()
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext) ?: "application/octet-stream"
+        return za.kilowatch.ultimatefilemanager.util.MimeTypeHelper.getOrFallback(ext)
     }
 
     private fun searchFiles(dir: File, query: String, cursor: MatrixCursor, depth: Int) {

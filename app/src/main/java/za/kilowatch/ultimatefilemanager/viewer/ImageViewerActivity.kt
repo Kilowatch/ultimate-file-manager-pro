@@ -480,10 +480,37 @@ class ImageViewerActivity : AppCompatActivity() {
                     }
                 },
                 onError = { _ ->
-                    progressBar.visibility = View.GONE
-                    txtInfo.setText(R.string.unable_to_decode_image)
-                    txtInfo.visibility = View.VISIBLE
-                    startPostponedEnterTransition()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        val bmp = try {
+                            val exif = android.media.ExifInterface(file.absolutePath)
+                            exif.thumbnailBitmap ?: exif.thumbnailBytes?.let { bytes ->
+                                android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                            } ?: za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                        } catch (_: Throwable) {
+                            za.kilowatch.ultimatefilemanager.media.FFmpegThumbnailHelper.extractVideoFrame(file.absolutePath, 0, 1920, 1080)
+                        }
+
+                        kotlinx.coroutines.withContext(Dispatchers.Main) {
+                            if (bmp != null && !isFinishing && !isDestroyed) {
+                                imageWidth = bmp.width
+                                imageHeight = bmp.height
+                                imageView.setImageBitmap(bmp)
+                                val fileSize = formatFileSize(file.length())
+                                txtInfo.text = "${imageWidth} \u00d7 ${imageHeight}  \u2022  $fileSize"
+                                txtInfo.visibility = View.VISIBLE
+                                progressBar.visibility = View.GONE
+                                imageView.post {
+                                    fitImageToView()
+                                    startPostponedEnterTransition()
+                                }
+                            } else {
+                                progressBar.visibility = View.GONE
+                                txtInfo.setText(R.string.unable_to_decode_image)
+                                txtInfo.visibility = View.VISIBLE
+                                startPostponedEnterTransition()
+                            }
+                        }
+                    }
                 }
             )
             .build()
