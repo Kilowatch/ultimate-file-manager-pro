@@ -22,6 +22,22 @@
 // which clashes with NDK 28 headers. All needed declarations are in the public
 // headers above (rpc_set_auth, rpc_set_timeout, libnfs_authunix_create, etc).
 
+/*
+ * The bundled libnfs does not expose nfs_set_nfsv4_minor_version /
+ * nfs_get_nfsv4_minor_version (added in a newer upstream release).
+ * Provide no-op stubs so the JNI bridge compiles without changes to callers.
+ * NFSv4 minor-version selection is silently ignored; major version control
+ * still works correctly via nfs_set_version().
+ */
+static inline void nfs_set_nfsv4_minor_version(struct nfs_context *nfs, int minor) {
+    (void)nfs;
+    (void)minor;
+}
+static inline int nfs_get_nfsv4_minor_version(struct nfs_context *nfs) {
+    (void)nfs;
+    return 0;
+}
+
 
 
 #define TAG "NFS_JNI"
