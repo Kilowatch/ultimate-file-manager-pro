@@ -2964,7 +2964,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun promptNetworkExtractToNewFolder(archives: List<NetworkFile>) {
         if (archives.isEmpty()) return
-        val defaultName = if (archives.size == 1) archives.first().name.substringBeforeLast('.') else "Extracted"
+        val defaultName = if (archives.size == 1) za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archives.first().name) else "Extracted"
         val isOnTv = DeviceUtils.isTvDevice(this)
 
         val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
@@ -3043,22 +3043,27 @@ class NetworkBrowserActivity : AppCompatActivity() {
             val tempExtractDir = File(cacheDir, "net_extract_${System.currentTimeMillis()}")
             tempExtractDir.mkdirs()
 
-            if (customDestPath != null) {
+            suspend fun ensureRemoteDir(path: String) {
+                if (path.isEmpty()) return
                 try {
                     when(share.type) {
-                        ShareType.SMB          -> SmbShareClient.mkdir(share, customDestPath)
-                        ShareType.FTP          -> FtpShareClient.mkdir(share, customDestPath)
-                        ShareType.TV           -> TvShareClient.mkdir(share, customDestPath)
-                        ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, customDestPath)
-                        ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, customDestPath)
-                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, customDestPath)
-                        ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, customDestPath)
-                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, customDestPath)
-                        ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, customDestPath)
-                        ShareType.NFS          -> NfsShareClient.mkdir(share, customDestPath)
+                        ShareType.SMB          -> SmbShareClient.mkdir(share, path)
+                        ShareType.FTP          -> FtpShareClient.mkdir(share, path)
+                        ShareType.TV           -> TvShareClient.mkdir(share, path)
+                        ShareType.SFTP, ShareType.SCP -> SshShareClient.mkdir(share, path)
+                        ShareType.ONEDRIVE     -> OnedriveShareClient.mkdir(share, path)
+                        ShareType.GOOGLE_DRIVE -> GoogleDriveShareClient.mkdir(share, path)
+                        ShareType.DROPBOX      -> DropboxShareClient.mkdir(share, path)
+                        ShareType.AWS_S3, ShareType.IDRIVE_E2 -> S3ShareClient.mkdir(share, path)
+                        ShareType.WEBDAV       -> WebDavShareClient.mkdir(share, path)
+                        ShareType.NFS          -> NfsShareClient.mkdir(share, path)
                         ShareType.DLNA         -> throw UnsupportedOperationException("DLNA is read-only")
                     }
                 } catch (_: Exception) {}
+            }
+
+            if (customDestPath != null) {
+                ensureRemoteDir(customDestPath)
             }
 
             try {
@@ -3071,11 +3076,17 @@ class NetworkBrowserActivity : AppCompatActivity() {
                         dialogProgress.progress = ((index.toFloat() / archives.size) * 30).toInt()
                     }
 
+                    val archiveBaseName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(netArchive.name)
+
                     // 1. Download network archive to temp file
                     val tempArchiveFile = downloadNetworkEntry(netArchive, tempExtractDir)
 
                     // 2. Extract locally into subfolder
-                    val localExtractedDir = File(tempExtractDir, "extracted_${netArchive.name.substringBeforeLast('.')}").apply { mkdirs() }
+                    val localExtractedDir = if (isSelectFolderMode && archives.size > 1) {
+                        File(tempExtractDir, archiveBaseName).apply { mkdirs() }
+                    } else {
+                        File(tempExtractDir, "extracted_$archiveBaseName").apply { mkdirs() }
+                    }
 
                     withContext(Dispatchers.Main) {
                         statusText.text = getString(R.string.archive_extracting)
@@ -3101,16 +3112,37 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     tempArchiveFile.delete()
 
                     if (isSelectFolderMode) {
-                        val items = localExtractedDir.listFiles() ?: emptyArray()
-                        stagedFiles.addAll(items)
+                        if (archives.size > 1) {
+                            stagedFiles.add(localExtractedDir)
+                        } else {
+                            val items = localExtractedDir.listFiles() ?: emptyArray()
+                            stagedFiles.addAll(items)
+                        }
                     } else {
-                        // 3. Upload extracted items to network share at currentPath or customDestPath
+                        // 3. Upload extracted items to network share at currentPath, customDestPath, or customDestPath/subfolder
                         withContext(Dispatchers.Main) {
                             statusText.text = getString(R.string.uploading_to_sharename, share.name)
                         }
 
                         val itemsToUpload = localExtractedDir.listFiles() ?: emptyArray()
-                        val baseUploadPath = customDestPath ?: currentPath
+                        val baseUploadPath = if (customDestPath != null) {
+                            if (archives.size > 1) {
+                                val subPath = if (customDestPath.isEmpty()) archiveBaseName else "$customDestPath/$archiveBaseName"
+                                ensureRemoteDir(subPath)
+                                subPath
+                            } else {
+                                customDestPath
+                            }
+                        } else {
+                            if (archives.size > 1) {
+                                val subPath = if (currentPath.isEmpty()) archiveBaseName else "$currentPath/$archiveBaseName"
+                                ensureRemoteDir(subPath)
+                                subPath
+                            } else {
+                                currentPath
+                            }
+                        }
+
                         for ((itemIndex, item) in itemsToUpload.withIndex()) {
                             val remoteDestPath = if (baseUploadPath.isEmpty()) item.name else "$baseUploadPath/${item.name}"
                             uploadLocalEntryToNetwork(item, remoteDestPath)

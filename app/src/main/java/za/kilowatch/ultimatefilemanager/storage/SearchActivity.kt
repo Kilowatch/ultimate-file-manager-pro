@@ -813,7 +813,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun promptExtractToNewFolder(file: File) {
-        val defaultName = file.name.substringBeforeLast('.')
+        val defaultName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(file.name)
         val isOnTv = za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)
 
         val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT

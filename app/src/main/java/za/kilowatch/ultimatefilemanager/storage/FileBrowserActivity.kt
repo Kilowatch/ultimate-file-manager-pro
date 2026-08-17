@@ -4784,7 +4784,7 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun promptExtractToNewFolder(archives: List<File>) {
         if (archives.isEmpty()) return
-        val defaultName = if (archives.size == 1) archives.first().name.substringBeforeLast('.') else "Extracted"
+        val defaultName = if (archives.size == 1) za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archives.first().name) else "Extracted"
         val isOnTv = DeviceUtils.isTvDevice(this)
 
         val bgColor = if (isOnTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
@@ -4860,7 +4860,48 @@ class FileBrowserActivity : AppCompatActivity() {
                     var password: String? = null
                     var success = false
                     var attempts = 0
-                    val targetDest = tempExtractDir ?: customDestFolder ?: (archive.parentFile ?: currentDir)
+                    withContext(Dispatchers.Main) {
+                        progressDialog.setMessage(archive.name)
+                    }
+
+                    val targetDest = if (isSelectFolderMode && tempExtractDir != null) {
+                        if (archives.size > 1) {
+                            File(tempExtractDir, za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)).apply { mkdirs() }
+                        } else {
+                            tempExtractDir
+                        }
+                    } else if (customDestFolder != null) {
+                        if (archives.size > 1) {
+                            val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
+                            val subDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(customDestFolder.absolutePath)) {
+                                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(customDestFolder.absolutePath, subName, true)
+                            } else {
+                                File(customDestFolder, subName)
+                            }
+                            if (!subDir.exists()) {
+                                subDir.mkdirs()
+                            }
+                            subDir
+                        } else {
+                            customDestFolder
+                        }
+                    } else {
+                        val baseParent = archive.parentFile ?: currentDir
+                        if (archives.size > 1) {
+                            val subName = za.kilowatch.ultimatefilemanager.archive.ArchiveManager.getArchiveBaseName(archive.name)
+                            val subDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(baseParent.absolutePath)) {
+                                za.kilowatch.ultimatefilemanager.storage.ShizukuFile(baseParent.absolutePath, subName, true)
+                            } else {
+                                File(baseParent, subName)
+                            }
+                            if (!subDir.exists()) {
+                                subDir.mkdirs()
+                            }
+                            subDir
+                        } else {
+                            baseParent
+                        }
+                    }
 
                     while (!success && attempts < 3) {
                         val result = ArchiveManager.extract(

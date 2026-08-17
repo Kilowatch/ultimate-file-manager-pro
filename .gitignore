@@ -23,6 +23,7 @@ app/.cxx/
 Fix/
 autofix/
 email_bugfix_monitor.py
+.gradle-home
 
 # ── Android Studio / IntelliJ IDEA ───────────────────────────
 /.idea/caches/

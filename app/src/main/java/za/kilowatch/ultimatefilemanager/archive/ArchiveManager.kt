@@ -198,6 +198,23 @@ object ArchiveManager {
         return isSupportedArchiveExtension(file.extension)
     }
 
+    /**
+     * Extracts the base name of an archive file, cleanly stripping single (.zip, .7z)
+     * and compound (.tar.gz, .tar.bz2, .tar.xz, .tar.zst) extensions.
+     */
+    fun getArchiveBaseName(fileName: String): String {
+        val lower = fileName.lowercase()
+        val compoundExtensions = listOf(".tar.gz", ".tar.bz2", ".tar.xz", ".tar.zst")
+        for (ext in compoundExtensions) {
+            if (lower.endsWith(ext)) {
+                return fileName.substring(0, fileName.length - ext.length)
+            }
+        }
+        return if (fileName.contains('.')) fileName.substringBeforeLast('.') else fileName
+    }
+
+    fun getArchiveBaseName(file: File): String = getArchiveBaseName(file.name)
+
     @Suppress("DEPRECATION")
     private fun createSevenZFile(archiveFile: File, password: String?): org.apache.commons.compress.archivers.sevenz.SevenZFile {
         val maxMemoryKb = (Runtime.getRuntime().maxMemory() / 1024).toInt()

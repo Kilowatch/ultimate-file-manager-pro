@@ -322,10 +322,11 @@ dependencies {
 }
 
 // Request the stripped variant on every configuration that feeds the compiler
-// or the D8/R8 dexer (i.e. all *CompileClasspath and *RuntimeClasspath confs).
+// or the D8/R8 dexer (i.e. all *CompileClasspath and *RuntimeClasspath confs, excluding unit tests).
 configurations.matching {
-    it.name.endsWith("CompileClasspath", ignoreCase = true) ||
-    it.name.endsWith("RuntimeClasspath", ignoreCase = true)
+    !it.name.contains("UnitTest", ignoreCase = true) &&
+    (it.name.endsWith("CompileClasspath", ignoreCase = true) ||
+     it.name.endsWith("RuntimeClasspath", ignoreCase = true))
 }.configureEach {
     attributes.attribute(strippedJar, true)
 }
