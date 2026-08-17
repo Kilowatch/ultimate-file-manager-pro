@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — مكتبة ترميز GIF نقية بل
         <item>
 Amazon Appstore SDK — يعالج عمليات الشراء الاختيارية للإكراميات داخل التطبيق على أجهزة Amazon. (ملكية خاصة)
 </item>
+        <item>
+Amazon Appstore SDK — يعالج عمليات شراء الإكراميات الاختيارية داخل التطبيق على أجهزة أمازون. (ملكية خاصة)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

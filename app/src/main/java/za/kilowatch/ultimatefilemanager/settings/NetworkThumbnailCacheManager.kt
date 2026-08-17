@@ -121,7 +121,7 @@ class NetworkThumbnailCacheManager(private val context: Context) {
         }
 
         val ext = networkFile.name.substringAfterLast('.', "").lowercase()
-        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
         val isVideo = ext in VIDEO_EXTENSIONS
         val isApk = ext in listOf("apk", "xapk", "apks")
 
@@ -249,7 +249,11 @@ class NetworkThumbnailCacheManager(private val context: Context) {
                                     if (totalRead > maxImageSize) break
                                 }
                                 val imageBytes = buffer.toByteArray()
-                                if (ext == "avif") {
+                                if (ext == "jxl") {
+                                    val rawBmp = decodeJxlBitmap(imageBytes)
+                                    finalBitmap = rawBmp?.let { scaleBitmap(it) }
+                                    rawBmp?.takeIf { it !== finalBitmap }?.recycle()
+                                } else if (ext == "avif") {
                                     val rawBmp = decodeAvifBitmap(imageBytes)
                                     finalBitmap = rawBmp?.let { scaleBitmap(it) }
                                     rawBmp?.takeIf { it !== finalBitmap }?.recycle()
@@ -418,6 +422,16 @@ class NetworkThumbnailCacheManager(private val context: Context) {
             }
         }
         return inSampleSize
+    }
+
+    private fun decodeJxlBitmap(bytes: ByteArray): Bitmap? {
+        if (bytes.isEmpty()) return null
+        return try {
+            com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, THUMB_MAX_PX, THUMB_MAX_PX)
+        } catch (e: Throwable) {
+            GoRoLog.e("UFM_CACHE", "Failed to decode JXL bitmap", e)
+            null
+        }
     }
 
     private fun decodeAvifBitmap(bytes: ByteArray): Bitmap? {

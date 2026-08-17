@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — бібліотека кодування
         <item>
 Amazon Appstore SDK — обробляє необов\\\'язкові покупки-чайові в застосунку на пристроях Amazon. (пропрієтарна ліцензія)
 </item>
+        <item>
+Amazon Appstore SDK — обробляє необов\'язкові покупки чайових у застосунках на пристроях Amazon. (Пропрієтарне)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

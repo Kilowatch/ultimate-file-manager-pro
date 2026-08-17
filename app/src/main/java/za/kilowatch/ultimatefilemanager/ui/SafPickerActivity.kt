@@ -575,7 +575,7 @@ class SafPickerActivity : AppCompatActivity() {
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)
                 val file = if (!item.isRoot && !item.isDir && item.path.isNotEmpty()) File(item.path) else null
                 val ext = file?.extension?.lowercase() ?: ""
-                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
                 val isVideo = ext in VIDEO_EXTENSIONS
                 val canShowThumb = showThumbnails && file != null && (isImage || isVideo)
 

@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — bibliothèque d\\\'encodage GIF en Java
         <item>
 Amazon Appstore SDK — traite les achats facultatifs de pourboires dans l\\\'application sur les appareils Amazon. (Propriétaire)
 </item>
+        <item>
+Amazon Appstore SDK — gère les achats facultatifs de pourboires au sein de l\'application sur les appareils Amazon. (Propriétaire).
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

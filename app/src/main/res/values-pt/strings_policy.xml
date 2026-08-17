@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — biblioteca de codificação GIF em Java
         <item>
 Amazon Appstore SDK — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
 </item>
+        <item>
+SDK da Amazon Appstore — processa compras opcionais de gorjetas no aplicativo em dispositivos Amazon. (Proprietário)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

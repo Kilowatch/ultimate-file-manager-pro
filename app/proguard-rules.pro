@@ -369,6 +369,18 @@
 # The old avif-android library has been removed; suppress any stale references.
 -dontwarn org.aomedia.avif.android.**
 
+# ── jxl-coder (io.github.awxkee) — JPEG XL decoder/encoder ──────────────────
+# JxlCoder is accessed from JxlDecoder.kt, NetworkThumbnailCacheManager.kt,
+# UfmDocumentsProvider.kt, PdfConverter.kt, ImageViewerActivity.kt and
+# SlideShowActivity.kt. Its JNI bridge (libjxl native layer) must not be
+# stripped or renamed, otherwise UnsatisfiedLinkError is thrown at runtime.
+-keep class com.awxkee.jxlcoder.** { *; }
+-keepclassmembers class com.awxkee.jxlcoder.** {
+    native <methods>;
+    *;
+}
+-dontwarn com.awxkee.jxlcoder.**
+
 # ── gifencoder (com.squareup:gifencoder) — GIF encoding engine ─────────────
 -keep class com.squareup.gifencoder.** { *; }
 -keepclassmembers class com.squareup.gifencoder.** { *; }

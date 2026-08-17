@@ -292,15 +292,30 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
 
                 // Dimensions for images
                 val ext = name.substringAfterLast('.').lowercase()
-                if (!isNetwork && ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif", "bmp", "gif")) {
+                if (!isNetwork && ext in setOf("jpg", "jpeg", "png", "webp", "heic", "heif", "avif", "jxl", "bmp", "gif")) {
                     rowDimensions.visibility = View.VISIBLE
                     txtDimensionsValue.text = "…"
                     viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                         try {
-                            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                            BitmapFactory.decodeFile(path, options)
-                            val width = options.outWidth
-                            val height = options.outHeight
+                            val width: Int
+                            val height: Int
+                            if (ext == "jxl") {
+                                // BitmapFactory cannot read JXL headers; JxlCoder has no getSize().
+                                // Decode at thumbnail size — decodeSampled returns proportional dims.
+                                val (w, h) = try {
+                                    val bytes = java.io.File(path).readBytes()
+                                    val thumb = com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, 256, 256)
+                                    val dims = thumb.width to thumb.height
+                                    thumb.recycle()
+                                    dims
+                                } catch (_: Exception) { -1 to -1 }
+                                width = w; height = h
+                            } else {
+                                val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                BitmapFactory.decodeFile(path, options)
+                                width = options.outWidth
+                                height = options.outHeight
+                            }
                             if (width > 0 && height > 0) {
                                 val megapixels = (width * height) / 1_000_000.0
                                 val mpString = if (megapixels >= 0.1) {
@@ -573,6 +588,7 @@ class FilePropertiesBottomSheet : BottomSheetDialogFragment() {
             "svg" -> Pair("SVG image (.svg)", "Scalable Vector Graphics (.svg)")
             "bmp" -> Pair("BMP image (.bmp)", "Bitmap Image (.bmp)")
             "heic", "heif", "avif" -> Pair("${ext.uppercase()} image (.${ext})", "${ext.uppercase()} Image (.${ext})")
+            "jxl" -> Pair("JPEG XL image (.jxl)", "JPEG XL Image (.jxl)")
             "pdf" -> Pair("PDF Document (.pdf)", "Adobe Acrobat Document (.pdf)")
             "doc", "docx" -> Pair("Word Document (.${ext})", "Microsoft Word Document (.${ext})")
             "xls", "xlsx", "csv" -> Pair("Excel Worksheet (.${ext})", "Microsoft Excel Worksheet (.${ext})")

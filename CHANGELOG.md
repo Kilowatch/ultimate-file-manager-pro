@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.8.8] — 2026-08-16
 
+### Added
+- **JPEG XL (.jxl) Image Support** — Added full support for viewing and handling JPEG XL image files across all storage types (local, network, and cloud) and both device targets (mobile and Android TV). `.jxl` files now display thumbnails in all file browser views (list, grid, compact, large grid), recycle bin, and SAF picker; open and navigate in the built-in image viewer and slideshow; re-encode correctly when saving edits; extract accurate dimensions and megapixel count in the File Properties sheet; generate network thumbnails over SMB, SFTP, SCP, FTP, NFS, WebDAV, and DLNA and all cloud providers (Google Drive, OneDrive, Dropbox, S3/iDrive E2, Box); appear under the Images filter chip, search/index category, Smart Sort, and PDF export. Powered by `jxl-coder` (io.github.awxkee, Apache-2.0 / BSD-3-Clause, API 21+).
+
 ### Changed
 - **Batch "Extract to New Folder" Isolation** — When extracting multiple archives simultaneously using "Extract to New Folder" or "Extract & Select Folder", each archive is now extracted into its own dedicated subfolder named after the archive file across local, Shizuku, and network/cloud storage to prevent filename conflicts and mixed contents.
 

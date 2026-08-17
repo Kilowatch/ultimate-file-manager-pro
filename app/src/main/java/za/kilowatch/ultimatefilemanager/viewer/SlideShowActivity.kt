@@ -148,6 +148,7 @@ class SlideShowActivity : AppCompatActivity() {
                 }
                 add(AnimatedPngDecoder.Factory())
                 add(AvifDecoder.Factory())
+                add(JxlDecoder.Factory())
                 add(SvgDecoder.Factory())
             }
             .build()
@@ -834,6 +835,7 @@ class SlideShowActivity : AppCompatActivity() {
                                 finalBmp.compress(Bitmap.CompressFormat.WEBP, 90, out)
                             }
                         }
+                        "jxl" -> out.write(com.awxkee.jxlcoder.JxlCoder.encode(finalBmp))
                         else -> finalBmp.compress(Bitmap.CompressFormat.PNG, 100, out)
                     }
                 }

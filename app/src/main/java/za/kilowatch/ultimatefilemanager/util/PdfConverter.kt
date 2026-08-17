@@ -52,9 +52,18 @@ class PdfConverter(private val context: Context) {
             }
 
             // ── Step 3: decode downsampled bitmap ────────────────────────────────
-            val decodeOpts = BitmapFactory.Options().apply { this.inSampleSize = inSampleSize }
-            val raw = BitmapFactory.decodeFile(imageFile.absolutePath, decodeOpts)
-                ?: return false
+            val ext = imageFile.extension.lowercase()
+            val raw: Bitmap = if (ext == "jxl") {
+                // BitmapFactory cannot decode JXL — use JxlCoder.decodeSampled()
+                try {
+                    val bytes = imageFile.readBytes()
+                    com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, MAX_DIM, MAX_DIM)
+                } catch (_: Exception) { return false }
+            } else {
+                val decodeOpts = BitmapFactory.Options().apply { this.inSampleSize = inSampleSize }
+                BitmapFactory.decodeFile(imageFile.absolutePath, decodeOpts)
+                    ?: return false
+            }
 
             // ── Step 4: apply EXIF orientation so the PDF is always upright ──────
             val rotation = readExifRotation(imageFile)

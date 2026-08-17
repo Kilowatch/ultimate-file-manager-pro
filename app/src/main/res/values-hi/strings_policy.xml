@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — चयनित छवियों स�
         <item>
 Amazon Appstore SDK — Amazon डिवाइसों पर वैकल्पिक इन-ऐप टिप खरीदारी संसाधित करता है। (मालिकाना)
 </item>
+        <item>
+Amazon Appstore SDK — Amazon डिवाइसों पर वैकल्पिक इन-ऐप टिप खरीदारी को संसाधित करता है। (मालिकाना)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

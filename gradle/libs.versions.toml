@@ -28,6 +28,7 @@ review = "2.0.2"
 libadb = "3.1.1"
 coil = "3.4.0"
 avif-coder = "2.2.1"
+jxl-coder = "2.5.2"
 apng4android = "3.0.0"
 zxing = "3.5.4"
 msal = "8.2.3"
@@ -68,6 +69,7 @@ play-review = { group = "com.google.android.play", name = "review-ktx", version.
 libadb = { group = "com.github.MuntashirAkon", name = "libadb-android", version.ref = "libadb" }
 coil-core = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 avif-coder = { group = "io.github.awxkee", name = "avif-coder", version.ref = "avif-coder" }
+jxl-coder  = { group = "io.github.awxkee", name = "jxl-coder", version.ref = "jxl-coder" }
 coil-gif  = { group = "io.coil-kt.coil3", name = "coil-gif", version.ref = "coil" }
 coil-svg  = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
 apng-core = { group = "com.github.penfeizhou.android.animation", name = "apng", version.ref = "apng4android" }

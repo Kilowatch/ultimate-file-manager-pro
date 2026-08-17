@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — 선택한 이미지에서 애니메이�
         <item>
 Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (Proprietary)
 </item>
+        <item>
+Amazon Appstore SDK — Amazon 기기에서 선택적 인앱 팁 구매를 처리합니다. (사유)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

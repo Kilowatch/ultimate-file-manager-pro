@@ -19,6 +19,7 @@ import za.kilowatch.ultimatefilemanager.network.DlnaDiscovery
 import za.kilowatch.ultimatefilemanager.network.NetworkHttpProxyServer
 import za.kilowatch.ultimatefilemanager.viewer.AnimatedPngDecoder
 import za.kilowatch.ultimatefilemanager.viewer.AvifDecoder
+import za.kilowatch.ultimatefilemanager.viewer.JxlDecoder
 
 
 
@@ -64,6 +65,7 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                 }
                 add(AnimatedPngDecoder.Factory())
                 add(AvifDecoder.Factory())
+                add(JxlDecoder.Factory())
                 add(SvgDecoder.Factory())
             }
             .build()

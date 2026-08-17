@@ -545,7 +545,7 @@ class FileAdapter(
             val isGrid = ViewModeManager.isGrid(viewMode)
 
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
@@ -688,7 +688,7 @@ class FileAdapter(
                 }
             } else {
                 val ext = file.extension.lowercase()
-                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+                val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
                 val isVideo = ext in VIDEO_EXTENSIONS
                 val isApk = ext in listOf("apk", "xapk", "apks")
                 val showThumbnails = ThumbnailPreferenceManager.isEnabled(context)
@@ -1119,7 +1119,7 @@ class FileAdapter(
          */
         private fun loadThumbnail(file: File) {
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
 
@@ -1320,7 +1320,7 @@ class FileAdapter(
 
         private fun applyGridTextColor(file: File) {
             val ext = file.extension.lowercase()
-            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+            val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
             val isVideo = ext in VIDEO_EXTENSIONS
             val isApk = ext in listOf("apk", "xapk", "apks")
             val showThumbnails = ThumbnailPreferenceManager.isEnabled(itemView.context)

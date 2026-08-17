@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — 選択した画像からアニメーシ
         <item>
 Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内投げ銭購入を処理します。（プロプライエタリ）
 </item>
+        <item>
+Amazon Appstore SDK — Amazonデバイス上で任意のアプリ内チップ購入を処理します。（プロプライエタリ）
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

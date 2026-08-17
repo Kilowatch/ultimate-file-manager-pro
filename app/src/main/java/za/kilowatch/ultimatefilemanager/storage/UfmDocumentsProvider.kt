@@ -613,21 +613,30 @@ class UfmDocumentsProvider : DocumentsProvider() {
         val file = File(absPath)
         if (!file.exists() || !file.isFile) return null
         val ext = file.extension.lowercase()
-        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif")
+        val isImage = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl")
         val isVideo = ext in VIDEO_EXTENSIONS
         if (!isImage && !isVideo) return null
 
         return try {
             val hint = sizeHint ?: Point(256, 256)
             val bitmap: android.graphics.Bitmap? = if (isImage) {
-                val opts = android.graphics.BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true
-                    android.graphics.BitmapFactory.decodeFile(absPath, this)
-                    val maxDim = maxOf(hint.x, hint.y).coerceAtLeast(64)
-                    inSampleSize = maxOf(1, minOf(outWidth, outHeight) / maxDim)
-                    inJustDecodeBounds = false
+                if (ext == "jxl") {
+                    // BitmapFactory cannot decode JXL — use JxlCoder.decodeSampled()
+                    try {
+                        val bytes = file.readBytes()
+                        val maxDim = maxOf(hint.x, hint.y).coerceAtLeast(64)
+                        com.awxkee.jxlcoder.JxlCoder.decodeSampled(bytes, maxDim, maxDim)
+                    } catch (_: Exception) { null }
+                } else {
+                    val opts = android.graphics.BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
+                        android.graphics.BitmapFactory.decodeFile(absPath, this)
+                        val maxDim = maxOf(hint.x, hint.y).coerceAtLeast(64)
+                        inSampleSize = maxOf(1, minOf(outWidth, outHeight) / maxDim)
+                        inJustDecodeBounds = false
+                    }
+                    android.graphics.BitmapFactory.decodeFile(absPath, opts)
                 }
-                android.graphics.BitmapFactory.decodeFile(absPath, opts)
             } else {
                 // Video thumbnail
                 val pct = context?.let { za.kilowatch.ultimatefilemanager.settings.VideoThumbnailTimePreferenceManager.getPercent(it) } ?: 10
@@ -1024,7 +1033,7 @@ class UfmDocumentsProvider : DocumentsProvider() {
             // Advertise thumbnail support for images and videos so picker apps
             // (e.g. Projectivity) know they can call openDocumentThumbnail()
             val ext = file.extension.lowercase()
-            val hasThumbnail = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif") || ext in VIDEO_EXTENSIONS
+            val hasThumbnail = ext in listOf("jpg", "jpeg", "png", "bmp", "webp", "gif", "heic", "heif", "avif", "jxl") || ext in VIDEO_EXTENSIONS
             if (hasThumbnail) flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
         }
         return flags

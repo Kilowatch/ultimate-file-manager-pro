@@ -76,6 +76,7 @@ class ImageViewerActivity : AppCompatActivity() {
                 }
                 add(AnimatedPngDecoder.Factory())
                 add(AvifDecoder.Factory())
+                add(JxlDecoder.Factory())
                 add(SvgDecoder.Factory())
             }
             .build()
@@ -267,6 +268,7 @@ class ImageViewerActivity : AppCompatActivity() {
                                 finalBmp.compress(Bitmap.CompressFormat.WEBP, 90, out)
                             }
                         }
+                        "jxl" -> out.write(com.awxkee.jxlcoder.JxlCoder.encode(finalBmp))
                         else -> finalBmp.compress(Bitmap.CompressFormat.PNG, 100, out)
                     }
                 }

@@ -28,7 +28,7 @@ object FileTypeIconProvider {
 
         // ── Images ────────────────────────────────────────────────────────────
         "jpg", "jpeg", "png", "gif", "bmp", "webp",
-        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "raw",
+        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "jxl", "raw",
         "cr2", "nef", "arw", "dng" ->
             R.drawable.ic_file_image
 
@@ -201,7 +201,7 @@ object FileTypeIconProvider {
 
     fun fileTypeIdForExtension(ext: String): String = when (ext.lowercase().trimStart('.')) {
         "jpg", "jpeg", "png", "gif", "bmp", "webp",
-        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "raw",
+        "heic", "heif", "svg", "tiff", "tif", "ico", "avif", "jxl", "raw",
         "cr2", "nef", "arw", "dng" -> "file_image"
 
         "mp4", "mkv", "avi", "mov", "wmv", "flv",

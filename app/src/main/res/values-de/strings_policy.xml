@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) – reine Java-GIF-Encoding-Bibliothek zum 
         <item>
 Amazon Appstore SDK – verarbeitet optionale In-App-Trinkgeldkäufe auf Amazon-Geräten. (Proprietär)
 </item>
+        <item>
+Amazon Appstore SDK — verarbeitet optionale In-App-Trinkgeldkäufe auf Amazon-Geräten. (Proprietär)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

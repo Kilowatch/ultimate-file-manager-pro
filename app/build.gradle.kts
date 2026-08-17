@@ -418,6 +418,7 @@ dependencies {
     implementation(libs.coil.svg)
     implementation("com.squareup:gifencoder:0.10.1")
     implementation(libs.avif.coder) // AVIF decoding for API 24–30 (API 31+ uses ImageDecoder); avif-coder by awxkee
+    implementation(libs.jxl.coder)  // JPEG XL decoding/encoding (API 21+); jxl-coder by awxkee
     implementation(libs.apng.core)
     // BouncyCastle for certificate generation and SSHD cryptography
     // SEC: upgraded 1.83 → 1.84 to fix CVE-2026-5588 (HIGH — CompositeVerifier signature bypass in bcpkix)

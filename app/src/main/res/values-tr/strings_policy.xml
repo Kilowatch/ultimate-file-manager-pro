@@ -607,6 +607,9 @@ gifencoder (com.squareup:gifencoder) — seçilen görsellerden animasyonlu GIF 
         <item>
 Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alımlarını işler. (Özel Mülk)
 </item>
+        <item>
+Amazon Appstore SDK — Amazon cihazlarında isteğe bağlı uygulama içi bahşiş satın alma işlemlerini gerçekleştirir. (Tescilli)
+</item>
     </string-array>
 
     <!-- Contact items (Section 11) -->

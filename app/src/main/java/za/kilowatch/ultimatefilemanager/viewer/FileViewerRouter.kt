@@ -99,7 +99,7 @@ object FileViewerRouter {
         // Animated
         "gif", "webp",
         // Modern compressed
-        "heic", "heif", "avif",
+        "heic", "heif", "avif", "jxl",
         // Legacy
         "bmp", "ico",
         // Vector
