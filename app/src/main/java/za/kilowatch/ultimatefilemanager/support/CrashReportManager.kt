@@ -3988,7 +3988,97 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall) {
+                    // 60. The main thread is sampled at the entry of a bounded
+                    //     `java.util.concurrent.PriorityBlockingQueue` enqueue while a
+                    //     bundled Google Play module — the Firebase Analytics / Google
+                    //     Analytics Measurement dynamite module
+                    //     (`com.google.android.gms.dynamite_measurementdynamite`, whose
+                    //     classes are R8-obfuscated to short names such as `m7.*` inside
+                    //     the dynamically loaded module) — dispatches one of its own
+                    //     main-looper Runnables — e.g. `Handler.handleCallback` ->
+                    //     `m7.km.run` -> `m7.rd.e` -> `m7.rd.i` ->
+                    //     `PriorityBlockingQueue.add` (top frame), thread state RUNNABLE
+                    //     — reported from a TPV 2021/22 Philips UHD Android TV, SDK 30,
+                    //     app 1.8.7-GOOGLE. `PriorityBlockingQueue.add`/`offer`/`put`
+                    //     (the unbounded queue's `add` delegates to `offer`) is a µs-scale
+                    //     bounded enqueue: the heap-insertion sift-up is O(log n) and the
+                    //     array growth (`tryGrow`) is a bounded copy — and when the
+                    //     queue's internal `ReentrantLock` is genuinely contended the
+                    //     parked thread shows a `LockSupport.park`/AQS frame (a blocking
+                    //     primitive), which this filter rejects — so the top frame
+                    //     cannot by itself occupy the main thread for 5 s. The stack has
+                    //     zero `za.kilowatch.ultimatefilemanager` frames (the enqueue is
+                    //     dispatched by the module's own non-platform Runnable, not app
+                    //     business logic), and the main looper is demonstrably processing
+                    //     a freshly dispatched message at sample time
+                    //     (`Handler.handleCallback` directly below the Runnable's
+                    //     `run()`), which a thread parked inside a >5 s block cannot do —
+                    //     so the >5 s block is device-side slowness / CPU starvation on
+                    //     the low-end TV (the report's own `DlnaSsdpListener`, `NanoHttpd
+                    //     Main Listener`, `bc6 www.kilowatch.co.za`, `Packet Reader for
+                    //     192.168.1.180`, `DefaultDispatcher-worker-*` and HTTP-server
+                    //     threads are all RUNNABLE) or a post-stall sample of the backlog
+                    //     the main looper drains after a genuine stall. This is the
+                    //     queue-enqueue counterpart of the already-filtered GMS
+                    //     Measurement reports (filter 27 `Thread.<init>` construction,
+                    //     filter 50 `BinderProxy.transact` round-trip), sampled inside
+                    //     the module's bounded queue add instead; none of the existing
+                    //     filters matched because the top frame is a platform
+                    //     `java.util.concurrent.*` method (so `isFreshRunBodyEntryStall`
+                    //     — which requires a non-platform top frame — does not match and
+                    //     `isPureFrameworkStack` is false, since the module's obfuscated
+                    //     `m7.*` frames are not platform-prefixed), and filter 50
+                    //     requires a `BinderProxy.transact` top frame. The
+                    //     `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `PriorityBlockingQueue.add`/`offer`/`put`, whose
+                    //     `run()` is a non-platform method sitting directly on
+                    //     `Handler.handleCallback`, with no `za.kilowatch.
+                    //     ultimatefilemanager` frames and no framework blocking primitive
+                    //     anywhere on the stack, as a false positive and resets its
+                    //     heartbeat instead of writing a report. Genuine freezes keep the
+                    //     main thread inside blocking work — a lock/`wait`/`park`
+                    //     (surfacing as a `LockSupport.park`/AQS frame below the
+                    //     enqueue, not the `add` entry), a `BinderProxy.transact`, a
+                    //     file/network/database I/O frame, an app frame anywhere on the
+                    //     stack, or the enqueue reached from app business logic without a
+                    //     `Handler.handleCallback`-dispatched `run()` frame — and are
+                    //     still reported.
+                    val isLibraryPriorityBlockingQueueEnqueueStall =
+                        topFrame?.className == "java.util.concurrent.PriorityBlockingQueue" &&
+                        (topFrame?.methodName == "add" ||
+                         topFrame?.methodName == "offer" ||
+                         topFrame?.methodName == "put") &&
+                        // The enqueue is dispatched by a bundled-library / Google Play
+                        // module main-looper Runnable — a non-platform (R8-obfuscated)
+                        // `run()` sitting directly on `Handler.handleCallback`, the fresh
+                        // message the main looper is processing at sample time.
+                        mainStackTrace.withIndex().any { (i, frame) ->
+                            frame.methodName == "run" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            mainStackTrace.getOrNull(i + 1)?.let { next ->
+                                next.className == "android.os.Handler" && next.methodName == "handleCallback"
+                            } == true
+                        } &&
+                        // No app-package frames — the enqueue is bundled-library / Google
+                        // Play module work, not app business logic.
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a genuine
+                        // freeze parks the main thread in one of these instead of at the
+                        // entry of a bounded queue enqueue (a genuinely contended
+                        // `PriorityBlockingQueue` lock surfaces as a `LockSupport`/AQS
+                        // park frame, not the `add` entry).
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
