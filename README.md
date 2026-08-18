@@ -73,6 +73,24 @@ To comply with open-source software guidelines and maximize privacy, the **FOSS 
 
 ---
 
+## 📦 App Size & Storage Footprint (~180 MB)
+
+When installed, Ultimate File Manager Pro uses around **180 MB** of device storage. Instead of a barebones file explorer that relies on 3rd-party apps or remote cloud servers, UFM is a **complete, 100% offline, all-in-one standalone suite**:
+
+| Component | Approx. Size | What It Does |
+| :--- | :---: | :--- |
+| 🎬 **Multimedia & Video Engine** | **~45 MB** | Built-in player (MKV, MP4, AVI) & instant video thumbnail generator |
+| ⚡ **Android Speed Optimization** | **~45 MB** | Device-level pre-compilation for instant launch and smooth scrolling |
+| ☁️ **Cloud & Storage Engine** | **~35 MB** | Native backends for MEGA, Filen, Drime, Koofr, WebDAV, SMB & NFS |
+| 🖥️ **PC Web Server & Network Suite** | **~25 MB** | Built-in Wi-Fi server for wireless PC file transfers & FTP/SFTP |
+| 📄 **Document, PDF & Image Viewers** | **~15 MB** | In-app PDF reader, Office file previews, AVIF & JPEG XL support |
+| 🗜️ **Archive Studio & Resources** | **~15 MB** | Built-in ZIP, 7Z, RAR, ZSTD tools + 14 complete language translations |
+| **TOTAL INSTALLED FOOTPRINT** | **~180 MB** | **Saves 300 MB+ compared to installing 5+ separate apps** |
+
+> 📖 *For a detailed non-technical breakdown, see [`size.md`](size.md).*
+
+---
+
 ## 🖥️ Windows Companion App
 
 UFM includes a native Windows desktop companion built with Rust and Tauri for ultra-low resource usage and instant performance.
