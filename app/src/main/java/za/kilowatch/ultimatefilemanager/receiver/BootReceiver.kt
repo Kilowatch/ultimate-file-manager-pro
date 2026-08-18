@@ -14,7 +14,13 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val action = intent.action
-        if (Intent.ACTION_BOOT_COMPLETED == action || Intent.ACTION_MY_PACKAGE_REPLACED == action) {
+        val isBootAction = Intent.ACTION_BOOT_COMPLETED == action ||
+                Intent.ACTION_LOCKED_BOOT_COMPLETED == action ||
+                Intent.ACTION_MY_PACKAGE_REPLACED == action ||
+                "android.intent.action.QUICKBOOT_POWERON" == action ||
+                "com.htc.intent.action.QUICKBOOT_POWERON" == action
+
+        if (isBootAction) {
             Log.d("BootReceiver", "Boot/update intent received ($action), re-registering instant sync watchers")
             try {
                 InstantSyncWatcher.rewatchAll(context.applicationContext)
