@@ -250,25 +250,26 @@ class SlideShowActivity : AppCompatActivity() {
         // Window insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val sb = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            findViewById<View>(R.id.toolbar)?.setPadding(0, sb.top, 0, 0)
+            val hPad = (16 * resources.displayMetrics.density).toInt()
+            findViewById<View>(R.id.toolbar)?.setPadding(sb.left + hPad, sb.top, sb.right + hPad, 0)
             val viewPager = findViewById<ViewPager2>(R.id.viewPager)
             if (viewPager != null) {
                 val topPadding = (8 * resources.displayMetrics.density).toInt()
                 val recyclerView = viewPager.getChildAt(0) as? RecyclerView
                 if (recyclerView != null) {
-                    recyclerView.setPadding(0, topPadding, 0, sb.bottom)
+                    recyclerView.setPadding(sb.left, topPadding, sb.right, sb.bottom)
                     recyclerView.clipToPadding = true
                 } else {
-                    viewPager.setPadding(0, topPadding, 0, sb.bottom)
+                    viewPager.setPadding(sb.left, topPadding, sb.right, sb.bottom)
                 }
             }
             val controlsLayout = findViewById<View>(R.id.controlsLayout)
             if (controlsLayout != null) {
                 val basePaddingBottom = (24 * resources.displayMetrics.density).toInt()
                 controlsLayout.setPadding(
-                    controlsLayout.paddingLeft,
+                    sb.left + (24 * resources.displayMetrics.density).toInt(),
                     controlsLayout.paddingTop,
-                    controlsLayout.paddingRight,
+                    sb.right + (24 * resources.displayMetrics.density).toInt(),
                     basePaddingBottom + sb.bottom
                 )
             }
@@ -276,9 +277,9 @@ class SlideShowActivity : AppCompatActivity() {
             if (layoutPhotoActions != null) {
                 val basePaddingBottom = (12 * resources.displayMetrics.density).toInt()
                 layoutPhotoActions.setPadding(
-                    layoutPhotoActions.paddingLeft,
+                    sb.left + (16 * resources.displayMetrics.density).toInt(),
                     layoutPhotoActions.paddingTop,
-                    layoutPhotoActions.paddingRight,
+                    sb.right + (16 * resources.displayMetrics.density).toInt(),
                     basePaddingBottom + sb.bottom
                 )
             }
@@ -1376,6 +1377,13 @@ class SlideShowActivity : AppCompatActivity() {
         handler.removeCallbacks(slideshowRunnable)
     }
 
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        viewPager.post {
+            getActiveZoomListener()?.fitImageToView()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(slideshowRunnable)
@@ -1464,6 +1472,7 @@ class ZoomTouchListener(
         translateX = (viewWidth - w * scaleFactor) / 2f
         translateY = (viewHeight - h * scaleFactor) / 2f
 
+        viewPager.isUserInputEnabled = true
         updateMatrix()
     }
 
@@ -1631,6 +1640,18 @@ class SlideShowAdapter(
         val drawingOverlay: DrawingOverlayView = itemView.findViewById(R.id.drawingOverlay)
         val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         var zoomTouchListener: ZoomTouchListener? = null
+
+        init {
+            imageView.addOnLayoutChangeListener { _, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+                val newW = right - left
+                val newH = bottom - top
+                val oldW = oldRight - oldLeft
+                val oldH = oldBottom - oldTop
+                if ((newW != oldW || newH != oldH) && newW > 0 && newH > 0) {
+                    zoomTouchListener?.fitImageToView()
+                }
+            }
+        }
 
         fun bind(path: String) {
             zoomTouchListener = ZoomTouchListener(viewPager, imageView)
