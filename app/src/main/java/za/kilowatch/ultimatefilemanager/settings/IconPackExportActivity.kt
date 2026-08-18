@@ -135,20 +135,26 @@ class IconPackExportActivity : AppCompatActivity() {
             listOf("nav_back", "nav_forward", "nav_up")
         ))
 
-        // Settings (28)
+        // Settings
+        val settingsKeys = mutableListOf(
+            "settings_search_bar", "settings_default_start_screen", "settings_language", "settings_appearance",
+            "settings_icons", "settings_backup_restore", "settings_main_menu_layout",
+            "settings_twin_window_layout", "settings_twin_window_startup",
+            "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat", "settings_breadcrumbs", "settings_default_apps",
+            "settings_font_size", "settings_apk_extract", "settings_long_press",
+            "settings_controls_timeout",
+            "settings_toolbar_icons", "settings_favorites", "settings_custom_drive_names",
+            "settings_file_server_tiles", "settings_hidden_files", "settings_recycle_bin",
+            "settings_media_thumbnails", "settings_video_thumbnail_time",
+            "settings_network_thumbnails", "settings_cache_copy", "settings_quick_transfer",
+            "settings_network_open_cache", "settings_storage_indexer", "settings_analytics"
+        )
+        if (isTv) {
+            settingsKeys.add("settings_tv_background_server")
+        }
         categories.add(CategorySelection(
             "settings", getString(R.string.category_settings),
-            listOf("settings_search_bar", "settings_default_start_screen", "settings_language", "settings_appearance",
-                "settings_icons", "settings_backup_restore", "settings_main_menu_layout",
-                "settings_twin_window_layout", "settings_twin_window_startup",
-                "settings_side_by_side_video", "settings_side_by_side_video_show_controls_on_repeat", "settings_breadcrumbs", "settings_default_apps",
-                "settings_font_size", "settings_apk_extract", "settings_long_press",
-                "settings_controls_timeout",
-                "settings_toolbar_icons", "settings_favorites", "settings_custom_drive_names",
-                "settings_file_server_tiles", "settings_hidden_files", "settings_recycle_bin",
-                "settings_media_thumbnails", "settings_video_thumbnail_time",
-                "settings_network_thumbnails", "settings_cache_copy", "settings_quick_transfer",
-                "settings_network_open_cache", "settings_storage_indexer", "settings_analytics")
+            settingsKeys
         ))
 
         // Main Menu Tiles (dynamic from TileIconManager)

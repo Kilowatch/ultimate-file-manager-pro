@@ -1314,6 +1314,38 @@ Cari pengaturan…
     <string name="settings_search_no_results">
 Tidak ada pengaturan yang cocok dengan pencarian Anda
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Umum &amp; Antarmuka
+</string>
+    <string name="settings_section_appearance">
+Tampilan &amp; Kustomisasi
+</string>
+    <string name="settings_section_file_management">
+Penjelajahan &amp; Pengelolaan File
+</string>
+    <string name="settings_section_controls">
+Kontrol &amp; Gestur
+</string>
+    <string name="settings_section_twin_window">
+Panel Ganda (Jendela Kembar)
+</string>
+    <string name="settings_section_media_player">
+Pemutar Media &amp; Pemutaran
+</string>
+    <string name="settings_section_thumbnails">
+Thumbnail &amp; Caching
+</string>
+    <string name="settings_section_network_performance">
+Jaringan &amp; Performa
+</string>
+    <string name="settings_section_backup">
+Cadangan &amp; Pemulihan
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Privasi &amp; Diagnostik
+</string>
     <string name="settings_search_bar_title">
 Bilah Pencarian Pengaturan
 </string>
@@ -3526,6 +3558,33 @@ Menunggu pemasangan…
 </string>
     <string name="tv_pairing_linked">
 Ditautkan dengan %s
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Server
+</string>
+    <string name="tv_server_channel_desc">
+Menjaga berbagi file TV tetap aktif untuk perangkat seluler yang dipasangkan
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Server Aktif
+</string>
+    <string name="tv_server_notification_desc">
+Siap menerima koneksi dari perangkat yang dipasangkan
+</string>
+    <string name="settings_tv_background_server_title">
+Berbagi TV di Latar Belakang
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Aktif di latar belakang saat ada perangkat yang dipasangkan
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Hanya aktif saat UFM terbuka di TV
+</string>
+    <string name="settings_tv_background_server_note">
+Memungkinkan perangkat seluler yang dipasangkan untuk menjelajahi penyimpanan TV bahkan saat UFM ditutup di TV. Otomatis dimulai saat ada perangkat yang dipasangkan dan berhenti saat semua perangkat dihapus.
+</string>
+    <string name="backup_pref_tv_server">
+Berbagi TV di Latar Belakang
 </string>
     <string name="type_here_to_search">
 Ketik di sini untuk mencari
@@ -9451,6 +9510,9 @@ Salin/Pindah Cepat
 </string>
     <string name="icon_settings_network_open_cache">
 Cache Buka Jaringan
+</string>
+    <string name="icon_settings_tv_background_server">
+Berbagi TV di Latar Belakang
 </string>
     <string name="icon_settings_storage_indexer">
 Pengindeks Penyimpanan

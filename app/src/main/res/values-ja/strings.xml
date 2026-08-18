@@ -1314,6 +1314,38 @@ USBおよびローカルストレージドライブの名前を変更
     <string name="settings_search_no_results">
 検索に一致する設定はありません
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+一般とインターフェース
+</string>
+    <string name="settings_section_appearance">
+外観とカスタマイズ
+</string>
+    <string name="settings_section_file_management">
+ファイルの閲覧と管理
+</string>
+    <string name="settings_section_controls">
+操作とジェスチャー
+</string>
+    <string name="settings_section_twin_window">
+デュアルペイン（ツインウィンドウ）
+</string>
+    <string name="settings_section_media_player">
+メディアプレーヤーと再生
+</string>
+    <string name="settings_section_thumbnails">
+サムネイルとキャッシュ
+</string>
+    <string name="settings_section_network_performance">
+ネットワークとパフォーマンス
+</string>
+    <string name="settings_section_backup">
+バックアップと復元
+</string>
+    <string name="settings_section_privacy_diagnostics">
+プライバシーと診断
+</string>
     <string name="settings_search_bar_title">
 設定検索バー
 </string>
@@ -3526,6 +3558,33 @@ Androidデバイスに接続
 </string>
     <string name="tv_pairing_linked">
 %s にリンクしました
+</string>
+    <string name="tv_server_channel_name">
+UFM TVサーバー
+</string>
+    <string name="tv_server_channel_desc">
+ペア設定済みモバイルデバイス向けにTVファイル共有を維持します
+</string>
+    <string name="tv_server_notification_title">
+UFM TVサーバー アクティブ
+</string>
+    <string name="tv_server_notification_desc">
+ペア設定済みデバイスからの接続準備ができています
+</string>
+    <string name="settings_tv_background_server_title">
+バックグラウンドTV共有
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+ペア設定済みデバイスがある場合にバックグラウンドでアクティブになります
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+TVでUFMが開いている間のみアクティブです
+</string>
+    <string name="settings_tv_background_server_note">
+TVでUFMが開いていなくても、ペア設定済みのモバイルデバイスがTVストレージを閲覧できます。ペア設定済みデバイスが存在すると自動的に開始し、すべて削除されると停止します。
+</string>
+    <string name="backup_pref_tv_server">
+バックグラウンドTV共有
 </string>
     <string name="type_here_to_search">
 ここに入力して検索
@@ -9451,6 +9510,9 @@ APK/XAPK抽出
 </string>
     <string name="icon_settings_network_open_cache">
 ネットワークオープンキャッシュ
+</string>
+    <string name="icon_settings_tv_background_server">
+バックグラウンドTV共有
 </string>
     <string name="icon_settings_storage_indexer">
 ストレージインデクサー

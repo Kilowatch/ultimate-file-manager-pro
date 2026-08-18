@@ -1314,6 +1314,38 @@ Buscar configuración…
     <string name="settings_search_no_results">
 No se encontró configuración que coincida con tu búsqueda
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+General e interfaz
+</string>
+    <string name="settings_section_appearance">
+Apariencia y personalización
+</string>
+    <string name="settings_section_file_management">
+Exploración y gestión de archivos
+</string>
+    <string name="settings_section_controls">
+Controles y gestos
+</string>
+    <string name="settings_section_twin_window">
+Doble panel (ventana dual)
+</string>
+    <string name="settings_section_media_player">
+Reproductor multimedia y reproducción
+</string>
+    <string name="settings_section_thumbnails">
+Miniaturas y caché
+</string>
+    <string name="settings_section_network_performance">
+Red y rendimiento
+</string>
+    <string name="settings_section_backup">
+Copia de seguridad y restauración
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Privacidad y diagnóstico
+</string>
     <string name="settings_search_bar_title">
 Barra de búsqueda de configuración
 </string>
@@ -3526,6 +3558,33 @@ Esperando emparejamiento…
 </string>
     <string name="tv_pairing_linked">
 Vinculado con %s
+</string>
+    <string name="tv_server_channel_name">
+Servidor de TV de UFM
+</string>
+    <string name="tv_server_channel_desc">
+Mantiene activo el intercambio de archivos de TV para dispositivos móviles emparejados
+</string>
+    <string name="tv_server_notification_title">
+Servidor de TV de UFM activo
+</string>
+    <string name="tv_server_notification_desc">
+Listo para la conexión desde dispositivos emparejados
+</string>
+    <string name="settings_tv_background_server_title">
+Uso compartido de TV en segundo plano
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Activo en segundo plano cuando existen dispositivos emparejados
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Solo activo mientras UFM está abierto en la TV
+</string>
+    <string name="settings_tv_background_server_note">
+Permite que los dispositivos móviles emparejados naveguen por el almacenamiento de la TV incluso cuando UFM está cerrado en la TV. Se inicia automáticamente cuando existen dispositivos emparejados y se detiene cuando todos se eliminan.
+</string>
+    <string name="backup_pref_tv_server">
+Uso compartido de TV en segundo plano
 </string>
     <string name="type_here_to_search">
 Escribe aquí para buscar
@@ -9463,6 +9522,9 @@ Copia/Mover rápido
 </string>
     <string name="icon_settings_network_open_cache">
 Caché de apertura de red
+</string>
+    <string name="icon_settings_tv_background_server">
+Compartir TV en segundo plano
 </string>
     <string name="icon_settings_storage_indexer">
 Indexador de almacenamiento

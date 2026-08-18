@@ -461,6 +461,18 @@
     <string name="settings_subtitle">App preferences</string>
     <string name="search_settings_hint">Search settings…</string>
     <string name="settings_search_no_results">No settings found matching your search</string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">General &amp; Interface</string>
+    <string name="settings_section_appearance">Appearance &amp; Customization</string>
+    <string name="settings_section_file_management">File Browsing &amp; Management</string>
+    <string name="settings_section_controls">Controls &amp; Gestures</string>
+    <string name="settings_section_twin_window">Dual-Pane (Twin Window)</string>
+    <string name="settings_section_media_player">Media Player &amp; Playback</string>
+    <string name="settings_section_thumbnails">Thumbnails &amp; Caching</string>
+    <string name="settings_section_network_performance">Network &amp; Performance</string>
+    <string name="settings_section_backup">Backup &amp; Restore</string>
+    <string name="settings_section_privacy_diagnostics">Privacy &amp; Diagnostics</string>
     <string name="settings_search_bar_title">Settings Search Bar</string>
     <string name="settings_search_bar_subtitle_on">Enabled — search field pinned at the top</string>
     <string name="settings_search_bar_subtitle_off">Disabled — search field hidden</string>
@@ -1264,6 +1276,15 @@
     <string name="tv_pairing_step5">5. Press on \"Link\" once the code has been entered</string>
     <string name="tv_pairing_waiting">Waiting for pairing…</string>
     <string name="tv_pairing_linked">Linked with %s</string>
+    <string name="tv_server_channel_name">UFM TV Server</string>
+    <string name="tv_server_channel_desc">Keeps TV file sharing active for paired mobile devices</string>
+    <string name="tv_server_notification_title">UFM TV Server Active</string>
+    <string name="tv_server_notification_desc">Ready for connection from paired devices</string>
+    <string name="settings_tv_background_server_title">Background TV Sharing</string>
+    <string name="settings_tv_background_server_subtitle_on">Active in background when paired devices exist</string>
+    <string name="settings_tv_background_server_subtitle_off">Only active while UFM is open on TV</string>
+    <string name="settings_tv_background_server_note">Allows paired mobile devices to browse TV storage even when UFM is closed on TV. Automatically starts when paired devices exist and stops when all are removed.</string>
+    <string name="backup_pref_tv_server">Background TV Sharing</string>
     <string name="type_here_to_search">Type here to search</string>
     <string name="a">A</string>
     <string name="hello_world">Hello World!</string>
@@ -3307,6 +3328,7 @@
     <string name="icon_settings_cache_copy">Cache Copy</string>
     <string name="icon_settings_quick_transfer">Quick Copy/Move</string>
     <string name="icon_settings_network_open_cache">Network Open Cache</string>
+    <string name="icon_settings_tv_background_server">Background TV Sharing</string>
     <string name="icon_settings_storage_indexer">Storage Indexer</string>
     <string name="icon_settings_analytics">Analytics</string>
 

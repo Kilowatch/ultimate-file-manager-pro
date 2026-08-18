@@ -348,41 +348,45 @@ class IconCustomizationActivity : AppCompatActivity() {
             )
         ))
 
-        // Settings (all 28 settings icons)
+        // Settings
+        val settingsIcons = mutableListOf(
+            IconItemData("settings_search_bar", getString(R.string.icon_settings_search_bar), R.drawable.ic_search, emptyList()),
+            IconItemData("settings_default_start_screen", getString(R.string.icon_settings_default_start_screen), R.drawable.ic_storage_internal, emptyList()),
+            IconItemData("settings_language", getString(R.string.icon_settings_language), R.drawable.ic_language, emptyList()),
+            IconItemData("settings_appearance", getString(R.string.icon_settings_appearance), R.drawable.ic_theme, emptyList()),
+            IconItemData("settings_icons", getString(R.string.icon_settings_icons), R.drawable.ic_palette, emptyList()),
+            IconItemData("settings_backup_restore", getString(R.string.icon_settings_backup_restore), R.drawable.ic_export, emptyList()),
+            IconItemData("settings_main_menu_layout", getString(R.string.icon_settings_main_menu_layout), R.drawable.ic_view_list, emptyList()),
+            IconItemData("settings_twin_window_layout", getString(R.string.icon_settings_twin_window_layout), R.drawable.ic_view_list, emptyList()),
+            IconItemData("settings_twin_window_startup", getString(R.string.icon_settings_twin_window_startup), R.drawable.ic_view_list, emptyList()),
+            IconItemData("settings_side_by_side_video", getString(R.string.icon_settings_side_by_side_video), R.drawable.ic_play, emptyList()),
+            IconItemData("settings_side_by_side_video_show_controls_on_repeat", getString(R.string.icon_settings_side_by_side_video_show_controls_on_repeat), R.drawable.ic_repeat, emptyList()),
+            IconItemData("settings_breadcrumbs", getString(R.string.icon_settings_breadcrumbs), R.drawable.ic_home, emptyList()),
+            IconItemData("settings_default_apps", getString(R.string.icon_settings_default_apps), R.drawable.ic_apps, emptyList()),
+            IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),
+            IconItemData("settings_apk_extract", getString(R.string.icon_settings_apk_extract), R.drawable.ic_file_apk, emptyList()),
+            IconItemData("settings_long_press", getString(R.string.icon_settings_long_press), R.drawable.ic_long_press, emptyList()),
+            IconItemData("settings_controls_timeout", getString(R.string.icon_settings_controls_timeout), R.drawable.ic_controls_timeout, emptyList()),
+            IconItemData("settings_toolbar_icons", getString(R.string.icon_settings_toolbar_icons), R.drawable.ic_star, emptyList()),
+            IconItemData("settings_favorites", getString(R.string.icon_settings_favorites), R.drawable.ic_star, emptyList()),
+            IconItemData("settings_custom_drive_names", getString(R.string.icon_settings_custom_drive_names), R.drawable.ic_edit, emptyList()),
+            IconItemData("settings_file_server_tiles", getString(R.string.icon_settings_file_server_tiles), R.drawable.ic_ufm_ftp, emptyList()),
+            IconItemData("settings_hidden_files", getString(R.string.icon_settings_hidden_files), R.drawable.ic_eye, emptyList()),
+            IconItemData("settings_recycle_bin", getString(R.string.icon_settings_recycle_bin), R.drawable.ic_delete, emptyList()),
+            IconItemData("settings_media_thumbnails", getString(R.string.icon_settings_media_thumbnails), R.drawable.ic_photo_video, emptyList()),
+            IconItemData("settings_video_thumbnail_time", getString(R.string.icon_settings_video_thumbnail_time), R.drawable.ic_photo_video, emptyList()),
+            IconItemData("settings_network_thumbnails", getString(R.string.icon_settings_network_thumbnails), R.drawable.ic_cloud, emptyList()),
+            IconItemData("settings_cache_copy", getString(R.string.icon_settings_cache_copy), R.drawable.ic_copy, emptyList()),
+            IconItemData("settings_quick_transfer", getString(R.string.icon_settings_quick_transfer), R.drawable.ic_copy, emptyList()),
+            IconItemData("settings_network_open_cache", getString(R.string.icon_settings_network_open_cache), R.drawable.ic_cloud, emptyList()),
+            IconItemData("settings_storage_indexer", getString(R.string.icon_settings_storage_indexer), R.drawable.ic_storage_internal, emptyList()),
+            IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList())
+        )
+        if (isTv) {
+            settingsIcons.add(IconItemData("settings_tv_background_server", getString(R.string.icon_settings_tv_background_server), R.drawable.ic_tv, emptyList()))
+        }
         categories.add(IconCategoryData(
-            "settings", getString(R.string.category_settings), listOf(
-                IconItemData("settings_search_bar", getString(R.string.icon_settings_search_bar), R.drawable.ic_search, emptyList()),
-                IconItemData("settings_default_start_screen", getString(R.string.icon_settings_default_start_screen), R.drawable.ic_storage_internal, emptyList()),
-                IconItemData("settings_language", getString(R.string.icon_settings_language), R.drawable.ic_language, emptyList()),
-                IconItemData("settings_appearance", getString(R.string.icon_settings_appearance), R.drawable.ic_theme, emptyList()),
-                IconItemData("settings_icons", getString(R.string.icon_settings_icons), R.drawable.ic_palette, emptyList()),
-                IconItemData("settings_backup_restore", getString(R.string.icon_settings_backup_restore), R.drawable.ic_export, emptyList()),
-                IconItemData("settings_main_menu_layout", getString(R.string.icon_settings_main_menu_layout), R.drawable.ic_view_list, emptyList()),
-                IconItemData("settings_twin_window_layout", getString(R.string.icon_settings_twin_window_layout), R.drawable.ic_view_list, emptyList()),
-                IconItemData("settings_twin_window_startup", getString(R.string.icon_settings_twin_window_startup), R.drawable.ic_view_list, emptyList()),
-                IconItemData("settings_side_by_side_video", getString(R.string.icon_settings_side_by_side_video), R.drawable.ic_play, emptyList()),
-                IconItemData("settings_side_by_side_video_show_controls_on_repeat", getString(R.string.icon_settings_side_by_side_video_show_controls_on_repeat), R.drawable.ic_repeat, emptyList()),
-                IconItemData("settings_breadcrumbs", getString(R.string.icon_settings_breadcrumbs), R.drawable.ic_home, emptyList()),
-                IconItemData("settings_default_apps", getString(R.string.icon_settings_default_apps), R.drawable.ic_apps, emptyList()),
-                IconItemData("settings_font_size", getString(R.string.icon_settings_font_size), R.drawable.ic_font_size, emptyList()),
-                IconItemData("settings_apk_extract", getString(R.string.icon_settings_apk_extract), R.drawable.ic_file_apk, emptyList()),
-                IconItemData("settings_long_press", getString(R.string.icon_settings_long_press), R.drawable.ic_long_press, emptyList()),
-                IconItemData("settings_controls_timeout", getString(R.string.icon_settings_controls_timeout), R.drawable.ic_controls_timeout, emptyList()),
-                IconItemData("settings_toolbar_icons", getString(R.string.icon_settings_toolbar_icons), R.drawable.ic_star, emptyList()),
-                IconItemData("settings_favorites", getString(R.string.icon_settings_favorites), R.drawable.ic_star, emptyList()),
-                IconItemData("settings_custom_drive_names", getString(R.string.icon_settings_custom_drive_names), R.drawable.ic_edit, emptyList()),
-                IconItemData("settings_file_server_tiles", getString(R.string.icon_settings_file_server_tiles), R.drawable.ic_ufm_ftp, emptyList()),
-                IconItemData("settings_hidden_files", getString(R.string.icon_settings_hidden_files), R.drawable.ic_eye, emptyList()),
-                IconItemData("settings_recycle_bin", getString(R.string.icon_settings_recycle_bin), R.drawable.ic_delete, emptyList()),
-                IconItemData("settings_media_thumbnails", getString(R.string.icon_settings_media_thumbnails), R.drawable.ic_photo_video, emptyList()),
-                IconItemData("settings_video_thumbnail_time", getString(R.string.icon_settings_video_thumbnail_time), R.drawable.ic_photo_video, emptyList()),
-                IconItemData("settings_network_thumbnails", getString(R.string.icon_settings_network_thumbnails), R.drawable.ic_cloud, emptyList()),
-                IconItemData("settings_cache_copy", getString(R.string.icon_settings_cache_copy), R.drawable.ic_copy, emptyList()),
-                IconItemData("settings_quick_transfer", getString(R.string.icon_settings_quick_transfer), R.drawable.ic_copy, emptyList()),
-                IconItemData("settings_network_open_cache", getString(R.string.icon_settings_network_open_cache), R.drawable.ic_cloud, emptyList()),
-                IconItemData("settings_storage_indexer", getString(R.string.icon_settings_storage_indexer), R.drawable.ic_storage_internal, emptyList()),
-                IconItemData("settings_analytics", getString(R.string.icon_settings_analytics), R.drawable.ic_tune, emptyList())
-            )
+            "settings", getString(R.string.category_settings), settingsIcons
         ))
 
         // Media Player (10)

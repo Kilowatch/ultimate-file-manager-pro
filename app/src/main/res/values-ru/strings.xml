@@ -1314,6 +1314,38 @@ Material You
     <string name="settings_search_no_results">
 Настройки по вашему запросу не найдены
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Общие и интерфейс
+</string>
+    <string name="settings_section_appearance">
+Внешний вид и настройка
+</string>
+    <string name="settings_section_file_management">
+Просмотр файлов и управление
+</string>
+    <string name="settings_section_controls">
+Управление и жесты
+</string>
+    <string name="settings_section_twin_window">
+Двухпанельный режим (двойное окно)
+</string>
+    <string name="settings_section_media_player">
+Медиаплеер и воспроизведение
+</string>
+    <string name="settings_section_thumbnails">
+Миниатюры и кэширование
+</string>
+    <string name="settings_section_network_performance">
+Сеть и производительность
+</string>
+    <string name="settings_section_backup">
+Резервное копирование и восстановление
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Конфиденциальность и диагностика
+</string>
     <string name="settings_search_bar_title">
 Строка поиска настроек
 </string>
@@ -3526,6 +3558,33 @@ NFSv4
 </string>
     <string name="tv_pairing_linked">
 Связано с %s
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Server
+</string>
+    <string name="tv_server_channel_desc">
+Поддерживает активный обмен файлами на ТВ для сопряженных мобильных устройств
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Server активен
+</string>
+    <string name="tv_server_notification_desc">
+Готов к подключению сопряженных устройств
+</string>
+    <string name="settings_tv_background_server_title">
+Фоновый обмен файлами на ТВ
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Активен в фоне, когда есть сопряженные устройства
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Активен только когда UFM открыт на ТВ
+</string>
+    <string name="settings_tv_background_server_note">
+Позволяет сопряженным мобильным устройствам просматривать хранилище ТВ, даже когда UFM закрыт на ТВ. Автоматически запускается, когда есть сопряженные устройства, и останавливается, когда все они удалены.
+</string>
+    <string name="backup_pref_tv_server">
+Фоновый обмен файлами на ТВ
 </string>
     <string name="type_here_to_search">
 Введите здесь для поиска
@@ -9451,6 +9510,9 @@ XML / Разметка
 </string>
     <string name="icon_settings_network_open_cache">
 Кэш открытия сети
+</string>
+    <string name="icon_settings_tv_background_server">
+Фоновый обмен с ТВ
 </string>
     <string name="icon_settings_storage_indexer">
 Индексатор хранилища

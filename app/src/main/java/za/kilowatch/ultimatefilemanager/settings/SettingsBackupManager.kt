@@ -293,6 +293,9 @@ object SettingsBackupManager {
         add("ufm_file_tags",             context.getString(R.string.backup_pref_file_tags))
         add("analytics_prefs",           context.getString(R.string.backup_pref_analytics))
         add("icon_tap_edit_mode_prefs",  context.getString(R.string.backup_pref_icon_tap_edit_mode))
+        if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
+            add("ufm_tv_server_prefs",   context.getString(R.string.backup_pref_tv_server))
+        }
 
         val shares = NetworkShareRepository.getInstance(context).getAll()
         for (share in shares) {
@@ -587,7 +590,8 @@ object SettingsBackupManager {
                 "loyalty_prefs"             to R.string.backup_pref_loyalty,
                 "ufm_file_tags"             to R.string.backup_pref_file_tags,
                 "analytics_prefs"           to R.string.backup_pref_analytics,
-                "icon_tap_edit_mode_prefs"  to R.string.backup_pref_icon_tap_edit_mode
+                "icon_tap_edit_mode_prefs"  to R.string.backup_pref_icon_tap_edit_mode,
+                "ufm_tv_server_prefs"       to R.string.backup_pref_tv_server
             )
             while (keys.hasNext()) {
                 val key = keys.next()
@@ -899,7 +903,7 @@ object SettingsBackupManager {
                 val id = keys.next()
                 val value = json.get(id)
                 if (value is JSONObject) {
-                    val path = value.optString("path", null)
+                    val path = value.optString("path", "")
                     if (!path.isNullOrEmpty()) {
                         // Extract the relative suffix after the dir name
                         // e.g. "/data/user/0/.../files/tile_icons/foo.png" → "tile_icons/foo.png"

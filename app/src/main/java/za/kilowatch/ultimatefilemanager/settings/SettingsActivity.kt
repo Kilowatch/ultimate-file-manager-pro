@@ -95,7 +95,10 @@ class SettingsActivity : AppCompatActivity() {
     private var switchLeftHandedFab: SwitchMaterial? = null
     private var txtLeftHandedFabSubtitle: TextView? = null
 
-    private lateinit var cardNetworkThumbnails: MaterialCardView
+    private var switchTvBackgroundServer: SwitchMaterial? = null
+    private var txtTvBackgroundServerSubtitle: TextView? = null
+
+    private lateinit var cardNetworkThumbnails: View
     private lateinit var txtVideoThumbnailTimeSubtitle: TextView
     private lateinit var txtApkExtractSubtitle: TextView
 
@@ -170,13 +173,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Font Size row
-        val cardFontSize = findViewById<MaterialCardView>(R.id.cardFontSize)
+        val cardFontSize = findViewById<View>(R.id.cardFontSize)
         cardFontSize.setOnClickListener {
             startActivity(Intent(this, FontSizeActivity::class.java))
         }
 
         // File Tags row (Mobile Only)
-        val cardFileTags = findViewById<MaterialCardView?>(R.id.cardFileTags)
+        val cardFileTags = findViewById<View>(R.id.cardFileTags)
         if (isTv) {
             cardFileTags?.visibility = View.GONE
         } else {
@@ -186,7 +189,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Analytics toggle
-        val cardAnalytics = findViewById<MaterialCardView>(R.id.cardAnalytics)
+        val cardAnalytics = findViewById<View>(R.id.cardAnalytics)
         switchAnalytics = findViewById(R.id.switchAnalytics)
         txtAnalyticsSubtitle = findViewById(R.id.txtAnalyticsSubtitle)
 
@@ -199,7 +202,7 @@ class SettingsActivity : AppCompatActivity() {
         switchAnalytics.setOnCheckedChangeListener(null) // avoid double-fire; card handles it
 
         // Crash & ANR Reporting toggle
-        val cardCrashReport = findViewById<MaterialCardView>(R.id.cardCrashReport)
+        val cardCrashReport = findViewById<View>(R.id.cardCrashReport)
         switchCrashReport = findViewById(R.id.switchCrashReport)
         txtCrashReportSubtitle = findViewById(R.id.txtCrashReportSubtitle)
 
@@ -211,7 +214,7 @@ class SettingsActivity : AppCompatActivity() {
         switchCrashReport.setOnCheckedChangeListener(null)
 
         // Hidden Files toggle
-        val cardHiddenFiles = findViewById<MaterialCardView>(R.id.cardHiddenFiles)
+        val cardHiddenFiles = findViewById<View>(R.id.cardHiddenFiles)
         switchHiddenFiles = findViewById(R.id.switchHiddenFiles)
         txtHiddenFilesSubtitle = findViewById(R.id.txtHiddenFilesSubtitle)
 
@@ -223,7 +226,7 @@ class SettingsActivity : AppCompatActivity() {
         switchHiddenFiles.setOnCheckedChangeListener(null)
 
         // Recycle Bin toggle
-        val cardRecycleBin = findViewById<MaterialCardView>(R.id.cardRecycleBin)
+        val cardRecycleBin = findViewById<View>(R.id.cardRecycleBin)
         switchRecycleBin = findViewById(R.id.switchRecycleBin)
         txtRecycleBinSubtitle = findViewById(R.id.txtRecycleBinSubtitle)
 
@@ -235,7 +238,7 @@ class SettingsActivity : AppCompatActivity() {
         switchRecycleBin.setOnCheckedChangeListener(null)
 
         // Media Thumbnails toggle
-        val cardMediaThumbnails = findViewById<MaterialCardView>(R.id.cardMediaThumbnails)
+        val cardMediaThumbnails = findViewById<View>(R.id.cardMediaThumbnails)
         switchMediaThumbnails = findViewById(R.id.switchMediaThumbnails)
         txtMediaThumbnailsSubtitle = findViewById(R.id.txtMediaThumbnailsSubtitle)
 
@@ -247,7 +250,7 @@ class SettingsActivity : AppCompatActivity() {
         switchMediaThumbnails.setOnCheckedChangeListener(null)
 
         // Cache Copying toggle
-        val cardCacheCopy = findViewById<MaterialCardView>(R.id.cardCacheCopy)
+        val cardCacheCopy = findViewById<View>(R.id.cardCacheCopy)
         switchCacheCopy = findViewById(R.id.switchCacheCopy)
         txtCacheCopySubtitle = findViewById(R.id.txtCacheCopySubtitle)
 
@@ -259,7 +262,7 @@ class SettingsActivity : AppCompatActivity() {
         switchCacheCopy.setOnCheckedChangeListener(null)
 
         // Quick Transfer toggle
-        val cardQuickTransfer = findViewById<MaterialCardView>(R.id.cardQuickTransfer)
+        val cardQuickTransfer = findViewById<View>(R.id.cardQuickTransfer)
         switchQuickTransfer = findViewById(R.id.switchQuickTransfer)
         txtQuickTransferSubtitle = findViewById(R.id.txtQuickTransferSubtitle)
 
@@ -271,7 +274,7 @@ class SettingsActivity : AppCompatActivity() {
         switchQuickTransfer.setOnCheckedChangeListener(null)
 
         // Network Open Cache toggle
-        val cardNetworkOpenCache = findViewById<MaterialCardView>(R.id.cardNetworkOpenCache)
+        val cardNetworkOpenCache = findViewById<View>(R.id.cardNetworkOpenCache)
         switchNetworkOpenCache = findViewById(R.id.switchNetworkOpenCache)
         txtNetworkOpenCacheSubtitle = findViewById(R.id.txtNetworkOpenCacheSubtitle)
 
@@ -282,8 +285,26 @@ class SettingsActivity : AppCompatActivity() {
         cardNetworkOpenCache.setOnClickListener { toggleNetworkOpenCache() }
         switchNetworkOpenCache.setOnCheckedChangeListener(null)
 
+        // Background TV Server toggle (TV only)
+        val cardTvBackgroundServer = findViewById<View>(R.id.cardTvBackgroundServer)
+        if (cardTvBackgroundServer != null) {
+            if (isTv) {
+                switchTvBackgroundServer = findViewById(R.id.switchTvBackgroundServer)
+                txtTvBackgroundServerSubtitle = findViewById(R.id.txtTvBackgroundServerSubtitle)
+
+                val tvBackgroundServerEnabled = za.kilowatch.ultimatefilemanager.settings.TvBackgroundServerPreferenceManager.isEnabled(this)
+                switchTvBackgroundServer?.isChecked = tvBackgroundServerEnabled
+                updateTvBackgroundServerSubtitle(tvBackgroundServerEnabled)
+
+                cardTvBackgroundServer.setOnClickListener { toggleTvBackgroundServer() }
+                switchTvBackgroundServer?.setOnCheckedChangeListener(null)
+            } else {
+                cardTvBackgroundServer.visibility = View.GONE
+            }
+        }
+
         // Twin Window Layout toggle
-        val cardTwinWindowLayout = findViewById<MaterialCardView?>(R.id.cardTwinWindowLayout)
+        val cardTwinWindowLayout = findViewById<View>(R.id.cardTwinWindowLayout)
         if (cardTwinWindowLayout != null) {
             switchTwinWindowLayout = findViewById(R.id.switchTwinWindowLayout)
             txtTwinWindowLayoutSubtitle = findViewById(R.id.txtTwinWindowLayoutSubtitle)
@@ -297,7 +318,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Twin Window Default Startup toggle
-        val cardTwinWindowStartup = findViewById<MaterialCardView?>(R.id.cardTwinWindowStartup)
+        val cardTwinWindowStartup = findViewById<View>(R.id.cardTwinWindowStartup)
         if (cardTwinWindowStartup != null) {
             switchTwinWindowStartup = findViewById(R.id.switchTwinWindowStartup)
             txtTwinWindowStartupSubtitle = findViewById(R.id.txtTwinWindowStartupSubtitle)
@@ -311,7 +332,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Side-by-Side Video toggle
-        val cardSideBySideVideo = findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)
+        val cardSideBySideVideo = findViewById<View>(R.id.cardSideBySideVideo)
         if (cardSideBySideVideo != null) {
             switchSideBySideVideo = findViewById(R.id.switchSideBySideVideo)
             txtSideBySideVideoSubtitle = findViewById(R.id.txtSideBySideVideoSubtitle)
@@ -325,7 +346,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Side-by-Side Video Show Controls On Repeat toggle
-        val cardSideBySideVideoShowControlsOnRepeat = findViewById<MaterialCardView?>(R.id.cardSideBySideVideoShowControlsOnRepeat)
+        val cardSideBySideVideoShowControlsOnRepeat = findViewById<View>(R.id.cardSideBySideVideoShowControlsOnRepeat)
         if (cardSideBySideVideoShowControlsOnRepeat != null) {
             switchSideBySideVideoShowControlsOnRepeat = findViewById(R.id.switchSideBySideVideoShowControlsOnRepeat)
             txtSideBySideVideoShowControlsOnRepeatSubtitle = findViewById(R.id.txtSideBySideVideoShowControlsOnRepeatSubtitle)
@@ -339,7 +360,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Auto-play Next File toggle
-        val cardAutoplayNext = findViewById<MaterialCardView?>(R.id.cardAutoplayNext)
+        val cardAutoplayNext = findViewById<View>(R.id.cardAutoplayNext)
         if (cardAutoplayNext != null) {
             switchAutoplayNext = findViewById(R.id.switchAutoplayNext)
             txtAutoplayNextSubtitle = findViewById(R.id.txtAutoplayNextSubtitle)
@@ -353,7 +374,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Background Video Mode
-        val cardBackgroundVideoMode = findViewById<MaterialCardView?>(R.id.cardBackgroundVideoMode)
+        val cardBackgroundVideoMode = findViewById<View>(R.id.cardBackgroundVideoMode)
         if (cardBackgroundVideoMode != null) {
             switchBackgroundVideoMode = findViewById(R.id.switchBackgroundVideoMode)
             txtBackgroundVideoSubtitle = findViewById(R.id.txtBackgroundVideoSubtitle)
@@ -365,7 +386,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Mini-Player toggle
-        val cardMiniPlayer = findViewById<MaterialCardView?>(R.id.cardMiniPlayer)
+        val cardMiniPlayer = findViewById<View>(R.id.cardMiniPlayer)
         if (cardMiniPlayer != null) {
             switchMiniPlayer = findViewById(R.id.switchMiniPlayer)
             txtMiniPlayerSubtitle = findViewById(R.id.txtMiniPlayerSubtitle)
@@ -377,7 +398,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Resume After Interruption toggle
-        val cardResumeAfterInterruption = findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)
+        val cardResumeAfterInterruption = findViewById<View>(R.id.cardResumeAfterInterruption)
         if (cardResumeAfterInterruption != null) {
             switchResumeAfterInterruption = findViewById(R.id.switchResumeAfterInterruption)
             txtResumeAfterInterruptionSubtitle = findViewById(R.id.txtResumeAfterInterruptionSubtitle)
@@ -389,7 +410,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Skip Length (forward/back seek)
-        val cardSkipLength = findViewById<MaterialCardView?>(R.id.cardSkipLength)
+        val cardSkipLength = findViewById<View>(R.id.cardSkipLength)
         if (cardSkipLength != null) {
             txtSkipLengthSubtitle = findViewById(R.id.txtSkipLengthSubtitle)
             updateSkipLengthSubtitle()
@@ -397,7 +418,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Breadcrumbs toggle (mobile only)
-        val cardBreadcrumbs = findViewById<MaterialCardView?>(R.id.cardBreadcrumbs)
+        val cardBreadcrumbs = findViewById<View>(R.id.cardBreadcrumbs)
         if (cardBreadcrumbs != null) {
             switchBreadcrumbs = findViewById(R.id.switchBreadcrumbs)
             txtBreadcrumbsSubtitle = findViewById(R.id.txtBreadcrumbsSubtitle)
@@ -411,7 +432,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Tap Icon to Edit Mode toggle (Mobile Only)
-        val cardIconTapEditMode = findViewById<MaterialCardView?>(R.id.cardIconTapEditMode)
+        val cardIconTapEditMode = findViewById<View>(R.id.cardIconTapEditMode)
         if (cardIconTapEditMode != null) {
             switchIconTapEditMode = findViewById(R.id.switchIconTapEditMode)
             txtIconTapEditModeSubtitle = findViewById(R.id.txtIconTapEditModeSubtitle)
@@ -425,7 +446,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Scrolling Text toggle
-        val cardScrollingText = findViewById<MaterialCardView>(R.id.cardScrollingText)
+        val cardScrollingText = findViewById<View>(R.id.cardScrollingText)
         switchScrollingText = findViewById(R.id.switchScrollingText)
         txtScrollingTextSubtitle = findViewById(R.id.txtScrollingTextSubtitle)
 
@@ -437,7 +458,7 @@ class SettingsActivity : AppCompatActivity() {
         switchScrollingText.setOnCheckedChangeListener(null)
 
         // Left-handed FAB toggle (Mobile Only)
-        val cardLeftHandedFab = findViewById<MaterialCardView?>(R.id.cardLeftHandedFab)
+        val cardLeftHandedFab = findViewById<View>(R.id.cardLeftHandedFab)
         if (cardLeftHandedFab != null) {
             switchLeftHandedFab = findViewById(R.id.switchLeftHandedFab)
             txtLeftHandedFabSubtitle = findViewById(R.id.txtLeftHandedFabSubtitle)
@@ -451,7 +472,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Grid Indicators toggle — ON = hide, OFF = show (default)
-        val cardGridIndicators = findViewById<MaterialCardView>(R.id.cardGridIndicators)
+        val cardGridIndicators = findViewById<View>(R.id.cardGridIndicators)
         switchGridIndicators = findViewById(R.id.switchGridIndicators)
         txtGridIndicatorsSubtitle = findViewById(R.id.txtGridIndicatorsSubtitle)
 
@@ -463,7 +484,7 @@ class SettingsActivity : AppCompatActivity() {
         switchGridIndicators.setOnCheckedChangeListener(null)
 
         // Tip Jar Progress Popup toggle — ON = show, OFF = hide (default ON)
-        val cardTipJarPopup = findViewById<MaterialCardView>(R.id.cardTipJarPopup)
+        val cardTipJarPopup = findViewById<View>(R.id.cardTipJarPopup)
         if (cardTipJarPopup != null) {
             switchTipJarPopup = findViewById(R.id.switchTipJarPopup)
             txtTipJarPopupSubtitle = findViewById(R.id.txtTipJarPopupSubtitle)
@@ -477,13 +498,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // File Server System Tiles row (mobile-only)
-        val cardFileServerTiles = findViewById<MaterialCardView?>(R.id.cardFileServerTiles)
+        val cardFileServerTiles = findViewById<View>(R.id.cardFileServerTiles)
         cardFileServerTiles?.setOnClickListener {
             startActivity(Intent(this, FileServerTilesActivity::class.java))
         }
 
         // Video Thumbnail Time row
-        val cardVideoThumbnailTime = findViewById<MaterialCardView>(R.id.cardVideoThumbnailTime)
+        val cardVideoThumbnailTime = findViewById<View>(R.id.cardVideoThumbnailTime)
         txtVideoThumbnailTimeSubtitle = findViewById(R.id.txtVideoThumbnailTimeSubtitle)
         updateVideoThumbnailTimeSubtitle()
         cardVideoThumbnailTime.setOnClickListener {
@@ -497,55 +518,55 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Storage Indexer row
-        val cardDbViewer = findViewById<MaterialCardView>(R.id.cardDbViewer)
+        val cardDbViewer = findViewById<View>(R.id.cardDbViewer)
         cardDbViewer.setOnClickListener {
             startActivity(Intent(this, StorageIndexerActivity::class.java))
         }
 
         // Manage Custom Drive Names row
-        val cardStorageRename = findViewById<MaterialCardView>(R.id.cardStorageRename)
+        val cardStorageRename = findViewById<View>(R.id.cardStorageRename)
         cardStorageRename?.setOnClickListener {
             startActivity(Intent(this, za.kilowatch.ultimatefilemanager.settings.renamer.StorageRenameActivity::class.java))
         }
 
         // Manage Favorites row
-        val cardFavorites = findViewById<MaterialCardView>(R.id.cardFavorites)
+        val cardFavorites = findViewById<View>(R.id.cardFavorites)
         cardFavorites.setOnClickListener {
             startActivity(Intent(this, ManageFavoritesActivity::class.java))
         }
 
         // Folder Sort Overrides row
-        val cardFolderSort = findViewById<MaterialCardView?>(R.id.cardFolderSort)
+        val cardFolderSort = findViewById<View>(R.id.cardFolderSort)
         cardFolderSort?.setOnClickListener {
             startActivity(Intent(this, FolderSortManagerActivity::class.java))
         }
 
         // Default Applications row
-        val cardDefaultApps = findViewById<MaterialCardView>(R.id.cardDefaultApps)
+        val cardDefaultApps = findViewById<View>(R.id.cardDefaultApps)
         cardDefaultApps.setOnClickListener {
             startActivity(Intent(this, DefaultAppsActivity::class.java))
         }
 
         // Long Press Duration row
-        val cardLongPressDuration = findViewById<MaterialCardView>(R.id.cardLongPressDuration)
+        val cardLongPressDuration = findViewById<View>(R.id.cardLongPressDuration)
         cardLongPressDuration.setOnClickListener {
             startActivity(Intent(this, LongPressDurationActivity::class.java))
         }
 
         // Controls Auto-Hide Duration row
-        val cardControlsTimeout = findViewById<MaterialCardView>(R.id.cardControlsTimeout)
+        val cardControlsTimeout = findViewById<View>(R.id.cardControlsTimeout)
         cardControlsTimeout.setOnClickListener {
             startActivity(Intent(this, ControlsTimeoutActivity::class.java))
         }
 
         // Long Press Toolbar Icons row
-        val cardToolbarIcons = findViewById<MaterialCardView?>(R.id.cardToolbarIcons)
+        val cardToolbarIcons = findViewById<View>(R.id.cardToolbarIcons)
         cardToolbarIcons?.setOnClickListener {
             startActivity(Intent(this, ToolbarIconsActivity::class.java))
         }
 
         // APK / XAPK Extract row
-        val cardApkExtract = findViewById<MaterialCardView>(R.id.cardApkExtract)
+        val cardApkExtract = findViewById<View>(R.id.cardApkExtract)
         txtApkExtractSubtitle = findViewById(R.id.txtApkExtractSubtitle)
         cardApkExtract.setOnClickListener {
             startActivity(Intent(this, ExtractApkSettingsActivity::class.java))
@@ -560,72 +581,73 @@ class SettingsActivity : AppCompatActivity() {
             setupTvCardFocus(cardHiddenFiles)
             setupTvCardFocus(cardRecycleBin)
             setupTvCardFocus(cardMediaThumbnails)
-            findViewById<MaterialCardView>(R.id.cardVideoThumbnailTime)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardVideoThumbnailTime)?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardNetworkThumbnails)
             setupTvCardFocus(cardCacheCopy)
-            findViewById<MaterialCardView?>(R.id.cardQuickTransfer)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardNetworkOpenCache)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardQuickTransfer)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardNetworkOpenCache)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardTvBackgroundServer)?.let { setupTvCardFocus(it) }
             cardTwinWindowLayout?.let { setupTvCardFocus(it) }
             cardTwinWindowStartup?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardBackgroundVideoMode)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardSkipLength)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSideBySideVideo)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardAutoplayNext)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardBackgroundVideoMode)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardSkipLength)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardMiniPlayer)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardResumeAfterInterruption)?.let { setupTvCardFocus(it) }
             cardBreadcrumbs?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardFavorites)
             cardFolderSort?.let { setupTvCardFocus(it) }
             setupTvCardFocus(cardDefaultApps)
             setupTvCardFocus(cardLongPressDuration)
-            findViewById<MaterialCardView?>(R.id.cardControlsTimeout)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardControlsTimeout)?.let { setupTvCardFocus(it) }
             cardToolbarIcons?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardDefaultStartScreen)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardLanguage)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardMainMenuViewMode)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardAppearance)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardAutoBackup)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
-            findViewById<MaterialCardView?>(R.id.cardTipJarPopup)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardDefaultStartScreen)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardLanguage)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardMainMenuViewMode)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardAppearance)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardDefaultIconColors)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardApkExtract)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardBackupRestore)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardAutoBackup)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardIcons)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardScrollingText)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardGridIndicators)?.let { setupTvCardFocus(it) }
+            findViewById<View>(R.id.cardTipJarPopup)?.let { setupTvCardFocus(it) }
         }
 
         // Icons row
-        val cardIcons = findViewById<MaterialCardView?>(R.id.cardIcons)
+        val cardIcons = findViewById<View>(R.id.cardIcons)
         cardIcons?.setOnClickListener {
             startActivity(Intent(this, IconCustomizationActivity::class.java))
         }
 
         // Main Menu View Mode row
-        val cardMainMenuViewMode = findViewById<MaterialCardView?>(R.id.cardMainMenuViewMode)
+        val cardMainMenuViewMode = findViewById<View>(R.id.cardMainMenuViewMode)
         cardMainMenuViewMode?.setOnClickListener {
             startActivity(Intent(this, MainMenuViewModeActivity::class.java))
         }
 
         // Default Start Screen row
-        val cardDefaultStartScreen = findViewById<MaterialCardView?>(R.id.cardDefaultStartScreen)
+        val cardDefaultStartScreen = findViewById<View>(R.id.cardDefaultStartScreen)
         cardDefaultStartScreen?.setOnClickListener {
             startActivity(Intent(this, StartScreenPreferenceActivity::class.java))
         }
 
         // Language Selection row
-        val cardLanguage = findViewById<MaterialCardView?>(R.id.cardLanguage)
+        val cardLanguage = findViewById<View>(R.id.cardLanguage)
         cardLanguage?.setOnClickListener {
             startActivity(Intent(this, LanguageActivity::class.java))
         }
 
         // Appearance / Theme row
-        val cardAppearance = findViewById<MaterialCardView?>(R.id.cardAppearance)
+        val cardAppearance = findViewById<View>(R.id.cardAppearance)
         cardAppearance?.setOnClickListener {
             startActivity(Intent(this, ThemeActivity::class.java))
         }
 
         // Folder Transitions row (Mobile Only - completely hidden on TV)
-        val cardFolderTransitions = findViewById<MaterialCardView?>(R.id.cardFolderTransitions)
+        val cardFolderTransitions = findViewById<View>(R.id.cardFolderTransitions)
         if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(this)) {
             cardFolderTransitions?.visibility = android.view.View.GONE
         } else {
@@ -639,7 +661,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Default Icon Colors row
-        val cardDefaultIconColors = findViewById<MaterialCardView?>(R.id.cardDefaultIconColors)
+        val cardDefaultIconColors = findViewById<View>(R.id.cardDefaultIconColors)
         cardDefaultIconColors?.setOnClickListener {
             if (DeviceUtils.isTvDevice(this)) {
                 startActivity(Intent(this, DefaultIconColorTvActivity::class.java))
@@ -649,13 +671,13 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // Backup & Restore row
-        val cardBackupRestore = findViewById<MaterialCardView?>(R.id.cardBackupRestore)
+        val cardBackupRestore = findViewById<View>(R.id.cardBackupRestore)
         cardBackupRestore?.setOnClickListener {
             startActivity(Intent(this, BackupRestoreActivity::class.java))
         }
 
         // Auto Backup row
-        val cardAutoBackup = findViewById<MaterialCardView?>(R.id.cardAutoBackup)
+        val cardAutoBackup = findViewById<View>(R.id.cardAutoBackup)
         cardAutoBackup?.setOnClickListener {
             startActivity(Intent(this, AutoBackupActivity::class.java))
         }
@@ -667,17 +689,22 @@ class SettingsActivity : AppCompatActivity() {
         switchSettingsSearch = findViewById(R.id.switchSettingsSearch)
         txtSettingsSearchSubtitle = findViewById(R.id.txtSettingsSearchSubtitle)
 
-        // Capture original visibilities of settings list children
+        // Capture original visibilities of all settings views
         val layoutSettingsList = findViewById<android.widget.LinearLayout>(R.id.layoutSettingsList)
         if (layoutSettingsList != null) {
-            for (i in 0 until layoutSettingsList.childCount) {
-                val child = layoutSettingsList.getChildAt(i)
-                originalVisibilities[child] = child.visibility
+            fun captureVisibilities(view: View) {
+                originalVisibilities[view] = view.visibility
+                if (view is android.view.ViewGroup) {
+                    for (i in 0 until view.childCount) {
+                        captureVisibilities(view.getChildAt(i))
+                    }
+                }
             }
+            captureVisibilities(layoutSettingsList)
         }
 
         // Setup search toggle card listener
-        val cardSettingsSearch = findViewById<MaterialCardView>(R.id.cardSettingsSearch)
+        val cardSettingsSearch = findViewById<View>(R.id.cardSettingsSearch)
         cardSettingsSearch?.setOnClickListener {
             val sw = switchSettingsSearch ?: return@setOnClickListener
             val newValue = !sw.isChecked
@@ -820,6 +847,13 @@ class SettingsActivity : AppCompatActivity() {
             val enabled = za.kilowatch.ultimatefilemanager.settings.NetworkOpenCachePreferenceManager.isEnabled(this)
             switchNetworkOpenCache.isChecked = enabled
             updateNetworkOpenCacheSubtitle(enabled)
+        }
+
+        // Refresh TV background server subtitle
+        switchTvBackgroundServer?.let { sw ->
+            val enabled = za.kilowatch.ultimatefilemanager.settings.TvBackgroundServerPreferenceManager.isEnabled(this)
+            sw.isChecked = enabled
+            updateTvBackgroundServerSubtitle(enabled)
         }
 
         // Refresh Twin Window layout subtitle (mobile only)
@@ -1136,6 +1170,27 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun toggleTvBackgroundServer() {
+        val sw = switchTvBackgroundServer ?: return
+        val newValue = !sw.isChecked
+        sw.isChecked = newValue
+        za.kilowatch.ultimatefilemanager.settings.TvBackgroundServerPreferenceManager.setEnabled(this, newValue)
+        updateTvBackgroundServerSubtitle(newValue)
+        if (newValue) {
+            za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this)
+        } else {
+            za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.stop(this)
+        }
+    }
+
+    private fun updateTvBackgroundServerSubtitle(enabled: Boolean) {
+        txtTvBackgroundServerSubtitle?.text = if (enabled) {
+            getString(R.string.settings_tv_background_server_subtitle_on)
+        } else {
+            getString(R.string.settings_tv_background_server_subtitle_off)
+        }
+    }
+
     private fun updateTwinWindowLayoutSubtitle(enabled: Boolean) {
         txtTwinWindowLayoutSubtitle?.text = if (enabled) {
             getString(R.string.settings_twin_window_layout_subtitle_vertical)
@@ -1372,21 +1427,43 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTvCardFocus(card: MaterialCardView) {
+    private fun setupTvCardFocus(card: View) {
         val yellowFill  = getColor(R.color.tv_button_focused_yellow)
         val blackText   = getColor(R.color.tv_button_focused_yellow_text)
         val glassColor  = getColor(R.color.tv_glass_white_10)
+        val transparent = android.graphics.Color.TRANSPARENT
         val primaryText = getColor(R.color.tv_text_primary)
         val secondText  = getColor(R.color.tv_text_secondary)
+        val iconTint    = getColor(R.color.tv_icon_tint)
 
         card.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                card.setCardBackgroundColor(yellowFill)
+                if (card is MaterialCardView) {
+                    card.setCardBackgroundColor(yellowFill)
+                } else {
+                    card.setBackgroundColor(yellowFill)
+                }
                 setChildTextColors(card, blackText)
+                setChildImageTints(card, blackText)
             } else {
-                card.setCardBackgroundColor(glassColor)
+                if (card is MaterialCardView) {
+                    card.setCardBackgroundColor(glassColor)
+                } else {
+                    card.setBackgroundColor(transparent)
+                }
                 setChildTextColorsTwo(card, primaryText, secondText)
+                setChildImageTints(card, iconTint)
             }
+        }
+    }
+
+    private fun setChildImageTints(view: android.view.View, color: Int) {
+        if (view is ImageView && view.id != R.id.btnBack) {
+            view.imageTintList = android.content.res.ColorStateList.valueOf(color)
+            return
+        }
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) setChildImageTints(view.getChildAt(i), color)
         }
     }
 
@@ -1439,6 +1516,7 @@ class SettingsActivity : AppCompatActivity() {
             CardIcon(R.id.cardCacheCopy, "settings_cache_copy", R.drawable.ic_copy),
             CardIcon(R.id.cardQuickTransfer, "settings_quick_transfer", R.drawable.ic_copy),
             CardIcon(R.id.cardNetworkOpenCache, "settings_network_open_cache", R.drawable.ic_cloud),
+            CardIcon(R.id.cardTvBackgroundServer, "settings_tv_background_server", R.drawable.ic_tv),
             CardIcon(R.id.cardSideBySideVideo, "settings_side_by_side_video", R.drawable.ic_play),
             CardIcon(R.id.cardSideBySideVideoShowControlsOnRepeat, "settings_side_by_side_video_show_controls_on_repeat", R.drawable.ic_repeat),
             CardIcon(R.id.cardAutoplayNext, "settings_autoplay_next", R.drawable.ic_play),
@@ -1492,20 +1570,70 @@ class SettingsActivity : AppCompatActivity() {
         var anyVisible = false
 
         for (i in 0 until layoutSettingsList.childCount) {
-            val child = layoutSettingsList.getChildAt(i)
-            if (child.id == R.id.layoutNoResults) continue
+            val sectionView = layoutSettingsList.getChildAt(i)
+            if (sectionView.id == R.id.layoutNoResults) continue
 
-            val initialVisibility = originalVisibilities[child] ?: View.VISIBLE
-            if (initialVisibility == View.GONE) {
-                child.visibility = View.GONE
-                continue
-            }
+            if (sectionView is android.view.ViewGroup) {
+                var sectionHasVisibleRow = false
+                val groupCard = findGroupCard(sectionView)
+                val container = groupCard?.getChildAt(0) as? android.view.ViewGroup
 
-            if (isCardMatching(child, query)) {
-                child.visibility = View.VISIBLE
-                anyVisible = true
-            } else {
-                child.visibility = View.GONE
+                if (container != null) {
+                    val visibleRows = mutableListOf<View>()
+                    for (j in 0 until container.childCount) {
+                        val child = container.getChildAt(j)
+                        val isDivider = child !is android.view.ViewGroup || child.id == View.NO_ID
+                        if (isDivider) {
+                            child.visibility = View.GONE
+                            continue
+                        }
+
+                        val initialVis = originalVisibilities[child] ?: View.VISIBLE
+                        if (initialVis == View.GONE) {
+                            child.visibility = View.GONE
+                            continue
+                        }
+
+                        if (isCardMatching(child, query)) {
+                            child.visibility = View.VISIBLE
+                            visibleRows.add(child)
+                            sectionHasVisibleRow = true
+                        } else {
+                            child.visibility = View.GONE
+                        }
+                    }
+
+                    // Re-show dividers between visible rows
+                    for (j in 0 until container.childCount - 1) {
+                        val child = container.getChildAt(j)
+                        val nextChild = container.getChildAt(j + 1)
+                        if (child in visibleRows && nextChild !in visibleRows && nextChild !is android.view.ViewGroup) {
+                            val hasNextVisible = (j + 2 until container.childCount).any { container.getChildAt(it) in visibleRows }
+                            if (hasNextVisible) {
+                                nextChild.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                } else {
+                    sectionHasVisibleRow = isCardMatching(sectionView, query)
+                }
+
+                if (query.isEmpty()) {
+                    val initialVis = originalVisibilities[sectionView] ?: View.VISIBLE
+                    sectionView.visibility = initialVis
+                    if (container != null) {
+                        for (j in 0 until container.childCount) {
+                            val c = container.getChildAt(j)
+                            c.visibility = originalVisibilities[c] ?: View.VISIBLE
+                        }
+                    }
+                    anyVisible = true
+                } else if (sectionHasVisibleRow) {
+                    sectionView.visibility = View.VISIBLE
+                    anyVisible = true
+                } else {
+                    sectionView.visibility = View.GONE
+                }
             }
         }
 
@@ -1514,6 +1642,17 @@ class SettingsActivity : AppCompatActivity() {
         } else {
             layoutNoResults?.visibility = View.GONE
         }
+    }
+
+    private fun findGroupCard(view: View): MaterialCardView? {
+        if (view is MaterialCardView) return view
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) {
+                val found = findGroupCard(view.getChildAt(i))
+                if (found != null) return found
+            }
+        }
+        return null
     }
 
     private fun isCardMatching(card: View, query: String): Boolean {
@@ -1635,66 +1774,88 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         val padHPx = (cfg.padH * density).toInt()
-        val padVPx = (cfg.padV * density).toInt()
         val framePx = (cfg.frameSize * density).toInt()
         val iconPx = (cfg.iconSize * density).toInt()
         val titleSp = cfg.titleSize
         val subSp = cfg.subSize
 
+        fun applyRowElements(inner: android.view.ViewGroup) {
+            if (inner.childCount > 0) {
+                val firstChild = inner.getChildAt(0)
+                if (firstChild is android.widget.FrameLayout) {
+                    val lp = firstChild.layoutParams
+                    lp.width = framePx
+                    lp.height = framePx
+                    firstChild.layoutParams = lp
+
+                    if (firstChild.childCount > 0) {
+                        (firstChild.getChildAt(0) as? ImageView)?.let { img ->
+                            val imgLp = img.layoutParams
+                            imgLp.width = iconPx
+                            imgLp.height = iconPx
+                            img.layoutParams = imgLp
+                        }
+                    }
+                } else if (firstChild is ImageView) {
+                    val imgLp = firstChild.layoutParams
+                    imgLp.width = iconPx
+                    imgLp.height = iconPx
+                    firstChild.layoutParams = imgLp
+                }
+            }
+
+            if (inner.childCount > 1) {
+                val textBlock = inner.getChildAt(1) as? android.view.ViewGroup
+                textBlock?.let { tb ->
+                    if (tb.childCount > 0) {
+                        (tb.getChildAt(0) as? TextView)?.textSize = titleSp
+                    }
+                    if (tb.childCount > 1) {
+                        (tb.getChildAt(1) as? TextView)?.textSize = subSp
+                    }
+                }
+            }
+        }
+
         fun applyToViewGroup(vg: android.view.ViewGroup) {
             for (i in 0 until vg.childCount) {
                 val child = vg.getChildAt(i)
-                if (child is MaterialCardView) {
-                    val cardLp = child.layoutParams
-                    if (cfg.cardHeightDp > 0) {
-                        cardLp.height = (cfg.cardHeightDp * density).toInt()
+                val isDirectRow = child is android.view.ViewGroup
+                    && child !is MaterialCardView
+                    && child.id != View.NO_ID
+                    && child.childCount >= 2
+                    && (child.getChildAt(0) is android.widget.FrameLayout || child.getChildAt(0) is ImageView)
+
+                val isVerticalNoteRow = child is android.view.ViewGroup
+                    && child !is MaterialCardView
+                    && child.id != View.NO_ID
+                    && child.childCount >= 2
+                    && child.getChildAt(0) is android.view.ViewGroup
+                    && (child.getChildAt(0) as android.view.ViewGroup).childCount >= 2
+                    && ((child.getChildAt(0) as android.view.ViewGroup).getChildAt(0) is android.widget.FrameLayout
+                        || (child.getChildAt(0) as android.view.ViewGroup).getChildAt(0) is ImageView)
+
+                if (isDirectRow) {
+                    val inner = child as android.view.ViewGroup
+                    val padVPx = (cfg.padV * density).toInt()
+                    if (isTv) {
+                        inner.setPadding(inner.paddingLeft, padVPx, inner.paddingRight, padVPx)
                     } else {
-                        cardLp.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                        inner.setPadding(padHPx, padVPx, padHPx, padVPx)
                     }
-                    child.layoutParams = cardLp
-
-                    val inner = child.getChildAt(0) as? android.view.ViewGroup ?: continue
-                    if (cfg.cardHeightDp == 0) {
-                        val innerLp = inner.layoutParams
-                        innerLp.height = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-                        inner.layoutParams = innerLp
+                    applyRowElements(inner)
+                } else if (isVerticalNoteRow) {
+                    val outer = child as android.view.ViewGroup
+                    val padVPx = (cfg.padV * density).toInt()
+                    if (isTv) {
+                        outer.setPadding(outer.paddingLeft, padVPx, outer.paddingRight, padVPx)
+                    } else {
+                        outer.setPadding(padHPx, padVPx, padHPx, padVPx)
                     }
-                    inner.setPadding(padHPx, padVPx, padHPx, padVPx)
-
-                    if (inner.childCount > 0) {
-                        val firstChild = inner.getChildAt(0)
-                        if (firstChild is android.widget.FrameLayout) {
-                            val lp = firstChild.layoutParams
-                            lp.width = framePx
-                            lp.height = framePx
-                            firstChild.layoutParams = lp
-
-                            if (firstChild.childCount > 0) {
-                                (firstChild.getChildAt(0) as? ImageView)?.let { img ->
-                                    val imgLp = img.layoutParams
-                                    imgLp.width = iconPx
-                                    imgLp.height = iconPx
-                                    img.layoutParams = imgLp
-                                }
-                            }
-                        } else if (firstChild is ImageView) {
-                            val imgLp = firstChild.layoutParams
-                            imgLp.width = iconPx
-                            imgLp.height = iconPx
-                            firstChild.layoutParams = imgLp
-                        }
-                    }
-
-                    if (inner.childCount > 1) {
-                        val textBlock = inner.getChildAt(1) as? android.view.ViewGroup
-                        textBlock?.let { tb ->
-                            if (tb.childCount > 0) {
-                                (tb.getChildAt(0) as? TextView)?.textSize = titleSp
-                            }
-                            if (tb.childCount > 1) {
-                                (tb.getChildAt(1) as? TextView)?.textSize = subSp
-                            }
-                        }
+                    val inner = outer.getChildAt(0) as android.view.ViewGroup
+                    applyRowElements(inner)
+                    if (outer.childCount > 1) {
+                        (outer.getChildAt(1) as? TextView)?.textSize = subSp
                     }
                 } else if (child is android.view.ViewGroup) {
                     applyToViewGroup(child)

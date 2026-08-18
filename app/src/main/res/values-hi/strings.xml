@@ -1314,6 +1314,38 @@ USB और स्थानीय स्टोरेज ड्राइव का
     <string name="settings_search_no_results">
 आपकी खोज से मेल खाने वाली कोई सेटिंग नहीं मिली
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+सामान्य और इंटरफ़ेस
+</string>
+    <string name="settings_section_appearance">
+उपस्थिति और अनुकूलन
+</string>
+    <string name="settings_section_file_management">
+फ़ाइल ब्राउज़िंग और प्रबंधन
+</string>
+    <string name="settings_section_controls">
+नियंत्रण और जेस्चर
+</string>
+    <string name="settings_section_twin_window">
+ड्यूल-पेन (ट्विन विंडो)
+</string>
+    <string name="settings_section_media_player">
+मीडिया प्लेयर और प्लेबैक
+</string>
+    <string name="settings_section_thumbnails">
+थंबनेल और कैशिंग
+</string>
+    <string name="settings_section_network_performance">
+नेटवर्क और प्रदर्शन
+</string>
+    <string name="settings_section_backup">
+बैकअप और पुनर्स्थापना
+</string>
+    <string name="settings_section_privacy_diagnostics">
+गोपनीयता और डायग्नोस्टिक्स
+</string>
     <string name="settings_search_bar_title">
 सेटिंग्स सर्च बार
 </string>
@@ -3526,6 +3558,33 @@ Android उपकरण से कनेक्ट करें
 </string>
     <string name="tv_pairing_linked">
 %s से लिंक किया गया
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Server
+</string>
+    <string name="tv_server_channel_desc">
+पेयर किए गए मोबाइल डिवाइसों के लिए TV फ़ाइल साझाकरण सक्रिय रखता है
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Server सक्रिय है
+</string>
+    <string name="tv_server_notification_desc">
+पेयर किए गए डिवाइसों से कनेक्शन के लिए तैयार
+</string>
+    <string name="settings_tv_background_server_title">
+बैकग्राउंड TV साझाकरण
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+जब पेयर किए गए डिवाइस मौजूद हों तो बैकग्राउंड में सक्रिय
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+केवल तब सक्रिय जब UFM TV पर खुला हो
+</string>
+    <string name="settings_tv_background_server_note">
+पेयर किए गए मोबाइल डिवाइसों को TV पर UFM बंद होने पर भी TV स्टोरेज ब्राउज़ करने की अनुमति देता है। जब पेयर किए गए डिवाइस मौजूद हों तो स्वचालित रूप से प्रारंभ होता है और जब सभी हटा दिए जाते हैं तो रुक जाता है।
+</string>
+    <string name="backup_pref_tv_server">
+बैकग्राउंड TV साझाकरण
 </string>
     <string name="type_here_to_search">
 खोजने के लिए यहां टाइप करें
@@ -9451,6 +9510,9 @@ APK/XAPK निकालें
 </string>
     <string name="icon_settings_network_open_cache">
 नेटवर्क ओपन कैश
+</string>
+    <string name="icon_settings_tv_background_server">
+पृष्ठभूमि टीवी साझाकरण
 </string>
     <string name="icon_settings_storage_indexer">
 स्टोरेज इंडेक्सर

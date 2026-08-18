@@ -1314,6 +1314,38 @@ Einstellungen durchsuchen …
     <string name="settings_search_no_results">
 Keine Einstellungen gefunden, die deiner Suche entsprechen
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Allgemein &amp;amp; Oberfläche
+</string>
+    <string name="settings_section_appearance">
+Darstellung &amp;amp; Anpassung
+</string>
+    <string name="settings_section_file_management">
+Dateinavigation &amp;amp; Dateiverwaltung
+</string>
+    <string name="settings_section_controls">
+Steuerung &amp;amp; Gesten
+</string>
+    <string name="settings_section_twin_window">
+Doppelfenster (Twin Window)
+</string>
+    <string name="settings_section_media_player">
+Mediaplayer &amp;amp; Wiedergabe
+</string>
+    <string name="settings_section_thumbnails">
+Miniaturansichten &amp;amp; Cache
+</string>
+    <string name="settings_section_network_performance">
+Netzwerk &amp;amp; Leistung
+</string>
+    <string name="settings_section_backup">
+Sicherung &amp;amp; Wiederherstellung
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Datenschutz &amp;amp; Diagnose
+</string>
     <string name="settings_search_bar_title">
 Einstellungssuchleiste
 </string>
@@ -3526,6 +3558,33 @@ Warte auf Pairing…
 </string>
     <string name="tv_pairing_linked">
 Verknüpft mit %s
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Server
+</string>
+    <string name="tv_server_channel_desc">
+Hält die TV-Dateifreigabe für gekoppelte mobile Geräte aktiv
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Server aktiv
+</string>
+    <string name="tv_server_notification_desc">
+Bereit für Verbindungen von gekoppelten Geräten
+</string>
+    <string name="settings_tv_background_server_title">
+TV-Freigabe im Hintergrund
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Im Hintergrund aktiv, wenn gekoppelte Geräte vorhanden sind
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Nur aktiv, während UFM auf dem TV geöffnet ist
+</string>
+    <string name="settings_tv_background_server_note">
+Ermöglicht gekoppelten mobilen Geräten, den TV-Speicher zu durchsuchen, auch wenn UFM auf dem TV geschlossen ist. Startet automatisch, wenn gekoppelte Geräte vorhanden sind, und stoppt, wenn alle entfernt werden.
+</string>
+    <string name="backup_pref_tv_server">
+TV-Freigabe im Hintergrund
 </string>
     <string name="type_here_to_search">
 Hier tippen, um zu suchen
@@ -9451,6 +9510,9 @@ Schnelles Kopieren/Verschieben
 </string>
     <string name="icon_settings_network_open_cache">
 Netzwerk-Öffnen-Cache
+</string>
+    <string name="icon_settings_tv_background_server">
+TV-Freigabe im Hintergrund
 </string>
     <string name="icon_settings_storage_indexer">
 Speicherindexierer

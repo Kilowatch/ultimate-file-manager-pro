@@ -271,12 +271,11 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
         Thread {
             android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
             // Initialize PairingServer (depends on BouncyCastle, already registered on main thread)
-            try {
-                pairingServer = PairingServer(this)
-                pairingServer?.startSecure()
-                Log.d(TAG, "Global PairingServer started successfully (HTTPS)")
-            } catch (t: Throwable) {
-                Log.e(TAG, "Failed to start global PairingServer", t)
+            ensurePairingServerRunning()
+
+            // On Android TV, if paired devices exist and setting is enabled, start background foreground service
+            if (DeviceUtils.isTvDevice(this@UfmApplication)) {
+                za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this@UfmApplication)
             }
         }.apply { name = "ufm-pairing-init"; isDaemon = true; start() }
 
@@ -412,6 +411,27 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
                     Log.e(TAG, "Failed to clean up for TRIM_MEMORY_COMPLETE", e)
                 }
             }.apply { name = "ufm-memory-trim"; isDaemon = true; start() }
+        }
+    }
+
+    /**
+     * Ensures that [PairingServer] is initialized and running.
+     * Can be safely called from background services, initializers, or activities.
+     */
+    fun ensurePairingServerRunning() {
+        if (pairingServer == null) {
+            synchronized(this) {
+                if (pairingServer == null) {
+                    try {
+                        val server = PairingServer(this)
+                        server.startSecure()
+                        pairingServer = server
+                        Log.d(TAG, "Global PairingServer started successfully (HTTPS)")
+                    } catch (t: Throwable) {
+                        Log.e(TAG, "Failed to start global PairingServer in ensurePairingServerRunning", t)
+                    }
+                }
+            }
         }
     }
 

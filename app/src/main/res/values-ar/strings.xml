@@ -1314,6 +1314,38 @@ Material You
     <string name="settings_search_no_results">
 لم يتم العثور على إعدادات تطابق بحثك
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+عام والواجهة
+</string>
+    <string name="settings_section_appearance">
+المظهر والتخصيص
+</string>
+    <string name="settings_section_file_management">
+تصفح الملفات وإدارتها
+</string>
+    <string name="settings_section_controls">
+عناصر التحكم والإيماءات
+</string>
+    <string name="settings_section_twin_window">
+جزأين (نافذة مزدوجة)
+</string>
+    <string name="settings_section_media_player">
+مشغل الوسائط والتشغيل
+</string>
+    <string name="settings_section_thumbnails">
+الصور المصغرة والتخزين المؤقت
+</string>
+    <string name="settings_section_network_performance">
+الشبكة والأداء
+</string>
+    <string name="settings_section_backup">
+النسخ الاحتياطي والاستعادة
+</string>
+    <string name="settings_section_privacy_diagnostics">
+الخصوصية والتشخيص
+</string>
     <string name="settings_search_bar_title">
 شريط بحث الإعدادات
 </string>
@@ -3526,6 +3558,33 @@ NFSv4
 </string>
     <string name="tv_pairing_linked">
 تم الربط مع %s
+</string>
+    <string name="tv_server_channel_name">
+خادم UFM للتلفاز
+</string>
+    <string name="tv_server_channel_desc">
+يحافظ على مشاركة ملفات التلفاز نشطة للأجهزة المحمولة المقترنة
+</string>
+    <string name="tv_server_notification_title">
+خادم UFM للتلفاز نشط
+</string>
+    <string name="tv_server_notification_desc">
+جاهز للاتصال من الأجهزة المقترنة
+</string>
+    <string name="settings_tv_background_server_title">
+مشاركة التلفاز في الخلفية
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+نشطة في الخلفية عند وجود أجهزة مقترنة
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+نشطة فقط عندما يكون UFM مفتوحًا على التلفاز
+</string>
+    <string name="settings_tv_background_server_note">
+تتيح للأجهزة المحمولة المقترنة تصفح تخزين التلفاز حتى عندما يكون UFM مغلقًا على التلفاز. تبدأ تلقائيًا عند وجود أجهزة مقترنة وتتوقف عند إزالة جميع الأجهزة.
+</string>
+    <string name="backup_pref_tv_server">
+مشاركة التلفاز في الخلفية
 </string>
     <string name="type_here_to_search">
 اكتب هنا للبحث
@@ -9451,6 +9510,9 @@ XML / ترميز
 </string>
     <string name="icon_settings_network_open_cache">
 ذاكرة تخزين مؤقت لفتح الشبكة
+</string>
+    <string name="icon_settings_tv_background_server">
+مشاركة التلفاز في الخلفية
 </string>
     <string name="icon_settings_storage_indexer">
 مفهرس التخزين

@@ -1314,6 +1314,38 @@ Ayarları ara…
     <string name="settings_search_no_results">
 Aramanızla eşleşen ayar bulunamadı
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Genel ve Arayüz
+</string>
+    <string name="settings_section_appearance">
+Görünüm ve Kişiselleştirme
+</string>
+    <string name="settings_section_file_management">
+Dosya Tarama ve Yönetimi
+</string>
+    <string name="settings_section_controls">
+Kontroller ve Hareketler
+</string>
+    <string name="settings_section_twin_window">
+Çift Bölmeli (Twin Window)
+</string>
+    <string name="settings_section_media_player">
+Medya Oynatıcı ve Oynatma
+</string>
+    <string name="settings_section_thumbnails">
+Küçük Resimler ve Önbellek
+</string>
+    <string name="settings_section_network_performance">
+Ağ ve Performans
+</string>
+    <string name="settings_section_backup">
+Yedekleme ve Geri Yükleme
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Gizlilik ve Tanılama
+</string>
     <string name="settings_search_bar_title">
 Ayarlar Arama Çubuğu
 </string>
@@ -3526,6 +3558,33 @@ Eşleştirme bekleniyor…
 </string>
     <string name="tv_pairing_linked">
 %s ile bağlandı
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Sunucusu
+</string>
+    <string name="tv_server_channel_desc">
+Eşleştirilmiş mobil cihazlar için TV dosya paylaşımını aktif tutar
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Sunucusu Aktif
+</string>
+    <string name="tv_server_notification_desc">
+Eşleştirilmiş cihazlardan bağlantı için hazır
+</string>
+    <string name="settings_tv_background_server_title">
+Arka Plan TV Paylaşımı
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Eşleştirilmiş cihazlar varken arka planda aktif
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Yalnızca UFM TV\'de açıkken aktif
+</string>
+    <string name="settings_tv_background_server_note">
+Eşleştirilmiş mobil cihazların, UFM TV\'de kapalıyken bile TV depolama alanına göz atmasına izin verir. Eşleştirilmiş cihazlar varken otomatik başlar ve tümü kaldırıldığında durur.
+</string>
+    <string name="backup_pref_tv_server">
+Arka Plan TV Paylaşımı
 </string>
     <string name="type_here_to_search">
 Aramak için buraya yazın
@@ -9451,6 +9510,9 @@ Hızlı Kopyala/Taşı
 </string>
     <string name="icon_settings_network_open_cache">
 Ağ Açma Önbelleği
+</string>
+    <string name="icon_settings_tv_background_server">
+Arka Plan TV Paylaşımı
 </string>
     <string name="icon_settings_storage_indexer">
 Depolama Dizinleyici

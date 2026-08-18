@@ -21,6 +21,14 @@ class BootReceiver : BroadcastReceiver() {
             } catch (e: Exception) {
                 Log.e("BootReceiver", "Failed to rewatch instant sync profiles on boot", e)
             }
+
+            try {
+                if (za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(context)) {
+                    za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(context)
+                }
+            } catch (e: Exception) {
+                Log.e("BootReceiver", "Failed to start TV server foreground service on boot", e)
+            }
         }
     }
 }

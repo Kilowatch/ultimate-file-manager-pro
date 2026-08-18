@@ -357,6 +357,9 @@ class PairingServer(
 
         // Once paired successfully, we can turn off pairing mode (optional, depending on UX)
         activePin = null
+
+        // Start TV server foreground service on TV if at least 1 device is paired and setting is on
+        TvServerForegroundService.start(context)
         
         // Broadcast an event so UI can update - Make it explicit for reliability
         val intent = android.content.Intent("za.kilowatch.ufm.PAIRING_UPDATED")
@@ -428,6 +431,9 @@ class PairingServer(
         val device = pairingManager.getPairedDevice(deviceId)
         if (device != null) {
             pairingManager.removeDevice(deviceId)
+            if (pairingManager.getAllPairedDevices().isEmpty()) {
+                TvServerForegroundService.stop(context)
+            }
             val intent = android.content.Intent("za.kilowatch.ufm.PAIRING_UPDATED")
             intent.setPackage(context.packageName)
             context.sendBroadcast(intent)

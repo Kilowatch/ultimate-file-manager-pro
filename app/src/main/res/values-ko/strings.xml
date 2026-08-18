@@ -1314,6 +1314,38 @@ USB 및 로컬 저장소 드라이브 이름 바꾸기
     <string name="settings_search_no_results">
 검색과 일치하는 설정이 없습니다
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+일반 및 인터페이스
+</string>
+    <string name="settings_section_appearance">
+모양 및 사용자 지정
+</string>
+    <string name="settings_section_file_management">
+파일 탐색 및 관리
+</string>
+    <string name="settings_section_controls">
+컨트롤 및 제스처
+</string>
+    <string name="settings_section_twin_window">
+듀얼 패널(트윈 창)
+</string>
+    <string name="settings_section_media_player">
+미디어 플레이어 및 재생
+</string>
+    <string name="settings_section_thumbnails">
+썸네일 및 캐싱
+</string>
+    <string name="settings_section_network_performance">
+네트워크 및 성능
+</string>
+    <string name="settings_section_backup">
+백업 및 복원
+</string>
+    <string name="settings_section_privacy_diagnostics">
+개인정보 및 진단
+</string>
     <string name="settings_search_bar_title">
 설정 검색창
 </string>
@@ -3526,6 +3558,33 @@ TV 이름 바꾸기
 </string>
     <string name="tv_pairing_linked">
 %s와(과) 연결됨
+</string>
+    <string name="tv_server_channel_name">
+UFM TV 서버
+</string>
+    <string name="tv_server_channel_desc">
+페어링된 모바일 기기와 TV 파일 공유를 계속 유지합니다
+</string>
+    <string name="tv_server_notification_title">
+UFM TV 서버 활성 상태
+</string>
+    <string name="tv_server_notification_desc">
+페어링된 기기에서 연결할 준비가 되었습니다
+</string>
+    <string name="settings_tv_background_server_title">
+백그라운드 TV 공유
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+페어링된 기기가 있으면 백그라운드에서 활성화됩니다
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+TV에서 UFM이 열려 있는 동안에만 활성화됩니다
+</string>
+    <string name="settings_tv_background_server_note">
+페어링된 모바일 기기가 TV에서 UFM이 닫혀 있어도 TV 저장 공간을 탐색할 수 있게 허용합니다. 페어링된 기기가 있으면 자동으로 시작되고 모두 제거되면 중지됩니다.
+</string>
+    <string name="backup_pref_tv_server">
+백그라운드 TV 공유
 </string>
     <string name="type_here_to_search">
 검색하려면 여기에 입력
@@ -9451,6 +9510,9 @@ APK/XAPK 추출
 </string>
     <string name="icon_settings_network_open_cache">
 네트워크 열기 캐시
+</string>
+    <string name="icon_settings_tv_background_server">
+백그라운드 TV 공유
 </string>
     <string name="icon_settings_storage_indexer">
 저장소 색인

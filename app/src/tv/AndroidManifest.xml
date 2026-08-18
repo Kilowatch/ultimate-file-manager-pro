@@ -36,6 +36,13 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- TV Server Foreground Service — keeps PairingServer and TV file browsing alive
+             in the background even when UFM is closed on TV. TV builds only. -->
+        <service
+            android:name=".network.TvServerForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
     </application>
 
 </manifest>

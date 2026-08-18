@@ -1314,6 +1314,38 @@ Material You
     <string name="settings_search_no_results">
 Не знайдено налаштувань, що відповідають вашому пошуку
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Загальне та інтерфейс
+</string>
+    <string name="settings_section_appearance">
+Зовнішній вигляд та налаштування
+</string>
+    <string name="settings_section_file_management">
+Перегляд та керування файлами
+</string>
+    <string name="settings_section_controls">
+Керування та жести
+</string>
+    <string name="settings_section_twin_window">
+Двопанельний режим (два вікна)
+</string>
+    <string name="settings_section_media_player">
+Медіаплеєр та відтворення
+</string>
+    <string name="settings_section_thumbnails">
+Мініатюри та кешування
+</string>
+    <string name="settings_section_network_performance">
+Мережа та продуктивність
+</string>
+    <string name="settings_section_backup">
+Резервне копіювання та відновлення
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Приватність та діагностика
+</string>
     <string name="settings_search_bar_title">
 Рядок пошуку налаштувань
 </string>
@@ -3526,6 +3558,33 @@ OK
 </string>
     <string name="tv_pairing_linked">
 Пов\'язано з %s
+</string>
+    <string name="tv_server_channel_name">
+UFM TV Server
+</string>
+    <string name="tv_server_channel_desc">
+Забезпечує активний обмін файлами на ТБ для пов\\\'язаних мобільних пристроїв
+</string>
+    <string name="tv_server_notification_title">
+UFM TV Server активний
+</string>
+    <string name="tv_server_notification_desc">
+Готовий до з\\\'єднання з пов\\\'язаними пристроями
+</string>
+    <string name="settings_tv_background_server_title">
+Фоновий обмін на ТБ
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Активний у фоновому режимі, коли є пов\\\'язані пристрої
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Активний лише коли UFM відкрито на ТБ
+</string>
+    <string name="settings_tv_background_server_note">
+Дозволяє пов\\\'язаним мобільним пристроям переглядати сховище ТБ, навіть коли UFM закрито на ТБ. Автоматично запускається, коли є пов\\\'язані пристрої, і зупиняється, коли всі вони видалені.
+</string>
+    <string name="backup_pref_tv_server">
+Фоновий обмін на ТБ
 </string>
     <string name="type_here_to_search">
 Введіть тут для пошуку
@@ -9451,6 +9510,9 @@ XML / Розмітка
 </string>
     <string name="icon_settings_network_open_cache">
 Кеш відкритих мережевих файлів
+</string>
+    <string name="icon_settings_tv_background_server">
+Фоновий обмін із телевізором
 </string>
     <string name="icon_settings_storage_indexer">
 Індексатор сховища

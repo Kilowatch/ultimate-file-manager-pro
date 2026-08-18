@@ -210,6 +210,9 @@ class DevicePairingActivity : AppCompatActivity() {
             
             withContext(Dispatchers.Main) {
                 pairingManager.removeDevice(device.deviceId)
+                if (isTvMode && pairingManager.getAllPairedDevices().isEmpty()) {
+                    za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.stop(this@DevicePairingActivity)
+                }
                 refreshList()
             }
         }

@@ -25,6 +25,7 @@ class TvPairingActivity : AppCompatActivity() {
             val deviceName = intent?.getStringExtra("newly_paired_device_name")
             if (deviceName != null) {
                 // Pairing successful
+                za.kilowatch.ultimatefilemanager.network.TvServerForegroundService.start(this@TvPairingActivity)
                 val msg = getString(R.string.tv_pairing_linked, deviceName)
                 Toast.makeText(this@TvPairingActivity, msg, Toast.LENGTH_LONG).show()
                 finish()

@@ -1314,6 +1314,38 @@ Rechercher dans les paramètres…
     <string name="settings_search_no_results">
 Aucun paramètre trouvé correspondant à votre recherche
 </string>
+
+    <!-- Settings Sections -->
+    <string name="settings_section_general">
+Général et interface
+</string>
+    <string name="settings_section_appearance">
+Apparence et personnalisation
+</string>
+    <string name="settings_section_file_management">
+Navigation et gestion des fichiers
+</string>
+    <string name="settings_section_controls">
+Commandes et gestes
+</string>
+    <string name="settings_section_twin_window">
+Double volet (double fenêtre)
+</string>
+    <string name="settings_section_media_player">
+Lecteur multimédia et lecture
+</string>
+    <string name="settings_section_thumbnails">
+Vignettes et cache
+</string>
+    <string name="settings_section_network_performance">
+Réseau et performances
+</string>
+    <string name="settings_section_backup">
+Sauvegarde et restauration
+</string>
+    <string name="settings_section_privacy_diagnostics">
+Confidentialité et diagnostics
+</string>
     <string name="settings_search_bar_title">
 Barre de recherche des paramètres
 </string>
@@ -3526,6 +3558,33 @@ En attente d\\\'appairage…
 </string>
     <string name="tv_pairing_linked">
 Lié à %s
+</string>
+    <string name="tv_server_channel_name">
+Serveur TV UFM
+</string>
+    <string name="tv_server_channel_desc">
+Maintient le partage de fichiers TV actif pour les appareils mobiles appariés
+</string>
+    <string name="tv_server_notification_title">
+Serveur TV UFM actif
+</string>
+    <string name="tv_server_notification_desc">
+Prêt pour la connexion depuis les appareils appariés
+</string>
+    <string name="settings_tv_background_server_title">
+Partage TV en arrière-plan
+</string>
+    <string name="settings_tv_background_server_subtitle_on">
+Actif en arrière-plan lorsque des appareils appariés existent
+</string>
+    <string name="settings_tv_background_server_subtitle_off">
+Actif uniquement lorsque UFM est ouvert sur le TV
+</string>
+    <string name="settings_tv_background_server_note">
+Permet aux appareils mobiles appariés de parcourir le stockage du TV même lorsque UFM est fermé sur le TV. Démarre automatiquement lorsque des appareils appariés existent et s\\\'arrête lorsque tous sont retirés.
+</string>
+    <string name="backup_pref_tv_server">
+Partage TV en arrière-plan
 </string>
     <string name="type_here_to_search">
 Tapez ici pour rechercher
@@ -9451,6 +9510,9 @@ Copier/Déplacer rapide
 </string>
     <string name="icon_settings_network_open_cache">
 Cache d\'ouverture réseau
+</string>
+    <string name="icon_settings_tv_background_server">
+Partage TV en arrière-plan
 </string>
     <string name="icon_settings_storage_indexer">
 Indexeur de stockage
