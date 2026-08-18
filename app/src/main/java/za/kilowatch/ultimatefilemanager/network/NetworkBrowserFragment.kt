@@ -221,12 +221,10 @@ class NetworkBrowserFragment : Fragment() {
         updatePasteFab()
     }
 
-    private fun applyLeftHandedFabSettings() {
+    fun updateFabPositions() {
         val ctx = context ?: return
-        val viewsToUpdate = mutableListOf<android.view.View>()
-        fabPaste?.let { viewsToUpdate.add(it) }
-        fabTools?.let { viewsToUpdate.add(it) }
-        fabSelectAll?.let { viewsToUpdate.add(it) }
+        val isToolsVisible = fabTools?.visibility == View.VISIBLE
+        val isPasteVisible = fabPaste?.visibility == View.VISIBLE
 
         if (isCompactMode) {
             val fabT = fabTools
@@ -247,8 +245,13 @@ class NetworkBrowserFragment : Fragment() {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
-                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
-                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                if (isToolsVisible) {
+                    lp.bottomToTop = R.id.fabTools
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                } else {
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                }
                 fab.layoutParams = lp
             }
             fabS?.let { fab ->
@@ -256,8 +259,18 @@ class NetworkBrowserFragment : Fragment() {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
-                lp.bottomToTop = R.id.fabTools
-                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                val anchorTop = when {
+                    isPasteVisible -> R.id.fabPaste
+                    isToolsVisible -> R.id.fabTools
+                    else -> 0
+                }
+                if (anchorTop != 0) {
+                    lp.bottomToTop = anchorTop
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                } else {
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                }
                 fab.layoutParams = lp
             }
             return
@@ -293,16 +306,22 @@ class NetworkBrowserFragment : Fragment() {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
                 lp.startToEnd = R.id.fabSelectAll
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
-                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
-                lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                if (isToolsVisible) {
+                    lp.bottomToTop = R.id.fabTools
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                } else {
+                    lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                    lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+                }
                 fab.layoutParams = lp
             }
             return
         }
 
         val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(ctx)
-        for (fab in viewsToUpdate) {
-            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+
+        fabTools?.let { fab ->
+            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
             lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             lp.bottomToTop = R.id.layoutActionPillsScroll
             lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -315,6 +334,30 @@ class NetworkBrowserFragment : Fragment() {
             }
             fab.layoutParams = lp
         }
+
+        fabPaste?.let { fab ->
+            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+            lp.startToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            if (isToolsVisible) {
+                lp.bottomToTop = R.id.fabTools
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                lp.bottomToTop = R.id.layoutActionPillsScroll
+                lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            if (isLeftHanded) {
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            fab.layoutParams = lp
+        }
+    }
+
+    private fun applyLeftHandedFabSettings() {
+        updateFabPositions()
     }
 
     private fun applyToolbarIconVisibility() {
@@ -1877,6 +1920,7 @@ class NetworkBrowserFragment : Fragment() {
         } else {
             fab.visibility = View.GONE
         }
+        updateFabPositions()
     }
 
     private fun sortAndFilterFiles(files: List<NetworkFile>): List<NetworkFile> {

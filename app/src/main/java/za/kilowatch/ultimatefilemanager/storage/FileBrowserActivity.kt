@@ -523,16 +523,15 @@ class FileBrowserActivity : AppCompatActivity() {
         } catch (_: Exception) {}
     }
 
-    private fun applyLeftHandedFabSettings() {
+    private fun updateFabPositions() {
+        if (!::fabPaste.isInitialized) return
         val isLeftHanded = za.kilowatch.ultimatefilemanager.settings.LeftHandedFabPreferenceManager.isLeftHanded(this)
-        val viewsToUpdate = mutableListOf<android.view.View>()
-        if (::fabPaste.isInitialized) {
-            viewsToUpdate.add(fabPaste)
-        }
-        fabTools?.let { viewsToUpdate.add(it) }
+        val isToolsVisible = fabTools?.visibility == View.VISIBLE
 
-        for (fab in viewsToUpdate) {
-            val lp = fab.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: continue
+        fabTools?.let { tools ->
+            val lp = tools.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams ?: return@let
+            lp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+            lp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             if (isLeftHanded) {
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
@@ -540,8 +539,31 @@ class FileBrowserActivity : AppCompatActivity() {
                 lp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
                 lp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
             }
-            fab.layoutParams = lp
+            tools.layoutParams = lp
         }
+
+        val pasteLp = fabPaste.layoutParams as? androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+        if (pasteLp != null) {
+            if (isToolsVisible) {
+                pasteLp.bottomToTop = R.id.fabTools
+                pasteLp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                pasteLp.bottomToBottom = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                pasteLp.bottomToTop = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            if (isLeftHanded) {
+                pasteLp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                pasteLp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            } else {
+                pasteLp.endToEnd = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.PARENT_ID
+                pasteLp.startToStart = androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.UNSET
+            }
+            fabPaste.layoutParams = pasteLp
+        }
+    }
+
+    private fun applyLeftHandedFabSettings() {
+        updateFabPositions()
     }
 
     private fun applyToolbarIconVisibility() {
@@ -3394,6 +3416,7 @@ class FileBrowserActivity : AppCompatActivity() {
         } else {
             fabPaste.visibility = View.GONE
         }
+        updateFabPositions()
     }
 
     private fun applyPickerFabState() {
@@ -3508,6 +3531,7 @@ class FileBrowserActivity : AppCompatActivity() {
                 fabPaste.setOnClickListener { confirmSmartSortFolder() }
             }
         }
+        updateFabPositions()
     }
 
     private fun showClipboardSheet() {
