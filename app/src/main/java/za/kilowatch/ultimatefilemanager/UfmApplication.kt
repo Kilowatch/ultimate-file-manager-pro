@@ -100,6 +100,30 @@ class UfmApplication : Application(), SingletonImageLoader.Factory {
 
         super.onCreate()
 
+        // Pre-warm the locale & font-size SharedPreferences caches BEFORE the ANR
+        // watchdog is installed (CrashReportManager.installAnrWatchdog below) and
+        // before the first Activity cold-starts. Every Activity overrides
+        // attachBaseContext() to wrap the base context via LocaleHelper.wrap() ->
+        // FontSizeHelper.applyTo() -> getSavedSize() / LocaleHelper.applyTo() ->
+        // getSavedLocale(), which synchronously reads the "ufm_prefs" file. On a
+        // cold start the first Activity's attachBaseContext is the first touch of
+        // that file: getSharedPreferences() spawns the background
+        // SharedPreferencesImpl-load thread and the getInt()/getString() blocks the
+        // main thread in SharedPreferencesImpl.awaitLoadedLocked() until the file
+        // finishes loading from disk. On a slow TV (SDMC DV 8535 4K, SDK 31, app
+        // 1.8.7-GOOGLE) that load exceeded the 5 s threshold and produced a genuine
+        // ANR report (LanguageWelcomeActivity.attachBaseContext ->
+        // SharedPreferencesImpl.getInt -> awaitLoadedLocked). Reading the values
+        // here — before the watchdog arms and before any Activity attaches — loads
+        // the file once and populates the in-memory caches, so every later
+        // attachBaseContext is a pure cache read with no disk I/O on the main thread.
+        try {
+            za.kilowatch.ultimatefilemanager.settings.FontSizeHelper.getSavedSize(this)
+            za.kilowatch.ultimatefilemanager.settings.LocaleHelper.getSavedLocale(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to pre-warm locale/font prefs", e)
+        }
+
         // Initialise Firebase Analytics asynchronously on a background thread (see the
         // google-flavor Analytics object). FirebaseInitProvider was removed from the
         // manifest to prevent it from firing during super.onCreate() before the security
