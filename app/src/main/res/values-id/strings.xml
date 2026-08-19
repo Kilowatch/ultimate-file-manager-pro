@@ -9232,6 +9232,9 @@ Kompres Gambar
     <string name="icon_toolbar_delete">
 Hapus
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+Pembersih &amp; Pengubah Nama EXIF Foto
+</string>
     <string name="export_pack">
 Ekspor Paket
 </string>
@@ -10930,6 +10933,234 @@ Hapus Foto
 </string>
     <string name="menu_more_options">
 Opsi lainnya
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+Pembersih &amp; Pengubah Nama EXIF Foto
+</string>
+    <string name="exif_tools_title">
+Alat EXIF Foto
+</string>
+    <string name="exif_tab_inspect">
+Periksa
+</string>
+    <string name="exif_tab_clean">
+Pembersih Privasi
+</string>
+    <string name="exif_tab_rename">
+Pengganti Nama Massal
+</string>
+    <string name="exif_photo_count">
+%1$d Foto Dipilih
+</string>
+    <string name="exif_card_location">
+Lokasi &amp; Geotag
+</string>
+    <string name="exif_card_camera">
+Kamera &amp; Optik Lensa
+</string>
+    <string name="exif_card_date">
+Tanggal &amp; Stempel Waktu
+</string>
+    <string name="exif_card_file">
+Detail File &amp; Perangkat
+</string>
+    <string name="exif_label_latitude">
+Lintang
+</string>
+    <string name="exif_label_longitude">
+Bujur
+</string>
+    <string name="exif_label_altitude">
+Ketinggian
+</string>
+    <string name="exif_label_camera_make">
+Merek Kamera
+</string>
+    <string name="exif_label_camera_model">
+Model Kamera
+</string>
+    <string name="exif_label_lens">
+Model Lensa
+</string>
+    <string name="exif_label_focal_length">
+Panjang Fokus
+</string>
+    <string name="exif_label_aperture">
+Bukaan
+</string>
+    <string name="exif_label_shutter_speed">
+Kecepatan Rana
+</string>
+    <string name="exif_label_iso">
+Kecepatan ISO
+</string>
+    <string name="exif_label_flash">
+Flash
+</string>
+    <string name="exif_label_white_balance">
+Keseimbangan Putih
+</string>
+    <string name="exif_label_date_taken">
+Tanggal Diambil
+</string>
+    <string name="exif_label_date_digitized">
+Tanggal Didigitalkan
+</string>
+    <string name="exif_label_dimensions">
+Dimensi
+</string>
+    <string name="exif_label_software">
+Perangkat Lunak / Sistem Operasi
+</string>
+    <string name="exif_label_author">
+Penulis / Artis
+</string>
+    <string name="exif_label_copyright">
+Hak Cipta
+</string>
+    <string name="exif_label_user_comment">
+Komentar Pengguna
+</string>
+    <string name="exif_btn_view_map">
+Lihat di Peta
+</string>
+    <string name="exif_btn_remove_gps_single">
+Hapus Geotag GPS
+</string>
+    <string name="exif_btn_wipe_all_single">
+Bersihkan Metadata Privasi
+</string>
+    <string name="exif_clean_title">
+Pembersih Privasi (Scrubber)
+</string>
+    <string name="exif_clean_preset_full">
+Pembersihan Privasi Penuh (Disarankan)
+</string>
+    <string name="exif_clean_preset_full_desc">
+Menghapus koordinat GPS, model kamera, nomor seri, tag penulis, dan komentar. Mempertahankan orientasi tampilan.
+</string>
+    <string name="exif_clean_preset_gps_only">
+Hapus Geotag GPS Saja
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+Mempertahankan pengaturan kamera dan stempel waktu, hanya menghapus koordinat lokasi.
+</string>
+    <string name="exif_clean_preset_custom">
+Penghapusan Privasi Kustom
+</string>
+    <string name="exif_clean_opt_gps">
+Hapus Geotag GPS (Lintang, Bujur, Ketinggian)
+</string>
+    <string name="exif_clean_opt_device">
+Hapus Info Perangkat &amp; Perangkat Keras (Model, Lensa, Nomor Seri)
+</string>
+    <string name="exif_clean_opt_author">
+Hapus Penulis, Hak Cipta &amp; Komentar Pribadi
+</string>
+    <string name="exif_clean_opt_date">
+Hapus Tanggal &amp; Stempel Waktu Pengambilan
+</string>
+    <string name="exif_clean_opt_camera">
+Hapus Pengaturan Kamera (ISO, Rana, Bukaan)
+</string>
+    <string name="exif_destination_overwrite">
+Timpa file asli (di tempat)
+</string>
+    <string name="exif_destination_copy">
+Simpan salinan yang dibersihkan (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+Simpan ke folder khusus
+</string>
+    <string name="exif_btn_start_cleaning">
+Bersihkan Metadata
+</string>
+    <string name="exif_cleaning_progress">
+Membersihkan %1$d dari %2$d…
+</string>
+    <string name="exif_clean_success">
+Metadata dibersihkan untuk %1$d foto
+</string>
+    <string name="exif_clean_error">
+Gagal membersihkan metadata untuk %1$s
+</string>
+    <string name="exif_rename_title">
+Pengganti Nama EXIF Massal
+</string>
+    <string name="exif_rename_pattern_label">
+Pola Penggantian Nama
+</string>
+    <string name="exif_rename_preset_date_original">
+Tanggal + Nama Asli
+</string>
+    <string name="exif_rename_preset_date_only">
+Tanggal Saja
+</string>
+    <string name="exif_rename_preset_camera_date">
+Kamera + Tanggal
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+Pratinjau Penggantian Nama
+</string>
+    <string name="exif_btn_start_rename">
+Ganti Nama %1$d Foto
+</string>
+    <string name="exif_renaming_progress">
+Mengganti Nama %1$d dari %2$d…
+</string>
+    <string name="exif_rename_success">
+Berhasil mengganti nama %1$d foto
+</string>
+    <string name="exif_rename_error">
+Gagal mengganti nama: %1$s
+</string>
+    <string name="exif_no_location">
+Tag lokasi GPS tidak ditemukan
+</string>
+    <string name="exif_no_camera">
+Informasi kamera tidak tersedia
+</string>
+    <string name="exif_no_date">
+Tanggal pengambilan tidak tersedia
+</string>
+    <string name="exif_confirm_overwrite_title">
+Timpa File Asli?
+</string>
+    <string name="exif_confirm_overwrite_msg">
+Ini akan mengubah metadata secara permanen pada %1$d foto asli. Apakah Anda ingin melanjutkan?
+</string>
+    <string name="exif_single_photo_cleaned">
+Metadata privasi dibersihkan untuk %1$s
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+Tidak Ada GPS
+</string>
+    <string name="exif_select_destination_folder">
+Pilih Folder Output
 </string>
 </resources>
 

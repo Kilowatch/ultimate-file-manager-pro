@@ -9232,6 +9232,9 @@ Compresser l\'image
     <string name="icon_toolbar_delete">
 Supprimer
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+Photo EXIF Cleaner &amp;amp; Renamer
+</string>
     <string name="export_pack">
 Exporter le pack
 </string>
@@ -10930,6 +10933,234 @@ Déplacé \"%1$s\" vers la corbeille
 </string>
     <string name="menu_more_options">
 Plus d\\\'options
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+Photo EXIF Cleaner &amp;amp; Renamer
+</string>
+    <string name="exif_tools_title">
+Photo EXIF Tools
+</string>
+    <string name="exif_tab_inspect">
+Inspecter
+</string>
+    <string name="exif_tab_clean">
+Nettoyeur de confidentialité
+</string>
+    <string name="exif_tab_rename">
+Renommage par lots
+</string>
+    <string name="exif_photo_count">
+%1$d photo(s) sélectionnée(s)
+</string>
+    <string name="exif_card_location">
+Localisation et géotags
+</string>
+    <string name="exif_card_camera">
+Optique de l\\\'appareil photo et de l\\\'objectif
+</string>
+    <string name="exif_card_date">
+Date et horodatages
+</string>
+    <string name="exif_card_file">
+Détails du fichier et de l\\\'appareil
+</string>
+    <string name="exif_label_latitude">
+Latitude
+</string>
+    <string name="exif_label_longitude">
+Longitude
+</string>
+    <string name="exif_label_altitude">
+Altitude
+</string>
+    <string name="exif_label_camera_make">
+Marque de l\\\'appareil photo
+</string>
+    <string name="exif_label_camera_model">
+Modèle de l\\\'appareil photo
+</string>
+    <string name="exif_label_lens">
+Modèle d\\\'objectif
+</string>
+    <string name="exif_label_focal_length">
+Longueur focale
+</string>
+    <string name="exif_label_aperture">
+Ouverture
+</string>
+    <string name="exif_label_shutter_speed">
+Vitesse d\\\'obturation
+</string>
+    <string name="exif_label_iso">
+Sensibilité ISO
+</string>
+    <string name="exif_label_flash">
+Flash
+</string>
+    <string name="exif_label_white_balance">
+Balance des blancs
+</string>
+    <string name="exif_label_date_taken">
+Date de prise de vue
+</string>
+    <string name="exif_label_date_digitized">
+Date de numérisation
+</string>
+    <string name="exif_label_dimensions">
+Dimensions
+</string>
+    <string name="exif_label_software">
+Logiciel / Système d\\\'exploitation
+</string>
+    <string name="exif_label_author">
+Auteur / Artiste
+</string>
+    <string name="exif_label_copyright">
+Droits d\\\'auteur
+</string>
+    <string name="exif_label_user_comment">
+Commentaire de l\\\'utilisateur
+</string>
+    <string name="exif_btn_view_map">
+Voir sur la carte
+</string>
+    <string name="exif_btn_remove_gps_single">
+Supprimer le géotag GPS
+</string>
+    <string name="exif_btn_wipe_all_single">
+Effacer les métadonnées de confidentialité
+</string>
+    <string name="exif_clean_title">
+Nettoyeur de confidentialité (Scrubber)
+</string>
+    <string name="exif_clean_preset_full">
+Nettoyage complet de la confidentialité (recommandé)
+</string>
+    <string name="exif_clean_preset_full_desc">
+Supprime les coordonnées GPS, le modèle d\\\'appareil photo, les numéros de série, les balises d\\\'auteur et les commentaires. Conserve l\\\'orientation de l\\\'affichage.
+</string>
+    <string name="exif_clean_preset_gps_only">
+Supprimer uniquement les géotags GPS
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+Conserve les réglages de l\\\'appareil photo et les horodatages, supprime uniquement les coordonnées de localisation.
+</string>
+    <string name="exif_clean_preset_custom">
+Suppression personnalisée de la confidentialité
+</string>
+    <string name="exif_clean_opt_gps">
+Supprimer les géotags GPS (latitude, longitude, altitude)
+</string>
+    <string name="exif_clean_opt_device">
+Supprimer les informations de l\\\'appareil et du matériel (modèle, objectif, numéros de série)
+</string>
+    <string name="exif_clean_opt_author">
+Supprimer l\\\'auteur, les droits d\\\'auteur et les commentaires personnels
+</string>
+    <string name="exif_clean_opt_date">
+Supprimer les dates de prise de vue et les horodatages
+</string>
+    <string name="exif_clean_opt_camera">
+Supprimer les réglages de l\\\'appareil photo (ISO, vitesse d\\\'obturation, ouverture)
+</string>
+    <string name="exif_destination_overwrite">
+Écraser les fichiers d\\\'origine (sur place)
+</string>
+    <string name="exif_destination_copy">
+Enregistrer des copies nettoyées (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+Enregistrer dans un dossier personnalisé
+</string>
+    <string name="exif_btn_start_cleaning">
+Nettoyer les métadonnées
+</string>
+    <string name="exif_cleaning_progress">
+Nettoyage de %1$d sur %2$d…
+</string>
+    <string name="exif_clean_success">
+Métadonnées nettoyées pour %1$d photo(s)
+</string>
+    <string name="exif_clean_error">
+Échec du nettoyage des métadonnées pour %1$s
+</string>
+    <string name="exif_rename_title">
+Renommage EXIF par lots
+</string>
+    <string name="exif_rename_pattern_label">
+Modèle de renommage
+</string>
+    <string name="exif_rename_preset_date_original">
+Date + nom d\\\'origine
+</string>
+    <string name="exif_rename_preset_date_only">
+Date uniquement
+</string>
+    <string name="exif_rename_preset_camera_date">
+Appareil photo + date
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+Aperçu du renommage
+</string>
+    <string name="exif_btn_start_rename">
+Renommer %1$d photo(s)
+</string>
+    <string name="exif_renaming_progress">
+Renommage de %1$d sur %2$d…
+</string>
+    <string name="exif_rename_success">
+%1$d photo(s) renommée(s) avec succès
+</string>
+    <string name="exif_rename_error">
+Échec du renommage : %1$s
+</string>
+    <string name="exif_no_location">
+Aucune balise de localisation GPS trouvée
+</string>
+    <string name="exif_no_camera">
+Informations sur l\\\'appareil photo non disponibles
+</string>
+    <string name="exif_no_date">
+Date de prise de vue non disponible
+</string>
+    <string name="exif_confirm_overwrite_title">
+Écraser les fichiers d\\\'origine ?
+</string>
+    <string name="exif_confirm_overwrite_msg">
+Cela modifiera définitivement les métadonnées de %1$d photo(s) d\\\'origine. Voulez-vous continuer ?
+</string>
+    <string name="exif_single_photo_cleaned">
+Métadonnées de confidentialité nettoyées pour %1$s
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+Aucun GPS
+</string>
+    <string name="exif_select_destination_folder">
+Sélectionner le dossier de sortie
 </string>
 </resources>
 

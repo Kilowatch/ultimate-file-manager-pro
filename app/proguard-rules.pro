@@ -386,6 +386,19 @@
 -keepclassmembers class com.squareup.gifencoder.** { *; }
 -dontwarn com.squareup.gifencoder.**
 
+# ── AndroidX ExifInterface (androidx.exifinterface:exifinterface) ──────────
+-keep class androidx.exifinterface.media.ExifInterface { *; }
+-keepclassmembers class androidx.exifinterface.media.ExifInterface {
+    public static <fields>;
+    public <methods>;
+}
+-dontwarn androidx.exifinterface.**
+
+# ── EXIF Privacy & Renamer Models ──────────────────────────────────────────
+-keep class za.kilowatch.ultimatefilemanager.util.ExifMetadataDetails { *; }
+-keep class za.kilowatch.ultimatefilemanager.util.ExifPrivacyOptions { *; }
+-keep class za.kilowatch.ultimatefilemanager.util.ExifRenamePreviewItem { *; }
+
 # ── BuildConfig ─────────────────────────────────────────────────────────────
 # Keep BuildConfig class and static fields so runtime accesses across the app
 # (GoRoLog, OAuth clients, crash reporting, flavor checks) never throw NoClassDefFoundError.

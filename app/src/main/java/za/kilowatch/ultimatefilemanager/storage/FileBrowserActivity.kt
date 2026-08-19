@@ -2129,6 +2129,18 @@ class FileBrowserActivity : AppCompatActivity() {
                 })
             }
 
+            // Photo EXIF Cleaner & Renamer (Mobile Only)
+            if (allImages && !DeviceUtils.isTvDevice(this) && pm.isIconEnabled(this, pm.KEY_EXIF_TOOLS)) {
+                list.add(FileToolsBottomSheet.ActionItem("exif_tools", getString(R.string.action_exif_cleaner_renamer), R.drawable.ic_exif_cleaner, "toolbar_exif_cleaner") {
+                    startActivity(Intent(this, za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity.EXTRA_FILE_PATHS,
+                            ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
             // Wallpaper (Single image file, mobile only)
             val isSingleImage = count == 1 && selected.first().isFile &&
                 selected.first().extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS

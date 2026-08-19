@@ -9232,6 +9232,9 @@ XML / マークアップ
     <string name="icon_toolbar_delete">
 削除
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+写真EXIFクリーナー&amp;リネーマー
+</string>
     <string name="export_pack">
 パックをエクスポート
 </string>
@@ -10930,6 +10933,234 @@ Android 11以降では、Android/dataおよびAndroid/obbフォルダへのア�
 </string>
     <string name="menu_more_options">
 その他のオプション
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+写真EXIFクリーナー&amp;リネーマー
+</string>
+    <string name="exif_tools_title">
+写真EXIFツール
+</string>
+    <string name="exif_tab_inspect">
+検査
+</string>
+    <string name="exif_tab_clean">
+プライバシークリーナー
+</string>
+    <string name="exif_tab_rename">
+一括リネーム
+</string>
+    <string name="exif_photo_count">
+%1$d 枚の写真を選択中
+</string>
+    <string name="exif_card_location">
+位置情報とジオタグ
+</string>
+    <string name="exif_card_camera">
+カメラとレンズ光学
+</string>
+    <string name="exif_card_date">
+日付とタイムスタンプ
+</string>
+    <string name="exif_card_file">
+ファイルとデバイス詳細
+</string>
+    <string name="exif_label_latitude">
+緯度
+</string>
+    <string name="exif_label_longitude">
+経度
+</string>
+    <string name="exif_label_altitude">
+高度
+</string>
+    <string name="exif_label_camera_make">
+カメラメーカー
+</string>
+    <string name="exif_label_camera_model">
+カメラモデル
+</string>
+    <string name="exif_label_lens">
+レンズモデル
+</string>
+    <string name="exif_label_focal_length">
+焦点距離
+</string>
+    <string name="exif_label_aperture">
+絞り値
+</string>
+    <string name="exif_label_shutter_speed">
+シャッタースピード
+</string>
+    <string name="exif_label_iso">
+ISO感度
+</string>
+    <string name="exif_label_flash">
+フラッシュ
+</string>
+    <string name="exif_label_white_balance">
+ホワイトバランス
+</string>
+    <string name="exif_label_date_taken">
+撮影日時
+</string>
+    <string name="exif_label_date_digitized">
+デジタル化日時
+</string>
+    <string name="exif_label_dimensions">
+画像サイズ
+</string>
+    <string name="exif_label_software">
+ソフトウェア / OS
+</string>
+    <string name="exif_label_author">
+作者 / アーティスト
+</string>
+    <string name="exif_label_copyright">
+著作権
+</string>
+    <string name="exif_label_user_comment">
+ユーザーコメント
+</string>
+    <string name="exif_btn_view_map">
+地図で表示
+</string>
+    <string name="exif_btn_remove_gps_single">
+GPSジオタグを削除
+</string>
+    <string name="exif_btn_wipe_all_single">
+プライバシーメタデータを消去
+</string>
+    <string name="exif_clean_title">
+プライバシークリーナー（スクラバー）
+</string>
+    <string name="exif_clean_preset_full">
+完全プライバシー消去（推奨）
+</string>
+    <string name="exif_clean_preset_full_desc">
+GPS座標、カメラモデル、シリアル番号、作者タグ、コメントを削除します。表示方向は維持されます。
+</string>
+    <string name="exif_clean_preset_gps_only">
+GPSジオタグのみ削除
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+カメラ設定とタイムスタンプは保持し、位置座標のみ削除します。
+</string>
+    <string name="exif_clean_preset_custom">
+カスタムプライバシー削除
+</string>
+    <string name="exif_clean_opt_gps">
+GPSジオタグを削除（緯度、経度、高度）
+</string>
+    <string name="exif_clean_opt_device">
+デバイスとハードウェア情報を削除（モデル、レンズ、シリアル番号）
+</string>
+    <string name="exif_clean_opt_author">
+作者、著作権、個人コメントを削除
+</string>
+    <string name="exif_clean_opt_date">
+撮影日時とタイムスタンプを削除
+</string>
+    <string name="exif_clean_opt_camera">
+カメラ設定を削除（ISO、シャッター、絞り）
+</string>
+    <string name="exif_destination_overwrite">
+元のファイルを上書き（その場で）
+</string>
+    <string name="exif_destination_copy">
+クリーニング済みコピーを保存（_cleaned）
+</string>
+    <string name="exif_destination_folder">
+カスタムフォルダーに保存
+</string>
+    <string name="exif_btn_start_cleaning">
+メタデータをクリーニング
+</string>
+    <string name="exif_cleaning_progress">
+%1$d / %2$d をクリーニング中…
+</string>
+    <string name="exif_clean_success">
+%1$d 枚の写真のメタデータをクリーニングしました
+</string>
+    <string name="exif_clean_error">
+%1$s 枚の写真のメタデータのクリーニングに失敗しました
+</string>
+    <string name="exif_rename_title">
+一括EXIFリネーマー
+</string>
+    <string name="exif_rename_pattern_label">
+リネームパターン
+</string>
+    <string name="exif_rename_preset_date_original">
+日付 + 元の名前
+</string>
+    <string name="exif_rename_preset_date_only">
+日付のみ
+</string>
+    <string name="exif_rename_preset_camera_date">
+カメラ + 日付
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+リネームプレビュー
+</string>
+    <string name="exif_btn_start_rename">
+%1$d 枚の写真をリネーム
+</string>
+    <string name="exif_renaming_progress">
+%1$d / %2$d をリネーム中…
+</string>
+    <string name="exif_rename_success">
+%1$d 枚の写真をリネームしました
+</string>
+    <string name="exif_rename_error">
+リネームに失敗しました: %1$s
+</string>
+    <string name="exif_no_location">
+GPS位置情報タグが見つかりません
+</string>
+    <string name="exif_no_camera">
+カメラ情報がありません
+</string>
+    <string name="exif_no_date">
+撮影日時がありません
+</string>
+    <string name="exif_confirm_overwrite_title">
+元のファイルを上書きしますか？
+</string>
+    <string name="exif_confirm_overwrite_msg">
+これにより、%1$d 枚の元の写真のメタデータが完全に変更されます。続行しますか？
+</string>
+    <string name="exif_single_photo_cleaned">
+%1$s 件のプライバシーメタデータをクリーニングしました
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+GPSなし
+</string>
+    <string name="exif_select_destination_folder">
+出力フォルダーを選択
 </string>
 </resources>
 

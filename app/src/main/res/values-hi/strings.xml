@@ -9232,6 +9232,9 @@ XML / मार्कअप
     <string name="icon_toolbar_delete">
 हटाएँ
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+फोटो EXIF क्लीनर और रिनेमर
+</string>
     <string name="export_pack">
 पैक निर्यात करें
 </string>
@@ -10930,6 +10933,234 @@ UFM में खोलें
 </string>
     <string name="menu_more_options">
 अधिक विकल्प
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+फोटो EXIF क्लीनर और रिनेमर
+</string>
+    <string name="exif_tools_title">
+फोटो EXIF टूल्स
+</string>
+    <string name="exif_tab_inspect">
+निरीक्षण
+</string>
+    <string name="exif_tab_clean">
+गोपनीयता क्लीनर
+</string>
+    <string name="exif_tab_rename">
+बैच रिनेमर
+</string>
+    <string name="exif_photo_count">
+%1$d फोटो चयनित
+</string>
+    <string name="exif_card_location">
+स्थान और जियोटैग
+</string>
+    <string name="exif_card_camera">
+कैमरा और लेंस ऑप्टिक्स
+</string>
+    <string name="exif_card_date">
+तारीख और टाइमस्टैम्प
+</string>
+    <string name="exif_card_file">
+फ़ाइल और डिवाइस विवरण
+</string>
+    <string name="exif_label_latitude">
+अक्षांश
+</string>
+    <string name="exif_label_longitude">
+देशांतर
+</string>
+    <string name="exif_label_altitude">
+ऊंचाई
+</string>
+    <string name="exif_label_camera_make">
+कैमरा निर्माता
+</string>
+    <string name="exif_label_camera_model">
+कैमरा मॉडल
+</string>
+    <string name="exif_label_lens">
+लेंस मॉडल
+</string>
+    <string name="exif_label_focal_length">
+फोकल लंबाई
+</string>
+    <string name="exif_label_aperture">
+अपर्चर
+</string>
+    <string name="exif_label_shutter_speed">
+शटर गति
+</string>
+    <string name="exif_label_iso">
+आईएसओ गति
+</string>
+    <string name="exif_label_flash">
+फ्लैश
+</string>
+    <string name="exif_label_white_balance">
+श्वेत संतुलन
+</string>
+    <string name="exif_label_date_taken">
+तारीख ली गई
+</string>
+    <string name="exif_label_date_digitized">
+डिजिटलीकृत तारीख
+</string>
+    <string name="exif_label_dimensions">
+आयाम
+</string>
+    <string name="exif_label_software">
+सॉफ़्टवेयर / ओएस
+</string>
+    <string name="exif_label_author">
+लेखक / कलाकार
+</string>
+    <string name="exif_label_copyright">
+कॉपीराइट
+</string>
+    <string name="exif_label_user_comment">
+उपयोगकर्ता टिप्पणी
+</string>
+    <string name="exif_btn_view_map">
+मानचित्र पर देखें
+</string>
+    <string name="exif_btn_remove_gps_single">
+GPS जियोटैग हटाएं
+</string>
+    <string name="exif_btn_wipe_all_single">
+गोपनीयता मेटाडेटा मिटाएं
+</string>
+    <string name="exif_clean_title">
+गोपनीयता क्लीनर (स्क्रबर)
+</string>
+    <string name="exif_clean_preset_full">
+पूर्ण गोपनीयता वाइप (अनुशंसित)
+</string>
+    <string name="exif_clean_preset_full_desc">
+GPS निर्देशांक, कैमरा मॉडल, सीरियल नंबर, लेखक टैग और टिप्पणियाँ हटाता है। प्रदर्शन ओरिएंटेशन बनाए रखता है।
+</string>
+    <string name="exif_clean_preset_gps_only">
+केवल GPS जियोटैग हटाएं
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+कैमरा सेटिंग्स और टाइमस्टैम्प रखता है, केवल स्थान निर्देशांक हटाता है।
+</string>
+    <string name="exif_clean_preset_custom">
+कस्टम गोपनीयता स्ट्रिपिंग
+</string>
+    <string name="exif_clean_opt_gps">
+GPS जियोटैग हटाएं (अक्षांश, देशांतर, ऊंचाई)
+</string>
+    <string name="exif_clean_opt_device">
+डिवाइस और हार्डवेयर जानकारी हटाएं (मॉडल, लेंस, सीरियल नंबर)
+</string>
+    <string name="exif_clean_opt_author">
+लेखक, कॉपीराइट और व्यक्तिगत टिप्पणियाँ हटाएं
+</string>
+    <string name="exif_clean_opt_date">
+कैप्चर तारीख और टाइमस्टैम्प हटाएं
+</string>
+    <string name="exif_clean_opt_camera">
+कैमरा सेटिंग्स हटाएं (ISO, शटर, अपर्चर)
+</string>
+    <string name="exif_destination_overwrite">
+मूल फ़ाइलों को अधिलेखित करें (इन-प्लेस)
+</string>
+    <string name="exif_destination_copy">
+साफ की गई प्रतियाँ सहेजें (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+कस्टम फ़ोल्डर में सहेजें
+</string>
+    <string name="exif_btn_start_cleaning">
+मेटाडेटा साफ़ करें
+</string>
+    <string name="exif_cleaning_progress">
+%2$d में से %1$d साफ़ किया जा रहा है…
+</string>
+    <string name="exif_clean_success">
+%1$d फोटो का मेटाडेटा साफ़ किया गया
+</string>
+    <string name="exif_clean_error">
+%1$s के मेटाडेटा साफ़ करने में विफल
+</string>
+    <string name="exif_rename_title">
+बैच EXIF रिनेमर
+</string>
+    <string name="exif_rename_pattern_label">
+नाम बदलने का पैटर्न
+</string>
+    <string name="exif_rename_preset_date_original">
+तारीख + मूल
+</string>
+    <string name="exif_rename_preset_date_only">
+केवल तारीख
+</string>
+    <string name="exif_rename_preset_camera_date">
+कैमरा + तारीख
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+नाम बदलने का पूर्वावलोकन
+</string>
+    <string name="exif_btn_start_rename">
+%1$d फोटो नाम बदलें
+</string>
+    <string name="exif_renaming_progress">
+%2$d में से %1$d नाम बदला जा रहा है…
+</string>
+    <string name="exif_rename_success">
+%1$d फोटो का नाम बदलना सफल रहा
+</string>
+    <string name="exif_rename_error">
+नाम बदलने में विफल: %1$s
+</string>
+    <string name="exif_no_location">
+कोई GPS स्थान टैग नहीं मिला
+</string>
+    <string name="exif_no_camera">
+कैमरा जानकारी उपलब्ध नहीं है
+</string>
+    <string name="exif_no_date">
+तारीख उपलब्ध नहीं है
+</string>
+    <string name="exif_confirm_overwrite_title">
+मूल फ़ाइलों को अधिलेखित करें?
+</string>
+    <string name="exif_confirm_overwrite_msg">
+यह %1$d मूल फोटो के मेटाडेटा को स्थायी रूप से संशोधित करेगा। क्या आप आगे बढ़ना चाहते हैं?
+</string>
+    <string name="exif_single_photo_cleaned">
+%1$s के लिए गोपनीयता मेटाडेटा साफ़ किया गया
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+कोई GPS नहीं
+</string>
+    <string name="exif_select_destination_folder">
+आउटपुट फ़ोल्डर चुनें
 </string>
 </resources>
 

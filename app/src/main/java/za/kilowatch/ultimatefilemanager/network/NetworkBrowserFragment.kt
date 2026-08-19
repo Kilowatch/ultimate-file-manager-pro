@@ -495,6 +495,16 @@ class NetworkBrowserFragment : Fragment() {
                 })
             }
 
+            // Photo EXIF Cleaner & Renamer (Mobile Only)
+            if (allNetworkImages && !DeviceUtils.isTvDevice(requireContext()) && pm.isIconEnabled(context, pm.KEY_EXIF_TOOLS)) {
+                list.add(FileToolsBottomSheet.ActionItem("exif_tools", getString(R.string.action_exif_cleaner_renamer), R.drawable.ic_exif_cleaner, "toolbar_exif_cleaner") {
+                    val netImages = selected.filter {
+                        it.name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+                    }
+                    (activity as? NetworkBrowserActivity)?.downloadNetworkImagesAndLaunchExifTools(netImages)
+                })
+            }
+
             // Wallpaper (Single network image file, mobile only)
             val isSingleNetworkImage = count == 1 && !selected.first().isDirectory &&
                 selected.first().name.substringAfterLast('.').lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS

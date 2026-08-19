@@ -32,6 +32,7 @@ object ToolbarIconsPreferenceManager {
     const val KEY_SET_HOME_WALLPAPER = "pref_icon_set_home_wallpaper"
     const val KEY_SET_LOCK_WALLPAPER = "pref_icon_set_lock_wallpaper"
     const val KEY_CREATE_GIF = "pref_icon_create_gif"
+    const val KEY_EXIF_TOOLS = "pref_icon_exif_tools"
 
 
     fun isIconEnabled(context: Context, key: String): Boolean {

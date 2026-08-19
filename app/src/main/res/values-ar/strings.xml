@@ -9232,6 +9232,9 @@ XML / ترميز
     <string name="icon_toolbar_delete">
 حذف
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+منظف ومعيد تسمية EXIF للصور
+</string>
     <string name="export_pack">
 تصدير الحزمة
 </string>
@@ -10930,6 +10933,234 @@ UFM Spreadsheet Viewer
 </string>
     <string name="menu_more_options">
 مزيد من الخيارات
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+منظف ومعيد تسمية EXIF للصور
+</string>
+    <string name="exif_tools_title">
+أدوات EXIF للصور
+</string>
+    <string name="exif_tab_inspect">
+فحص
+</string>
+    <string name="exif_tab_clean">
+منظف الخصوصية
+</string>
+    <string name="exif_tab_rename">
+إعادة التسمية الجماعية
+</string>
+    <string name="exif_photo_count">
+الصور المحددة: %1$d
+</string>
+    <string name="exif_card_location">
+الموقع والعلامات الجغرافية
+</string>
+    <string name="exif_card_camera">
+إعدادات الكاميرا والعدسة
+</string>
+    <string name="exif_card_date">
+التاريخ والطوابع الزمنية
+</string>
+    <string name="exif_card_file">
+تفاصيل الملف والجهاز
+</string>
+    <string name="exif_label_latitude">
+خط العرض
+</string>
+    <string name="exif_label_longitude">
+خط الطول
+</string>
+    <string name="exif_label_altitude">
+الارتفاع
+</string>
+    <string name="exif_label_camera_make">
+الشركة المصنعة للكاميرا
+</string>
+    <string name="exif_label_camera_model">
+طراز الكاميرا
+</string>
+    <string name="exif_label_lens">
+طراز العدسة
+</string>
+    <string name="exif_label_focal_length">
+البعد البؤري
+</string>
+    <string name="exif_label_aperture">
+فتحة العدسة
+</string>
+    <string name="exif_label_shutter_speed">
+سرعة الغالق
+</string>
+    <string name="exif_label_iso">
+سرعة ISO
+</string>
+    <string name="exif_label_flash">
+الفلاش
+</string>
+    <string name="exif_label_white_balance">
+توازن اللون الأبيض
+</string>
+    <string name="exif_label_date_taken">
+تاريخ الالتقاط
+</string>
+    <string name="exif_label_date_digitized">
+تاريخ الرقمنة
+</string>
+    <string name="exif_label_dimensions">
+الأبعاد
+</string>
+    <string name="exif_label_software">
+البرنامج / نظام التشغيل
+</string>
+    <string name="exif_label_author">
+المؤلف / الفنان
+</string>
+    <string name="exif_label_copyright">
+حقوق النشر
+</string>
+    <string name="exif_label_user_comment">
+تعليق المستخدم
+</string>
+    <string name="exif_btn_view_map">
+عرض على الخريطة
+</string>
+    <string name="exif_btn_remove_gps_single">
+إزالة العلامة الجغرافية GPS
+</string>
+    <string name="exif_btn_wipe_all_single">
+مسح بيانات الخصوصية
+</string>
+    <string name="exif_clean_title">
+منظف الخصوصية (الماسح)
+</string>
+    <string name="exif_clean_preset_full">
+مسح الخصوصية الكامل (موصى به)
+</string>
+    <string name="exif_clean_preset_full_desc">
+يزيل إحداثيات GPS وطراز الكاميرا والأرقام التسلسلية وعلامات المؤلف والتعليقات. يحافظ على اتجاه العرض.
+</string>
+    <string name="exif_clean_preset_gps_only">
+إزالة العلامات الجغرافية GPS فقط
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+يحتفظ بإعدادات الكاميرا والطوابع الزمنية، ويزيل إحداثيات الموقع فقط.
+</string>
+    <string name="exif_clean_preset_custom">
+تخصيص إزالة الخصوصية
+</string>
+    <string name="exif_clean_opt_gps">
+إزالة العلامات الجغرافية GPS (خط العرض، خط الطول، الارتفاع)
+</string>
+    <string name="exif_clean_opt_device">
+إزالة معلومات الجهاز والعتاد (الطراز، العدسة، الأرقام التسلسلية)
+</string>
+    <string name="exif_clean_opt_author">
+إزالة المؤلف وحقوق النشر والتعليقات الشخصية
+</string>
+    <string name="exif_clean_opt_date">
+إزالة تواريخ الالتقاط والطوابع الزمنية
+</string>
+    <string name="exif_clean_opt_camera">
+إزالة إعدادات الكاميرا (ISO، سرعة الغالق، فتحة العدسة)
+</string>
+    <string name="exif_destination_overwrite">
+الكتابة فوق الملفات الأصلية (في مكانها)
+</string>
+    <string name="exif_destination_copy">
+حفظ نسخ منظفة (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+حفظ في مجلد مخصص
+</string>
+    <string name="exif_btn_start_cleaning">
+تنظيف البيانات الوصفية
+</string>
+    <string name="exif_cleaning_progress">
+جارٍ تنظيف %1$d من %2$d…
+</string>
+    <string name="exif_clean_success">
+تم تنظيف البيانات الوصفية لـ %1$d من الصور
+</string>
+    <string name="exif_clean_error">
+فشل تنظيف البيانات الوصفية لـ %1$s
+</string>
+    <string name="exif_rename_title">
+إعادة تسمية EXIF الجماعية
+</string>
+    <string name="exif_rename_pattern_label">
+نمط إعادة التسمية
+</string>
+    <string name="exif_rename_preset_date_original">
+التاريخ + الأصلي
+</string>
+    <string name="exif_rename_preset_date_only">
+التاريخ فقط
+</string>
+    <string name="exif_rename_preset_camera_date">
+الكاميرا + التاريخ
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+معاينة إعادة التسمية
+</string>
+    <string name="exif_btn_start_rename">
+إعادة تسمية %1$d من الصور
+</string>
+    <string name="exif_renaming_progress">
+جارٍ إعادة تسمية %1$d من %2$d…
+</string>
+    <string name="exif_rename_success">
+تمت إعادة تسمية %1$d من الصور بنجاح
+</string>
+    <string name="exif_rename_error">
+فشل إعادة التسمية: %1$s
+</string>
+    <string name="exif_no_location">
+لم يتم العثور على علامة موقع GPS
+</string>
+    <string name="exif_no_camera">
+معلومات الكاميرا غير متاحة
+</string>
+    <string name="exif_no_date">
+تاريخ الالتقاط غير متاح
+</string>
+    <string name="exif_confirm_overwrite_title">
+استبدال الملفات الأصلية؟
+</string>
+    <string name="exif_confirm_overwrite_msg">
+سيؤدي هذا إلى تعديل البيانات الوصفية بشكل دائم في %1$d من الصور الأصلية. هل تريد المتابعة؟
+</string>
+    <string name="exif_single_photo_cleaned">
+تم تنظيف بيانات الخصوصية لـ %1$s
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+لا يوجد GPS
+</string>
+    <string name="exif_select_destination_folder">
+اختر مجلد الإخراج
 </string>
 </resources>
 

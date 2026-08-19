@@ -1114,6 +1114,18 @@ class FileBrowserFragment : Fragment() {
                 })
             }
 
+            // Photo EXIF Cleaner & Renamer (Mobile Only)
+            if (allImages && !za.kilowatch.ultimatefilemanager.util.DeviceUtils.isTvDevice(requireContext()) && pm.isIconEnabled(context, pm.KEY_EXIF_TOOLS)) {
+                list.add(FileToolsBottomSheet.ActionItem("exif_tools", getString(R.string.action_exif_cleaner_renamer), R.drawable.ic_exif_cleaner, "toolbar_exif_cleaner") {
+                    startActivity(android.content.Intent(requireContext(), za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity::class.java).apply {
+                        putStringArrayListExtra(
+                            za.kilowatch.ultimatefilemanager.viewer.ExifToolsActivity.EXTRA_FILE_PATHS,
+                            java.util.ArrayList(selected.map { it.absolutePath })
+                        )
+                    })
+                })
+            }
+
             // Extract Here
             val hasArchiveSelected = selected.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
             if (hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) {

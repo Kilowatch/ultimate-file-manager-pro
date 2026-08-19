@@ -102,6 +102,9 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 items.indexOfFirst { it.prefKey == ToolbarIconsPreferenceManager.KEY_SELECT_ALL } + 1,
                 IconItem(R.drawable.ic_invert_selection, R.string.action_invert_selection, ToolbarIconsPreferenceManager.KEY_INVERT_SELECTION)
             )
+            items.add(
+                IconItem(R.drawable.ic_exif_cleaner, R.string.action_exif_cleaner_renamer, ToolbarIconsPreferenceManager.KEY_EXIF_TOOLS)
+            )
         }
 
 
@@ -140,6 +143,7 @@ class ToolbarIconsActivity : AppCompatActivity() {
                 ToolbarIconsPreferenceManager.KEY_DELETE -> "toolbar_delete"
                 ToolbarIconsPreferenceManager.KEY_PIN -> "toolbar_pin"
                 ToolbarIconsPreferenceManager.KEY_UNPIN -> "toolbar_unpin"
+                ToolbarIconsPreferenceManager.KEY_EXIF_TOOLS -> "toolbar_exif_cleaner"
                 else -> null
             }
             if (iconId != null) {

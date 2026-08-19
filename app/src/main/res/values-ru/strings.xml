@@ -9232,6 +9232,9 @@ XML / Разметка
     <string name="icon_toolbar_delete">
 Удалить
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+Photo EXIF Cleaner &amp; Renamer
+</string>
     <string name="export_pack">
 Экспорт набора
 </string>
@@ -10930,6 +10933,234 @@ Android 11+ ограничивает доступ к папкам Android/data �
 </string>
     <string name="menu_more_options">
 Дополнительные параметры
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+Photo EXIF Cleaner &amp; Renamer
+</string>
+    <string name="exif_tools_title">
+Инструменты EXIF для фото
+</string>
+    <string name="exif_tab_inspect">
+Просмотр
+</string>
+    <string name="exif_tab_clean">
+Очистка конфиденциальности
+</string>
+    <string name="exif_tab_rename">
+Пакетный переименователь
+</string>
+    <string name="exif_photo_count">
+%1$d фото выбрано
+</string>
+    <string name="exif_card_location">
+Местоположение и геометки
+</string>
+    <string name="exif_card_camera">
+Камера и объектив
+</string>
+    <string name="exif_card_date">
+Дата и временные метки
+</string>
+    <string name="exif_card_file">
+Сведения о файле и устройстве
+</string>
+    <string name="exif_label_latitude">
+Широта
+</string>
+    <string name="exif_label_longitude">
+Долгота
+</string>
+    <string name="exif_label_altitude">
+Высота
+</string>
+    <string name="exif_label_camera_make">
+Производитель камеры
+</string>
+    <string name="exif_label_camera_model">
+Модель камеры
+</string>
+    <string name="exif_label_lens">
+Модель объектива
+</string>
+    <string name="exif_label_focal_length">
+Фокусное расстояние
+</string>
+    <string name="exif_label_aperture">
+Диафрагма
+</string>
+    <string name="exif_label_shutter_speed">
+Выдержка
+</string>
+    <string name="exif_label_iso">
+Светочувствительность (ISO)
+</string>
+    <string name="exif_label_flash">
+Вспышка
+</string>
+    <string name="exif_label_white_balance">
+Баланс белого
+</string>
+    <string name="exif_label_date_taken">
+Дата съёмки
+</string>
+    <string name="exif_label_date_digitized">
+Дата оцифровки
+</string>
+    <string name="exif_label_dimensions">
+Размеры
+</string>
+    <string name="exif_label_software">
+ПО / ОС
+</string>
+    <string name="exif_label_author">
+Автор / Художник
+</string>
+    <string name="exif_label_copyright">
+Авторские права
+</string>
+    <string name="exif_label_user_comment">
+Комментарий пользователя
+</string>
+    <string name="exif_btn_view_map">
+Показать на карте
+</string>
+    <string name="exif_btn_remove_gps_single">
+Удалить GPS-геометку
+</string>
+    <string name="exif_btn_wipe_all_single">
+Очистить конфиденциальные метаданные
+</string>
+    <string name="exif_clean_title">
+Очиститель конфиденциальности (Скраббер)
+</string>
+    <string name="exif_clean_preset_full">
+Полная очистка конфиденциальности (рекомендуется)
+</string>
+    <string name="exif_clean_preset_full_desc">
+Удаляет GPS-координаты, модель камеры, серийные номера, данные об авторе и комментарии. Сохраняет ориентацию отображения.
+</string>
+    <string name="exif_clean_preset_gps_only">
+Удалить только GPS-геометки
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+Сохраняет настройки камеры и временные метки, удаляет только координаты местоположения.
+</string>
+    <string name="exif_clean_preset_custom">
+Выборочное удаление личных данных
+</string>
+    <string name="exif_clean_opt_gps">
+Удалить GPS-геометки (широта, долгота, высота)
+</string>
+    <string name="exif_clean_opt_device">
+Удалить информацию об устройстве и оборудовании (модель, объектив, серийные номера)
+</string>
+    <string name="exif_clean_opt_author">
+Удалить данные об авторе, авторские права и личные комментарии
+</string>
+    <string name="exif_clean_opt_date">
+Удалить даты съёмки и временные метки
+</string>
+    <string name="exif_clean_opt_camera">
+Удалить настройки камеры (ISO, выдержка, диафрагма)
+</string>
+    <string name="exif_destination_overwrite">
+Перезаписать исходные файлы (на месте)
+</string>
+    <string name="exif_destination_copy">
+Сохранить очищенные копии (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+Сохранить в выбранную папку
+</string>
+    <string name="exif_btn_start_cleaning">
+Очистить метаданные
+</string>
+    <string name="exif_cleaning_progress">
+Очистка %1$d из %2$d…
+</string>
+    <string name="exif_clean_success">
+Метаданные очищены для %1$d фото
+</string>
+    <string name="exif_clean_error">
+Не удалось очистить метаданные для %1$s
+</string>
+    <string name="exif_rename_title">
+Пакетный переименователь EXIF
+</string>
+    <string name="exif_rename_pattern_label">
+Шаблон переименования
+</string>
+    <string name="exif_rename_preset_date_original">
+Дата + Оригинал
+</string>
+    <string name="exif_rename_preset_date_only">
+Только дата
+</string>
+    <string name="exif_rename_preset_camera_date">
+Камера + Дата
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+Предпросмотр переименования
+</string>
+    <string name="exif_btn_start_rename">
+Переименовать %1$d фото
+</string>
+    <string name="exif_renaming_progress">
+Переименование %1$d из %2$d…
+</string>
+    <string name="exif_rename_success">
+Успешно переименовано %1$d фото
+</string>
+    <string name="exif_rename_error">
+Не удалось переименовать: %1$s
+</string>
+    <string name="exif_no_location">
+GPS-геометка не найдена
+</string>
+    <string name="exif_no_camera">
+Информация о камере недоступна
+</string>
+    <string name="exif_no_date">
+Дата съёмки недоступна
+</string>
+    <string name="exif_confirm_overwrite_title">
+Перезаписать исходные файлы?
+</string>
+    <string name="exif_confirm_overwrite_msg">
+Это безвозвратно изменит метаданные в %1$d исходных фото. Продолжить?
+</string>
+    <string name="exif_single_photo_cleaned">
+Конфиденциальные метаданные очищены для %1$s
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+Без GPS
+</string>
+    <string name="exif_select_destination_folder">
+Выберите папку для сохранения
 </string>
 </resources>
 

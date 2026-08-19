@@ -37,7 +37,9 @@ browser = "1.9.0"
 media3 = "1.10.1"
 shizuku = "13.1.5"
 lottie = "6.3.0"
+exifinterface = "1.4.2"
 [libraries]
+androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

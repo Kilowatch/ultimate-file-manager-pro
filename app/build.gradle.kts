@@ -393,6 +393,7 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0")
     implementation("androidx.biometric:biometric:1.1.0")  // latest stable (alpha: 1.4.0-alpha06)
     implementation("androidx.documentfile:documentfile:1.0.1")
+    implementation(libs.androidx.exifinterface)
     "googleImplementation"(libs.firebase.analytics)
     
     // Archive Support

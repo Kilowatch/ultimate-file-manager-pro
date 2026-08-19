@@ -9232,6 +9232,9 @@ XML / 마크업
     <string name="icon_toolbar_delete">
 삭제
 </string>
+    <string name="icon_toolbar_exif_cleaner">
+사진 EXIF 정리 및 이름 바꾸기
+</string>
     <string name="export_pack">
 팩 내보내기
 </string>
@@ -10930,6 +10933,234 @@ Android 11+에서는 Android/data 및 Android/obb 폴더에 대한 접근이 제
 </string>
     <string name="menu_more_options">
 추가 옵션
+</string>
+
+    <!-- Photo EXIF Inspector, Privacy Cleaner & Batch Renamer -->
+    <string name="action_exif_cleaner_renamer">
+사진 EXIF 정리 및 이름 바꾸기
+</string>
+    <string name="exif_tools_title">
+사진 EXIF 도구
+</string>
+    <string name="exif_tab_inspect">
+검사
+</string>
+    <string name="exif_tab_clean">
+개인정보 클리너
+</string>
+    <string name="exif_tab_rename">
+일괄 이름 변경
+</string>
+    <string name="exif_photo_count">
+사진 %1$d장 선택됨
+</string>
+    <string name="exif_card_location">
+위치 및 지오태그
+</string>
+    <string name="exif_card_camera">
+카메라 및 렌즈 정보
+</string>
+    <string name="exif_card_date">
+날짜 및 타임스탬프
+</string>
+    <string name="exif_card_file">
+파일 및 기기 정보
+</string>
+    <string name="exif_label_latitude">
+위도
+</string>
+    <string name="exif_label_longitude">
+경도
+</string>
+    <string name="exif_label_altitude">
+고도
+</string>
+    <string name="exif_label_camera_make">
+카메라 제조사
+</string>
+    <string name="exif_label_camera_model">
+카메라 모델
+</string>
+    <string name="exif_label_lens">
+렌즈 모델
+</string>
+    <string name="exif_label_focal_length">
+초점 거리
+</string>
+    <string name="exif_label_aperture">
+조리개
+</string>
+    <string name="exif_label_shutter_speed">
+셔터 속도
+</string>
+    <string name="exif_label_iso">
+ISO 감도
+</string>
+    <string name="exif_label_flash">
+플래시
+</string>
+    <string name="exif_label_white_balance">
+화이트 밸런스
+</string>
+    <string name="exif_label_date_taken">
+촬영 날짜
+</string>
+    <string name="exif_label_date_digitized">
+디지털화 날짜
+</string>
+    <string name="exif_label_dimensions">
+크기
+</string>
+    <string name="exif_label_software">
+소프트웨어 / OS
+</string>
+    <string name="exif_label_author">
+작성자 / 아티스트
+</string>
+    <string name="exif_label_copyright">
+저작권
+</string>
+    <string name="exif_label_user_comment">
+사용자 주석
+</string>
+    <string name="exif_btn_view_map">
+지도에서 보기
+</string>
+    <string name="exif_btn_remove_gps_single">
+GPS 지오태그 제거
+</string>
+    <string name="exif_btn_wipe_all_single">
+개인정보 메타데이터 삭제
+</string>
+    <string name="exif_clean_title">
+개인정보 클리너 (스크러버)
+</string>
+    <string name="exif_clean_preset_full">
+전체 개인정보 삭제 (권장)
+</string>
+    <string name="exif_clean_preset_full_desc">
+GPS 좌표, 카메라 모델, 일련번호, 작성자 태그, 주석을 제거합니다. 표시 방향은 유지됩니다.
+</string>
+    <string name="exif_clean_preset_gps_only">
+GPS 지오태그만 제거
+</string>
+    <string name="exif_clean_preset_gps_only_desc">
+카메라 설정과 타임스탬프는 유지하고 위치 좌표만 제거합니다.
+</string>
+    <string name="exif_clean_preset_custom">
+사용자 지정 개인정보 제거
+</string>
+    <string name="exif_clean_opt_gps">
+GPS 지오태그 제거 (위도, 경도, 고도)
+</string>
+    <string name="exif_clean_opt_device">
+기기 및 하드웨어 정보 제거 (모델, 렌즈, 일련번호)
+</string>
+    <string name="exif_clean_opt_author">
+작성자, 저작권 및 개인 주석 제거
+</string>
+    <string name="exif_clean_opt_date">
+촬영 날짜 및 타임스탬프 제거
+</string>
+    <string name="exif_clean_opt_camera">
+카메라 설정 제거 (ISO, 셔터, 조리개)
+</string>
+    <string name="exif_destination_overwrite">
+원본 파일 덮어쓰기 (제자리)
+</string>
+    <string name="exif_destination_copy">
+정리된 복사본 저장 (_cleaned)
+</string>
+    <string name="exif_destination_folder">
+사용자 지정 폴더에 저장
+</string>
+    <string name="exif_btn_start_cleaning">
+메타데이터 정리
+</string>
+    <string name="exif_cleaning_progress">
+%1$d/%2$d 정리 중…
+</string>
+    <string name="exif_clean_success">
+%1$d장의 사진 메타데이터를 정리했습니다.
+</string>
+    <string name="exif_clean_error">
+%1$s의 메타데이터 정리에 실패했습니다.
+</string>
+    <string name="exif_rename_title">
+EXIF 일괄 이름 변경
+</string>
+    <string name="exif_rename_pattern_label">
+이름 변경 패턴
+</string>
+    <string name="exif_rename_preset_date_original">
+날짜 + 원본
+</string>
+    <string name="exif_rename_preset_date_only">
+날짜만
+</string>
+    <string name="exif_rename_preset_camera_date">
+카메라 + 날짜
+</string>
+    <string name="exif_rename_token_year">
++ {YYYY}
+</string>
+    <string name="exif_rename_token_month">
++ {MM}
+</string>
+    <string name="exif_rename_token_day">
++ {DD}
+</string>
+    <string name="exif_rename_token_time">
++ {hh}{mm}{ss}
+</string>
+    <string name="exif_rename_token_model">
++ {MODEL}
+</string>
+    <string name="exif_rename_token_original">
++ {ORIGINAL}
+</string>
+    <string name="exif_rename_token_seq">+ {#}</string>
+    <string name="exif_rename_preview_header">
+이름 변경 미리보기
+</string>
+    <string name="exif_btn_start_rename">
+사진 %1$d장 이름 변경
+</string>
+    <string name="exif_renaming_progress">
+%1$d/%2$d 이름 변경 중…
+</string>
+    <string name="exif_rename_success">
+사진 %1$d장의 이름을 성공적으로 변경했습니다.
+</string>
+    <string name="exif_rename_error">
+%1$s 이름 변경에 실패했습니다.
+</string>
+    <string name="exif_no_location">
+GPS 위치 태그를 찾을 수 없습니다.
+</string>
+    <string name="exif_no_camera">
+카메라 정보를 사용할 수 없습니다.
+</string>
+    <string name="exif_no_date">
+촬영 날짜를 사용할 수 없습니다.
+</string>
+    <string name="exif_confirm_overwrite_title">
+원본 파일을 덮어쓸까요?
+</string>
+    <string name="exif_confirm_overwrite_msg">
+이 작업은 %1$d장의 원본 사진에 있는 메타데이터를 영구적으로 수정합니다. 계속하시겠습니까?
+</string>
+    <string name="exif_single_photo_cleaned">
+%1$s의 개인정보 메타데이터를 정리했습니다.
+</string>
+    <string name="exif_has_gps_badge">
+📍 GPS
+</string>
+    <string name="exif_no_gps_badge">
+GPS 없음
+</string>
+    <string name="exif_select_destination_folder">
+출력 폴더 선택
 </string>
 </resources>
 
