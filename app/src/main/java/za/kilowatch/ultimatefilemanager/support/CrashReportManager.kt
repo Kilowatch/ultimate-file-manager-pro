@@ -4078,7 +4078,57 @@ object CrashReportManager {
                             frame.className.startsWith("android.database.")
                         }
 
-                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall) {
+                    // 61. The main thread is blocked inside a synchronous binder call to
+                    //     the system server's MediaSessionService while the app's media
+                    //     session (the bundled Media3 / ExoPlayer session in
+                    //     UFMPlaybackService) syncs the platform media session's playback
+                    //     state — e.g. top frame `BinderProxy.transactNative` under
+                    //     `BinderProxy.transact` → `android.media.session.ISession$Stub$
+                    //     Proxy.setPlaybackState` → `android.media.session.MediaSession.
+                    //     setPlaybackState`, reached from the Media3 session's
+                    //     Player-listener playback-state dispatch (`zy3.onPlaybackStateChanged`
+                    //     → `bd2.onPlaybackStateChanged` → ... → `sy3.v`), invoked from a
+                    //     main-looper Runnable (`cg.run` sitting directly on
+                    //     `android.os.Handler.handleCallback`) — reported from an askey
+                    //     ADT-3 (Android TV), SDK 34, app 1.8.3-AMAZON (2026-08-12). The
+                    //     app merely ran the one-line framework API `MediaSession.
+                    //     setPlaybackState()` whenever the player's playback state changed;
+                    //     the >5 s block is the system server's MediaSessionService
+                    //     response latency, which the app cannot act on. The stack has zero
+                    //     `za.kilowatch.ultimatefilemanager` frames (the call path is the
+                    //     bundled Media3 library, R8-obfuscated to short names), so the
+                    //     wait is the same system-side class as the binder round-trip
+                    //     filters (8 unbind/bind service, 21 vendor SDK service lookup,
+                    //     23 Activity launch, 50 Google Play module, system-service fetch).
+                    //     Filter 50 (`isLibraryHandlerBinderStall`) did not match because
+                    //     the binder call here is dispatched by a main-looper Runnable
+                    //     (`Handler.handleCallback`), not a Handler message (`handleMessage`).
+                    //     The `AnrWatchdogThread` now treats a main-thread stack whose top
+                    //     frame is `BinderProxy.transact`/`transactNative`, containing the
+                    //     media-session binder proxy frame `android.media.session.ISession$
+                    //     Stub$Proxy.setPlaybackState` reached through the framework
+                    //     `android.media.session.MediaSession.setPlaybackState` API, with no
+                    //     app frames anywhere, as a false positive and resets its heartbeat
+                    //     instead of writing a report. Genuine freezes keep the main thread
+                    //     inside app business logic — an app frame anywhere on the stack, or
+                    //     a top frame that is not the media-session binder transact (e.g.
+                    //     app code around a media-session update doing heavy work, a
+                    //     lock/file/database I/O frame, or a binder call to a different
+                    //     service) — and are still reported.
+                    val isMediaSessionSyncBinderStall =
+                        topFrame?.className == "android.os.BinderProxy" &&
+                        (topFrame?.methodName == "transact" || topFrame?.methodName == "transactNative") &&
+                        mainStackTrace.any {
+                            it.className == "android.media.session.ISession\$Stub\$Proxy" &&
+                            it.methodName == "setPlaybackState"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "android.media.session.MediaSession" &&
+                            it.methodName == "setPlaybackState"
+                        } &&
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
+
+                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
