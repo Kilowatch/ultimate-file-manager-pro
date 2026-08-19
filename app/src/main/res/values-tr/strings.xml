@@ -88,6 +88,53 @@ Izgara Görünümü -> Orta
     <string name="view_mode_grid_large">
 Izgara Görünümü -> Büyük
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Tercih ettiğiniz düzeni ve öğe boyutunu seçin:
+</string>
+    <string name="view_mode_title_list_small">
+Liste • Küçük
+</string>
+    <string name="view_mode_desc_list_small">
+Maksimum dosya yoğunluğu için kompakt satırlar
+</string>
+    <string name="view_mode_title_list_medium">
+Liste • Orta
+</string>
+    <string name="view_mode_desc_list_medium">
+Dosya ayrıntılarıyla standart dengeli satırlar
+</string>
+    <string name="view_mode_title_list_large">
+Liste • Büyük
+</string>
+    <string name="view_mode_desc_list_large">
+Daha büyük dokunma hedefleriyle rahat satırlar
+</string>
+    <string name="view_mode_title_list_xlarge">
+Liste • Çok Büyük
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Gelişmiş önizleme okunabilirliğiyle ferah satırlar
+</string>
+    <string name="view_mode_title_grid_small">
+Izgara • Küçük
+</string>
+    <string name="view_mode_desc_grid_small">
+Çok sütunlu kompakt ızgara düzeni
+</string>
+    <string name="view_mode_title_grid_medium">
+Izgara • Orta
+</string>
+    <string name="view_mode_desc_grid_medium">
+Dengeli önizlemelerle standart ızgara düzeni
+</string>
+    <string name="view_mode_title_grid_large">
+Izgara • Büyük
+</string>
+    <string name="view_mode_desc_grid_large">
+Büyük küçük resimlerle ferah 2 sütunlu ızgara
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Tablo
 </string>
@@ -393,6 +440,9 @@ Yeni klasör oluştur
 </string>
     <string name="cd_view_toggle">
 Görünüm modunu değiştir
+</string>
+    <string name="cd_clear_search">
+Arama sorgusunu temizle
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ Yeni Klasör
     <string name="new_folder_title">
 Yeni Klasör
 </string>
+    <string name="new_folder_dialog_desc">
+Yeni klasör için bir ad girin:
+</string>
     <string name="new_folder_hint">
 Klasör adı
 </string>
@@ -1823,10 +1876,22 @@ Yeni klasör veya metin dosyası oluştur
     <string name="create_new_title">
 Yeni
 </string>
+    <string name="create_new_desc">
+Bu klasörde ne oluşturulacağını seçin:
+</string>
+    <string name="create_new_folder_desc">
+Yeni bir dizin veya klasör oluştur
+</string>
+    <string name="create_new_file_desc">
+Boş bir metin belgesi oluştur
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Yeni Metin Dosyası Oluştur
+</string>
+    <string name="new_file_dialog_desc">
+Yeni metin dosyası için bir dosya adı girin:
 </string>
     <string name="new_file_hint">
 Dosya adı
@@ -2353,6 +2418,10 @@ Amazon Appstore\'dan fiyatlar yükleniyor...
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Amazon satın alma hatası: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Satın alımlar henüz kullanılamıyor. Lütfen birazdan tekrar deneyin.
 </string>
     <string name="tile_hidden_with_name">
 \"%1$s\" kutucuğu gizlendi

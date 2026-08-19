@@ -172,6 +172,77 @@ Ultimate File Manager Pro — це безкоштовний додаток дл�
 </string>
 
     <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+Файловий браузер — переглядайте, копіюйте, переміщуйте, перейменовуйте та видаляйте файли будь-де на вашому пристрої.
+</item>
+        <item>
+Зашифроване сховище — захищайте конфіденційні файли за допомогою шифрування AES-256-GCM з власним PIN-кодом.
+</item>
+        <item>
+Файловий сервер — запускайте FTP або захищений SFTP сервер безпосередньо на вашому пристрої, щоб обмінюватися файлами в локальній мережі.
+</item>
+        <item>
+Віддалене керування — керуйте файлами через локальну Wi-Fi мережу за допомогою вбудованого HTTP-сервера, який підтримує завантаження, вивантаження та встановлення APK-файлів віддалено.
+</item>
+        <item>
+Мережеві ресурси — підключайтеся до SMB, FTP та NFS серверів у локальній мережі, щоб переглядати, завантажувати та керувати віддаленими файлами.
+</item>
+        <item>
+Синхронізація папок — автоматично створюйте резервні копії локальних папок телефону на мережевому ресурсі SMB або FTP за обраним вами розкладом (інтервал або конкретний час щодня, щотижня чи щомісяця).
+</item>
+        <item>
+Спряження пристроїв — спрягайте ваш мобільний телефон і Android TV через локальну Wi-Fi мережу для передавання та встановлення файлів.
+</item>
+        <item>
+ADB-термінал — підключайтеся до Android-пристроїв у режимі розробника через локальну Wi-Fi мережу за допомогою ADB (Android Debug Bridge) для прямого доступу до оболонки та розширеного усунення неполадок.
+</item>
+        <item>
+Вбудовані переглядачі — переглядайте текстові файли, PDF, анімовані зображення (APNG, GIF, анімовані WebP, AVIF, SVG та інші), архіви та інші формати безпосередньо в застосунку.
+</item>
+        <item>
+Розширена підтримка ZIP — створюйте та розпаковуйте ZIP-архіви, захищені паролем та AES-шифруванням.
+</item>
+        <item>
+Віддалені знімки екрана — робіть знімки екрана спряженого Android TV через локальну Wi-Fi мережу за допомогою ADB і зберігайте їх безпосередньо у пам\\\'ять вашого телефону.
+</item>
+        <item>
+Підтримка архівів 7Z — розпаковуйте архіви 7Z зі стисненням LZMA/LZMA2.
+</item>
+        <item>
+Пошук файлів — швидко знаходьте файли та папки в пам\\\'яті вашого пристрою.
+</item>
+        <item>
+Аналізатор сховища — переглядайте візуальну розбивку того, що займає простір вашого сховища.
+</item>
+        <item>
+Менеджер застосунків — переглядайте та керуйте всіма застосунками, встановленими на вашому пристрої, з рекомендаціями щодо видалення зайвих попередньо встановлених застосунків.
+</item>
+        <item>
+Інсталятор APK — встановлюйте Android-застосунки та розділені APK (XAPK) безпосередньо з файлів, збережених локально.
+</item>
+        <item>
+Розширений доступ (Shizuku, Shevery та ADB) — отримуйте доступ, подібний до root, для керування системними файлами та захищеними каталогами без фактичного рутування вашого пристрою.
+</item>
+        <item>
+Індексатор сховища — створюйте локальний індекс метаданих файлів для миттєвого пошуку та надшвидкого перегляду.
+</item>
+        <item>
+Storage Access Framework — інші застосунки можуть отримувати доступ до ваших файлів через документ-провайдер UFM.
+</item>
+        <item>
+Скринька для чайових — необов\\\'язкові одноразові покупки для підтримки розробника; застосунок завжди безкоштовний без чайових.
+</item>
+        <item>
+Медіаплеєр UFM — відтворюйте аудіо та відеофайли з фоновим відтворенням, елементами керування у сповіщеннях, режимом «картинка в картинці» та керуванням плейлистами.
+</item>
+        <item>
+Створювач GIF — створюйте анімовані GIF-файли з вибраних зображень із налаштовуваною частотою кадрів, параметрами зміни розміру та зміною порядку кадрів перетягуванням.
+</item>
+        <item>
+Інструменти EXIF для фото — переглядайте EXIF та GPS-метадані фото, видаляйте приватні геомітки та інформацію про пристрій, а також перейменовуйте фотографії пакетно за часом зйомки та метаданими камери.
+</item>
+    </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
@@ -418,6 +489,134 @@ Bluetooth
     </string-array>
 
     <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — легкий HTTP-сервер, який забезпечує роботу віддаленого керування. (BSD-3-Clause)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — клієнтська бібліотека SMB2/SMB3 для перегляду мережевих ресурсів та синхронізації папок. (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — реалізація SMB2/SMB3 на Java для доступу до мережевих ресурсів. (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS Client (com.emc.ecs:nfs-client) — клієнтська бібліотека NFS v3 для доступу до мережевих ресурсів. (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — нативна клієнтська бібліотека NFS з підтримкою NFSv2, NFSv3 та NFSv4. (LGPL-2.1 / BSD-2-Clause)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — комплексна бібліотека ядра SSHD, SFTP та SCP для безпечного доступу до мережевих ресурсів і розміщення сервера. (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% чистий FTP-сервер на Java. (Apache-2.0)
+</item>
+        <item>
+Apache POI — бібліотека обробки документів для перегляду офісних файлів. (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — аналітична платформа Google, яка допомагає нам зрозуміти використання застосунку. (Apache-2.0)
+</item>
+        <item>
+Бібліотеки AndroidX (включно з Leanback для Android TV) — компоненти Jetpack від Google для сучасної розробки під Android. (Apache-2.0)
+</item>
+        <item>
+Material Design Components — бібліотека інтерфейсу Google для чистого та узгодженого дизайну. (Apache-2.0)
+</item>
+        <item>
+Room Persistence Library — рівень абстракції над SQLite для локального індексування метаданих. (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — розширена бібліотека ZIP для архівів, захищених паролем та AES-шифруванням. (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — бібліотека для читання та запису різних форматів архівів (7z, zip, tar тощо). (Apache-2.0)
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — реалізація стиснення XZ та LZMA. (Public Domain)
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) — JNI-прив\\\'язки для бібліотеки стиснення та розпакування Zstandard. (BSD-2-Clause)
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) — бібліотека для вилучення RAR на Java. (BSD-3-Clause)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — бібліотека Android Debug Bridge, що забезпечує безпечні з\\\'єднання з пристроями з підтримкою ADB для віддаленого доступу до оболонки та спряження на основі сертифікатів. (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — комплексна бібліотека ядра SSHD, SFTP та SCP для безпечного доступу до мережевих ресурсів. (Apache-2.0)
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — реалізація EdDSA (алгоритм цифрового підпису на кривих Едвардса) для SSH-ключів Ed25519. (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — прив\\\'язка логування для Android, яка використовується бібліотекою SSHD. (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — криптографічна бібліотека для генерації ключових пар RSA/EdDSA та створення сертифікатів X.509; версія 1.83. (Ліцензія MIT-стилю)
+</item>
+        <item>
+Google Play Billing Library — обробляє необов\\\'язкові покупки чайових у застосунку; регулюється Політикою конфіденційності Google Play. (Apache-2.0)
+</item>
+        <item>
+Google Play Review Library — забезпечує функціонал оцінювання та відгуків у застосунку. (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — бібліотека завантаження зображень, яка забезпечує відтворення анімованих зображень (APNG, GIF, анімовані WebP, AVIF, JXL, SVG) у вбудованому переглядачі зображень. (Apache-2.0)
+</item>
+        <item>
+avif-coder (io.github.awxkee) — бібліотека декодування зображень AVIF, що забезпечує нативну підтримку AVIF на Android API 24–30; для API 31+ використовується вбудований ImageDecoder. (Apache-2.0)
+</item>
+        <item>
+jxl-coder (io.github.awxkee) — бібліотека декодування та кодування зображень JPEG XL, що забезпечує нативну підтримку JXL на Android API 21+. (Apache-2.0 / BSD-3-Clause)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — основна бібліотека для декодування та відтворення анімованих PNG-файлів на Android. (Apache-2.0)
+</item>
+        <item>
+Shizuku &amp; Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — бібліотеки, що забезпечують розширений доступ до файлової системи через застосунки Shizuku або Shevery Manager. (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — бібліотека Android для перегортання між фрагментами та макетами. (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — бібліотека анімації для нативного відтворення анімацій Adobe After Effects на Android, використовується для плавних анімацій інтерфейсу в усьому застосунку. (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — легкий веб-фреймворк, який використовується для роботи локального файлового сервера. (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — бібліотека для нативного рендерингу та перегляду PDF-документів. (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — розширений медіаплеєр для надійного відтворення відео та аудіо. (Apache-2.0)
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — нативно обробляє автентифікацію OneDrive API. (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — надійний HTTP та HTTP/2 клієнт для мережевих запитів до хмарних сховищ. (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — бібліотека обробки JSON, що використовується для інтеграції з хмарними сховищами. (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — підтримка Chrome Custom Tabs для автентифікації Google Drive API. (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — бібліотека обробки зображень штрих-кодів. (Apache-2.0)
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — чиста Java-бібліотека кодування GIF для створення анімованих GIF-файлів із вибраних зображень. (Apache-2.0)
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — бібліотека для читання, запису та видалення EXIF і GPS-метаданих у форматах зображень JPEG, PNG, WebP, HEIF та DNG. (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — обробляє необов\\\'язкові покупки чайових у застосунку на пристроях Amazon. (Proprietary)
+</item>
+    </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">

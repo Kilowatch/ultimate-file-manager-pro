@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="&gt;"
-    android:textSize="14sp"
-    android:fontFamily="sans-serif-black"
-    android:textColor="?attr/colorPrimary"
-    android:paddingHorizontal="4dp" />
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="14dp"
+    android:layout_height="14dp"
+    android:layout_gravity="center_vertical"
+    android:layout_marginHorizontal="1dp"
+    android:src="@drawable/ic_chevron_right_small"
+    android:alpha="0.45"
+    android:contentDescription="@null"
+    app:tint="@color/mobile_text_secondary" />

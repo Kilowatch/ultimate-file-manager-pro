@@ -88,6 +88,53 @@ Rasteransicht -> Mittel
     <string name="view_mode_grid_large">
 Rasteransicht -> Groß
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Wählen Sie Ihr bevorzugtes Layout und die Elementgröße:
+</string>
+    <string name="view_mode_title_list_small">
+Liste • Klein
+</string>
+    <string name="view_mode_desc_list_small">
+Kompakte Zeilen für maximale Dateidichte
+</string>
+    <string name="view_mode_title_list_medium">
+Liste • Mittel
+</string>
+    <string name="view_mode_desc_list_medium">
+Ausgewogene Standardzeilen mit Dateidetails
+</string>
+    <string name="view_mode_title_list_large">
+Liste • Groß
+</string>
+    <string name="view_mode_desc_list_large">
+Komfortable Zeilen mit größeren Touch-Zielen
+</string>
+    <string name="view_mode_title_list_xlarge">
+Liste • Extra groß
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Großzügige Zeilen mit verbesserter Lesbarkeit der Vorschau
+</string>
+    <string name="view_mode_title_grid_small">
+Raster • Klein
+</string>
+    <string name="view_mode_desc_grid_small">
+Mehrspaltiges kompaktes Rasterlayout
+</string>
+    <string name="view_mode_title_grid_medium">
+Raster • Mittel
+</string>
+    <string name="view_mode_desc_grid_medium">
+Standard-Rasterlayout mit ausgewogenen Vorschauen
+</string>
+    <string name="view_mode_title_grid_large">
+Raster • Groß
+</string>
+    <string name="view_mode_desc_grid_large">
+Großzügiges 2-spaltiges Raster mit großen Miniaturansichten
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Tabellenansicht
 </string>
@@ -393,6 +440,9 @@ Neuen Ordner erstellen
 </string>
     <string name="cd_view_toggle">
 Ansichtsmodus umschalten
+</string>
+    <string name="cd_clear_search">
+Suchanfrage löschen
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ Neuer Ordner
     <string name="new_folder_title">
 Neuer Ordner
 </string>
+    <string name="new_folder_dialog_desc">
+Geben Sie einen Namen für den neuen Ordner ein:
+</string>
     <string name="new_folder_hint">
 Ordnername
 </string>
@@ -1823,10 +1876,22 @@ Neuen Ordner oder neue Textdatei erstellen
     <string name="create_new_title">
 Neu
 </string>
+    <string name="create_new_desc">
+Wählen Sie aus, was in diesem Ordner erstellt werden soll:
+</string>
+    <string name="create_new_folder_desc">
+Neues Verzeichnis (Ordner) erstellen
+</string>
+    <string name="create_new_file_desc">
+Leeres Textdokument erstellen
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Neue Textdatei erstellen
+</string>
+    <string name="new_file_dialog_desc">
+Geben Sie einen Dateinamen für die neue Textdatei ein:
 </string>
     <string name="new_file_hint">
 Dateiname
@@ -2353,6 +2418,10 @@ Preise vom Amazon Appstore werden geladen...
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Amazon-Kauffehler: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Käufe sind noch nicht verfügbar. Bitte versuchen Sie es in einem Moment erneut.
 </string>
     <string name="tile_hidden_with_name">
 \"%1$s\"-Kachel ausgeblendet

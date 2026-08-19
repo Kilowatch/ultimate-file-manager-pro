@@ -227,6 +227,14 @@ class AmazonBillingManager(
      */
     fun onResume() {
         activeDelegate = this
+        // If listener registration failed earlier, retry before calling SDK methods
+        if (!listenerRegistered) {
+            registerProcessListener(context.applicationContext)
+        }
+        if (!listenerRegistered) {
+            Log.w(TAG, "onResume: PurchasingListener not registered, skipping SDK calls")
+            return
+        }
         try {
             PurchasingService.getUserData()
             PurchasingService.getPurchaseUpdates(false)
@@ -241,6 +249,15 @@ class AmazonBillingManager(
      */
     fun purchase(activity: Activity, sku: String) {
         Log.d(TAG, "purchase: $sku")
+        // If listener registration failed earlier, retry before purchasing
+        if (!listenerRegistered) {
+            registerProcessListener(context.applicationContext)
+        }
+        if (!listenerRegistered) {
+            Log.e(TAG, "Cannot purchase: PurchasingListener not registered")
+            onError(context.getString(R.string.amazon_iap_not_ready))
+            return
+        }
         mainHandler.post {
             try {
                 PurchasingService.purchase(sku)

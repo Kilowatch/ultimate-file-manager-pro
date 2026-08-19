@@ -172,6 +172,77 @@ RClone के माध्यम से क्लाउड ड्राइव �
 </string>
 
     <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+फ़ाइल ब्राउज़र — अपने डिवाइस पर कहीं भी फ़ाइलों को ब्राउज़ करें, कॉपी करें, स्थानांतरित करें, नाम बदलें और हटाएँ।
+</item>
+        <item>
+एन्क्रिप्टेड वॉल्ट — अपने स्वयं के PIN से AES-256-GCM एन्क्रिप्शन के पीछे संवेदनशील फ़ाइलों को लॉक करें।
+</item>
+        <item>
+फ़ाइल सर्वर — अपने डिवाइस पर सीधे FTP या सुरक्षित SFTP सर्वर होस्ट करें और अपने स्थानीय नेटवर्क पर फ़ाइलें साझा करें।
+</item>
+        <item>
+रिमोट प्रबंधन — अपने स्थानीय Wi-Fi पर बिल्ट-इन HTTP सर्वर के माध्यम से फ़ाइलों को प्रबंधित करें, जो दूरस्थ रूप से APK अपलोड, डाउनलोड और इंस्टॉल करने की सुविधा देता है।
+</item>
+        <item>
+नेटवर्क शेयर — अपने स्थानीय नेटवर्क पर SMB, FTP और NFS सर्वर से कनेक्ट करें, दूरस्थ फ़ाइलें ब्राउज़ करें, डाउनलोड करें और प्रबंधित करें।
+</item>
+        <item>
+फ़ोल्डर सिंक — आपके द्वारा चुने गए शेड्यूल (अंतराल या दैनिक, साप्ताहिक, या मासिक विशिष्ट समय) के अनुसार स्थानीय फ़ोन फ़ोल्डरों का स्वचालित रूप से SMB या FTP नेटवर्क शेयर पर बैकअप करें।
+</item>
+        <item>
+डिवाइस पेयरिंग — स्थानीय Wi-Fi पर अपने मोबाइल फ़ोन और Android TV को पेयर करें ताकि फ़ाइलें स्थानांतरित और इंस्टॉल की जा सकें।
+</item>
+        <item>
+ADB टर्मिनल — डेवलपर मोड में Android डिवाइसों से स्थानीय Wi-Fi पर ADB (Android Debug Bridge) का उपयोग करके सीधे शेल पहुंच और उन्नत समस्या निवारण के लिए कनेक्ट करें।
+</item>
+        <item>
+बिल्ट-इन व्यूअर — ऐप के भीतर सीधे टेक्स्ट फ़ाइलें, PDF, एनिमेटेड इमेज (APNG, GIF, एनिमेटेड WebP, AVIF, SVG और अधिक), आर्काइव और अन्य फ़ॉर्मेट देखें।
+</item>
+        <item>
+उन्नत ZIP समर्थन — पासवर्ड-संरक्षित और AES-एन्क्रिप्टेड ZIP आर्काइव बनाएं और निकालें।
+</item>
+        <item>
+रिमोट स्क्रीनशॉट — स्थानीय Wi-Fi पर ADB के माध्यम से अपने पेयर किए गए Android TV की स्क्रीन कैप्चर करें और सीधे अपने फ़ोन की स्टोरेज में सहेजें।
+</item>
+        <item>
+7Z आर्काइव समर्थन — LZMA/LZMA2 कम्प्रेशन के साथ 7Z आर्काइव निकालें।
+</item>
+        <item>
+फ़ाइल खोज — अपने डिवाइस स्टोरेज में फ़ाइलों और फ़ोल्डरों को तुरंत खोजें।
+</item>
+        <item>
+स्टोरेज विश्लेषक — विज़ुअल ब्रेकडाउन देखें कि आपकी स्टोरेज स्पेस का उपयोग कौन कर रहा है।
+</item>
+        <item>
+ऐप प्रबंधक — अपने डिवाइस पर इंस्टॉल किए गए सभी ऐप्स देखें और प्रबंधित करें, साथ ही प्री-इंस्टॉल ऐप्स के लिए डीब्लोट अनुशंसाएँ।
+</item>
+        <item>
+APK इंस्टॉलर — स्थानीय रूप से सहेजी गई फ़ाइलों से Android ऐप्स और स्प्लिट APK (XAPK) सीधे इंस्टॉल करें।
+</item>
+        <item>
+उन्नत पहुंच (Shizuku, Shevery और ADB) — अपने डिवाइस को रूट किए बिना सिस्टम फ़ाइलों और प्रतिबंधित निर्देशिकाओं को प्रबंधित करने के लिए रूट-जैसी पहुंच प्राप्त करें।
+</item>
+        <item>
+स्टोरेज इंडेक्सर — त्वरित खोज और बेहद तेज़ ब्राउज़िंग के लिए फ़ाइल मेटाडेटा का स्थानीय इंडेक्स बनाएं।
+</item>
+        <item>
+स्टोरेज एक्सेस फ्रेमवर्क — अन्य ऐप्स UFM के डॉक्यूमेंट प्रोवाइडर के माध्यम से आपकी फ़ाइलों तक पहुंच सकते हैं।
+</item>
+        <item>
+टिप जार — डेवलपर को समर्थन देने के लिए वैकल्पिक एकमुश्त खरीदारी; टिपिंग के बिना ऐप हमेशा मुफ्त है।
+</item>
+        <item>
+UFM मीडिया प्लेयर — बैकग्राउंड प्लेबैक, नोटिफिकेशन कंट्रोल, पिक्चर-इन-पिक्चर मोड और प्लेलिस्ट प्रबंधन के साथ ऑडियो और वीडियो फ़ाइलें चलाएं।
+</item>
+        <item>
+GIF क्रिएटर — चुनी गई छवियों से कस्टम फ्रेम दर, आकार बदलने के विकल्प और ड्रैग-एंड-ड्रॉप फ्रेम पुनः क्रमबद्ध करने की सुविधा के साथ एनिमेटेड GIF फ़ाइलें बनाएं।
+</item>
+        <item>
+फोटो EXIF टूल्स — फोटो EXIF और GPS मेटाडेटा की जाँच करें, निजी जियोटैग और डिवाइस जानकारी हटाएं, और कैप्चर टाइमस्टैम्प और कैमरा मेटाडेटा का उपयोग करके फोटो का बैच नाम बदलें।
+</item>
+    </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
@@ -418,6 +489,134 @@ TV रिमोट पर बटन दबाने पर हैप्टिक
     </string-array>
 
     <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — हल्का HTTP सर्वर जो रिमोट प्रबंधन को संचालित करता है। (BSD-3-Clause)
+</item>
+        <item>
+jcifs-ng (AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng) — नेटवर्क शेयर ब्राउज़िंग और फ़ोल्डर सिंक के लिए SMB2/SMB3 क्लाइंट लाइब्रेरी। (LGPL-2.1)
+</item>
+        <item>
+smbj (hierynomus/smbj) — नेटवर्क शेयर एक्सेस के लिए उपयोग किया जाने वाला SMB2/SMB3 Java इम्प्लीमेंटेशन। (Apache-2.0)
+</item>
+        <item>
+EMC ECS NFS क्लाइंट (com.emc.ecs:nfs-client) — नेटवर्क शेयर एक्सेस के लिए NFS v3 क्लाइंट लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+libnfs (sahlberg/libnfs) — NFSv2, NFSv3 और NFSv4 का समर्थन करने वाली नेटिव NFS क्लाइंट लाइब्रेरी। (LGPL-2.1 / BSD-2-Clause)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — सुरक्षित नेटवर्क शेयर एक्सेस और होस्टिंग के लिए व्यापक SSHD कोर, SFTP और SCP क्लाइंट लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Apache FtpServer (org.apache.ftpserver) — 100% शुद्ध Java FTP सर्वर। (Apache-2.0)
+</item>
+        <item>
+Apache POI — ऑफिस फ़ाइलों को देखने के लिए दस्तावेज़ प्रोसेसिंग लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Firebase Analytics — Google का एनालिटिक्स प्लेटफ़ॉर्म जो हमें ऐप उपयोग समझने में मदद करता है। (Apache-2.0)
+</item>
+        <item>
+AndroidX लाइब्रेरीज़ (incl. Android TV के लिए Leanback) — आधुनिक Android विकास के लिए Google के Jetpack घटक। (Apache-2.0)
+</item>
+        <item>
+मटेरियल डिज़ाइन कंपोनेंट्स — एक स्वच्छ और सुसंगत इंटरफ़ेस के लिए Google की UI लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+रूम पर्सिस्टेंस लाइब्रेरी — स्थानीय मेटाडेटा इंडेक्सिंग के लिए SQLite एब्स्ट्रैक्शन लेयर। (Apache-2.0)
+</item>
+        <item>
+zip4j (net.lingala.zip4j) — पासवर्ड-संरक्षित और AES-एन्क्रिप्टेड आर्काइव के लिए उन्नत ZIP लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Apache Commons Compress — विभिन्न आर्काइव फ़ॉर्मेट (7z, zip, tar, आदि) पढ़ने और लिखने के लिए लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+XZ for Java (org.tukaani.xz) — XZ और LZMA कम्प्रेशन का इम्प्लीमेंटेशन। (Public Domain)
+</item>
+        <item>
+zstd-jni (com.github.luben:zstd-jni) — Zstandard कम्प्रेशन और एक्सट्रैक्शन लाइब्रेरी के लिए JNI बाइंडिंग्स। (BSD-2-Clause)
+</item>
+        <item>
+Junrar (com.github.junrar:junrar) — Java RAR एक्सट्रैक्शन लाइब्रेरी। (BSD-3-Clause)
+</item>
+        <item>
+libadb-android (com.github.MuntashirAkon) — ADB-सक्षम डिवाइसों से सुरक्षित कनेक्शन, रिमोट शेल एक्सेस और प्रमाणपत्र-आधारित पेयरिंग को सक्षम करने वाली Android Debug Bridge लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Apache MINA SSHD (org.apache.sshd) — सुरक्षित नेटवर्क शेयर एक्सेस के लिए व्यापक SSHD कोर, SFTP और SCP क्लाइंट लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+EdDSA for Java (net.i2p.crypto:eddsa) — Ed25519 SSH कुंजियों के लिए EdDSA (Edwards-curve Digital Signature Algorithm) का इम्प्लीमेंटेशन। (CC0-1.0)
+</item>
+        <item>
+SLF4J Android (uk.uuid.slf4j:slf4j-android) — SSHD लाइब्रेरी द्वारा उपयोग किया जाने वाला Android के लिए लॉगिंग बाइंडिंग। (MIT)
+</item>
+        <item>
+BouncyCastle (org.bouncycastle) — RSA/EdDSA कुंजी-जोड़ी निर्माण और X.509 प्रमाणपत्र निर्माण के लिए क्रिप्टोग्राफी लाइब्रेरी; संस्करण 1.83। (MIT-style License)
+</item>
+        <item>
+Google Play Billing Library — वैकल्पिक इन-ऐप टिप खरीदारी की प्रक्रिया करता है; Google Play की गोपनीयता नीति द्वारा शासित। (Apache-2.0)
+</item>
+        <item>
+Google Play Review Library — ऐप की इन-ऐप रेटिंग और समीक्षा कार्यक्षमता को संचालित करता है। (Apache-2.0)
+</item>
+        <item>
+Coil (io.coil-kt.coil3) — इमेज लोडिंग लाइब्रेरी जो बिल्ट-इन इमेज व्यूअर में एनिमेटेड इमेज रेंडरिंग (APNG, GIF, एनिमेटेड WebP, AVIF, JXL, SVG) को संचालित करती है। (Apache-2.0)
+</item>
+        <item>
+avif-coder (io.github.awxkee) — Android API 24–30 पर नेटिव AVIF समर्थन प्रदान करने वाली AVIF इमेज डिकोडिंग लाइब्रेरी; API 31+ बिल्ट-इन ImageDecoder का उपयोग करता है। (Apache-2.0)
+</item>
+        <item>
+jxl-coder (io.github.awxkee) — Android API 21+ पर नेटिव JXL समर्थन प्रदान करने वाली JPEG XL इमेज डिकोडिंग और एन्कोडिंग लाइब्रेरी। (Apache-2.0 / BSD-3-Clause)
+</item>
+        <item>
+APNG4Android (com.github.penfeizhou.android.animation) — Android पर एनिमेटेड PNG फ़ाइलों को डिकोड और रेंडर करने के लिए कोर लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Shizuku और Shevery API (dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery) — Shizuku या Shevery Manager ऐप्स के माध्यम से उन्नत फ़ाइल सिस्टम एक्सेस सक्षम करने वाली लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+ViewPager2 — फ्रैगमेंट और लेआउट के बीच स्लाइड करने के लिए Android लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Lottie (com.airbnb.android:lottie) v6.3.0 — Android पर Adobe After Effects एनिमेशन नेटिव रूप से रेंडर करने के लिए एनिमेशन लाइब्रेरी, जो पूरे ऐप में सुचारू UI एनिमेशन के लिए उपयोग की जाती है। (Apache-2.0)
+</item>
+        <item>
+Ktor (io.ktor) — स्थानीय फ़ाइल सर्वर को संचालित करने के लिए उपयोग किया जाने वाला हल्का वेब फ्रेमवर्क। (Apache-2.0)
+</item>
+        <item>
+PDFBox-Android (com.tom-roush:pdfbox-android) — PDF दस्तावेज़ों को नेटिव रूप से रेंडर और देखने के लिए लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+ExoPlayer / Media3 (androidx.media3) — मजबूत वीडियो और ऑडियो प्लेबैक के लिए उन्नत मीडिया प्लेयर। (Apache-2.0)
+</item>
+        <item>
+Microsoft Authentication Library (MSAL) — OneDrive API प्रमाणीकरण को नेटिव रूप से संभालता है। (MIT)
+</item>
+        <item>
+OkHttp (com.squareup.okhttp3) — क्लाउड स्टोरेज नेटवर्क अनुरोधों के लिए मजबूत HTTP और HTTP/2 क्लाइंट। (Apache-2.0)
+</item>
+        <item>
+Gson (com.google.code.gson) — क्लाउड स्टोरेज एकीकरण के लिए उपयोग की जाने वाली JSON प्रोसेसिंग लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+AndroidX Browser (androidx.browser) — Google Drive API प्रमाणीकरण के लिए Chrome Custom Tabs समर्थन। (Apache-2.0)
+</item>
+        <item>
+ZXing (com.google.zxing:core) — बारकोड इमेज प्रोसेसिंग लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+gifencoder (com.squareup:gifencoder) — चुनी गई छवियों से एनिमेटेड GIF फ़ाइलें बनाने के लिए शुद्ध Java GIF एन्कोडिंग लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+AndroidX ExifInterface (androidx.exifinterface:exifinterface) — JPEG, PNG, WebP, HEIF और DNG इमेज फ़ॉर्मेट में EXIF और GPS मेटाडेटा पढ़ने, लिखने और हटाने के लिए लाइब्रेरी। (Apache-2.0)
+</item>
+        <item>
+Amazon Appstore SDK — Amazon डिवाइसों पर वैकल्पिक इन-ऐप टिप खरीदारी की प्रक्रिया करता है। (Proprietary)
+</item>
+    </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">

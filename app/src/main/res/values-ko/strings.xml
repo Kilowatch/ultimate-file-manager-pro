@@ -88,6 +88,53 @@ Ultimate File Manager Pro
     <string name="view_mode_grid_large">
 격자 보기 -> 크게
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+선호하는 레이아웃과 항목 크기를 선택하세요:
+</string>
+    <string name="view_mode_title_list_small">
+목록 • 작게
+</string>
+    <string name="view_mode_desc_list_small">
+최대 파일 밀도를 위한 컴팩트한 행
+</string>
+    <string name="view_mode_title_list_medium">
+목록 • 중간
+</string>
+    <string name="view_mode_desc_list_medium">
+파일 정보가 포함된 표준 균형 행
+</string>
+    <string name="view_mode_title_list_large">
+목록 • 크게
+</string>
+    <string name="view_mode_desc_list_large">
+더 큰 터치 영역을 제공하는 편안한 행
+</string>
+    <string name="view_mode_title_list_xlarge">
+목록 • 아주 크게
+</string>
+    <string name="view_mode_desc_list_xlarge">
+미리보기 가독성을 높인 넓은 행
+</string>
+    <string name="view_mode_title_grid_small">
+그리드 • 작게
+</string>
+    <string name="view_mode_desc_grid_small">
+다열 컴팩트 그리드 레이아웃
+</string>
+    <string name="view_mode_title_grid_medium">
+그리드 • 중간
+</string>
+    <string name="view_mode_desc_grid_medium">
+균형 잡힌 미리보기를 제공하는 표준 그리드 레이아웃
+</string>
+    <string name="view_mode_title_grid_large">
+그리드 • 크게
+</string>
+    <string name="view_mode_desc_grid_large">
+큰 썸네일을 제공하는 넓은 2열 그리드
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 스프레드시트
 </string>
@@ -393,6 +440,9 @@ Ultimate File Manager Pro 아이콘
 </string>
     <string name="cd_view_toggle">
 보기 모드 전환
+</string>
+    <string name="cd_clear_search">
+검색어 지우기
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ UFM 슬라이드 쇼
     <string name="new_folder_title">
 새 폴더
 </string>
+    <string name="new_folder_dialog_desc">
+새 폴더의 이름을 입력하세요:
+</string>
     <string name="new_folder_hint">
 폴더 이름
 </string>
@@ -1823,10 +1876,22 @@ UFM 슬라이드 쇼
     <string name="create_new_title">
 새로 만들기
 </string>
+    <string name="create_new_desc">
+이 폴더에 만들 항목을 선택하세요:
+</string>
+    <string name="create_new_folder_desc">
+새 디렉토리 또는 폴더 만들기
+</string>
+    <string name="create_new_file_desc">
+빈 텍스트 문서 만들기
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 새 텍스트 파일 만들기
+</string>
+    <string name="new_file_dialog_desc">
+새 텍스트 파일의 파일 이름을 입력하세요:
 </string>
     <string name="new_file_hint">
 파일 이름
@@ -2353,6 +2418,10 @@ Amazon Appstore에서 가격 로딩 중…
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Amazon 구매 오류: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+구매가 아직 이용할 수 없습니다. 잠시 후 다시 시도해 주세요.
 </string>
     <string name="tile_hidden_with_name">
 \"%1$s\" 타일 숨김

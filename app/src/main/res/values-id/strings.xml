@@ -88,6 +88,53 @@ Tampilan Grid -> Sedang
     <string name="view_mode_grid_large">
 Tampilan Grid -> Besar
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Pilih tata letak dan ukuran item yang Anda inginkan:
+</string>
+    <string name="view_mode_title_list_small">
+Daftar • Kecil
+</string>
+    <string name="view_mode_desc_list_small">
+Baris padat untuk kepadatan file maksimal
+</string>
+    <string name="view_mode_title_list_medium">
+Daftar • Sedang
+</string>
+    <string name="view_mode_desc_list_medium">
+Baris standar seimbang dengan detail file
+</string>
+    <string name="view_mode_title_list_large">
+Daftar • Besar
+</string>
+    <string name="view_mode_desc_list_large">
+Baris nyaman dengan target sentuh lebih besar
+</string>
+    <string name="view_mode_title_list_xlarge">
+Daftar • Sangat Besar
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Baris lega dengan keterbacaan pratinjau yang ditingkatkan
+</string>
+    <string name="view_mode_title_grid_small">
+Kisi • Kecil
+</string>
+    <string name="view_mode_desc_grid_small">
+Tata letak kisi padat multi-kolom
+</string>
+    <string name="view_mode_title_grid_medium">
+Kisi • Sedang
+</string>
+    <string name="view_mode_desc_grid_medium">
+Tata letak kisi standar dengan pratinjau seimbang
+</string>
+    <string name="view_mode_title_grid_large">
+Kisi • Besar
+</string>
+    <string name="view_mode_desc_grid_large">
+Kisi 2 kolom lega dengan gambar mini besar
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Spreadsheet
 </string>
@@ -393,6 +440,9 @@ Buat folder baru
 </string>
     <string name="cd_view_toggle">
 Alihkan mode tampilan
+</string>
+    <string name="cd_clear_search">
+Hapus kueri pencarian
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ Folder Baru
     <string name="new_folder_title">
 Folder Baru
 </string>
+    <string name="new_folder_dialog_desc">
+Masukkan nama untuk folder baru:
+</string>
     <string name="new_folder_hint">
 Nama folder
 </string>
@@ -1823,10 +1876,22 @@ Buat folder baru atau berkas teks
     <string name="create_new_title">
 Baru
 </string>
+    <string name="create_new_desc">
+Pilih apa yang akan dibuat di folder ini:
+</string>
+    <string name="create_new_folder_desc">
+Buat direktori atau folder baru
+</string>
+    <string name="create_new_file_desc">
+Buat dokumen teks kosong
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Buat Berkas Teks Baru
+</string>
+    <string name="new_file_dialog_desc">
+Masukkan nama file untuk file teks baru:
 </string>
     <string name="new_file_hint">
 Nama berkas
@@ -2353,6 +2418,10 @@ Memuat harga dari Amazon Appstore...
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Kesalahan pembelian Amazon: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Pembelian belum tersedia. Silakan coba lagi sebentar lagi.
 </string>
     <string name="tile_hidden_with_name">
 Tile \"%1$s\" disembunyikan

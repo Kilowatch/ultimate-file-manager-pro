@@ -88,6 +88,53 @@ Vue grille -> Moyenne
     <string name="view_mode_grid_large">
 Vue grille -> Grande
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Choisissez votre mise en page et la taille des éléments :
+</string>
+    <string name="view_mode_title_list_small">
+Liste • Petite
+</string>
+    <string name="view_mode_desc_list_small">
+Lignes compactes pour une densité de fichiers maximale
+</string>
+    <string name="view_mode_title_list_medium">
+Liste • Moyenne
+</string>
+    <string name="view_mode_desc_list_medium">
+Lignes standard équilibrées avec détails des fichiers
+</string>
+    <string name="view_mode_title_list_large">
+Liste • Grande
+</string>
+    <string name="view_mode_desc_list_large">
+Lignes confortables avec des zones tactiles plus grandes
+</string>
+    <string name="view_mode_title_list_xlarge">
+Liste • Très grande
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Lignes spacieuses avec une meilleure lisibilité des aperçus
+</string>
+    <string name="view_mode_title_grid_small">
+Grille • Petite
+</string>
+    <string name="view_mode_desc_grid_small">
+Disposition en grille compacte à plusieurs colonnes
+</string>
+    <string name="view_mode_title_grid_medium">
+Grille • Moyenne
+</string>
+    <string name="view_mode_desc_grid_medium">
+Disposition en grille standard avec aperçus équilibrés
+</string>
+    <string name="view_mode_title_grid_large">
+Grille • Grande
+</string>
+    <string name="view_mode_desc_grid_large">
+Grille spacieuse à 2 colonnes avec de grandes vignettes
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Tableur
 </string>
@@ -393,6 +440,9 @@ Créer un nouveau dossier
 </string>
     <string name="cd_view_toggle">
 Basculer le mode d\'affichage
+</string>
+    <string name="cd_clear_search">
+Effacer la requête de recherche
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ Nouveau dossier
     <string name="new_folder_title">
 Nouveau dossier
 </string>
+    <string name="new_folder_dialog_desc">
+Saisissez un nom pour le nouveau dossier :
+</string>
     <string name="new_folder_hint">
 Nom du dossier
 </string>
@@ -1823,10 +1876,22 @@ Créer un nouveau dossier ou fichier texte
     <string name="create_new_title">
 Nouveau
 </string>
+    <string name="create_new_desc">
+Sélectionnez ce que vous souhaitez créer dans ce dossier :
+</string>
+    <string name="create_new_folder_desc">
+Créer un nouveau répertoire ou dossier
+</string>
+    <string name="create_new_file_desc">
+Créer un document texte vide
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Créer un nouveau fichier texte
+</string>
+    <string name="new_file_dialog_desc">
+Saisissez un nom de fichier pour le nouveau fichier texte :
 </string>
     <string name="new_file_hint">
 Nom du fichier
@@ -2353,6 +2418,10 @@ Chargement des prix depuis l\'Amazon Appstore...
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Erreur d\'achat Amazon : %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Les achats ne sont pas encore disponibles. Veuillez réessayer dans un instant.
 </string>
     <string name="tile_hidden_with_name">
 Tuile \"%1$s\" masquée

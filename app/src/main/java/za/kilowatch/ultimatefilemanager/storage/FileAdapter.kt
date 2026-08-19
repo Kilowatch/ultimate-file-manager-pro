@@ -337,23 +337,24 @@ class FileAdapter(
     /** Whether every item is currently selected. */
     fun isAllSelected(): Boolean = files.isNotEmpty() && selectedPaths.size == files.size
 
-    /** Invert the current selection over the visible listing, staying in selection mode. */
+    /** Invert the current selection over the visible listing. */
     fun invertSelection() {
         files.forEach {
             val path = it.absolutePath
             if (path in selectedPaths) selectedPaths.remove(path) else selectedPaths.add(path)
+        }
+        if (selectedPaths.isEmpty()) {
+            exitSelectionMode()
+            return
         }
         longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedPaths.size)
     }
 
-    /** Deselect all while staying in selection mode. */
+    /** Deselect all and exit selection mode. */
     fun deselectAll() {
-        selectedPaths.clear()
-        longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
-        onSelectionChanged(0)
+        exitSelectionMode()
     }
 
     /** Clear all selections and exit selection mode. */
@@ -417,6 +418,10 @@ class FileAdapter(
         val path = file.absolutePath
         if (path in selectedPaths) {
             selectedPaths.remove(path)
+            if (selectedPaths.isEmpty()) {
+                exitSelectionMode()
+                return
+            }
         } else {
             selectedPaths.add(path)
         }
@@ -808,7 +813,9 @@ class FileAdapter(
                                 if (!wasSelected) {
                                     longPressAnchorIndex = pos
                                 }
-                                notifyItemChanged(pos)
+                                if (isSelectionMode) {
+                                    notifyItemChanged(pos)
+                                }
                             }
                         }
                     }
@@ -834,7 +841,9 @@ class FileAdapter(
                                 // so the next long press ranges from this position.
                                 longPressAnchorIndex = pos
                             }
-                            notifyItemChanged(pos)
+                            if (isSelectionMode) {
+                                notifyItemChanged(pos)
+                            }
                         } else {
                             // Pass the icon container as the shared element view for image transitions
                             onItemClick(currentFile, iconContainer)

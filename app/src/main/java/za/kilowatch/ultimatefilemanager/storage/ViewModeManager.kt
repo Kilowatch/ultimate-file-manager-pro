@@ -1,7 +1,10 @@
 package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
@@ -118,32 +121,85 @@ object ViewModeManager {
         ViewMode.GRID_LARGE  -> R.drawable.ic_view_grid_large
     }
 
-    /** Shows a single-choice dialog to select the view mode. */
+    /** Shows a single-choice dialog to select the view mode (modernized on mobile, classic single-choice on TV). */
     fun showSelectionDialog(context: Context, currentMode: ViewMode, onSelected: (ViewMode) -> Unit) {
-        val modes = ViewMode.entries.toTypedArray()
-        val options = modes.map { mode ->
-            val resId = when (mode) {
-                ViewMode.LIST_SMALL  -> R.string.view_mode_list_small
-                ViewMode.LIST_MEDIUM -> R.string.view_mode_list_medium
-                ViewMode.LIST_LARGE  -> R.string.view_mode_list_large
-                ViewMode.LIST_XLARGE -> R.string.view_mode_list_xlarge
-                ViewMode.GRID_SMALL  -> R.string.view_mode_grid_small
-                ViewMode.GRID_MEDIUM -> R.string.view_mode_grid_medium
-                ViewMode.GRID_LARGE  -> R.string.view_mode_grid_large
-            }
-            context.getString(resId)
-        }.toTypedArray()
+        val isTv = DeviceUtils.isTvDevice(context)
+        if (isTv) {
+            val modes = ViewMode.entries.toTypedArray()
+            val options = modes.map { mode ->
+                val resId = when (mode) {
+                    ViewMode.LIST_SMALL  -> R.string.view_mode_list_small
+                    ViewMode.LIST_MEDIUM -> R.string.view_mode_list_medium
+                    ViewMode.LIST_LARGE  -> R.string.view_mode_list_large
+                    ViewMode.LIST_XLARGE -> R.string.view_mode_list_xlarge
+                    ViewMode.GRID_SMALL  -> R.string.view_mode_grid_small
+                    ViewMode.GRID_MEDIUM -> R.string.view_mode_grid_medium
+                    ViewMode.GRID_LARGE  -> R.string.view_mode_grid_large
+                }
+                context.getString(resId)
+            }.toTypedArray()
 
-        val selectedIndex = modes.indexOf(currentMode)
+            val selectedIndex = modes.indexOf(currentMode)
 
-        MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
-            .setTitle(R.string.dialog_view_mode_title)
-            .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
-                onSelected(modes[which])
+            MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
+                .setTitle(R.string.dialog_view_mode_title)
+                .setSingleChoiceItems(options, selectedIndex) { dialog, which ->
+                    onSelected(modes[which])
+                    dialog.dismiss()
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+            return
+        }
+
+        // Modern Mobile Dialog
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_select_view_mode, null)
+
+        val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // Configure checkmarks
+        dialogView.findViewById<View>(R.id.checkModeListSmall)?.visibility =
+            if (currentMode == ViewMode.LIST_SMALL) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeListMedium)?.visibility =
+            if (currentMode == ViewMode.LIST_MEDIUM) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeListLarge)?.visibility =
+            if (currentMode == ViewMode.LIST_LARGE) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeListXLarge)?.visibility =
+            if (currentMode == ViewMode.LIST_XLARGE) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeGridSmall)?.visibility =
+            if (currentMode == ViewMode.GRID_SMALL) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeGridMedium)?.visibility =
+            if (currentMode == ViewMode.GRID_MEDIUM) View.VISIBLE else View.GONE
+        dialogView.findViewById<View>(R.id.checkModeGridLarge)?.visibility =
+            if (currentMode == ViewMode.GRID_LARGE) View.VISIBLE else View.GONE
+
+        // Wire click handlers
+        val modeMap = listOf(
+            R.id.btnModeListSmall to ViewMode.LIST_SMALL,
+            R.id.btnModeListMedium to ViewMode.LIST_MEDIUM,
+            R.id.btnModeListLarge to ViewMode.LIST_LARGE,
+            R.id.btnModeListXLarge to ViewMode.LIST_XLARGE,
+            R.id.btnModeGridSmall to ViewMode.GRID_SMALL,
+            R.id.btnModeGridMedium to ViewMode.GRID_MEDIUM,
+            R.id.btnModeGridLarge to ViewMode.GRID_LARGE
+        )
+
+        for ((viewId, mode) in modeMap) {
+            dialogView.findViewById<View>(viewId)?.setOnClickListener {
                 dialog.dismiss()
+                onSelected(mode)
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
     }
 }
 

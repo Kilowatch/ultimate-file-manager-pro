@@ -88,6 +88,53 @@
     <string name="view_mode_grid_large">
 ग्रिड दृश्य -> बड़ा
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+अपना पसंदीदा लेआउट और आइटम आकार चुनें:
+</string>
+    <string name="view_mode_title_list_small">
+सूची • छोटा
+</string>
+    <string name="view_mode_desc_list_small">
+अधिकतम फ़ाइल घनत्व के लिए कॉम्पैक्ट पंक्तियाँ
+</string>
+    <string name="view_mode_title_list_medium">
+सूची • मध्यम
+</string>
+    <string name="view_mode_desc_list_medium">
+फ़ाइल विवरण के साथ मानक संतुलित पंक्तियाँ
+</string>
+    <string name="view_mode_title_list_large">
+सूची • बड़ा
+</string>
+    <string name="view_mode_desc_list_large">
+बड़े टच लक्ष्यों के साथ आरामदायक पंक्तियाँ
+</string>
+    <string name="view_mode_title_list_xlarge">
+सूची • अतिरिक्त बड़ा
+</string>
+    <string name="view_mode_desc_list_xlarge">
+बेहतर पूर्वावलोकन पठनीयता के साथ विशाल पंक्तियाँ
+</string>
+    <string name="view_mode_title_grid_small">
+ग्रिड • छोटा
+</string>
+    <string name="view_mode_desc_grid_small">
+बहु-स्तंभ कॉम्पैक्ट ग्रिड लेआउट
+</string>
+    <string name="view_mode_title_grid_medium">
+ग्रिड • मध्यम
+</string>
+    <string name="view_mode_desc_grid_medium">
+संतुलित पूर्वावलोकन के साथ मानक ग्रिड लेआउट
+</string>
+    <string name="view_mode_title_grid_large">
+ग्रिड • बड़ा
+</string>
+    <string name="view_mode_desc_grid_large">
+बड़े थंबनेल के साथ विशाल 2-स्तंभ ग्रिड
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 स्प्रेडशीट
 </string>
@@ -393,6 +440,9 @@ UFM प्लेयर में अगला स्वतः चलाएँ
 </string>
     <string name="cd_view_toggle">
 दृश्य मोड टॉगल करें
+</string>
+    <string name="cd_clear_search">
+खोज क्वेरी साफ़ करें
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ UFM स्लाइड शो
     <string name="new_folder_title">
 नया फ़ोल्डर
 </string>
+    <string name="new_folder_dialog_desc">
+नए फ़ोल्डर के लिए एक नाम दर्ज करें:
+</string>
     <string name="new_folder_hint">
 फ़ोल्डर का नाम
 </string>
@@ -1823,10 +1876,22 @@ UFM स्लाइड शो
     <string name="create_new_title">
 नया
 </string>
+    <string name="create_new_desc">
+इस फ़ोल्डर में क्या बनाना है चुनें:
+</string>
+    <string name="create_new_folder_desc">
+नई निर्देशिका या फ़ोल्डर बनाएं
+</string>
+    <string name="create_new_file_desc">
+एक खाली टेक्स्ट दस्तावेज़ बनाएं
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 नई टेक्स्ट फ़ाइल बनाएँ
+</string>
+    <string name="new_file_dialog_desc">
+नई टेक्स्ट फ़ाइल के लिए एक फ़ाइल नाम दर्ज करें:
 </string>
     <string name="new_file_hint">
 फ़ाइल का नाम
@@ -2353,6 +2418,10 @@ Amazon Appstore से मूल्य लोड हो रहे हैं…
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Amazon खरीदारी त्रुटि: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+खरीदारी अभी उपलब्ध नहीं हैं। कृपया कुछ क्षण में पुनः प्रयास करें।
 </string>
     <string name="tile_hidden_with_name">
 \"%1$s\" टाइल छिपाई गई

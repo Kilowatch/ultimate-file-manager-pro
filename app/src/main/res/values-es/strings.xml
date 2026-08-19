@@ -88,6 +88,53 @@ Vista de cuadrícula -> Mediano
     <string name="view_mode_grid_large">
 Vista de cuadrícula -> Grande
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Selecciona tu diseño y tamaño de elemento preferidos:
+</string>
+    <string name="view_mode_title_list_small">
+Lista • Pequeño
+</string>
+    <string name="view_mode_desc_list_small">
+Filas compactas para máxima densidad de archivos
+</string>
+    <string name="view_mode_title_list_medium">
+Lista • Mediano
+</string>
+    <string name="view_mode_desc_list_medium">
+Filas estándar equilibradas con detalles de archivo
+</string>
+    <string name="view_mode_title_list_large">
+Lista • Grande
+</string>
+    <string name="view_mode_desc_list_large">
+Filas cómodas con áreas táctiles más grandes
+</string>
+    <string name="view_mode_title_list_xlarge">
+Lista • Extra Grande
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Filas espaciosas con legibilidad de vista previa mejorada
+</string>
+    <string name="view_mode_title_grid_small">
+Cuadrícula • Pequeño
+</string>
+    <string name="view_mode_desc_grid_small">
+Diseño de cuadrícula compacta de varias columnas
+</string>
+    <string name="view_mode_title_grid_medium">
+Cuadrícula • Mediano
+</string>
+    <string name="view_mode_desc_grid_medium">
+Diseño de cuadrícula estándar con vistas previas equilibradas
+</string>
+    <string name="view_mode_title_grid_large">
+Cuadrícula • Grande
+</string>
+    <string name="view_mode_desc_grid_large">
+Cuadrícula amplia de 2 columnas con miniaturas grandes
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Hoja de cálculo
 </string>
@@ -393,6 +440,9 @@ Crear nueva carpeta
 </string>
     <string name="cd_view_toggle">
 Alternar modo de vista
+</string>
+    <string name="cd_clear_search">
+Borrar consulta de búsqueda
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ Nueva carpeta
     <string name="new_folder_title">
 Nueva carpeta
 </string>
+    <string name="new_folder_dialog_desc">
+Introduce un nombre para la nueva carpeta:
+</string>
     <string name="new_folder_hint">
 Nombre de la carpeta
 </string>
@@ -1823,10 +1876,22 @@ Crear nueva carpeta o archivo de texto
     <string name="create_new_title">
 Nuevo
 </string>
+    <string name="create_new_desc">
+Selecciona qué crear en esta carpeta:
+</string>
+    <string name="create_new_folder_desc">
+Crear un nuevo directorio o carpeta
+</string>
+    <string name="create_new_file_desc">
+Crear un documento de texto vacío
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Crear nuevo archivo de texto
+</string>
+    <string name="new_file_dialog_desc">
+Introduce un nombre de archivo para el nuevo archivo de texto:
 </string>
     <string name="new_file_hint">
 Nombre de archivo
@@ -2353,6 +2418,10 @@ Cargando precios desde Amazon Appstore...
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Error de compra en Amazon: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Las compras aún no están disponibles. Inténtalo de nuevo en un momento.
 </string>
     <string name="tile_hidden_with_name">
 El mosaico \"%1$s\" está oculto

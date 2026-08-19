@@ -60,8 +60,8 @@ class FileBrowserFragment : Fragment() {
     private lateinit var layoutActionPills: View
     private lateinit var txtSelectionCount: TextView
     private lateinit var btnCloseSelection: ImageView
-    private lateinit var btnSelectAll: MaterialButton
-    private lateinit var btnDelete: MaterialButton
+    private lateinit var btnSelectAll: View
+    private lateinit var btnDelete: View
     private lateinit var btnCopy: ImageView
     private lateinit var btnMove: ImageView
     private lateinit var btnRename: ImageView
@@ -80,7 +80,7 @@ class FileBrowserFragment : Fragment() {
     private lateinit var btnImageCompress: View
     private var btnViewToggle: ImageView? = null
     private var btnSort: ImageView? = null
-    private var btnOptionsToggle: ImageView? = null
+    private var btnOptionsToggle: View? = null
     private var layoutOptionsRow: View? = null
     private var isOptionsVisible = false
     private var fabPaste: ExtendedFloatingActionButton? = null
@@ -573,8 +573,10 @@ class FileBrowserFragment : Fragment() {
         }
         
         btnSearchToggle = view.findViewById(R.id.btnSearchToggle)
-        btnSearchToggle?.setImageResource(R.drawable.ic_search) 
-        btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+        btnSearchToggle?.setImageResource(R.drawable.ic_search)
+        if (isTv) {
+            btnSearchToggle?.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.ufm_denied))
+        }
         layoutSearchRow = view.findViewById(R.id.layoutSearchRow)
         edtSearch = view.findViewById(R.id.edtSearch)
         btnSearchClear = view.findViewById(R.id.btnSearchClear)
@@ -664,23 +666,8 @@ class FileBrowserFragment : Fragment() {
         btnOptionsToggle = view.findViewById(R.id.btnOptionsToggle)
         layoutOptionsRow = view.findViewById(R.id.layoutOptionsRow)
 
-        val prefs = requireContext().getSharedPreferences("ufm_prefs", android.content.Context.MODE_PRIVATE)
-        isOptionsVisible = prefs.getBoolean("toolbar_options_visible", false)
-
-        if (isTv) {
-            btnOptionsToggle?.visibility = View.GONE
-            layoutOptionsRow?.visibility = View.GONE
-        } else {
-            layoutOptionsRow?.visibility = if (isOptionsVisible) View.VISIBLE else View.GONE
-            btnOptionsToggle?.setImageResource(if (isOptionsVisible) R.drawable.ic_settings else R.drawable.ic_settings_off)
-
-            btnOptionsToggle?.setOnClickListener {
-                isOptionsVisible = !isOptionsVisible
-                layoutOptionsRow?.visibility = if (isOptionsVisible) View.VISIBLE else View.GONE
-                btnOptionsToggle?.setImageResource(if (isOptionsVisible) R.drawable.ic_settings else R.drawable.ic_settings_off)
-                prefs.edit().putBoolean("toolbar_options_visible", isOptionsVisible).apply()
-            }
-        }
+        btnOptionsToggle?.visibility = View.GONE
+        layoutOptionsRow?.visibility = View.GONE
         
         btnSearchToggle?.setOnClickListener { toggleSearch() }
         btnSearchClear?.setOnClickListener { edtSearch?.setText("") }
@@ -1531,6 +1518,43 @@ class FileBrowserFragment : Fragment() {
         
         val showSelection = fileAdapter.isSelectionMode
         val isTv = DeviceUtils.isTvDevice(requireContext())
+        if (!isTv) {
+            val layoutHeaderNormal = view?.findViewById<View>(R.id.layoutHeaderNormal)
+            val layoutHeaderSelection = view?.findViewById<View>(R.id.layoutHeaderSelection)
+
+            if (showSelection) {
+                val showActions = count > 0
+                layoutHeaderNormal?.visibility = View.GONE
+                layoutHeaderSelection?.visibility = View.VISIBLE
+                layoutSelectionBar.visibility = View.GONE
+                layoutActionPills.visibility = View.GONE
+                txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
+
+                val isAll = fileAdapter.isAllSelected()
+                if (btnSelectAll is ImageView) {
+                    (btnSelectAll as ImageView).setImageResource(if (isAll) R.drawable.ic_deselect_all else R.drawable.ic_select_all)
+                    (btnSelectAll as ImageView).contentDescription = getString(if (isAll) R.string.action_deselect_all else R.string.action_select_all)
+                } else if (btnSelectAll is MaterialButton) {
+                    (btnSelectAll as MaterialButton).text = if (isAll) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+                }
+
+                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
+                fabProperties?.visibility = View.GONE
+                fabSelectAll?.visibility = View.GONE
+                updatePasteFab()
+            } else {
+                layoutHeaderNormal?.visibility = View.VISIBLE
+                layoutHeaderSelection?.visibility = View.GONE
+                layoutSelectionBar.visibility = View.GONE
+                layoutActionPills.visibility = View.GONE
+                fabProperties?.visibility = View.GONE
+                fabTools?.visibility = View.GONE
+                fabSelectAll?.visibility = View.GONE
+                updatePasteFab()
+            }
+            return
+        }
+
         if (isTwinWindow) {
             layoutSelectionBar.visibility = View.GONE
             layoutActionPills.visibility = if (showSelection) View.VISIBLE else View.GONE
@@ -1550,91 +1574,66 @@ class FileBrowserFragment : Fragment() {
             val hasPinned = fileAdapter.hasAnySelectedPinned(context)
             val hasUnpinned = fileAdapter.hasAnySelectedUnpinned(context)
 
-            if (!isTv) {
-                if (!isTwinWindow) {
-                    val row2 = btnCopy.parent.parent as? View
+            fabTools?.visibility = View.GONE
+            fabSelectAll?.visibility = View.GONE
+            if (!isTwinWindow) {
+                val row2 = btnCopy.parent.parent as? View
+                if (showActions) {
+                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
+                    row2?.visibility = View.VISIBLE
+                } else {
                     row2?.visibility = View.GONE
-                    btnSelectAll.visibility = if (pm.isIconEnabled(context, pm.KEY_SELECT_ALL)) View.VISIBLE else View.GONE
-                    btnDelete.visibility = View.GONE
-                    btnCompress.visibility = View.GONE
-                    fabSelectAll?.visibility = View.GONE
-                } else {
-                    view?.findViewById<View>(R.id.btnPillCopy)?.visibility = View.GONE
-                    view?.findViewById<View>(R.id.btnPillMove)?.visibility = View.GONE
-                    view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
-                    view?.findViewById<View>(R.id.btnPillDelete)?.visibility = View.GONE
-                    layoutActionPills.visibility = View.GONE
-                    
-                    val fabSelAll = fabSelectAll
-                    if (fabSelAll != null) {
-                        val isAllSel = fileAdapter.isAllSelected()
-                        fabSelAll.text = if (isAllSel) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
-                        fabSelAll.setIconResource(if (isAllSel) R.drawable.ic_close else R.drawable.ic_check)
-                        fabSelAll.visibility = View.VISIBLE
-                    }
+                    za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
                 }
-                btnExtract?.visibility = View.GONE
-                fabTools?.visibility = if (showActions) View.VISIBLE else View.GONE
             } else {
-                fabTools?.visibility = View.GONE
-                fabSelectAll?.visibility = View.GONE
-                if (!isTwinWindow) {
-                    val row2 = btnCopy.parent.parent as? View
-                    if (showActions) {
-                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.stopAnimation(layoutSelectionBar)
-                        row2?.visibility = View.VISIBLE
-                    } else {
-                        row2?.visibility = View.GONE
-                        za.kilowatch.ultimatefilemanager.ui.SelectionAnimationHelper.startAnimation(layoutSelectionBar)
-                    }
-                } else {
-                    view?.findViewById<View>(R.id.btnPillCopy)?.visibility = if (showActions) View.VISIBLE else View.GONE
-                    view?.findViewById<View>(R.id.btnPillMove)?.visibility = if (showActions) View.VISIBLE else View.GONE
-                    view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
-                    view?.findViewById<View>(R.id.btnPillDelete)?.visibility = if (showActions) View.VISIBLE else View.GONE
-                    // On TV twin window, hide the pills container entirely if no actions are showable
-                    layoutActionPills.visibility = if (showActions) View.VISIBLE else View.GONE
-                }
-                
-                // TV-only icon/row visibility
-                btnDelete.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
-                btnCopy.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY)) View.VISIBLE else View.GONE
-                btnMove.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE)) View.VISIBLE else View.GONE
-                btnRename.visibility = if (count >= 1 && pm.isIconEnabled(context, pm.KEY_RENAME)) View.VISIBLE else View.GONE
-                btnShare.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_SHARE)) View.VISIBLE else View.GONE
-                btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
-                btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
-                btnCompress.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
-                val imgFiles = fileAdapter.getSelectedFiles()
-                val hasArchiveSelected = imgFiles.isNotEmpty() && imgFiles.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
-                btnExtract?.visibility = if (isTv && showActions && hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) View.VISIBLE else View.GONE
-                val allImages = imgFiles.isNotEmpty() && imgFiles.all {
-                    it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
-                }
-                btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
-                val hasVideoOrFolder = imgFiles.isNotEmpty() && imgFiles.any {
-                    it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
-                }
-                btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
-                
-                val isSingleFolderSel = imgFiles.size == 1 && imgFiles.first().isDirectory
-                val (selStorageId, _, _) = if (isSingleFolderSel) za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(imgFiles.first().absolutePath) else Triple("", "", "")
-                val isSelFolderIndexed = selStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(selStorageId)
-                btnDuplicateFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(context, pm.KEY_DUPLICATE_FINDER)) View.VISIBLE else View.GONE
-                btnLargeFilesFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(context, pm.KEY_LARGE_FILES_FINDER)) View.VISIBLE else View.GONE
-
-                
-                btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
-                btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
-                btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
-                btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
-                btnPin?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(context, pm.KEY_PIN)) View.VISIBLE else View.GONE
-                btnUnpin?.visibility = if (showActions && hasPinned && pm.isIconEnabled(context, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
-                btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.btnPillCopy)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.btnPillMove)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                view?.findViewById<View>(R.id.btnPillSelectAll)?.visibility = View.GONE
+                view?.findViewById<View>(R.id.btnPillDelete)?.visibility = if (showActions) View.VISIBLE else View.GONE
+                // On TV twin window, hide the pills container entirely if no actions are showable
+                layoutActionPills.visibility = if (showActions) View.VISIBLE else View.GONE
             }
+            
+            // TV-only icon/row visibility
+            btnDelete.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_DELETE)) View.VISIBLE else View.GONE
+            btnCopy.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY)) View.VISIBLE else View.GONE
+            btnMove.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE)) View.VISIBLE else View.GONE
+            btnRename.visibility = if (count >= 1 && pm.isIconEnabled(context, pm.KEY_RENAME)) View.VISIBLE else View.GONE
+            btnShare.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_SHARE)) View.VISIBLE else View.GONE
+            btnCopyEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COPY_ENCRYPT)) View.VISIBLE else View.GONE
+            btnMoveEncrypt.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_MOVE_ENCRYPT)) View.VISIBLE else View.GONE
+            btnCompress.visibility = if (showActions && pm.isIconEnabled(context, pm.KEY_COMPRESS)) View.VISIBLE else View.GONE
+            val imgFiles = fileAdapter.getSelectedFiles()
+            val hasArchiveSelected = imgFiles.isNotEmpty() && imgFiles.any { za.kilowatch.ultimatefilemanager.archive.ArchiveManager.isSupportedArchive(it) }
+            btnExtract?.visibility = if (isTv && showActions && hasArchiveSelected && pm.isIconEnabled(context, pm.KEY_EXTRACT)) View.VISIBLE else View.GONE
+            val allImages = imgFiles.isNotEmpty() && imgFiles.all {
+                it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.IMAGE_EXTENSIONS
+            }
+            btnImageCompress.visibility = if (showActions && allImages && pm.isIconEnabled(context, pm.KEY_IMAGE_COMPRESS)) View.VISIBLE else View.GONE
+            val hasVideoOrFolder = imgFiles.isNotEmpty() && imgFiles.any {
+                it.isDirectory || it.extension.lowercase() in za.kilowatch.ultimatefilemanager.viewer.FileViewerRouter.VIDEO_EXTENSIONS
+            }
+            btnRetriggerThumbnails?.visibility = if (showActions && hasVideoOrFolder && pm.isIconEnabled(context, pm.KEY_RETRIGGER_THUMBNAILS)) View.VISIBLE else View.GONE
+            
+            val isSingleFolderSel = imgFiles.size == 1 && imgFiles.first().isDirectory
+            val (selStorageId, _, _) = if (isSingleFolderSel) za.kilowatch.ultimatefilemanager.indexing.IndexingRepository.resolveStorageForPath(imgFiles.first().absolutePath) else Triple("", "", "")
+            val isSelFolderIndexed = selStorageId.isNotEmpty() && UfmApplication.indexingRepository.isStorageFullyIndexed(selStorageId)
+            btnDuplicateFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(context, pm.KEY_DUPLICATE_FINDER)) View.VISIBLE else View.GONE
+            btnLargeFilesFinder?.visibility = if (showActions && isSingleFolderSel && isSelFolderIndexed && pm.isIconEnabled(context, pm.KEY_LARGE_FILES_FINDER)) View.VISIBLE else View.GONE
+
+            btnHide.visibility = if (showActions && hasVisible && pm.isIconEnabled(context, pm.KEY_HIDE)) View.VISIBLE else View.GONE
+            btnUnhide.visibility = if (showActions && hasHidden && pm.isIconEnabled(context, pm.KEY_UNHIDE)) View.VISIBLE else View.GONE
+            btnProtect.visibility = if (showActions && hasUnprotected && pm.isIconEnabled(context, pm.KEY_PROTECT)) View.VISIBLE else View.GONE
+            btnUnprotect.visibility = if (showActions && hasProtected && pm.isIconEnabled(context, pm.KEY_UNPROTECT)) View.VISIBLE else View.GONE
+            btnPin?.visibility = if (showActions && hasUnpinned && pm.isIconEnabled(context, pm.KEY_PIN)) View.VISIBLE else View.GONE
+            btnUnpin?.visibility = if (showActions && hasPinned && pm.isIconEnabled(context, pm.KEY_UNPIN)) View.VISIBLE else View.GONE
+            btnFavorite.visibility = if (count == 1 && pm.isIconEnabled(context, pm.KEY_FAVORITE)) View.VISIBLE else View.GONE
 
             txtSelectionCount.text = if (count == 0) getString(R.string.selection_prompt_select_item) else getString(R.string.selection_count, count)
-            btnSelectAll.text = if (fileAdapter.isAllSelected()) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+            val isAll = fileAdapter.isAllSelected()
+            if (btnSelectAll is MaterialButton) {
+                (btnSelectAll as MaterialButton).text = if (isAll) getString(R.string.action_deselect_all) else getString(R.string.action_select_all)
+            }
 
             val selectedFiles = fileAdapter.getSelectedFiles()
             val isSingleFile = selectedFiles.size == 1 && !selectedFiles.first().isDirectory
@@ -1738,6 +1737,17 @@ class FileBrowserFragment : Fragment() {
         }
         view?.findViewById<TextView>(R.id.txtTvSubtitle)?.text = displaySubtitle
         view?.findViewById<TextView>(R.id.txtSubtitle)?.text = displaySubtitle
+
+        val badgeStorage = view?.findViewById<TextView>(R.id.badgeStorageType)
+        if (badgeStorage != null && !isTv) {
+            badgeStorage.visibility = View.VISIBLE
+            badgeStorage.text = when {
+                storageLabel.contains("Vault", ignoreCase = true) -> "VAULT"
+                rootPath.contains("emulated", ignoreCase = true) -> "LOCAL"
+                rootPath.contains("sdcard", ignoreCase = true) || rootPath.contains("storage/", ignoreCase = true) -> "STORAGE"
+                else -> "LOCAL"
+            }
+        }
 
         if (fileAdapter.isSelectionMode) fileAdapter.exitSelectionMode()
 
@@ -2132,102 +2142,81 @@ class FileBrowserFragment : Fragment() {
     }
 
     private fun showCreateNewMenu() {
-        val isOnTv = DeviceUtils.isTvDevice(requireContext())
-        val bgColor = if (isOnTv) requireContext().getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
-        val textPrimary = if (isOnTv) requireContext().getColor(R.color.tv_text_primary) else requireContext().getColor(R.color.ufm_text_primary)
-        val textSecondary = if (isOnTv) requireContext().getColor(R.color.tv_text_secondary) else requireContext().getColor(R.color.ufm_text_hint)
+        val ctx = requireContext()
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+        val dialogView = LayoutInflater.from(ctx).inflate(
+            if (isOnTv) R.layout.dialog_create_new_options_tv else R.layout.dialog_create_new_options,
+            null
+        )
 
-        val container = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(64, 32, 64, 16)
-            setBackgroundColor(bgColor)
-        }
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
 
-        val rowFolder = createMenuRowView(R.drawable.ic_folder, getString(R.string.new_menu_new_folder), isOnTv, textPrimary, textSecondary)
-        container.addView(rowFolder)
-
-        val divider = View(requireContext()).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1).apply {
-                topMargin = 8; bottomMargin = 8
-            }
-            setBackgroundColor(0x33FFFFFF.toInt())
-        }
-        container.addView(divider)
-
-        val rowFile = createMenuRowView(R.drawable.ic_file_text, getString(R.string.new_menu_new_file), isOnTv, textPrimary, textSecondary)
-        container.addView(rowFile)
-
-        val dialog = MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.create_new_title))
-            .setView(container)
-            .setNegativeButton(getString(R.string.delete_cancel), null)
-            .show()
-
-        // Wire clicks after dialog.show() so we have a reference to dismiss it
-        rowFolder.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnOptionNewFolder)?.setOnClickListener {
             dialog.dismiss()
             showCreateFolderDialog()
         }
-        rowFile.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnOptionNewFile)?.setOnClickListener {
             dialog.dismiss()
             showCreateTextFileDialog()
         }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
 
-        if (isOnTv) {
-            dialog.window?.setBackgroundDrawable(
-                android.graphics.drawable.ColorDrawable(requireContext().getColor(R.color.tv_bg_gradient_end))
-            )
-            dialog.findViewById<TextView>(com.google.android.material.R.id.alertTitle)?.setTextColor(textPrimary)
-        }
-    }
+        dialog.show()
 
-    private fun createMenuRowView(iconRes: Int, label: String, isOnTv: Boolean, textPrimary: Int, textSecondary: Int): LinearLayout {
-        val ctx = requireContext()
-        val row = LinearLayout(ctx).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = android.view.Gravity.CENTER_VERTICAL
-            setPadding(16, 12, 16, 12)
-            isClickable = true
-            isFocusable = true
-        }
-        val icon = ImageView(ctx).apply {
-            setImageResource(iconRes)
-            layoutParams = LinearLayout.LayoutParams(40, 40).apply { marginEnd = 16 }
-            if (isOnTv) imageTintList = android.content.res.ColorStateList.valueOf(textPrimary)
-        }
-        row.addView(icon)
-        val text = TextView(ctx).apply {
-            this.text = label
-            textSize = 16f
-            setTextColor(textPrimary)
-        }
-        row.addView(text)
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         if (isOnTv) {
-            val white = ctx.getColor(R.color.tv_text_primary)
-            val black = ctx.getColor(R.color.tv_button_focused_yellow_text)
-            val yellow = ctx.getColor(R.color.tv_button_focused_yellow)
-            row.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    row.setBackgroundColor(yellow)
-                    text.setTextColor(black)
-                    icon.imageTintList = android.content.res.ColorStateList.valueOf(black)
-                } else {
-                    row.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                    text.setTextColor(white)
-                    icon.imageTintList = android.content.res.ColorStateList.valueOf(white)
-                }
-            }
+            val widthPx = (800 * ctx.resources.displayMetrics.density).toInt()
+            val screenWidth = ctx.resources.displayMetrics.widthPixels
+            val finalWidth = minOf(widthPx, (screenWidth * 0.85).toInt())
+            dialog.window?.setLayout(finalWidth, android.view.WindowManager.LayoutParams.WRAP_CONTENT)
         }
-        return row
     }
 
     private fun showCreateTextFileDialog() {
-        val isOnTv = DeviceUtils.isTvDevice(requireContext())
         val ctx = requireContext()
-        val bgColor = if (isOnTv) ctx.getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT
-        val textColorPrimary = if (isOnTv) ctx.getColor(R.color.tv_text_primary) else ctx.getColor(R.color.ufm_text_primary)
-        val textColorHint = if (isOnTv) ctx.getColor(R.color.tv_text_hint) else ctx.getColor(R.color.ufm_text_hint)
-        val accentColor = if (isOnTv) ctx.getColor(R.color.tv_button_focused_yellow) else ctx.getColor(R.color.ufm_primary)
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+
+        if (!isOnTv) {
+            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_text_file, null)
+            val edtFileName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFileName)
+            edtFileName?.setText(getString(R.string.new_file_default))
+            edtFileName?.selectAll()
+
+            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+                val name = edtFileName?.text?.toString()?.trim().orEmpty()
+                if (name.isEmpty()) {
+                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_file_empty))
+                } else {
+                    dialog.dismiss()
+                    createTextFileInFragment(name)
+                }
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            edtFileName?.requestFocus()
+            return
+        }
+
+        val bgColor = ctx.getColor(R.color.tv_bg_gradient_end)
+        val textColorPrimary = ctx.getColor(R.color.tv_text_primary)
+        val textColorHint = ctx.getColor(R.color.tv_text_hint)
+        val accentColor = ctx.getColor(R.color.tv_button_focused_yellow)
 
         val container = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
@@ -2339,11 +2328,64 @@ class FileBrowserFragment : Fragment() {
     }
 
     private fun showCreateFolderDialog() {
-        val container = LinearLayout(requireContext()).apply {
+        val ctx = requireContext()
+        val isOnTv = DeviceUtils.isTvDevice(ctx)
+
+        if (!isOnTv) {
+            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_create_folder, null)
+            val edtFolderName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtFolderName)
+            edtFolderName?.setText(getString(R.string.new_menu_new_folder))
+            edtFolderName?.selectAll()
+
+            val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialogView.findViewById<View>(R.id.btnCreate)?.setOnClickListener {
+                val name = edtFolderName?.text?.toString()?.trim().orEmpty()
+                if (name.isEmpty()) {
+                    (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_empty))
+                } else {
+                    dialog.dismiss()
+                    val newDir = if (za.kilowatch.ultimatefilemanager.storage.ShizukuShellWrapper.canUseShizukuForPath(currentDir.absolutePath)) {
+                        za.kilowatch.ultimatefilemanager.storage.ShizukuFile(currentDir.absolutePath, name, true)
+                    } else {
+                        File(currentDir, name)
+                    }
+                    when {
+                        newDir.exists() -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_exists))
+                        newDir.mkdirs() -> {
+                            try {
+                                val (sid, stype) = za.kilowatch.ultimatefilemanager.indexing
+                                    .IndexingRepository.resolveStorageForPath(newDir.absolutePath)
+                                    .let { it.first to it.second }
+                                UfmApplication.indexingRepository.indexFile(newDir, sid, stype)
+                            } catch (_: Exception) {}
+                            loadDirectory(currentDir)
+                            (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_success))
+                        }
+                        else -> (activity as? FileBrowserActivity)?.showPremiumSnackbar(getString(R.string.new_folder_error))
+                    }
+                }
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            edtFolderName?.requestFocus()
+            return
+        }
+
+        val container = LinearLayout(ctx).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(64, 32, 64, 16)
         }
-        val editText = EditText(requireContext()).apply {
+        val editText = EditText(ctx).apply {
             hint = getString(R.string.new_folder_hint)
             setText("New Folder")
             selectAll()
@@ -2351,7 +2393,7 @@ class FileBrowserFragment : Fragment() {
         }
         container.addView(editText)
 
-        MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(ctx, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
             .setTitle(R.string.new_folder_title)
             .setIcon(R.drawable.ic_folder)
             .setView(container)
@@ -2905,8 +2947,10 @@ class FileBrowserFragment : Fragment() {
         isSearchVisible = !isSearchVisible
         searchRow.visibility = if (isSearchVisible) View.VISIBLE else View.GONE
         
-        val colorRes = if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied
-        btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
+        if (DeviceUtils.isTvDevice(requireContext())) {
+            val colorRes = if (isSearchVisible) R.color.ufm_granted else R.color.ufm_denied
+            btnToggle.imageTintList = android.content.res.ColorStateList.valueOf(requireContext().getColor(colorRes))
+        }
         
         if (isSearchVisible) {
             searchEdit.requestFocus()

@@ -12,90 +12,156 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Compact Header Bar — icons only, no title/subtitle -->
+    <!-- Compact Header Bar — Modern Glass Style -->
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="6dp"
-        android:paddingVertical="8dp"
+        android:paddingVertical="4dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button -->
-        <ImageView
-            android:id="@+id/btnTvBack"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:padding="9dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/cd_back"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- Normal Header Content (visible when NOT in selection mode) -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <!-- Accent divider -->
-        <View
-            android:id="@+id/divider_back"
-            android:layout_width="1.5dp"
-            android:layout_height="28dp"
-            android:layout_marginHorizontal="6dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/btnTvBack"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
 
-        <!-- Spacer pushes icons to the right -->
-        <View
-            android:id="@+id/spacerHeaderFlex"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+            <!-- Storage Badge Pill -->
+            <TextView
+                android:id="@+id/badgeStorageType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2.5dp"
+                android:background="@drawable/bg_storage_badge"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.04"
+                android:visibility="gone"
+                tools:text="LOCAL"
+                tools:visibility="visible" />
 
-        <!-- Options Toggle (gear) -->
+            <!-- Spacer pushes icons to the right -->
+            <View
+                android:id="@+id/spacerHeaderFlex"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Close Twin Window -->
+            <ImageView
+                android:id="@+id/btnCloseTwin"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
+                android:layout_marginEnd="2dp"
+                android:src="@drawable/ic_twin_window_off"
+                android:contentDescription="@string/close_twin_window"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Drive Picker -->
+            <ImageView
+                android:id="@+id/btnDrivePicker"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
+                android:src="@drawable/ic_storage_internal"
+                android:contentDescription="@string/select_storage"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+        </LinearLayout>
+
+        <!-- Contextual Selection Header (revealed in selection mode on mobile) -->
+        <LinearLayout
+            android:id="@+id/layoutHeaderSelection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <!-- Close Selection Button (X) -->
+            <ImageView
+                android:id="@+id/btnCloseSelection"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="@string/action_clear_selection"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+            <!-- Dynamic Selection Count -->
+            <TextView
+                android:id="@+id/txtSelectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="1 selected" />
+
+            <!-- Select All / Deselect All Toggle Icon -->
+            <ImageView
+                android:id="@+id/btnSelectAll"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
+                android:src="@drawable/ic_select_all"
+                android:contentDescription="@string/action_select_all"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_icon_tint" />
+
+        </LinearLayout>
+
+        <!-- Hidden compat stubs -->
         <ImageView
             android:id="@+id/btnOptionsToggle"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="8dp"
-            android:layout_marginEnd="2dp"
-            android:src="@drawable/ic_settings"
-            android:contentDescription="@string/toggle_options"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint" />
-
-        <!-- Close Twin Window -->
-        <ImageView
-            android:id="@+id/btnCloseTwin"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="8dp"
-            android:layout_marginEnd="2dp"
-            android:src="@drawable/ic_twin_window_off"
-            android:contentDescription="@string/close_twin_window"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint" />
-
-        <!-- Drive Picker -->
-        <ImageView
-            android:id="@+id/btnDrivePicker"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_storage_internal"
-            android:contentDescription="@string/select_storage"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+        <View
+            android:id="@+id/divider_back"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -124,106 +190,105 @@
             <!-- Spacer aligned with back button width -->
             <View
                 android:id="@+id/spacerOptions"
-                android:layout_width="38dp"
-                android:layout_height="36dp" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
             <!-- Aligned divider -->
             <View
                 android:id="@+id/dividerOptions"
-                android:layout_width="1.5dp"
-                android:layout_height="28dp"
-                android:layout_marginHorizontal="6dp"
-                android:background="?attr/colorPrimary"
-                android:alpha="0.6" />
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
             <!-- View Toggle -->
             <ImageView
                 android:id="@+id/btnViewToggle"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_view_list"
                 android:contentDescription="@string/cd_view_toggle"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
             <!-- Sort -->
             <ImageView
                 android:id="@+id/btnSort"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_sort"
                 android:contentDescription="@string/sort_and_filter"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
             <!-- Create New -->
             <ImageView
                 android:id="@+id/btnCreateNew"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_create_new"
                 android:contentDescription="@string/cd_create_new"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
             <!-- Search -->
             <ImageView
                 android:id="@+id/btnSearchToggle"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_search"
                 android:contentDescription="@string/search"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
             <!-- Switch to Installed Apps (left pane, local storage, twin window only) -->
             <ImageView
                 android:id="@+id/btnAppsSwitch"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_apps"
                 android:contentDescription="@string/perm_query_apps_title"
                 android:clickable="true"
                 android:focusable="true"
                 android:visibility="gone"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
             <ImageView
                 android:id="@+id/btnRefreshIndex"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:padding="8dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="7dp"
                 android:layout_marginEnd="2dp"
                 android:src="@drawable/ic_refresh_custom"
                 android:contentDescription="@string/refresh"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/bg_header_action_ripple"
                 app:tint="@color/mobile_icon_tint" />
 
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Search Row -->
+    <!-- Modern Search Row -->
     <LinearLayout
         android:id="@+id/layoutSearchRow"
         android:layout_width="match_parent"
@@ -239,46 +304,50 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
 
-        <ImageView
-            android:layout_width="36dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_search"
-            app:tint="@color/mobile_icon_tint" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="8dp"
+            android:background="@drawable/bg_modern_search_box">
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="24dp"
-            android:layout_marginHorizontal="6dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_search"
+                app:tint="@color/mobile_text_secondary"
+                android:contentDescription="@null" />
 
-        <EditText
-            android:id="@+id/edtSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/type_here_to_search"
-            android:textColor="@color/mobile_text_primary"
-            android:textColorHint="@color/mobile_text_secondary"
-            android:textSize="13sp"
-            android:paddingVertical="6dp"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:maxLines="1" />
+            <EditText
+                android:id="@+id/edtSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:background="@null"
+                android:hint="@string/type_here_to_search"
+                android:textColor="@color/mobile_text_primary"
+                android:textColorHint="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:paddingVertical="4dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
 
-        <ImageView
-            android:id="@+id/btnSearchClear"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:padding="9dp"
-            android:src="@drawable/ic_close"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/mobile_icon_tint"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <ImageView
+                android:id="@+id/btnSearchClear"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:padding="4dp"
+                android:src="@drawable/ic_close"
+                android:background="@drawable/bg_header_action_ripple"
+                app:tint="@color/mobile_text_secondary"
+                android:visibility="gone"
+                android:contentDescription="@string/cd_clear_search"
+                tools:visibility="visible" />
 
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.Barrier
@@ -288,186 +357,29 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="headerLayout,layoutOptionsRow,layoutSearchRow" />
 
-    <!-- Selection Action Bar (hidden by default) -->
+    <!-- Hidden compat stubs for action views -->
     <LinearLayout
         android:id="@+id/layoutSelectionBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/mobile_glass_header"
-        android:elevation="6dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/barrier_header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible">
-
-        <!-- Close | Count -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="6dp">
-
-            <ImageView
-                android:id="@+id/btnCloseSelection"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:padding="7dp"
-                android:src="@drawable/ic_close"
-                android:contentDescription="@string/action_clear_selection"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/mobile_icon_tint" />
-
-            <TextView
-                android:id="@+id/txtSelectionCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="12sp"
-                android:fontFamily="sans-serif-medium"
-                tools:text="3 selected" />
-
-        </LinearLayout>
-
-        <!-- Scrolling Actions Row 1 -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:scrollbars="none"
-            android:fillViewport="true"
-            android:paddingHorizontal="4dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <ImageView android:id="@+id/btnCopy" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_copy" android:contentDescription="@string/action_copy" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnMove" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_move" android:contentDescription="@string/action_move" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnRename" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_rename" android:contentDescription="@string/action_rename" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnShare" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_share" android:contentDescription="@string/action_share" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnImageCompress" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_compress_image" android:contentDescription="@string/action_compress_image" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnCopyEncrypt" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_copy_encrypt" android:contentDescription="@string/action_copy_encrypt" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnMoveEncrypt" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_move_encrypt" android:contentDescription="@string/action_move_encrypt" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnFavorite" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_star" android:contentDescription="@string/action_favorite" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnHide" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_eye_off" android:contentDescription="@string/hide" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnUnhide" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_eye" android:contentDescription="@string/unhide" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnProtect" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_shield_protected" android:contentDescription="@string/protect" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-                <ImageView android:id="@+id/btnUnprotect" android:layout_width="34dp" android:layout_height="34dp" android:padding="7dp" android:layout_marginEnd="1dp" android:src="@drawable/ic_shield_unprotected" android:contentDescription="@string/unprotect" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackgroundBorderless" app:tint="@color/mobile_icon_tint" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <!-- Actions Row 2: Select All | Compress | Delete -->
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:paddingHorizontal="4dp"
-            android:paddingVertical="3dp">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSelectAll"
-                    style="@style/Widget.Material3Expressive.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:text="@string/action_select_all"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="11sp"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:paddingVertical="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minHeight="0dp"
-                    app:backgroundTint="?attr/colorPrimaryContainer"
-                    app:icon="@drawable/ic_check"
-                    app:iconTint="?attr/colorPrimary"
-                    app:iconSize="14dp"
-                    app:iconPadding="4dp"
-                    app:cornerRadius="14dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCompress"
-                    style="@style/Widget.Material3Expressive.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:text="@string/action_compress"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="11sp"
-                    android:paddingVertical="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minHeight="0dp"
-                    app:backgroundTint="#1A00897B"
-                    app:icon="@drawable/ic_compress"
-                    app:iconTint="?attr/colorPrimary"
-                    app:iconSize="14dp"
-                    app:iconPadding="4dp"
-                    app:cornerRadius="14dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnExtract"
-                    style="@style/Widget.Material3Expressive.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:visibility="gone"
-                    android:text="@string/action_extract_here"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="11sp"
-                    android:paddingVertical="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minHeight="0dp"
-                    app:backgroundTint="#1A00897B"
-                    app:icon="@drawable/ic_extract"
-                    app:iconTint="?attr/colorPrimary"
-                    app:iconSize="14dp"
-                    app:iconPadding="4dp"
-                    app:cornerRadius="14dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDelete"
-                    style="@style/Widget.Material3Expressive.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:text="@string/action_delete"
-                    android:textColor="@color/ufm_denied"
-                    android:textSize="11sp"
-                    android:paddingVertical="0dp"
-                    android:paddingHorizontal="10dp"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:minHeight="0dp"
-                    app:backgroundTint="@color/ufm_delete_tint"
-                    app:icon="@drawable/ic_delete"
-                    app:iconTint="@color/ufm_denied"
-                    app:iconSize="14dp"
-                    app:iconPadding="4dp"
-                    app:cornerRadius="14dp" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageView android:id="@+id/btnCopy" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnMove" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnRename" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnShare" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnImageCompress" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnCopyEncrypt" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnMoveEncrypt" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnFavorite" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnHide" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnUnhide" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnProtect" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <ImageView android:id="@+id/btnUnprotect" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <View android:id="@+id/btnCompress" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <View android:id="@+id/btnExtract" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+        <View android:id="@+id/btnDelete" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
     </LinearLayout>
 
     <!-- Twin Window Action Pills -->
@@ -500,42 +412,39 @@
                 style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:text="@string/action_select_all"
                 app:icon="@drawable/ic_check"
-                app:iconSize="18dp" />
+                app:iconSize="16dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillCopy"
                 style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/action_copy"
-                android:textSize="11sp"
                 app:icon="@drawable/ic_copy"
-                app:iconSize="14dp" />
+                app:iconSize="16dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillMove"
                 style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
                 android:text="@string/action_move"
-                android:textSize="11sp"
                 app:icon="@drawable/ic_move"
-                app:iconSize="14dp" />
+                app:iconSize="16dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPillDelete"
                 style="@style/Widget.Material3Expressive.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="@string/action_delete"
-                android:textSize="11sp"
                 app:icon="@drawable/ic_delete"
-                app:iconSize="14dp"
+                app:iconSize="16dp"
                 app:iconTint="@color/ufm_denied"
                 android:textColor="@color/ufm_denied" />
 
@@ -549,7 +458,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingVertical="2dp"
-        app:layout_constraintTop_toBottomOf="@id/layoutSelectionBar"
+        app:layout_constraintTop_toBottomOf="@id/barrier_header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

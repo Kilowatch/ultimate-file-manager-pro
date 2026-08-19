@@ -263,16 +263,17 @@ class NetworkFileAdapter(
         files.forEach { f ->
             if (f in selectedFiles) selectedFiles.remove(f) else selectedFiles.add(f)
         }
+        if (selectedFiles.isEmpty()) {
+            exitSelectionMode()
+            return
+        }
         longPressAnchorIndex = RecyclerView.NO_POSITION
         notifyItemRangeChanged(0, itemCount)
         onSelectionChanged(selectedFiles.size)
     }
 
     fun deselectAll() {
-        selectedFiles.clear()
-        longPressAnchorIndex = RecyclerView.NO_POSITION
-        notifyItemRangeChanged(0, itemCount)
-        onSelectionChanged(0)
+        exitSelectionMode()
     }
     
     fun isAllSelected(): Boolean = selectedFiles.size == files.size && files.isNotEmpty()
@@ -479,10 +480,16 @@ class NetworkFileAdapter(
         private fun toggleSelection(file: NetworkFile) {
             if (selectedFiles.contains(file)) {
                 selectedFiles.remove(file)
+                if (selectedFiles.isEmpty()) {
+                    exitSelectionMode()
+                    return
+                }
             } else {
                 selectedFiles.add(file)
             }
-            notifyItemChanged(bindingAdapterPosition)
+            if (isSelectionMode) {
+                notifyItemChanged(bindingAdapterPosition)
+            }
             onSelectionChanged(selectedFiles.size)
         }
 

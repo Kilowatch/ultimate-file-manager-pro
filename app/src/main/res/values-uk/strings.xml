@@ -88,6 +88,53 @@ Ultimate File Manager Pro
     <string name="view_mode_grid_large">
 Сітка -> Великий
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+Виберіть бажаний макет і розмір елементів:
+</string>
+    <string name="view_mode_title_list_small">
+Список • Малий
+</string>
+    <string name="view_mode_desc_list_small">
+Компактні рядки для максимальної щільності файлів
+</string>
+    <string name="view_mode_title_list_medium">
+Список • Середній
+</string>
+    <string name="view_mode_desc_list_medium">
+Стандартні збалансовані рядки з деталями файлів
+</string>
+    <string name="view_mode_title_list_large">
+Список • Великий
+</string>
+    <string name="view_mode_desc_list_large">
+Зручні рядки з більшими сенсорними зонами
+</string>
+    <string name="view_mode_title_list_xlarge">
+Список • Дуже великий
+</string>
+    <string name="view_mode_desc_list_xlarge">
+Просторі рядки з покращеною читабельністю попереднього перегляду
+</string>
+    <string name="view_mode_title_grid_small">
+Сітка • Малий
+</string>
+    <string name="view_mode_desc_grid_small">
+Багатоколонкова компактна сітка
+</string>
+    <string name="view_mode_title_grid_medium">
+Сітка • Середній
+</string>
+    <string name="view_mode_desc_grid_medium">
+Стандартна сітка зі збалансованими попередніми переглядами
+</string>
+    <string name="view_mode_title_grid_large">
+Сітка • Великий
+</string>
+    <string name="view_mode_desc_grid_large">
+Простора сітка з 2 стовпців і великими мініатюрами
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 Таблиця
 </string>
@@ -393,6 +440,9 @@ USB-накопичувач
 </string>
     <string name="cd_view_toggle">
 Перемкнути режим перегляду
+</string>
+    <string name="cd_clear_search">
+Очистити пошуковий запит
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ UFM Slide Show
     <string name="new_folder_title">
 Нова папка
 </string>
+    <string name="new_folder_dialog_desc">
+Введіть назву для нової папки:
+</string>
     <string name="new_folder_hint">
 Назва папки
 </string>
@@ -1823,10 +1876,22 @@ UFM Slide Show
     <string name="create_new_title">
 Новий
 </string>
+    <string name="create_new_desc">
+Виберіть, що створити в цій папці:
+</string>
+    <string name="create_new_folder_desc">
+Створити новий каталог або папку
+</string>
+    <string name="create_new_file_desc">
+Створити порожній текстовий документ
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 Створити новий текстовий файл
+</string>
+    <string name="new_file_dialog_desc">
+Введіть ім\\\'я файлу для нового текстового файлу:
 </string>
     <string name="new_file_hint">
 Ім\'я файлу
@@ -2353,6 +2418,10 @@ Amazon Tip Jar незабаром — дякуємо за терпіння! ☕
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 Помилка покупки Amazon: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+Покупки ще недоступні. Спробуйте ще раз за мить.
 </string>
     <string name="tile_hidden_with_name">
 Плитку \\\"%1$s\\\" приховано

@@ -30,6 +30,23 @@
     <string name="view_mode_grid_small">Gridview -> Small</string>
     <string name="view_mode_grid_medium">Gridview -> Medium</string>
     <string name="view_mode_grid_large">Gridview -> Large</string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">Select your preferred layout and item size:</string>
+    <string name="view_mode_title_list_small">List • Small</string>
+    <string name="view_mode_desc_list_small">Compact rows for maximum file density</string>
+    <string name="view_mode_title_list_medium">List • Medium</string>
+    <string name="view_mode_desc_list_medium">Standard balanced rows with file details</string>
+    <string name="view_mode_title_list_large">List • Large</string>
+    <string name="view_mode_desc_list_large">Comfortable rows with larger touch targets</string>
+    <string name="view_mode_title_list_xlarge">List • Extra Large</string>
+    <string name="view_mode_desc_list_xlarge">Spacious rows with enhanced preview readability</string>
+    <string name="view_mode_title_grid_small">Grid • Small</string>
+    <string name="view_mode_desc_grid_small">Multi-column compact grid layout</string>
+    <string name="view_mode_title_grid_medium">Grid • Medium</string>
+    <string name="view_mode_desc_grid_medium">Standard grid layout with balanced previews</string>
+    <string name="view_mode_title_grid_large">Grid • Large</string>
+    <string name="view_mode_desc_grid_large">Spacious 2-column grid with large thumbnails</string>
     <string name="spreadsheet_viewer_fallback_title">Spreadsheet</string>
     <string name="spreadsheet_performance_warning">Performance Warning: Large document truncated to first %1$d rows.</string>
     <string name="spreadsheet_error_parsing">Error parsing file: %1$s</string>
@@ -140,6 +157,7 @@
     <string name="cd_back">Go back</string>
     <string name="cd_new_folder">Create new folder</string>
     <string name="cd_view_toggle">Toggle view mode</string>
+    <string name="cd_clear_search">Clear search query</string>
 
     <!-- Settings: Favorites -->
     <string name="settings_favorites_title">Manage Favorites</string>
@@ -634,6 +652,7 @@
     <!-- New Folder -->
     <string name="action_new_folder">New Folder</string>
     <string name="new_folder_title">New Folder</string>
+    <string name="new_folder_dialog_desc">Enter a name for the new folder:</string>
     <string name="new_folder_hint">Folder name</string>
     <string name="new_folder_create">Create</string>
     <string name="new_folder_success">Folder created</string>
@@ -644,9 +663,13 @@
     <!-- Create New (menu combining New Folder + New Text File) -->
     <string name="cd_create_new">Create new folder or text file</string>
     <string name="create_new_title">New</string>
+    <string name="create_new_desc">Select what to create in this folder:</string>
+    <string name="create_new_folder_desc">Create a new directory or folder</string>
+    <string name="create_new_file_desc">Create an empty text document</string>
 
     <!-- New Text File -->
     <string name="new_file_title">Create New Text File</string>
+    <string name="new_file_dialog_desc">Enter a filename for the new text file:</string>
     <string name="new_file_hint">Filename</string>
     <string name="new_file_default">New File.txt</string>
     <string name="new_file_create">Create</string>
@@ -842,6 +865,8 @@
     <string name="tip_jar_loading_amazon">Loading prices from Amazon Appstore…</string>
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">Amazon purchase error: %1$s</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">Purchases aren\'t available yet. Please try again in a moment.</string>
     <string name="tile_hidden_with_name">\"%1$s\" tile hidden</string>
 
     <!-- Folder Sync -->

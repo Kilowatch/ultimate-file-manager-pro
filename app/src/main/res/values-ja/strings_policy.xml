@@ -172,6 +172,77 @@ Ultimate File Manager Proを使用することにより、本利用規約を読�
 </string>
 
     <!-- Feature list (Section 2) -->
+    <string-array name="tc_features">
+        <item>
+ファイルブラウザ — デバイス上のどこでもファイルの閲覧、コピー、移動、名前変更、削除ができます。
+</item>
+        <item>
+暗号化ボールト — 独自のPINでAES-256-GCM暗号化により機密ファイルを保護します。
+</item>
+        <item>
+ファイルサーバー — デバイス上でFTPまたはセキュアなSFTPサーバーを直接ホストし、ローカルネットワーク全体でファイルを共有します。
+</item>
+        <item>
+リモート管理 — 内蔵HTTPサーバーを介してローカルWi-Fi経由でファイルを管理し、APKのアップロード、ダウンロード、リモートインストールをサポートします。
+</item>
+        <item>
+ネットワーク共有 — ローカルネットワーク上のSMB、FTP、NFSサーバーに接続して、リモートファイルの閲覧、ダウンロード、管理を行います。
+</item>
+        <item>
+フォルダ同期 — 選択したスケジュール（間隔または毎日・毎週・毎月の特定時刻）で、スマートフォンのローカルフォルダをSMBまたはFTPネットワーク共有に自動バックアップします。
+</item>
+        <item>
+デバイスペアリング — ローカルWi-Fi経由でスマートフォンとAndroid TVをペアリングし、ファイルの転送とインストールを行います。
+</item>
+        <item>
+ADBターミナル — ADB（Android Debug Bridge）を使用して、ローカルWi-Fi経由で開発者モードのAndroidデバイスに接続し、直接シェルアクセスと高度なトラブルシューティングを実現します。
+</item>
+        <item>
+内蔵ビューア — テキストファイル、PDF、アニメーション画像（APNG、GIF、アニメーションWebP、AVIF、SVGなど）、アーカイブ、その他の形式をアプリ内で直接表示できます。
+</item>
+        <item>
+高度なZIPサポート — パスワード保護およびAES暗号化されたZIPアーカイブの作成と解凍ができます。
+</item>
+        <item>
+リモートスクリーンショット — ADB経由でローカルWi-Fi上のペアリング済みAndroid TVの画面をキャプチャし、スマートフォンのストレージに直接保存します。
+</item>
+        <item>
+7Zアーカイブサポート — LZMA/LZMA2圧縮の7Zアーカイブを解凍します。
+</item>
+        <item>
+ファイル検索 — デバイスストレージ全体からファイルやフォルダをすばやく見つけます。
+</item>
+        <item>
+ストレージ分析 — ストレージ容量の使用状況を視覚的に確認できます。
+</item>
+        <item>
+アプリマネージャー — デバイスにインストールされているすべてのアプリを表示・管理し、プリインストールアプリのデブロート（不要アプリ削除）推奨を提供します。
+</item>
+        <item>
+APKインストーラー — ローカルに保存されたファイルからAndroidアプリや分割APK（XAPK）を直接インストールします。
+</item>
+        <item>
+特権アクセス（Shizuku、Shevery &amp; ADB） — デバイスを実際にroot化せずに、rootに近いアクセス権を取得してシステムファイルや制限されたディレクトリを管理できます。
+</item>
+        <item>
+ストレージインデクサー — ファイルメタデータのローカルインデックスを作成し、即時検索と超高速ブラウジングを実現します。
+</item>
+        <item>
+ストレージアクセスフレームワーク — 他のアプリはUFMのドキュメントプロバイダーを通じてファイルにアクセスできます。
+</item>
+        <item>
+チップジャー — 開発者を支援するための任意の一回限りの購入です。チップを支払わなくてもアプリは常に無料です。
+</item>
+        <item>
+UFMメディアプレーヤー — バックグラウンド再生、通知コントロール、ピクチャーインピクチャーモード、プレイリスト管理に対応したオーディオ・ビデオファイルの再生ができます。
+</item>
+        <item>
+GIFクリエーター — 選択した画像からアニメーションGIFファイルを作成できます。カスタムフレームレート、リサイズオプション、ドラッグ＆ドロップによるフレーム並べ替えに対応。
+</item>
+        <item>
+写真EXIFツール — 写真のEXIFおよびGPSメタデータを検査し、プライベートなジオタグやデバイス情報を削除し、撮影タイムスタンプとカメラメタデータを使用して写真を一括リネームできます。
+</item>
+    </string-array>
 
     <!-- Risk table (Section 3) — label|detail pairs -->
     <string-array name="tc_risk_labels">
@@ -418,6 +489,134 @@ TVリモコンのボタンを押したときに触覚フィードバックを提
     </string-array>
 
     <!-- Open-source list (Section 7) -->
+    <string-array name="tc_opensource">
+        <item>
+NanoHTTPD — リモート管理を支える軽量HTTPサーバー。（BSD-3-Clause）
+</item>
+        <item>
+jcifs-ng（AgNO3 GmbH / eu.agno3.jcifs:jcifs-ng） — ネットワーク共有ブラウジングとフォルダ同期のためのSMB2/SMB3クライアントライブラリ。（LGPL-2.1）
+</item>
+        <item>
+smbj（hierynomus/smbj） — ネットワーク共有アクセスに使用されるSMB2/SMB3 Java実装。（Apache-2.0）
+</item>
+        <item>
+EMC ECS NFSクライアント（com.emc.ecs:nfs-client） — ネットワーク共有アクセスのためのNFS v3クライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+libnfs（sahlberg/libnfs） — NFSv2、NFSv3、NFSv4をサポートするネイティブNFSクライアントライブラリ。（LGPL-2.1 / BSD-2-Clause）
+</item>
+        <item>
+Apache MINA SSHD（org.apache.sshd） — セキュアなネットワーク共有アクセスとホスティングのための包括的なSSHDコア、SFTP、SCPクライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache FtpServer（org.apache.ftpserver） — 100%純JavaのFTPサーバー。（Apache-2.0）
+</item>
+        <item>
+Apache POI — オフィスファイルを表示するためのドキュメント処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+Firebase Analytics — アプリの利用状況を把握するためのGoogleの分析プラットフォーム。（Apache-2.0）
+</item>
+        <item>
+AndroidXライブラリ（Android TV用Leanbackを含む） — 最新のAndroid開発のためのGoogleのJetpackコンポーネント。（Apache-2.0）
+</item>
+        <item>
+マテリアルデザインコンポーネント — クリーンで一貫性のあるインターフェースのためのGoogleのUIライブラリ。（Apache-2.0）
+</item>
+        <item>
+Room永続化ライブラリ — ローカルメタデータインデックス作成のためのSQLite抽象化レイヤー。（Apache-2.0）
+</item>
+        <item>
+zip4j（net.lingala.zip4j） — パスワード保護およびAES暗号化アーカイブのための高度なZIPライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache Commons Compress — さまざまなアーカイブ形式（7z、zip、tarなど）の読み書きのためのライブラリ。（Apache-2.0）
+</item>
+        <item>
+XZ for Java（org.tukaani.xz） — XZおよびLZMA圧縮の実装。（パブリックドメイン）
+</item>
+        <item>
+zstd-jni（com.github.luben:zstd-jni） — Zstandard圧縮・展開ライブラリのJNIバインディング。（BSD-2-Clause）
+</item>
+        <item>
+Junrar（com.github.junrar:junrar） — Java RAR解凍ライブラリ。（BSD-3-Clause）
+</item>
+        <item>
+libadb-android（com.github.MuntashirAkon） — ADB対応デバイスへの安全な接続を可能にし、リモートシェルアクセスと証明書ベースのペアリングを実現するAndroid Debug Bridgeライブラリ。（Apache-2.0）
+</item>
+        <item>
+Apache MINA SSHD（org.apache.sshd） — セキュアなネットワーク共有アクセスのための包括的なSSHDコア、SFTP、SCPクライアントライブラリ。（Apache-2.0）
+</item>
+        <item>
+EdDSA for Java（net.i2p.crypto:eddsa） — Ed25519 SSH鍵のためのEdDSA（Edwards曲線デジタル署名アルゴリズム）の実装。（CC0-1.0）
+</item>
+        <item>
+SLF4J Android（uk.uuid.slf4j:slf4j-android） — SSHDライブラリで使用されるAndroid用ロギングバインディング。（MIT）
+</item>
+        <item>
+BouncyCastle（org.bouncycastle） — RSA/EdDSA鍵ペア生成とX.509証明書作成のための暗号化ライブラリ、バージョン1.83。（MITスタイルライセンス）
+</item>
+        <item>
+Google Play Billingライブラリ — 任意のアプリ内チップ購入を処理します。Google Playのプライバシーポリシーに準拠します。（Apache-2.0）
+</item>
+        <item>
+Google Play Reviewライブラリ — アプリ内の評価・レビュー機能を提供します。（Apache-2.0）
+</item>
+        <item>
+Coil（io.coil-kt.coil3） — 内蔵イメージビューアでのアニメーション画像レンダリング（APNG、GIF、アニメーションWebP、AVIF、JXL、SVG）を支える画像読み込みライブラリ。（Apache-2.0）
+</item>
+        <item>
+avif-coder（io.github.awxkee） — Android API 24〜30でネイティブAVIFサポートを提供するAVIF画像デコードライブラリ。API 31以降は内蔵ImageDecoderを使用します。（Apache-2.0）
+</item>
+        <item>
+jxl-coder（io.github.awxkee） — Android API 21以上でネイティブJXLサポートを提供するJPEG XL画像デコード・エンコードライブラリ。（Apache-2.0 / BSD-3-Clause）
+</item>
+        <item>
+APNG4Android（com.github.penfeizhou.android.animation） — AndroidでアニメーションPNGファイルをデコードおよびレンダリングするためのコアライブラリ。（Apache-2.0）
+</item>
+        <item>
+Shizuku &amp; Shevery API（dev.rikka.shizuku:api &amp; provider / com.hamondev.shevery） — ShizukuまたはShevery Managerアプリを介して特権ファイルシステムアクセスを可能にするライブラリ。（Apache-2.0）
+</item>
+        <item>
+ViewPager2 — フラグメントやレイアウト間のスライド移動のためのAndroidライブラリ。（Apache-2.0）
+</item>
+        <item>
+Lottie（com.airbnb.android:lottie） v6.3.0 — Android上でAdobe After Effectsアニメーションをネイティブにレンダリングするアニメーションライブラリ。アプリ全体の滑らかなUIアニメーションに使用されています。（Apache-2.0）
+</item>
+        <item>
+Ktor（io.ktor） — ローカルファイルサーバーを支える軽量Webフレームワーク。（Apache-2.0）
+</item>
+        <item>
+PDFBox-Android（com.tom-roush:pdfbox-android） — PDFドキュメントをネイティブにレンダリングおよび表示するためのライブラリ。（Apache-2.0）
+</item>
+        <item>
+ExoPlayer / Media3（androidx.media3） — 堅牢なビデオ・オーディオ再生のための高度なメディアプレーヤー。（Apache-2.0）
+</item>
+        <item>
+Microsoft Authentication Library（MSAL） — OneDrive API認証をネイティブに処理します。（MIT）
+</item>
+        <item>
+OkHttp（com.squareup.okhttp3） — クラウドストレージのネットワークリクエストのための堅牢なHTTP &amp; HTTP/2クライアント。（Apache-2.0）
+</item>
+        <item>
+Gson（com.google.code.gson） — クラウドストレージ統合に使用されるJSON処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+AndroidX Browser（androidx.browser） — Google Drive API認証のためのChrome Custom Tabsサポート。（Apache-2.0）
+</item>
+        <item>
+ZXing（com.google.zxing:core） — バーコード画像処理ライブラリ。（Apache-2.0）
+</item>
+        <item>
+gifencoder（com.squareup:gifencoder） — 選択した画像からアニメーションGIFファイルを作成するための純Java GIFエンコードライブラリ。（Apache-2.0）
+</item>
+        <item>
+AndroidX ExifInterface（androidx.exifinterface:exifinterface） — JPEG、PNG、WebP、HEIF、DNG画像形式のEXIFおよびGPSメタデータの読み取り、書き込み、削除を行うライブラリ。（Apache-2.0）
+</item>
+        <item>
+Amazon Appstore SDK — Amazonデバイスでの任意のアプリ内チップ購入を処理します。（プロプライエタリ）
+</item>
+    </string-array>
 
     <!-- Contact items (Section 11) -->
     <string-array name="tc_contact_labels">

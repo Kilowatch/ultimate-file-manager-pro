@@ -88,6 +88,53 @@
     <string name="view_mode_grid_large">
 عرض الشبكة -> كبير
 </string>
+
+    <!-- View Mode Dialog Descriptions -->
+    <string name="view_mode_dialog_desc">
+اختر التخطيط وحجم العنصر المفضل لديك:
+</string>
+    <string name="view_mode_title_list_small">
+قائمة • صغير
+</string>
+    <string name="view_mode_desc_list_small">
+صفوف مضغوطة لأقصى كثافة للملفات
+</string>
+    <string name="view_mode_title_list_medium">
+قائمة • متوسط
+</string>
+    <string name="view_mode_desc_list_medium">
+صفوف متوازنة قياسية مع تفاصيل الملف
+</string>
+    <string name="view_mode_title_list_large">
+قائمة • كبير
+</string>
+    <string name="view_mode_desc_list_large">
+صفوف مريحة مع أهداف لمس أكبر
+</string>
+    <string name="view_mode_title_list_xlarge">
+قائمة • كبير جداً
+</string>
+    <string name="view_mode_desc_list_xlarge">
+صفوف واسعة مع قراءة محسّنة للمعاينة
+</string>
+    <string name="view_mode_title_grid_small">
+شبكة • صغير
+</string>
+    <string name="view_mode_desc_grid_small">
+تخطيط شبكي مضغوط متعدد الأعمدة
+</string>
+    <string name="view_mode_title_grid_medium">
+شبكة • متوسط
+</string>
+    <string name="view_mode_desc_grid_medium">
+تخطيط شبكي قياسي مع معاينات متوازنة
+</string>
+    <string name="view_mode_title_grid_large">
+شبكة • كبير
+</string>
+    <string name="view_mode_desc_grid_large">
+شبكة واسعة بعمودين مع صور مصغّرة كبيرة
+</string>
     <string name="spreadsheet_viewer_fallback_title">
 جدول بيانات
 </string>
@@ -393,6 +440,9 @@
 </string>
     <string name="cd_view_toggle">
 تبديل وضع العرض
+</string>
+    <string name="cd_clear_search">
+مسح استعلام البحث
 </string>
 
     <!-- Settings: Favorites -->
@@ -1797,6 +1847,9 @@ APKs
     <string name="new_folder_title">
 مجلد جديد
 </string>
+    <string name="new_folder_dialog_desc">
+أدخل اسماً للمجلد الجديد:
+</string>
     <string name="new_folder_hint">
 اسم المجلد
 </string>
@@ -1823,10 +1876,22 @@ APKs
     <string name="create_new_title">
 جديد
 </string>
+    <string name="create_new_desc">
+اختر ما تريد إنشاءه في هذا المجلد:
+</string>
+    <string name="create_new_folder_desc">
+إنشاء مجلد أو دليل جديد
+</string>
+    <string name="create_new_file_desc">
+إنشاء مستند نصي فارغ
+</string>
 
     <!-- New Text File -->
     <string name="new_file_title">
 إنشاء ملف نصي جديد
+</string>
+    <string name="new_file_dialog_desc">
+أدخل اسم الملف للنص الجديد:
 </string>
     <string name="new_file_hint">
 اسم الملف
@@ -2353,6 +2418,10 @@ Google Play Store
     <!-- Shown as a Toast when an Amazon IAP call returns an error status -->
     <string name="amazon_iap_error">
 خطأ في شراء Amazon: %1$s
+</string>
+    <!-- Shown when the Amazon PurchasingListener hasn't been registered yet -->
+    <string name="amazon_iap_not_ready">
+المشتريات غير متاحة بعد. يرجى المحاولة مرة أخرى بعد قليل.
 </string>
     <string name="tile_hidden_with_name">
 تم إخفاء بلاطة \"%1$s\"
