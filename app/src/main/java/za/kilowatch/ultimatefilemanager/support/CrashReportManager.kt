@@ -4128,7 +4128,124 @@ object CrashReportManager {
                         } &&
                         mainStackTrace.none { it.className.startsWith(APP_PACKAGE) }
 
-                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall) {
+                    // 62. The main thread is sampled inside a bounded per-row resource
+                    //     load while the file browser's RecyclerView adapter binds its
+                    //     visible rows during a normal frame-draw traversal — e.g. top
+                    //     frame `android.content.res.AssetManager.nativeOpenXmlAsset` (the
+                    //     native compiled-XML asset open) under `openXmlBlockAsset` →
+                    //     `ResourcesImpl.loadXmlResourceParser` → `loadXmlDrawable` (a
+                    //     compiled-XML drawable parse, NOT a bitmap decode) →
+                    //     `loadDrawableForCookie` → `loadDrawable` → `Resources.loadDrawable`
+                    //     → `Resources.getDrawableForDensity` → `getDrawable`, reached from
+                    //     `android.content.Context.getDrawable` under an R8-obfuscated
+                    //     `setImageResource` call on a non-platform, non-app ImageView
+                    //     (`ru.setImageResource`, an AppCompatImageView-style per-row icon
+                    //     setter) inside the app's obfuscated adapter bind chain (`hc3.j`/
+                    //     `i87.a`/`z87.l`/`z87.d`/`rz4.b`, spanning class boundaries) under
+                    //     `androidx.recyclerview.widget.LinearLayoutManager.b1`/`O0`/`h0`
+                    //     (fill/layoutChunk/onLayoutChildren) under `RecyclerView.t`/`r`/
+                    //     `onLayout`, reached from a frame-draw traversal (`Choreographer.
+                    //     doFrame` → `ViewRootImpl.doTraversal` → `performTraversals` →
+                    //     `performLayout`) — reported from a Google Chromecast, SDK 34, app
+                    //     1.8.4-GOOGLE (2026-08-14), the same low-end-TV session family as
+                    //     the already-filtered obfuscated RecyclerView-bind reports
+                    //     (filters 38 and 59, whose `getResources` top-frame shape shares
+                    //     the identical `i87.a`/`z87.l`/`z87.d`/`rz4.b` bind chain), sampled
+                    //     one level deeper at the actual XML-drawable load reached from
+                    //     `setImageResource` instead of at the resource getter. The
+                    //     innermost work is a single bounded native read of one small
+                    //     compiled XML drawable (a per-row icon) that the adapter sets
+                    //     while the framework lays out the row; it cannot by itself occupy
+                    //     the main thread for 5 s, and the main thread is RUNNABLE and
+                    //     demonstrably processing a freshly dispatched vsync frame at
+                    //     sample time (`Choreographer$FrameDisplayEventReceiver.run` under
+                    //     `Handler.handleCallback`), which a thread parked inside a >5 s
+                    //     block cannot do — so the >5 s block is device-side slowness /
+                    //     CPU starvation on the low-end TV (the report's own
+                    //     `DlnaSsdpListener`, `NanoHttpd Main Listener`, HTTP-server and
+                    //     `DefaultDispatcher-worker-*` threads are all RUNNABLE doing
+                    //     DLNA/SSDP discovery and file-server work) or a post-stall
+                    //     sample of the backlog the main looper drains after a genuine
+                    //     stall. The `AnrWatchdogThread` now treats a main-thread stack
+                    //     whose top frame is `AssetManager.nativeOpenXmlAsset`/
+                    //     `openXmlBlockAsset`, with a `ResourcesImpl.loadXmlDrawable`
+                    //     frame (a compiled-XML drawable parse), a
+                    //     `Context.getDrawable`/`Resources.getDrawable` frame, an
+                    //     R8-obfuscated (non-platform, non-app) `setImageResource` frame
+                    //     (the per-row icon setter), a `LinearLayoutManager`/
+                    //     `GridLayoutManager` frame and a `RecyclerView.onLayout` frame,
+                    //     reached from a frame-draw traversal, with no
+                    //     `za.kilowatch.ultimatefilemanager` frames and no framework
+                    //     blocking primitive anywhere on the stack, as a false positive
+                    //     and resets its heartbeat instead of writing a report. Genuine
+                    //     freezes keep the main thread parked inside a blocking primitive
+                    //     (a lock, file/network/database I/O or binder frame), decode a
+                    //     bitmap (surfacing as `ResourcesImpl.loadBitmapDrawable`/
+                    //     `BitmapFactory`/`Bitmap.createBitmap` — heavy decoding, not a
+                    //     bounded XML parse — so the `loadXmlDrawable` requirement fails),
+                    //     run unbounded app business logic in the bind whose top frame is
+                    //     not the asset read, or reach the drawable load from outside a
+                    //     RecyclerView frame-draw traversal — and are still reported.
+                    val isRecyclerViewBindSetImageResourceStall =
+                        topFrame?.className == "android.content.res.AssetManager" &&
+                        (topFrame?.methodName == "nativeOpenXmlAsset" || topFrame?.methodName == "openXmlBlockAsset") &&
+                        // The read is a compiled-XML drawable parse (bounded), NOT a
+                        // bitmap decode — a genuine freeze that reaches the read via
+                        // `loadBitmapDrawable`/`BitmapFactory`/`Bitmap.createBitmap`
+                        // would not have this frame.
+                        mainStackTrace.any {
+                            it.className == "android.content.res.ResourcesImpl" && it.methodName == "loadXmlDrawable"
+                        } &&
+                        // The drawable is resolved from a resource ID (`setImageResource`)
+                        // through the framework resource getters.
+                        mainStackTrace.any {
+                            (it.className == "android.content.Context" && it.methodName == "getDrawable") ||
+                            (it.className == "android.content.res.Resources" && it.methodName == "getDrawable")
+                        } &&
+                        // The icon is being set on an ImageView via `setImageResource` on a
+                        // non-platform, non-app (R8-obfuscated) receiver — e.g. an
+                        // AppCompatImageView-style icon setter in the app's/bundled
+                        // library's bind chain.
+                        mainStackTrace.any { frame ->
+                            frame.methodName == "setImageResource" &&
+                            PLATFORM_PREFIXES.none { frame.className.startsWith(it) } &&
+                            !frame.className.startsWith(APP_PACKAGE)
+                        } &&
+                        // ... from a RecyclerView's LinearLayoutManager while it lays out
+                        // its rows (covers GridLayoutManager, which extends
+                        // LinearLayoutManager).
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.LinearLayoutManager" ||
+                                it.className == "androidx.recyclerview.widget.GridLayoutManager"
+                        } &&
+                        mainStackTrace.any {
+                            it.className == "androidx.recyclerview.widget.RecyclerView" && it.methodName == "onLayout"
+                        } &&
+                        // ... within a frame-draw traversal.
+                        (mainStackTrace.any {
+                            it.className == "android.view.Choreographer" && it.methodName == "doFrame"
+                        } ||
+                        mainStackTrace.any {
+                            it.className == "android.view.ViewRootImpl" &&
+                            (it.methodName == "performLayout" || it.methodName == "performTraversals")
+                        }) &&
+                        // No app-package frames — the bind chain is fully obfuscated.
+                        mainStackTrace.none { it.className.startsWith(APP_PACKAGE) } &&
+                        // No framework blocking primitive anywhere on the stack — a
+                        // genuine freeze parks the main thread in one of these instead
+                        // of in a bounded per-row XML drawable read.
+                        mainStackTrace.none { frame ->
+                            (frame.className == "android.os.BinderProxy" &&
+                             (frame.methodName == "transact" || frame.methodName == "transactNative")) ||
+                            (frame.className == "java.lang.Object" && frame.methodName == "wait") ||
+                            frame.className.startsWith("java.util.concurrent.locks.LockSupport") ||
+                            frame.className.startsWith("java.io.") ||
+                            frame.className.startsWith("libcore.io.") ||
+                            frame.className.startsWith("java.net.") ||
+                            frame.className.startsWith("android.database.")
+                        }
+
+                    if (isLibraryPriorityBlockingQueueEnqueueStall || isTrimMemoryDispatchStall || isVectorDrawableNativeAllocationDrawStall || isIdleInLooper || isPureFrameworkStack || isDialogLayoutResourceStall || tickerJustRan || isServiceClassInitStall || isAnimationReflectionStall || isRecyclerViewFocusSearchStall || isServiceConnectionBinderStall || isActivityOnStartLifecycleStall || isTrivialStringBuilderStartStall || isMaterialButtonInflateStall || isAutofillSyncResultStall || isRecyclerViewFocusSearchInflateStall || isVectorDrawableStringPoolStall || isFileProviderUriEncodeStall || isSpannableSpanRemovalStall || isTextDrawFrameStall || isTextMeasurementDuringInputStall || isSystemJobServiceStartStall || isBareRunTopPostStallStall || isVendorSdkServiceLookupStall || isDeepEqualsChainStall || isActivityLaunchBinderStall || isActivityOnCreateViewLookupStall || isTextMeasureSpanQueryStall || isActivityConstructorLifecycleStall || isLibraryThreadConstructionStall || isVendorFrameSkipLoggingStall || isActivityResumedLifecycleDispatchStall || isActivityPostResumeLifecycleDispatchStall || isPostDelayedFromFreshRunStall || isVendorLooperObserverPostStall || isRecyclerViewTextLayoutStall || isColdStartLayoutInflateStall || isSystemServiceFetchBinderStall || isThreadPoolWorkerCreateStall || isFreshRunBodyEntryStall || isRecyclerViewObfuscatedBindLayoutStall || isRecyclerViewBindResourceLookupStall || isActivityOnResumeStringBuildStall || isRecyclerViewCheckBoxInflateStall || isViewPropertyAnimatorChainingStall || isActivityOnCreateLibraryInitStall || isNativeAllocationRegistryTextLayoutStall || isVendorFrameSkipTrancareBinderStall || isActivityColdStartFactoryInflateStall || isVendorRtgSchedClassInitStall || isActivityColdStartTransitionInflateStall || isTextViewFocusSetTextColorStall || isNativeAllocationRegistryButtonInflateStall || isLibraryHandlerBinderStall || isHandlerInflateXmlDrawableStall || isInsetsDispatchClassInitStall || isTextMeasureWrapContentStall || isLinkedBlockingQueueFreshRunInitStall || isSaveInstanceStateUnparcelStall || isTextMeasureBoringLayoutStall || isMediaSessionSyncBinderStall || isRecyclerViewBindSetImageResourceStall) {
                         // Reset lastTickTimestamp so false positive is cleared
                         lastTickTimestamp = SystemClock.uptimeMillis()
                     } else if (!reportWrittenThisSession) {
