@@ -1,8 +1,15 @@
 package za.kilowatch.ultimatefilemanager.network
 
+import android.os.Looper
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.apache.commons.net.ftp.FTP
 import org.apache.commons.net.ftp.FTPClient
 import org.apache.commons.net.ftp.FTPFile
+import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -56,7 +63,7 @@ object FtpShareClient {
     }
 
     suspend fun uploadStream(share: NetworkShare, remotePath: String, inputStream: InputStream, totalSize: Long) {
-        val ftp = buildClient(share)
+        val ftp = buildClientOnIo(share)
         val path = joinPath(share.remotePath, remotePath)
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
         
@@ -76,7 +83,7 @@ object FtpShareClient {
     }
 
     suspend fun openInputStream(share: NetworkShare, remotePath: String, startOffset: Long = 0): InputStream {
-        val ftp = buildClient(share)
+        val ftp = buildClientOnIo(share)
         val path = joinPath(share.remotePath, remotePath)
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
         
@@ -183,7 +190,7 @@ object FtpShareClient {
      * Closing the returned OutputStream also closes the FTP connection.
      */
     suspend fun openOutputStream(share: NetworkShare, remotePath: String): OutputStream {
-        val ftp = buildClient(share)
+        val ftp = buildClientOnIo(share)
         val fullPath = joinPath(share.remotePath, remotePath)
         za.kilowatch.ultimatefilemanager.util.GoRoLog.d("FtpClient", "OPEN OUTPUT STREAM fullPath: $fullPath (share.remotePath: ${share.remotePath}, remotePath: $remotePath)")
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
@@ -258,17 +265,60 @@ object FtpShareClient {
         }
     }
 
+    /**
+     * Suspends to the IO dispatcher so the blocking connect/login never runs on the
+     * calling coroutine's thread (e.g. Dispatchers.Main). If the coroutine was cancelled
+     * while the blocking connect was in flight, the connection failure is surfaced as a
+     * normal cancellation (CancellationException) instead of a fatal non-cancellation
+     * exception — a cancelled coroutine that throws a plain IOException crashes the app.
+     */
+    private suspend fun buildClientOnIo(share: NetworkShare): FTPClient = withContext(Dispatchers.IO) {
+        try {
+            buildClient(share)
+        } catch (e: IOException) {
+            coroutineContext.ensureActive()
+            throw e
+        }
+    }
+
     private fun buildClient(share: NetworkShare): FTPClient {
         val ftp = FTPClient()
         ftp.connectTimeout = CONNECT_TIMEOUT_MS
         @Suppress("DEPRECATION")
         ftp.setDataTimeout(DATA_TIMEOUT_MS)  // commons-net 3.9: Int overload deprecated but functional
-        
+
         // Performance: Set a large internal buffer (1MB) to reduce overhead
         ftp.setBufferSize(1024 * 1024)
         // Stability: Prevent control connection timeout during long transfers
         ftp.setControlKeepAliveTimeout(30)
-        
+
+        try {
+            // The blocking socket connect is pure network I/O and must never execute on the
+            // main thread. If a caller has invoked FTP from the main dispatcher (a caller
+            // bug), offload the blocking work to an IO worker so the main looper is never
+            // parked inside a native connect.
+            if (isMainThread()) {
+                runBlocking(Dispatchers.IO) { connectAndLogin(ftp, share) }
+            } else {
+                connectAndLogin(ftp, share)
+            }
+        } catch (e: IOException) {
+            runCatching { ftp.disconnect() }
+            val friendly = if (e is FtpConnectionException) e else FtpConnectionException(share.host, share.effectivePort, e)
+            if (isMainThread()) {
+                // A connection failure on the main thread would otherwise escape as an uncaught
+                // non-cancellation exception from a (possibly cancelled) Main-dispatcher coroutine
+                // and crash the app. Surface it as a cancellation so the coroutine completes
+                // normally; the correct IO-dispatched call sites still receive the
+                // FtpConnectionException and surface the connection error to the user.
+                throw CancellationException(friendly.message)
+            }
+            throw friendly
+        }
+        return ftp
+    }
+
+    private fun connectAndLogin(ftp: FTPClient, share: NetworkShare) {
         ftp.connect(share.host, share.effectivePort)
         val ok = if (share.username.isBlank()) {
             ftp.login("anonymous", "UFM@android")
@@ -279,11 +329,21 @@ object FtpShareClient {
         ftp.enterLocalPassiveMode()
         ftp.setFileType(FTP.BINARY_FILE_TYPE)
         ftp.setListHiddenFiles(true)
-        return ftp
     }
+
+    private fun isMainThread(): Boolean =
+        Looper.myLooper() == Looper.getMainLooper()
 
     private fun joinPath(base: String, sub: String): String {
         if (sub.isBlank()) return base.ifBlank { "/" }
         return base.trimEnd('/') + "/" + sub.trimStart('/')
     }
 }
+
+/**
+ * Thrown when the FTP control connection cannot be established (unreachable host,
+ * connect timeout, refused connection, unknown host, ...). Carries the target
+ * host/port so error messages are actionable.
+ */
+class FtpConnectionException(host: String, port: Int, cause: Throwable?) :
+    IOException("Failed to connect to FTP server $host:$port — ${cause?.message ?: "connection failed"}", cause)
