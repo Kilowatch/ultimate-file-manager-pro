@@ -9,7 +9,9 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -61,8 +63,23 @@ class TvServerForegroundService : Service() {
                 }
 
                 val intent = Intent(appContext, TvServerForegroundService::class.java)
-                ContextCompat.startForegroundService(appContext, intent)
-                Log.d(TAG, "Requested TvServerForegroundService start")
+                // Post the actual startForegroundService request to the main looper. A service
+                // started via startForegroundService() must call startForeground() within the
+                // platform's foreground-service timeout or Android crashes the app with
+                // ForegroundServiceDidNotStartInTimeException. This service is auto-started while
+                // the main thread is still cold-starting the first Activity on a slow TV, which
+                // can delay onCreate() (where startForeground() runs) past that timeout. Posting
+                // hands the request to the system only when the main thread is free to create the
+                // service, so onCreate() runs immediately afterwards and startForeground() is
+                // reached well inside the window.
+                Handler(Looper.getMainLooper()).post {
+                    try {
+                        ContextCompat.startForegroundService(appContext, intent)
+                        Log.d(TAG, "Requested TvServerForegroundService start")
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to start TvServerForegroundService", e)
+                    }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start TvServerForegroundService", e)
             }
@@ -91,8 +108,21 @@ class TvServerForegroundService : Service() {
         super.onCreate()
         Log.d(TAG, "TvServerForegroundService onCreate")
 
-        createNotificationChannel()
-        val notification = buildNotification()
+        // Create the notification channel first. Guarded: a failure here must never abort
+        // the service before startForeground() is reached, or the system crashes the app
+        // with ForegroundServiceDidNotStartInTimeException.
+        runCatching { createNotificationChannel() }
+            .onFailure { Log.e(TAG, "Failed to create notification channel", it) }
+
+        // Build the notification defensively. If the build ever throws, stopSelf() cleanly
+        // instead of leaving the system waiting on startForeground() (which would then crash
+        // the app with ForegroundServiceDidNotStartInTimeException).
+        val notification = runCatching { buildNotification() }.getOrNull()
+        if (notification == null) {
+            Log.e(TAG, "Failed to build TV server notification — stopping service")
+            stopSelf()
+            return
+        }
 
         try {
             ServiceCompat.startForeground(
