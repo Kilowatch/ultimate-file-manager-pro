@@ -157,7 +157,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="@string/backup_confirm_import_message"
+                            android:text="@string/backup_import_notice"
                             android:textColor="@color/tv_text_primary"
                             android:textSize="14sp"
                             android:lineSpacingMultiplier="1.1"

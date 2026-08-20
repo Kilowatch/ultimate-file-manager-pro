@@ -94,6 +94,11 @@ object FavoritesManager {
         }
     }
 
+    fun clearAllFavorites(context: Context) {
+        getPrefs(context).edit().remove(KEY_FAVORITES).apply()
+        notifyWidget(context)
+    }
+
     fun isFavorite(context: Context, path: String): Boolean {
         return getFavorites(context).any { it.path == path }
     }

@@ -18,6 +18,15 @@ class TileColorImportBottomSheet : BottomSheetDialogFragment() {
     private var onApply: ((TileColorConfig) -> Unit)? = null
     private var currentValidConfig: TileColorConfig? = null
 
+    override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as com.google.android.material.bottomsheet.BottomSheetDialog
+        dialog.setOnShowListener {
+            val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet?.background = null
+        }
+        return dialog
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_tile_color_import, container, false)
     }
@@ -29,6 +38,11 @@ class TileColorImportBottomSheet : BottomSheetDialogFragment() {
         val tvImportError = view.findViewById<TextView>(R.id.tvImportError)
         val importPreviewPanel = view.findViewById<View>(R.id.importPreviewPanel)
         val btnImportApply = view.findViewById<View>(R.id.btnImportApply)
+        val btnCancelImport = view.findViewById<View>(R.id.btnCancelImport)
+
+        btnCancelImport?.setOnClickListener {
+            dismiss()
+        }
 
         etImportCode.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

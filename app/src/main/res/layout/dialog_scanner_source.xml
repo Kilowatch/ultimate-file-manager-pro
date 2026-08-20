@@ -1,46 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Document Scanner Source Picker — Premium Glassmorphic Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="320dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/bg_bottom_sheet">
+    android:gravity="center_horizontal"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
 
+    <!-- 64dp Frosted Scanner Hero Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_scanner"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/scanner_scan_new_page"
-        android:textSize="18sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="?attr/colorOnSurface"
-        android:layout_marginBottom="20dp" />
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
 
-    <com.google.android.material.button.MaterialButton
+    <!-- Dialog Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Choose how you want to add document pages"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Option 1: Camera -->
+    <LinearLayout
         android:id="@+id/btnCamera"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="@string/scanner_capture_camera"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:cornerRadius="16dp"
-        app:backgroundTint="@color/btn_save_bg_tint"
-        android:textColor="@android:color/white"
-        app:icon="@drawable/ic_scanner"
-        app:iconTint="@android:color/white"
-        android:layout_marginBottom="12dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="14dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
 
-    <com.google.android.material.button.MaterialButton
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_scanner"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scanner_capture_camera"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Capture new document pages with your camera"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Option 2: Gallery -->
+    <LinearLayout
         android:id="@+id/btnGallery"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="@string/scanner_capture_gallery"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:cornerRadius="16dp"
-        app:backgroundTint="@color/btn_save_bg_tint"
-        android:textColor="@android:color/white"
-        app:icon="@drawable/ic_file_image"
-        app:iconTint="@android:color/white" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="14dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="18dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="12dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_file_image"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scanner_capture_gallery"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Import existing images from your gallery or storage"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/mobile_text_secondary"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelSource"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
 
 </LinearLayout>

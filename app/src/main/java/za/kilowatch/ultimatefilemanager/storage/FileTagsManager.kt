@@ -223,6 +223,15 @@ object FileTagsManager {
     }
 
     /**
+     * Clears all tags from the entire UFM tagging database.
+     */
+    fun clearAllTags(context: Context) {
+        val updated = emptyMap<String, String>()
+        cachedEntries = updated
+        persist(context, updated)
+    }
+
+    /**
      * Handles updating tag paths when a file or directory is moved or renamed.
      *
      * Called once per file inside copy/move loops that already run on a background thread. The

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1.5dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:id="@+id/layoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="14dp">
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_about"
+                app:tint="@color/tv_text_primary"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="Package Name" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                tools:text="Unique Android application ID (package_name)" />
+        </LinearLayout>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cbSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            app:useMaterialThemeColors="true" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

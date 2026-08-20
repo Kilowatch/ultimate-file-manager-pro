@@ -48,8 +48,7 @@ class PairedDeviceAdapter(
 
         fun bind(device: PairedDevice) {
             txtDeviceName.text = device.name
-            
-            val deviceTypeLabel = if (device.isTv) "TV" else "Phone"
+            txtStatus.text = device.lastIp.ifEmpty { device.deviceId }
 
             if (device.isTv) {
                 imgIcon.setImageResource(R.drawable.ic_tv)
@@ -57,18 +56,23 @@ class PairedDeviceAdapter(
                 imgIcon.setImageResource(R.drawable.ic_phone)
             }
 
-            if (device.isConnected) {
-                txtStatus.text = itemView.context.getString(R.string.devicetypelabel_connected, device.lastIp)
-                txtStatus.setTextColor(itemView.context.getColor(
-                    if (isTvLayout) android.R.color.holo_green_light else android.R.color.holo_green_dark
-                ))
-                btnConnect.setText(R.string.disconnect)
+            val iconColor = if (device.isConnected) {
+                android.graphics.Color.parseColor("#4ADE80") // Green when connected
             } else {
-                txtStatus.text = itemView.context.getString(R.string.devicetypelabel_disconnected, device.lastIp)
-                txtStatus.setTextColor(itemView.context.getColor(
-                    if (isTvLayout) R.color.tv_text_secondary else R.color.mobile_text_secondary
-                ))
+                android.graphics.Color.parseColor("#EF5350") // Red when disconnected
+            }
+            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconColor)
+
+            txtStatus.setTextColor(itemView.context.getColor(
+                if (isTvLayout) R.color.tv_text_secondary else R.color.mobile_text_secondary
+            ))
+
+            if (device.isConnected) {
+                btnConnect.setText(R.string.disconnect)
+                (btnConnect as? com.google.android.material.button.MaterialButton)?.setIconResource(R.drawable.ic_close)
+            } else {
                 btnConnect.setText(R.string.connect)
+                (btnConnect as? com.google.android.material.button.MaterialButton)?.setIconResource(R.drawable.ic_check_circle)
             }
 
             btnConnect.setOnClickListener {

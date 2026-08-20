@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -13,17 +14,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.server.DlnaServerPrefs
 import za.kilowatch.ultimatefilemanager.server.FtpServerProfileRepository
 import za.kilowatch.ultimatefilemanager.server.ServerHostActivity
-import za.kilowatch.ultimatefilemanager.widget.FtpTileService
-import za.kilowatch.ultimatefilemanager.server.DlnaServerPrefs
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import za.kilowatch.ultimatefilemanager.widget.DlnaTileService
+import za.kilowatch.ultimatefilemanager.widget.FtpTileService
 import za.kilowatch.ultimatefilemanager.widget.SftpTileService
 import java.util.concurrent.Executors
 
+/**
+ * File Server System Tiles activity.
+ * Configures Android Quick Settings pull-down tiles for FTP, SFTP, and DLNA media servers.
+ * Follows the Language and Grouped Glass Card design standard.
+ */
 class FileServerTilesActivity : AppCompatActivity() {
 
     private lateinit var switchFtpTile: SwitchMaterial
@@ -35,6 +41,10 @@ class FileServerTilesActivity : AppCompatActivity() {
     private lateinit var switchDlnaTile: SwitchMaterial
     private lateinit var txtDlnaTileSubtitle: TextView
 
+    // Persisted through recreate() to prevent looping when restartPending is still true.
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
@@ -42,6 +52,9 @@ class FileServerTilesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
+
         enableEdgeToEdge()
         setContentView(R.layout.activity_file_server_tiles)
 
@@ -51,17 +64,21 @@ class FileServerTilesActivity : AppCompatActivity() {
             insets
         }
 
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
+        val btnBack = findViewById<View>(R.id.btnBack)
         btnBack.setOnClickListener { finish() }
 
+        val primaryColor = ThemeColors.primary(this)
+        findViewById<TextView>(R.id.labelSectionServer)?.setTextColor(primaryColor)
+        findViewById<TextView>(R.id.labelSectionTiles)?.setTextColor(primaryColor)
+
         // Open File Server Activity
-        val cardOpenFileServer = findViewById<MaterialCardView>(R.id.cardOpenFileServer)
+        val cardOpenFileServer = findViewById<View>(R.id.cardOpenFileServer)
         cardOpenFileServer.setOnClickListener {
             startActivity(Intent(this, ServerHostActivity::class.java))
         }
 
         // FTP Tile
-        val cardFtpTile = findViewById<MaterialCardView>(R.id.cardFtpTile)
+        val cardFtpTile = findViewById<View>(R.id.cardFtpTile)
         switchFtpTile = findViewById(R.id.switchFtpTile)
         txtFtpTileSubtitle = findViewById(R.id.txtFtpTileSubtitle)
 
@@ -73,7 +90,7 @@ class FileServerTilesActivity : AppCompatActivity() {
         switchFtpTile.setOnCheckedChangeListener(null)
 
         // SFTP Tile
-        val cardSftpTile = findViewById<MaterialCardView>(R.id.cardSftpTile)
+        val cardSftpTile = findViewById<View>(R.id.cardSftpTile)
         switchSftpTile = findViewById(R.id.switchSftpTile)
         txtSftpTileSubtitle = findViewById(R.id.txtSftpTileSubtitle)
 
@@ -85,7 +102,7 @@ class FileServerTilesActivity : AppCompatActivity() {
         switchSftpTile.setOnCheckedChangeListener(null)
 
         // DLNA Tile
-        val cardDlnaTile = findViewById<MaterialCardView>(R.id.cardDlnaTile)
+        val cardDlnaTile = findViewById<View>(R.id.cardDlnaTile)
         switchDlnaTile = findViewById(R.id.switchDlnaTile)
         txtDlnaTileSubtitle = findViewById(R.id.txtDlnaTileSubtitle)
 
@@ -95,6 +112,39 @@ class FileServerTilesActivity : AppCompatActivity() {
 
         cardDlnaTile.setOnClickListener { toggleDlnaTile() }
         switchDlnaTile.setOnCheckedChangeListener(null)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+
+        // Refresh tile states in case system tile status changed externally
+        val ftpTileEnabled = isTileEnabled(FtpTileService::class.java)
+        switchFtpTile.isChecked = ftpTileEnabled
+        updateFtpTileSubtitle(ftpTileEnabled)
+
+        val sftpTileEnabled = isTileEnabled(SftpTileService::class.java)
+        switchSftpTile.isChecked = sftpTileEnabled
+        updateSftpTileSubtitle(sftpTileEnabled)
+
+        val dlnaTileEnabled = isTileEnabled(DlnaTileService::class.java)
+        switchDlnaTile.isChecked = dlnaTileEnabled
+        updateDlnaTileSubtitle(dlnaTileEnabled)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
     private fun isTileEnabled(cls: Class<*>): Boolean {

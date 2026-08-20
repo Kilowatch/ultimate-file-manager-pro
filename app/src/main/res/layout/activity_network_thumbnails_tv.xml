@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Network Thumbnails settings screen — following Language standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,9 +9,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tv_gradient">
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".settings.NetworkThumbnailSettingsActivity">
 
-    <!-- Header -->
+    <!-- TV Header Bar (72dp standard) -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
@@ -17,7 +21,9 @@
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
         android:background="@color/tv_glass_white_10"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -36,6 +42,7 @@
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_marginHorizontal="@dimen/margin_md">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,6 +50,7 @@
                 android:textColor="@color/tv_text_primary"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,253 +61,406 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/tv_safe_horizontal"
             android:paddingTop="@dimen/margin_xl"
-            android:paddingBottom="48dp">
+            android:paddingBottom="48dp"
+            android:clipChildren="false">
 
-            <!-- Enable Toggle -->
+            <!-- Section 1 Header: Configuration -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_section_caching"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- Card 1: Enable Remote Thumbnails -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEnable"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="@drawable/selector_tv_button_yellow"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/card_radius_lg"
-                app:cardElevation="0dp">
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_tune"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/selector_tv_icon_tint_yellow" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:id="@+id/imgIconEnable"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_tune"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="12dp">
+
                         <TextView
+                            android:id="@+id/txtEnableTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nt_enable_title"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="22sp"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium" />
+
                         <TextView
+                            android:id="@+id/txtEnableDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:text="@string/nt_enable_desc"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="14sp" />
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="12sp" />
                     </LinearLayout>
+
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchEnable"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        app:useMaterialThemeColors="true" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Cache Folder Selector -->
+            <!-- Card 2: Cache Directory -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCacheFolder"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="@drawable/selector_tv_button_yellow"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/card_radius_lg"
-                app:cardElevation="0dp">
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_folder"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/selector_tv_icon_tint_yellow" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:id="@+id/imgIconFolder"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_folder"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/txtCacheFolderTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nt_cache_folder_title"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="22sp"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium" />
+
                         <TextView
                             android:id="@+id/txtCacheFolder"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:text="@string/nt_folder_not_selected"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="14sp" />
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="12sp" />
                     </LinearLayout>
+
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/selector_tv_button_text_yellow" />
+                        android:id="@+id/imgFolderChevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/tv_text_secondary"
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Cache Limit Selector -->
+            <!-- Card 3: Cache Size Limit -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCacheLimit"
                 android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:layout_marginTop="12dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="@drawable/selector_tv_button_yellow"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/card_radius_lg"
-                app:cardElevation="0dp">
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_storage_internal"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/selector_tv_icon_tint_yellow" />
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:id="@+id/imgIconLimit"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_storage_internal"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/txtCacheLimitTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nt_cache_limit_title"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="22sp"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium" />
+
                         <TextView
                             android:id="@+id/txtCacheLimit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:text="500 MB"
-                            android:textColor="@color/selector_tv_button_text_yellow"
-                            android:textSize="14sp" />
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="12sp" />
                     </LinearLayout>
+
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/selector_tv_button_text_yellow" />
+                        android:id="@+id/imgLimitChevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/tv_text_secondary"
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Stats -->
+            <!-- Section 2 Header: Storage & Maintenance -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_section_storage"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- Card 4: Statistics -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStats"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="12dp"
-                android:foreground="@drawable/bg_tv_glass_normal"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/card_radius_lg"
-                app:cardElevation="0dp">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/nt_stats_title"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:id="@+id/txtStats"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Current usage: 0 MB / 500 MB"
-                        android:textColor="@color/tv_text_secondary"
-                        android:textSize="16sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Clear Cache -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnClearCache"
-                android:layout_width="match_parent"
-                android:layout_height="88dp"
-                android:layout_marginTop="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="@drawable/selector_tv_button_yellow"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="@dimen/card_radius_lg"
-                app:cardElevation="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingHorizontal="@dimen/margin_xl">
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/ic_delete"
-                        android:layout_marginEnd="@dimen/margin_lg"
-                        app:tint="@color/tv_error_red" />
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:id="@+id/imgIconStats"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_analyzer"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
+
                         <TextView
+                            android:id="@+id/txtStatsTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nt_stats_title"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtStats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Current usage: 0 MB / 500 MB"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card 5: Clear All Cache -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_btn_icon_danger">
+
+                        <ImageView
+                            android:id="@+id/imgIconClear"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_delete"
+                            app:tint="@color/status_error"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtClearTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nt_clear_cache_title"
                             android:textColor="@color/tv_error_red"
-                            android:textSize="22sp"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium" />
+
                         <TextView
+                            android:id="@+id/txtClearDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:text="@string/nt_clear_cache_desc"
                             android:textColor="@color/tv_text_secondary"
-                            android:textSize="14sp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imgClearChevron"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/tv_error_red"
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

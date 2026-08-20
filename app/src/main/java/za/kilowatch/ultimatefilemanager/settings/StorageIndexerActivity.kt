@@ -22,8 +22,6 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.IndexingManager
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
-import za.kilowatch.ultimatefilemanager.network.NetworkShareRepository
-import za.kilowatch.ultimatefilemanager.network.PairingManager
 import za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity
 import za.kilowatch.ultimatefilemanager.storage.StorageItem
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
@@ -31,6 +29,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 /**
  * Storage Indexer Activity — hub for managing indexing across all storage devices.
  * Shows a list of Internal, SD, and USB storages.
+ * Follows the Language and Grouped Glass Card design standard.
  */
 class StorageIndexerActivity : AppCompatActivity() {
 
@@ -39,6 +38,10 @@ class StorageIndexerActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var txtSubtitle: TextView
 
+    // Persisted through recreate() to prevent looping when restartPending is still true.
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
@@ -46,6 +49,9 @@ class StorageIndexerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
+
         enableEdgeToEdge()
 
         isTv = DeviceUtils.isTvDevice(this)
@@ -92,7 +98,23 @@ class StorageIndexerActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
         loadStorages()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
     private fun loadStorages() {
@@ -145,18 +167,8 @@ class StorageIndexerActivity : AppCompatActivity() {
             }
             startActivity(intent)
         } else {
-            // Not indexed -> Show Premium Indexing Popup if "Not Now" is set, otherwise use standard flow
-            if (repo.hasUserDeclinedIndexing(storageId)) {
-                showPremiumIndexingPopup(storage)
-            } else {
-                // Should we just open the browser or show the offer?
-                // The requirements say: "when a user presses on a storage that does not have a full index, 
-                // it should give the user a premium popup asking if they want to enable indexing 
-                // if the 'Not Now' flag is true"
-                // If its FALSE, we just show the standard offer or follow the browse flow?
-                // Actually the requirement seems specifically about the "Not Now" case for the indexer.
-                showPremiumIndexingPopup(storage)
-            }
+            // Not indexed -> Show Premium Indexing Popup
+            showPremiumIndexingPopup(storage)
         }
     }
 
@@ -167,9 +179,11 @@ class StorageIndexerActivity : AppCompatActivity() {
             null
         )
 
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, dialogTheme)
+        val dialog = MaterialAlertDialogBuilder(this, dialogTheme)
             .setView(dialogView)
             .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         dialogView.findViewById<TextView>(R.id.txtTitle).text = getString(R.string.storage_indexer_premium_title)
         dialogView.findViewById<TextView>(R.id.txtMessage).text = getString(R.string.storage_indexer_premium_message)
@@ -179,9 +193,6 @@ class StorageIndexerActivity : AppCompatActivity() {
 
         btnContinue.setOnClickListener {
             dialog.dismiss()
-            // Follow the same process as when the user have indexed the 1st time
-            // We need to trigger showIndexingProgressDialog from StorageBrowserActivity?
-            // Better to have a shared helper or just implement it here.
             startIndexing(storage)
         }
 
@@ -190,6 +201,7 @@ class StorageIndexerActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        if (isTv) btnContinue.requestFocus()
     }
 
     private fun startIndexing(storage: StorageItem) {
@@ -222,8 +234,6 @@ class StorageIndexerActivity : AppCompatActivity() {
         val btnRunBackground = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRunBackground)
         val btnCancel = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
 
-        // Remove circular progress initialization
-
         val indexingManager = IndexingManager.getInstance(this)
 
         btnCancel.setOnClickListener {
@@ -244,7 +254,7 @@ class StorageIndexerActivity : AppCompatActivity() {
             storageId = storageId,
             storagePath = item.mountPath,
             storageType = storageType,
-            onProgress = { current, total ->
+            onProgress = { current, _ ->
                 runOnUiThread {
                     if (dialog.isShowing) {
                         txtProgressStats.text = "Indexed $current Files"

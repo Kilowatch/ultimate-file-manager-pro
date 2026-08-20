@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile APK / XAPK Extract Settings Activity — following Language & Grouped Glass Card standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,22 +12,24 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.ExtractApkSettingsActivity">
 
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -38,701 +43,114 @@
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_md"
-            android:text="@string/settings_apk_extract_title"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-black" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_apk_extract_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_apk_extract_subtitle"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Reset Defaults Action Button -->
+        <FrameLayout
+            android:id="@+id/btnResetDefaults"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_undo"
+                app:tint="@color/mobile_icon_tint"
+                android:contentDescription="@string/settings_apk_extract_reset_defaults" />
+        </FrameLayout>
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_md"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
             android:orientation="vertical">
 
+            <!-- Info Guidance Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardMasterToggle"
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:padding="14dp">
 
                     <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_file_apk"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@null" />
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
                     </FrameLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/apk_extract_master_title"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:id="@+id/txtMasterSubtitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/apk_extract_master_summary"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchMaster"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="false"
-                        android:clickable="false"
-                        android:focusable="false" />
+                        android:text="@string/settings_apk_extract_info_notice"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:id="@+id/layoutOptions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardExtractIcon"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke"
-                    app:rippleColor="@color/mobile_glass_ripple">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <FrameLayout
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
-                            android:background="@drawable/bg_icon_circle_accent">
-
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_photo_video"
-                                app:tint="@color/mobile_icon_tint"
-                                android:contentDescription="@null" />
-                        </FrameLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="@dimen/margin_md">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/apk_extract_icon_title"
-                                android:textColor="@color/mobile_card_text_primary"
-                                android:textSize="15sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/apk_extract_icon_summary"
-                                android:textColor="@color/mobile_text_secondary"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchIcon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:clickable="false"
-                            android:focusable="false" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/apk_extract_fields_title"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="4dp"
-                    android:fontFamily="sans-serif-bold"/>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldPackageName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldPackageName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_package_name"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldVersionName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldVersionName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_version_name"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldVersionCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldVersionCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_version_code"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_label"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldExtractedDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldExtractedDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_extracted_date"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldInstallTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldInstallTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_install_time"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldLastUpdateTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldLastUpdateTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_last_update_time"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldTargetSdk"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldTargetSdk"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_target_sdk"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldMinSdk"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldMinSdk"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_min_sdk"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldAppSize"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldAppSize"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_app_size"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldSourceDir"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldSourceDir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_source_dir"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldSplitApks"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldSplitApks"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_split_apks"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldHasObb"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldHasObb"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_has_obb"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardFieldPermissions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <CheckBox
-                            android:id="@+id/checkFieldPermissions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false"
-                            android:focusable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/field_permissions"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:layout_marginStart="8dp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
+            <!-- Dynamically populated grouped sections matching Language standard -->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

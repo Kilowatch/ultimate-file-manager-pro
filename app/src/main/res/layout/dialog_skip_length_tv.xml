@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="720dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="28dp">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_skip_forward"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/settings_skip_length_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/settings_skip_length_dialog_desc"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 3s Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkip3s"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInner3s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/icon3s"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="@color/tv_icon_tint"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle3s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_3s"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDesc3s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_3s"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkip3s"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 5s Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkip5s"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInner5s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/icon5s"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="@color/tv_icon_tint"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle5s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_5s"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDesc5s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_5s"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkip5s"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 10s Card (Default) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkip10s"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInner10s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/icon10s"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="@color/tv_icon_tint"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle10s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_10s"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDesc10s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_10s"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkip10s"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 20s Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkip20s"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInner20s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/icon20s"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="@color/tv_icon_tint"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle20s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_20s"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDesc20s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_20s"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkip20s"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 30s Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkip30s"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInner30s"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/icon30s"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="@color/tv_icon_tint"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle30s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_30s"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDesc30s"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_30s"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkip30s"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Disable Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSkipDisable"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="@drawable/selector_tv_card"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:id="@+id/layoutInnerDisable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:id="@+id/iconDisable"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/status_error"
+                        android:layout_marginEnd="16dp"
+                        android:importantForAccessibility="no" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitleDisable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_option_disable"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="20sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:id="@+id/txtDescDisable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/skip_length_desc_disable"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/checkSkipDisable"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:layout_marginStart="8dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- TV Cancel Button -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="18sp"
+        android:focusable="true"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>

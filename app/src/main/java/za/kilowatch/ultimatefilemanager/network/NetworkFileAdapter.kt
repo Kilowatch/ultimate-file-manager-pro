@@ -620,44 +620,45 @@ class NetworkFileAdapter(
             iconContainer?.setBackgroundResource(0)
 
             if (file.iconRes != 0) {
-                // Custom icon (e.g. sideload items)
+                // Custom icon (e.g. TV action items: screenshot, record screen, sideload, settings, remote)
                 imgIcon.setImageResource(file.iconRes)
-                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ContextCompat.getColor(context, R.color.ufm_primary))
-                if (!isGrid) {
+                val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
+                if (!isGrid && !isTv) {
+                    iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+                    val p = (8 * context.resources.displayMetrics.density).toInt()
+                    imgIcon.setPadding(p, p, p, p)
                     progressDisk?.visibility = View.GONE
                     txtDisk?.visibility = View.GONE
                     circularDisk?.visibility = View.GONE
-                    txtDetails.text = ""
+                    txtDetails.text = file.subtitle ?: ""
+                    txtDetails.visibility = if (!file.subtitle.isNullOrEmpty()) View.VISIBLE else View.GONE
                 }
             } else if (file.isDirectory) {
-                imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
-                val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
-                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
-                if (!isGrid) {
-                    // Show disk usage bar if the directory has storage info (TV drive entries)
-                    if (file.freeSpace >= 0 && file.size > 0) {
-                        val usedBytes = file.size - file.freeSpace
-                        val usedPct = ((usedBytes.toDouble() / file.size) * 100).toInt().coerceIn(0, 100)
-                        val freeStr = Formatter.formatFileSize(context, file.freeSpace)
-                        val totalStr = Formatter.formatFileSize(context, file.size)
-                        val tintColor = when {
-                            usedPct >= 90 -> ContextCompat.getColor(context, R.color.ufm_denied)    // red
-                            usedPct >= 75 -> ContextCompat.getColor(context, R.color.ufm_pending)   // orange
-                            else          -> ContextCompat.getColor(context, R.color.ufm_primary)    // teal
-                        }
-                        // Linear bar
-                        progressDisk?.apply {
-                            visibility = View.VISIBLE
-                            progress = usedPct
-                            progressTintList = android.content.res.ColorStateList.valueOf(tintColor)
-                        }
-                        // Detail text under bar
+                if (file.freeSpace >= 0 && file.size > 0) {
+                    // TV drive entries (e.g. Internal shared storage)
+                    imgIcon.setImageResource(R.drawable.ic_storage_internal)
+                    val usedBytes = file.size - file.freeSpace
+                    val usedPct = ((usedBytes.toDouble() / file.size) * 100).toInt().coerceIn(0, 100)
+                    val freeStr = Formatter.formatFileSize(context, file.freeSpace)
+                    val totalStr = Formatter.formatFileSize(context, file.size)
+                    val normalColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                    val tintColor = when {
+                        usedPct >= 90 -> ContextCompat.getColor(context, R.color.ufm_denied)    // red
+                        usedPct >= 75 -> ContextCompat.getColor(context, R.color.ufm_pending)   // orange
+                        else          -> normalColor                                            // Material You / theme accent
+                    }
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                    if (!isGrid && !isTv) {
+                        iconContainer?.setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+                        val p = (8 * context.resources.displayMetrics.density).toInt()
+                        imgIcon.setPadding(p, p, p, p)
+                        progressDisk?.visibility = View.GONE
+                        txtDetails.visibility = View.GONE
                         txtDisk?.apply {
                             visibility = View.VISIBLE
                             text = context.getString(R.string.freestr_free_of_totalstr, freeStr, totalStr)
                         }
-                        txtDetails.text = context.getString(R.string.usedpct_used, usedPct)
-                        // Circular donut indicator
                         circularDisk?.apply {
                             visibility = View.VISIBLE
                             percentLabel = "used"
@@ -665,7 +666,31 @@ class NetworkFileAdapter(
                             setProgressColor(tintColor)
                             progress = usedPct
                         }
-                    } else {
+                        itemView.findViewById<View>(R.id.imgChevron)?.visibility = View.GONE
+                    } else if (!isGrid) {
+                        progressDisk?.apply {
+                            visibility = View.VISIBLE
+                            progress = usedPct
+                            progressTintList = android.content.res.ColorStateList.valueOf(tintColor)
+                        }
+                        txtDisk?.apply {
+                            visibility = View.VISIBLE
+                            text = context.getString(R.string.freestr_free_of_totalstr, freeStr, totalStr)
+                        }
+                        txtDetails.text = context.getString(R.string.usedpct_used, usedPct)
+                        circularDisk?.apply {
+                            visibility = View.VISIBLE
+                            percentLabel = "used"
+                            showPercentText = true
+                            setProgressColor(tintColor)
+                            progress = usedPct
+                        }
+                    }
+                } else {
+                    imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(context, "folder_default", R.drawable.ic_folder))
+                    val iconTintColor = if (isTv) DefaultIconColorManager.getTvIconTint(context) else DefaultIconColorManager.getMobileIconTint(context)
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(iconTintColor)
+                    if (!isGrid) {
                         progressDisk?.visibility = View.GONE
                         txtDisk?.visibility = View.GONE
                         circularDisk?.visibility = View.GONE
@@ -678,9 +703,6 @@ class NetworkFileAdapter(
                             txtDetails.text = dateStr
                         }
                     }
-                } else {
-                    // Hide overlays in grid
-                    itemView.findViewById<View>(R.id.viewSelectionOverlay)?.visibility = View.GONE
                 }
             } else {
                 imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(context, file.name.substringAfterLast('.', "")))
@@ -772,6 +794,7 @@ class NetworkFileAdapter(
             val switchToggle = itemView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchToggle)
             val imgChevron = itemView.findViewById<ImageView>(R.id.imgChevron)
             val txtFileSize = itemView.findViewById<TextView>(R.id.txtFileSize)
+            val isDriveEntry = file.freeSpace >= 0 && file.size > 0
             if (file.isToggle && !isGrid) {
                 switchToggle?.visibility = View.VISIBLE
                 imgChevron?.visibility = View.GONE
@@ -790,7 +813,7 @@ class NetworkFileAdapter(
                 }
             } else {
                 switchToggle?.visibility = View.GONE
-                imgChevron?.visibility = View.VISIBLE
+                imgChevron?.visibility = if (isDriveEntry && !isTv) View.GONE else View.VISIBLE
             }
 
             // Icon tap to enter edit/selection mode (Mobile List view only)

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Mobile Network Thumbnails settings screen — following Language & Grouped Glass Card standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,33 +9,38 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient">
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".settings.NetworkThumbnailSettingsActivity">
 
-    <!-- Header -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
-        android:id="@+id/header"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button -->
         <FrameLayout
             android:id="@+id/btnBack"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted"
             android:clickable="true"
             android:focusable="true">
+
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@color/mobile_icon_tint"
-                android:contentDescription="@string/cd_back" />
+                android:contentDescription="@string/cd_back"
+                app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
         <LinearLayout
@@ -40,14 +48,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_network_thumbnails_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,21 +68,27 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_md">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
+            android:orientation="vertical">
 
-            <!-- Enable Toggle -->
+            <!-- Info Guidance Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardEnable"
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -81,252 +97,422 @@
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/mobile_glass_stroke">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_tune"
-                            app:tint="@color/mobile_icon_tint" />
-                    </FrameLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_enable_title"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_enable_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchEnable"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                    android:padding="14dp">
 
-            <!-- Cache Folder Selector -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCacheFolder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
                     <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_folder"
-                            app:tint="@color/mobile_icon_tint" />
-                    </FrameLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_cache_folder_title"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-                        <TextView
-                            android:id="@+id/txtCacheFolder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_folder_not_selected"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/mobile_text_secondary" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
 
-            <!-- Cache Limit Selector -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCacheLimit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_storage_internal"
-                            app:tint="@color/mobile_icon_tint" />
+                            android:src="@drawable/ic_cloud"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
                     </FrameLayout>
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_cache_limit_title"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-                        <TextView
-                            android:id="@+id/txtCacheLimit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="500 MB"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/mobile_text_secondary" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Stats -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/margin_md">
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/nt_stats_title"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_marginBottom="4dp"/>
-                    <TextView
-                        android:id="@+id/txtStats"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Current usage: 0 MB / 500 MB"
+                        android:layout_weight="1"
+                        android:text="@string/nt_info_notice"
                         android:textColor="@color/mobile_text_secondary"
-                        android:textSize="13sp" />
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Clear Cache -->
+            <!-- Section 1: Configuration Header -->
+            <TextView
+                android:id="@+id/sectionCachingHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_section_caching"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Card 1: Configuration -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnClearCache"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Row 1: Enable Remote Thumbnails -->
+                    <LinearLayout
+                        android:id="@+id/cardEnable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_tune"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nt_enable_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/nt_enable_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchEnable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 2: Cache Directory -->
+                    <LinearLayout
+                        android:id="@+id/cardCacheFolder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_folder"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nt_cache_folder_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtCacheFolder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/nt_folder_not_selected"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mobile_icon_tint"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 3: Cache Size Limit -->
+                    <LinearLayout
+                        android:id="@+id/cardCacheLimit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_storage_internal"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nt_cache_limit_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtCacheLimit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="500 MB"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mobile_icon_tint"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 2: Storage & Maintenance Header -->
+            <TextView
+                android:id="@+id/sectionStorageHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_section_storage"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Card 2: Storage & Maintenance -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:clickable="true"
-                android:focusable="true"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/mobile_glass_stroke">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_delete"
-                            app:tint="#FF5252" />
-                    </FrameLayout>
+                    android:orientation="vertical">
+
+                    <!-- Row 1: Statistics -->
                     <LinearLayout
+                        android:id="@+id/cardStats"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_analyzer"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="@string/nt_clear_cache_title"
-                            android:textColor="#FF5252"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/nt_clear_cache_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nt_stats_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtStats"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Current usage: 0 MB / 500 MB"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 2: Clear All Cache -->
+                    <LinearLayout
+                        android:id="@+id/btnClearCache"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_danger">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_delete"
+                                app:tint="@color/status_error"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nt_clear_cache_title"
+                                android:textColor="@color/mobile_stop_btn"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/nt_clear_cache_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/status_error"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

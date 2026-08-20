@@ -1,60 +1,50 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.card.MaterialCardView
-import coil3.load
+import androidx.core.widget.NestedScrollView
 import coil3.asImage
-import androidx.core.content.ContextCompat
+import coil3.load
+import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
-import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Language selection screen.
- * Offers System Default, English, and German options.
+ * Displays System Default and supported languages in sleek grouped glass cards.
  */
 class LanguageActivity : AppCompatActivity() {
 
-    private lateinit var cardSystemDefault: MaterialCardView
-    private lateinit var cardEnglish:       MaterialCardView
-    private lateinit var cardGerman:        MaterialCardView
-    private lateinit var cardJapanese:      MaterialCardView
-    private lateinit var cardArabic:        MaterialCardView
-    private lateinit var cardSpanish:       MaterialCardView
-    private lateinit var cardFrench:        MaterialCardView
-    private lateinit var cardHindi:         MaterialCardView
-    private lateinit var cardIndonesian:    MaterialCardView
-    private lateinit var cardKorean:        MaterialCardView
-    private lateinit var cardPortuguese:    MaterialCardView
-    private lateinit var cardRussian:       MaterialCardView
-    private lateinit var cardTurkish:       MaterialCardView
-    private lateinit var cardUkrainian:     MaterialCardView
-
-    private lateinit var rbSystemDefault:   RadioButton
-    private lateinit var rbEnglish:         RadioButton
-    private lateinit var rbGerman:          RadioButton
-    private lateinit var rbJapanese:        RadioButton
-    private lateinit var rbArabic:          RadioButton
-    private lateinit var rbSpanish:         RadioButton
-    private lateinit var rbFrench:          RadioButton
-    private lateinit var rbHindi:           RadioButton
-    private lateinit var rbIndonesian:      RadioButton
-    private lateinit var rbKorean:          RadioButton
-    private lateinit var rbPortuguese:      RadioButton
-    private lateinit var rbRussian:         RadioButton
-    private lateinit var rbTurkish:         RadioButton
-    private lateinit var rbUkrainian:       RadioButton
+    companion object {
+        private const val EXTRA_SAVED_SCROLL_Y = "extra_saved_scroll_y"
+    }
 
     private var isTv = false
+    private lateinit var contentLayout: LinearLayout
+    private val optionViews = mutableListOf<Pair<String, RadioButton>>()
+    private val tvCards = mutableListOf<MaterialCardView>()
+
+    private data class LanguageItem(
+        val code: String,
+        val titleRes: Int,
+        val nativeSubtitle: String,
+        val flagAsset: String? = null,
+        val iconRes: Int = R.drawable.ic_language
+    )
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
@@ -84,8 +74,8 @@ class LanguageActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -93,83 +83,224 @@ class LanguageActivity : AppCompatActivity() {
         }
         btnBack?.setOnClickListener { finish() }
 
-        cardSystemDefault = findViewById(R.id.cardSystemDefault)
-        cardEnglish       = findViewById(R.id.cardEnglish)
-        cardGerman        = findViewById(R.id.cardGerman)
-        cardJapanese      = findViewById(R.id.cardJapanese)
-        cardArabic        = findViewById(R.id.cardArabic)
-        cardSpanish       = findViewById(R.id.cardSpanish)
-        cardFrench        = findViewById(R.id.cardFrench)
-        cardHindi         = findViewById(R.id.cardHindi)
-        cardIndonesian    = findViewById(R.id.cardIndonesian)
-        cardKorean        = findViewById(R.id.cardKorean)
-        cardPortuguese    = findViewById(R.id.cardPortuguese)
-        cardRussian       = findViewById(R.id.cardRussian)
-        cardTurkish       = findViewById(R.id.cardTurkish)
-        cardUkrainian     = findViewById(R.id.cardUkrainian)
+        contentLayout = findViewById(R.id.contentLayout)
 
-        rbSystemDefault   = findViewById(R.id.rbSystemDefault)
-        rbEnglish         = findViewById(R.id.rbEnglish)
-        rbGerman          = findViewById(R.id.rbGerman)
-        rbJapanese        = findViewById(R.id.rbJapanese)
-        rbArabic          = findViewById(R.id.rbArabic)
-        rbSpanish         = findViewById(R.id.rbSpanish)
-        rbFrench          = findViewById(R.id.rbFrench)
-        rbHindi           = findViewById(R.id.rbHindi)
-        rbIndonesian      = findViewById(R.id.rbIndonesian)
-        rbKorean          = findViewById(R.id.rbKorean)
-        rbPortuguese      = findViewById(R.id.rbPortuguese)
-        rbRussian         = findViewById(R.id.rbRussian)
-        rbTurkish         = findViewById(R.id.rbTurkish)
-        rbUkrainian       = findViewById(R.id.rbUkrainian)
+        val systemDefaultOption = LanguageItem(
+            code = LocaleHelper.LOCALE_DEFAULT,
+            titleRes = R.string.language_system_default,
+            nativeSubtitle = getString(R.string.language_system_default_desc),
+            flagAsset = null,
+            iconRes = R.drawable.ic_language
+        )
 
-        loadFlag(R.id.imgEnglish, "gb.svg")
-        loadFlag(R.id.imgGerman, "de.svg")
-        loadFlag(R.id.imgJapanese, "jp.svg")
-        loadFlag(R.id.imgArabic, "sa.svg")
-        loadFlag(R.id.imgSpanish, "es.svg")
-        loadFlag(R.id.imgFrench, "fr.svg")
-        loadFlag(R.id.imgHindi, "in.svg")
-        loadFlag(R.id.imgIndonesian, "id.svg")
-        loadFlag(R.id.imgKorean, "kr.svg")
-        loadFlag(R.id.imgPortuguese, "br.svg")
-        loadFlag(R.id.imgRussian, "ru.svg")
-        loadFlag(R.id.imgTurkish, "tr.svg")
-        loadFlag(R.id.imgUkrainian, "ua.svg")
+        val supportedLanguages = listOf(
+            LanguageItem(LocaleHelper.LOCALE_EN, R.string.language_english, "English", "gb.svg"),
+            LanguageItem(LocaleHelper.LOCALE_DE, R.string.language_german, "Deutsch", "de.svg"),
+            LanguageItem(LocaleHelper.LOCALE_JA, R.string.language_japanese, "日本語", "jp.svg"),
+            LanguageItem(LocaleHelper.LOCALE_AR, R.string.language_arabic, "العربية", "sa.svg"),
+            LanguageItem(LocaleHelper.LOCALE_ES, R.string.language_spanish, "Español", "es.svg"),
+            LanguageItem(LocaleHelper.LOCALE_FR, R.string.language_french, "Français", "fr.svg"),
+            LanguageItem(LocaleHelper.LOCALE_HI, R.string.language_hindi, "हिन्दी", "in.svg"),
+            LanguageItem(LocaleHelper.LOCALE_ID, R.string.language_indonesian, "Bahasa Indonesia", "id.svg"),
+            LanguageItem(LocaleHelper.LOCALE_KO, R.string.language_korean, "한국어", "kr.svg"),
+            LanguageItem(LocaleHelper.LOCALE_PT, R.string.language_portuguese, "Português", "br.svg"),
+            LanguageItem(LocaleHelper.LOCALE_RU, R.string.language_russian, "Русский", "ru.svg"),
+            LanguageItem(LocaleHelper.LOCALE_TR, R.string.language_turkish, "Türkçe", "tr.svg"),
+            LanguageItem(LocaleHelper.LOCALE_UK, R.string.language_ukrainian, "Українська", "ua.svg")
+        )
 
-        updateSelection(LocaleHelper.getSavedLocale(this))
+        val currentLocale = LocaleHelper.getSavedLocale(this)
 
-        cardSystemDefault.setOnClickListener { selectLanguage(LocaleHelper.LOCALE_DEFAULT) }
-        cardEnglish.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_EN) }
-        cardGerman.setOnClickListener        { selectLanguage(LocaleHelper.LOCALE_DE) }
-        cardJapanese.setOnClickListener      { selectLanguage(LocaleHelper.LOCALE_JA) }
-        cardArabic.setOnClickListener        { selectLanguage(LocaleHelper.LOCALE_AR) }
-        cardSpanish.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_ES) }
-        cardFrench.setOnClickListener        { selectLanguage(LocaleHelper.LOCALE_FR) }
-        cardHindi.setOnClickListener         { selectLanguage(LocaleHelper.LOCALE_HI) }
-        cardIndonesian.setOnClickListener    { selectLanguage(LocaleHelper.LOCALE_ID) }
-        cardKorean.setOnClickListener        { selectLanguage(LocaleHelper.LOCALE_KO) }
-        cardPortuguese.setOnClickListener    { selectLanguage(LocaleHelper.LOCALE_PT) }
-        cardRussian.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_RU) }
-        cardTurkish.setOnClickListener       { selectLanguage(LocaleHelper.LOCALE_TR) }
-
-        cardUkrainian.setOnClickListener     { selectLanguage(LocaleHelper.LOCALE_UK) }
+        optionViews.clear()
+        tvCards.clear()
 
         if (isTv) {
-            setupTvCardFocus(cardSystemDefault)
-            setupTvCardFocus(cardEnglish)
-            setupTvCardFocus(cardGerman)
-            setupTvCardFocus(cardJapanese)
-            setupTvCardFocus(cardArabic)
-            setupTvCardFocus(cardSpanish)
-            setupTvCardFocus(cardFrench)
-            setupTvCardFocus(cardHindi)
-            setupTvCardFocus(cardIndonesian)
-            setupTvCardFocus(cardKorean)
-            setupTvCardFocus(cardPortuguese)
-            setupTvCardFocus(cardRussian)
-            setupTvCardFocus(cardTurkish)
-            setupTvCardFocus(cardUkrainian)
+            buildTvLayout(systemDefaultOption, supportedLanguages, currentLocale)
+        } else {
+            buildMobileLayout(systemDefaultOption, supportedLanguages, currentLocale)
+        }
+
+        updateSelection(currentLocale)
+
+        // Restore scroll position after recreation
+        val savedScrollY = intent.getIntExtra(EXTRA_SAVED_SCROLL_Y, -1).takeIf { it >= 0 }
+            ?: savedInstanceState?.getInt(EXTRA_SAVED_SCROLL_Y, 0) ?: 0
+
+        if (savedScrollY > 0) {
+            val scrollView = findViewById<NestedScrollView?>(R.id.scrollView)
+            scrollView?.post {
+                scrollView.scrollTo(0, savedScrollY)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val scrollView = findViewById<NestedScrollView?>(R.id.scrollView)
+        scrollView?.let {
+            outState.putInt(EXTRA_SAVED_SCROLL_Y, it.scrollY)
+        }
+    }
+
+    private fun buildMobileLayout(
+        systemDefault: LanguageItem,
+        languages: List<LanguageItem>,
+        currentLocale: String
+    ) {
+        val inflater = LayoutInflater.from(this)
+
+        // Section 1: System Preference
+        contentLayout.addView(createSectionHeader(R.string.language_section_system))
+        val systemCard = createGlassCard()
+        val systemContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+        val systemRow = inflater.inflate(R.layout.item_language_row, systemContainer, false)
+        bindRow(systemRow, systemDefault, currentLocale)
+        systemContainer.addView(systemRow)
+        systemCard.addView(systemContainer)
+        contentLayout.addView(systemCard)
+
+        // Section 2: Available Languages
+        contentLayout.addView(createSectionHeader(R.string.language_section_available))
+        val languagesCard = createGlassCard()
+        val languagesContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+
+        languages.forEachIndexed { index, item ->
+            val row = inflater.inflate(R.layout.item_language_row, languagesContainer, false)
+            bindRow(row, item, currentLocale)
+            languagesContainer.addView(row)
+
+            if (index < languages.size - 1) {
+                languagesContainer.addView(createDivider())
+            }
+        }
+        languagesCard.addView(languagesContainer)
+        contentLayout.addView(languagesCard)
+    }
+
+    private fun bindRow(row: View, item: LanguageItem, currentLocale: String) {
+        val imgFlag = row.findViewById<ImageView>(R.id.imgFlag)
+        val imgIcon = row.findViewById<ImageView>(R.id.imgIcon)
+        val txtTitle = row.findViewById<TextView>(R.id.txtTitle)
+        val txtSubtitle = row.findViewById<TextView>(R.id.txtSubtitle)
+        val rbSelect = row.findViewById<RadioButton>(R.id.rbSelect)
+
+        txtTitle.setText(item.titleRes)
+        txtSubtitle.text = item.nativeSubtitle
+        rbSelect.isChecked = (item.code == currentLocale)
+
+        if (item.flagAsset != null) {
+            imgFlag.visibility = View.VISIBLE
+            imgIcon.visibility = View.GONE
+            val placeholder = ContextCompat.getDrawable(this, R.drawable.ic_photo_video)?.asImage()
+            imgFlag.load("file:///android_asset/remote/flags/${item.flagAsset}") {
+                placeholder(placeholder)
+                error(placeholder)
+            }
+        } else {
+            imgFlag.visibility = View.GONE
+            imgIcon.visibility = View.VISIBLE
+            imgIcon.setImageResource(item.iconRes)
+        }
+
+        row.tag = item.code
+        row.setOnClickListener { selectLanguage(item.code) }
+        optionViews.add(Pair(item.code, rbSelect))
+    }
+
+    private fun createSectionHeader(titleRes: Int): TextView {
+        return TextView(this).apply {
+            setText(titleRes)
+            setTextColor(ThemeColors.primary(this@LanguageActivity))
+            textSize = 13f
+            typeface = Typeface.create("sans-serif-black", Typeface.NORMAL)
+            isAllCaps = true
+            letterSpacing = 0.05f
+            val density = resources.displayMetrics.density
+            setPadding(
+                (4 * density).toInt(),
+                (14 * density).toInt(),
+                (4 * density).toInt(),
+                (8 * density).toInt()
+            )
+        }
+    }
+
+    private fun createGlassCard(): MaterialCardView {
+        val density = resources.displayMetrics.density
+        return MaterialCardView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                bottomMargin = (12 * density).toInt()
+            }
+            radius = 16 * density
+            strokeWidth = (1 * density).toInt()
+            strokeColor = getColor(R.color.mobile_glass_stroke)
+            setCardBackgroundColor(getColor(R.color.mobile_glass_card))
+            cardElevation = 0f
+        }
+    }
+
+    private fun createDivider(): View {
+        val density = resources.displayMetrics.density
+        return View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (1 * density).toInt()
+            ).apply {
+                marginStart = (14 * density).toInt()
+                marginEnd = (14 * density).toInt()
+            }
+            setBackgroundColor(getColor(R.color.mobile_glass_stroke))
+        }
+    }
+
+    private fun buildTvLayout(
+        systemDefault: LanguageItem,
+        languages: List<LanguageItem>,
+        currentLocale: String
+    ) {
+        val inflater = LayoutInflater.from(this)
+        val allOptions = listOf(systemDefault) + languages
+
+        for (item in allOptions) {
+            val card = inflater.inflate(R.layout.item_language_card_tv, contentLayout, false) as MaterialCardView
+            val imgFlag = card.findViewById<ImageView>(R.id.imgFlag)
+            val imgIcon = card.findViewById<ImageView>(R.id.imgIcon)
+            val txtLabel = card.findViewById<TextView>(R.id.txtLabel)
+            val txtSubtitle = card.findViewById<TextView>(R.id.txtSubtitle)
+            val rbSelect = card.findViewById<RadioButton>(R.id.rbSelect)
+
+            txtLabel.setText(item.titleRes)
+            txtSubtitle.text = item.nativeSubtitle
+            rbSelect.isChecked = (item.code == currentLocale)
+
+            if (item.flagAsset != null) {
+                imgFlag.visibility = View.VISIBLE
+                imgIcon.visibility = View.GONE
+                val placeholder = ContextCompat.getDrawable(this, R.drawable.ic_photo_video)?.asImage()
+                imgFlag.load("file:///android_asset/remote/flags/${item.flagAsset}") {
+                    placeholder(placeholder)
+                    error(placeholder)
+                }
+            } else {
+                imgFlag.visibility = View.GONE
+                imgIcon.visibility = View.VISIBLE
+                imgIcon.setImageResource(item.iconRes)
+            }
+
+            setupTvCardFocus(card)
+
+            card.tag = item.code
+            card.setOnClickListener { selectLanguage(item.code) }
+            tvCards.add(card)
+            optionViews.add(Pair(item.code, rbSelect))
+            contentLayout.addView(card)
         }
     }
 
@@ -182,84 +313,75 @@ class LanguageActivity : AppCompatActivity() {
 
         // Mark that we need a restart for the new language to apply globally
         LocaleHelper.restartPending = true
-        recreate() // Update this screen immediately
+
+        // Capture scroll position and recreate immediately
+        val scrollView = findViewById<NestedScrollView?>(R.id.scrollView)
+        val scrollY = scrollView?.scrollY ?: 0
+        intent.putExtra(EXTRA_SAVED_SCROLL_Y, scrollY)
+        recreate()
     }
 
     private fun updateSelection(locale: String) {
-        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else getColor(R.color.ufm_primary)
-        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.ufm_surface_variant)
+        for ((code, rb) in optionViews) {
+            rb.isChecked = (code == locale)
+        }
 
-        rbSystemDefault.isChecked = locale == LocaleHelper.LOCALE_DEFAULT
-        rbEnglish.isChecked       = locale == LocaleHelper.LOCALE_EN
-        rbGerman.isChecked        = locale == LocaleHelper.LOCALE_DE
-        rbJapanese.isChecked      = locale == LocaleHelper.LOCALE_JA
-        rbArabic.isChecked        = locale == LocaleHelper.LOCALE_AR
-        rbSpanish.isChecked       = locale == LocaleHelper.LOCALE_ES
-        rbFrench.isChecked        = locale == LocaleHelper.LOCALE_FR
-        rbHindi.isChecked         = locale == LocaleHelper.LOCALE_HI
-        rbIndonesian.isChecked    = locale == LocaleHelper.LOCALE_ID
-        rbKorean.isChecked        = locale == LocaleHelper.LOCALE_KO
-        rbPortuguese.isChecked    = locale == LocaleHelper.LOCALE_PT
-        rbRussian.isChecked       = locale == LocaleHelper.LOCALE_RU
-        rbTurkish.isChecked       = locale == LocaleHelper.LOCALE_TR
-        rbUkrainian.isChecked     = locale == LocaleHelper.LOCALE_UK
+        if (isTv) {
+            val activeColor = getColor(R.color.tv_accent)
+            val inactiveColor = getColor(R.color.tv_glass_border)
 
-        cardSystemDefault.strokeColor = if (locale == LocaleHelper.LOCALE_DEFAULT) activeColor else inactiveColor
-        cardEnglish.strokeColor       = if (locale == LocaleHelper.LOCALE_EN)       activeColor else inactiveColor
-        cardGerman.strokeColor        = if (locale == LocaleHelper.LOCALE_DE)       activeColor else inactiveColor
-        cardJapanese.strokeColor      = if (locale == LocaleHelper.LOCALE_JA)       activeColor else inactiveColor
-        cardArabic.strokeColor        = if (locale == LocaleHelper.LOCALE_AR)       activeColor else inactiveColor
-        cardSpanish.strokeColor       = if (locale == LocaleHelper.LOCALE_ES)       activeColor else inactiveColor
-        cardFrench.strokeColor        = if (locale == LocaleHelper.LOCALE_FR)       activeColor else inactiveColor
-        cardHindi.strokeColor         = if (locale == LocaleHelper.LOCALE_HI)       activeColor else inactiveColor
-        cardIndonesian.strokeColor    = if (locale == LocaleHelper.LOCALE_ID)       activeColor else inactiveColor
-        cardKorean.strokeColor        = if (locale == LocaleHelper.LOCALE_KO)       activeColor else inactiveColor
-        cardPortuguese.strokeColor    = if (locale == LocaleHelper.LOCALE_PT)       activeColor else inactiveColor
-        cardRussian.strokeColor       = if (locale == LocaleHelper.LOCALE_RU)       activeColor else inactiveColor
-        cardTurkish.strokeColor       = if (locale == LocaleHelper.LOCALE_TR)       activeColor else inactiveColor
-        cardUkrainian.strokeColor     = if (locale == LocaleHelper.LOCALE_UK)       activeColor else inactiveColor
-    }
+            for (card in tvCards) {
+                val code = card.tag as String
+                val isSelected = (code == locale)
+                val rb = card.findViewById<RadioButton>(R.id.rbSelect)
+                rb.isChecked = isSelected
 
-    private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill   = getColor(R.color.tv_button_focused_yellow)
-        val blackText    = getColor(R.color.tv_button_focused_yellow_text)
-        val glassColor   = getColor(R.color.tv_glass_white_10)
-        val primaryText  = getColor(R.color.tv_text_primary)
-
-        card.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                card.setCardBackgroundColor(yellowFill)
-                setCardTextColors(card, blackText)
-                setCardRadioTint(card, blackText)
-            } else {
-                card.setCardBackgroundColor(glassColor)
-                setCardTextColors(card, primaryText)
-                setCardRadioTint(card, getColor(R.color.tv_accent))
+                card.strokeColor = if (isSelected) activeColor else inactiveColor
+                if (!card.hasFocus()) {
+                    rb.buttonTintList = ColorStateList.valueOf(if (isSelected) activeColor else getColor(R.color.tv_text_secondary))
+                }
             }
         }
     }
 
-    private fun setCardTextColors(view: View, color: Int) {
-        if (view is TextView) { view.setTextColor(color); return }
-        if (view is android.view.ViewGroup) {
-            for (i in 0 until view.childCount) setCardTextColors(view.getChildAt(i), color)
+    private fun setupTvCardFocus(card: MaterialCardView) {
+        val yellowFill = getColor(R.color.tv_button_focused_yellow)
+        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val glassColor = getColor(R.color.tv_glass_white_10)
+        val primaryText = getColor(R.color.tv_text_primary)
+        val secondaryText = getColor(R.color.tv_text_secondary)
+
+        card.setOnFocusChangeListener { _, hasFocus ->
+            val isSelected = (card.tag as String) == LocaleHelper.getSavedLocale(this)
+            val rb = card.findViewById<RadioButton>(R.id.rbSelect)
+            val imgIcon = card.findViewById<ImageView>(R.id.imgIcon)
+            if (hasFocus) {
+                card.setCardBackgroundColor(yellowFill)
+                setCardTextColors(card, blackText, blackText)
+                rb.buttonTintList = ColorStateList.valueOf(blackText)
+                imgIcon.imageTintList = ColorStateList.valueOf(blackText)
+            } else {
+                card.setCardBackgroundColor(glassColor)
+                setCardTextColors(card, primaryText, secondaryText)
+                rb.buttonTintList = ColorStateList.valueOf(if (isSelected) getColor(R.color.tv_accent) else secondaryText)
+                imgIcon.imageTintList = ColorStateList.valueOf(primaryText)
+            }
         }
     }
 
-    private fun setCardRadioTint(view: View, color: Int) {
-        if (view is RadioButton) { view.buttonTintList = android.content.res.ColorStateList.valueOf(color); return }
-        if (view is android.view.ViewGroup) {
-            for (i in 0 until view.childCount) setCardRadioTint(view.getChildAt(i), color)
+    private fun setCardTextColors(view: View, primaryColor: Int, secondaryColor: Int) {
+        if (view is TextView) {
+            if (view.id == R.id.txtSubtitle) {
+                view.setTextColor(secondaryColor)
+            } else {
+                view.setTextColor(primaryColor)
+            }
+            return
         }
-    }
-
-    private fun loadFlag(imageViewId: Int, flagAsset: String) {
-        val imageView = findViewById<ImageView>(imageViewId) ?: return
-        // Load flag SVG from assets using Coil 3
-        val placeholderImage = ContextCompat.getDrawable(this, R.drawable.ic_photo_video)?.asImage()
-        imageView.load("file:///android_asset/remote/flags/$flagAsset") {
-            placeholder(placeholderImage)
-            error(placeholderImage)
+        if (view is android.view.ViewGroup) {
+            for (i in 0 until view.childCount) {
+                setCardTextColors(view.getChildAt(i), primaryColor, secondaryColor)
+            }
         }
     }
 }

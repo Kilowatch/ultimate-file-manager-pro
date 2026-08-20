@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Remove Custom Certificate Confirmation — Premium Glassmorphic Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Danger Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_danger"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/ufm_denied"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remote_cert_remove_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Revert to Default Certificate"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Message Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_cert_remove_msg"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <!-- Remove Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirmRemoveCert"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/remote_cert_remove"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/ufm_denied"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_delete"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelRemoveCert"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

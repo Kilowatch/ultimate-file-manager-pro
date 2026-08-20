@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Android TV Custom Drive Names settings screen — following Language & TV Glass Card standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,16 +12,18 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".settings.renamer.StorageRenameActivity">
 
-    <!-- TV Header Bar -->
+    <!-- TV Header Bar (72dp standard) -->
     <LinearLayout
-        android:id="@+id/toolbar"
+        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
         android:background="@color/tv_glass_white_10"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -53,47 +58,124 @@
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <!-- Clear All Button -->
+        <ImageView
+            android:id="@+id/btnClearAll"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_undo"
+            android:contentDescription="@string/storage_rename_clear_all"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:visibility="gone" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerRenames"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/tv_safe_horizontal"
-        android:paddingVertical="@dimen/margin_lg"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/layoutEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingTop="@dimen/margin_xl"
+            android:paddingBottom="48dp"
+            android:clipChildren="false">
+
+            <!-- Context Info Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:paddingVertical="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_edit"
+                        android:layout_marginEnd="@dimen/margin_lg"
+                        app:tint="@color/tv_accent"
+                        android:importantForAccessibility="no" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/storage_rename_info_notice"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="3dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dynamically populated TV cards -->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- TV Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="48dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_storage_usb"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@drawable/ic_storage_internal"
             app:tint="@color/tv_text_secondary"
-            android:alpha="0.5" />
+            android:layout_marginBottom="16dp"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/storage_no_storages"
+            android:text="@string/storage_rename_empty_title"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:textAlignment="center"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/storage_rename_empty_desc"
             android:textColor="@color/tv_text_secondary"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:layout_marginHorizontal="32dp" />
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:lineSpacingExtra="4dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

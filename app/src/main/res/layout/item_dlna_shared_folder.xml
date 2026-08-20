@@ -1,51 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    DLNA Shared Folder Item Layout — Language & Grouped Glass Card Standard
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingVertical="8dp"
-    android:paddingStart="4dp"
-    android:paddingEnd="0dp">
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="4dp">
 
-    <ImageView
-        android:id="@+id/btnRemoveFolder"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:padding="6dp"
-        android:src="@drawable/ic_close"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/bg_icon_circle_accent"
-        app:tint="@color/mobile_icon_tint" />
+    <!-- Frosted Folder Badge -->
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="12dp">
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_folder"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Folder Label & Path -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginStart="12dp">
+        android:layout_marginEnd="8dp">
 
         <TextView
             android:id="@+id/txtFolderLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="14.5sp"
+            android:fontFamily="sans-serif-bold"
             android:maxLines="1"
-            android:ellipsize="end" />
+            android:ellipsize="end"
+            tools:text="Movies &amp; Videos" />
 
         <TextView
             android:id="@+id/txtFolderPath"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="11sp"
+            android:textColor="@color/mobile_card_text_secondary"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:ellipsize="middle"
-            android:layout_marginTop="1dp" />
+            android:layout_marginTop="2dp"
+            tools:text="/storage/emulated/0/Movies" />
     </LinearLayout>
+
+    <!-- Remove Folder Button in Frosted Squircle -->
+    <FrameLayout
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_btn_icon_frosted">
+
+        <ImageView
+            android:id="@+id/btnRemoveFolder"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete"
+            android:contentDescription="@string/delete"
+            android:clickable="true"
+            android:focusable="true"
+            app:tint="@color/mobile_stop_btn" />
+    </FrameLayout>
+
 </LinearLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:id="@+id/imgFlag"
+                android:layout_width="32dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:contentDescription="@null" />
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_language"
+                app:tint="@color/tv_text_primary"
+                android:visibility="gone"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="English" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                tools:text="English" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/rbSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/tv_button_focused_yellow"
+            android:clickable="false"
+            android:focusable="false"
+            android:saveEnabled="false" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

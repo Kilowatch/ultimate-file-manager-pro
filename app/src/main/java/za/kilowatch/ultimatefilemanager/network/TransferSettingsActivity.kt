@@ -27,6 +27,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
+import android.widget.ImageView
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.SettingsTransferManager
 import za.kilowatch.ultimatefilemanager.settings.SettingsTransferManager.SettingItem
@@ -99,6 +101,7 @@ class TransferSettingsActivity : AppCompatActivity() {
         recyclerItems = findViewById(R.id.recyclerItems)
         btnTransfer   = findViewById(R.id.btnTransfer)
 
+        findViewById<TextView>(R.id.txtTargetDeviceName)?.text = device.name
         txtSubtitle.text = getString(
             R.string.transfer_settings_subtitle,
             android.os.Build.MODEL,
@@ -121,7 +124,6 @@ class TransferSettingsActivity : AppCompatActivity() {
         )
         recyclerItems.layoutManager = LinearLayoutManager(this)
         recyclerItems.adapter       = listAdapter
-        recyclerItems.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         // Select All toggle
         txtSelectAll.setOnClickListener {
@@ -259,15 +261,19 @@ class TransferSettingsActivity : AppCompatActivity() {
     }
 
     private fun showSecurityRequiredDialog() {
-        AlertDialog.Builder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(getString(R.string.security_required_title))
-            .setMessage(getString(R.string.security_required_desc))
-            .setPositiveButton(getString(R.string.open_picker)) { _, _ ->
-                // Open Android security settings
-                startActivity(android.content.Intent(android.provider.Settings.ACTION_SECURITY_SETTINGS))
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_security_required, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialogView.findViewById<View>(R.id.btnOpenSettings)?.setOnClickListener {
+            dialog.dismiss()
+            startActivity(android.content.Intent(android.provider.Settings.ACTION_SECURITY_SETTINGS))
+        }
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
 
@@ -331,21 +337,23 @@ class TransferSettingsAdapter(
         when (val row = rows[position]) {
             is Row.Header -> (holder as HeaderVH).bind(row.label)
             is Row.SettingRow -> (holder as ItemVH).bind(
-                label   = context.getString(R.string.general_setting_prefix, row.item.displayLabel),
+                iconRes  = R.drawable.ic_settings,
+                label    = context.getString(R.string.general_setting_prefix, row.item.displayLabel),
                 subLabel = null,
-                checked = row.checked,
+                checked  = row.checked,
                 onToggle = { row.checked = it }
             )
             is Row.ShareRow -> {
-                val prefix = when (row.share.type) {
-                    ShareType.SMB  -> context.getString(R.string.smb_share_prefix,  row.share.name, row.share.host)
-                    ShareType.FTP  -> context.getString(R.string.ftp_share_prefix,  row.share.name, row.share.host)
-                    ShareType.SFTP -> context.getString(R.string.sftp_share_prefix, row.share.name, row.share.host)
-                    ShareType.SCP  -> context.getString(R.string.scp_share_prefix,  row.share.name, row.share.host)
-                    ShareType.NFS  -> row.share.name
-                    else           -> row.share.name
+                val (iconRes, prefix) = when (row.share.type) {
+                    ShareType.SMB  -> Pair(R.drawable.ic_network,     context.getString(R.string.smb_share_prefix,  row.share.name, row.share.host))
+                    ShareType.FTP  -> Pair(R.drawable.ic_network,     context.getString(R.string.ftp_share_prefix,  row.share.name, row.share.host))
+                    ShareType.SFTP -> Pair(R.drawable.ic_lock,        context.getString(R.string.sftp_share_prefix, row.share.name, row.share.host))
+                    ShareType.SCP  -> Pair(R.drawable.ic_lock,        context.getString(R.string.scp_share_prefix,  row.share.name, row.share.host))
+                    ShareType.NFS  -> Pair(R.drawable.ic_nfs,         row.share.name)
+                    else           -> Pair(R.drawable.ic_network,     row.share.name)
                 }
                 (holder as ItemVH).bind(
+                    iconRes  = iconRes,
                     label    = prefix,
                     subLabel = row.share.username.takeIf { it.isNotEmpty() }?.let { "User: $it" },
                     checked  = row.checked,
@@ -353,6 +361,7 @@ class TransferSettingsAdapter(
                 )
             }
             is Row.FileServerRow -> (holder as ItemVH).bind(
+                iconRes  = R.drawable.ic_file_server,
                 label    = context.getString(R.string.file_server_port_item, row.port),
                 subLabel = context.getString(R.string.file_server_pin_warning),
                 checked  = row.checked,
@@ -388,12 +397,16 @@ class TransferSettingsAdapter(
     }
 
     inner class ItemVH(v: View) : RecyclerView.ViewHolder(v) {
-        private val checkBox  = v.findViewById<android.widget.CheckBox>(R.id.checkBox)
-        private val txtLabel  = v.findViewById<TextView>(R.id.txtLabel)
-        private val txtSub    = v.findViewById<TextView>(R.id.txtSubLabel)
+        private val checkBox = v.findViewById<com.google.android.material.checkbox.MaterialCheckBox>(R.id.checkBox)
+        private val txtLabel = v.findViewById<TextView>(R.id.txtLabel)
+        private val txtSub   = v.findViewById<TextView>(R.id.txtSubLabel)
+        private val imgIcon  = v.findViewById<ImageView>(R.id.imgSettingIcon)
 
-        fun bind(label: String, subLabel: String?, checked: Boolean, onToggle: (Boolean) -> Unit) {
-            txtLabel.text   = label
+        fun bind(iconRes: Int, label: String, subLabel: String?, checked: Boolean, onToggle: (Boolean) -> Unit) {
+            imgIcon?.setImageResource(iconRes)
+            val accent = za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager.getMobileIconTint(context)
+            imgIcon?.imageTintList = android.content.res.ColorStateList.valueOf(accent)
+            txtLabel.text = label
             checkBox.isChecked = checked
             if (subLabel != null) {
                 txtSub.text = subLabel

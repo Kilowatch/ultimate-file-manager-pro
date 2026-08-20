@@ -1,10 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardFavorite"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="10dp"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="false"
@@ -20,21 +22,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="14dp">
 
-        <!-- Icon -->
+        <!-- Hero Icon Badge -->
         <FrameLayout
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
 
             <ImageView
                 android:id="@+id/imgIcon"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_star"
-                app:tint="@color/mobile_icon_tint"
+                android:src="@drawable/ic_folder"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@string/favorite_icon" />
         </FrameLayout>
 
@@ -44,19 +47,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md"
-            android:layout_marginEnd="@dimen/margin_md">
+            android:layout_marginEnd="12dp">
 
             <TextView
                 android:id="@+id/txtLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_card_text_primary"
-                android:textSize="15sp"
-                android:fontFamily="sans-serif-medium"
+                android:textSize="15.5sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="My Favorite Movie" />
+                tools:text="Downloads Folder" />
 
             <TextView
                 android:id="@+id/txtPath"
@@ -66,20 +68,27 @@
                 android:textSize="12sp"
                 android:maxLines="1"
                 android:ellipsize="middle"
-                tools:text="/storage/emulated/0/Movies/MyMovie.mp4" />
+                android:layout_marginTop="2dp"
+                tools:text="/storage/emulated/0/Download" />
         </LinearLayout>
 
-        <!-- Delete Action -->
-        <ImageView
-            android:id="@+id/btnDelete"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_delete"
-            app:tint="@color/mobile_text_secondary"
-            android:background="?attr/selectableItemBackgroundBorderless"
+        <!-- Frosted Danger Delete Action Button -->
+        <FrameLayout
+            android:id="@+id/btnDeleteContainer"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_btn_icon_danger"
             android:clickable="true"
-            android:focusable="true"
-            android:contentDescription="@string/remove_favorite" />
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/btnDelete"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/status_error"
+                android:contentDescription="@string/remove_favorite" />
+        </FrameLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

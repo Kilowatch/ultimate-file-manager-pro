@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Mobile Remote Manage — premium dark glassmorphism design
-    Same dark-navy theme as activity_welcome: bg_mobile_gradient background,
-    glass header bar with back button and title.
--->
+<!-- Mobile Remote Manage — Premium Glassmorphic Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,15 +10,14 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".remote.RemoteManageActivity">
 
-    <!-- Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,29 +26,22 @@
         <!-- Back Button -->
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/cd_back"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_header_action_ripple"
             app:tint="@color/mobile_icon_tint" />
-
-        <!-- Accent divider -->
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
 
         <!-- Title + Subtitle -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -61,9 +49,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/remote_manage_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.01"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -73,247 +60,258 @@
                 android:text="@string/remote_tile_subtitle"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
-                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="end" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Server Info Card -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cardServerInfo"
-        android:layout_width="0dp"
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/margin_md"
-        android:background="@drawable/bg_glass_card_dark"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Status Badge - White Pill -->
         <LinearLayout
-            android:id="@+id/layoutStatus"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:background="@drawable/bg_status_badge_accent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/txtOpenBrowser"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_bias="0.4">
+            android:paddingTop="16dp">
 
-            <View
-                android:id="@+id/viewStatusDot"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
-                android:background="@drawable/bg_status_dot"
-                android:layout_marginEnd="10dp" />
-
-            <TextView
-                android:id="@+id/txtStatus"
-                android:layout_width="wrap_content"
+            <!-- Hero Server Info Card -->
+            <LinearLayout
+                android:id="@+id/cardServerInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/remote_server_running"
-                android:textColor="#FFFFFFFF"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-medium"
-                android:textAllCaps="true"
-                android:letterSpacing="0.1" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:background="@drawable/bg_reindex_option_card"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
 
-        <!-- Open Browser Label -->
-        <TextView
-            android:id="@+id/txtOpenBrowser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remote_open_browser"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="16sp"
-            android:paddingHorizontal="@dimen/margin_md"
-            android:layout_marginTop="@dimen/margin_xl"
-            app:layout_constraintTop_toBottomOf="@id/layoutStatus"
-            app:layout_constraintBottom_toTopOf="@id/txtServerUrl"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <!-- 64dp Hero Icon Badge -->
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginBottom="14dp">
 
-        <!-- URL Display -->
-        <TextView
-            android:id="@+id/txtServerUrl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/mobile_card_text_primary"
-            android:textSize="15sp"
-            android:fontFamily="monospace"
-            android:background="@drawable/bg_url_box"
-            android:paddingHorizontal="20dp"
-            android:paddingVertical="14dp"
-            android:layout_marginTop="@dimen/margin_md"
-            android:elevation="2dp"
-            app:layout_constraintTop_toBottomOf="@id/txtOpenBrowser"
-            app:layout_constraintBottom_toTopOf="@id/txtWarning"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="http://192.168.1.100:8080" />
+                    <ImageView
+                        android:id="@+id/imgHeroRemote"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_remote_manage"
+                        app:tint="?attr/colorPrimary"
+                        android:contentDescription="@null" />
+                </FrameLayout>
 
-        <!-- Warning text -->
-        <TextView
-            android:id="@+id/txtWarning"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/remote_warning_screen"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:paddingHorizontal="@dimen/margin_md"
-            android:layout_marginTop="@dimen/margin_xl"
-            android:layout_marginHorizontal="@dimen/margin_xl"
-            app:layout_constraintTop_toBottomOf="@id/txtServerUrl"
-            app:layout_constraintBottom_toTopOf="@id/txtFingerprintLabel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <!-- Status Pill Badge -->
+                <LinearLayout
+                    android:id="@+id/layoutStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:background="@drawable/bg_badge_step_pill"
+                    android:layout_marginBottom="14dp">
 
-        <!-- Fingerprint Label -->
-        <TextView
-            android:id="@+id/txtFingerprintLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remote_fingerprint_label"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="11sp"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/margin_md"
-            app:layout_constraintTop_toBottomOf="@id/txtWarning"
-            app:layout_constraintBottom_toTopOf="@id/txtFingerprint"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                    <View
+                        android:id="@+id/viewStatusDot"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_status_dot"
+                        android:layout_marginEnd="8dp" />
 
-        <!-- Fingerprint Value -->
-        <TextView
-            android:id="@+id/txtFingerprint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/mobile_card_text_primary"
-            android:textSize="11sp"
-            android:fontFamily="monospace"
-            android:visibility="gone"
-            android:background="@drawable/bg_url_box"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="8dp"
-            android:layout_marginTop="@dimen/margin_sm"
-            android:layout_marginHorizontal="@dimen/margin_md"
-            android:elevation="1dp"
-            app:layout_constraintTop_toBottomOf="@id/txtFingerprintLabel"
-            app:layout_constraintBottom_toTopOf="@id/txtVerifyFingerprint"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                    <TextView
+                        android:id="@+id/txtStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/remote_server_running"
+                        android:textColor="#4ADE80"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.06" />
+                </LinearLayout>
 
-        <!-- Verify hint -->
-        <TextView
-            android:id="@+id/txtVerifyFingerprint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/remote_verify_fingerprint"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="10sp"
-            android:gravity="center"
-            android:visibility="gone"
-            android:paddingHorizontal="@dimen/margin_md"
-            android:layout_marginTop="@dimen/margin_sm"
-            android:layout_marginHorizontal="@dimen/margin_xl"
-            app:layout_constraintTop_toBottomOf="@id/txtFingerprint"
-            app:layout_constraintBottom_toTopOf="@id/layoutCaStatus"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+                <!-- Open Browser / IP Label -->
+                <TextView
+                    android:id="@+id/txtOpenBrowser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remote_open_browser"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="8dp" />
 
-        <!-- CA Trust Status Badge -->
-        <LinearLayout
-            android:id="@+id/layoutCaStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="10dp"
-            android:background="@drawable/bg_url_box"
-            android:layout_marginTop="@dimen/margin_md"
-            android:layout_marginHorizontal="@dimen/margin_md"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/txtVerifyFingerprint"
-            app:layout_constraintBottom_toTopOf="@id/btnStopServer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                <!-- IP / URL Display Box -->
+                <TextView
+                    android:id="@+id/txtServerUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="18sp"
+                    android:fontFamily="monospace"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/bg_url_box"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp"
+                    android:layout_marginBottom="14dp"
+                    tools:text="192.168.10.76" />
 
-            <ImageView
-                android:id="@+id/imgCaShield"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_shield_alert"
-                android:contentDescription="@null"
-                android:layout_marginEnd="10dp" />
+                <!-- Warning / Help text -->
+                <TextView
+                    android:id="@+id/txtWarning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remote_warning_screen"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:lineSpacingMultiplier="1.3"
+                    android:textAlignment="center" />
 
-            <TextView
-                android:id="@+id/txtCaStatus"
-                android:layout_width="0dp"
+            </LinearLayout>
+
+            <!-- HTTPS Security & Fingerprint Card (visible in HTTPS mode) -->
+            <LinearLayout
+                android:id="@+id/cardSecurityDetails"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="@drawable/bg_reindex_option_card"
+                android:padding="16dp"
+                android:layout_marginBottom="16dp">
+
+                <!-- Fingerprint Label -->
+                <TextView
+                    android:id="@+id/txtFingerprintLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remote_fingerprint_label"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_marginBottom="6dp" />
+
+                <!-- Fingerprint Value -->
+                <TextView
+                    android:id="@+id/txtFingerprint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="11sp"
+                    android:fontFamily="monospace"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:background="@drawable/bg_url_box"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="8dp"
+                    android:layout_marginBottom="6dp"
+                    tools:text="9B:3E:44:A1:7F:..." />
+
+                <!-- Verify hint -->
+                <TextView
+                    android:id="@+id/txtVerifyFingerprint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remote_verify_fingerprint"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="11sp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- CA Trust Status Badge -->
+                <LinearLayout
+                    android:id="@+id/layoutCaStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="10dp"
+                    android:background="@drawable/bg_url_box"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imgCaShield"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_shield_alert"
+                        android:contentDescription="@null"
+                        android:layout_marginEnd="10dp" />
+
+                    <TextView
+                        android:id="@+id/txtCaStatus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="13sp"
+                        android:fontFamily="sans-serif-medium"
+                        tools:text="Unverified — Auto-generated CA" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Stop Server Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStopServer"
+                style="@style/Widget.Material3Expressive.Button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="@string/remote_stop_server"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-bold"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/mobile_stop_btn"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_close"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/white"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Import / Remove CA Certificate Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnUseCA"
+                style="@style/Widget.Material3Expressive.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/remote_ca_action_import"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="13sp"
-                android:fontFamily="sans-serif-medium" />
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:textAllCaps="false"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_lock"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@color/mobile_text_primary" />
 
         </LinearLayout>
 
-        <!-- Stop button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStopServer"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:text="@string/remote_stop_server"
-            android:textColor="#FFFFFFFF"
-            android:textSize="16sp"
-            android:focusable="true"
-            android:backgroundTint="@color/mobile_stop_btn"
-            android:layout_marginTop="@dimen/margin_xl"
-            android:layout_marginHorizontal="@dimen/margin_xl"
-            app:cornerRadius="26dp"
-            app:icon="@drawable/ic_close"
-            app:iconSize="20dp"
-            app:iconGravity="textStart"
-            app:elevation="4dp"
-            app:layout_constraintTop_toBottomOf="@id/layoutCaStatus"
-            app:layout_constraintBottom_toTopOf="@id/btnUseCA"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <!-- Import / Remove CA button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnUseCA"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:text="@string/remote_ca_action_import"
-            android:textColor="#FFFFFFFF"
-            android:textSize="14sp"
-            android:background="@drawable/bg_btn_ca_import"
-            android:layout_marginTop="@dimen/margin_sm"
-            android:layout_marginBottom="@dimen/margin_lg"
-            android:layout_marginHorizontal="@dimen/margin_xl"
-            app:cornerRadius="26dp"
-            app:icon="@drawable/ic_lock"
-            app:iconSize="18dp"
-            app:iconGravity="textStart"
-            app:iconTint="#FFFFFFFF"
-            app:elevation="6dp"
-            app:layout_constraintTop_toBottomOf="@id/btnStopServer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

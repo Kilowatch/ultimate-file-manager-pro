@@ -7,32 +7,32 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Header / Toolbar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="0dp"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="@color/mobile_glass_header"
-        android:paddingHorizontal="4dp"
+        android:paddingHorizontal="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
                 android:importantForAccessibility="no"
+                app:tint="@color/mobile_icon_tint"
                 android:clickable="true"
                 android:focusable="true" />
         </FrameLayout>
@@ -42,22 +42,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="12dp">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icons_settings_title"
-                android:textSize="20sp"
-                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textColor="@color/mobile_text_primary"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icons_settings_subtitle"
-                android:textSize="13sp"
-                android:textColor="?attr/colorOnSurfaceVariant" />
+                android:textSize="12sp"
+                android:textColor="@color/mobile_text_secondary" />
         </LinearLayout>
     </LinearLayout>
 
@@ -68,7 +68,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -87,11 +88,11 @@
                 android:layout_marginEnd="6dp"
                 android:text="@string/export_pack"
                 android:textSize="13sp"
-                
-                
+                app:cornerRadius="12dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                app:icon="@drawable/ic_export" />
+                app:icon="@drawable/ic_export"
+                app:iconTint="?attr/colorPrimary" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnImportPack"
@@ -102,11 +103,11 @@
                 android:layout_marginStart="6dp"
                 android:text="@string/import_pack"
                 android:textSize="13sp"
-                
-                
+                app:cornerRadius="12dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                app:icon="@drawable/ic_import_code" />
+                app:icon="@drawable/ic_import_code"
+                app:iconTint="?attr/colorPrimary" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -117,10 +118,9 @@
             android:layout_marginTop="8dp"
             android:text="@string/reset_all_icons"
             android:textSize="13sp"
+            app:cornerRadius="12dp"
             app:strokeColor="?attr/colorError"
             android:textColor="?attr/colorError"
-            
-            
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:icon="@drawable/ic_refresh"
@@ -133,8 +133,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="12dp"
-        android:paddingTop="8dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="6dp"
         android:paddingBottom="24dp"
         app:layout_constraintTop_toBottomOf="@id/layoutActions"
         app:layout_constraintStart_toStartOf="parent"

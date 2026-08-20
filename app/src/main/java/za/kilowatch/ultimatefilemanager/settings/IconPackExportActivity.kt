@@ -266,12 +266,7 @@ class IconPackExportActivity : AppCompatActivity() {
 
         btnSkip.setOnClickListener {
             dialog.dismiss()
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.theme_password_skip_title)
-                .setMessage(R.string.theme_password_skip_warning)
-                .setPositiveButton(R.string.save_unencrypted) { _, _ -> doExport(selectedIconIds, null) }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            showSkipConfirmationDialog(selectedIconIds)
         }
 
         dialog.show()
@@ -299,6 +294,59 @@ class IconPackExportActivity : AppCompatActivity() {
                 btnSkip.setTextColor(if (hasFocus) black else white)
             }
             btnEncrypt.requestFocus()
+        }
+    }
+
+    private fun showSkipConfirmationDialog(selectedIconIds: Set<String>) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_theme_skip_confirm_tv else R.layout.dialog_theme_skip_confirm,
+            null
+        )
+
+        val btnSaveUnencrypted = dialogView.findViewById<Button>(R.id.btnSaveUnencrypted)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+
+        val confirmDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        confirmDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnSaveUnencrypted.setOnClickListener {
+            confirmDialog.dismiss()
+            doExport(selectedIconIds, null)
+        }
+
+        btnCancel.setOnClickListener {
+            confirmDialog.dismiss()
+        }
+
+        confirmDialog.show()
+
+        if (isTv) {
+            val yellow = getColor(R.color.tv_button_focused_yellow)
+            val black = getColor(R.color.tv_button_focused_yellow_text)
+            val white = getColor(R.color.tv_text_primary)
+            val glass = 0x26FFFFFF.toInt()
+
+            btnSaveUnencrypted.backgroundTintList = ColorStateList.valueOf(yellow)
+            btnSaveUnencrypted.setTextColor(black)
+            btnSaveUnencrypted.setOnFocusChangeListener { _, hasFocus ->
+                btnSaveUnencrypted.backgroundTintList =
+                    if (hasFocus) ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
+                    else ColorStateList.valueOf(yellow)
+            }
+
+            btnCancel.backgroundTintList = ColorStateList.valueOf(glass)
+            btnCancel.setTextColor(white)
+            btnCancel.setOnFocusChangeListener { _, hasFocus ->
+                btnCancel.backgroundTintList =
+                    if (hasFocus) ColorStateList.valueOf(yellow)
+                    else ColorStateList.valueOf(glass)
+                btnCancel.setTextColor(if (hasFocus) black else white)
+            }
+            btnSaveUnencrypted.requestFocus()
         }
     }
 

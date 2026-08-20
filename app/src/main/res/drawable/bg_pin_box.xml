@@ -3,25 +3,25 @@
     <!-- Active box: currently receiving input (selected state used by TextViews) -->
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="#1A00A389" />
             <corners android:radius="12dp" />
             <stroke android:width="2dp" android:color="?attr/colorPrimary" />
         </shape>
     </item>
-    <!-- Focused EditText box (legacy; kept for back-compat) -->
+    <!-- Focused EditText box (legacy) -->
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="#1A00A389" />
             <corners android:radius="12dp" />
             <stroke android:width="2dp" android:color="?attr/colorPrimary" />
         </shape>
     </item>
-    <!-- Default / filled box -->
+    <!-- Default / empty box -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="?attr/colorSurface" />
+            <solid android:color="#0DFFFFFF" />
             <corners android:radius="12dp" />
-            <stroke android:width="2dp" android:color="?attr/colorSurfaceVariant" />
+            <stroke android:width="1.5dp" android:color="@color/mobile_glass_stroke" />
         </shape>
     </item>
 </selector>

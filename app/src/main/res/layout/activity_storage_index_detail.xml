@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Storage Index Detail Activity — Language & Grouped Glass Card Standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,23 +9,27 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient">
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".settings.StorageIndexDetailActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -33,6 +40,7 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
+                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -41,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -49,8 +57,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/storage_details"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-black" />
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black"
+                tools:text="Internal Storage" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,52 +70,156 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_md"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Delete Records Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardDeleteRecords"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
 
-            <LinearLayout
+            <!-- Top Guidance Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_delete"
-                    app:tint="@color/status_error" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_md"
-                    android:text="@string/storage_indexer_delete_records"
-                    android:textColor="@color/status_error"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
 
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
 
-    </LinearLayout>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_lightning"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/storage_indexer_detail_info_notice"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section Header: Maintenance -->
+            <TextView
+                android:id="@+id/labelSectionActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/storage_indexer_section_actions"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Glass Card: Actions -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <!-- Delete Records Row -->
+                <LinearLayout
+                    android:id="@+id/cardDeleteRecords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_danger">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_delete"
+                            app:tint="@color/status_error"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/storage_indexer_delete_records"
+                            android:textColor="@color/status_error"
+                            android:textSize="15.5sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/storage_indexer_delete_records_desc"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/status_error"
+                        android:importantForAccessibility="no" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

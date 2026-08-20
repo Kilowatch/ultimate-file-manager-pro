@@ -10523,14 +10523,8 @@ Nenhuma configuração de ordenação específica da pasta salva.\n
 \n
 Abra uma pasta, toque em Ordenar &amp; Filtrar e escolha \"Esta Pasta\" para criar uma substituição.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Limpar Tudo
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Remover todas as substituições de ordenação específicas da pasta? As pastas reverterão para a configuração de ordenação global.
-</string>
-    <string name="folder_sort_manager_deleted">
-Substituição removida
 </string>
     <string name="folder_sort_network_badge">
 Rede / Online

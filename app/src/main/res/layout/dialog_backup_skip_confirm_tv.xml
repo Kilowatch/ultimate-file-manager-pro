@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_tv_dialog_surface"
+    android:padding="28dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_password_skip_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="22sp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Message -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_skip_confirm_desc"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="15sp"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/cancel"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="15sp"
+            android:background="@drawable/selector_tv_button"
+            android:focusable="true"
+            android:clickable="true" />
+
+        <Button
+            android:id="@+id/btnConfirmSkip"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/save_unencrypted"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="15sp"
+            android:background="@drawable/selector_tv_button_yellow"
+            android:focusable="true"
+            android:clickable="true" />
+    </LinearLayout>
+
+</LinearLayout>

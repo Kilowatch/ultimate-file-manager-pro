@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Storage Indexer Row Item — TV Standard
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,7 +31,8 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@drawable/ic_storage_internal"
-            android:layout_marginEnd="@dimen/margin_lg" />
+            android:layout_marginEnd="@dimen/margin_lg"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -48,8 +52,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/internal_storage"
                     android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-bold" />
 
                 <ImageView
                     android:id="@+id/icLightning"
@@ -57,7 +61,9 @@
                     android:layout_height="20dp"
                     android:layout_marginStart="8dp"
                     android:src="@drawable/ic_lightning"
-                    android:visibility="gone" />
+                    app:tint="@color/tv_button_focused_yellow"
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
             </LinearLayout>
 
             <TextView
@@ -73,16 +79,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/s_0_files_indexed"
-                android:textColor="@color/tv_text_secondary"
+                android:textColor="@color/tv_button_focused_yellow"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_down"
-            android:rotation="-90"
-            android:contentDescription="@null" />
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/tv_text_secondary"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

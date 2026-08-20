@@ -57,7 +57,7 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var toolbar: MaterialToolbar
     private lateinit var editSearch: EditText
-    private lateinit var spinnerDrive: Spinner
+    private var spinnerDrive: Spinner? = null
     private lateinit var txtStatus: TextView
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerResults: RecyclerView
@@ -137,11 +137,18 @@ class SearchActivity : AppCompatActivity() {
     private var isTv = false
 
     /** Represents a searchable drive entry. path==null means "All Drives" */
-    data class DriveEntry(val label: String, val path: File?) {
+    data class DriveEntry(
+        val label: String,
+        val path: File?,
+        val subtitle: String = "",
+        val iconRes: Int = R.drawable.ic_storage_internal,
+        val isIndexed: Boolean = false
+    ) {
         override fun toString(): String = label
     }
 
     private val driveEntries = mutableListOf<DriveEntry>()
+    private var selectedDriveIndex = 0
     private var selectedDrivePath: File? = null  // null = all drives
 
     override fun attachBaseContext(newBase: android.content.Context) {
@@ -169,6 +176,11 @@ class SearchActivity : AppCompatActivity() {
 
         isTv = DeviceUtils.isTvDevice(this)
         setupViews()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateIndexingBanner()
     }
 
     override fun onDestroy() {
@@ -326,120 +338,115 @@ class SearchActivity : AppCompatActivity() {
     private fun setupDrivePicker() {
         driveEntries.clear()
         val roots = getStorageRoots()
+        val repo = IndexingRepository.getInstance(this)
 
         if (roots.size > 1) {
-            driveEntries.add(DriveEntry(getString(R.string.all_drives), null))
+            val allIndexed = roots.all { repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first) }
+            driveEntries.add(
+                DriveEntry(
+                    label = getString(R.string.all_drives),
+                    path = null,
+                    subtitle = getString(R.string.search_all_drives_subtitle),
+                    iconRes = R.drawable.ic_storage_internal,
+                    isIndexed = allIndexed
+                )
+            )
         }
         for (root in roots) {
+            val isInternal = root.absolutePath.contains("emulated/0")
             val label = when {
-                root.absolutePath.contains("emulated/0") -> getString(R.string.storage_internal)
+                isInternal -> getString(R.string.storage_internal)
                 else -> root.name
             }
-            driveEntries.add(DriveEntry(label, root))
+            val iconRes = when {
+                isInternal -> R.drawable.ic_storage_internal
+                root.absolutePath.contains("usb", ignoreCase = true) -> R.drawable.ic_storage_usb
+                else -> R.drawable.ic_storage_sdcard
+            }
+            val (storageId, _, _) = IndexingRepository.resolveStorageForPath(root.absolutePath)
+            val isIndexed = repo.isStorageFullyIndexed(storageId)
+
+            val total = root.totalSpace
+            val free = root.freeSpace
+            val subtitle = if (total > 0) {
+                "${android.text.format.Formatter.formatFileSize(this, free)} free of ${android.text.format.Formatter.formatFileSize(this, total)}"
+            } else {
+                root.absolutePath
+            }
+
+            driveEntries.add(DriveEntry(label, root, subtitle, iconRes, isIndexed))
         }
 
-        val isTv = DeviceUtils.isTvDevice(this)
-        
-        // Premium custom adapter with icons and white text
-        val adapter = object : ArrayAdapter<DriveEntry>(this, R.layout.item_drive_spinner_selected, driveEntries) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = convertView ?: android.view.LayoutInflater.from(context)
-                    .inflate(R.layout.item_drive_spinner_selected, parent, false)
-                val entry = driveEntries[position]
-                val txtName = v.findViewById<TextView>(R.id.txtDriveName)
-                val imgIcon = v.findViewById<ImageView>(R.id.imgDriveIcon)
-                val imgBolt = v.findViewById<ImageView>(R.id.imgIndexingBolt)
-                
-                txtName.text = entry.label
-                // Set icon based on drive type
-                val iconRes = when {
-                    entry.path == null -> R.drawable.ic_storage_internal
-                    entry.path.absolutePath.contains("emulated/0") -> R.drawable.ic_storage_internal
-                    else -> R.drawable.ic_storage_sdcard
-                }
-                imgIcon.setImageResource(iconRes)
-
-                // Show bolt if indexed
-                val repo = IndexingRepository.getInstance(context)
-                val isIndexed = if (entry.path == null) {
-                    getStorageRoots().all { repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first) }
-                } else {
-                    repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(entry.path.absolutePath).first)
-                }
-                imgBolt.visibility = if (isIndexed) View.VISIBLE else View.GONE
-                
-                return v
-            }
-            
-            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val v = convertView ?: android.view.LayoutInflater.from(context)
-                    .inflate(R.layout.item_drive_spinner, parent, false)
-                val entry = driveEntries[position]
-                val txtName = v.findViewById<TextView>(R.id.txtDriveName)
-                val imgIcon = v.findViewById<ImageView>(R.id.imgDriveIcon)
-                val imgBolt = v.findViewById<ImageView>(R.id.imgIndexingBolt)
-                
-                txtName.text = entry.label
-                // Set icon based on drive type
-                val iconRes = when {
-                    entry.path == null -> R.drawable.ic_storage_internal
-                    entry.path.absolutePath.contains("emulated/0") -> R.drawable.ic_storage_internal
-                    else -> R.drawable.ic_storage_sdcard
-                }
-                imgIcon.setImageResource(iconRes)
-
-                // Show bolt if indexed
-                val repo = IndexingRepository.getInstance(context)
-                val isIndexed = if (entry.path == null) {
-                    getStorageRoots().all { repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first) }
-                } else {
-                    repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(entry.path.absolutePath).first)
-                }
-                imgBolt.visibility = if (isIndexed) View.VISIBLE else View.GONE
-                
-                return v
-            }
-        }
-        spinnerDrive.adapter = adapter
-
-        // TV focus: yellow bg + black text on the spinner row
         if (isTv) {
-            val yellowColor = getColor(R.color.tv_button_focused_yellow)
-            val blackColor = getColor(R.color.tv_button_focused_yellow_text)
-            val white = getColor(R.color.tv_text_primary)
-            spinnerDrive.setOnFocusChangeListener { v, hasFocus ->
-                v.setBackgroundColor(if (hasFocus) yellowColor else android.graphics.Color.TRANSPARENT)
-                val tv = (v as? android.widget.Spinner)?.selectedView?.findViewById<TextView>(R.id.txtDriveName)
-                tv?.setTextColor(if (hasFocus) blackColor else white)
-            }
+            setupTvDriveSpinner()
+        } else {
+            setupMobileDriveCard()
         }
 
-        spinnerDrive.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val entry = driveEntries[position]
-                selectedDrivePath = entry.path
-                
-                // Update subtitle for TV
-                if (isTv) {
-                    findViewById<TextView>(R.id.txtSearchSubtitle)?.text = entry.label
-                }
+        updateIndexingBanner()
+    }
+
+    private fun setupMobileDriveCard() {
+        val cardDrive = findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardDrive) ?: return
+        updateMobileDriveCardUI()
+        cardDrive.setOnClickListener {
+            showDriveSelectDialog()
+        }
+    }
+
+    private fun updateMobileDriveCardUI() {
+        val cardDrive = findViewById<View>(R.id.cardDrive) ?: return
+        if (driveEntries.isEmpty()) return
+        val entry = driveEntries.getOrNull(selectedDriveIndex) ?: driveEntries.first()
+
+        cardDrive.findViewById<ImageView>(R.id.imgDriveIcon)?.setImageResource(entry.iconRes)
+        cardDrive.findViewById<TextView>(R.id.txtDriveName)?.text = entry.label
+        cardDrive.findViewById<TextView>(R.id.txtDriveSubtitle)?.text = entry.subtitle
+        cardDrive.findViewById<ImageView>(R.id.imgIndexingBolt)?.visibility = if (entry.isIndexed) View.VISIBLE else View.GONE
+    }
+
+    private fun showDriveSelectDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_search_drive_select, null)
+        val layoutOptions = view.findViewById<LinearLayout>(R.id.layoutDriveOptions)
+
+        val dlg = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(view)
+            .create()
+        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        view.findViewById<View>(R.id.btnCancelDriveSelect)?.setOnClickListener {
+            dlg.dismiss()
+        }
+
+        layoutOptions.removeAllViews()
+        for ((index, entry) in driveEntries.withIndex()) {
+            val isSelected = (index == selectedDriveIndex)
+            val itemView = layoutInflater.inflate(R.layout.item_drive_option, layoutOptions, false)
+
+            itemView.findViewById<ImageView>(R.id.imgDriveIcon)?.setImageResource(entry.iconRes)
+            itemView.findViewById<TextView>(R.id.txtDriveName)?.text = entry.label
+            itemView.findViewById<TextView>(R.id.txtDriveDetails)?.text = entry.subtitle
+            itemView.findViewById<ImageView>(R.id.imgIndexingBolt)?.visibility = if (entry.isIndexed) View.VISIBLE else View.GONE
+            itemView.findViewById<ImageView>(R.id.imgDriveCheck)?.visibility = if (isSelected) View.VISIBLE else View.GONE
+
+            if (isSelected) {
+                itemView.setBackgroundResource(R.drawable.bg_drive_option_card_selected)
+            } else {
+                itemView.setBackgroundResource(R.drawable.bg_reindex_option_card)
+            }
+
+            itemView.setOnClickListener {
+                selectedDriveIndex = index
+                val chosen = driveEntries[index]
+                selectedDrivePath = chosen.path
+
+                updateMobileDriveCardUI()
+                dlg.dismiss()
 
                 updateIndexingBanner()
 
-                // Check if newly selected drive is indexed
-                val repo = IndexingRepository.getInstance(this@SearchActivity)
-                val isIndexed = if (selectedDrivePath == null) {
-                    getStorageRoots().all {
-                        repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first)
-                    }
-                } else {
-                    repo.isStorageFullyIndexed(
-                        IndexingRepository.resolveStorageForPath(selectedDrivePath!!.absolutePath).first
-                    )
-                }
-
                 // Pill filters are index-only — clear them when switching to an unindexed drive
-                if (!isIndexed && !activeFilters.isEmpty()) {
+                if (!chosen.isIndexed && !activeFilters.isEmpty()) {
                     activeFilters.minBytes  = null
                     activeFilters.maxBytes  = null
                     activeFilters.mimeTypes.clear()
@@ -452,19 +459,84 @@ class SearchActivity : AppCompatActivity() {
                 // and the blank-query reset (clears list when nothing to search)
                 triggerFilteredSearch()
             }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            layoutOptions.addView(itemView)
         }
 
+        dlg.show()
+    }
+
+    private fun setupTvDriveSpinner() {
+        val spinner = spinnerDrive ?: return
+        val adapter = object : ArrayAdapter<DriveEntry>(this, R.layout.item_drive_spinner_selected, driveEntries) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val v = convertView ?: layoutInflater.inflate(R.layout.item_drive_spinner_selected, parent, false)
+                val entry = driveEntries[position]
+                v.findViewById<TextView>(R.id.txtDriveName)?.text = entry.label
+                v.findViewById<ImageView>(R.id.imgDriveIcon)?.setImageResource(entry.iconRes)
+                v.findViewById<ImageView>(R.id.imgIndexingBolt)?.visibility = if (entry.isIndexed) View.VISIBLE else View.GONE
+                return v
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val v = convertView ?: layoutInflater.inflate(R.layout.item_drive_spinner, parent, false)
+                val entry = driveEntries[position]
+                v.findViewById<TextView>(R.id.txtDriveName)?.text = entry.label
+                v.findViewById<ImageView>(R.id.imgDriveIcon)?.setImageResource(entry.iconRes)
+                v.findViewById<ImageView>(R.id.imgIndexingBolt)?.visibility = if (entry.isIndexed) View.VISIBLE else View.GONE
+                return v
+            }
+        }
+        spinner.adapter = adapter
+
+        val yellowColor = getColor(R.color.tv_button_focused_yellow)
+        val blackColor = getColor(R.color.tv_button_focused_yellow_text)
+        val white = getColor(R.color.tv_text_primary)
+        spinner.setOnFocusChangeListener { v, hasFocus ->
+            v.setBackgroundColor(if (hasFocus) yellowColor else android.graphics.Color.TRANSPARENT)
+            val tv = (v as? Spinner)?.selectedView?.findViewById<TextView>(R.id.txtDriveName)
+            tv?.setTextColor(if (hasFocus) blackColor else white)
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedDriveIndex = position
+                val entry = driveEntries[position]
+                selectedDrivePath = entry.path
+
+                // Update subtitle for TV
+                if (isTv) {
+                    findViewById<TextView>(R.id.txtSearchSubtitle)?.text = entry.label
+                }
+
+                updateIndexingBanner()
+
+                val isIndexed = entry.isIndexed
+                if (!isIndexed && !activeFilters.isEmpty()) {
+                    activeFilters.minBytes  = null
+                    activeFilters.maxBytes  = null
+                    activeFilters.mimeTypes.clear()
+                    activeFilters.extension = null
+                    activeFilters.dateDays  = null
+                    updateFilterPillState()
+                }
+
+                triggerFilteredSearch()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun updateIndexingBanner() {
         val repo = IndexingRepository.getInstance(this)
+        val roots = getStorageRoots()
         val isIndexed = if (selectedDrivePath == null) {
-            getStorageRoots().all { repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first) }
+            roots.all { repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(it.absolutePath).first) }
         } else {
             repo.isStorageFullyIndexed(IndexingRepository.resolveStorageForPath(selectedDrivePath!!.absolutePath).first)
         }
         txtIndexingBanner.visibility = if (isIndexed) View.GONE else View.VISIBLE
+        txtIndexingBanner.text = getString(R.string.some_storages_are_not_indexed)
         // Filter pills only make sense on indexed storage
         scrollCategories.visibility = if (isIndexed) View.VISIBLE else View.GONE
     }
@@ -1165,94 +1237,195 @@ class SearchActivity : AppCompatActivity() {
         // updateFilterPillState() explicitly marks a filter as active.
         listOf(pillSize, pillType, pillExtension, pillDate).forEach { it.isCheckable = false }
 
-        pillSize.setOnClickListener {
-            if (activeFilters.minBytes != null || activeFilters.maxBytes != null) {
-                activeFilters.minBytes = null
-                activeFilters.maxBytes = null
-                updateFilterPillState()
-                triggerFilteredSearch()
-            } else {
-                showSizeDialog()
-            }
+        // Size filter
+        pillSize.setOnClickListener { showSizeDialog() }
+        pillSize.setOnCloseIconClickListener {
+            activeFilters.minBytes = null
+            activeFilters.maxBytes = null
+            updateFilterPillState()
+            triggerFilteredSearch()
         }
 
-        pillType.setOnClickListener {
-            if (activeFilters.mimeTypes.isNotEmpty()) {
-                activeFilters.mimeTypes.clear()
-                updateFilterPillState()
-                triggerFilteredSearch()
-            } else {
-                showTypeDialog()
-            }
+        // Type filter
+        pillType.setOnClickListener { showTypeDialog() }
+        pillType.setOnCloseIconClickListener {
+            activeFilters.mimeTypes.clear()
+            updateFilterPillState()
+            triggerFilteredSearch()
         }
 
-        pillExtension.setOnClickListener {
-            if (activeFilters.extension != null) {
-                activeFilters.extension = null
-                updateFilterPillState()
-                triggerFilteredSearch()
-            } else {
-                showExtensionDialog()
-            }
+        // Extension filter
+        pillExtension.setOnClickListener { showExtensionDialog() }
+        pillExtension.setOnCloseIconClickListener {
+            activeFilters.extension = null
+            updateFilterPillState()
+            triggerFilteredSearch()
         }
 
-        pillDate.setOnClickListener {
-            if (activeFilters.dateDays != null) {
-                activeFilters.dateDays = null
-                updateFilterPillState()
-                triggerFilteredSearch()
-            } else {
-                showDateDialog()
-            }
+        // Date filter
+        pillDate.setOnClickListener { showDateDialog() }
+        pillDate.setOnCloseIconClickListener {
+            activeFilters.dateDays = null
+            updateFilterPillState()
+            triggerFilteredSearch()
         }
 
         if (isTv) {
             val pills = listOf(pillSize, pillType, pillExtension, pillDate)
-            val yellow = getColor(R.color.tv_button_focused_yellow)
             val black = getColor(R.color.tv_button_focused_yellow_text)
-            val white = getColor(R.color.tv_text_primary)
 
             pills.forEach { pill ->
-                pill.setOnFocusChangeListener { _, hasFocus ->
-                    val isActive = when(pill.id) {
-                        R.id.chipFilterSize -> activeFilters.minBytes != null || activeFilters.maxBytes != null
-                        R.id.chipFilterType -> activeFilters.mimeTypes.isNotEmpty()
-                        R.id.chipFilterExtension -> activeFilters.extension != null
-                        R.id.chipFilterDate -> activeFilters.dateDays != null
-                        else -> false
+                pill.setOnClickListener {
+                    when (pill.id) {
+                        R.id.chipFilterSize -> {
+                            if (activeFilters.minBytes != null || activeFilters.maxBytes != null) {
+                                activeFilters.minBytes = null
+                                activeFilters.maxBytes = null
+                                updateFilterPillState()
+                                triggerFilteredSearch()
+                            } else {
+                                showSizeDialog()
+                            }
+                        }
+                        R.id.chipFilterType -> {
+                            if (activeFilters.mimeTypes.isNotEmpty()) {
+                                activeFilters.mimeTypes.clear()
+                                updateFilterPillState()
+                                triggerFilteredSearch()
+                            } else {
+                                showTypeDialog()
+                            }
+                        }
+                        R.id.chipFilterExtension -> {
+                            if (activeFilters.extension != null) {
+                                activeFilters.extension = null
+                                updateFilterPillState()
+                                triggerFilteredSearch()
+                            } else {
+                                showExtensionDialog()
+                            }
+                        }
+                        R.id.chipFilterDate -> {
+                            if (activeFilters.dateDays != null) {
+                                activeFilters.dateDays = null
+                                updateFilterPillState()
+                                triggerFilteredSearch()
+                            } else {
+                                showDateDialog()
+                            }
+                        }
                     }
-                    
+                }
+                pill.setOnFocusChangeListener { _, hasFocus ->
                     if (hasFocus) {
                         pill.setChipBackgroundColorResource(R.color.tv_button_focused_yellow)
                         pill.setTextColor(black)
                     } else {
-                        updateFilterPillState() // Restore based on active state
+                        updateFilterPillState()
                     }
                 }
             }
         }
+
+        updateFilterPillState()
     }
 
-    /** Applies yellow/accent tint to active pills and resets inactive ones. */
+    /** Applies active styling and dynamic summaries to pills on mobile and yellow tint on TV. */
     private fun updateFilterPillState() {
-        val accentColor   = getColor(R.color.tv_accent)
-        val accentCsl     = android.content.res.ColorStateList.valueOf(accentColor)
-        val inactiveColor = if (isTv) getColor(R.color.tv_glass_white_10)
-                           else getColor(R.color.mobile_glass_card)
-        val inactiveCsl   = android.content.res.ColorStateList.valueOf(inactiveColor)
-        val blackText     = getColor(android.R.color.black)
-        val normalText    = if (isTv) getColor(R.color.tv_text_primary)
-                           else getColor(R.color.mobile_card_text_primary)
+        val pillSize      = findViewById<Chip>(R.id.chipFilterSize) ?: return
+        val pillType      = findViewById<Chip>(R.id.chipFilterType) ?: return
+        val pillExtension = findViewById<Chip>(R.id.chipFilterExtension) ?: return
+        val pillDate      = findViewById<Chip>(R.id.chipFilterDate) ?: return
 
-        fun applyState(pill: Chip, active: Boolean) {
-            pill.chipBackgroundColor = if (active) accentCsl else inactiveCsl
-            pill.setTextColor(if (active) blackText else normalText)
+        val isSizeActive = activeFilters.minBytes != null || activeFilters.maxBytes != null
+        val isTypeActive = activeFilters.mimeTypes.isNotEmpty()
+        val isExtActive  = activeFilters.extension != null
+        val isDateActive = activeFilters.dateDays != null
+
+        if (isTv) {
+            val accentColor   = getColor(R.color.tv_accent)
+            val accentCsl     = android.content.res.ColorStateList.valueOf(accentColor)
+            val inactiveColor = getColor(R.color.tv_glass_white_10)
+            val inactiveCsl   = android.content.res.ColorStateList.valueOf(inactiveColor)
+            val blackText     = getColor(android.R.color.black)
+            val normalText    = getColor(R.color.tv_text_primary)
+
+            fun applyTv(pill: Chip, active: Boolean) {
+                pill.chipBackgroundColor = if (active) accentCsl else inactiveCsl
+                pill.setTextColor(if (active) blackText else normalText)
+            }
+
+            applyTv(pillSize, isSizeActive)
+            applyTv(pillType, isTypeActive)
+            applyTv(pillExtension, isExtActive)
+            applyTv(pillDate, isDateActive)
+            return
         }
 
-        applyState(findViewById(R.id.chipFilterSize),      activeFilters.minBytes != null || activeFilters.maxBytes != null)
-        applyState(findViewById(R.id.chipFilterType),      activeFilters.mimeTypes.isNotEmpty())
-        applyState(findViewById(R.id.chipFilterExtension), activeFilters.extension != null)
-        applyState(findViewById(R.id.chipFilterDate),      activeFilters.dateDays  != null)
+        val primaryColor      = za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
+        val activeBgCsl       = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_selection_highlight))
+        val inactiveBgCsl     = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_card))
+        val activeStrokeCsl   = android.content.res.ColorStateList.valueOf(primaryColor)
+        val inactiveStrokeCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_glass_stroke))
+        val activeText        = primaryColor
+        val inactiveText      = getColor(R.color.mobile_card_text_primary)
+        val density           = resources.displayMetrics.density
+
+        fun applyMobile(
+            pill: Chip,
+            active: Boolean,
+            defaultText: String,
+            activeTextSummary: String
+        ) {
+            pill.text = if (active) activeTextSummary else defaultText
+            pill.isCloseIconVisible = active
+            pill.chipBackgroundColor = if (active) activeBgCsl else inactiveBgCsl
+            pill.chipStrokeColor = if (active) activeStrokeCsl else inactiveStrokeCsl
+            pill.chipStrokeWidth = if (active) 1.5f * density else 1f * density
+            pill.setTextColor(if (active) activeText else inactiveText)
+            pill.chipIconTint = android.content.res.ColorStateList.valueOf(if (active) activeText else getColor(R.color.mobile_icon_tint))
+            pill.closeIconTint = android.content.res.ColorStateList.valueOf(activeText)
+        }
+
+        // Size summary
+        val sizeSummary = when {
+            activeFilters.minBytes != null && activeFilters.maxBytes != null ->
+                "${android.text.format.Formatter.formatFileSize(this, activeFilters.minBytes!!)} - ${android.text.format.Formatter.formatFileSize(this, activeFilters.maxBytes!!)}"
+            activeFilters.minBytes != null ->
+                "> ${android.text.format.Formatter.formatFileSize(this, activeFilters.minBytes!!)}"
+            activeFilters.maxBytes != null ->
+                "< ${android.text.format.Formatter.formatFileSize(this, activeFilters.maxBytes!!)}"
+            else -> getString(R.string.search_pill_size)
+        }
+
+        // Type summary
+        val typeSummary = when {
+            activeFilters.mimeTypes.size == 1 -> {
+                val token = activeFilters.mimeTypes.first()
+                when (token) {
+                    "type:image" -> getString(R.string.analyzer_category_images)
+                    "type:video" -> getString(R.string.analyzer_category_videos)
+                    "type:audio" -> getString(R.string.analyzer_category_audio)
+                    "type:doc" -> getString(R.string.analyzer_category_documents)
+                    "type:apk" -> getString(R.string.analyzer_category_apks)
+                    "type:archive" -> "Archives"
+                    else -> token.removePrefix("type:")
+                }
+            }
+            activeFilters.mimeTypes.size > 1 -> "${activeFilters.mimeTypes.size} Types"
+            else -> getString(R.string.search_pill_type)
+        }
+
+        // Extension summary
+        val extSummary = if (isExtActive) ".${activeFilters.extension}" else getString(R.string.search_pill_extension)
+
+        // Date summary
+        val dateSummary = if (isDateActive) "< ${activeFilters.dateDays}d" else getString(R.string.search_pill_date)
+
+        applyMobile(pillSize, isSizeActive, getString(R.string.search_pill_size), sizeSummary)
+        applyMobile(pillType, isTypeActive, getString(R.string.search_pill_type), typeSummary)
+        applyMobile(pillExtension, isExtActive, getString(R.string.search_pill_extension), extSummary)
+        applyMobile(pillDate, isDateActive, getString(R.string.search_pill_date), dateSummary)
     }
 
     // ---- Size dialog ----
@@ -1278,14 +1451,14 @@ class SearchActivity : AppCompatActivity() {
                 override fun getView(pos: Int, cv: android.view.View?, parent: android.view.ViewGroup): android.view.View {
                     val v = super.getView(pos, cv, parent) as TextView
                     if (!isTv) {
-                        v.setTextColor(textColor); v.setBackgroundColor(bgColor); v.setPadding(16, 0, 16, 0)
+                        v.setTextColor(textColor); v.setBackgroundColor(android.graphics.Color.TRANSPARENT); v.setPadding(8, 0, 8, 0)
                     }
                     return v
                 }
                 override fun getDropDownView(pos: Int, cv: android.view.View?, parent: android.view.ViewGroup): android.view.View {
                     val v = super.getDropDownView(pos, cv, parent) as TextView
                     if (!isTv) {
-                        v.setTextColor(textColor); v.setBackgroundColor(bgColor); v.setPadding(24, 20, 24, 20)
+                        v.setTextColor(textColor); v.setBackgroundColor(getColor(R.color.mobile_glass_card)); v.setPadding(24, 20, 24, 20)
                     }
                     return v
                 }
@@ -1309,10 +1482,10 @@ class SearchActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
         }
 
-        val dlg = MaterialAlertDialogBuilder(this)
+        val dlg = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(view)
             .create()
-        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(bgColor))
+        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) bgColor else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
             val yellow = getColor(R.color.tv_button_focused_yellow)
@@ -1378,10 +1551,10 @@ class SearchActivity : AppCompatActivity() {
         // Pre-check whatever is currently active
         checkMap.forEach { (cb, token) -> cb.isChecked = activeFilters.mimeTypes.contains(token) }
 
-        val dlg = MaterialAlertDialogBuilder(this)
+        val dlg = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(view)
             .create()
-        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end)))
+        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
             val black = getColor(R.color.tv_button_focused_yellow_text)
@@ -1421,10 +1594,10 @@ class SearchActivity : AppCompatActivity() {
         edit.hint = getString(R.string.search_filter_ext_hint)
         activeFilters.extension?.let { edit.setText(it) }
 
-        val dlg = MaterialAlertDialogBuilder(this)
+        val dlg = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(view)
             .create()
-        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end)))
+        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
             val black = getColor(R.color.tv_button_focused_yellow_text)
@@ -1461,10 +1634,10 @@ class SearchActivity : AppCompatActivity() {
         val edit = view.findViewById<android.widget.EditText>(R.id.editDays)
         activeFilters.dateDays?.let { edit.setText(it.toString()) }
 
-        val dlg = MaterialAlertDialogBuilder(this)
+        val dlg = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(view)
             .create()
-        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(getColor(R.color.tv_bg_gradient_end)))
+        dlg.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(if (isTv) getColor(R.color.tv_bg_gradient_end) else android.graphics.Color.TRANSPARENT))
 
         if (isTv) {
             val black = getColor(R.color.tv_button_focused_yellow_text)

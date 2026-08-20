@@ -3,7 +3,9 @@ package za.kilowatch.ultimatefilemanager.settings
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -174,11 +176,7 @@ class IconCustomizationActivity : AppCompatActivity() {
 
         val btnImport = findViewById<MaterialButton?>(R.id.btnImportPack)
         btnImport?.setOnClickListener {
-            val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
-                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, "ufmtheme")
-            }
-            importPackLauncher.launch(intent)
+            showImportInstructionsDialog()
         }
 
         if (isTv) {
@@ -188,19 +186,7 @@ class IconCustomizationActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton?>(R.id.btnResetAll)?.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.reset_all_confirm_title)
-                .setMessage(R.string.reset_all_confirm_message)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    IconCustomizationManager.clearAll(this)
-                    TileIconManager.getAllTileIcons(this).keys.forEach {
-                        TileIconManager.clearTileIcon(this, it)
-                    }
-                    loadIconCategories()
-                    Toast.makeText(this, R.string.reset_all_icons, Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            showResetAllConfirmDialog()
         }
 
         val recycler = findViewById<RecyclerView>(R.id.rvIconCategories)
@@ -316,6 +302,79 @@ class IconCustomizationActivity : AppCompatActivity() {
             }
         )
         recycler?.adapter = adapter
+    }
+
+    private fun showImportInstructionsDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_icon_pack_import_instructions_tv
+            else R.layout.dialog_icon_pack_import_instructions,
+            null
+        )
+
+        val btnSelectPack = dialogView.findViewById<View>(R.id.btnSelectPack)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnSelectPack.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, "ufmtheme")
+            }
+            importPackLauncher.launch(intent)
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnSelectPack.requestFocus()
+        }
+    }
+
+    private fun showResetAllConfirmDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_reset_all_icons_confirm_tv
+            else R.layout.dialog_reset_all_icons_confirm,
+            null
+        )
+
+        val btnResetConfirm = dialogView.findViewById<View>(R.id.btnResetConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnResetConfirm.setOnClickListener {
+            dialog.dismiss()
+            IconCustomizationManager.clearAll(this)
+            TileIconManager.getAllTileIcons(this).keys.forEach {
+                TileIconManager.clearTileIcon(this, it)
+            }
+            loadIconCategories()
+            Toast.makeText(this, R.string.reset_all_icons, Toast.LENGTH_SHORT).show()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnCancel.requestFocus()
+        }
     }
 
     private fun loadIconCategories() {

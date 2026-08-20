@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_icon_circle_accent"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_storage_internal"
+            app:tint="@color/white"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nt_cache_limit_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nt_cache_limit_dialog_desc"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Option 500 MB -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/opt500Mb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nt_limit_500mb"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <RadioButton
+                android:id="@+id/rb500Mb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/tv_button_focused_yellow"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Option 1 GB -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/opt1Gb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nt_limit_1gb"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <RadioButton
+                android:id="@+id/rb1Gb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/tv_button_focused_yellow"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Option 2 GB -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/opt2Gb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nt_limit_2gb"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <RadioButton
+                android:id="@+id/rb2Gb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/tv_button_focused_yellow"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Option 5 GB -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/opt5Gb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nt_limit_5gb"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <RadioButton
+                android:id="@+id/rb5Gb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/tv_button_focused_yellow"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Option Custom... -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/optCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/nt_limit_custom"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <RadioButton
+                android:id="@+id/rbCustom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/tv_button_focused_yellow"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="14sp"
+        android:focusable="true" />
+
+</LinearLayout>

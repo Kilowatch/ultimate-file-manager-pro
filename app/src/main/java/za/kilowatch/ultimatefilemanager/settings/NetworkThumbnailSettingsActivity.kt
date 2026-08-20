@@ -3,13 +3,12 @@ package za.kilowatch.ultimatefilemanager.settings
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.View
 import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.RadioGroup
-import android.widget.RadioButton
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.Dispatchers
@@ -25,10 +25,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
-import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import java.io.File
 import java.util.Locale
 
+/**
+ * Network Thumbnail Settings activity.
+ * Configures persistent caching, cache folder location, cache size limits, and cache clearing.
+ * Follows the Language & Grouped Glass Card design standard.
+ */
 class NetworkThumbnailSettingsActivity : AppCompatActivity() {
 
     private var isTv = false
@@ -37,7 +41,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
     // Persisted through recreate() to prevent looping when restartPending is still true.
     private var handledFontChange = false
     private var handledLocaleChange = false
-    
+
     /** Receives the selected folder from [za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity]. */
     private lateinit var folderPickerLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
 
@@ -73,7 +77,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
                 insets
             }
         }
-        
+
         // Register folder picker result launcher
         folderPickerLauncher = registerForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -84,7 +88,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
                 if (path != null) {
                     val file = File(path)
                     if (!file.exists()) file.mkdirs()
-                    
+
                     NetworkThumbnailPreferenceManager.setCachePath(this, path)
                     updateUI()
                 }
@@ -122,8 +126,8 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
         btnBack.setOnClickListener { finish() }
 
         if (isTv && btnBack is ImageView) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack.imageTintList = whiteCsl
             btnBack.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -139,32 +143,39 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
         txtCacheLimit = findViewById(R.id.txtCacheLimit)
         txtStats = findViewById(R.id.txtStats)
 
-        val cardEnable = findViewById<MaterialCardView>(R.id.cardEnable)
+        val cardEnable = findViewById<View>(R.id.cardEnable)
         cardEnable.setOnClickListener {
             val newValue = !switchEnable.isChecked
             NetworkThumbnailPreferenceManager.setEnabled(this, newValue)
             switchEnable.isChecked = newValue
         }
 
-        val cardCacheFolder = findViewById<MaterialCardView>(R.id.cardCacheFolder)
+        val cardCacheFolder = findViewById<View>(R.id.cardCacheFolder)
         cardCacheFolder.setOnClickListener {
-            showStoragePicker()
+            showStoragePickerGuideDialog()
         }
 
-        val cardCacheLimit = findViewById<MaterialCardView>(R.id.cardCacheLimit)
+        val cardCacheLimit = findViewById<View>(R.id.cardCacheLimit)
         cardCacheLimit.setOnClickListener {
             showLimitDialog()
         }
 
-        val btnClearCache = findViewById<MaterialCardView>(R.id.btnClearCache)
+        val btnClearCache = findViewById<View>(R.id.btnClearCache)
         btnClearCache.setOnClickListener {
             showClearConfirmDialog()
+        }
+
+        if (isTv) {
+            if (cardEnable is MaterialCardView) setupTvCardFocus(cardEnable)
+            if (cardCacheFolder is MaterialCardView) setupTvCardFocus(cardCacheFolder)
+            if (cardCacheLimit is MaterialCardView) setupTvCardFocus(cardCacheLimit)
+            if (btnClearCache is MaterialCardView) setupTvCardFocus(btnClearCache)
         }
     }
 
     fun updateUI() {
         switchEnable.isChecked = NetworkThumbnailPreferenceManager.isEnabled(this)
-        
+
         val currentPath = NetworkThumbnailPreferenceManager.getCachePath(this)
         txtCacheFolder.text = getFriendlyPathName(currentPath)
 
@@ -195,12 +206,12 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
 
     private fun getFriendlyPathName(path: String): String {
         if (path.isEmpty()) return getString(R.string.nt_folder_not_selected)
-        
+
         val internalCache = externalCacheDir?.absolutePath ?: ""
         if (path.startsWith(internalCache)) {
-            return "Internal Storage"
+            return "Internal Storage (Default)"
         }
-        
+
         val externalDirs = ContextCompat.getExternalFilesDirs(this, null)
         for (i in 1 until externalDirs.size) {
             val dir = externalDirs[i]
@@ -208,7 +219,7 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
                 return "SD Card $i"
             }
         }
-        
+
         // If it's a subfolder, show the last part of the path or the full path
         val file = File(path)
         return if (file.exists()) {
@@ -218,113 +229,35 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showStoragePicker() {
-        folderPickerLauncher.launch(
-            Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-                putExtra(za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
-            }
-        )
-    }
+    private fun showStoragePickerGuideDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_network_cache_folder_guide_tv else R.layout.dialog_network_cache_folder_guide
+        val view = LayoutInflater.from(this).inflate(layoutRes, null)
 
-    private fun showLimitDialog() {
-        val options = arrayOf(
-            getString(R.string.nt_limit_500mb),
-            getString(R.string.nt_limit_1gb),
-            getString(R.string.nt_limit_2gb),
-            getString(R.string.nt_limit_5gb)
-        )
-        val values = arrayOf(500, 1024, 2048, 5120)
+        val currentPath = NetworkThumbnailPreferenceManager.getCachePath(this)
+        val txtCurrentPath = view.findViewById<TextView>(R.id.txtCurrentPath)
+        txtCurrentPath.text = currentPath.ifEmpty { getString(R.string.nt_folder_not_selected) }
 
-        // Add a Custom... option at the end
-        val optionsWithCustom = options + arrayOf(getString(R.string.nt_limit_custom))
-        val valuesList = values.toMutableList()
+        val btnBrowse = view.findViewById<View>(R.id.btnBrowse)
+        val btnResetDefault = view.findViewById<View>(R.id.btnResetDefault)
+        val btnCancel = view.findViewById<View>(R.id.btnCancel)
 
-        AlertDialog.Builder(this)
-            .setTitle(R.string.nt_cache_limit_title)
-            .setItems(optionsWithCustom) { _, which ->
-                if (which < values.size) {
-                    NetworkThumbnailPreferenceManager.setCacheLimitMb(this, values[which])
-                    updateUI()
-                } else {
-                    // On TV open full-screen Activity; on Mobile show dialog
-                    if (isTv) {
-                        startActivity(android.content.Intent(this, NetworkThumbnailCustomLimitActivity::class.java))
-                    } else {
-                        val frag = CacheLimitDialogFragment()
-                        frag.show(supportFragmentManager, CacheLimitDialogFragment.TAG)
-                    }
-                }
-            }
-            .show()
-    }
+        val defaultPath = File(externalCacheDir, "network_thumbnails").absolutePath
+        val isCustom = currentPath.isNotEmpty() && currentPath != defaultPath
+        btnResetDefault.visibility = if (isCustom) View.VISIBLE else View.GONE
 
-    private fun showCustomLimitDialog() {
-        val inflater = LayoutInflater.from(this)
-        val view = inflater.inflate(R.layout.dialog_cache_limit_custom, null)
-
-        val editValue = view.findViewById<android.widget.EditText>(R.id.editCacheValue)
-        val chip500 = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipPreset500)
-        val chip1gb = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipPreset1gb)
-        val chip2gb = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipPreset2gb)
-        val chip5gb = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipPreset5gb)
-        val chipMb = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipMb)
-        val chipGb = view.findViewById<com.google.android.material.chip.Chip>(R.id.chipGb)
-        val btnSave = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSave)
-        val btnCancel = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancel)
-
-        val currentMb = NetworkThumbnailPreferenceManager.getCacheLimitMb(this)
-        if (currentMb >= 1024 && currentMb % 1024 == 0) {
-            val gbVal = currentMb.toDouble() / 1024.0
-            editValue.setText(String.format(java.util.Locale.getDefault(), "%.1f", gbVal))
-            chipGb.isChecked = true
-        } else if (currentMb >= 1024) {
-            val gbVal = currentMb.toDouble() / 1024.0
-            editValue.setText(String.format(java.util.Locale.getDefault(), "%.1f", gbVal))
-            chipGb.isChecked = true
-        } else {
-            editValue.setText(currentMb.toString())
-            chipMb.isChecked = true
-        }
-
-        fun setPresetValue(mb: Int) {
-            if (mb >= 1024) {
-                val gb = mb.toDouble() / 1024.0
-                editValue.setText(String.format(java.util.Locale.getDefault(), "%.1f", gb))
-                chipGb.isChecked = true
-            } else {
-                editValue.setText(mb.toString())
-                chipMb.isChecked = true
-            }
-        }
-
-        chip500.setOnClickListener { setPresetValue(500) }
-        chip1gb.setOnClickListener { setPresetValue(1024) }
-        chip2gb.setOnClickListener { setPresetValue(2048) }
-        chip5gb.setOnClickListener { setPresetValue(5120) }
-
-        chipMb.setOnClickListener { /* unit switched to MB */ }
-        chipGb.setOnClickListener { /* unit switched to GB */ }
-
-        val dialog = android.app.AlertDialog.Builder(this)
-            .setTitle(R.string.nt_cache_limit_title)
+        val dialog = AlertDialog.Builder(this)
             .setView(view)
             .create()
 
-        btnSave.setOnClickListener {
-            val raw = editValue.text.toString().trim()
-            if (raw.isEmpty()) {
-                editValue.error = getString(R.string.nt_custom_value_hint)
-                return@setOnClickListener
-            }
-            val isGb = chipGb.isChecked
-            val valueDouble = try {
-                raw.toDouble()
-            } catch (e: Exception) {
-                editValue.error = getString(R.string.nt_custom_value_hint)
-                return@setOnClickListener
-            }
-            val resultMb = if (isGb) (valueDouble * 1024.0).toInt() else valueDouble.toInt()
-            NetworkThumbnailPreferenceManager.setCacheLimitMb(this, resultMb)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnBrowse.setOnClickListener {
+            dialog.dismiss()
+            showStoragePicker()
+        }
+
+        btnResetDefault.setOnClickListener {
+            NetworkThumbnailPreferenceManager.setCachePath(this, "")
             updateUI()
             dialog.dismiss()
         }
@@ -336,29 +269,157 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun showClearConfirmDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.nt_clear_cache_confirm_title)
-            .setMessage(R.string.nt_clear_cache_confirm_msg)
-            .setPositiveButton(R.string.nt_clear_cache_title) { _, _ ->
-                lifecycleScope.launch(Dispatchers.IO) {
-                    cacheManager.clearAllCache()
-                    withContext(Dispatchers.Main) {
-                        updateUI()
+    private fun showStoragePicker() {
+        folderPickerLauncher.launch(
+            Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity.EXTRA_NETWORK_CACHE_PICKER, true)
+            }
+        )
+    }
+
+    private fun showLimitDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_network_cache_limit_chooser_tv else R.layout.dialog_network_cache_limit_chooser
+        val view = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val currentMb = NetworkThumbnailPreferenceManager.getCacheLimitMb(this)
+
+        val opt500Mb = view.findViewById<View>(R.id.opt500Mb)
+        val opt1Gb = view.findViewById<View>(R.id.opt1Gb)
+        val opt2Gb = view.findViewById<View>(R.id.opt2Gb)
+        val opt5Gb = view.findViewById<View>(R.id.opt5Gb)
+        val optCustom = view.findViewById<View>(R.id.optCustom)
+
+        val rb500Mb = view.findViewById<android.widget.RadioButton>(R.id.rb500Mb)
+        val rb1Gb = view.findViewById<android.widget.RadioButton>(R.id.rb1Gb)
+        val rb2Gb = view.findViewById<android.widget.RadioButton>(R.id.rb2Gb)
+        val rb5Gb = view.findViewById<android.widget.RadioButton>(R.id.rb5Gb)
+        val rbCustom = view.findViewById<android.widget.RadioButton>(R.id.rbCustom)
+
+        val isCustom = (currentMb !in listOf(500, 1024, 2048, 5120))
+
+        rb500Mb.isChecked = (currentMb == 500)
+        rb1Gb.isChecked = (currentMb == 1024)
+        rb2Gb.isChecked = (currentMb == 2048)
+        rb5Gb.isChecked = (currentMb == 5120)
+        rbCustom.isChecked = isCustom
+
+        val txtCustomSubtitle = view.findViewById<TextView?>(R.id.txtCustomSubtitle)
+        if (isCustom && txtCustomSubtitle != null) {
+            val formatted = if (currentMb >= 1024) {
+                val gb = currentMb.toDouble() / 1024.0
+                String.format(Locale.getDefault(), "%.1f GB", gb)
+            } else {
+                "$currentMb MB"
+            }
+            txtCustomSubtitle.text = "$formatted custom limit"
+        }
+
+        val btnCancel = view.findViewById<View>(R.id.btnCancel)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        fun selectPreset(valueMb: Int) {
+            NetworkThumbnailPreferenceManager.setCacheLimitMb(this, valueMb)
+            updateUI()
+            dialog.dismiss()
+        }
+
+        opt500Mb.setOnClickListener { selectPreset(500) }
+        opt1Gb.setOnClickListener { selectPreset(1024) }
+        opt2Gb.setOnClickListener { selectPreset(2048) }
+        opt5Gb.setOnClickListener { selectPreset(5120) }
+
+        optCustom.setOnClickListener {
+            dialog.dismiss()
+            if (isTv) {
+                startActivity(Intent(this, NetworkThumbnailCustomLimitActivity::class.java))
+            } else {
+                val frag = CacheLimitDialogFragment()
+                frag.show(supportFragmentManager, CacheLimitDialogFragment.TAG)
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        if (isTv) {
+            val yellowFill = getColor(R.color.tv_button_focused_yellow)
+            val blackText = getColor(R.color.tv_button_focused_yellow_text)
+            val glassColor = getColor(R.color.tv_glass_white_10)
+            val primaryText = getColor(R.color.tv_text_primary)
+            val secondaryText = getColor(R.color.tv_text_secondary)
+            val activeColor = getColor(R.color.tv_accent)
+
+            val tvCards = listOf(
+                Pair(opt500Mb as? MaterialCardView, rb500Mb),
+                Pair(opt1Gb as? MaterialCardView, rb1Gb),
+                Pair(opt2Gb as? MaterialCardView, rb2Gb),
+                Pair(opt5Gb as? MaterialCardView, rb5Gb),
+                Pair(optCustom as? MaterialCardView, rbCustom)
+            )
+
+            for ((card, rb) in tvCards) {
+                if (card == null) continue
+                card.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        card.setCardBackgroundColor(yellowFill)
+                        setChildTextColors(card, blackText)
+                        rb.buttonTintList = ColorStateList.valueOf(blackText)
+                    } else {
+                        card.setCardBackgroundColor(glassColor)
+                        setChildTextColors(card, primaryText)
+                        rb.buttonTintList = ColorStateList.valueOf(if (rb.isChecked) activeColor else secondaryText)
                     }
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        }
+
+        dialog.show()
+    }
+
+    private fun showClearConfirmDialog() {
+        val layoutRes = if (isTv) R.layout.dialog_network_cache_clear_confirm_tv else R.layout.dialog_network_cache_clear_confirm
+        val view = LayoutInflater.from(this).inflate(layoutRes, null)
+
+        val btnClearConfirm = view.findViewById<View>(R.id.btnClearConfirm)
+        val btnCancel = view.findViewById<View>(R.id.btnCancel)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        btnClearConfirm.setOnClickListener {
+            dialog.dismiss()
+            lifecycleScope.launch(Dispatchers.IO) {
+                cacheManager.clearAllCache()
+                withContext(Dispatchers.Main) {
+                    updateUI()
+                }
+            }
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun setupTvCardFocus(card: MaterialCardView) {
-        val yellowFill  = getColor(R.color.tv_button_focused_yellow)
-        val blackText   = getColor(R.color.tv_button_focused_yellow_text)
-        val glassColor  = android.graphics.Color.TRANSPARENT
+        val yellowFill = getColor(R.color.tv_button_focused_yellow)
+        val blackText = getColor(R.color.tv_button_focused_yellow_text)
+        val glassColor = getColor(R.color.tv_glass_white_10)
         val primaryText = getColor(R.color.tv_text_primary)
-        val secondText  = getColor(R.color.tv_text_secondary)
-        val errorRed    = getColor(R.color.tv_error_red)
+        val secondaryText = getColor(R.color.tv_text_secondary)
+        val errorRed = getColor(R.color.tv_error_red)
+        val isClearCard = (card.id == R.id.btnClearCache)
 
         card.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -366,33 +427,46 @@ class NetworkThumbnailSettingsActivity : AppCompatActivity() {
                 setChildTextColors(card, blackText)
             } else {
                 card.setCardBackgroundColor(glassColor)
-                setChildTextColorsTwo(card, primaryText, secondText, errorRed, card.id == R.id.btnClearCache)
+                setChildTextColorsTwo(card, primaryText, secondaryText, errorRed, isClearCard)
             }
         }
     }
 
     private fun setChildTextColors(view: View, color: Int) {
-        if (view is TextView) { view.setTextColor(color) }
-        else if (view is ImageView && view !is SwitchMaterial) {
-            view.imageTintList = android.content.res.ColorStateList.valueOf(color)
+        if (view is TextView) {
+            view.setTextColor(color)
+        } else if (view is ImageView && view !is SwitchMaterial) {
+            view.imageTintList = ColorStateList.valueOf(color)
         }
         if (view is ViewGroup) {
-            for (i in 0 until view.childCount) setChildTextColors(view.getChildAt(i), color)
+            for (i in 0 until view.childCount) {
+                setChildTextColors(view.getChildAt(i), color)
+            }
         }
     }
 
     private fun setChildTextColorsTwo(view: View, primary: Int, secondary: Int, error: Int, isErrorCard: Boolean) {
         if (view is TextView) {
-            if (isErrorCard && view.text == getString(R.string.nt_clear_cache_title)) {
+            if (isErrorCard && view.id == R.id.txtClearTitle) {
                 view.setTextColor(error)
+            } else if (view.id == R.id.txtClearDesc || view.id == R.id.txtEnableDesc || view.id == R.id.txtCacheFolder || view.id == R.id.txtCacheLimit || view.id == R.id.txtStats) {
+                view.setTextColor(secondary)
             } else {
-                view.setTextColor(if (view.textSize > resources.displayMetrics.density * 18) primary else secondary)
+                view.setTextColor(primary)
             }
         } else if (view is ImageView && view !is SwitchMaterial) {
-            view.imageTintList = android.content.res.ColorStateList.valueOf(if (isErrorCard && view.id != R.id.switchEnable) error else primary)
+            if (isErrorCard) {
+                view.imageTintList = ColorStateList.valueOf(error)
+            } else if (view.id == R.id.imgFolderChevron || view.id == R.id.imgLimitChevron) {
+                view.imageTintList = ColorStateList.valueOf(secondary)
+            } else {
+                view.imageTintList = ColorStateList.valueOf(getColor(R.color.white))
+            }
         }
         if (view is ViewGroup) {
-            for (i in 0 until view.childCount) setChildTextColorsTwo(view.getChildAt(i), primary, secondary, error, isErrorCard)
+            for (i in 0 until view.childCount) {
+                setChildTextColorsTwo(view.getChildAt(i), primary, secondary, error, isErrorCard)
+            }
         }
     }
 }

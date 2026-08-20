@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rename Device — Premium Mobile Dialog (Re-Index Glassmorphic Standard) -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Edit Icon -->
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_edit"
+        app:tint="?attr/colorPrimary"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/rename_device"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_sm"
+        android:text="@string/rename_tv"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/margin_lg" />
+
+    <!-- Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/rename_device"
+        app:endIconMode="clear_text"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxStrokeColor="?attr/colorPrimary"
+        android:layout_marginBottom="18dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtDeviceName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:textColor="@color/mobile_text_primary"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Save Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveName"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/network_btn_save"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelName"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

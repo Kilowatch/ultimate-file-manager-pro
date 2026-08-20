@@ -1,21 +1,22 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,21 +28,16 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  * Settings activity that shows all folders which have a per-folder sort override,
  * and allows the user to delete individual entries or clear all overrides.
  *
- * Follows the Activity pattern from CLAUDE.md:
- *  - attachBaseContext → LocaleHelper.wrap
- *  - ThemeHelper.applyTheme before super.onCreate
- *  - enableEdgeToEdge
- *  - dual layouts: activity_folder_sort_manager.xml (mobile) / activity_folder_sort_manager_tv.xml (TV)
- *
- * Data is read from [SortFilterPreferenceManager.getAllFolderEntries] which uses
- * [EncryptedSharedPreferences] — all reads/writes are dispatched on [Dispatchers.IO].
+ * Supports both Mobile (frosted glass) and Android TV (yellow focus) themes.
  */
 class FolderSortManagerActivity : AppCompatActivity() {
 
     private var isTv = false
 
     private lateinit var recyclerEntries: RecyclerView
-    private lateinit var layoutEmpty: LinearLayout
+    private lateinit var layoutEmpty: View
+    private lateinit var cardInfo: View
+    private lateinit var btnClearAll: View
     private lateinit var adapter: FolderSortManagerAdapter
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -97,25 +93,27 @@ class FolderSortManagerActivity : AppCompatActivity() {
     }
 
     private fun setupClearAll() {
-        val btnClearAll = findViewById<MaterialButton?>(R.id.btnClearAll)
-        btnClearAll?.setOnClickListener { showClearAllDialog() }
+        btnClearAll = findViewById(R.id.btnClearAll)
+        btnClearAll.setOnClickListener { showClearAllDialog() }
         if (isTv) {
-            val accentCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow))
-            val defaultCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            btnClearAll?.setOnFocusChangeListener { _, hasFocus ->
-                btnClearAll.setTextColor(if (hasFocus) android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text)) else defaultCsl)
-                btnClearAll.backgroundTintList = if (hasFocus) accentCsl else android.content.res.ColorStateList.valueOf(getColor(R.color.tv_glass_white_10))
+            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val btn = btnClearAll as? ImageView
+            btn?.imageTintList = whiteCsl
+            btn?.setOnFocusChangeListener { _, hasFocus ->
+                btn.imageTintList = if (hasFocus) blackCsl else whiteCsl
             }
         }
     }
 
     private fun setupRecycler() {
+        cardInfo = findViewById(R.id.cardInfo)
         recyclerEntries = findViewById(R.id.recyclerFolderSort)
         layoutEmpty = findViewById(R.id.layoutEmpty)
 
         recyclerEntries.layoutManager = LinearLayoutManager(this)
         adapter = FolderSortManagerAdapter(isTv) { entry ->
-            if (isTv) showDeleteEntryDialogTv(entry) else deleteEntry(entry)
+            showDeleteEntryDialog(entry)
         }
         recyclerEntries.adapter = adapter
     }
@@ -126,15 +124,17 @@ class FolderSortManagerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val entries = SortFilterPreferenceManager.getAllFolderEntries(this@FolderSortManagerActivity)
             withContext(Dispatchers.Main) {
-                if (entries.isEmpty()) {
+                val isEmpty = entries.isEmpty()
+                if (isEmpty) {
                     recyclerEntries.visibility = View.GONE
+                    cardInfo.visibility = View.GONE
+                    btnClearAll.visibility = View.GONE
                     layoutEmpty.visibility = View.VISIBLE
-                    // Hide Clear All when list is empty
-                    findViewById<MaterialButton?>(R.id.btnClearAll)?.visibility = View.GONE
                 } else {
                     recyclerEntries.visibility = View.VISIBLE
+                    cardInfo.visibility = View.VISIBLE
+                    btnClearAll.visibility = View.VISIBLE
                     layoutEmpty.visibility = View.GONE
-                    findViewById<MaterialButton?>(R.id.btnClearAll)?.visibility = View.VISIBLE
                     adapter.submitList(entries)
                 }
             }
@@ -145,7 +145,11 @@ class FolderSortManagerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             SortFilterPreferenceManager.clearFolderSpecific(this@FolderSortManagerActivity, entry.key)
             withContext(Dispatchers.Main) {
-                showSnackbar(getString(R.string.folder_sort_manager_deleted))
+                Toast.makeText(
+                    this@FolderSortManagerActivity,
+                    getString(R.string.folder_sort_manager_deleted, entry.displayPath),
+                    Toast.LENGTH_SHORT
+                ).show()
                 loadEntries()
             }
         }
@@ -155,7 +159,11 @@ class FolderSortManagerActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             SortFilterPreferenceManager.clearAllFolderSpecific(this@FolderSortManagerActivity)
             withContext(Dispatchers.Main) {
-                showSnackbar(getString(R.string.folder_sort_manager_deleted))
+                Toast.makeText(
+                    this@FolderSortManagerActivity,
+                    R.string.folder_sort_manager_cleared_all_toast,
+                    Toast.LENGTH_SHORT
+                ).show()
                 loadEntries()
             }
         }
@@ -163,39 +171,70 @@ class FolderSortManagerActivity : AppCompatActivity() {
 
     // ── Dialogs ───────────────────────────────────────────────────────────────
 
-    private fun showDeleteEntryDialogTv(entry: SortFilterPreferenceManager.FolderSortEntry) {
-        AlertDialog.Builder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.network_delete_confirm_title)
-            .setMessage(entry.displayPath)
-            .setPositiveButton(R.string.network_delete_confirm_yes) { _, _ -> deleteEntry(entry) }
-            .setNegativeButton(R.string.delete_cancel, null)
-            .show()
+    private fun showDeleteEntryDialog(entry: SortFilterPreferenceManager.FolderSortEntry) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_folder_sort_remove_confirm_tv
+            else R.layout.dialog_folder_sort_remove_confirm,
+            null
+        )
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtMessage)
+        val btnResetConfirm = dialogView.findViewById<View>(R.id.btnResetConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtMessage.text = getString(R.string.folder_sort_manager_remove_confirm_message, entry.displayPath)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnResetConfirm.setOnClickListener {
+            dialog.dismiss()
+            deleteEntry(entry)
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnCancel.requestFocus()
+        }
     }
 
     private fun showClearAllDialog() {
-        AlertDialog.Builder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.folder_sort_manager_clear_all)
-            .setMessage(R.string.folder_sort_manager_clear_confirm)
-            .setPositiveButton(R.string.network_delete_confirm_yes) { _, _ -> clearAll() }
-            .setNegativeButton(R.string.delete_cancel, null)
-            .show()
-    }
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_folder_sort_clear_all_confirm_tv
+            else R.layout.dialog_folder_sort_clear_all_confirm,
+            null
+        )
 
-    // ── Snackbar ──────────────────────────────────────────────────────────────
+        val btnClearConfirm = dialogView.findViewById<View>(R.id.btnClearConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
-    private fun showSnackbar(message: String) {
-        val rootView = findViewById<View>(R.id.main)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnClearConfirm.setOnClickListener {
+            dialog.dismiss()
+            clearAll()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
         if (isTv) {
-            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(getColor(R.color.tv_glass_white_10))
-                .setTextColor(getColor(R.color.tv_text_primary))
-                .show()
-        } else {
-            Snackbar.make(rootView, message, Snackbar.LENGTH_SHORT)
-                .setBackgroundTint(getColor(R.color.ufm_surface_variant))
-                .setTextColor(getColor(R.color.ufm_text_primary))
-                .setActionTextColor(getColor(R.color.ufm_primary))
-                .show()
+            btnCancel.requestFocus()
         }
     }
 }

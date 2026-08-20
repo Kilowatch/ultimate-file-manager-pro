@@ -1,6 +1,6 @@
 package za.kilowatch.ultimatefilemanager.settings
 
-import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.SortFilterPreferenceManager
 
@@ -52,6 +53,8 @@ class FolderSortManagerAdapter(
         private val txtSummary: TextView = itemView.findViewById(R.id.txtSortSummary)
         private val imgNetwork: View? = itemView.findViewById(R.id.imgNetworkBadge)
         private val btnDelete: ImageView = itemView.findViewById(R.id.btnDeleteFolderSort)
+        private val btnDeleteContainer: View? = itemView.findViewById(R.id.btnDeleteContainer)
+        private val card: MaterialCardView = itemView.findViewById(R.id.cardFolderSort)
 
         fun bind(entry: SortFilterPreferenceManager.FolderSortEntry) {
             val ctx = itemView.context
@@ -83,16 +86,59 @@ class FolderSortManagerAdapter(
             // Network badge visibility
             imgNetwork?.visibility = if (entry.isNetwork) View.VISIBLE else View.GONE
 
-            // Delete button
+            // Delete action
+            val deleteAction = { onDelete(entry) }
             btnDelete.contentDescription = ctx.getString(R.string.folder_sort_manager_delete_cd)
-            btnDelete.setOnClickListener { onDelete(entry) }
+            btnDelete.setOnClickListener { deleteAction() }
+            btnDeleteContainer?.setOnClickListener { deleteAction() }
 
-            // TV focus handling
             if (isTv) {
-                val accentCsl = ColorStateList.valueOf(ctx.getColor(R.color.tv_button_focused_yellow))
-                val defaultCsl = ColorStateList.valueOf(ctx.getColor(R.color.tv_text_primary))
-                btnDelete.setOnFocusChangeListener { _, hasFocus ->
-                    btnDelete.imageTintList = if (hasFocus) accentCsl else defaultCsl
+                card.setOnClickListener { deleteAction() }
+                setupTvCardFocus(card, btnDelete)
+            } else {
+                card.setCardBackgroundColor(ctx.getColor(R.color.mobile_glass_card))
+                txtPath.setTextColor(ctx.getColor(R.color.mobile_card_text_primary))
+                txtSummary.setTextColor(ctx.getColor(R.color.mobile_text_secondary))
+            }
+        }
+
+        private fun setupTvCardFocus(card: MaterialCardView, btnDelete: ImageView) {
+            val ctx = itemView.context
+            val yellowFill  = ctx.getColor(R.color.tv_button_focused_yellow)
+            val blackText   = ctx.getColor(R.color.tv_button_focused_yellow_text)
+            val glassColor  = ctx.getColor(R.color.tv_glass_white_10)
+            val primaryText = ctx.getColor(R.color.tv_text_primary)
+            val secondText  = ctx.getColor(R.color.tv_text_secondary)
+
+            // Initial
+            card.setCardBackgroundColor(glassColor)
+            txtPath.setTextColor(primaryText)
+            txtSummary.setTextColor(secondText)
+            btnDelete.setColorFilter(secondText)
+
+            card.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    card.setCardBackgroundColor(yellowFill)
+                    txtPath.setTextColor(blackText)
+                    txtSummary.setTextColor(Color.parseColor("#333333"))
+                    btnDelete.setColorFilter(blackText)
+                } else {
+                    card.setCardBackgroundColor(glassColor)
+                    txtPath.setTextColor(primaryText)
+                    txtSummary.setTextColor(secondText)
+                    btnDelete.setColorFilter(secondText)
+                }
+            }
+
+            btnDelete.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    btnDelete.setColorFilter(ctx.getColor(R.color.tv_error_red))
+                } else {
+                    if (card.hasFocus()) {
+                        btnDelete.setColorFilter(blackText)
+                    } else {
+                        btnDelete.setColorFilter(secondText)
+                    }
                 }
             }
         }

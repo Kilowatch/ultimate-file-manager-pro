@@ -7,19 +7,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="52dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingHorizontal="16dp"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/bg_reindex_option_card">
 
-    <ImageView
-        android:id="@+id/imgDriveIcon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/ic_storage_internal"
-        android:contentDescription="@null"
-        android:alpha="0.8" />
+    <FrameLayout
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_btn_icon_frosted">
+
+        <ImageView
+            android:id="@+id/imgDriveIcon"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_storage_internal"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtDriveName"
@@ -29,7 +36,7 @@
         android:layout_marginStart="12dp"
         android:textColor="@color/mobile_card_text_primary"
         android:textSize="15sp"
-        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif-bold"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Internal Storage" />

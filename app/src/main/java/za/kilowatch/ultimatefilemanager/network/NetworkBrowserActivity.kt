@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -58,6 +60,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 import za.kilowatch.ultimatefilemanager.util.NaturalSort
 import za.kilowatch.ultimatefilemanager.util.GoRoLog
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareActivity
+import za.kilowatch.ultimatefilemanager.settings.DefaultIconColorManager
 import za.kilowatch.ultimatefilemanager.ui.PremiumShareTvActivity
 import java.io.File
 import java.io.FileOutputStream
@@ -1857,107 +1860,178 @@ class NetworkBrowserActivity : AppCompatActivity() {
         updateFabPositions()
     }
 
+    private fun showFolderConfirmDialog(
+        heroIconRes: Int,
+        title: CharSequence,
+        subtitle: CharSequence,
+        folderName: String,
+        path: String,
+        description: CharSequence?,
+        actionText: CharSequence,
+        actionIconRes: Int = R.drawable.ic_check_circle,
+        onConfirm: () -> Unit
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_folder_confirm, null)
+        val imgHero = dialogView.findViewById<ImageView>(R.id.imgPickerConfirmHero)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtPickerConfirmTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtPickerConfirmSubtitle)
+        val imgCardIcon = dialogView.findViewById<ImageView>(R.id.imgPickerConfirmCardIcon)
+        val txtFolderName = dialogView.findViewById<TextView>(R.id.txtPickerConfirmFolderName)
+        val txtPath = dialogView.findViewById<TextView>(R.id.txtPickerConfirmPath)
+        val txtDesc = dialogView.findViewById<TextView>(R.id.txtPickerConfirmDesc)
+        val btnAction = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPickerConfirmAction)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnPickerConfirmCancel)
+
+        imgHero?.setImageResource(heroIconRes)
+        imgCardIcon?.setImageResource(heroIconRes)
+        txtTitle?.text = title
+        txtSubtitle?.text = subtitle
+        txtFolderName?.text = folderName
+        txtPath?.text = path
+
+        if (description != null) {
+            txtDesc?.text = description
+            txtDesc?.visibility = View.VISIBLE
+        } else {
+            txtDesc?.visibility = View.GONE
+        }
+
+        btnAction?.text = actionText
+        btnAction?.setIconResource(actionIconRes)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnAction?.setOnClickListener {
+            dialog.dismiss()
+            onConfirm()
+        }
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun showConfirmQuickTransferNetworkDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
         val fileCount = za.kilowatch.ultimatefilemanager.storage.FileClipboard.files.size
         val msgRes = if (quickTransferIsMove) R.string.quick_transfer_move_confirm else R.string.quick_transfer_copy_confirm
         val posRes = if (quickTransferIsMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here
         val iconRes = if (quickTransferIsMove) R.drawable.ic_move else R.drawable.ic_copy
-        MaterialAlertDialogBuilder(this)
-            .setTitle(if (quickTransferIsMove) R.string.action_move_to else R.string.action_copy_to)
-            .setMessage(getString(msgRes, fileCount) + "\n\n" + displayPath)
-            .setIcon(iconRes)
-            .setPositiveButton(posRes) { _, _ ->
-                // Execute the transfer and signal completion back to FileBrowserActivity
-                performPaste()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+
+        showFolderConfirmDialog(
+            heroIconRes = iconRes,
+            title = getString(if (quickTransferIsMove) R.string.action_move_to else R.string.action_copy_to),
+            subtitle = if (quickTransferIsMove) "Move files to network share" else "Copy files to network share",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(msgRes, fileCount),
+            actionText = getString(posRes),
+            actionIconRes = iconRes
+        ) {
+            performPaste()
+        }
     }
 
     private fun showConfirmShareDestNetworkDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.use_this_folder)
-            .setMessage(getString(R.string.share_receive_confirm, displayPath))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.use_this_folder),
+            subtitle = "Save Incoming Files",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.share_receive_confirm, displayPath),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmCompressNetworkFolderDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.compress_here)
-            .setMessage(getString(R.string.save_archive_to_path, displayPath))
-            .setIcon(R.drawable.ic_compress)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_COMPRESS_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_COMPRESS_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_compress,
+            title = getString(R.string.compress_here),
+            subtitle = "Save archive to network storage",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.save_archive_to_path, displayPath),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_compress
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_COMPRESS_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_COMPRESS_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmLocationPickerNetworkFolderDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.select_folder)
-            .setMessage(getString(R.string.use_network_folder_as_default_location, displayPath))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val type = when (share.type) {
-                    ShareType.SMB              -> "SMB"
-                    ShareType.FTP              -> "FTP"
-                    ShareType.SFTP, ShareType.SCP -> "SFTP"
-                    ShareType.TV               -> "TV"
-                    ShareType.GOOGLE_DRIVE     -> "GOOGLE_DRIVE"
-                    ShareType.DROPBOX          -> "DROPBOX"
-                    ShareType.ONEDRIVE         -> "ONEDRIVE"
-                    ShareType.AWS_S3           -> "AWS S3"
-                    ShareType.IDRIVE_E2        -> "S3 Storage"
-                    ShareType.WEBDAV           -> "WebDAV"
-                    ShareType.DLNA             -> "DLNA"
-                    ShareType.NFS              -> "NFS"
-                }
-                val scheme = when (share.type) {
-                    ShareType.SMB              -> "smb"
-                    ShareType.FTP              -> "ftp"
-                    ShareType.SFTP, ShareType.SCP -> "sftp"
-                    ShareType.TV               -> "tv"
-                    ShareType.GOOGLE_DRIVE     -> "gdrive"
-                    ShareType.DROPBOX          -> "dropbox"
-                    ShareType.ONEDRIVE         -> "onedrive"
-                    ShareType.AWS_S3           -> "s3"
-                    ShareType.IDRIVE_E2        -> "idrive-e2"
-                    ShareType.WEBDAV           -> "webdav"
-                    ShareType.DLNA             -> "dlna"
-                    ShareType.NFS              -> "nfs"
-                }
-
-                val result = Intent().apply {
-                    putExtra(RESULT_URI, "$scheme://${share.id}/$currentPath")
-                    putExtra(RESULT_LABEL, displayPath)
-                    putExtra(RESULT_TYPE, type)
-                    putExtra(RESULT_META_ID, share.id)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.select_folder),
+            subtitle = "Set Default Network Location",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.use_network_folder_as_default_location, displayPath),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val type = when (share.type) {
+                ShareType.SMB              -> "SMB"
+                ShareType.FTP              -> "FTP"
+                ShareType.SFTP, ShareType.SCP -> "SFTP"
+                ShareType.TV               -> "TV"
+                ShareType.GOOGLE_DRIVE     -> "GOOGLE_DRIVE"
+                ShareType.DROPBOX          -> "DROPBOX"
+                ShareType.ONEDRIVE         -> "ONEDRIVE"
+                ShareType.AWS_S3           -> "AWS S3"
+                ShareType.IDRIVE_E2        -> "S3 Storage"
+                ShareType.WEBDAV           -> "WebDAV"
+                ShareType.DLNA             -> "DLNA"
+                ShareType.NFS              -> "NFS"
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            val scheme = when (share.type) {
+                ShareType.SMB              -> "smb"
+                ShareType.FTP              -> "ftp"
+                ShareType.SFTP, ShareType.SCP -> "sftp"
+                ShareType.TV               -> "tv"
+                ShareType.GOOGLE_DRIVE     -> "gdrive"
+                ShareType.DROPBOX          -> "dropbox"
+                ShareType.ONEDRIVE         -> "onedrive"
+                ShareType.AWS_S3           -> "s3"
+                ShareType.IDRIVE_E2        -> "idrive-e2"
+                ShareType.WEBDAV           -> "webdav"
+                ShareType.DLNA             -> "dlna"
+                ShareType.NFS              -> "nfs"
+            }
+
+            val result = Intent().apply {
+                putExtra(RESULT_URI, "$scheme://${share.id}/$currentPath")
+                putExtra(RESULT_LABEL, displayPath)
+                putExtra(RESULT_TYPE, type)
+                putExtra(RESULT_META_ID, share.id)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun confirmSmartSortFolder() {
@@ -1971,115 +2045,135 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
     private fun showConfirmScannerNetworkFolderDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.scanner_use_this_folder)
-            .setMessage(getString(R.string.scanner_folder_picker_title) + "\n\n${share.name}$displayPath")
-            .setIcon(R.drawable.ic_scanner)
-            .setPositiveButton(R.string.scanner_use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_scanner,
+            title = getString(R.string.scanner_use_this_folder),
+            subtitle = "Document Scanner Network Destination",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.scanner_folder_picker_title),
+            actionText = getString(R.string.scanner_use_this_folder),
+            actionIconRes = R.drawable.ic_scanner
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmAutoBackupNetworkFolderDialog() {
-        MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.auto_backup_location_confirm_title)
-            .setMessage(R.string.auto_backup_location_confirm_message)
-            .setPositiveButton(R.string.auto_backup_select_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_cloud,
+            title = getString(R.string.auto_backup_location_confirm_title),
+            subtitle = "Automatic Backup Network Destination",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.auto_backup_location_confirm_message),
+            actionText = getString(R.string.auto_backup_select_folder),
+            actionIconRes = R.drawable.ic_cloud
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmImageCompressNetworkFolderDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.compress_here)
-            .setMessage(getString(R.string.save_archive_to_path, displayPath))
-            .setIcon(R.drawable.ic_compress_image)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_COMPRESS_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_COMPRESS_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_compress_image,
+            title = getString(R.string.compress_here),
+            subtitle = "Save compressed images to network storage",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.save_archive_to_path, displayPath),
+            actionText = getString(R.string.use_this_folder_image),
+            actionIconRes = R.drawable.ic_compress_image
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_COMPRESS_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_COMPRESS_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmGifCreatorNetworkFolderDialog() {
         val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.gif_creator_title)
-            .setMessage(getString(R.string.save_archive_to_path, displayPath))
-            .setIcon(R.drawable.ic_gif)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id.toString())
-                    putExtra(NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID, share.id)
-                    putExtra(RESULT_SELECTED_NET_PATH, currentPath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_gif,
+            title = getString(R.string.gif_creator_title),
+            subtitle = "Save created GIF to network storage",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.save_archive_to_path, displayPath),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_gif
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id.toString())
+                putExtra(NetworkBrowserActivity.RESULT_SELECTED_SHARE_ID, share.id)
+                putExtra(RESULT_SELECTED_NET_PATH, currentPath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmSyncPathDialog() {
-        val displayPath = if (currentPath.isEmpty()) "/" else "/$currentPath"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_sync_folder)
-            .setMessage(
-                getString(R.string.use_following_path_as_sync_destination, displayPath) +
-                getString(R.string.folder_sync_will_back_up_to_this_location_on_the_network_share)
-            )
-            .setIcon(R.drawable.ic_sync)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_sync,
+            title = getString(R.string.confirm_sync_folder),
+            subtitle = "Network Sync Destination",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.folder_sync_will_back_up_to_this_location_on_the_network_share),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_sync
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmAdvancedSyncPathDialog() {
-        val displayPath = if (currentPath.isEmpty()) "/" else "/$currentPath"
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_sync_folder)
-            .setMessage(
-                getString(R.string.use_following_path_as_sync_destination, displayPath) +
-                getString(R.string.folder_sync_will_back_up_to_this_location_on_the_network_share)
-            )
-            .setIcon(R.drawable.ic_sync_advanced)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
-                    putExtra(RESULT_SELECTED_SHARE_ID, share.id)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val displayPath = "${share.name}/${if (currentPath.isEmpty()) "" else currentPath}"
+        val folderName = if (currentPath.isNotEmpty()) currentPath.substringAfterLast('/') else share.name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_sync_advanced,
+            title = getString(R.string.confirm_sync_folder),
+            subtitle = "Advanced Sync Network Destination",
+            folderName = folderName,
+            path = displayPath,
+            description = getString(R.string.folder_sync_will_back_up_to_this_location_on_the_network_share),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_sync_advanced
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_SYNC_PATH, currentPath)
+                putExtra(RESULT_SELECTED_SHARE_ID, share.id)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showFavoriteDialog(file: NetworkFile) {
@@ -2767,31 +2861,36 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     name = getString(R.string.take_screenshot),
                     path = SCREENSHOT_PATH,
                     isDirectory = false,
-                    iconRes = R.drawable.ic_screenshot
+                    iconRes = R.drawable.ic_screenshot,
+                    subtitle = getString(R.string.take_screenshot_subtitle)
                 ),
                 NetworkFile(
                     name = getString(R.string.record_screen),
                     path = RECORD_SCREEN_PATH,
                     isDirectory = false,
-                    iconRes = R.drawable.ic_record_screen
+                    iconRes = R.drawable.ic_record_screen,
+                    subtitle = getString(R.string.record_screen_subtitle)
                 ),
                 NetworkFile(
                     name = getString(R.string.sideload_apk),
                     path = SIDELOAD_APK_PATH,
                     isDirectory = false,
-                    iconRes = R.drawable.ic_apps
+                    iconRes = R.drawable.ic_apps,
+                    subtitle = getString(R.string.sideload_apk_subtitle)
                 ),
                 NetworkFile(
                     name = getString(R.string.sideload_xapk),
                     path = SIDELOAD_XAPK_PATH,
                     isDirectory = false,
-                    iconRes = R.drawable.ic_apps
+                    iconRes = R.drawable.ic_apps,
+                    subtitle = getString(R.string.sideload_xapk_subtitle)
                 ),
                 NetworkFile(
                     name = getString(R.string.transfer_settings),
                     path = TRANSFER_SETTINGS_PATH,
                     isDirectory = false,
-                    iconRes = R.drawable.ic_sync
+                    iconRes = R.drawable.ic_sync,
+                    subtitle = getString(R.string.transfer_settings_action_subtitle)
                 ),
                 NetworkFile(
                     name = getUseRemoteLabel(),
@@ -2801,7 +2900,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     isToggle = true,
                     isToggled = RemoteTransportPrefs(this).isRemoteEnabled(
                         intent.getStringExtra(EXTRA_PAIRED_DEVICE_ID) ?: ""
-                    )
+                    ),
+                    subtitle = getString(R.string.use_remote_disabled_subtitle)
                 )
             )
         } else {
@@ -2854,37 +2954,103 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private fun handleUseRemoteToggle(deviceId: String, enable: Boolean) {
         if (enable) {
             val device = PairingManager.getInstance(this).getPairedDevice(deviceId)
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.use_remote_auth_title)
-                .setMessage(getString(R.string.use_remote_auth_message, device?.name ?: ""))
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    lifecycleScope.launch {
-                        val adbManager = AdbManager.getInstance()
-                        val success = withContext(Dispatchers.IO) {
-                            adbManager.connect(share.host, 5555)
-                        }
-                        withContext(Dispatchers.Main) {
-                            if (success) {
-                                RemoteTransportPrefs(this@NetworkBrowserActivity).setRemoteEnabled(deviceId, true)
-                                adbManager.disconnectExplicit()
-                                loadDirectory()
-                            } else {
-                                MaterialAlertDialogBuilder(this@NetworkBrowserActivity, R.style.UFM_Dialog)
-                                    .setTitle(R.string.use_remote_failed_title)
-                                    .setMessage(R.string.use_remote_failed_message)
-                                    .setPositiveButton(R.string.ok, null)
-                                    .show()
-                                loadDirectory()
+            val tvName = device?.name ?: share.name.ifEmpty { share.host }
+
+            fun attemptAdbRemoteConnect() {
+                // Show connecting progress dialog
+                val progressView = layoutInflater.inflate(R.layout.dialog_connecting_progress, null)
+                val tvTitle = progressView.findViewById<TextView>(R.id.tvConnectingTitle)
+                val tvStatus = progressView.findViewById<TextView>(R.id.tvConnectingStatus)
+                val btnCancelProgress = progressView.findViewById<View>(R.id.btnCancelConnecting)
+                tvTitle?.text = getString(R.string.use_remote_disabled)
+                tvStatus?.text = getString(R.string.connecting_to_device, tvName)
+
+                val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(progressView)
+                    .setCancelable(false)
+                    .create()
+                progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+                var isCancelled = false
+                btnCancelProgress?.setOnClickListener {
+                    isCancelled = true
+                    progressDialog.dismiss()
+                    loadDirectory()
+                }
+                progressDialog.show()
+
+                lifecycleScope.launch {
+                    val adbManager = AdbManager.getInstance()
+                    val success = withContext(Dispatchers.IO) {
+                        adbManager.connect(share.host, 5555)
+                    }
+                    if (isCancelled) return@launch
+
+                    withContext(Dispatchers.Main) {
+                        progressDialog.dismiss()
+                        if (success) {
+                            RemoteTransportPrefs(this@NetworkBrowserActivity).setRemoteEnabled(deviceId, true)
+                            adbManager.disconnectExplicit()
+                            showPremiumSnackbar(getString(R.string.use_remote_enabled))
+                            loadDirectory()
+                        } else {
+                            showAdbRemoteFailedDialog(deviceId, tvName) {
+                                attemptAdbRemoteConnect()
                             }
+                            loadDirectory()
                         }
                     }
                 }
-                .setNegativeButton(R.string.cancel) { _, _ -> loadDirectory() }
-                .show()
+            }
+
+            val authView = layoutInflater.inflate(R.layout.dialog_wifi_remote_auth, null)
+            val tvSubtitle = authView.findViewById<TextView>(R.id.tvRemoteTargetTv)
+            val btnConnect = authView.findViewById<View>(R.id.btnConnect)
+            val btnCancel = authView.findViewById<View>(R.id.btnCancel)
+
+            tvSubtitle?.text = "Connect directly to $tvName using ADB remote control."
+
+            val authDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(authView)
+                .create()
+            authDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+            btnConnect?.setOnClickListener {
+                authDialog.dismiss()
+                attemptAdbRemoteConnect()
+            }
+            btnCancel?.setOnClickListener {
+                authDialog.dismiss()
+                loadDirectory()
+            }
+            authDialog.setOnCancelListener {
+                loadDirectory()
+            }
+            authDialog.show()
         } else {
             RemoteTransportPrefs(this).setRemoteEnabled(deviceId, false)
             loadDirectory()
         }
+    }
+
+    private fun showAdbRemoteFailedDialog(deviceId: String, tvName: String, onRetry: () -> Unit) {
+        val failedView = layoutInflater.inflate(R.layout.dialog_wifi_remote_failed, null)
+        val btnRetry = failedView.findViewById<View>(R.id.btnRetry)
+        val btnDismiss = failedView.findViewById<View>(R.id.btnDismiss)
+
+        val failedDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(failedView)
+            .create()
+        failedDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnRetry?.setOnClickListener {
+            failedDialog.dismiss()
+            onRetry()
+        }
+        btnDismiss?.setOnClickListener {
+            failedDialog.dismiss()
+        }
+        failedDialog.show()
     }
 
     private fun showSortFilterSheet() {
@@ -6381,17 +6547,49 @@ class NetworkBrowserActivity : AppCompatActivity() {
     // ── Sideload APK / XAPK ──────────────────────────────────────────────────
 
     /**
-     * Launches the global StorageBrowserActivity in picker mode, filtered
-     * to only show files matching [extensions] (e.g. "apk" or "xapk,apks").
+     * Shows a user-friendly instruction guide dialog before launching
+     * the file picker to choose an APK or XAPK package.
      */
     private fun launchFilePicker(extensions: String) {
-        pendingSideloadType = extensions.split(",").first().trim() // "apk" or "xapk"
+        val isXapk = extensions.contains("xapk")
+        val dialogView = layoutInflater.inflate(R.layout.dialog_sideload_guide, null)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvSideloadTitle)
+        val tvDesc = dialogView.findViewById<TextView>(R.id.tvSideloadDesc)
+        val tvStep1 = dialogView.findViewById<TextView>(R.id.tvSideloadStep1)
+        val btnProceed = dialogView.findViewById<View>(R.id.btnProceed)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
 
-        val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-            putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
-            putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, extensions)
+        if (isXapk) {
+            tvTitle?.text = getString(R.string.sideload_xapk)
+            tvDesc?.text = getString(R.string.sideload_dialog_desc_xapk)
+            tvStep1?.text = getString(R.string.sideload_step_1_xapk)
+        } else {
+            tvTitle?.text = getString(R.string.sideload_apk)
+            tvDesc?.text = getString(R.string.sideload_dialog_desc_apk)
+            tvStep1?.text = getString(R.string.sideload_step_1_apk)
         }
-        sideloadPickerLauncher.launch(intent)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnProceed?.setOnClickListener {
+            dialog.dismiss()
+            pendingSideloadType = extensions.split(",").first().trim() // "apk" or "xapk"
+
+            val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                putExtra(FileBrowserActivity.EXTRA_PICKER_MODE, true)
+                putExtra(FileBrowserActivity.EXTRA_PICKER_EXTENSIONS, extensions)
+            }
+            sideloadPickerLauncher.launch(intent)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     /**
@@ -6533,36 +6731,36 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun showEnableAdbDialog() {
-        MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(R.string.adb_required_title)
-            .setMessage(R.string.adb_required_to_take_screenshots)
-            .setIcon(R.drawable.ic_screenshot)
-            .setPositiveButton(R.string.action_done, null)
-            .show()
-            .also { applyDarkDialogStyle(it) }
+        val dialogView = layoutInflater.inflate(R.layout.dialog_enable_adb, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialogView.findViewById<View>(R.id.btnDone)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun startAdbScreenshot() {
         val adbManager = AdbManager.getInstance(this)
 
-        // Build a status dialog with Cancel
-        val statusText = TextView(this).apply {
-            text = getString(R.string.adb_terminal_status_connecting)
-            textSize = 14f
-            setPadding(64, 32, 64, 32)
-        }
-        val dialog = MaterialAlertDialogBuilder(this, com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
-            .setTitle(R.string.take_screenshot)
-            .setIcon(R.drawable.ic_screenshot)
-            .setView(statusText)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_screenshot_progress, null)
+        val tvStatus = dialogView.findViewById<TextView>(R.id.tvScreenshotStatus)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelCapture)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
             .setCancelable(false)
-            .setNegativeButton(R.string.delete_cancel) { d, _ ->
-                screenshotJob?.cancel()
-                adbManager.disconnectExplicit()
-                d.dismiss()
-            }
-            .show()
-            .also { applyDarkDialogStyle(it) }
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnCancel?.setOnClickListener {
+            screenshotJob?.cancel()
+            adbManager.disconnectExplicit()
+            dialog.dismiss()
+        }
+        dialog.show()
 
         val host = share.host
         val port = 5555
@@ -6580,7 +6778,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                 }
 
                 withContext(Dispatchers.Main) {
-                    statusText.setText(R.string.connected_capturing_screen)
+                    tvStatus?.setText(R.string.connected_capturing_screen)
                 }
 
                 // 2. Run screencap via ADB exec (shell user has framebuffer access)
@@ -6621,7 +6819,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
 
                 // 4. Save to Pictures/Screenshots/
                 withContext(Dispatchers.Main) {
-                    statusText.setText(R.string.saving_screenshot)
+                    tvStatus?.setText(R.string.saving_screenshot)
                 }
 
                 val savedFileName = withContext(Dispatchers.IO) {
@@ -6699,14 +6897,16 @@ class NetworkBrowserActivity : AppCompatActivity() {
             setContentView(sheetView)
             setCancelable(false)
         }
+        bottomSheet.window?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.background =
+            android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT)
 
-        val cardMicToggle = sheetView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardMicToggle)
+        val cardMicToggle = sheetView.findViewById<View>(R.id.cardMicToggle)
         val imgMicIcon = sheetView.findViewById<ImageView>(R.id.imgMicIcon)
         val tvMicDesc = sheetView.findViewById<TextView>(R.id.tvMicDesc)
         val switchMicAudio = sheetView.findViewById<com.google.android.material.switchmaterial.SwitchMaterial>(R.id.switchMicAudio)
 
         val layoutConfigContainer = sheetView.findViewById<View>(R.id.layoutConfigContainer)
-        val cardActiveRecording = sheetView.findViewById<com.google.android.material.card.MaterialCardView>(R.id.cardActiveRecording)
+        val cardActiveRecording = sheetView.findViewById<View>(R.id.cardActiveRecording)
         val tvCountdownClock = sheetView.findViewById<TextView>(R.id.tvCountdownClock)
         val tvRecordingStatusDetail = sheetView.findViewById<TextView>(R.id.tvRecordingStatusDetail)
 
@@ -6722,12 +6922,13 @@ class NetworkBrowserActivity : AppCompatActivity() {
         fun updateMicUI() {
             if (isAudioEnabled) {
                 imgMicIcon.setImageResource(R.drawable.ic_mic)
-                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_primary))
+                val accent = DefaultIconColorManager.getMobileIconTint(this@NetworkBrowserActivity)
+                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(accent)
                 tvMicDesc.text = getString(R.string.record_screen_audio_enabled)
                 switchMicAudio.isChecked = true
             } else {
                 imgMicIcon.setImageResource(R.drawable.ic_mic_off)
-                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_text_secondary))
+                imgMicIcon.imageTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.mobile_text_secondary))
                 tvMicDesc.text = getString(R.string.record_screen_audio_disabled)
                 switchMicAudio.isChecked = false
             }
@@ -6755,7 +6956,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     c.setTypeface(null, android.graphics.Typeface.BOLD)
                 } else {
                     c.setBackgroundResource(R.drawable.bg_chip_unselected)
-                    c.setTextColor(getColor(R.color.ufm_text_primary))
+                    c.setTextColor(getColor(R.color.mobile_text_primary))
                     c.setTypeface(null, android.graphics.Typeface.NORMAL)
                 }
             }
@@ -6880,7 +7081,8 @@ class NetworkBrowserActivity : AppCompatActivity() {
                     btnExit.visibility = View.GONE
 
                     btnStartStop.text = getString(R.string.record_screen_stop)
-                    btnStartStop.backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.ufm_error))
+                    btnStartStop.setIconResource(R.drawable.ic_stop)
+                    btnStartStop.backgroundTintList = android.content.res.ColorStateList.valueOf(0xFFD32F2F.toInt())
 
                     // Clean slate: best-effort cleanup of stale screenrecord processes
                     withContext(Dispatchers.IO) {

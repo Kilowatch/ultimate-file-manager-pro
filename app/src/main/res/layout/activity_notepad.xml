@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mobile Notepad — dark glassmorphism design -->
+<!-- Mobile Notepad — Premium Dark Glassmorphic Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,46 +10,42 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".notepad.NotepadActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/mobile_icon_tint" />
 
-            <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/cd_back"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                app:tint="@color/mobile_icon_tint" />
-        </FrameLayout>
-
+        <!-- Title -->
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_md"
+            android:layout_marginStart="8dp"
             android:textColor="@color/mobile_text_primary"
             android:textSize="18sp"
-            android:fontFamily="sans-serif-black"
+            android:fontFamily="sans-serif-bold"
             android:singleLine="true"
             android:ellipsize="middle"
             tools:text="Notepad.txt" />
@@ -57,44 +53,44 @@
         <!-- New Document button -->
         <ImageView
             android:id="@+id/btnNewDoc"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:padding="10dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:padding="8dp"
             android:src="@drawable/ic_file_text"
             android:contentDescription="@string/new_document"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@android:color/white" />
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/mobile_icon_tint" />
 
         <!-- Save button -->
         <ImageView
             android:id="@+id/btnSave"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:padding="10dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:padding="8dp"
             android:src="@drawable/ic_save"
             android:contentDescription="@string/save_note"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@android:color/white" />
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="?attr/colorPrimary" />
 
         <!-- Clear text button -->
         <ImageView
             android:id="@+id/btnClear"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="8dp"
-            android:padding="10dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="4dp"
+            android:padding="8dp"
             android:src="@drawable/ic_delete"
             android:contentDescription="@string/clear_text"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
-            app:tint="@android:color/white" />
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/ufm_denied" />
     </LinearLayout>
 
     <!-- Loading progress -->
@@ -108,15 +104,15 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-    <!-- Word/Character count bar -->
+    <!-- Word/Character count stats pill bar -->
     <LinearLayout
         android:id="@+id/countBar"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
+        android:layout_height="32dp"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
-        android:background="#0DFFFFFF"
+        android:background="#0AFFFFFF"
         app:layout_constraintTop_toBottomOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -126,18 +122,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#66FFFFFF"
-            android:textSize="11sp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             tools:text="0 words" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="14dp"
+            android:background="#26FFFFFF" />
 
         <TextView
             android:id="@+id/txtCharCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#66FFFFFF"
-            android:textSize="11sp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
             tools:text="0 characters" />
     </LinearLayout>
@@ -148,10 +151,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="16dp"
-        android:background="#1A000000"
+        android:background="@null"
         android:fontFamily="monospace"
         android:textSize="14sp"
         android:textColor="@color/mobile_text_primary"
+        android:textColorHint="@color/mobile_text_secondary"
         android:inputType="textMultiLine|textNoSuggestions"
         android:gravity="start|top"
         android:scrollbars="vertical"

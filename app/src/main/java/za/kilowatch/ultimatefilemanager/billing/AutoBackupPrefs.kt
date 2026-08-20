@@ -205,8 +205,14 @@ object AutoBackupPrefs {
         getPrefs(context).edit().putString(KEY_CUSTOM_NET_PATH, netPath).apply()
     }
 
-    fun isCustomLocationSet(context: Context): Boolean =
-        getCustomLocationType(context).isNotEmpty()
+    fun isCustomLocationSet(context: Context): Boolean {
+        val type = getCustomLocationType(context)
+        return when (type) {
+            "local" -> getCustomLocalPath(context).isNotEmpty()
+            "network" -> getCustomShareId(context).isNotEmpty()
+            else -> false
+        }
+    }
 
     fun clearCustomLocation(context: Context) {
         getPrefs(context).edit()
@@ -223,18 +229,25 @@ object AutoBackupPrefs {
      */
     fun getBackupDirectoryDisplayPath(context: Context): String {
         return when (getCustomLocationType(context)) {
-            "local" -> getCustomLocalPath(context)
+            "local" -> {
+                val path = getCustomLocalPath(context)
+                if (path.isNotEmpty()) path else "Documents/UFM/"
+            }
             "network" -> {
                 val shareId = getCustomShareId(context)
                 val netPath = getCustomNetPath(context)
-                val shareName = try {
-                    val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
-                    val share = repo.getById(shareId)
-                    share?.name ?: shareId
-                } catch (e: Exception) {
-                    shareId
+                if (shareId.isNotEmpty()) {
+                    val shareName = try {
+                        val repo = za.kilowatch.ultimatefilemanager.network.NetworkShareRepository.getInstance(context)
+                        val share = repo.getById(shareId)
+                        share?.name ?: shareId
+                    } catch (e: Exception) {
+                        shareId
+                    }
+                    "$shareName: $netPath"
+                } else {
+                    "Documents/UFM/"
                 }
-                "$shareName: $netPath"
             }
             else -> "Documents/UFM/"
         }

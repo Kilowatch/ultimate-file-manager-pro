@@ -10523,14 +10523,8 @@ UFM 스프레드시트 뷰어
 \n
 폴더를 열고 정렬 및 필터를 탭한 다음 \"이 폴더\"를 선택하여 재정의를 만드세요.
 </string>
-    <string name="folder_sort_manager_clear_all">
-모두 지우기
-</string>
     <string name="folder_sort_manager_clear_confirm">
 모든 폴더별 정렬 재정의를 제거하시겠습니까? 폴더는 전역 정렬 설정으로 되돌아갑니다.
-</string>
-    <string name="folder_sort_manager_deleted">
-재정의가 제거됨
 </string>
     <string name="folder_sort_network_badge">
 네트워크 / 온라인

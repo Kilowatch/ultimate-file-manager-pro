@@ -10523,14 +10523,8 @@ Keine ordnerspezifischen Sortiereinstellungen gespeichert.\n
 \n
 Öffnen Sie einen Ordner, tippen Sie auf Sortieren &amp; Filtern und wählen Sie \"Dieser Ordner\", um eine Überschreibung zu erstellen.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Alle löschen
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Alle ordnerspezifischen Sortierüberschreibungen entfernen? Ordner werden auf die globale Sortiereinstellung zurückgesetzt.
-</string>
-    <string name="folder_sort_manager_deleted">
-Überschreibung entfernt
 </string>
     <string name="folder_sort_network_badge">
 Netzwerk / Online

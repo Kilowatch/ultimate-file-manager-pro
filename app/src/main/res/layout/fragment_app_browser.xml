@@ -11,11 +11,10 @@
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,28 +22,21 @@
 
         <ImageView
             android:id="@+id/btnDrivePicker"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
             android:src="@drawable/ic_apps"
             android:contentDescription="@string/select_storage"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_header_action_ripple"
             app:tint="@color/mobile_icon_tint" />
-
-        <View
-            android:id="@+id/dividerHeader"
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="?attr/colorPrimary"
-            android:alpha="0.6" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -53,9 +45,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/perm_query_apps_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-black"
-                android:letterSpacing="0.01"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -66,32 +57,32 @@
                 android:text="@string/apps_tile_subtitle"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
-                android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="end" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/btnSortApp"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
             android:src="@drawable/ic_sort"
+            android:contentDescription="@string/sort_title"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginEnd="@dimen/margin_sm"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_header_action_ripple"
             app:tint="@color/mobile_icon_tint" />
 
         <ImageView
             android:id="@+id/btnRefreshDebloat"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="12dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
             android:src="@drawable/ic_refresh"
+            android:contentDescription="@string/refresh_debloat_list"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_icon_circle_accent"
+            android:background="@drawable/bg_header_action_ripple"
             app:tint="@color/mobile_icon_tint"
             android:visibility="gone" />
 
@@ -100,14 +91,15 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="@dimen/margin_sm"
-        android:background="@color/mobile_glass_header"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_reindex_option_card"
         app:tabTextColor="@color/mobile_text_secondary"
-        app:tabSelectedTextColor="@color/mobile_text_primary"
+        app:tabSelectedTextColor="?attr/colorPrimary"
         app:tabIndicatorColor="?attr/colorPrimary"
         app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabRippleColor="@color/mobile_glass_ripple"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
@@ -117,19 +109,19 @@
     <EditText
         android:id="@+id/editSearch"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="@dimen/margin_sm"
-        android:paddingHorizontal="12dp"
+        android:layout_height="46dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="14dp"
         android:hint="@string/search_apps"
         android:textColor="@color/mobile_card_text_primary"
         android:textColorHint="@color/mobile_card_text_secondary"
         android:textSize="14sp"
-        android:background="@color/mobile_glass_card"
+        android:background="@drawable/bg_reindex_option_card"
         android:inputType="text"
         android:maxLines="1"
         android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="@dimen/margin_sm"
+        android:drawablePadding="10dp"
         android:drawableTint="@color/mobile_card_text_secondary"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintStart_toStartOf="parent"

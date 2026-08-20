@@ -29,10 +29,14 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 class ExportDetailsActivity : AppCompatActivity() {
 
     private var isTv = false
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
     private lateinit var progressBar: ProgressBar
     private lateinit var tvError: TextView
     private lateinit var layoutContent: View
@@ -48,6 +52,11 @@ class ExportDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
+
+        if (savedInstanceState != null) {
+            handledFontChange = savedInstanceState.getBoolean("font_handled", false)
+            handledLocaleChange = savedInstanceState.getBoolean("locale_handled", false)
+        }
 
         if (isTv) {
             setContentView(R.layout.activity_export_details_tv)
@@ -69,6 +78,26 @@ class ExportDetailsActivity : AppCompatActivity() {
         loadExportableItems()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
     private fun setupViews() {
         progressBar = findViewById(R.id.progressBar)
         tvError = findViewById(R.id.tvError)
@@ -78,8 +107,8 @@ class ExportDetailsActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -96,6 +125,11 @@ class ExportDetailsActivity : AppCompatActivity() {
 
         if (isTv) {
             setupTvButtonFocus(btnExportConfirm)
+        } else {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            btnExportConfirm.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            btnExportConfirm.setTextColor(onPrimaryColor)
         }
     }
 
@@ -135,9 +169,9 @@ class ExportDetailsActivity : AppCompatActivity() {
     }
 
     private fun performExport(items: List<BackupItem>) {
-        val isTv = DeviceUtils.isTvDevice(this)
+        val isTvDevice = DeviceUtils.isTvDevice(this)
         val dialogView = LayoutInflater.from(this).inflate(
-            if (isTv) R.layout.dialog_backup_password_tv else R.layout.dialog_backup_password,
+            if (isTvDevice) R.layout.dialog_backup_password_tv else R.layout.dialog_backup_password,
             null
         )
 
@@ -154,6 +188,13 @@ class ExportDetailsActivity : AppCompatActivity() {
             .create()
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        if (!isTvDevice) {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            (btnEncrypt as? MaterialButton)?.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            (btnEncrypt as? MaterialButton)?.setTextColor(onPrimaryColor)
+        }
 
         btnEncrypt.setOnClickListener {
             val pw = edtPassword.text?.toString() ?: ""
@@ -174,17 +215,12 @@ class ExportDetailsActivity : AppCompatActivity() {
 
         btnSkip.setOnClickListener {
             dialog.dismiss()
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.backup_password_skip_title)
-                .setMessage(R.string.backup_password_skip_warning)
-                .setPositiveButton(R.string.save_unencrypted) { _, _ -> doExport(items, null) }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            showSkipConfirmationDialog(items)
         }
 
         dialog.show()
 
-        if (isTv) {
+        if (isTvDevice) {
             val yellow = getColor(R.color.tv_button_focused_yellow)
             val black = getColor(R.color.tv_button_focused_yellow_text)
             val white = getColor(R.color.tv_text_primary)
@@ -208,6 +244,42 @@ class ExportDetailsActivity : AppCompatActivity() {
             }
             btnEncrypt.requestFocus()
         }
+    }
+
+    private fun showSkipConfirmationDialog(items: List<BackupItem>) {
+        val isTvDevice = DeviceUtils.isTvDevice(this)
+        val view = LayoutInflater.from(this).inflate(
+            if (isTvDevice) R.layout.dialog_backup_skip_confirm_tv else R.layout.dialog_backup_skip_confirm,
+            null
+        )
+
+        val confirmDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(view)
+            .setCancelable(true)
+            .create()
+
+        confirmDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
+        val btnConfirmSkip = view.findViewById<Button>(R.id.btnConfirmSkip)
+
+        if (!isTvDevice) {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            (btnConfirmSkip as? MaterialButton)?.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            (btnConfirmSkip as? MaterialButton)?.setTextColor(onPrimaryColor)
+        }
+
+        btnCancel.setOnClickListener {
+            confirmDialog.dismiss()
+        }
+
+        btnConfirmSkip.setOnClickListener {
+            confirmDialog.dismiss()
+            doExport(items, null)
+        }
+
+        confirmDialog.show()
     }
 
     private fun doExport(items: List<BackupItem>, password: String?) {
@@ -243,10 +315,10 @@ class ExportDetailsActivity : AppCompatActivity() {
 
         btn.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(yellowFill)
+                btn.backgroundTintList = ColorStateList.valueOf(yellowFill)
                 btn.setTextColor(blackText)
             } else {
-                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(defaultBg)
+                btn.backgroundTintList = ColorStateList.valueOf(defaultBg)
                 btn.setTextColor(defaultText)
             }
         }

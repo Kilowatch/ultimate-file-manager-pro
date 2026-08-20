@@ -31,6 +31,7 @@ import kotlinx.coroutines.withContext
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 import java.io.File
 import javax.crypto.AEADBadTagException
 
@@ -41,6 +42,9 @@ class ImportDetailsActivity : AppCompatActivity() {
     }
 
     private var isTv = false
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
     private var backupPath: String? = null
     private var parsedDetails: BackupDetails? = null
     private var importPasswordAttempts = 0
@@ -62,6 +66,11 @@ class ImportDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
+
+        if (savedInstanceState != null) {
+            handledFontChange = savedInstanceState.getBoolean("font_handled", false)
+            handledLocaleChange = savedInstanceState.getBoolean("locale_handled", false)
+        }
 
         if (isTv) {
             setContentView(R.layout.activity_import_details_tv)
@@ -89,6 +98,26 @@ class ImportDetailsActivity : AppCompatActivity() {
         loadBackupFile()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
     private fun setupViews() {
         progressBar = findViewById(R.id.progressBar)
         tvError = findViewById(R.id.tvError)
@@ -105,8 +134,8 @@ class ImportDetailsActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val yellowCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val yellowCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) yellowCsl else whiteCsl
@@ -121,11 +150,16 @@ class ImportDetailsActivity : AppCompatActivity() {
 
         btnImportConfirm.setOnClickListener {
             val details = parsedDetails ?: return@setOnClickListener
-            performRestore(details)
+            showImportConfirmationDialog(details)
         }
 
         if (isTv) {
             setupTvButtonFocus(btnImportConfirm)
+        } else {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            btnImportConfirm.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            btnImportConfirm.setTextColor(onPrimaryColor)
         }
     }
 
@@ -177,9 +211,9 @@ class ImportDetailsActivity : AppCompatActivity() {
     }
 
     private fun showImportPasswordDialog(bytes: ByteArray, onPassword: (String) -> Unit) {
-        val isTv = DeviceUtils.isTvDevice(this)
+        val isTvDevice = DeviceUtils.isTvDevice(this)
         val dialogView = LayoutInflater.from(this).inflate(
-            if (isTv) R.layout.dialog_backup_import_password_tv
+            if (isTvDevice) R.layout.dialog_backup_import_password_tv
             else R.layout.dialog_backup_import_password,
             null
         )
@@ -196,6 +230,13 @@ class ImportDetailsActivity : AppCompatActivity() {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        if (!isTvDevice) {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            (btnDecrypt as? MaterialButton)?.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            (btnDecrypt as? MaterialButton)?.setTextColor(onPrimaryColor)
+        }
+
         btnDecrypt.setOnClickListener {
             val pw = edtPassword.text?.toString() ?: ""
             if (pw.isEmpty()) return@setOnClickListener
@@ -205,7 +246,7 @@ class ImportDetailsActivity : AppCompatActivity() {
 
         dialog.show()
 
-        if (isTv) {
+        if (isTvDevice) {
             val yellow = getColor(R.color.tv_button_focused_yellow)
             val black = getColor(R.color.tv_button_focused_yellow_text)
             btnDecrypt.backgroundTintList = ColorStateList.valueOf(yellow)
@@ -290,6 +331,47 @@ class ImportDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun showImportConfirmationDialog(details: BackupDetails) {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_backup_import_confirm_tv
+            else R.layout.dialog_backup_import_confirm,
+            null
+        )
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        if (!isTv) {
+            val primaryColor = ThemeColors.primary(this)
+            val onPrimaryColor = ThemeColors.onPrimary(this)
+            (btnConfirm as? MaterialButton)?.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            (btnConfirm as? MaterialButton)?.setTextColor(onPrimaryColor)
+            (btnConfirm as? MaterialButton)?.iconTint = ColorStateList.valueOf(onPrimaryColor)
+        }
+
+        btnConfirm.setOnClickListener {
+            dialog.dismiss()
+            performRestore(details)
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            btnConfirm.requestFocus()
+        }
+    }
+
     private fun performRestore(details: BackupDetails) {
         progressBar.visibility = View.VISIBLE
         layoutContent.visibility = View.GONE
@@ -347,10 +429,10 @@ class ImportDetailsActivity : AppCompatActivity() {
 
         btn.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(yellowFill)
+                btn.backgroundTintList = ColorStateList.valueOf(yellowFill)
                 btn.setTextColor(blackText)
             } else {
-                btn.backgroundTintList = android.content.res.ColorStateList.valueOf(defaultBg)
+                btn.backgroundTintList = ColorStateList.valueOf(defaultBg)
                 btn.setTextColor(defaultText)
             }
         }

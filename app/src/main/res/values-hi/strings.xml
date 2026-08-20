@@ -10523,14 +10523,8 @@ UFM स्प्रेडशीट व्यूअर
 \n
 एक फ़ोल्डर खोलें, सॉर्ट और फ़िल्टर पर टैप करें और ओवरराइड बनाने के लिए \"यह फ़ोल्डर\" चुनें।
 </string>
-    <string name="folder_sort_manager_clear_all">
-सभी साफ़ करें
-</string>
     <string name="folder_sort_manager_clear_confirm">
 सभी फ़ोल्डर-विशिष्ट सॉर्ट ओवरराइड हटाएं? फ़ोल्डर वैश्विक सॉर्ट सेटिंग पर वापस आ जाएंगे।
-</string>
-    <string name="folder_sort_manager_deleted">
-ओवरराइड हटा दिया गया
 </string>
     <string name="folder_sort_network_badge">
 नेटवर्क / ऑनलाइन

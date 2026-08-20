@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:foreground="@drawable/selector_tv_card"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp">
+
+        <!-- Drive Icon Hero Badge -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/imgIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_storage_usb"
+                app:tint="@color/tv_accent"
+                android:importantForAccessibility="no" />
+        </FrameLayout>
+
+        <!-- Title & Subtitle -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="16dp">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="SanDisk Ultra" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="2dp"
+                tools:text="Originally: USB Drive 1" />
+        </LinearLayout>
+
+        <!-- Status Pill & Size -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginEnd="12dp">
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-bold"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:background="@drawable/bg_status_badge"
+                android:textColor="@color/white"
+                tools:text="Online" />
+
+            <TextView
+                android:id="@+id/txtSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp"
+                tools:text="128 GB" />
+        </LinearLayout>
+
+        <!-- Edit Icon Button -->
+        <ImageView
+            android:id="@+id/btnEditDrive"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/tv_text_secondary"
+            android:background="@drawable/selector_tv_icon_btn"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="@string/rename_action" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -179,13 +179,36 @@ class NotepadActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (isModified) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.unsaved_changes_title)
-                .setMessage(R.string.unsaved_changes_message)
-                .setPositiveButton(R.string.save) { _, _ -> onSavePressed() }
-                .setNegativeButton(R.string.btn_discard) { _, _ -> finish() }
-                .setNeutralButton(android.R.string.cancel, null)
-                .show()
+            if (isTv) {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.unsaved_changes_title)
+                    .setMessage(R.string.unsaved_changes_message)
+                    .setPositiveButton(R.string.save) { _, _ -> onSavePressed() }
+                    .setNegativeButton(R.string.btn_discard) { _, _ -> finish() }
+                    .setNeutralButton(android.R.string.cancel, null)
+                    .show()
+            } else {
+                val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_unsaved, null)
+                val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create()
+
+                dialogView.findViewById<View>(R.id.btnSaveUnsaved).setOnClickListener {
+                    dialog.dismiss()
+                    onSavePressed()
+                }
+                dialogView.findViewById<View>(R.id.btnDiscardUnsaved).setOnClickListener {
+                    dialog.dismiss()
+                    finish()
+                }
+                dialogView.findViewById<View>(R.id.btnCancelUnsaved).setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            }
         } else {
             super.onBackPressed()
         }
@@ -266,22 +289,61 @@ class NotepadActivity : AppCompatActivity() {
     }
 
     private fun showFormatPicker(text: String) {
-        val formats = arrayOf(
-            getString(R.string.export_txt),
-            getString(R.string.export_csv),
-            getString(R.string.export_pdf)
-        )
-        AlertDialog.Builder(this)
-            .setTitle(R.string.notepad_select_export_format)
-            .setItems(formats) { _, which ->
-                val ext = arrayOf("txt", "csv", "pdf")[which]
-                pendingFormat = ext
-                pendingFileName = "Notepad.$ext"
+        if (isTv) {
+            val formats = arrayOf(
+                getString(R.string.export_txt),
+                getString(R.string.export_csv),
+                getString(R.string.export_pdf)
+            )
+            AlertDialog.Builder(this)
+                .setTitle(R.string.notepad_select_export_format)
+                .setItems(formats) { _, which ->
+                    val ext = arrayOf("txt", "csv", "pdf")[which]
+                    pendingFormat = ext
+                    pendingFileName = "Notepad.$ext"
+                    selectedFolderPath = notesDir?.absolutePath
+                    showSaveAsDialog(ext, pendingFileName!!)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        } else {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_format, null)
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnFormatTxt).setOnClickListener {
+                dialog.dismiss()
+                pendingFormat = "txt"
+                pendingFileName = "Notepad.txt"
                 selectedFolderPath = notesDir?.absolutePath
-                showSaveAsDialog(ext, pendingFileName!!)
+                showSaveAsDialog("txt", pendingFileName!!)
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+
+            dialogView.findViewById<View>(R.id.btnFormatCsv).setOnClickListener {
+                dialog.dismiss()
+                pendingFormat = "csv"
+                pendingFileName = "Notepad.csv"
+                selectedFolderPath = notesDir?.absolutePath
+                showSaveAsDialog("csv", pendingFileName!!)
+            }
+
+            dialogView.findViewById<View>(R.id.btnFormatPdf).setOnClickListener {
+                dialog.dismiss()
+                pendingFormat = "pdf"
+                pendingFileName = "Notepad.pdf"
+                selectedFolderPath = notesDir?.absolutePath
+                showSaveAsDialog("pdf", pendingFileName!!)
+            }
+
+            dialogView.findViewById<View>(R.id.btnCancelFormat).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun showSaveAsDialog(ext: String, name: String) {
@@ -299,11 +361,18 @@ class NotepadActivity : AppCompatActivity() {
 
         val baseName = name.substringBeforeLast(".")
         edtFilename?.setText(baseName)
-        txtPath?.text = getString(R.string.notepad_saved_path, selectedFolderPath ?: notesDir?.absolutePath ?: "")
+        txtPath?.text = selectedFolderPath ?: notesDir?.absolutePath ?: ""
 
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .create()
+        val dialog = if (isTv) {
+            AlertDialog.Builder(this)
+                .setView(dialogView)
+                .create()
+        } else {
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+        }
 
         btnSelectFolder?.setOnClickListener {
             pendingFormat = ext
@@ -330,16 +399,43 @@ class NotepadActivity : AppCompatActivity() {
         btnCancel?.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
+        if (!isTv) {
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun onNewDocumentPressed() {
         if (isModified) {
-            AlertDialog.Builder(this)
-                .setTitle(R.string.new_document_warning_title)
-                .setMessage(R.string.new_document_warning_message)
-                .setPositiveButton(R.string.btn_discard) { _, _ -> resetToNewDocument() }
-                .setNegativeButton(android.R.string.cancel, null)
-                .show()
+            if (isTv) {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.new_document_warning_title)
+                    .setMessage(R.string.new_document_warning_message)
+                    .setPositiveButton(R.string.btn_discard) { _, _ -> resetToNewDocument() }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            } else {
+                val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_unsaved, null)
+                val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .setCancelable(true)
+                    .create()
+
+                dialogView.findViewById<TextView>(R.id.txtTitle).text = getString(R.string.new_document_warning_title)
+                dialogView.findViewById<TextView>(R.id.txtMessage).text = getString(R.string.new_document_warning_message)
+                dialogView.findViewById<View>(R.id.btnSaveUnsaved).visibility = View.GONE
+                dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnDiscardUnsaved).text = getString(R.string.btn_discard)
+
+                dialogView.findViewById<View>(R.id.btnDiscardUnsaved).setOnClickListener {
+                    dialog.dismiss()
+                    resetToNewDocument()
+                }
+                dialogView.findViewById<View>(R.id.btnCancelUnsaved).setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+            }
         } else {
             resetToNewDocument()
         }
@@ -383,15 +479,36 @@ class NotepadActivity : AppCompatActivity() {
     }
 
     private fun showClearConfirmDialog() {
-        AlertDialog.Builder(this)
-            .setTitle(R.string.clear_text_confirm_title)
-            .setMessage(R.string.clear_text_confirm_message)
-            .setPositiveButton(R.string.clear_text) { _, _ ->
+        if (isTv) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.clear_text_confirm_title)
+                .setMessage(R.string.clear_text_confirm_message)
+                .setPositiveButton(R.string.clear_text) { _, _ ->
+                    editText.text.clear()
+                    isModified = true
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
+        } else {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_notepad_clear, null)
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnClearConfirm).setOnClickListener {
+                dialog.dismiss()
                 editText.text.clear()
                 isModified = true
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+
+            dialogView.findViewById<View>(R.id.btnCancelClear).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun saveInPlace(text: String) {

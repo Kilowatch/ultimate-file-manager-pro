@@ -10535,14 +10535,8 @@ No hay configuraciones de orden específicas de carpeta guardadas.\n
 \n
 Abra una carpeta, pulse Ordenar y Filtrar y elija \"Esta Carpeta\" para crear una anulación.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Borrar todo
-</string>
     <string name="folder_sort_manager_clear_confirm">
 ¿Eliminar todas las anulaciones de orden específicas de carpeta? Las carpetas volverán a la configuración de orden global.
-</string>
-    <string name="folder_sort_manager_deleted">
-Anulación eliminada
 </string>
     <string name="folder_sort_network_badge">
 Red / En línea

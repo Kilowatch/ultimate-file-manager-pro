@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<!--
+    DLNA Server Settings Activity — Language & Grouped Glass Card Standard
+    Configuration: Server Name, Renderer Name, and Shared Directory List
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,175 +11,337 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient"
-    android:fillViewport="true"
     tools:context=".server.DlnaServerSettingsActivity">
 
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
+        android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_glass_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Header Bar -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Back Button in Frosted Squircle -->
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/margin_md"
-            android:paddingVertical="14dp"
-            android:background="@color/mobile_glass_header">
+            android:text="@string/dlna_server_settings"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-black"
+            android:layout_marginStart="14dp" />
+    </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_icon_circle_accent">
+    <!-- Scrollable Form Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_arrow_back"
-                    android:contentDescription="@string/cd_back"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:tint="@color/mobile_icon_tint" />
-            </FrameLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/dlna_server_settings"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="17sp"
-                android:fontFamily="sans-serif-black"
-                android:layout_marginStart="@dimen/margin_md" />
-        </LinearLayout>
-
-        <!-- Form Content -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="36dp">
 
-            <!-- Server Name Card -->
-            <LinearLayout
+            <!-- Top Guidance Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_glass_card_dark"
-                android:padding="@dimen/margin_md"
-                android:layout_marginBottom="@dimen/margin_md">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_server_name_label"
-                    android:textColor="@color/mobile_text_primary"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/mobile_text_secondary">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editServerName"
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_about"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/dlna_settings_info_notice"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 1 Header: Identification -->
+            <TextView
+                android:id="@+id/labelSectionIdentification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_identification"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Glass Card 1: Identification -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <!-- Server Name Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dlna_server_name_label"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-bold" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputLayoutServerName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_primary"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:hint="@string/dlna_server_name_default" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:layout_marginTop="6dp"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxStrokeColor="?attr/colorPrimary"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="clear_text">
 
-            <!-- Renderer Name Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_glass_card_dark"
-                android:padding="@dimen/margin_md"
-                android:layout_marginBottom="@dimen/margin_md">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editServerName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:inputType="textCapWords"
+                            android:maxLines="1"
+                            android:hint="@string/dlna_server_name_default"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_renderer_name_label"
-                    android:textColor="@color/mobile_text_primary"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium" />
+                    <!-- 1dp Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="@color/mobile_glass_stroke" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/mobile_text_secondary">
+                    <!-- Renderer Name Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dlna_renderer_name_label"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-bold" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editRendererName"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/inputLayoutRendererName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_primary"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:hint="@string/dlna_renderer_name_default" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:layout_marginTop="6dp"
+                        app:boxBackgroundMode="outline"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxStrokeColor="?attr/colorPrimary"
+                        app:boxStrokeWidth="1dp"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="clear_text">
 
-            <!-- Shared Folders Card -->
-            <LinearLayout
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editRendererName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/mobile_text_primary"
+                            android:inputType="textCapWords"
+                            android:maxLines="1"
+                            android:hint="@string/dlna_renderer_name_default"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Section 2 Header: Shared Directories -->
+            <TextView
+                android:id="@+id/labelSectionSharedFolders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_shared_folders"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
+            <!-- Grouped Glass Card 2: Shared Folders -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/bg_glass_card_dark"
-                android:padding="@dimen/margin_md"
-                android:layout_marginBottom="@dimen/margin_md">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_shared_folders_label"
-                    android:textColor="@color/mobile_text_primary"
-                    android:textSize="15sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <!-- Empty state -->
-                <TextView
-                    android:id="@+id/txtNoFolders"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/dlna_no_folders_configured"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    android:visibility="visible" />
+                    android:orientation="vertical"
+                    android:padding="14dp">
 
-                <!-- Folder list -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSharedFolders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    android:visibility="gone" />
+                    <!-- Empty State Container -->
+                    <LinearLayout
+                        android:id="@+id/layoutEmptyFolders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingVertical="18dp"
+                        android:visibility="gone">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAddFolder"
-                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_add_folder"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    app:icon="@drawable/ic_folder" />
-            </LinearLayout>
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_btn_icon_frosted"
+                            android:layout_marginBottom="10dp">
 
-            <!-- Security Notice -->
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_folder"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/txtNoFolders"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dlna_no_folders_configured"
+                            android:textColor="@color/mobile_card_text_primary"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dlna_empty_shared_folders_desc"
+                            android:textColor="@color/mobile_card_text_secondary"
+                            android:textSize="12sp"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:paddingHorizontal="16dp" />
+                    </LinearLayout>
+
+                    <!-- Folders RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSharedFolders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="visible" />
+
+                    <!-- Add Folder Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddFolder"
+                        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/dlna_add_folder"
+                        android:textColor="?attr/colorPrimary"
+                        app:icon="@drawable/ic_folder"
+                        app:iconTint="?attr/colorPrimary"
+                        app:strokeColor="?attr/colorPrimary"
+                        app:cornerRadius="12dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Port & Security Warning -->
+            <TextView
+                android:id="@+id/txtPortInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12.5sp"
+                android:gravity="center"
+                android:layout_marginBottom="4dp"
+                tools:text="Port 8200 • Unencrypted media streaming" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -184,27 +350,22 @@
                 android:textSize="12sp"
                 android:gravity="center"
                 android:alpha="0.7"
-                android:layout_marginBottom="@dimen/margin_md" />
+                android:layout_marginBottom="18dp" />
 
-            <!-- Port Display -->
-            <TextView
-                android:id="@+id/txtPortInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="13sp"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin_md" />
-
-            <!-- Save Button -->
+            <!-- Primary Save Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
+                style="@style/Widget.Material3Expressive.Button"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:text="@string/save"
-                android:textSize="16sp"
-                app:cornerRadius="26dp" />
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                app:backgroundTint="?attr/colorPrimary"
+                app:cornerRadius="14dp" />
 
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

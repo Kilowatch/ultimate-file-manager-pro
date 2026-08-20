@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Mobile Font Size Activity — premium dark glassmorphism design
-    Mirrors activity_theme.xml structure.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,24 +12,24 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.FontSizeActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button in Accent Circle -->
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -41,7 +40,6 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -50,14 +48,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/font_size_title"
+                android:text="@string/font_size_title_row"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -69,225 +67,28 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Font Size Cards (glass style vertical list) -->
-    <LinearLayout
+    <!-- Scrollable Content Layout -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_md"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Small Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSmall"
+        <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/a"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/mobile_icon_tint" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_small"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="13sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_preview"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="11sp" />
-                </LinearLayout>
-
-                <RadioButton
-                    android:id="@+id/rbSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:clickable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Normal Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardNormal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/a"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/mobile_icon_tint" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_normal"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_preview"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <RadioButton
-                    android:id="@+id/rbNormal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:clickable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Large Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/a"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/mobile_icon_tint" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_large"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="17sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/font_size_preview"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="15sp" />
-                </LinearLayout>
-
-                <RadioButton
-                    android:id="@+id/rbLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="?attr/colorPrimary"
-                    android:clickable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
+            <!-- Dynamically populated sections matching Language standard -->
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

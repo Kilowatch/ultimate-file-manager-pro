@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
-import za.kilowatch.ultimatefilemanager.storage.StorageItem
-import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 data class RenameListItem(
     val deviceId: String,
@@ -30,7 +29,8 @@ class StorageRenameAdapter(
 ) : ListAdapter<RenameListItem, StorageRenameAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_storage_rename, parent, false)
+        val layoutRes = if (isTv) R.layout.item_storage_rename_tv else R.layout.item_storage_rename
+        val view = LayoutInflater.from(parent.context).inflate(layoutRes, parent, false)
         return ViewHolder(view)
     }
 
@@ -46,6 +46,7 @@ class StorageRenameAdapter(
         private val txtSubtitle: TextView = itemView.findViewById(R.id.txtSubtitle)
         private val txtStatus: TextView = itemView.findViewById(R.id.txtStatus)
         private val txtSize: TextView = itemView.findViewById(R.id.txtSize)
+        private val btnEditDrive: View? = itemView.findViewById(R.id.btnEditDrive)
 
         fun bind(item: RenameListItem) {
             val context = itemView.context
@@ -75,12 +76,18 @@ class StorageRenameAdapter(
                 txtTitle.alpha = 0.7f
             }
 
+            val clickAction = { onClick(item) }
+            cardItem.setOnClickListener { clickAction() }
+            btnEditDrive?.setOnClickListener { clickAction() }
+
             if (isTv) {
                 setupTvCardFocus(cardItem, context)
-            }
-            
-            cardItem.setOnClickListener {
-                onClick(item)
+            } else {
+                imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(ThemeColors.primary(context))
+                cardItem.setCardBackgroundColor(context.getColor(R.color.mobile_glass_card))
+                txtTitle.setTextColor(context.getColor(R.color.mobile_card_text_primary))
+                txtSubtitle.setTextColor(context.getColor(R.color.mobile_text_secondary))
+                txtSize.setTextColor(context.getColor(R.color.mobile_text_secondary))
             }
         }
 
@@ -106,7 +113,7 @@ class StorageRenameAdapter(
                     txtTitle.setTextColor(primaryText)
                     txtSubtitle.setTextColor(secondText)
                     txtSize.setTextColor(secondText)
-                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(primaryText)
+                    imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.tv_accent))
                     txtStatus.setTextColor(context.getColor(android.R.color.white))
                     txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(badgeTintNormal)
                 }
@@ -117,7 +124,7 @@ class StorageRenameAdapter(
             txtTitle.setTextColor(primaryText)
             txtSubtitle.setTextColor(secondText)
             txtSize.setTextColor(secondText)
-            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(primaryText)
+            imgIcon.imageTintList = android.content.res.ColorStateList.valueOf(context.getColor(R.color.tv_accent))
             txtStatus.setTextColor(context.getColor(android.R.color.white))
             txtStatus.backgroundTintList = android.content.res.ColorStateList.valueOf(badgeTintNormal)
         }

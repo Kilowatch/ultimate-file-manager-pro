@@ -9,23 +9,24 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.ImportDetailsActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
+
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="20dp"
@@ -35,6 +36,7 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
+                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -43,14 +45,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/backup_import_details_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,9 +103,10 @@
             android:id="@+id/cardWarning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="14dp"
             app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/mobile_glass_stroke"
@@ -111,23 +116,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:padding="14dp">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_warning"
-                    app:tint="@color/mobile_note_color"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="@null" />
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_warning"
+                        app:tint="@color/mobile_note_color"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="@string/backup_confirm_import_message"
-                    android:textColor="@color/mobile_text_primary"
-                    android:textSize="13sp" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/backup_import_notice"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12.5sp"
+                    android:lineSpacingExtra="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -137,8 +151,9 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:clipToPadding="false"
             app:layout_constraintTop_toBottomOf="@id/cardWarning"
             app:layout_constraintBottom_toTopOf="@id/btnImportConfirm" />
 
@@ -146,13 +161,16 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnImportConfirm"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_margin="16dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/backup_import_action_btn"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             app:cornerRadius="16dp"
-            app:backgroundTint="@color/btn_save_bg_tint"
+            app:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent" />
 

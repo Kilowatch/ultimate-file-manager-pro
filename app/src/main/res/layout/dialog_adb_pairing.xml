@@ -4,140 +4,162 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="24dp"
-    android:paddingTop="28dp"
-    android:paddingBottom="16dp">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
 
-    <!-- Icon -->
-    <ImageView
-        android:layout_width="44dp"
-        android:layout_height="44dp"
+    <!-- Hero Icon -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="12dp"
-        android:src="@drawable/ic_terminal"
-        app:tint="?attr/colorPrimary" />
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
 
-    <!-- Title & Step-by-step -->
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_terminal"
+            app:tint="?attr/colorPrimary" />
+    </FrameLayout>
+
+    <!-- Title & Subtitle -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/adb_pairing_title"
-        android:textColor="@color/ufm_text_primary"
+        android:textColor="@color/mobile_text_primary"
         android:textSize="18sp"
         android:fontFamily="sans-serif-black"
         android:gravity="center"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="4dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/adb_terminal_subtitle"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Status Message -->
     <TextView
         android:id="@+id/txtAdbStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/ufm_error"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:visibility="gone"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="12dp" />
 
-    <!-- Auto-Discovery Section -->
-    <Button
-        android:id="@+id/btnScanDevices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/adb_scan_devices"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Scan Progress Container -->
+    <!-- Discovery Option Card -->
     <LinearLayout
-        android:id="@+id/scanProgressContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_marginBottom="16dp">
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="14dp"
+        android:layout_marginBottom="12dp">
 
-        <ProgressBar
-            android:id="@+id/scanProgressBar"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScanDevices"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/adb_scan_devices"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            style="@style/Widget.Material3Expressive.Button"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="10dp" />
+
+        <!-- Scan Progress Container -->
+        <LinearLayout
+            android:id="@+id/scanProgressContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:indeterminate="true" />
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="10dp">
 
-        <TextView
-            android:id="@+id/scanProgressText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/scanning"
-            android:textColor="@color/ufm_text_secondary"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
+            <ProgressBar
+                android:id="@+id/scanProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_marginBottom="6dp"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:indeterminate="true" />
 
-        <TextView
-            android:id="@+id/devicesDetectedText"
+            <TextView
+                android:id="@+id/scanProgressText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scanning"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="11sp"
+                android:gravity="center"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/devicesDetectedText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/devices_detected_0"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Device Spinner -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/devices_detected_0"
-            android:textColor="@color/ufm_text_primary"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:fontFamily="sans-serif-medium" />
+            android:layout_height="44dp"
+            android:background="@drawable/bg_url_box"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:paddingHorizontal="4dp">
+
+            <Spinner
+                android:id="@+id/spinnerDevices"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Device Spinner -->
-    <Spinner
-        android:id="@+id/spinnerDevices"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Port Input -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/adb_port_label"
-        android:textColor="@color/ufm_text_secondary"
-        android:textSize="12sp"
-        android:layout_gravity="start"
-        android:layout_marginStart="8dp" />
-    
-    <EditText
-        android:id="@+id/editAdbPort"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/port"
-        android:inputType="number"
-        android:maxLength="5"
-        android:background="@drawable/bg_url_box"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp" />
-
-    <!-- Connection Mode Buttons -->
+    <!-- Port Input Card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="14dp"
+        android:layout_marginBottom="12dp">
 
-        <Button
-            android:id="@+id/btnConnectNoPIN"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="@string/connect_without_pin" />
+            android:text="@string/adb_port_label"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginBottom="6dp" />
 
-        <Button
-            android:id="@+id/btnTogglePIN"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="@string/use_pin" />
+        <EditText
+            android:id="@+id/editAdbPort"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:hint="@string/s_5555"
+            android:inputType="number"
+            android:maxLength="5"
+            android:background="@drawable/bg_url_box"
+            android:paddingHorizontal="14dp"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:textColor="@color/mobile_text_primary"
+            android:textColorHint="@color/mobile_text_secondary" />
     </LinearLayout>
 
     <!-- 6 PIN Boxes Container (Initially Hidden) -->
@@ -146,23 +168,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="14dp"
         android:visibility="gone"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="12dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/adb_pin_label"
-            android:textColor="@color/ufm_text_secondary"
+            android:textColor="@color/mobile_text_secondary"
             android:textSize="12sp"
-            android:layout_gravity="start"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -172,8 +193,46 @@
             <EditText android:id="@+id/pin_4" style="@style/AdbPinBox" />
             <EditText android:id="@+id/pin_5" style="@style/AdbPinBox" />
             <EditText android:id="@+id/pin_6" style="@style/AdbPinBox" />
-
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConnectWithPin"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/pair_and_connect"
+            app:icon="@drawable/ic_lock"
+            app:iconGravity="textStart"
+            style="@style/Widget.Material3Expressive.Button"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp" />
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConnectNoPIN"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/connect_without_pin"
+            style="@style/Widget.Material3Expressive.Button"
+            app:backgroundTint="?attr/colorPrimary"
+            android:layout_marginBottom="8dp"
+            app:cornerRadius="12dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTogglePIN"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/use_pin_pairing"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:textColor="@color/mobile_text_primary"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:cornerRadius="12dp" />
     </LinearLayout>
 
 </LinearLayout>

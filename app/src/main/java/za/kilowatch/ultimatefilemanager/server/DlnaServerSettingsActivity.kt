@@ -2,6 +2,7 @@ package za.kilowatch.ultimatefilemanager.server
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Settings screen for the DLNA Media Server.
@@ -32,7 +36,7 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
  * - Shared folder list (which folders are exposed via DLNA)
  * - View the configured port
  *
- * Follows the one-activity-two-layouts pattern (mobile / TV).
+ * Follows the Language & Grouped Glass Card design standard across Mobile & TV.
  */
 class DlnaServerSettingsActivity : AppCompatActivity() {
 
@@ -41,10 +45,14 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
     private lateinit var editServerName: TextInputEditText
     private lateinit var editRendererName: TextInputEditText
     private lateinit var rvSharedFolders: RecyclerView
-    private lateinit var txtNoFolders: TextView
+    private var layoutEmptyFolders: View? = null
+    private var txtNoFolders: TextView? = null
     private lateinit var txtPortInfo: TextView
     private lateinit var btnAddFolder: MaterialButton
     private lateinit var btnSave: MaterialButton
+
+    private var handledFontChange = false
+    private var handledLocaleChange = false
 
     // ── Data ───────────────────────────────────────────────────────────────────
 
@@ -65,6 +73,11 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        if (savedInstanceState != null) {
+            handledFontChange = savedInstanceState.getBoolean("font_handled", false)
+            handledLocaleChange = savedInstanceState.getBoolean("locale_handled", false)
+        }
 
         val isTv = DeviceUtils.isTvDevice(this)
         if (isTv) {
@@ -102,8 +115,28 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
             }
         }
 
-        setupViews()
+        setupViews(isTv)
         loadSettings()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
     /**
@@ -116,14 +149,34 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
 
     // ── View binding ──────────────────────────────────────────────────────────
 
-    private fun setupViews() {
-        editServerName = findViewById(R.id.editServerName)
+    private fun setupViews(isTv: Boolean) {
+        editServerName   = findViewById(R.id.editServerName)
         editRendererName = findViewById(R.id.editRendererName)
-        rvSharedFolders = findViewById(R.id.rvSharedFolders)
-        txtNoFolders = findViewById(R.id.txtNoFolders)
-        txtPortInfo = findViewById(R.id.txtPortInfo)
-        btnAddFolder = findViewById(R.id.btnAddFolder)
-        btnSave = findViewById(R.id.btnSave)
+        rvSharedFolders  = findViewById(R.id.rvSharedFolders)
+        layoutEmptyFolders = findViewById(R.id.layoutEmptyFolders)
+        txtNoFolders     = findViewById(R.id.txtNoFolders)
+        txtPortInfo      = findViewById(R.id.txtPortInfo)
+        btnAddFolder     = findViewById(R.id.btnAddFolder)
+        btnSave          = findViewById(R.id.btnSave)
+
+        // Dynamic theme color application
+        val primaryColor = ThemeColors.primary(this)
+        val onPrimaryColor = ThemeColors.onPrimary(this)
+
+        if (!isTv) {
+            findViewById<TextView>(R.id.labelSectionIdentification)?.setTextColor(primaryColor)
+            findViewById<TextView>(R.id.labelSectionSharedFolders)?.setTextColor(primaryColor)
+
+            findViewById<TextInputLayout>(R.id.inputLayoutServerName)?.setBoxStrokeColor(primaryColor)
+            findViewById<TextInputLayout>(R.id.inputLayoutRendererName)?.setBoxStrokeColor(primaryColor)
+
+            btnAddFolder.strokeColor = ColorStateList.valueOf(primaryColor)
+            btnAddFolder.setTextColor(primaryColor)
+            btnAddFolder.iconTint = ColorStateList.valueOf(primaryColor)
+
+            btnSave.backgroundTintList = ColorStateList.valueOf(primaryColor)
+            btnSave.setTextColor(onPrimaryColor)
+        }
 
         // Back button
         findViewById<View>(R.id.btnBack).setOnClickListener {
@@ -147,7 +200,7 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
         }
 
         // RecyclerView setup
-        folderAdapter = FolderAdapter(sharedFolders) { index ->
+        folderAdapter = FolderAdapter(sharedFolders, isTv) { index ->
             sharedFolders.removeAt(index)
             updateFolderList()
         }
@@ -171,7 +224,8 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
 
     private fun updateFolderList() {
         val isEmpty = sharedFolders.isEmpty()
-        txtNoFolders.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        layoutEmptyFolders?.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        txtNoFolders?.visibility = if (isEmpty) View.VISIBLE else View.GONE
         rvSharedFolders.visibility = if (isEmpty) View.GONE else View.VISIBLE
         folderAdapter.notifyDataSetChanged()
     }
@@ -192,16 +246,17 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
     // ── RecyclerView adapter ──────────────────────────────────────────────────
 
     /**
-     * Simple adapter that shows each shared folder label with a remove button.
+     * Adapter that displays each shared folder label and path with a remove button.
      */
     private class FolderAdapter(
         private val folders: List<DlnaServerPrefs.SharedFolder>,
+        private val isTv: Boolean,
         private val onRemove: (Int) -> Unit
     ) : RecyclerView.Adapter<FolderAdapter.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_dlna_shared_folder, parent, false)
+            val layoutId = if (isTv) R.layout.item_dlna_shared_folder_tv else R.layout.item_dlna_shared_folder
+            val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
             return ViewHolder(view)
         }
 
@@ -210,7 +265,10 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
             holder.labelText.text = folder.label
             holder.pathText.text = folder.uri
             holder.btnRemove.setOnClickListener {
-                onRemove(holder.bindingAdapterPosition)
+                val pos = holder.bindingAdapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onRemove(pos)
+                }
             }
         }
 
@@ -219,7 +277,7 @@ class DlnaServerSettingsActivity : AppCompatActivity() {
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val labelText: TextView = itemView.findViewById(R.id.txtFolderLabel)
             val pathText: TextView = itemView.findViewById(R.id.txtFolderPath)
-            val btnRemove: ImageView = itemView.findViewById(R.id.btnRemoveFolder)
+            val btnRemove: View = itemView.findViewById(R.id.btnRemoveFolder)
         }
     }
 }

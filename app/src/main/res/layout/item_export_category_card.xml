@@ -2,58 +2,99 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardCategory"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginBottom="12dp"
     app:cardBackgroundColor="@color/mobile_glass_card"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
-    app:strokeColor="@color/mobile_glass_stroke">
+    app:strokeColor="@color/mobile_glass_stroke"
+    app:rippleColor="@color/mobile_glass_ripple">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header Row -->
+        <!-- Category Header Row -->
         <LinearLayout
             android:id="@+id/layoutHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="13dp"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
 
+            <!-- Frosted Icon Badge -->
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/imgCategoryIcon"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder"
+                    app:tint="?attr/colorPrimary"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <!-- Title & Subtitle -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:id="@+id/txtHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="15.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    tools:text="User Settings" />
+
+                <TextView
+                    android:id="@+id/txtHeaderSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:text="3 items" />
+            </LinearLayout>
+
+            <!-- Selection CheckBox -->
             <CheckBox
                 android:id="@+id/cbHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="?attr/colorPrimary"
                 android:clickable="false"
-                android:focusable="false" />
-
-            <TextView
-                android:id="@+id/txtHeaderTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="15sp"
-                android:fontFamily="sans-serif-black"
-                android:layout_marginStart="8dp" />
+                android:focusable="false"
+                android:saveEnabled="false" />
         </LinearLayout>
 
-        <!-- Divider -->
+        <!-- Inner Divider -->
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/mobile_glass_stroke"
-            android:layout_marginHorizontal="16dp" />
+            android:layout_marginHorizontal="14dp"
+            android:background="@color/mobile_glass_stroke" />
 
         <!-- Children Container -->
         <LinearLayout
@@ -61,8 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp" />
+            android:paddingBottom="6dp" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile Search Activity — premium dark glassmorphism design
-    Matches the theme of activity_welcome and other mobile screens.
+    Mobile Search Activity — Premium Dark Glassmorphism Standard
+    Strictly follows App Access standard header bar, cards, and buttons.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,47 +13,60 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".storage.SearchActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Fixed 56dp Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button in Accent Circle -->
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btnSearchBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/mobile_icon_tint" />
 
-            <ImageView
-                android:id="@+id/btnSearchBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/cd_back"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                app:tint="@color/mobile_icon_tint" />
-        </FrameLayout>
-
-        <TextView
+        <!-- Title + Subtitle -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="@dimen/margin_md"
-            android:text="@string/search_title"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="22sp"
-            android:fontFamily="sans-serif-black" />
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/txtHeaderSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_hint"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -71,11 +84,11 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSearch"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginHorizontal="@dimen/margin_md"
-        android:layout_marginTop="@dimen/margin_md"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
         app:cardBackgroundColor="@color/mobile_glass_card"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/mobile_glass_stroke"
@@ -88,13 +101,14 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="@dimen/margin_md">
+            android:paddingStart="14dp"
+            android:paddingEnd="6dp">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/ic_search"
-                app:tint="@color/mobile_card_text_secondary"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@null" />
 
             <EditText
@@ -102,7 +116,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_marginStart="@dimen/margin_sm"
+                android:layout_marginStart="10dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/search_hint"
                 android:textColor="@color/mobile_card_text_primary"
@@ -114,16 +128,18 @@
 
             <ImageView
                 android:id="@+id/btnSearchClear"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="4dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:padding="8dp"
                 android:src="@drawable/ic_close"
+                android:background="@drawable/bg_header_action_ripple"
                 android:contentDescription="@string/search_clear"
+                android:clickable="true"
+                android:focusable="true"
                 android:visibility="gone"
                 app:tint="@color/mobile_card_text_secondary" />
 
         </LinearLayout>
-
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -131,11 +147,14 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardDrive"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_height="52dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/mobile_glass_card"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/mobile_glass_stroke"
@@ -143,13 +162,76 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Spinner
-            android:id="@+id/spinnerDrive"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingHorizontal="@dimen/margin_md"
-            android:background="@android:color/transparent"
-            android:popupBackground="#FF0A1628" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp">
+
+            <FrameLayout
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:id="@+id/imgDriveIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_storage_internal"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtDriveName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_primary"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="All Drives" />
+
+                <TextView
+                    android:id="@+id/txtDriveSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/mobile_card_text_secondary"
+                    android:textSize="11sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="Search across all connected storage" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgIndexingBolt"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_lightning"
+                app:tint="@color/tv_button_focused_yellow"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_arrow_back"
+                android:rotation="270"
+                app:tint="@color/mobile_icon_tint"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -158,7 +240,7 @@
         android:id="@+id/scrollCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:scrollbars="none"
         android:visibility="gone"
@@ -170,86 +252,120 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingVertical="2dp">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFilterSize"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/search_pill_size"
-                android:textColor="@color/mobile_card_text_primary"
-                app:chipBackgroundColor="@color/mobile_glass_card"
+                android:textColor="@color/selector_mobile_chip_text"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                app:chipIcon="@drawable/ic_sort"
+                app:chipIconSize="18dp"
+                app:chipIconTint="@color/selector_mobile_chip_text"
+                app:chipIconVisible="true"
+                app:closeIconSize="16dp"
+                app:chipBackgroundColor="@color/selector_mobile_chip_bg"
                 app:chipStrokeColor="@color/mobile_glass_stroke"
-                app:chipStrokeWidth="1dp" />
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="12dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFilterType"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/search_pill_type"
-                android:textColor="@color/mobile_card_text_primary"
-                app:chipBackgroundColor="@color/mobile_glass_card"
+                android:textColor="@color/selector_mobile_chip_text"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                app:chipIcon="@drawable/ic_view_grid_medium"
+                app:chipIconSize="18dp"
+                app:chipIconTint="@color/selector_mobile_chip_text"
+                app:chipIconVisible="true"
+                app:closeIconSize="16dp"
+                app:chipBackgroundColor="@color/selector_mobile_chip_bg"
                 app:chipStrokeColor="@color/mobile_glass_stroke"
-                app:chipStrokeWidth="1dp" />
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="12dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFilterExtension"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/search_pill_extension"
-                android:textColor="@color/mobile_card_text_primary"
-                app:chipBackgroundColor="@color/mobile_glass_card"
+                android:textColor="@color/selector_mobile_chip_text"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                app:chipIcon="@drawable/ic_file_generic"
+                app:chipIconSize="18dp"
+                app:chipIconTint="@color/selector_mobile_chip_text"
+                app:chipIconVisible="true"
+                app:closeIconSize="16dp"
+                app:chipBackgroundColor="@color/selector_mobile_chip_bg"
                 app:chipStrokeColor="@color/mobile_glass_stroke"
-                app:chipStrokeWidth="1dp" />
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="12dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipFilterDate"
                 style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:text="@string/search_pill_date"
-                android:textColor="@color/mobile_card_text_primary"
-                app:chipBackgroundColor="@color/mobile_glass_card"
+                android:textColor="@color/selector_mobile_chip_text"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                app:chipIcon="@drawable/ic_time"
+                app:chipIconSize="18dp"
+                app:chipIconTint="@color/selector_mobile_chip_text"
+                app:chipIconVisible="true"
+                app:closeIconSize="16dp"
+                app:chipBackgroundColor="@color/selector_mobile_chip_bg"
                 app:chipStrokeColor="@color/mobile_glass_stroke"
-                app:chipStrokeWidth="1dp" />
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="12dp" />
 
         </LinearLayout>
     </HorizontalScrollView>
-
-
 
     <!-- Indexing Status Banner -->
     <TextView
         android:id="@+id/txtIndexingBanner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_md"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/bg_glass_card"
-        android:padding="12dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:drawableStart="@drawable/ic_warning"
+        android:drawablePadding="10dp"
+        app:drawableTint="@color/tv_button_focused_yellow"
         android:text="@string/some_storages_are_not_indexed"
         android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/scrollCategories"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
     <!-- Status / Count -->
     <TextView
         android:id="@+id/txtSearchStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/margin_md"
-        android:paddingVertical="@dimen/margin_sm"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="6dp"
         android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"
         android:visibility="gone"
@@ -275,7 +391,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingVertical="@dimen/margin_xs"
+        android:paddingVertical="4dp"
         app:layout_constraintTop_toBottomOf="@id/progressSearch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -296,16 +412,16 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_search"
-                app:tint="@color/mobile_icon_tint"
+                app:tint="?attr/colorPrimary"
                 android:contentDescription="@null" />
         </FrameLayout>
 
@@ -313,10 +429,11 @@
             android:id="@+id/txtEmptyMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_md"
+            android:layout_marginTop="12dp"
             android:text="@string/search_no_results"
             android:textColor="@color/mobile_text_secondary"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Folder & Picker Selection Confirmation Dialog — Premium Glassmorphic Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:id="@+id/imgPickerConfirmHero"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_folder"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtPickerConfirmTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_this_folder"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/txtPickerConfirmSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Confirm your selected destination folder"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Folder Details Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
+
+        <!-- Folder Name Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:id="@+id/imgPickerConfirmCardIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_folder"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtPickerConfirmFolderName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="Scans" />
+        </LinearLayout>
+
+        <!-- Full Directory Path -->
+        <TextView
+            android:id="@+id/txtPickerConfirmPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/bg_url_box"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="10dp"
+            tools:text="/storage/emulated/0/Documents/UFM/Scans" />
+
+        <!-- Description Note -->
+        <TextView
+            android:id="@+id/txtPickerConfirmDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:lineSpacingMultiplier="1.2"
+            tools:text="Files and exports will be saved into this directory." />
+
+    </LinearLayout>
+
+    <!-- Confirm Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPickerConfirmAction"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/use_this_folder"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPickerConfirmCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

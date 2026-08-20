@@ -1,107 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Paired Device Item — Premium Glass Card with Polished Action Controls -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:layout_marginHorizontal="@dimen/margin_md"
     android:layout_marginVertical="6dp"
-    app:cardBackgroundColor="@color/mobile_glass_card"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp">
+    android:padding="16dp"
+    android:background="@drawable/bg_reindex_option_card">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <!-- Top Header Row: Icon + Device Info + Action Button Group -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/imgDeviceIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/bg_icon_circle_accent"
-            android:padding="12dp"
-            android:src="@drawable/ic_tv"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/mobile_icon_tint" />
+        <!-- TV Device Icon Badge -->
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="12dp">
 
-        <TextView
-            android:id="@+id/txtDeviceName"
+            <ImageView
+                android:id="@+id/imgDeviceIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_tv"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
+
+        <!-- Device Info Column -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="18sp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@+id/txtStatus"
-            app:layout_constraintEnd_toStartOf="@+id/btnEditName"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/imgDeviceIcon"
-            app:layout_constraintTop_toTopOf="@id/imgDeviceIcon"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Living Room TV" />
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-        <!-- Edit name button just floats near the text but we'll adapt its constraints to flow properly -->
-        <ImageView
-            android:id="@+id/btnEditName"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="6dp"
-            android:src="@drawable/ic_edit"
-            app:layout_constraintBottom_toBottomOf="@+id/txtDeviceName"
-            app:layout_constraintStart_toEndOf="@+id/txtDeviceName"
-            app:layout_constraintEnd_toStartOf="@+id/btnDelete"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toTopOf="@+id/txtDeviceName"
-            app:tint="@color/mobile_text_secondary" />
+            <TextView
+                android:id="@+id/txtDeviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-black"
+                android:maxLines="1"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                tools:text="Bedroom TV" />
 
-        <TextView
-            android:id="@+id/txtStatus"
-            android:layout_width="0dp"
+            <!-- Status Pill Badge -->
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp"
+                android:background="@drawable/bg_badge_step_pill"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp"
+                tools:text="192.168.10.76 · Connected" />
+
+        </LinearLayout>
+
+        <!-- Polished Action Buttons (Rename & Delete) -->
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="8dp"
-            android:fontFamily="sans-serif"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@id/imgDeviceIcon"
-            app:layout_constraintEnd_toStartOf="@+id/btnDelete"
-            app:layout_constraintStart_toStartOf="@+id/txtDeviceName"
-            app:layout_constraintTop_toBottomOf="@+id/txtDeviceName"
-            tools:text="Disconnected" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/btnDelete"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            android:src="@drawable/ic_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/mobile_stop_btn" />
+            <!-- Edit / Rename Button -->
+            <ImageView
+                android:id="@+id/btnEditName"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:clickable="true"
+                android:contentDescription="@string/rename_device"
+                android:focusable="true"
+                android:padding="9dp"
+                android:src="@drawable/ic_edit"
+                app:tint="?attr/colorPrimary" />
 
-        <Button
-            android:id="@+id/btnConnect"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:minHeight="48dp"
-            android:text="@string/connect"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/imgDeviceIcon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            <!-- Unpair / Delete Button -->
+            <ImageView
+                android:id="@+id/btnDelete"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_btn_icon_danger"
+                android:clickable="true"
+                android:contentDescription="@string/remove_device"
+                android:focusable="true"
+                android:padding="9dp"
+                android:src="@drawable/ic_delete"
+                app:tint="#FFEF5350" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <!-- Connect / Disconnect Full-Width Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConnect"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="14dp"
+        android:text="@string/connect"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconPadding="6dp"
+        app:iconSize="16dp"
+        app:iconTint="@color/white"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
+
+</LinearLayout>

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Storage Indexer Hub Activity — Language & Grouped Glass Card Standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,23 +9,27 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_mobile_gradient">
+    android:background="@drawable/bg_mobile_gradient"
+    tools:context=".settings.StorageIndexerActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -33,6 +40,7 @@
                 android:contentDescription="@string/cd_back"
                 android:clickable="true"
                 android:focusable="true"
+                android:focusableInTouchMode="false"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
@@ -41,14 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/storage_indexer_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -61,24 +69,95 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <!-- Top Guidance Notice Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="14dp">
+
+            <FrameLayout
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_btn_icon_frosted">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_lightning"
+                    app:tint="?attr/colorPrimary"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="@string/storage_indexer_info_notice"
+                android:textColor="@color/mobile_card_text_primary"
+                android:textSize="13sp"
+                android:lineSpacingMultiplier="1.2" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Section Header: Detected Storage -->
+    <TextView
+        android:id="@+id/labelSectionStorages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:indeterminateTint="?attr/colorSecondary"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="@string/storage_indexer_section_storages"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="13sp"
+        android:fontFamily="sans-serif-black"
+        android:textAllCaps="true"
+        android:letterSpacing="0.05"
+        android:paddingStart="20dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/cardInfo"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Storage Items List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/labelSectionStorages"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/labelSectionStorages"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

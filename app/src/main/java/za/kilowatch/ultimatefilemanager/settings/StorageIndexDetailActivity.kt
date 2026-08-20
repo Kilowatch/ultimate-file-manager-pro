@@ -10,13 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.indexing.IndexingRepository
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Detail activity for a specific storage's indexing status.
+ * Allows viewing indexing state and deleting indexed records.
+ * Follows the Language and Grouped Glass Card design standard.
  */
 class StorageIndexDetailActivity : AppCompatActivity() {
 
@@ -24,7 +26,10 @@ class StorageIndexDetailActivity : AppCompatActivity() {
     private lateinit var storageId: String
     private lateinit var storageLabel: String
     private lateinit var storagePath: String
-    
+
+    // Persisted through recreate() to prevent looping when restartPending is still true.
+    private var handledFontChange = false
+    private var handledLocaleChange = false
 
     companion object {
         const val EXTRA_STORAGE_ID = "extra_storage_id"
@@ -39,6 +44,9 @@ class StorageIndexDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
+
         enableEdgeToEdge()
 
         storageId = intent.getStringExtra(EXTRA_STORAGE_ID) ?: ""
@@ -63,9 +71,9 @@ class StorageIndexDetailActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.txtTitle).text = storageLabel
-        
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
-        if (isTv) {
+
+        val btnBack = findViewById<View>(R.id.btnBack)
+        if (isTv && btnBack is ImageView) {
             val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
             val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack.imageTintList = whiteCsl
@@ -75,42 +83,83 @@ class StorageIndexDetailActivity : AppCompatActivity() {
         }
         btnBack.setOnClickListener { finish() }
 
-        val cardDelete = findViewById<MaterialCardView>(R.id.cardDeleteRecords)
+        val cardDelete = findViewById<View>(R.id.cardDeleteRecords)
         cardDelete.setOnClickListener { confirmDeleteRecords() }
 
-        if (isTv) {
+        if (isTv && cardDelete is MaterialCardView) {
             setupTvFocus(cardDelete)
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
     private fun confirmDeleteRecords() {
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.storage_indexer_delete_confirm_title)
-            .setMessage(R.string.storage_indexer_delete_confirm_message)
-            .setPositiveButton(R.string.action_delete) { _, _ ->
-                IndexingRepository.getInstance(this).clearIndexForStorage(storageId)
-                finish() // Go back after clearing
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(
+            if (isTv) R.layout.dialog_storage_index_delete_confirm_tv else R.layout.dialog_storage_index_delete_confirm,
+            null
+        )
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtMessage)
+        txtMessage?.text = getString(R.string.storage_indexer_delete_confirm_message)
+
+        val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        btnDeleteConfirm.setOnClickListener {
+            dialog.dismiss()
+            IndexingRepository.getInstance(this).clearIndexForStorage(storageId)
+            finish()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        if (isTv) btnCancel.requestFocus()
     }
 
     private fun setupTvFocus(card: MaterialCardView) {
         val yellow = getColor(R.color.tv_button_focused_yellow)
         val black = getColor(R.color.tv_button_focused_yellow_text)
         val white = getColor(R.color.tv_text_primary)
-        
+        val errorRed = getColor(R.color.status_error)
+
+        val txtDeleteTitle = card.findViewById<TextView>(R.id.txtDeleteTitle)
+        val imgDeleteIcon = card.findViewById<ImageView>(R.id.imgDeleteIcon)
+
         card.setOnFocusChangeListener { _, hasFocus ->
             card.backgroundTintList = android.content.res.ColorStateList.valueOf(if (hasFocus) yellow else 0x1AFFFFFF)
-            // Need a way to set child text colors like in SettingsActivity
-            setChildTextColors(card, if (hasFocus) black else white)
-        }
-    }
-
-    private fun setChildTextColors(view: android.view.View, color: Int) {
-        if (view is android.widget.TextView) { view.setTextColor(color); return }
-        if (view is android.view.ViewGroup) {
-            for (i in 0 until view.childCount) setChildTextColors(view.getChildAt(i), color)
+            if (txtDeleteTitle != null) {
+                txtDeleteTitle.setTextColor(if (hasFocus) black else errorRed)
+            }
+            if (imgDeleteIcon != null) {
+                imgDeleteIcon.imageTintList = android.content.res.ColorStateList.valueOf(if (hasFocus) black else errorRed)
+            }
         }
     }
 }

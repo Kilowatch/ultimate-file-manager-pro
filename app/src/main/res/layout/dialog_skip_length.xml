@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="20dp">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_skip_forward"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/settings_skip_length_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/settings_skip_length_dialog_desc"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 3 Seconds -->
+            <LinearLayout
+                android:id="@+id/btnSkip3s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_3s"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_3s"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkip3s"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- 5 Seconds -->
+            <LinearLayout
+                android:id="@+id/btnSkip5s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_5s"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_5s"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkip5s"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- 10 Seconds (Default) -->
+            <LinearLayout
+                android:id="@+id/btnSkip10s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_10s"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_10s"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkip10s"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- 20 Seconds -->
+            <LinearLayout
+                android:id="@+id/btnSkip20s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_20s"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_20s"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkip20s"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- 30 Seconds -->
+            <LinearLayout
+                android:id="@+id/btnSkip30s"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_skip_forward"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_30s"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_30s"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkip30s"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Disable Option -->
+            <LinearLayout
+                android:id="@+id/btnSkipDisable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_reindex_option_card"
+                android:clickable="true"
+                android:focusable="true">
+
+                <FrameLayout
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/status_error"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_option_disable"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/skip_length_desc_disable"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="11.5sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/checkSkipDisable"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_marginStart="8dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

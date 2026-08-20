@@ -2100,11 +2100,11 @@ class FileBrowserFragment : Fragment() {
         }
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-            .setTitle(R.string.reindexing_title)
             .setView(dialogView)
             .setCancelable(false)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
 
         viewLifecycleOwner.lifecycleScope.launch {

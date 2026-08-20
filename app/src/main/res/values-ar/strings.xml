@@ -10523,14 +10523,8 @@ UFM Spreadsheet Viewer
 \n
 افتح مجلدًا، وانقر على \"فرز وتصفية\" واختر \"هذا المجلد\" لإنشاء تجاوز.
 </string>
-    <string name="folder_sort_manager_clear_all">
-مسح الكل
-</string>
     <string name="folder_sort_manager_clear_confirm">
 إزالة جميع تجاوزات فرز المجلدات؟ ستعود المجلدات إلى إعداد الفرز العام.
-</string>
-    <string name="folder_sort_manager_deleted">
-تمت إزالة التجاوز
 </string>
     <string name="folder_sort_network_badge">
 الشبكة / الإنترنت

@@ -1283,23 +1283,59 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showSkipLengthDialog() {
-        val labels = PlayerPreferencesManager.skipOptionLabels(this)
+        val layoutRes = if (isTv) R.layout.dialog_skip_length_tv else R.layout.dialog_skip_length
+        val dialogView = LayoutInflater.from(this).inflate(layoutRes, null)
+
         val currentSeconds = PlayerPreferencesManager.getSkipLengthSeconds(this)
-        val checkedIndex = when (currentSeconds) {
-            PlayerPreferencesManager.SKIP_DISABLED -> labels.size - 1
-            else -> PlayerPreferencesManager.SKIP_OPTIONS.indexOf(currentSeconds).coerceAtLeast(0)
-        }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.settings_skip_length_title)
-            .setSingleChoiceItems(labels, checkedIndex) { dialog, which ->
-                val seconds = if (which == labels.size - 1) PlayerPreferencesManager.SKIP_DISABLED
-                              else PlayerPreferencesManager.SKIP_OPTIONS[which]
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        val options = listOf(
+            Triple(R.id.btnSkip3s, R.id.checkSkip3s, 3),
+            Triple(R.id.btnSkip5s, R.id.checkSkip5s, 5),
+            Triple(R.id.btnSkip10s, R.id.checkSkip10s, 10),
+            Triple(R.id.btnSkip20s, R.id.checkSkip20s, 20),
+            Triple(R.id.btnSkip30s, R.id.checkSkip30s, 30),
+            Triple(R.id.btnSkipDisable, R.id.checkSkipDisable, PlayerPreferencesManager.SKIP_DISABLED)
+        )
+
+        var defaultFocusView: View? = null
+
+        options.forEach { (btnId, checkId, seconds) ->
+            val btn = dialogView.findViewById<View>(btnId)
+            val check = dialogView.findViewById<ImageView>(checkId)
+            val isSelected = currentSeconds == seconds
+            check?.visibility = if (isSelected) View.VISIBLE else View.GONE
+            if (isSelected) {
+                defaultFocusView = btn
+            }
+
+            btn?.setOnClickListener {
+                dialog.dismiss()
                 PlayerPreferencesManager.setSkipLengthSeconds(this, seconds)
                 updateSkipLengthSubtitle()
-                dialog.dismiss()
+                val label = PlayerPreferencesManager.formatSkipLabel(this)
+                android.widget.Toast.makeText(this, getString(R.string.skip_length_toast_set, label), android.widget.Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
+
+            if (isTv && btn != null) {
+                setupTvCardFocus(btn)
+            }
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+        if (isTv) {
+            (defaultFocusView ?: dialogView.findViewById(R.id.btnSkip10s))?.requestFocus()
+        }
     }
 
     private fun toggleMiniPlayer() {

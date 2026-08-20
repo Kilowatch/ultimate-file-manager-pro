@@ -8,22 +8,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:id="@+id/btnBackContainer"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -32,47 +33,72 @@
                 android:layout_gravity="center"
                 android:src="@drawable/ic_arrow_back"
                 android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
                 app:tint="@color/mobile_icon_tint" />
         </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_md"
-            android:text="@string/settings_main_menu_layout_title"
-            android:textColor="@color/mobile_text_primary"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-black" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_main_menu_layout_title"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_main_menu_layout_subtitle"
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_md"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp"
             android:orientation="vertical">
 
             <!-- Section: View Mode -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="4dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="8dp"
                 android:text="@string/view_mode"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp"
-                android:layout_marginBottom="8dp"
-                android:fontFamily="sans-serif-bold"/>
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:textAllCaps="true" />
 
-            <!-- List Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -82,88 +108,140 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/rbList"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false" />
-
+                    <!-- List Option -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/cardList"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_sm">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                        <TextView
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_view_list"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_list"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/single_column_list_view"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/rbList"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/layout_list"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
+                            android:buttonTint="?attr/colorPrimary"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:saveEnabled="false" />
+                    </LinearLayout>
 
-                        <TextView
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Grid Option -->
+                    <LinearLayout
+                        android:id="@+id/cardGrid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_view_grid_medium"
+                                app:tint="?attr/colorPrimary"
+                                android:contentDescription="@null" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_grid"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/multicolumn_grid_view"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <RadioButton
+                            android:id="@+id/rbGrid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/single_column_list_view"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="13sp" />
+                            android:buttonTint="?attr/colorPrimary"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:saveEnabled="false" />
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Grid Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardGrid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
-
-                    <RadioButton
-                        android:id="@+id/rbGrid"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_sm">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/layout_grid"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/multicolumn_grid_view"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Section: List Size (Only visible if List selected) -->
+            <!-- Section: List Size (Visible if List mode) -->
             <LinearLayout
                 android:id="@+id/layoutListSize"
                 android:layout_width="match_parent"
@@ -173,107 +251,232 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="List Layout Size"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="sans-serif-bold"/>
+                    android:paddingHorizontal="4dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/layout_list_size_section"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true" />
 
-                <!-- Large Size Card -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSizeLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="12dp"
                     app:cardBackgroundColor="@color/mobile_glass_card"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
                     app:strokeColor="@color/mobile_glass_stroke">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-                        <RadioButton
-                            android:id="@+id/rbSizeLarge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_sm"
-                            android:text="Large"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
-                <!-- Medium Size Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSizeMedium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-                        <RadioButton
-                            android:id="@+id/rbSizeMedium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_sm"
-                            android:text="Medium"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                        android:orientation="vertical">
 
-                <!-- Small Size Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSizeSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-                        <RadioButton
-                            android:id="@+id/rbSizeSmall"
-                            android:layout_width="wrap_content"
+                        <!-- Large Size -->
+                        <LinearLayout
+                            android:id="@+id/cardSizeLarge"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:clickable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_grid_large"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/layout_size_large"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/layout_size_large_desc"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/rbSizeLarge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:saveEnabled="false" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- Medium Size -->
+                        <LinearLayout
+                            android:id="@+id/cardSizeMedium"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_sm"
-                            android:text="Small"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_grid_medium"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/layout_size_medium"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/layout_size_medium_desc"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/rbSizeMedium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:saveEnabled="false" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- Small Size -->
+                        <LinearLayout
+                            android:id="@+id/cardSizeSmall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_grid_small"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/layout_size_small"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/layout_size_small_desc"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/rbSizeSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:saveEnabled="false" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
-            <!-- Section: Columns (Only visible if Grid selected) -->
+            <!-- Section: Column Count (Visible if Grid mode) -->
             <LinearLayout
                 android:id="@+id/layoutColumns"
                 android:layout_width="match_parent"
@@ -283,18 +486,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingHorizontal="4dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="8dp"
                     android:text="@string/column_count"
-                    android:textColor="@color/mobile_text_secondary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="sans-serif-bold"/>
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="13sp"
+                    android:fontFamily="sans-serif-black"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="true" />
 
-                <!-- 4 Columns Card -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardColumns4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="12dp"
                     app:cardBackgroundColor="@color/mobile_glass_card"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
@@ -304,60 +509,140 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
+                        android:orientation="vertical">
 
-                        <RadioButton
-                            android:id="@+id/rbColumns4"
-                            android:layout_width="wrap_content"
+                        <!-- 4 Columns -->
+                        <LinearLayout
+                            android:id="@+id/cardColumns4"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:clickable="false" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_grid_small"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/columns_4"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/columns_4_desc"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/rbColumns4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:saveEnabled="false" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="14dp"
+                            android:background="@color/mobile_glass_stroke" />
+
+                        <!-- 3 Columns -->
+                        <LinearLayout
+                            android:id="@+id/cardColumns3"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_sm"
-                            android:text="@string/columns_4"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="13dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true">
+
+                            <FrameLayout
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
+                                android:background="@drawable/bg_btn_icon_frosted">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_view_grid_large"
+                                    app:tint="?attr/colorPrimary"
+                                    android:contentDescription="@null" />
+                            </FrameLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:layout_marginStart="14dp"
+                                android:layout_marginEnd="8dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/columns_3"
+                                    android:textColor="@color/mobile_card_text_primary"
+                                    android:textSize="15sp"
+                                    android:fontFamily="sans-serif-bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/columns_3_desc"
+                                    android:textColor="@color/mobile_text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <RadioButton
+                                android:id="@+id/rbColumns3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="?attr/colorPrimary"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:saveEnabled="false" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <!-- 3 Columns Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardColumns3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@color/mobile_glass_card"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/mobile_glass_stroke">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="@dimen/margin_md">
-
-                        <RadioButton
-                            android:id="@+id/rbColumns3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="false" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_sm"
-                            android:text="@string/columns_3"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Select TV to Link — Premium Mobile Dialog (Re-Index Glassmorphic Standard) -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero TV Icon -->
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_tv"
+        app:tint="?attr/colorPrimary"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/select_tv_to_link"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Dialog Subtitle -->
+    <TextView
+        android:id="@+id/txtDialogSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_sm"
+        android:text="@string/looking_for_tvs_on_local"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/margin_lg" />
+
+    <!-- Discovered TVs List Container -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="320dp"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:id="@+id/layoutDiscoveredList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelSelect"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

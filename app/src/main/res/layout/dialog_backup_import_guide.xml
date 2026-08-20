@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_file_backup"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/backup_import_guide_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Format Info Box -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="12dp"
+        android:layout_marginBottom="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_import_guide_format_label"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="11.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/txtFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/bg_url_box"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="7dp"
+            android:text="@string/backup_import_guide_format_val" />
+    </LinearLayout>
+
+    <!-- Message / Guidance -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/backup_import_guide_msg"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="2.5dp"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Select Backup File Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBrowse"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/backup_import_guide_btn_browse"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_folder"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@android:color/white"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:insetTop="0dp"
+        android:insetBottom="0dp" />
+
+</LinearLayout>

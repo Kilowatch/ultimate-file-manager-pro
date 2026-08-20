@@ -2,35 +2,37 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:padding="@dimen/margin_xl"
     android:background="@drawable/bg_dialog_glass"
-    android:gravity="center">
+    android:gravity="center_horizontal">
 
+    <!-- 64dp Frosted Hero Progress Badge -->
     <FrameLayout
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginBottom="16dp">
 
-        <!-- Outer Glowing Ring (Indeterminate) -->
         <ProgressBar
-            android:id="@+id/progressPremium"
+            android:id="@+id/progressHero"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/bg_premium_progress" />
+            android:indeterminateTint="?attr/colorPrimary" />
 
-        <!-- Inner Searching Icon -->
         <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_search"
-            app:tint="?attr/colorSecondary" />
+            android:src="@drawable/ic_lightning"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
     </FrameLayout>
 
+    <!-- Dialog Title -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
@@ -41,53 +43,74 @@
         android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
+    <!-- Dialog Subtitle -->
     <TextView
         android:id="@+id/txtDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="@string/we_are_indexing_your_files"
         android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"
-        android:textAlignment="center" />
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
 
-    <TextView
-        android:id="@+id/txtProgressStats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/indexed_0_files"
-        android:textColor="?attr/colorSecondary"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-medium" />
-
+    <!-- Live Progress Card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="24dp"
-        android:gravity="center">
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="20dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancel"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
+        <ProgressBar
+            android:id="@+id/progressLinear"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:indeterminate="true"
+            android:indeterminateTint="?attr/colorPrimary"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/txtProgressStats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:textColor="@color/status_error"
-            android:layout_marginEnd="12dp"
-            android:textSize="14sp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnRunBackground"
-            style="@style/Widget.Material3Expressive.Button.TonalButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/run_in_background"
-            app:backgroundTint="?attr/colorSecondary"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:text="@string/indexed_0_files"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAlignment="center"
+            tools:text="Indexed 1,420 Files" />
     </LinearLayout>
+
+    <!-- Run in Background Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRunBackground"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/run_in_background"
+        app:cornerRadius="16dp"
+        app:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="4dp" />
 
 </LinearLayout>

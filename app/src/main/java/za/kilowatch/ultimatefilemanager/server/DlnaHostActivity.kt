@@ -1,5 +1,8 @@
 package za.kilowatch.ultimatefilemanager.server
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -12,19 +15,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.materialswitch.MaterialSwitch
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.settings.FontSizeHelper
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 /**
  * Dedicated screen for the two DLNA services:
- *  - DLNA Media Server (toggle + status URL + settings button)
+ *  - DLNA Media Server (toggle + status URL + settings navigation)
  *  - DLNA Media Renderer (toggle + status)
  *
- * Follows the one-activity-two-layouts pattern:
- *  - Mobile → activity_dlna_host.xml (gear button inside server card)
- *  - TV     → activity_dlna_host_tv.xml (DLNA Settings is its own focusable row)
- *
+ * Follows the Language & Grouped Glass Card design standard across Mobile & TV.
  * Observes [FileServerService.serverState] to update status text in real-time.
  */
 class DlnaHostActivity : AppCompatActivity() {
@@ -34,7 +36,10 @@ class DlnaHostActivity : AppCompatActivity() {
     private lateinit var txtDlnaUrl: TextView
     private lateinit var txtDlnaRendererUrl: TextView
 
-    override fun attachBaseContext(newBase: android.content.Context) {
+    private var handledFontChange = false
+    private var handledLocaleChange = false
+
+    override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
@@ -42,6 +47,11 @@ class DlnaHostActivity : AppCompatActivity() {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        if (savedInstanceState != null) {
+            handledFontChange = savedInstanceState.getBoolean("font_handled", false)
+            handledLocaleChange = savedInstanceState.getBoolean("locale_handled", false)
+        }
 
         val isTv = DeviceUtils.isTvDevice(this)
         if (isTv) {
@@ -73,7 +83,24 @@ class DlnaHostActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+
         loadSavedState()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
     }
 
     // ── View binding ──────────────────────────────────────────────────────────
@@ -84,6 +111,13 @@ class DlnaHostActivity : AppCompatActivity() {
         txtDlnaUrl         = findViewById(R.id.txtDlnaUrl)
         txtDlnaRendererUrl = findViewById(R.id.txtDlnaRendererUrl)
 
+        // Section headers primary color tinting (Mobile)
+        if (!isTv) {
+            val primaryColor = ThemeColors.primary(this)
+            findViewById<TextView>(R.id.labelSectionServices)?.setTextColor(primaryColor)
+            findViewById<TextView>(R.id.labelSectionConfig)?.setTextColor(primaryColor)
+        }
+
         // Back button
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
@@ -92,19 +126,36 @@ class DlnaHostActivity : AppCompatActivity() {
                 override fun handleOnBackPressed() { finish() }
             })
 
-        if (isTv) {
-            // TV: each card row is a focusable container that drives the switch
-            findViewById<View>(R.id.layoutDlnaCard).setOnClickListener { switchDlna.toggle() }
-            findViewById<View>(R.id.layoutDlnaRendererCard).setOnClickListener { switchDlnaRenderer.toggle() }
+        // Tap entire card row to toggle switch
+        findViewById<View>(R.id.layoutDlnaCard)?.setOnClickListener { switchDlna.toggle() }
+        findViewById<View>(R.id.layoutDlnaRendererCard)?.setOnClickListener { switchDlnaRenderer.toggle() }
 
-            // TV: "DLNA Settings" is its own dedicated focusable row
-            findViewById<View>(R.id.layoutDlnaSettingsCard).setOnClickListener {
-                startActivity(Intent(this, DlnaServerSettingsActivity::class.java))
+        // Settings navigation
+        val settingsClickListener = View.OnClickListener {
+            startActivity(Intent(this, DlnaServerSettingsActivity::class.java))
+        }
+        findViewById<View>(R.id.btnDlnaSettings)?.setOnClickListener(settingsClickListener)
+        findViewById<View>(R.id.layoutDlnaSettingsCard)?.setOnClickListener(settingsClickListener)
+
+        // Tap-to-copy URL box
+        txtDlnaUrl.setOnClickListener {
+            val text = txtDlnaUrl.text.toString()
+            if (text.isNotEmpty()) {
+                val cleanUrl = if (text.startsWith("DLNA: ")) text.removePrefix("DLNA: ") else text
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("DLNA URL", cleanUrl)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, getString(R.string.tile_color_export_copied), Toast.LENGTH_SHORT).show()
             }
-        } else {
-            // Mobile: gear button inside the server card header
-            findViewById<ImageView>(R.id.btnDlnaSettings).setOnClickListener {
-                startActivity(Intent(this, DlnaServerSettingsActivity::class.java))
+        }
+
+        txtDlnaRendererUrl.setOnClickListener {
+            val text = txtDlnaRendererUrl.text.toString()
+            if (text.isNotEmpty()) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("DLNA Renderer", text)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, getString(R.string.tile_color_export_copied), Toast.LENGTH_SHORT).show()
             }
         }
     }

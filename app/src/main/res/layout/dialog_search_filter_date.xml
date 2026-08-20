@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Date filter dialog — user enters number of days e.g. 7 = "last 7 days" -->
+<!-- Date Filter Dialog — Premium Mobile Glassmorphic Standard -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_time"
+            app:tint="?attr/colorPrimary" />
+    </FrameLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_filter_date_title"
-        android:textColor="@color/mobile_card_text_primary"
+        android:textColor="@color/mobile_text_primary"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:fontFamily="sans-serif-bold"
+        android:gravity="center"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -22,45 +41,60 @@
         android:text="@string/search_filter_date_body"
         android:textColor="@color/mobile_text_secondary"
         android:textSize="13sp"
-        android:layout_marginBottom="16dp" />
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_marginBottom="18dp" />
 
-    <EditText
-        android:id="@+id/editDays"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:hint="@string/search_filter_date_hint"
-        android:textColor="@color/mobile_card_text_primary"
-        android:textColorHint="@color/mobile_text_secondary"
-        android:backgroundTint="@color/mobile_glass_stroke"
-        android:paddingHorizontal="8dp"
-        android:inputType="number"
-        android:singleLine="true"
-        android:layout_marginBottom="24dp" />
-
+    <!-- Input Container -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:paddingHorizontal="12dp"
+        android:layout_marginBottom="22dp">
 
-        <Button
-            android:id="@+id/btnDateCancel"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:textColor="@color/mobile_text_secondary" />
-
-        <Button
-            android:id="@+id/btnDateApply"
-            style="@style/Widget.Material3Expressive.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/search_filter_apply"
-            android:backgroundTint="@color/tv_accent"
-            android:textColor="@android:color/black" />
+        <EditText
+            android:id="@+id/editDays"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search_filter_date_hint"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textColorHint="@color/mobile_text_secondary"
+            android:background="@android:color/transparent"
+            android:textSize="14sp"
+            android:inputType="number"
+            android:singleLine="true" />
 
     </LinearLayout>
+
+    <!-- Action Buttons -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDateApply"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/search_filter_apply"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDateCancel"
+        style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_primary"
+        app:strokeColor="@color/mobile_glass_stroke"
+        app:cornerRadius="12dp"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:textAllCaps="false" />
 
 </LinearLayout>

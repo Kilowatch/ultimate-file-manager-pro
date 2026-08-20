@@ -1,217 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Custom Cache Limit Bottom Sheet / Dialog — Modern Grouped Glass Card Standard
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/ufm_surface"
-    android:paddingBottom="20dp">
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
 
-    <!-- Premium Header with Gradient -->
+    <!-- Drag Handle -->
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_drag_handle"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Hero Icon Badge -->
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_cache_limit_header"
-        android:paddingTop="24dp"
-        android:paddingBottom="24dp"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp">
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="12dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/labelCustomLimit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:text="@string/nt_cache_limit_title"
-                android:textColor="@color/ufm_text_primary"
-                android:textStyle="bold"
-                android:layout_marginBottom="6dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:text="@string/nt_custom_value_hint"
-                android:textColor="@color/ufm_text_secondary"
-                android:alpha="0.8" />
-
-        </LinearLayout>
-
+        <ImageView
+            android:id="@+id/imgHeroIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_tune"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
     </FrameLayout>
 
-    <!-- Content Container -->
-    <LinearLayout
+    <!-- Title -->
+    <TextView
+        android:id="@+id/labelCustomLimit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/nt_custom_limit_dialog_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/nt_custom_limit_dialog_desc"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Presets Section Header -->
+    <TextView
+        android:id="@+id/labelPresetsHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nt_custom_presets_label"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-black"
+        android:textAllCaps="true"
+        android:letterSpacing="0.05"
+        android:paddingStart="2dp"
+        android:paddingBottom="8dp" />
+
+    <!-- Preset Buttons Group (Single Selection) -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/togglePresetsGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="24dp">
+        android:layout_marginBottom="18dp"
+        app:singleSelection="true"
+        app:selectionRequired="false">
 
-        <!-- Preset Options Header -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Quick Presets"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="@color/ufm_text_secondary"
-            android:textAllCaps="true"
-            android:alpha="0.7"
-            android:layout_marginBottom="12dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chipPreset500"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="500 MB"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:checkable="true"
+            app:backgroundTint="@color/selector_protocol_bg"
+            android:textColor="@color/selector_protocol_text"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="4dp" />
 
-        <!-- Preset Chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipPresetsGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:singleLine="false"
-            android:paddingBottom="8dp">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chipPreset1gb"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="1 GB"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:checkable="true"
+            app:backgroundTint="@color/selector_protocol_bg"
+            android:textColor="@color/selector_protocol_text"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="4dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPreset500"
-                style="?attr/chipStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="500 MB"
-                app:chipIcon="@android:drawable/ic_dialog_info"
-                android:layout_margin="4dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chipPreset2gb"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="2 GB"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:checkable="true"
+            app:backgroundTint="@color/selector_protocol_bg"
+            android:textColor="@color/selector_protocol_text"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="4dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPreset1gb"
-                style="?attr/chipStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 GB"
-                app:chipIcon="@android:drawable/ic_dialog_info"
-                android:layout_margin="4dp" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chipPreset5gb"
+            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:text="5 GB"
+            android:textSize="12.5sp"
+            android:fontFamily="sans-serif-bold"
+            android:checkable="true"
+            app:backgroundTint="@color/selector_protocol_bg"
+            android:textColor="@color/selector_protocol_text"
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:strokeWidth="1dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="4dp" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPreset2gb"
-                style="?attr/chipStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2 GB"
-                app:chipIcon="@android:drawable/ic_dialog_info"
-                android:layout_margin="4dp" />
+    <!-- Custom Size Section Header -->
+    <TextView
+        android:id="@+id/labelCustomSizeHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nt_custom_size_label"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-black"
+        android:textAllCaps="true"
+        android:letterSpacing="0.05"
+        android:paddingStart="2dp"
+        android:paddingBottom="8dp" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipPreset5gb"
-                style="?attr/chipStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="5 GB"
-                app:chipIcon="@android:drawable/ic_dialog_info"
-                android:layout_margin="4dp" />
+    <!-- Custom Size Input & Unit Box -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke">
 
-        </com.google.android.material.chip.ChipGroup>
-
-        <!-- Custom Value Section -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Custom Size"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="@color/ufm_text_secondary"
-                android:textAllCaps="true"
-                android:alpha="0.7"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Input with better styling -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxStrokeColor="@color/ufm_primary_light"
-                android:layout_marginBottom="12dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editCacheValue"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:inputType="numberDecimal"
-                    android:hint="e.g. 3.5"
-                    android:importantForAutofill="no"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Unit Selection -->
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipUnitGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:singleSelection="true"
-                app:selectionRequired="true"
-                app:chipSpacing="12dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipMb"
-                    style="?attr/chipStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="MB"
-                    android:checkable="true" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipGb"
-                    style="?attr/chipStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="GB"
-                    android:checkable="true" />
-
-            </com.google.android.material.chip.ChipGroup>
-
-        </LinearLayout>
-
-        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="28dp"
-            android:layout_marginBottom="8dp"
-            android:spacing="12dp">
+            android:gravity="center_vertical"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancel"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:text="@string/delete_cancel"
-                style="?attr/materialButtonOutlinedStyle"
-                app:cornerRadius="12dp"
-                android:paddingHorizontal="24dp"
-                android:layout_marginEnd="12dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSave"
+            <EditText
+                android:id="@+id/editCacheValue"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="@string/network_btn_save"
-                style="?attr/materialButtonStyle"
-                app:cornerRadius="12dp" />
+                android:inputType="numberDecimal"
+                android:hint="e.g. 3.5"
+                android:textColorHint="@color/mobile_text_secondary"
+                android:textColor="@color/mobile_card_text_primary"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
+                android:background="@android:color/transparent"
+                android:importantForAutofill="no"
+                android:paddingEnd="12dp" />
 
+            <!-- Unit Selection Toggle Buttons (MB / GB) -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleUnitGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:selectionRequired="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipMb"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                    android:layout_width="54dp"
+                    android:layout_height="38dp"
+                    android:text="MB"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:checkable="true"
+                    app:backgroundTint="@color/selector_protocol_bg"
+                    android:textColor="@color/selector_protocol_text"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="0dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/chipGb"
+                    style="@style/Widget.Material3Expressive.Button.OutlinedButton"
+                    android:layout_width="54dp"
+                    android:layout_height="38dp"
+                    android:text="GB"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:checkable="true"
+                    app:backgroundTint="@color/selector_protocol_bg"
+                    android:textColor="@color/selector_protocol_text"
+                    app:strokeColor="@color/mobile_glass_stroke"
+                    app:strokeWidth="1dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingHorizontal="0dp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
-    </LinearLayout>
+    <!-- Save Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@android:color/white"
+        app:backgroundTint="?attr/colorPrimary"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:text="@string/cancel"
+        android:textSize="14sp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp"
+        android:textColor="@color/mobile_text_secondary" />
 
 </LinearLayout>

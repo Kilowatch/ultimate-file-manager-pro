@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Drive Option Card in Search Location Selection Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="14dp"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_reindex_option_card"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- 40dp Frosted Icon Container -->
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="12dp">
+
+        <ImageView
+            android:id="@+id/imgDriveIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_storage_internal"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtDriveName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="All Drives" />
+
+        <TextView
+            android:id="@+id/txtDriveDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"
+            tools:text="Search across all connected storage locations" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgIndexingBolt"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ic_lightning"
+        app:tint="@color/tv_button_focused_yellow"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <!-- Selection Checkmark -->
+    <ImageView
+        android:id="@+id/imgDriveCheck"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:src="@drawable/ic_check"
+        app:tint="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:contentDescription="@null" />
+
+</LinearLayout>

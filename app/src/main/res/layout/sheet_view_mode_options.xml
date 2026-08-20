@@ -25,14 +25,21 @@
         android:paddingHorizontal="20dp"
         android:layout_marginBottom="16dp">
 
-        <ImageView
-            android:id="@+id/imgSheetIcon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_grid_view_custom"
+        <FrameLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="12dp"
-            android:contentDescription="@null"
-            app:tint="?attr/colorOnSurface" />
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/imgSheetIcon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_grid_view_custom"
+                android:contentDescription="@null"
+                app:tint="?attr/colorPrimary" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/txtSheetTitle"
@@ -40,8 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Layout Options"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="20sp"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="18sp"
             android:fontFamily="sans-serif-black" />
     </LinearLayout>
 
@@ -65,10 +72,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/column_count"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="12sp"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05"
             android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-bold"/>
+            android:fontFamily="sans-serif-black"/>
 
         <!-- 4 Columns Card -->
         <com.google.android.material.card.MaterialCardView
@@ -80,7 +89,8 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,6 +102,7 @@
                     android:id="@+id/rbColumns4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
 
                 <TextView
@@ -113,7 +124,8 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,6 +137,7 @@
                     android:id="@+id/rbColumns3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
 
                 <TextView
@@ -152,10 +165,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="List Layout Size"
-            android:textColor="@color/mobile_text_secondary"
-            android:textSize="12sp"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05"
             android:layout_marginBottom="8dp"
-            android:fontFamily="sans-serif-bold"/>
+            android:fontFamily="sans-serif-black"/>
 
         <!-- Large Size Card -->
         <com.google.android.material.card.MaterialCardView
@@ -167,7 +182,8 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,6 +193,7 @@
                     android:id="@+id/rbSizeLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -198,7 +215,8 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -208,6 +226,7 @@
                     android:id="@+id/rbSizeMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -228,7 +247,8 @@
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke">
+            app:strokeColor="@color/mobile_glass_stroke"
+            app:rippleColor="@color/mobile_glass_ripple">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -238,6 +258,7 @@
                     android:id="@+id/rbSizeSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:buttonTint="?attr/colorPrimary"
                     android:clickable="false" />
                 <TextView
                     android:layout_width="wrap_content"

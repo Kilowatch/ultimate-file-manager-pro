@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,14 +13,14 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.switchmaterial.SwitchMaterial
@@ -29,28 +30,32 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupPrefs
 import za.kilowatch.ultimatefilemanager.billing.AutoBackupScheduler
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 class AutoBackupActivity : AppCompatActivity() {
 
     private var isTv = false
     private var isUpdatingLocationUI = false
+    private var isUpdatingScheduleUI = false
+    private var handledFontChange = false
+    private var handledLocaleChange = false
 
     // Views
     private lateinit var switchAutoBackup: SwitchMaterial
     private lateinit var chkBackupSettings: CheckBox
     private lateinit var chkBackupTheme: CheckBox
-    private lateinit var radioSchedule: RadioGroup
-    private lateinit var rbDaily: RadioButton
-    private lateinit var rbWeekly: RadioButton
-    private lateinit var rbMonthly: RadioButton
+    private lateinit var toggleSchedule: MaterialButtonToggleGroup
+    private lateinit var btnDaily: MaterialButton
+    private lateinit var btnWeekly: MaterialButton
+    private lateinit var btnMonthly: MaterialButton
     private lateinit var txtPasswordTitle: TextView
     private lateinit var txtPasswordStatus: TextView
     private lateinit var txtSummary: TextView
     private lateinit var btnBackupNow: View
     private lateinit var progressBar: ProgressBar
-    private lateinit var radioLocation: RadioGroup
-    private lateinit var rbLocationDefault: RadioButton
-    private lateinit var rbLocationCustom: RadioButton
+    private lateinit var toggleLocation: MaterialButtonToggleGroup
+    private lateinit var btnLocationDefault: MaterialButton
+    private lateinit var btnLocationCustom: MaterialButton
     private lateinit var txtLocationPath: TextView
     private lateinit var txtLocationWarning: TextView
     private lateinit var btnSelectFolder: View
@@ -88,6 +93,8 @@ class AutoBackupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeHelper.applyTheme(this)
         super.onCreate(savedInstanceState)
+        handledFontChange = savedInstanceState?.getBoolean("font_handled", false) ?: false
+        handledLocaleChange = savedInstanceState?.getBoolean("locale_handled", false) ?: false
         enableEdgeToEdge()
         isTv = DeviceUtils.isTvDevice(this)
 
@@ -112,22 +119,42 @@ class AutoBackupActivity : AppCompatActivity() {
         loadSettings()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (LocaleHelper.restartPending && !handledLocaleChange) {
+            handledLocaleChange = true
+            recreate()
+            return
+        }
+        if (FontSizeHelper.restartPending && !handledFontChange) {
+            handledFontChange = true
+            recreate()
+            return
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("font_handled", handledFontChange)
+        outState.putBoolean("locale_handled", handledLocaleChange)
+    }
+
     private fun bindViews() {
         switchAutoBackup = findViewById(R.id.switchAutoBackup)
         chkBackupSettings = findViewById(R.id.chkBackupSettings)
         chkBackupTheme = findViewById(R.id.chkBackupTheme)
-        radioSchedule = findViewById(R.id.radioSchedule)
-        rbDaily = findViewById(R.id.rbDaily)
-        rbWeekly = findViewById(R.id.rbWeekly)
-        rbMonthly = findViewById(R.id.rbMonthly)
+        toggleSchedule = findViewById(R.id.toggleSchedule)
+        btnDaily = findViewById(R.id.btnDaily)
+        btnWeekly = findViewById(R.id.btnWeekly)
+        btnMonthly = findViewById(R.id.btnMonthly)
         txtPasswordTitle = findViewById(R.id.txtPasswordTitle)
         txtPasswordStatus = findViewById(R.id.txtPasswordStatus)
         txtSummary = findViewById(R.id.txtAutoBackupSummary)
         btnBackupNow = findViewById(R.id.btnBackupNow)
         progressBar = findViewById(R.id.progressBar)
-        radioLocation = findViewById(R.id.radioLocation)
-        rbLocationDefault = findViewById(R.id.rbLocationDefault)
-        rbLocationCustom = findViewById(R.id.rbLocationCustom)
+        toggleLocation = findViewById(R.id.toggleLocation)
+        btnLocationDefault = findViewById(R.id.btnLocationDefault)
+        btnLocationCustom = findViewById(R.id.btnLocationCustom)
         txtLocationPath = findViewById(R.id.txtLocationPath)
         txtLocationWarning = findViewById(R.id.txtLocationWarning)
         btnSelectFolder = findViewById(R.id.btnSelectFolder)
@@ -135,6 +162,47 @@ class AutoBackupActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
+        val primaryColor = if (isTv) getColor(R.color.tv_button_focused_yellow) else ThemeColors.primary(this)
+        val onPrimaryColor = if (isTv) getColor(R.color.tv_button_focused_yellow_text) else ThemeColors.onPrimary(this)
+
+        if (!isTv) {
+            // Apply theme colors to section headers
+            findViewById<TextView?>(R.id.labelSectionGeneral)?.setTextColor(primaryColor)
+            findViewById<TextView?>(R.id.labelSectionSchedule)?.setTextColor(primaryColor)
+            findViewById<TextView?>(R.id.labelSectionSecurity)?.setTextColor(primaryColor)
+            findViewById<TextView?>(R.id.labelSectionLocation)?.setTextColor(primaryColor)
+
+            // Setup single-selection toggle button styling
+            val glassBgColor = getColor(R.color.mobile_glass_white_10)
+            val textPrimaryColor = getColor(R.color.mobile_card_text_primary)
+            val toggleBgCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    primaryColor,
+                    glassBgColor
+                )
+            )
+            val toggleTextCsl = ColorStateList(
+                arrayOf(
+                    intArrayOf(android.R.attr.state_checked),
+                    intArrayOf(-android.R.attr.state_checked)
+                ),
+                intArrayOf(
+                    onPrimaryColor,
+                    textPrimaryColor
+                )
+            )
+
+            val toggleButtons = listOf(btnDaily, btnWeekly, btnMonthly, btnLocationDefault, btnLocationCustom)
+            for (btn in toggleButtons) {
+                btn.backgroundTintList = toggleBgCsl
+                btn.setTextColor(toggleTextCsl)
+            }
+        }
+
         // ── Back button ──────────────────────────────────────────────────
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
@@ -152,76 +220,73 @@ class AutoBackupActivity : AppCompatActivity() {
         }
         btnBack?.setOnClickListener { finish() }
 
-        // ── Enable toggle card ───────────────────────────────────────────
-        val cardEnable = findViewById<MaterialCardView>(R.id.cardAutoBackupEnable)
+        // ── Enable toggle row ────────────────────────────────────────────
+        val cardEnable = findViewById<View>(R.id.cardAutoBackupEnable)
         cardEnable.setOnClickListener {
             switchAutoBackup.isChecked = !switchAutoBackup.isChecked
             onEnabledChanged(switchAutoBackup.isChecked)
         }
 
-        // ── Settings checkbox card ───────────────────────────────────────
-        val cardSettings = findViewById<MaterialCardView>(R.id.cardAutoBackupSettings)
+        // ── Settings checkbox row ────────────────────────────────────────
+        val cardSettings = findViewById<View>(R.id.cardAutoBackupSettings)
         cardSettings.setOnClickListener {
             chkBackupSettings.isChecked = !chkBackupSettings.isChecked
             onSettingsChanged(chkBackupSettings.isChecked)
         }
 
-        // ── Theme checkbox card ──────────────────────────────────────────
-        val cardTheme = findViewById<MaterialCardView>(R.id.cardAutoBackupTheme)
+        // ── Theme checkbox row ───────────────────────────────────────────
+        val cardTheme = findViewById<View>(R.id.cardAutoBackupTheme)
         cardTheme.setOnClickListener {
             chkBackupTheme.isChecked = !chkBackupTheme.isChecked
             onThemeChanged(chkBackupTheme.isChecked)
         }
 
-        // ── Schedule RadioGroup ──────────────────────────────────────────
-        radioSchedule.setOnCheckedChangeListener { _, checkedId ->
+        // ── Schedule ToggleGroup ─────────────────────────────────────────
+        toggleSchedule.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isUpdatingScheduleUI || !isChecked) return@addOnButtonCheckedListener
             val type = when (checkedId) {
-                R.id.rbDaily -> "daily"
-                R.id.rbMonthly -> "monthly"
+                R.id.btnDaily -> "daily"
+                R.id.btnMonthly -> "monthly"
                 else -> "weekly"
             }
             onScheduleChanged(type)
         }
 
         // ── Password card ────────────────────────────────────────────────
-        val cardPassword = findViewById<MaterialCardView>(R.id.cardAutoBackupPassword)
+        val cardPassword = findViewById<View>(R.id.cardAutoBackupPassword)
         cardPassword.setOnClickListener { showPasswordDialog() }
 
-        // ── Backup Now button ────────────────────────────────────────────
-        btnBackupNow.setOnClickListener { performBackupNow() }
-
-        // ── Save Location ────────────────────────────────────────────────
-        radioLocation.setOnCheckedChangeListener { _, checkedId ->
-            if (isUpdatingLocationUI) return@setOnCheckedChangeListener
-            if (checkedId == R.id.rbLocationCustom) {
-                AutoBackupPrefs.setCustomLocationType(this, "local")
-                AutoBackupPrefs.setCustomLocalPath(this, "") // will be set after picker
+        // ── Location ToggleGroup ─────────────────────────────────────────
+        toggleLocation.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isUpdatingLocationUI || !isChecked) return@addOnButtonCheckedListener
+            if (checkedId == R.id.btnLocationCustom) {
+                if (!AutoBackupPrefs.isCustomLocationSet(this)) {
+                    showFolderGuideDialog()
+                }
                 updateLocationUI()
             } else {
                 AutoBackupPrefs.clearCustomLocation(this)
                 updateLocationUI()
             }
         }
-        btnSelectFolder.setOnClickListener {
-            val intent = android.content.Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
-                putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
-            }
-            backupFolderPickerLauncher.launch(intent)
-        }
-        btnResetLocation.setOnClickListener {
-            AutoBackupPrefs.clearCustomLocation(this)
-            rbLocationDefault.isChecked = true
-            updateLocationUI()
-        }
+
+        // ── Select Folder Button ─────────────────────────────────────────
+        btnSelectFolder.setOnClickListener { showFolderGuideDialog() }
+
+        // ── Reset to Default Button ──────────────────────────────────────
+        btnResetLocation.setOnClickListener { resetLocationToDefault() }
+
+        // ── Backup Now button ────────────────────────────────────────────
+        btnBackupNow.setOnClickListener { performBackupNow() }
 
         // ── TV focus handling ────────────────────────────────────────────
         if (isTv) {
-            setupTvCardFocus(cardEnable)
-            setupTvCardFocus(cardSettings)
-            setupTvCardFocus(cardTheme)
-            setupTvCardFocus(cardPassword)
-            val cardLocation = findViewById<MaterialCardView>(R.id.cardAutoBackupLocation)
-            setupTvCardFocus(cardLocation)
+            (cardEnable as? MaterialCardView)?.let { setupTvCardFocus(it) }
+            (cardSettings as? MaterialCardView)?.let { setupTvCardFocus(it) }
+            (cardTheme as? MaterialCardView)?.let { setupTvCardFocus(it) }
+            (cardPassword as? MaterialCardView)?.let { setupTvCardFocus(it) }
+            val cardLocation = findViewById<MaterialCardView?>(R.id.cardAutoBackupLocation)
+            cardLocation?.let { setupTvCardFocus(it) }
             setupTvButtonFocus(btnBackupNow)
         }
     }
@@ -231,11 +296,13 @@ class AutoBackupActivity : AppCompatActivity() {
         chkBackupSettings.isChecked = AutoBackupPrefs.isBackupSettings(this)
         chkBackupTheme.isChecked = AutoBackupPrefs.isBackupTheme(this)
 
+        isUpdatingScheduleUI = true
         when (AutoBackupPrefs.getScheduleType(this)) {
-            "daily" -> rbDaily.isChecked = true
-            "monthly" -> rbMonthly.isChecked = true
-            else -> rbWeekly.isChecked = true
+            "daily" -> toggleSchedule.check(R.id.btnDaily)
+            "monthly" -> toggleSchedule.check(R.id.btnMonthly)
+            else -> toggleSchedule.check(R.id.btnWeekly)
         }
+        isUpdatingScheduleUI = false
 
         updatePasswordStatus()
         updateLocationUI()
@@ -279,12 +346,20 @@ class AutoBackupActivity : AppCompatActivity() {
     private fun setControlsEnabled(enabled: Boolean) {
         chkBackupSettings.isEnabled = enabled
         chkBackupTheme.isEnabled = enabled
-        radioSchedule.isEnabled = enabled
-        findViewById<MaterialCardView>(R.id.cardAutoBackupSettings).isEnabled = enabled
-        findViewById<MaterialCardView>(R.id.cardAutoBackupTheme).isEnabled = enabled
-        findViewById<MaterialCardView>(R.id.cardSchedule).isEnabled = enabled
-        findViewById<MaterialCardView>(R.id.cardAutoBackupPassword).isEnabled = enabled
-        findViewById<MaterialCardView>(R.id.cardAutoBackupLocation).isEnabled = enabled
+        toggleSchedule.isEnabled = enabled
+        btnDaily.isEnabled = enabled
+        btnWeekly.isEnabled = enabled
+        btnMonthly.isEnabled = enabled
+        findViewById<View?>(R.id.cardAutoBackupSettings)?.isEnabled = enabled
+        findViewById<View?>(R.id.cardAutoBackupTheme)?.isEnabled = enabled
+        findViewById<View?>(R.id.cardSchedule)?.isEnabled = enabled
+        findViewById<View?>(R.id.cardAutoBackupPassword)?.isEnabled = enabled
+        findViewById<View?>(R.id.cardAutoBackupLocation)?.isEnabled = enabled
+        toggleLocation.isEnabled = enabled
+        btnLocationDefault.isEnabled = enabled
+        btnLocationCustom.isEnabled = enabled
+        btnSelectFolder.isEnabled = enabled
+        btnResetLocation.isEnabled = enabled
         btnBackupNow.isEnabled = enabled
     }
 
@@ -329,7 +404,6 @@ class AutoBackupActivity : AppCompatActivity() {
             tilPassword.error = null
             tilConfirm.error = null
             dialog.dismiss()
-            // Store password in EncryptedSharedPreferences
             AutoBackupPrefs.setPassword(this, pw)
             AutoBackupPrefs.setUsePassword(this, true)
             updatePasswordStatus()
@@ -338,18 +412,7 @@ class AutoBackupActivity : AppCompatActivity() {
 
         btnSkip.setOnClickListener {
             dialog.dismiss()
-            // Confirm plain text choice
-            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-                .setTitle(R.string.backup_password_skip_title)
-                .setMessage(R.string.backup_password_skip_warning)
-                .setPositiveButton(R.string.save_unencrypted) { _, _ ->
-                    AutoBackupPrefs.setPassword(this, null)
-                    AutoBackupPrefs.setUsePassword(this, false)
-                    updatePasswordStatus()
-                    updateSummary()
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            showSkipConfirmDialog()
         }
 
         dialog.show()
@@ -366,6 +429,98 @@ class AutoBackupActivity : AppCompatActivity() {
             }
             btnEncrypt.requestFocus()
         }
+    }
+
+    private fun showSkipConfirmDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_backup_skip_confirm_tv else R.layout.dialog_backup_skip_confirm,
+            null
+        )
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        val btnSaveUnencrypted = dialogView.findViewById<Button>(R.id.btnSaveUnencrypted)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+
+        btnSaveUnencrypted.setOnClickListener {
+            AutoBackupPrefs.setPassword(this, null)
+            AutoBackupPrefs.setUsePassword(this, false)
+            updatePasswordStatus()
+            updateSummary()
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    // ── Folder Guidance Dialog ─────────────────────────────────────────────
+
+    private fun showFolderGuideDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(
+            if (isTv) R.layout.dialog_backup_folder_guide_tv else R.layout.dialog_backup_folder_guide,
+            null
+        )
+
+        val cardCurrentLocation = dialogView.findViewById<View?>(R.id.cardCurrentLocation)
+        val txtCurrentPath = dialogView.findViewById<TextView>(R.id.txtCurrentPath)
+        val btnBrowse = dialogView.findViewById<Button>(R.id.btnBrowse)
+        val btnResetDefault = dialogView.findViewById<Button>(R.id.btnResetDefault)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
+
+        val isCustom = AutoBackupPrefs.isCustomLocationSet(this)
+        if (isCustom) {
+            txtCurrentPath.text = AutoBackupPrefs.getBackupDirectoryDisplayPath(this)
+            cardCurrentLocation?.visibility = View.VISIBLE
+            btnResetDefault.visibility = View.VISIBLE
+        } else {
+            cardCurrentLocation?.visibility = View.GONE
+            btnResetDefault.visibility = View.GONE
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnBrowse.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, za.kilowatch.ultimatefilemanager.storage.StorageBrowserActivity::class.java).apply {
+                putExtra(za.kilowatch.ultimatefilemanager.storage.FileBrowserActivity.EXTRA_AUTO_BACKUP_FOLDER_PICKER, true)
+            }
+            backupFolderPickerLauncher.launch(intent)
+        }
+
+        btnResetDefault.setOnClickListener {
+            dialog.dismiss()
+            resetLocationToDefault()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            updateLocationUI()
+        }
+
+        dialog.show()
+    }
+
+    private fun resetLocationToDefault() {
+        AutoBackupPrefs.clearCustomLocation(this)
+        updateLocationUI()
+        Toast.makeText(this, R.string.auto_backup_reset_success, Toast.LENGTH_SHORT).show()
     }
 
     // ── UI updates ─────────────────────────────────────────────────────────
@@ -411,30 +566,34 @@ class AutoBackupActivity : AppCompatActivity() {
 
     private fun updateLocationUI() {
         isUpdatingLocationUI = true
-        val isCustom = AutoBackupPrefs.isCustomLocationSet(this)
-        if (isCustom) {
-            rbLocationCustom.isChecked = true
+        val isCustomConfigured = AutoBackupPrefs.isCustomLocationSet(this)
+        val isCustomToggled = (toggleLocation.checkedButtonId == R.id.btnLocationCustom) || isCustomConfigured
+        if (isCustomToggled) {
+            toggleLocation.check(R.id.btnLocationCustom)
         } else {
-            rbLocationDefault.isChecked = true
+            toggleLocation.check(R.id.btnLocationDefault)
         }
         isUpdatingLocationUI = false
 
-        val path = AutoBackupPrefs.getBackupDirectoryDisplayPath(this)
-        if (isCustom) {
-            txtLocationPath.text = path
-            txtLocationPath.visibility = View.VISIBLE
+        if (isCustomToggled) {
             btnSelectFolder.visibility = View.VISIBLE
-            btnResetLocation.visibility = View.VISIBLE
 
-            val localPath = AutoBackupPrefs.getCustomLocalPath(this)
-            if (localPath.isEmpty()) {
-                txtLocationWarning.setText(R.string.auto_backup_location_not_set)
-                txtLocationWarning.visibility = View.VISIBLE
-            } else if (!AutoBackupPrefs.isCustomLocationAvailable(this)) {
-                txtLocationWarning.setText(R.string.auto_backup_location_unavailable)
-                txtLocationWarning.visibility = View.VISIBLE
+            if (isCustomConfigured) {
+                val path = AutoBackupPrefs.getBackupDirectoryDisplayPath(this)
+                txtLocationPath.text = path
+                txtLocationPath.visibility = View.VISIBLE
+                btnResetLocation.visibility = View.VISIBLE
+
+                if (!AutoBackupPrefs.isCustomLocationAvailable(this)) {
+                    txtLocationWarning.setText(R.string.auto_backup_location_unavailable)
+                    txtLocationWarning.visibility = View.VISIBLE
+                } else {
+                    txtLocationWarning.visibility = View.GONE
+                }
             } else {
+                txtLocationPath.visibility = View.GONE
                 txtLocationWarning.visibility = View.GONE
+                btnResetLocation.visibility = View.GONE
             }
         } else {
             txtLocationPath.visibility = View.GONE
@@ -450,10 +609,8 @@ class AutoBackupActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         btnBackupNow.isEnabled = false
 
-        // Enqueue a one-shot backup worker
         AutoBackupScheduler.runOnceNow(this)
 
-        // Show progress briefly, then check result
         btnBackupNow.postDelayed({
             progressBar.visibility = View.GONE
             btnBackupNow.isEnabled = true
@@ -489,10 +646,10 @@ class AutoBackupActivity : AppCompatActivity() {
 
         btn.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                btn.setBackgroundTintList(ColorStateList.valueOf(yellowFill))
+                btn.backgroundTintList = ColorStateList.valueOf(yellowFill)
                 if (btn is Button) btn.setTextColor(blackText)
             } else {
-                btn.setBackgroundTintList(ColorStateList.valueOf(defaultBg))
+                btn.backgroundTintList = ColorStateList.valueOf(defaultBg)
                 if (btn is Button) btn.setTextColor(defaultText)
             }
         }

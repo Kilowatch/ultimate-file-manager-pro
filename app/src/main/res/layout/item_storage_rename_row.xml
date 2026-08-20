@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rowRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="14dp"
+    android:paddingVertical="13dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Frosted Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginEnd="14dp">
+
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_storage_internal"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title & Subtitle -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginEnd="10dp">
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_card_text_primary"
+            android:textSize="15.5sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="Internal Storage" />
+
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            tools:text="Original: Internal • 128 GB" />
+    </LinearLayout>
+
+    <!-- Online / Offline Pill Badge -->
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="3dp"
+        android:background="@drawable/bg_badge"
+        android:textColor="@android:color/white"
+        android:textSize="10.5sp"
+        android:fontFamily="sans-serif-bold"
+        android:layout_marginEnd="10dp"
+        tools:text="ONLINE" />
+
+    <!-- Edit Action Button -->
+    <FrameLayout
+        android:id="@+id/btnEditAction"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/imgAction"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_edit"
+            app:tint="@color/mobile_icon_tint"
+            android:contentDescription="@string/rename_action" />
+    </FrameLayout>
+
+</LinearLayout>

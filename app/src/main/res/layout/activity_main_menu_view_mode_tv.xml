@@ -41,6 +41,7 @@
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
@@ -89,8 +90,10 @@
                         android:id="@+id/rbList"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -142,8 +145,10 @@
                         android:id="@+id/rbGrid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -180,7 +185,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="List Layout Size"
+                    android:text="@string/layout_list_size_section"
                     android:textColor="@color/tv_text_secondary"
                     android:textSize="14sp"
                     android:layout_marginBottom="12dp"
@@ -209,15 +214,29 @@
                             android:id="@+id/rbSizeLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/tv_button_focused_yellow"
                             android:clickable="false"
-                            android:focusable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                            android:focusable="false"
+                            android:saveEnabled="false" />
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:text="Large"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="22sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/margin_lg">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_large"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="22sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_large_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -245,15 +264,29 @@
                             android:id="@+id/rbSizeMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/tv_button_focused_yellow"
                             android:clickable="false"
-                            android:focusable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                            android:focusable="false"
+                            android:saveEnabled="false" />
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:text="Medium"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="22sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/margin_lg">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_medium"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="22sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_medium_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -281,19 +314,34 @@
                             android:id="@+id/rbSizeSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/tv_button_focused_yellow"
                             android:clickable="false"
-                            android:focusable="false" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                            android:focusable="false"
+                            android:saveEnabled="false" />
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:text="Small"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="22sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/margin_lg">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_small"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="22sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/layout_size_small_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
+
             <!-- Section: Columns -->
             <LinearLayout
                 android:id="@+id/layoutColumns"
@@ -336,16 +384,32 @@
                             android:id="@+id/rbColumns4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/tv_button_focused_yellow"
                             android:clickable="false"
-                            android:focusable="false" />
+                            android:focusable="false"
+                            android:saveEnabled="false" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:text="@string/columns_4"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="22sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/margin_lg">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columns_4"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="22sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columns_4_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -375,16 +439,32 @@
                             android:id="@+id/rbColumns3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:buttonTint="@color/tv_button_focused_yellow"
                             android:clickable="false"
-                            android:focusable="false" />
+                            android:focusable="false"
+                            android:saveEnabled="false" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_lg"
-                            android:text="@string/columns_3"
-                            android:textColor="@color/tv_text_primary"
-                            android:textSize="22sp" />
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/margin_lg">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columns_3"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="22sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/columns_3_desc"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

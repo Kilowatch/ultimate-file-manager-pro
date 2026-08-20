@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@drawable/bg_bottom_sheet">
+    android:padding="24dp"
+    android:background="@drawable/bg_dialog_glass">
 
     <!-- Title -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/tile_color_custom"
-        android:textColor="@color/ufm_text_primary"
-        android:textSize="17sp"
-        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
         android:gravity="center_horizontal"
         android:layout_marginBottom="16dp" />
 
@@ -31,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <Space android:layout_width="12dp" android:layout_height="match_parent" />
+        <Space android:layout_width="14dp" android:layout_height="match_parent" />
 
-        <!-- Vertical hue slider — same height as palette (enforced by weight) -->
+        <!-- Vertical hue slider -->
         <za.kilowatch.ultimatefilemanager.ui.HueSliderView
             android:id="@+id/hueSlider"
             android:layout_width="32dp"
@@ -47,21 +47,21 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="14dp">
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="#"
-            android:textColor="@color/ufm_text_secondary"
-            android:textSize="16sp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="17sp"
             android:fontFamily="monospace"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="6dp" />
 
         <EditText
             android:id="@+id/hexInput"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
             android:layout_marginEnd="12dp"
             android:maxLength="8"
@@ -69,11 +69,11 @@
             android:digits="0123456789abcdefABCDEF"
             android:fontFamily="monospace"
             android:textSize="15sp"
-            android:textColor="@color/ufm_text_primary"
+            android:textColor="@color/mobile_text_primary"
             android:hint="FF6B35"
-            android:textColorHint="@color/ufm_text_secondary"
+            android:textColorHint="@color/mobile_text_secondary"
             android:background="@drawable/bg_input_field"
-            android:paddingHorizontal="10dp"
+            android:paddingHorizontal="12dp"
             android:gravity="center_vertical" />
 
         <View
@@ -90,50 +90,58 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="14dp">
+        android:layout_marginTop="16dp">
 
         <View android:id="@+id/swatchBlack"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#000000"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchWhite"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#FFFFFF"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchRed"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#E53935"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchOrange"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#FB8C00"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchYellow"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#FFEB3B"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchGreen"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#4CAF50"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchBlue"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#1E88E5"
+            android:layout_marginHorizontal="3.5dp" />
         <View android:id="@+id/swatchPurple"
-            android:layout_width="36dp" android:layout_height="36dp"
+            android:layout_width="34dp" android:layout_height="34dp"
             android:background="@drawable/bg_color_swatch"
-            android:layout_marginHorizontal="4dp" />
+            android:backgroundTint="#8E24AA"
+            android:layout_marginHorizontal="3.5dp" />
 
     </LinearLayout>
 
-    <!-- Preview + action buttons -->
+    <!-- Action buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="20dp">
 
         <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
@@ -141,15 +149,26 @@
             android:id="@+id/btnCancel"
             style="@style/Widget.Material3Expressive.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:text="@string/tile_color_cancel"
-            android:textColor="@color/ufm_text_secondary" />
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            android:textColor="@color/mobile_text_secondary"
+            android:layout_marginEnd="8dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelect"
-            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
+            android:minWidth="100dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:cornerRadius="12dp"
+            app:backgroundTint="?attr/colorPrimary"
             android:text="@string/tile_color_done" />
 
     </LinearLayout>

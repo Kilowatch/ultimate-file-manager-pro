@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Long Press Toolbar Icons settings screen — TV.
+    Android TV Long Press Toolbar Icons settings screen — following Language & TV Glass Card standard
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -9,9 +9,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tv_gradient">
+    android:background="@drawable/bg_tv_gradient"
+    tools:context=".settings.ToolbarIconsActivity">
 
-    <!-- TV Header Bar -->
+    <!-- TV Header Bar (72dp standard) -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
@@ -33,7 +34,6 @@
             android:contentDescription="@string/cd_back"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:background="@drawable/selector_tv_icon_btn" />
 
         <LinearLayout
@@ -58,32 +58,82 @@
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <!-- Reset Defaults Button -->
+        <ImageView
+            android:id="@+id/btnResetDefaults"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_undo"
+            android:contentDescription="@string/settings_toolbar_icons_reset_defaults"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn" />
     </LinearLayout>
 
-    <!-- Content -->
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
         android:clipToPadding="false"
-        android:scrollbars="none"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/layoutIconsContainer"
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/tv_safe_horizontal"
             android:paddingTop="@dimen/margin_xl"
             android:paddingBottom="48dp"
-            android:clipToPadding="false">
+            android:clipChildren="false">
 
-            <!-- Rows will be injected here -->
+            <!-- Context Info Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:focusable="false"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="@dimen/card_radius_lg"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="@color/tv_glass_border">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/margin_xl"
+                    android:paddingVertical="16dp"
+                    android:background="@drawable/bg_glass_card">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_more"
+                        android:layout_marginEnd="@dimen/margin_lg"
+                        app:tint="@color/tv_accent"
+                        android:importantForAccessibility="no" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_toolbar_icons_info_notice"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="3dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dynamically populated TV cards -->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

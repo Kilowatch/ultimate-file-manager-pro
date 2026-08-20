@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Video Thumbnail Time settings screen — following Language standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,6 +12,7 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".settings.VideoThumbnailTimeActivity">
 
+    <!-- TV Header Bar (72dp standard) -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
@@ -30,7 +34,6 @@
             android:contentDescription="@string/back"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:background="@drawable/selector_tv_icon_btn" />
 
         <LinearLayout
@@ -57,17 +60,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
@@ -76,306 +71,16 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/tv_safe_horizontal"
-            android:paddingVertical="@dimen/margin_xl">
+            android:paddingTop="@dimen/margin_xl"
+            android:paddingBottom="48dp"
+            android:clipChildren="false">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPercent0"
-            android:layout_width="match_parent"
-            android:layout_height="88dp"
-            android:layout_marginBottom="@dimen/margin_md"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/selector_tv_card"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="@dimen/card_radius_lg"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/tv_glass_border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_xl"
-                android:background="@drawable/bg_glass_card">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="@dimen/margin_lg"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="0%"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:gravity="center" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/vtt_percent_0"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <RadioButton
-                    android:id="@+id/rbPercent0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/tv_accent"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPercent10"
-            android:layout_width="match_parent"
-            android:layout_height="88dp"
-            android:layout_marginBottom="@dimen/margin_md"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/selector_tv_card"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="@dimen/card_radius_lg"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/tv_glass_border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_xl"
-                android:background="@drawable/bg_glass_card">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="@dimen/margin_lg"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="10%"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:gravity="center" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/vtt_percent_10"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <RadioButton
-                    android:id="@+id/rbPercent10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/tv_accent"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPercent25"
-            android:layout_width="match_parent"
-            android:layout_height="88dp"
-            android:layout_marginBottom="@dimen/margin_md"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/selector_tv_card"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="@dimen/card_radius_lg"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/tv_glass_border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_xl"
-                android:background="@drawable/bg_glass_card">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="@dimen/margin_lg"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="25%"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:gravity="center" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/vtt_percent_25"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <RadioButton
-                    android:id="@+id/rbPercent25"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/tv_accent"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPercent50"
-            android:layout_width="match_parent"
-            android:layout_height="88dp"
-            android:layout_marginBottom="@dimen/margin_md"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/selector_tv_card"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="@dimen/card_radius_lg"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/tv_glass_border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_xl"
-                android:background="@drawable/bg_glass_card">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="@dimen/margin_lg"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="50%"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:gravity="center" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/vtt_percent_50"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <RadioButton
-                    android:id="@+id/rbPercent50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/tv_accent"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardPercent75"
-            android:layout_width="match_parent"
-            android:layout_height="88dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            android:foreground="@drawable/selector_tv_card"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="@dimen/card_radius_lg"
-            app:cardElevation="0dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@color/tv_glass_border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="@dimen/margin_xl"
-                android:background="@drawable/bg_glass_card">
-
-                <FrameLayout
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="@dimen/margin_lg"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="75%"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:gravity="center" />
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/vtt_percent_75"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="22sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <RadioButton
-                    android:id="@+id/rbPercent75"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="@color/tv_accent"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
+            <!-- Dynamically populated TV cards -->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

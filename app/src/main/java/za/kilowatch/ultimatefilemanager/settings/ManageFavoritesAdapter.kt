@@ -1,5 +1,6 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.util.FileTypeIconProvider
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 class ManageFavoritesAdapter(
     private val isTv: Boolean,
@@ -41,32 +43,34 @@ class ManageFavoritesAdapter(
         private val txtPath: TextView = itemView.findViewById(R.id.txtPath)
         private val imgIcon: ImageView = itemView.findViewById(R.id.imgIcon)
         private val btnDelete: ImageView = itemView.findViewById(R.id.btnDelete)
-        private val card: MaterialCardView = itemView as MaterialCardView
+        private val btnDeleteContainer: View? = itemView.findViewById(R.id.btnDeleteContainer)
+        private val card: MaterialCardView = itemView.findViewById(R.id.cardFavorite)
 
         fun bind(item: FavoritesManager.FavoriteItem) {
             txtLabel.text = item.label
             txtPath.text = item.path
 
             val ctx = itemView.context
+            val iconTint = if (isTv) ctx.getColor(R.color.tv_accent) else ThemeColors.primary(ctx)
             if (item.isFolder) {
                 imgIcon.setImageResource(IconCustomizationManager.getEffectiveIconRes(ctx, "folder_default", R.drawable.ic_folder))
-                imgIcon.setColorFilter(ctx.getColor(if (isTv) R.color.tv_icon_tint else R.color.mobile_icon_tint))
+                imgIcon.setColorFilter(iconTint)
             } else {
-                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(ctx, item.path.substringAfterLast('.', "")))
-                imgIcon.setColorFilter(ctx.getColor(if (isTv) R.color.tv_icon_tint else R.color.mobile_icon_tint))
+                imgIcon.setImageResource(FileTypeIconProvider.iconForExtension(item.path.substringAfterLast('.', "")))
+                imgIcon.setColorFilter(iconTint)
             }
 
-            btnDelete.setOnClickListener {
-                onDeleteClick(item)
-            }
-
-            // Also handle card click for TV D-pad OK support
-            card.setOnClickListener {
-                onDeleteClick(item)
-            }
+            val deleteAction = { onDeleteClick(item) }
+            btnDelete.setOnClickListener { deleteAction() }
+            btnDeleteContainer?.setOnClickListener { deleteAction() }
 
             if (isTv) {
+                card.setOnClickListener { deleteAction() }
                 setupTvCardFocus(card, btnDelete)
+            } else {
+                card.setCardBackgroundColor(ctx.getColor(R.color.mobile_glass_card))
+                txtLabel.setTextColor(ctx.getColor(R.color.mobile_card_text_primary))
+                txtPath.setTextColor(ctx.getColor(R.color.mobile_text_secondary))
             }
         }
 
@@ -77,11 +81,17 @@ class ManageFavoritesAdapter(
             val primaryText = itemView.context.getColor(R.color.tv_text_primary)
             val secondText  = itemView.context.getColor(R.color.tv_text_secondary)
 
+            // Initial
+            card.setCardBackgroundColor(glassColor)
+            txtLabel.setTextColor(primaryText)
+            txtPath.setTextColor(secondText)
+            btnDelete.setColorFilter(secondText)
+
             card.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     card.setCardBackgroundColor(yellowFill)
                     txtLabel.setTextColor(blackText)
-                    txtPath.setTextColor(blackText)
+                    txtPath.setTextColor(Color.parseColor("#333333"))
                     btnDelete.setColorFilter(blackText)
                 } else {
                     card.setCardBackgroundColor(glassColor)
@@ -91,12 +101,10 @@ class ManageFavoritesAdapter(
                 }
             }
 
-            // TV hover states for delete button specifically
             btnDelete.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     btnDelete.setColorFilter(itemView.context.getColor(R.color.tv_error_red))
                 } else {
-                    // Reset to parent state
                     if (card.hasFocus()) {
                         btnDelete.setColorFilter(blackText)
                     } else {

@@ -1,14 +1,20 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import za.kilowatch.ultimatefilemanager.R
+import za.kilowatch.ultimatefilemanager.storage.TileIconManager
+import za.kilowatch.ultimatefilemanager.util.ThemeColors
 
 data class IconCategoryData(
     val id: String,
@@ -44,8 +50,8 @@ class IconCustomizationAdapter(
 
         holder.categoryName.text = category.label
         holder.itemCount.text = "${category.icons.size}"
-        holder.expandArrow.setImageResource(R.drawable.ic_expand_more)
         holder.expandArrow.rotation = if (isExpanded) 180f else 0f
+        holder.divider.visibility = if (isExpanded) View.VISIBLE else View.GONE
         holder.childrenContainer.removeAllViews()
         holder.childrenContainer.visibility = if (isExpanded) View.VISIBLE else View.GONE
 
@@ -64,25 +70,29 @@ class IconCustomizationAdapter(
             val black = holder.itemView.context.getColor(R.color.tv_button_focused_yellow_text)
             val white = holder.itemView.context.getColor(R.color.tv_text_primary)
             val secondary = holder.itemView.context.getColor(R.color.tv_text_secondary)
-            
+
             holder.headerLayout.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     holder.categoryName.setTextColor(black)
                     holder.itemCount.setTextColor(black)
-                    holder.expandArrow.imageTintList = android.content.res.ColorStateList.valueOf(black)
+                    holder.expandArrow.imageTintList = ColorStateList.valueOf(black)
                 } else {
                     holder.categoryName.setTextColor(white)
-                    holder.itemCount.setTextColor(secondary)
-                    holder.expandArrow.imageTintList = android.content.res.ColorStateList.valueOf(white)
+                    holder.itemCount.setTextColor(holder.itemView.context.getColor(R.color.tv_accent))
+                    holder.expandArrow.imageTintList = ColorStateList.valueOf(holder.itemView.context.getColor(R.color.tv_accent))
                 }
             }
         }
 
         // Build children
         if (isExpanded) {
-            for (iconItem in category.icons) {
+            category.icons.forEachIndexed { index, iconItem ->
                 val inlineChild = createIconChildView(holder, iconItem)
                 holder.childrenContainer.addView(inlineChild)
+
+                if (index < category.icons.size - 1) {
+                    holder.childrenContainer.addView(createDivider(holder.itemView.context))
+                }
             }
         }
     }
@@ -91,8 +101,14 @@ class IconCustomizationAdapter(
         val context = holder.itemView.context
         val density = context.resources.displayMetrics.density
 
-        val paddingHorizontal = (density * (if (isTv) 24 else 16)).toInt()
+        val paddingHorizontal = (density * (if (isTv) 24 else 14)).toInt()
         val paddingVertical = (density * (if (isTv) 16 else 12)).toInt()
+
+        val isCustomized = IconCustomizationManager.getOverride(context, iconItem.id) != null ||
+            (iconItem.id.startsWith("tile_") && (
+                !TileIconManager.getTileIcon(context, iconItem.id.removePrefix("tile_")).isNullOrEmpty() ||
+                TileIconManager.getTileIconRes(context, iconItem.id.removePrefix("tile_")) != 0
+            ))
 
         val child = LinearLayout(context).apply {
             layoutParams = LinearLayout.LayoutParams(
@@ -108,62 +124,97 @@ class IconCustomizationAdapter(
                 isFocusableInTouchMode = false
                 setBackgroundResource(R.drawable.selector_tv_list_item)
             } else {
-                val outValue = android.util.TypedValue()
+                val outValue = TypedValue()
                 context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
                 setBackgroundResource(outValue.resourceId)
             }
         }
 
-        // Icon preview
-        val iconSize = (density * (if (isTv) 64 else 56)).toInt()
-        val iconMarginEnd = (density * (if (isTv) 16 else 12)).toInt()
-        val iconPadding = (density * (if (isTv) 12 else 10)).toInt()
+        // Frosted Icon Badge (44dp)
+        val badgeSize = (density * (if (isTv) 56 else 44)).toInt()
+        val iconSize = (density * (if (isTv) 28 else 22)).toInt()
+        val iconContainer = FrameLayout(context).apply {
+            layoutParams = LinearLayout.LayoutParams(badgeSize, badgeSize).apply {
+                marginEnd = (density * 14).toInt()
+            }
+            setBackgroundResource(if (isTv) R.drawable.bg_glass_card else R.drawable.bg_btn_icon_frosted)
+        }
 
         val iconIv = ImageView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(iconSize, iconSize).also {
-                it.setMargins(0, 0, iconMarginEnd, 0)
-            }
-            scaleType = ImageView.ScaleType.CENTER_INSIDE
-            setPadding(iconPadding, iconPadding, iconPadding, iconPadding)
-            setBackgroundResource(if (isTv) R.drawable.bg_glass_card else R.drawable.bg_icon_circle_accent)
+            layoutParams = FrameLayout.LayoutParams(iconSize, iconSize, Gravity.CENTER)
+            scaleType = ImageView.ScaleType.FIT_CENTER
         }
         IconCustomizationManager.applyToView(context, iconIv, iconItem.id, iconItem.defaultRes)
-        child.addView(iconIv)
+        iconContainer.addView(iconIv)
+        child.addView(iconContainer)
 
-        // Label
-        val labelTv = TextView(context).apply {
-            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            text = iconItem.label
-            textSize = if (isTv) 20f else 16f
-            setTextColor(context.getColor(if (isTv) R.color.tv_text_primary else android.R.color.primary_text_dark))
-        }
-        child.addView(labelTv)
-
-        // Reset button (hidden on TV, user can reset in the customize dialog)
-        if (!isTv) {
-            val resetBtn = TextView(context).apply {
-                layoutParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                text = context.getString(R.string.reset_icon)
-                textSize = 13f
-                setTextColor(context.getColor(android.R.color.holo_red_light))
-                setPadding((density * 8).toInt(), (density * 4).toInt(), (density * 8).toInt(), (density * 4).toInt())
-                setOnClickListener { onIconReset(iconItem) }
+        // Text Layout (Title + Subtitle)
+        val textContainer = LinearLayout(context).apply {
+            layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f).apply {
+                marginEnd = (density * 8).toInt()
             }
-            child.addView(resetBtn)
+            orientation = LinearLayout.VERTICAL
+        }
+
+        val labelTv = TextView(context).apply {
+            text = iconItem.label
+            textSize = if (isTv) 18f else 15f
+            typeface = Typeface.create("sans-serif-bold", Typeface.NORMAL)
+            setTextColor(context.getColor(if (isTv) R.color.tv_text_primary else R.color.mobile_card_text_primary))
+        }
+        textContainer.addView(labelTv)
+
+        val statusTv = TextView(context).apply {
+            textSize = 12f
+            layoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = (density * 2).toInt()
+            }
+            if (isCustomized) {
+                text = context.getString(R.string.icon_status_customized)
+                setTextColor(if (isTv) context.getColor(R.color.tv_accent) else ThemeColors.primary(context))
+                typeface = Typeface.create("sans-serif-bold", Typeface.NORMAL)
+            } else {
+                text = context.getString(R.string.icon_status_default)
+                setTextColor(context.getColor(if (isTv) R.color.tv_text_secondary else R.color.mobile_text_secondary))
+            }
+        }
+        textContainer.addView(statusTv)
+        child.addView(textContainer)
+
+        // Reset button (if customized and not TV)
+        if (!isTv && isCustomized) {
+            val resetBadge = FrameLayout(context).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    (density * 36).toInt(),
+                    (density * 36).toInt()
+                )
+                setBackgroundResource(R.drawable.bg_btn_icon_frosted)
+                isClickable = true
+                isFocusable = true
+            }
+            val resetIv = ImageView(context).apply {
+                layoutParams = FrameLayout.LayoutParams(
+                    (density * 18).toInt(),
+                    (density * 18).toInt(),
+                    Gravity.CENTER
+                )
+                setImageResource(R.drawable.ic_refresh)
+                imageTintList = ColorStateList.valueOf(context.getColor(R.color.mobile_stop_btn))
+                contentDescription = context.getString(R.string.reset_icon)
+            }
+            resetBadge.addView(resetIv)
+            resetBadge.setOnClickListener { onIconReset(iconItem) }
+            child.addView(resetBadge)
         }
 
         if (isTv) {
             val black = context.getColor(R.color.tv_button_focused_yellow_text)
             val white = context.getColor(R.color.tv_text_primary)
             child.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    labelTv.setTextColor(black)
-                } else {
-                    labelTv.setTextColor(white)
-                }
+                labelTv.setTextColor(if (hasFocus) black else white)
             }
         }
 
@@ -173,6 +224,20 @@ class IconCustomizationAdapter(
         return child
     }
 
+    private fun createDivider(context: android.content.Context): View {
+        val density = context.resources.displayMetrics.density
+        return View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                (1 * density).toInt()
+            ).apply {
+                marginStart = (14 * density).toInt()
+                marginEnd = (14 * density).toInt()
+            }
+            setBackgroundColor(context.getColor(R.color.mobile_glass_stroke))
+        }
+    }
+
     override fun getItemCount(): Int = categories.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -180,6 +245,7 @@ class IconCustomizationAdapter(
         val categoryName: TextView = itemView.findViewById(R.id.txtCategoryName)
         val itemCount: TextView = itemView.findViewById(R.id.txtItemCount)
         val expandArrow: ImageView = itemView.findViewById(R.id.imgExpandArrow)
+        val divider: View = itemView.findViewById(R.id.divider)
         val childrenContainer: LinearLayout = itemView.findViewById(R.id.layoutChildren)
     }
 }

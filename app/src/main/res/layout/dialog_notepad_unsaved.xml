@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Notepad Unsaved Changes — Premium Glassmorphic Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- 64dp Warning Hero Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_warning"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/unsaved_changes_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Message Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:id="@+id/txtMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unsaved_changes_message"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.3"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <!-- Save Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveUnsaved"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_save"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
+
+    <!-- Discard Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDiscardUnsaved"
+        style="@style/Widget.Material3Expressive.Button.TonalButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/btn_discard"
+        android:textColor="@color/ufm_denied"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:cornerRadius="12dp" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelUnsaved"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@android:string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

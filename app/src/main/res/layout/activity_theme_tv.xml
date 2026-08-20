@@ -58,18 +58,9 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Hidden toolbar for compatibility -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!-- Theme option cards — scrollable container -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingHorizontal="@dimen/tv_safe_horizontal"
@@ -112,27 +103,41 @@
 
                     <!-- Swatch -->
                     <View
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="#FFF5F5F5"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_theme_light_swatch"
                         android:layout_marginEnd="@dimen/margin_lg" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/theme_light"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_light"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_light_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <RadioButton
                         android:id="@+id/rbLight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_accent"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -161,27 +166,41 @@
                     android:background="@drawable/bg_glass_card">
 
                     <View
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="#FF121212"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_theme_dark_swatch"
                         android:layout_marginEnd="@dimen/margin_lg" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/theme_dark"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_dark"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_dark_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <RadioButton
                         android:id="@+id/rbDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_accent"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -209,11 +228,10 @@
                     android:paddingHorizontal="@dimen/margin_xl"
                     android:background="@drawable/bg_glass_card">
 
-                    <!-- Pure-black swatch -->
                     <View
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="#FF000000"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_theme_amoled_swatch"
                         android:layout_marginEnd="@dimen/margin_lg" />
 
                     <LinearLayout
@@ -242,9 +260,10 @@
                         android:id="@+id/rbAmoled"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_accent"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -271,42 +290,43 @@
                     android:paddingHorizontal="@dimen/margin_xl"
                     android:background="@drawable/bg_glass_card">
 
-                    <!-- Split swatch -->
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/bg_theme_system_swatch"
+                        android:contentDescription="@null"
+                        android:layout_marginEnd="@dimen/margin_lg" />
+
                     <LinearLayout
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:orientation="horizontal"
-                        android:layout_marginEnd="@dimen/margin_lg">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="#FFF5F5F5" />
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="#FF121212" />
-                    </LinearLayout>
-
-                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/theme_system"
-                        android:textColor="@color/tv_text_primary"
-                        android:textSize="22sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_system"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="22sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/theme_system_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <RadioButton
                         android:id="@+id/rbSystem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:buttonTint="@color/tv_accent"
+                        android:buttonTint="@color/tv_button_focused_yellow"
                         android:clickable="false"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        android:saveEnabled="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -314,4 +334,3 @@
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

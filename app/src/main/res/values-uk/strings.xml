@@ -10523,14 +10523,8 @@ UFM Spreadsheet Viewer
 \n
 Відкрийте папку, натисніть «Сортування та фільтр» і виберіть «Ця папка», щоб створити перевизначення.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Очистити все
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Видалити всі перевизначення сортування для папок? Папки повернуться до глобального налаштування сортування.
-</string>
-    <string name="folder_sort_manager_deleted">
-Перевизначення видалено
 </string>
     <string name="folder_sort_network_badge">
 Мережа / Онлайн

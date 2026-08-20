@@ -1,6 +1,8 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,11 +22,16 @@ import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.storage.FileTagsManager
 import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
+/**
+ * Mobile-only settings activity for managing file hashtags and multi-tagging preferences.
+ */
 class FileTagsSettingsActivity : AppCompatActivity() {
 
     private lateinit var switchMultiTagging: SwitchMaterial
     private lateinit var recyclerTags: RecyclerView
-    private lateinit var txtNoTags: TextView
+    private lateinit var txtHeaderCreatedTags: View
+    private lateinit var layoutEmpty: View
+    private lateinit var btnClearAll: View
     private lateinit var adapter: TagsAdapter
 
     override fun attachBaseContext(newBase: Context) {
@@ -54,9 +61,15 @@ class FileTagsSettingsActivity : AppCompatActivity() {
             finish()
         }
 
+        btnClearAll = findViewById(R.id.btnClearAll)
+        btnClearAll.setOnClickListener {
+            showClearAllConfirmDialog()
+        }
+
         switchMultiTagging = findViewById(R.id.switchMultiTagging)
+        txtHeaderCreatedTags = findViewById(R.id.txtHeaderCreatedTags)
         recyclerTags = findViewById(R.id.recyclerTags)
-        txtNoTags = findViewById(R.id.txtNoTags)
+        layoutEmpty = findViewById(R.id.layoutEmpty)
 
         setupPrefs()
         setupRecycler()
@@ -81,29 +94,74 @@ class FileTagsSettingsActivity : AppCompatActivity() {
 
     private fun loadTags() {
         val tags = FileTagsManager.getAllCreatedTags(this).sorted()
-        adapter.submitList(tags)
-        if (tags.isEmpty()) {
-            txtNoTags.visibility = View.VISIBLE
-            recyclerTags.visibility = View.GONE
-        } else {
-            txtNoTags.visibility = View.GONE
+        val hasTags = tags.isNotEmpty()
+
+        btnClearAll.visibility = if (hasTags) View.VISIBLE else View.GONE
+        txtHeaderCreatedTags.visibility = if (hasTags) View.VISIBLE else View.GONE
+
+        if (hasTags) {
             recyclerTags.visibility = View.VISIBLE
+            layoutEmpty.visibility = View.GONE
+            adapter.submitList(tags)
+        } else {
+            recyclerTags.visibility = View.GONE
+            layoutEmpty.visibility = View.VISIBLE
         }
     }
 
     private fun showDeleteConfirmDialog(tag: String) {
-        val dialogTheme = com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_file_tag_delete_confirm, null)
 
-        MaterialAlertDialogBuilder(this, dialogTheme)
-            .setTitle("Delete Tag")
-            .setMessage("Are you sure you want to delete the tag #$tag? It will be removed from all tagged files.")
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Delete") { _, _ ->
-                FileTagsManager.deleteGlobalTag(this, tag)
-                Toast.makeText(this, "Tag #$tag deleted", Toast.LENGTH_SHORT).show()
-                loadTags()
-            }
-            .show()
+        val txtMessage = dialogView.findViewById<TextView>(R.id.txtMessage)
+        val btnDeleteConfirm = dialogView.findViewById<View>(R.id.btnDeleteConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        txtMessage.text = getString(R.string.settings_file_tags_delete_confirm_message, tag)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnDeleteConfirm.setOnClickListener {
+            dialog.dismiss()
+            FileTagsManager.deleteGlobalTag(this, tag)
+            Toast.makeText(this, getString(R.string.settings_file_tags_deleted_toast, tag), Toast.LENGTH_SHORT).show()
+            loadTags()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showClearAllConfirmDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_file_tags_clear_all_confirm, null)
+
+        val btnClearConfirm = dialogView.findViewById<View>(R.id.btnClearConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnClearConfirm.setOnClickListener {
+            dialog.dismiss()
+            FileTagsManager.clearAllTags(this)
+            Toast.makeText(this, R.string.settings_file_tags_cleared_all_toast, Toast.LENGTH_SHORT).show()
+            loadTags()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private class TagsAdapter(private val onDeleteClick: (String) -> Unit) :
@@ -125,9 +183,10 @@ class FileTagsSettingsActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val tag = items[position]
             holder.txtTagName.text = "#$tag"
-            holder.btnDeleteTag.setOnClickListener {
-                onDeleteClick(tag)
-            }
+            
+            val deleteAction = { onDeleteClick(tag) }
+            holder.btnDeleteTag.setOnClickListener { deleteAction() }
+            holder.btnDeleteContainer?.setOnClickListener { deleteAction() }
         }
 
         override fun getItemCount(): Int = items.size
@@ -135,6 +194,7 @@ class FileTagsSettingsActivity : AppCompatActivity() {
         class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val txtTagName: TextView = v.findViewById(R.id.txtTagName)
             val btnDeleteTag: ImageView = v.findViewById(R.id.btnDeleteTag)
+            val btnDeleteContainer: View? = v.findViewById(R.id.btnDeleteContainer)
         }
     }
 }

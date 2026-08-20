@@ -13,23 +13,23 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.SettingsActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -49,14 +49,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/settings_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textAppearance="@style/TextAppearance.Material3.TitleLarge.Emphasized" />
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,10 +68,10 @@
         </LinearLayout>
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="@dimen/margin_md"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnListViewSize"
@@ -181,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_general"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -218,14 +219,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_search"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_search_bar_title" />
                                                 </FrameLayout>
 
@@ -283,14 +284,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_storage_internal"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_default_start_screen_title" />
                                                 </FrameLayout>
 
@@ -348,14 +349,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_language"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_language" />
                                                 </FrameLayout>
 
@@ -412,14 +413,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_apps"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_default_apps_title" />
                                                 </FrameLayout>
 
@@ -475,14 +476,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_view_list"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_main_menu_layout_title" />
                                                 </FrameLayout>
 
@@ -537,7 +538,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_appearance"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -574,14 +575,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_theme"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/theme_title" />
                                                 </FrameLayout>
 
@@ -639,14 +640,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_palette"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/icons_settings_title" />
                                                 </FrameLayout>
 
@@ -703,14 +704,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_tune"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_default_icon_colors_title" />
                                                 </FrameLayout>
 
@@ -768,14 +769,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_font_size"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/font_size_title" />
                                                 </FrameLayout>
 
@@ -833,7 +834,7 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:id="@+id/imgFolderTransitionsIcon"
@@ -841,7 +842,7 @@
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_transitions"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@null" />
                                                 </FrameLayout>
 
@@ -897,14 +898,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_home"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_breadcrumbs_title" />
                                                 </FrameLayout>
 
@@ -960,14 +961,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_font_size"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_scrolling_text_title" />
                                                 </FrameLayout>
 
@@ -1025,14 +1026,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_view_list"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_grid_indicators_title" />
                                                 </FrameLayout>
 
@@ -1087,7 +1088,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_file_management"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -1124,14 +1125,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_eye"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/show_hidden_files_1" />
                                                 </FrameLayout>
 
@@ -1188,14 +1189,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_delete"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_recycle_bin" />
                                                 </FrameLayout>
 
@@ -1251,14 +1252,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_star"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_favorites_title" />
                                                 </FrameLayout>
 
@@ -1315,14 +1316,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_sort"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_folder_sort_title" />
                                                 </FrameLayout>
 
@@ -1379,14 +1380,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_edit"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_storage_rename_title" />
                                                 </FrameLayout>
 
@@ -1443,14 +1444,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_about"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_file_tags_title" />
                                                 </FrameLayout>
 
@@ -1506,14 +1507,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_file_apk"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_apk_extract_title" />
                                                 </FrameLayout>
 
@@ -1566,7 +1567,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_controls"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -1603,14 +1604,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_long_press"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_long_press_title" />
                                                 </FrameLayout>
 
@@ -1668,14 +1669,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_star"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_toolbar_icons_title" />
                                                 </FrameLayout>
 
@@ -1732,14 +1733,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_edit"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_icon_tap_edit_mode_title" />
                                                 </FrameLayout>
 
@@ -1797,14 +1798,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_edit"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_left_handed_fab_title" />
                                                 </FrameLayout>
 
@@ -1859,7 +1860,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_twin_window"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -1896,14 +1897,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_view_list"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_twin_window_layout_title" />
                                                 </FrameLayout>
 
@@ -1961,14 +1962,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_view_list"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_twin_window_startup_title" />
                                                 </FrameLayout>
 
@@ -2023,7 +2024,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_media_player"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -2059,14 +2060,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_play"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_side_by_side_video_title" />
                                                 </FrameLayout>
 
@@ -2121,14 +2122,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_repeat"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_side_by_side_video_show_controls_on_repeat_title" />
                                                 </FrameLayout>
 
@@ -2183,14 +2184,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_play"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_autoplay_next_title" />
                                                 </FrameLayout>
 
@@ -2245,14 +2246,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_play"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_background_video_title" />
                                                 </FrameLayout>
 
@@ -2307,14 +2308,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_list_view_custom"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_mini_player_title" />
                                                 </FrameLayout>
 
@@ -2369,14 +2370,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_phone"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_resume_playback_title" />
                                                 </FrameLayout>
 
@@ -2431,14 +2432,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_skip_forward"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_skip_length_title" />
                                                 </FrameLayout>
 
@@ -2494,14 +2495,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_controls_timeout"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_controls_timeout_title" />
                                                 </FrameLayout>
 
@@ -2556,7 +2557,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_thumbnails"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -2593,14 +2594,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_photo_video"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_media_thumbnails_title" />
                                                 </FrameLayout>
 
@@ -2657,14 +2658,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_photo_video"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/video_thumbnail_time_title" />
                                                 </FrameLayout>
 
@@ -2719,14 +2720,14 @@
                             <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_cloud"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_network_thumbnails_title" />
                                                 </FrameLayout>
 
@@ -2779,7 +2780,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_network_performance"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -2821,14 +2822,14 @@
                                                     <FrameLayout
                                                         android:layout_width="44dp"
                                                         android:layout_height="44dp"
-                                                        android:background="@drawable/bg_icon_circle_accent">
+                                                        android:background="@drawable/bg_btn_icon_frosted">
 
                                                         <ImageView
                                                             android:layout_width="22dp"
                                                             android:layout_height="22dp"
                                                             android:layout_gravity="center"
                                                             android:src="@drawable/ic_copy"
-                                                            app:tint="@color/mobile_icon_tint"
+                                                            app:tint="?attr/colorPrimary"
                                                             android:contentDescription="@string/settings_quick_transfer_title" />
                                                     </FrameLayout>
 
@@ -2901,14 +2902,14 @@
                                                     <FrameLayout
                                                         android:layout_width="44dp"
                                                         android:layout_height="44dp"
-                                                        android:background="@drawable/bg_icon_circle_accent">
+                                                        android:background="@drawable/bg_btn_icon_frosted">
 
                                                         <ImageView
                                                             android:layout_width="22dp"
                                                             android:layout_height="22dp"
                                                             android:layout_gravity="center"
                                                             android:src="@drawable/ic_copy"
-                                                            app:tint="@color/mobile_icon_tint"
+                                                            app:tint="?attr/colorPrimary"
                                                             android:contentDescription="@string/settings_cache_copy_title" />
                                                     </FrameLayout>
 
@@ -2976,14 +2977,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_cloud"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_network_open_cache_title" />
                                                 </FrameLayout>
 
@@ -3041,14 +3042,14 @@
                             <FrameLayout
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
-                                android:background="@drawable/bg_icon_circle_accent">
+                                android:background="@drawable/bg_btn_icon_frosted">
 
                                 <ImageView
                                     android:layout_width="22dp"
                                     android:layout_height="22dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_tv"
-                                    app:tint="@color/mobile_icon_tint"
+                                    app:tint="?attr/colorPrimary"
                                     android:contentDescription="@string/settings_tv_background_server_title" />
                             </FrameLayout>
 
@@ -3106,14 +3107,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_ufm_ftp"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_file_server_tiles_title" />
                                                 </FrameLayout>
 
@@ -3170,14 +3171,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_storage_internal"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/database_viewer" />
                                                 </FrameLayout>
 
@@ -3231,7 +3232,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_backup"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -3268,14 +3269,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_export"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/backup_restore_title" />
                                                 </FrameLayout>
 
@@ -3332,14 +3333,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_cloud"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_auto_backup_title" />
                                                 </FrameLayout>
 
@@ -3393,7 +3394,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/settings_section_privacy_diagnostics"
-                    android:textColor="@color/ufm_primary_blue"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="12sp"
                     android:fontFamily="sans-serif-bold"
                     android:letterSpacing="0.08"
@@ -3430,14 +3431,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_tip_jar_glow"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_tip_jar_popup_title" />
                                                 </FrameLayout>
 
@@ -3495,14 +3496,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_tune"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_analytics_title" />
                                                 </FrameLayout>
 
@@ -3559,14 +3560,14 @@
                                                 <FrameLayout
                                                     android:layout_width="44dp"
                                                     android:layout_height="44dp"
-                                                    android:background="@drawable/bg_icon_circle_accent">
+                                                    android:background="@drawable/bg_btn_icon_frosted">
 
                                                     <ImageView
                                                         android:layout_width="22dp"
                                                         android:layout_height="22dp"
                                                         android:layout_gravity="center"
                                                         android:src="@drawable/ic_crash_report"
-                                                        app:tint="@color/mobile_icon_tint"
+                                                        app:tint="?attr/colorPrimary"
                                                         android:contentDescription="@string/settings_crash_report_title" />
                                                 </FrameLayout>
 

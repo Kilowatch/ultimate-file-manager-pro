@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/tv_glass_white_10"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/tv_glass_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
+
+        <FrameLayout
+            android:id="@+id/badgeContainer"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/bg_icon_circle_accent">
+
+            <TextView
+                android:id="@+id/txtBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-black"
+                tools:text="10%" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                tools:text="10% into video" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="12sp"
+                tools:text="Recommended default — skips black or opening intro frames" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/rbSelect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/tv_button_focused_yellow"
+            android:clickable="false"
+            android:focusable="false"
+            android:saveEnabled="false" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

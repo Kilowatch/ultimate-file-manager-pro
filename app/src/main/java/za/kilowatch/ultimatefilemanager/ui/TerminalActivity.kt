@@ -130,14 +130,19 @@ class TerminalActivity : AppCompatActivity() {
 
         // Long-press on RecyclerView to copy all terminal output
         recycler.setOnLongClickListener {
-            val allText = adapter.getAllLines().joinToString("\n")
-            if (allText.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip = ClipData.newPlainText(getString(R.string.terminal_output), allText)
-                clipboard.setPrimaryClip(clip)
-                Toast.makeText(this, R.string.copied_all_output_to_clipboard, Toast.LENGTH_SHORT).show()
-            }
+            copyAllOutputToClipboard()
             true
+        }
+
+        // Header copy & clear buttons
+        findViewById<View>(R.id.btnCopyTerminal)?.setOnClickListener {
+            copyAllOutputToClipboard()
+        }
+
+        findViewById<View>(R.id.btnClearTerminal)?.setOnClickListener {
+            adapter.clear()
+            adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
+            Toast.makeText(this, R.string.adb_terminal_cleared, Toast.LENGTH_SHORT).show()
         }
 
         val editCommand = findViewById<EditText>(R.id.editCommand)
@@ -153,8 +158,32 @@ class TerminalActivity : AppCompatActivity() {
             } else false
         }
 
-        // pairingLauncher is registered in onCreate() before any coroutine launches
-        // to satisfy the LifecycleOwner contract (must register before STARTED).
+        // Quick command chips
+        fun bindQuickChip(id: Int, command: String, isClear: Boolean = false) {
+            findViewById<TextView>(id)?.setOnClickListener {
+                if (isClear) {
+                    adapter.clear()
+                    adapter.addLine(getString(R.string.welcome_to_ufm_adb_shell))
+                    Toast.makeText(this, R.string.adb_terminal_cleared, Toast.LENGTH_SHORT).show()
+                } else {
+                    editCommand.setText(command)
+                    editCommand.setSelection(command.length)
+                    if (adbManager.isConnected()) {
+                        sendCommand()
+                    }
+                }
+            }
+        }
+
+        bindQuickChip(R.id.chipCmdLs, "ls -la")
+        bindQuickChip(R.id.chipCmdPm, "pm list packages")
+        bindQuickChip(R.id.chipCmdTop, "top -n 1")
+        bindQuickChip(R.id.chipCmdDf, "df -h")
+        bindQuickChip(R.id.chipCmdProp, "getprop")
+        bindQuickChip(R.id.chipCmdBattery, "dumpsys battery")
+        bindQuickChip(R.id.chipCmdUptime, "uptime")
+        bindQuickChip(R.id.chipCmdLogcat, "logcat -d -t 50")
+        bindQuickChip(R.id.chipCmdClear, "clear", isClear = true)
 
         btnConnect.setOnClickListener {
             // Launch dedicated pairing activity instead of dialog
@@ -182,6 +211,16 @@ class TerminalActivity : AppCompatActivity() {
         }
     }
 
+    private fun copyAllOutputToClipboard() {
+        val allText = adapter.getAllLines().joinToString("\n")
+        if (allText.isNotEmpty()) {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(getString(R.string.terminal_output), allText)
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this, R.string.adb_terminal_copied, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     /**
      * SEC-§8.9: Show a security warning once per ADB session.
      * Uses an in-memory flag so the warning fires once for each new session but is
@@ -200,15 +239,31 @@ class TerminalActivity : AppCompatActivity() {
     }
 
     private fun updateStatus(status: String) {
-        findViewById<TextView>(R.id.txtStatus).text = status
+        findViewById<TextView>(R.id.txtStatus)?.text = status
+        val dotStatus = findViewById<View>(R.id.dotStatus) ?: return
+        val color = when {
+            status == getString(R.string.adb_terminal_status_connected) -> android.graphics.Color.parseColor("#4ADE80") // Bright Green
+            status == getString(R.string.adb_terminal_status_connecting) -> android.graphics.Color.parseColor("#FACC15") // Yellow
+            else -> android.graphics.Color.parseColor("#94A3B8") // Slate Grey
+        }
+        val bg = android.graphics.drawable.GradientDrawable().apply {
+            shape = android.graphics.drawable.GradientDrawable.OVAL
+            setColor(color)
+        }
+        dotStatus.background = bg
     }
 
     private fun updateButtonState() {
         val btnConnect = findViewById<View>(R.id.btnConnect)
         val btnDisconnect = findViewById<View>(R.id.btnDisconnect)
         val isConnected = adbManager.isConnected()
-        btnConnect.visibility = if (isConnected) View.GONE else View.VISIBLE
-        btnDisconnect.visibility = if (isConnected) View.VISIBLE else View.GONE
+        btnConnect?.visibility = if (isConnected) View.GONE else View.VISIBLE
+        btnDisconnect?.visibility = if (isConnected) View.VISIBLE else View.GONE
+        if (isConnected) {
+            updateStatus(getString(R.string.adb_terminal_status_connected))
+        } else {
+            updateStatus(getString(R.string.adb_terminal_status_disconnected))
+        }
     }
 
     override fun onResume() {
@@ -266,7 +321,7 @@ class TerminalActivity : AppCompatActivity() {
 
     private fun showConnectDialog(onConnectionStateChanged: (() -> Unit)? = null) {
         // Dialog for ADB connection and pairing
-        val builder = MaterialAlertDialogBuilder(this)
+        val builder = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
         
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_adb_pairing, null)
@@ -276,6 +331,7 @@ class TerminalActivity : AppCompatActivity() {
         val btnScan = view.findViewById<Button>(R.id.btnScanDevices)
         val btnConnectNoPIN = view.findViewById<Button>(R.id.btnConnectNoPIN)
         val btnTogglePIN = view.findViewById<Button>(R.id.btnTogglePIN)
+        val btnConnectWithPin = view.findViewById<Button>(R.id.btnConnectWithPin)
         val pinContainer = view.findViewById<android.view.ViewGroup>(R.id.pinContainer)
         val scanProgressContainer = view.findViewById<android.view.ViewGroup>(R.id.scanProgressContainer)
         val scanProgressText = view.findViewById<android.widget.TextView>(R.id.scanProgressText)
@@ -370,35 +426,24 @@ class TerminalActivity : AppCompatActivity() {
         var isSessionActive = false
         
         // Create the dialog first
-        val dialog = builder.setTitle(R.string.adb_pairing_title)
-               .setView(view)
-               .setNegativeButton(R.string.cancel) { d, _ ->
-                   if (!isSessionActive) {
-                       connectionJob?.cancel()
-                       lifecycleScope.launch(Dispatchers.IO) { adbManager.disconnectExplicit() }
-                   }
-                   d.dismiss()
-               }
-               .setPositiveButton(R.string.adb_terminal_connect, null)  // Placeholder, will be overridden
-               .setOnDismissListener {
-                   if (!isSessionActive) {
-                       connectionJob?.cancel()
-                       lifecycleScope.launch(Dispatchers.IO) { adbManager.disconnectExplicit() }
-                   }
-                   txtAdbStatus.clearAnimation()
-               }
-               .show()
-
-        // Get the positive button for PIN connection
-        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
-        positiveButton.visibility = android.view.View.GONE
+        val dialog = builder
+            .setView(view)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.setOnDismissListener {
+            if (!isSessionActive) {
+                connectionJob?.cancel()
+                lifecycleScope.launch(Dispatchers.IO) { adbManager.disconnectExplicit() }
+            }
+            txtAdbStatus.clearAnimation()
+        }
+        dialog.show()
 
         // Now set up the toggle with access to the dialog
         btnTogglePIN.setOnClickListener {
             pinVisible = !pinVisible
             pinContainer.visibility = if (pinVisible) android.view.View.VISIBLE else android.view.View.GONE
-            positiveButton.visibility = if (pinVisible) android.view.View.VISIBLE else android.view.View.GONE
-            btnTogglePIN.text = if (pinVisible) getString(R.string.hide_pin) else "Use PIN"
+            btnTogglePIN.text = if (pinVisible) getString(R.string.hide_pin) else getString(R.string.use_pin_pairing)
         }
 
         // Connect without PIN
@@ -408,7 +453,7 @@ class TerminalActivity : AppCompatActivity() {
             txtAdbStatus.visibility = View.GONE
             
             // Disable buttons to prevent double-click
-            positiveButton.isEnabled = false
+            btnConnectWithPin?.isEnabled = false
             btnConnectNoPIN.isEnabled = false
             
             adapter.addLine("[UI] Starting connect without PIN")
@@ -419,7 +464,7 @@ class TerminalActivity : AppCompatActivity() {
                     isSessionActive = true
                     dialog.dismiss()
                 } else {
-                    positiveButton.isEnabled = true
+                    btnConnectWithPin?.isEnabled = true
                     btnConnectNoPIN.isEnabled = true
                     // Ensure status text visible if not already
                     txtAdbStatus?.apply {
@@ -430,7 +475,7 @@ class TerminalActivity : AppCompatActivity() {
                 }
             }, reenableButtons = {
                 // Defensive re-enable in case callback wasn't invoked
-                positiveButton.isEnabled = true
+                btnConnectWithPin?.isEnabled = true
                 btnConnectNoPIN.isEnabled = true
                 txtAdbStatus?.apply {
                     clearAnimation()
@@ -455,13 +500,13 @@ class TerminalActivity : AppCompatActivity() {
             })
         }
 
-        // Override positive button for PIN
-        positiveButton.setOnClickListener {
+        // Connect with PIN
+        btnConnectWithPin?.setOnClickListener {
             val host = if (selectedHost.isNotEmpty()) selectedHost else "127.0.0.1"
             val port = editPort.text.toString().toIntOrNull() ?: 5555
             val pin = pins.joinToString("") { it.text.toString() }
             if (pin.length == 6) {
-                positiveButton.isEnabled = false
+                btnConnectWithPin.isEnabled = false
                 btnConnectNoPIN.isEnabled = false
                 adapter.addLine("[UI] Starting connect with PIN")
                 startAdbSession(host, port, pin, txtAdbStatus, { success ->
@@ -471,7 +516,7 @@ class TerminalActivity : AppCompatActivity() {
                         isSessionActive = true
                         dialog.dismiss()
                     } else {
-                        positiveButton.isEnabled = true
+                        btnConnectWithPin.isEnabled = true
                         btnConnectNoPIN.isEnabled = true
                         txtAdbStatus?.apply {
                             visibility = View.VISIBLE
@@ -480,7 +525,7 @@ class TerminalActivity : AppCompatActivity() {
                         }
                     }
                 }, reenableButtons = {
-                    positiveButton.isEnabled = true
+                    btnConnectWithPin.isEnabled = true
                     btnConnectNoPIN.isEnabled = true
                     txtAdbStatus?.apply {
                         clearAnimation()
@@ -735,6 +780,13 @@ class TerminalActivity : AppCompatActivity() {
 
         /** Must be called on the Main thread only. */
         fun getAllLines(): List<String> = lines.toList()
+
+        /** Clears the terminal output buffer. */
+        fun clear() {
+            val count = lines.size
+            lines.clear()
+            notifyDataSetChanged()
+        }
 
         override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): ViewHolder {
             val tv = TextView(parent.context).apply {

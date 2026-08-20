@@ -42,4 +42,11 @@ object ToolbarIconsPreferenceManager {
     fun setIconEnabled(context: Context, key: String, enabled: Boolean) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit().putBoolean(key, enabled).apply()
     }
+
+    fun resetToDefaults(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
+    }
 }

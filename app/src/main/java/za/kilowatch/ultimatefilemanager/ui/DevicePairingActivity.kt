@@ -85,12 +85,16 @@ class DevicePairingActivity : AppCompatActivity() {
         setupRecyclerView()
         
         val btnAdd = findViewById<View>(R.id.btnAddDevice)
-        btnAdd.setOnClickListener {
+        btnAdd?.setOnClickListener {
             if (isTvMode) {
                 showTvPairingDialog()
             } else {
                 startMobileDiscovery()
             }
+        }
+
+        findViewById<View>(R.id.btnLinkTvEmpty)?.setOnClickListener {
+            startMobileDiscovery()
         }
         
         if (isTvMode) {
@@ -131,7 +135,9 @@ class DevicePairingActivity : AppCompatActivity() {
     private fun refreshList() {
         val devices = pairingManager.getAllPairedDevices()
         adapter.setDevices(devices)
-        findViewById<TextView>(R.id.txtEmptyState).visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.layoutEmptyState)?.visibility = if (devices.isEmpty()) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.recyclerPairedDevices)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
+        findViewById<View>(R.id.btnAddDevice)?.visibility = if (devices.isEmpty()) View.GONE else View.VISIBLE
 
         // Asynchronously verify connected devices are still reachable
         lifecycleScope.launch {
@@ -163,26 +169,50 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     private fun showRenameDialog(device: PairedDevice) {
-        val input = EditText(this)
-        input.setText(device.name)
-        
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.rename_device)
-            .setView(input)
-            .setPositiveButton(R.string.network_btn_save) { _, _ ->
-                val newName = input.text.toString()
+        if (isTvMode) {
+            val input = EditText(this)
+            input.setText(device.name)
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.rename_device)
+                .setView(input)
+                .setPositiveButton(R.string.network_btn_save) { _, _ ->
+                    val newName = input.text.toString()
+                    if (newName.isNotBlank()) {
+                        device.name = newName
+                        pairingManager.addOrUpdateDevice(device)
+                        refreshList()
+                    }
+                }
+                .setNegativeButton(R.string.cancel, null)
+                .show()
+        } else {
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_rename_device, null)
+            val edtName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtDeviceName)
+            edtName.setText(device.name)
+            edtName.setSelection(device.name.length)
+
+            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnSaveName).setOnClickListener {
+                val newName = edtName.text?.toString()?.trim() ?: ""
                 if (newName.isNotBlank()) {
-                    // Update the local display name only.
-                    // Do NOT push to the remote — renameRemoteDevice sends our own deviceId
-                    // to the remote's /rename endpoint, which renames the phone's record on
-                    // the TV, making both sides appear to have the same new name.
                     device.name = newName
                     pairingManager.addOrUpdateDevice(device)
                     refreshList()
+                    dialog.dismiss()
                 }
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+
+            dialogView.findViewById<View>(R.id.btnCancelName).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        }
     }
 
     private fun showDeleteConfirmationDialog(device: PairedDevice) {
@@ -194,12 +224,26 @@ class DevicePairingActivity : AppCompatActivity() {
                 .setNegativeButton(R.string.cancel, null)
                 .show()
         } else {
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.remove_device)
-                .setMessage(getString(R.string.are_you_sure_you_want_to_remove_devicename_from_paired_devices, device.name))
-                .setPositiveButton(R.string.network_delete_confirm_yes) { _, _ -> performDelete(device) }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
+            val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unpair_device_confirm, null)
+            val txtMsg = dialogView.findViewById<TextView>(R.id.txtConfirmMsg)
+            txtMsg.text = getString(R.string.are_you_sure_you_want_to_remove_devicename_from_paired_devices, device.name)
+
+            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            dialogView.findViewById<View>(R.id.btnUnpairConfirm).setOnClickListener {
+                dialog.dismiss()
+                performDelete(device)
+            }
+
+            dialogView.findViewById<View>(R.id.btnCancelUnpair).setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         }
     }
 
@@ -250,12 +294,13 @@ class DevicePairingActivity : AppCompatActivity() {
 
     // --- MOBILE FLOW ---
     private fun startMobileDiscovery() {
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.searching_for_tvs)
-            .setMessage(R.string.looking_for_tvs_on_local)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_device_discovery_progress, null)
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
             .setCancelable(false)
             .create()
         progressDialog.show()
+        progressDialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         
         lifecycleScope.launch {
             val foundDevices = PairingDiscovery.discoverDevices(this@DevicePairingActivity)
@@ -271,14 +316,36 @@ class DevicePairingActivity : AppCompatActivity() {
     }
 
     private fun showTvSelectionDialog(devices: List<PairingDiscovery.DiscoveredDevice>) {
-        val names = devices.map { it.deviceName }.toTypedArray()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.select_tv_to_link)
-            .setItems(names) { _, which ->
-                showPinEntryDialog(devices[which])
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_select_tv, null)
+        val listContainer = dialogView.findViewById<android.widget.LinearLayout>(R.id.layoutDiscoveredList)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelSelect)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        for (device in devices) {
+            val itemView = LayoutInflater.from(this).inflate(R.layout.item_discovered_tv, listContainer, false)
+            val txtName = itemView.findViewById<TextView>(R.id.txtDiscoveredTvName)
+            val txtIp = itemView.findViewById<TextView>(R.id.txtDiscoveredTvIp)
+
+            txtName.text = device.deviceName
+            txtIp.text = device.ipAddress
+
+            itemView.setOnClickListener {
+                dialog.dismiss()
+                showPinEntryDialog(device)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            listContainer.addView(itemView)
+        }
+
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showPinEntryDialog(targetDevice: PairingDiscovery.DiscoveredDevice) {
@@ -316,32 +383,34 @@ class DevicePairingActivity : AppCompatActivity() {
             }
         }
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.enter_pin)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
-            .setPositiveButton(R.string.link, null) // set null to override later
-            .setNegativeButton(R.string.cancel, null)
+            .setCancelable(true)
             .create()
 
-        dialog.setOnShowListener {
-            d1.requestFocus()
-            // Show keyboard
-            val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
-                    as android.view.inputmethod.InputMethodManager
-            imm.showSoftInput(d1, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
-
-            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val pin = digits.joinToString("") { it.text.toString() }
-                if (pin.length == 4) {
-                    dialog.dismiss()
-                    performPairingRequest(targetDevice, pin)
-                } else {
-                    Toast.makeText(this, R.string.please_enter_all_4_digits, Toast.LENGTH_SHORT).show()
-                }
+        dialogView.findViewById<View>(R.id.btnLink).setOnClickListener {
+            val pin = digits.joinToString("") { it.text.toString() }
+            if (pin.length == 4) {
+                dialog.dismiss()
+                performPairingRequest(targetDevice, pin)
+            } else {
+                Toast.makeText(this, R.string.please_enter_all_4_digits, Toast.LENGTH_SHORT).show()
             }
         }
 
+        dialogView.findViewById<View>(R.id.btnCancelPin).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            d1.requestFocus()
+            val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE)
+                    as android.view.inputmethod.InputMethodManager
+            imm.showSoftInput(d1, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+        }
+
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun performPairingRequest(targetDevice: PairingDiscovery.DiscoveredDevice, pin: String) {

@@ -47,6 +47,9 @@ import com.tom_roush.pdfbox.pdmodel.graphics.image.JPEGFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.settings.LocaleHelper
 import za.kilowatch.ultimatefilemanager.settings.ThemeHelper
@@ -62,7 +65,7 @@ import java.util.Locale
 class DocumentScannerActivity : AppCompatActivity() {
 
     private lateinit var txtSubtitle: TextView
-    private lateinit var txtEmptyState: TextView
+    private lateinit var layoutEmptyContainer: View
     private lateinit var pagesRecycler: RecyclerView
     private lateinit var btnScanPage: com.google.android.material.button.MaterialButton
     private lateinit var btnSave: com.google.android.material.button.MaterialButton
@@ -119,9 +122,9 @@ class DocumentScannerActivity : AppCompatActivity() {
                 selectedNetPath = netPath ?: ""
                 selectedFolderPath = null
             }
-            if (pendingFormat != null && pendingFileName != null) {
-                showSaveDialog(pendingFormat!!, pendingFileName!!)
-            }
+        }
+        if (pendingFormat != null && pendingFileName != null) {
+            showSaveDialog(pendingFormat!!, pendingFileName!!)
         }
     }
 
@@ -149,7 +152,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         }
 
         txtSubtitle = findViewById(R.id.txtSubtitle)
-        txtEmptyState = findViewById(R.id.txtEmptyState)
+        layoutEmptyContainer = findViewById(R.id.layoutEmptyContainer)
         pagesRecycler = findViewById(R.id.pagesRecycler)
         btnScanPage = findViewById(R.id.btnScanPage)
         btnSave = findViewById(R.id.btnSave)
@@ -171,10 +174,10 @@ class DocumentScannerActivity : AppCompatActivity() {
 
     private fun showCaptureChoice() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_scanner_source, null)
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialogView.findViewById<View>(R.id.btnCamera).setOnClickListener {
             dialog.dismiss()
             launchCamera()
@@ -182,6 +185,9 @@ class DocumentScannerActivity : AppCompatActivity() {
         dialogView.findViewById<View>(R.id.btnGallery).setOnClickListener {
             dialog.dismiss()
             launchGallery()
+        }
+        dialogView.findViewById<View>(R.id.btnCancelSource)?.setOnClickListener {
+            dialog.dismiss()
         }
         dialog.show()
     }
@@ -256,11 +262,11 @@ class DocumentScannerActivity : AppCompatActivity() {
         val count = scannedBitmaps.size
         txtSubtitle.text = getString(R.string.scanner_pages, count)
         if (count == 0) {
-            txtEmptyState.visibility = View.VISIBLE
+            layoutEmptyContainer.visibility = View.VISIBLE
             pagesRecycler.visibility = View.GONE
             btnSave.visibility = View.GONE
         } else {
-            txtEmptyState.visibility = View.GONE
+            layoutEmptyContainer.visibility = View.GONE
             pagesRecycler.visibility = View.VISIBLE
             btnSave.visibility = View.VISIBLE
             btnSave.isEnabled = true
@@ -325,19 +331,18 @@ class DocumentScannerActivity : AppCompatActivity() {
             }
         }
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         btnSelectFolder.setOnClickListener {
+            val nameInput = edtFilename.text?.toString()?.trim() ?: ""
+            val baseName = if (nameInput.isNotEmpty()) nameInput else "Scan"
             pendingFormat = selectedFormat
-            pendingFileName = "${edtFilename.text}.$selectedFormat"
+            pendingFileName = "$baseName.$selectedFormat"
             dialog.dismiss()
-            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
-                putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
-            }
-            folderPickerLauncher.launch(intent)
+            showSelectFolderGuide()
         }
 
         btnConfirm.setOnClickListener {
@@ -357,12 +362,58 @@ class DocumentScannerActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    private fun showSelectFolderGuide() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_scanner_guide, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogView.findViewById<View>(R.id.btnProceedGuide)?.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(this, StorageBrowserActivity::class.java).apply {
+                putExtra(FileBrowserActivity.EXTRA_SCANNER_FOLDER_PICKER, true)
+            }
+            folderPickerLauncher.launch(intent)
+        }
+        dialogView.findViewById<View>(R.id.btnCancelGuide)?.setOnClickListener {
+            dialog.dismiss()
+            if (pendingFormat != null && pendingFileName != null) {
+                showSaveDialog(pendingFormat!!, pendingFileName!!)
+            }
+        }
+        dialog.show()
+    }
+
+    private fun showSaveSuccessDialog(targetFile: File, displayLocation: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_scanner_success, null)
+        val tvSavedFileName = dialogView.findViewById<TextView>(R.id.tvSavedFileName)
+        val tvSavedLocationPath = dialogView.findViewById<TextView>(R.id.tvSavedLocationPath)
+        val btnSavedGotIt = dialogView.findViewById<View>(R.id.btnSavedGotIt)
+
+        tvSavedFileName?.text = targetFile.name
+        tvSavedLocationPath?.text = displayLocation
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnSavedGotIt?.setOnClickListener {
+            dialog.dismiss()
+            finish()
+        }
+        dialog.show()
+    }
+
     private fun doSave(targetFile: File, format: String) {
         val progressView = layoutInflater.inflate(R.layout.dialog_scanner_progress, null)
-        val progressDialog = AlertDialog.Builder(this)
+        val progressDialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(progressView)
             .setCancelable(false)
             .create()
+        progressDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         progressDialog.show()
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -426,14 +477,15 @@ class DocumentScannerActivity : AppCompatActivity() {
                     if (tempFile.exists()) tempFile.delete()
                 }
 
+                val displayLocation = when {
+                    selectedFolderPath != null -> selectedFolderPath!!
+                    selectedNetShareId != null -> "${selectedNetShareId}/${selectedNetPath ?: ""}"
+                    else -> getDefaultScansDir()
+                }
+
                 withContext(Dispatchers.Main) {
                     if (progressDialog.isShowing) progressDialog.dismiss()
-                    Toast.makeText(
-                        this@DocumentScannerActivity,
-                        getString(R.string.scanner_saved, targetFile.name),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    finish()
+                    showSaveSuccessDialog(targetFile, displayLocation)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {

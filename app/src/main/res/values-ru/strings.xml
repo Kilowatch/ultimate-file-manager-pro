@@ -10523,14 +10523,8 @@ UFM Просмотр таблиц
 \n
 Откройте папку, нажмите «Сортировка и фильтр» и выберите \\\"Эта папка\\\", чтобы создать переопределение.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Очистить всё
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Удалить все переопределения сортировки для папок? Папки вернутся к глобальной настройке сортировки.
-</string>
-    <string name="folder_sort_manager_deleted">
-Переопределение удалено
 </string>
     <string name="folder_sort_network_badge">
 Сеть / Онлайн

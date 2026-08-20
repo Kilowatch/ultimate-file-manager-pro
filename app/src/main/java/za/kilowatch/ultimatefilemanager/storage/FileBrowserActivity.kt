@@ -1,6 +1,8 @@
 package za.kilowatch.ultimatefilemanager.storage
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -591,24 +593,81 @@ class FileBrowserActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnRefreshIndex)?.visibility = if (isIndexed) View.VISIBLE else View.GONE
     }
 
-    private fun showConfirmExtractLocalFolderDialog() {
-        val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.extract_here)
-            .setMessage(getString(R.string.extract_contents_to_path, path))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.extract_here_1) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+    private fun showFolderConfirmDialog(
+        heroIconRes: Int,
+        title: CharSequence,
+        subtitle: CharSequence,
+        folderName: String,
+        path: String,
+        description: CharSequence?,
+        actionText: CharSequence,
+        actionIconRes: Int = R.drawable.ic_check_circle,
+        onConfirm: () -> Unit
+    ) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_folder_confirm, null)
+        val imgHero = dialogView.findViewById<ImageView>(R.id.imgPickerConfirmHero)
+        val txtTitle = dialogView.findViewById<TextView>(R.id.txtPickerConfirmTitle)
+        val txtSubtitle = dialogView.findViewById<TextView>(R.id.txtPickerConfirmSubtitle)
+        val imgCardIcon = dialogView.findViewById<ImageView>(R.id.imgPickerConfirmCardIcon)
+        val txtFolderName = dialogView.findViewById<TextView>(R.id.txtPickerConfirmFolderName)
+        val txtPath = dialogView.findViewById<TextView>(R.id.txtPickerConfirmPath)
+        val txtDesc = dialogView.findViewById<TextView>(R.id.txtPickerConfirmDesc)
+        val btnAction = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPickerConfirmAction)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnPickerConfirmCancel)
+
+        imgHero?.setImageResource(heroIconRes)
+        imgCardIcon?.setImageResource(heroIconRes)
+        txtTitle?.text = title
+        txtSubtitle?.text = subtitle
+        txtFolderName?.text = folderName
+        txtPath?.text = path
+
+        if (description != null) {
+            txtDesc?.text = description
+            txtDesc?.visibility = View.VISIBLE
+        } else {
+            txtDesc?.visibility = View.GONE
+        }
+
+        btnAction?.text = actionText
+        btnAction?.setIconResource(actionIconRes)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        btnAction?.setOnClickListener {
+            dialog.dismiss()
+            onConfirm()
+        }
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
-
+    private fun showConfirmExtractLocalFolderDialog() {
+        val path = currentDir.absolutePath
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_extract,
+            title = getString(R.string.extract_here),
+            subtitle = "Choose destination for archive extraction",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.extract_contents_to_path, path),
+            actionText = getString(R.string.extract_here_1),
+            actionIconRes = R.drawable.ic_extract
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+            }
+            setResult(RESULT_OK, result)
+            finish()
+        }
+    }
 
     private fun confirmSmartSortFolder() {
         val path = currentDir.absolutePath
@@ -616,13 +675,19 @@ class FileBrowserActivity : AppCompatActivity() {
             returnSmartSortResult(path)
             return
         }
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.smart_sort_warning_title)
-            .setMessage(getString(R.string.smart_sort_warning_message, path))
-            .setIcon(R.drawable.ic_warning)
-            .setPositiveButton(R.string.btn_continue) { _, _ -> returnSmartSortResult(path) }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_warning,
+            title = getString(R.string.smart_sort_warning_title),
+            subtitle = "High-Risk Directory Warning",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.smart_sort_warning_message, path),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_warning
+        ) {
+            returnSmartSortResult(path)
+        }
     }
 
     private fun returnSmartSortResult(path: String) {
@@ -644,131 +709,155 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showConfirmCompressLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.compress_here)
-            .setMessage(getString(R.string.save_archive_to_path, path))
-            .setIcon(R.drawable.ic_compress)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_compress,
+            title = getString(R.string.compress_here),
+            subtitle = "Choose destination folder for archive",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.save_archive_to_path, path),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_compress
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmImageCompressLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.compress_here)
-            .setMessage(getString(R.string.save_archive_to_path, path))
-            .setIcon(R.drawable.ic_compress_image)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_compress_image,
+            title = getString(R.string.compress_here),
+            subtitle = "Choose destination folder for compressed images",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.save_archive_to_path, path),
+            actionText = getString(R.string.use_this_folder_image),
+            actionIconRes = R.drawable.ic_compress_image
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmGifCreatorLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.gif_creator_title)
-            .setMessage(getString(R.string.save_archive_to_path, path))
-            .setIcon(R.drawable.ic_gif)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                    putExtra(RESULT_SELECTED_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_gif,
+            title = getString(R.string.gif_creator_title),
+            subtitle = "Choose destination folder for generated GIF",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.save_archive_to_path, path),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_gif
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
+                putExtra(RESULT_SELECTED_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmSyncLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_source_folder)
-            .setMessage(
-                getString(R.string.use_folder_as_sync_source, path) +
-                getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share)
-            )
-            .setIcon(R.drawable.ic_sync)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_sync,
+            title = getString(R.string.confirm_source_folder),
+            subtitle = "Select source directory for folder sync",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.use_folder_as_sync_source, path) + " " +
+                getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_sync
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmAdvancedSyncLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_source_folder)
-            .setMessage(
-                getString(R.string.use_folder_as_sync_source, path) +
-                getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share)
-            )
-            .setIcon(R.drawable.ic_sync_advanced)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_sync_advanced,
+            title = getString(R.string.confirm_source_folder),
+            subtitle = "Select source directory for advanced sync profile",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.use_folder_as_sync_source, path) + " " +
+                getString(R.string.files_in_this_folder_will_be_backed_up_to_your_network_share),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_sync_advanced
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmAdvancedSyncDestFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.confirm_destination_folder)
-            .setMessage(getString(R.string.use_folder_as_sync_destination, path))
-            .setIcon(R.drawable.ic_sync_advanced)
-            .setPositiveButton(R.string.btn_continue) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_sync_advanced,
+            title = getString(R.string.confirm_destination_folder),
+            subtitle = "Select destination directory for advanced sync profile",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.use_folder_as_sync_destination, path),
+            actionText = getString(R.string.btn_continue),
+            actionIconRes = R.drawable.ic_sync_advanced
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmLocationPickerLocalFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.select_folder)
-            .setMessage(getString(R.string.use_folder_as_default_location, path))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_URI, "file://$path")
-                    putExtra(RESULT_LABEL, path)
-                    putExtra(RESULT_TYPE, "LOCAL")
-                    putExtra(RESULT_META_ID, null as String?)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.select_folder),
+            subtitle = "Choose root storage location",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.use_folder_as_default_location, path),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_URI, "file://$path")
+                putExtra(RESULT_LABEL, path)
+                putExtra(RESULT_TYPE, "LOCAL")
+                putExtra(RESULT_META_ID, null as String?)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmSupportAttachmentDialog() {
@@ -845,123 +934,167 @@ class FileBrowserActivity : AppCompatActivity() {
 
     private fun showConfirmKeyfilePickedDialog() {
         val path = selectedKeyFilePath ?: return
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.use_this_key_file)
-            .setMessage(getString(R.string.use_key_file_confirm, path))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.use_this_key_file) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val fileName = java.io.File(path).name
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_lock,
+            title = getString(R.string.use_this_key_file),
+            subtitle = "Public Key Authentication",
+            folderName = fileName,
+            path = path,
+            description = getString(R.string.use_key_file_confirm, path),
+            actionText = getString(R.string.use_this_key_file),
+            actionIconRes = R.drawable.ic_lock
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmCertPickedDialog() {
         val path = selectedKeyFilePath ?: return
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_cert_import_title)
-            .setMessage(getString(R.string.remote_cert_import_msg) + "\n\n$path")
-            .setIcon(R.drawable.ic_lock)
-            .setPositiveButton(R.string.remote_use_ca) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val fileName = java.io.File(path).name
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_confirm_use_cert, null)
+        val txtFileName = dialogView.findViewById<TextView>(R.id.txtCertFileName)
+        val txtPath = dialogView.findViewById<TextView>(R.id.txtCertPath)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmUseCert)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelUseCert)
+
+        txtFileName?.text = fileName
+        txtPath?.text = path
+
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnConfirm?.setOnClickListener {
+            dialog.dismiss()
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showConfirmNetworkCacheFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.nt_use_this_folder_for_caching)
-            .setMessage(getString(R.string.nt_cache_limit_title))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.nt_use_this_folder_for_caching) { _, _ ->
-                val cacheDir = java.io.File(path, ".ufm_network_thumbnails")
-                cacheDir.mkdirs()
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, cacheDir.absolutePath)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.nt_use_this_folder_for_caching),
+            subtitle = "Network Thumbnail Cache",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.nt_cache_limit_title),
+            actionText = getString(R.string.nt_use_this_folder_for_caching),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val cacheDir = java.io.File(path, ".ufm_network_thumbnails")
+            cacheDir.mkdirs()
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, cacheDir.absolutePath)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmShareDestDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.use_this_folder)
-            .setMessage(getString(R.string.share_receive_confirm, path))
-            .setIcon(R.drawable.ic_folder)
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.use_this_folder),
+            subtitle = "Save Incoming Files",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.share_receive_confirm, path),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmNotepadFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.use_this_folder)
-            .setMessage(getString(R.string.notepad_folder_picker_title))
-            .setPositiveButton(R.string.use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_folder,
+            title = getString(R.string.use_this_folder),
+            subtitle = "Notepad Save Destination",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.notepad_folder_picker_title),
+            actionText = getString(R.string.use_this_folder),
+            actionIconRes = R.drawable.ic_folder
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmScannerFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.scanner_use_this_folder)
-            .setMessage(getString(R.string.scanner_folder_picker_title))
-            .setPositiveButton(R.string.scanner_use_this_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_scanner,
+            title = getString(R.string.scanner_use_this_folder),
+            subtitle = "Document Scanner Destination",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.scanner_folder_picker_title),
+            actionText = getString(R.string.scanner_use_this_folder),
+            actionIconRes = R.drawable.ic_scanner
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
     private fun showConfirmAutoBackupFolderDialog() {
         val path = currentDir.absolutePath
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setTitle(R.string.auto_backup_location_confirm_title)
-            .setMessage(R.string.auto_backup_location_confirm_message)
-            .setPositiveButton(R.string.auto_backup_select_folder) { _, _ ->
-                val result = Intent().apply {
-                    putExtra(RESULT_SELECTED_LOCAL_PATH, path)
-                }
-                setResult(RESULT_OK, result)
-                finish()
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        showFolderConfirmDialog(
+            heroIconRes = R.drawable.ic_cloud,
+            title = getString(R.string.auto_backup_location_confirm_title),
+            subtitle = "Automatic Backup Destination",
+            folderName = folderName,
+            path = path,
+            description = getString(R.string.auto_backup_location_confirm_message),
+            actionText = getString(R.string.auto_backup_select_folder),
+            actionIconRes = R.drawable.ic_cloud
+        ) {
+            val result = Intent().apply {
+                putExtra(RESULT_SELECTED_LOCAL_PATH, path)
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            setResult(RESULT_OK, result)
+            finish()
+        }
     }
 
-    // â”€â”€ Quick Transfer helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Quick Transfer helpers ──────────────────────────────────────────────────
 
     /**
      * Confirms the chosen folder and immediately triggers the file transfer.
@@ -970,21 +1103,27 @@ class FileBrowserActivity : AppCompatActivity() {
      */
     private fun showConfirmQuickTransferDialog(isMove: Boolean) {
         val path = currentDir.absolutePath
-        // In the picker instance pendingQuickTransferFiles is null â€” fall back to FileClipboard
+        val folderName = if (currentDir.name.isNotEmpty()) currentDir.name else path
+        // In the picker instance pendingQuickTransferFiles is null — fall back to FileClipboard
         val fileCount = pendingQuickTransferFiles?.size ?: FileClipboard.files.size
         val titleRes = if (isMove) R.string.action_move_to else R.string.action_copy_to
         val msgRes   = if (isMove) R.string.quick_transfer_move_confirm else R.string.quick_transfer_copy_confirm
         val posRes   = if (isMove) R.string.quick_transfer_move_here else R.string.quick_transfer_copy_here
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-            .setTitle(titleRes)
-            .setMessage(getString(msgRes, fileCount))
-            .setIcon(if (isMove) R.drawable.ic_move else R.drawable.ic_copy)
-            .setPositiveButton(posRes) { _, _ ->
-                quickTransferDestDir = currentDir
-                performPaste()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val iconRes  = if (isMove) R.drawable.ic_move else R.drawable.ic_copy
+
+        showFolderConfirmDialog(
+            heroIconRes = iconRes,
+            title = getString(titleRes),
+            subtitle = if (isMove) "Move files to destination" else "Copy files to destination",
+            folderName = folderName,
+            path = path,
+            description = getString(msgRes, fileCount),
+            actionText = getString(posRes),
+            actionIconRes = iconRes
+        ) {
+            quickTransferDestDir = currentDir
+            performPaste()
+        }
     }
 
     /**
@@ -1304,11 +1443,11 @@ class FileBrowserActivity : AppCompatActivity() {
         }
 
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
-            .setTitle(R.string.reindexing_title)
             .setView(dialogView)
             .setCancelable(false)
             .create()
 
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.show()
 
         lifecycleScope.launch {

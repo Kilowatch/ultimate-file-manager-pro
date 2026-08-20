@@ -1,9 +1,11 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +34,17 @@ class NetworkThumbnailCustomLimitActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         setContentView(R.layout.activity_network_thumbnail_custom_limit)
+
+        val btnBack = findViewById<View?>(R.id.btnBack)
+        btnBack?.setOnClickListener { finish() }
+        if (btnBack is ImageView) {
+            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            btnBack.imageTintList = whiteCsl
+            btnBack.setOnFocusChangeListener { _, hasFocus ->
+                btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
+            }
+        }
 
         val txtValue = findViewById<TextView>(R.id.txtValue)
         val btnMinus = findViewById<Button>(R.id.btnMinus)

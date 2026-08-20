@@ -57,4 +57,11 @@ object ApkExtractPreferenceManager {
         if (field in current) current.remove(field) else current.add(field)
         setSelectedFields(context, current)
     }
+
+    fun resetToDefaults(context: Context) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
+    }
 }

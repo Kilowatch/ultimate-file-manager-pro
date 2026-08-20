@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Mobile Document Scanner — Premium Dark Glassmorphic Standard -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,124 +10,173 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".scanner.DocumentScannerActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- 56dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="10dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
-            <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_arrow_back"
-                android:contentDescription="@string/cd_back"
-                android:clickable="true"
-                android:focusable="true"
-                app:tint="@color/mobile_icon_tint" />
-        </FrameLayout>
+        <!-- Back Button -->
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_header_action_ripple"
+            app:tint="@color/mobile_icon_tint" />
 
+        <!-- Title + Subtitle -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/scanner_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
-                android:fontFamily="sans-serif-black" />
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
             <TextView
                 android:id="@+id/txtSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end"
                 tools:text="0 pages" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Main content -->
+    <!-- Main Content Container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="28dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Scan new page button -->
+        <!-- Scan New Page Action Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnScanPage"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="50dp"
             android:text="@string/scanner_scan_new_page"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            app:cornerRadius="16dp"
-            app:backgroundTint="@color/btn_save_bg_tint"
-            android:textColor="@android:color/white"
-            app:icon="@drawable/ic_scanner"
-            app:iconTint="@android:color/white" />
-
-        <!-- Empty state -->
-        <TextView
-            android:id="@+id/txtEmptyState"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/scanner_no_pages"
-            android:textColor="@color/mobile_text_secondary"
+            android:textColor="@color/white"
             android:textSize="14sp"
-            android:visibility="gone" />
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_scanner"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/white" />
 
-        <!-- Scanned pages preview -->
+        <!-- Empty State Container -->
+        <LinearLayout
+            android:id="@+id/layoutEmptyContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
+
+            <FrameLayout
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginBottom="14dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_scanner"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtEmptyState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scanner_no_pages"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-bold"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap 'Scan New Page' above to take photos or import images from your gallery."
+                android:textColor="@color/mobile_text_secondary"
+                android:textSize="13sp"
+                android:lineSpacingMultiplier="1.2"
+                android:textAlignment="center"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <!-- Scanned Pages RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pagesRecycler"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:clipToPadding="false"
-            android:paddingBottom="16dp"
+            android:paddingBottom="12dp"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical" />
 
-        <!-- Save button -->
+        <!-- Save Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
+            style="@style/Widget.Material3Expressive.Button"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
+            android:layout_height="50dp"
             android:text="@string/scanner_save"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:visibility="gone"
-            app:cornerRadius="16dp"
-            app:backgroundTint="@color/btn_save_bg_tint"
-            android:textColor="@android:color/white"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
             app:icon="@drawable/ic_save"
-            app:iconTint="@android:color/white" />
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/white" />
 
     </LinearLayout>
 

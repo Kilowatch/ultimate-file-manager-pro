@@ -346,6 +346,70 @@ class AppManagerActivity : AppCompatActivity() {
     }
 
     private fun showAppDetail(app: AppItem) {
+        if (!DeviceUtils.isTvDevice(this)) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_app_detail_mobile, null)
+            val imgIcon = dialogView.findViewById<ImageView>(R.id.imgDetailAppIcon)
+            val tvName = dialogView.findViewById<TextView>(R.id.tvDetailAppName)
+            val tvPackage = dialogView.findViewById<TextView>(R.id.tvDetailAppPackage)
+            val tvSize = dialogView.findViewById<TextView>(R.id.tvDetailAppSize)
+            val tvDate = dialogView.findViewById<TextView>(R.id.tvDetailAppDate)
+            val tvType = dialogView.findViewById<TextView>(R.id.tvDetailAppType)
+            val layoutDebloat = dialogView.findViewById<View>(R.id.layoutDetailDebloat)
+            val tvDebloatRec = dialogView.findViewById<TextView>(R.id.tvDetailDebloatRec)
+            val tvDebloatDesc = dialogView.findViewById<TextView>(R.id.tvDetailDebloatDesc)
+            val btnExtract = dialogView.findViewById<View>(R.id.btnDetailExtract)
+            val btnAppInfo = dialogView.findViewById<View>(R.id.btnDetailAppInfo)
+            val btnClose = dialogView.findViewById<View>(R.id.btnDetailClose)
+
+            if (app.icon != null) {
+                imgIcon.setImageDrawable(app.icon)
+            } else {
+                imgIcon.setImageResource(R.drawable.ic_apps)
+            }
+            tvName.text = app.name
+            tvPackage.text = app.packageName
+            tvSize.text = Formatter.formatFileSize(this, app.appSizeBytes)
+
+            val dateFormat = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+            tvDate.text = dateFormat.format(Date(app.installedDate))
+            tvType.text = if (app.isSystem) getString(R.string.app_type_system) else getString(R.string.app_type_user)
+
+            app.debloatInfo?.let { debloat ->
+                layoutDebloat.visibility = View.VISIBLE
+                tvDebloatRec.text = debloat.recommendation.uppercase()
+                val recColor = when (debloat.recommendation.lowercase()) {
+                    "recommended" -> android.graphics.Color.parseColor("#4ADE80")
+                    "advanced" -> android.graphics.Color.parseColor("#FBBF24")
+                    "expert" -> android.graphics.Color.parseColor("#FB923C")
+                    "dangerous", "unsafe" -> android.graphics.Color.parseColor("#EF5350")
+                    else -> android.graphics.Color.parseColor("#9CA3AF")
+                }
+                tvDebloatRec.setTextColor(recColor)
+                tvDebloatDesc.text = debloat.description
+            } ?: run {
+                layoutDebloat.visibility = View.GONE
+            }
+
+            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+            btnExtract.setOnClickListener {
+                dialog.dismiss()
+                extractApp(app)
+            }
+            btnAppInfo.setOnClickListener {
+                dialog.dismiss()
+                openAppInfo(app.packageName)
+            }
+            btnClose.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+            return
+        }
+
         val bgColor = getColor(R.color.tv_bg_gradient_end)
         val white = getColor(R.color.tv_text_primary)
         val black = getColor(R.color.tv_button_focused_yellow_text)
@@ -507,12 +571,33 @@ class AppManagerActivity : AppCompatActivity() {
      * and that an 'APK / XAPK Extracts' tile will appear on the home screen.
      */
     private fun showExtractionSuccessDialog(fileName: String, wasXapk: Boolean) {
+        val formatLabel = if (wasXapk) "XAPK" else "APK"
+        if (!DeviceUtils.isTvDevice(this)) {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_app_extract_success, null)
+            val tvTitle = dialogView.findViewById<TextView>(R.id.tvExtractSuccessTitle)
+            val tvFileName = dialogView.findViewById<TextView>(R.id.tvExtractFileName)
+            val btnGotIt = dialogView.findViewById<View>(R.id.btnExtractGotIt)
+
+            tvTitle.text = getString(R.string.extracted_as_formatlabel, formatLabel)
+            tvFileName.text = fileName
+
+            val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                .setView(dialogView)
+                .create()
+            dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+            btnGotIt.setOnClickListener {
+                dialog.dismiss()
+            }
+            dialog.show()
+            return
+        }
+
         val bgColor = getColor(R.color.tv_bg_gradient_end)
         val white = getColor(R.color.tv_text_primary)
         val glassCsl = android.content.res.ColorStateList.valueOf(0x26FFFFFF.toInt())
         val greenCsl = android.content.res.ColorStateList.valueOf(0xFF4CAF50.toInt())
 
-        val formatLabel = if (wasXapk) "XAPK" else "APK"
         MaterialAlertDialogBuilder(this,
             com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
             .setTitle(getString(R.string.extracted_as_formatlabel, formatLabel))

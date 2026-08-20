@@ -1,38 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingStart="24dp"
-    android:paddingVertical="6dp">
+    android:paddingStart="20dp"
+    android:paddingEnd="16dp"
+    android:paddingVertical="9dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground">
 
     <CheckBox
         android:id="@+id/cbChild"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:buttonTint="?attr/colorPrimary"
+        android:clickable="false"
+        android:focusable="false"
+        android:saveEnabled="false" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:layout_marginStart="8dp">
+        android:layout_marginStart="12dp">
 
         <TextView
             android:id="@+id/txtChildName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurface"
+            android:textColor="@color/mobile_card_text_primary"
             android:textSize="14sp"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-medium"
+            tools:text="Setting Name" />
 
         <TextView
             android:id="@+id/txtChildExtra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:textSize="12sp" />
+            android:layout_marginTop="1dp"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Extra Info" />
     </LinearLayout>
 </LinearLayout>

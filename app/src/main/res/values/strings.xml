@@ -16,6 +16,9 @@
     <string name="language_ukrainian">Ukrainian (українська)</string>
     <string name="select_language">Select Language</string>
     <string name="language_system_default">System Default</string>
+    <string name="language_system_default_desc">Match device system language</string>
+    <string name="language_section_system">System Preference</string>
+    <string name="language_section_available">Available Languages</string>
     <string name="settings_list_size_title">Settings Row Size</string>
     <string name="cd_settings_list_size">Adjust settings row size</string>
 
@@ -164,6 +167,16 @@
     <string name="settings_favorites_subtitle">View and remove favorite items</string>
     <string name="manage_favorites_title">Favorites</string>
     <string name="manage_favorites_empty">You haven\'t added any favorites yet.\n\nLong-press a file or folder and tap the star icon to add it here.</string>
+    <string name="manage_favorites_empty_title">No Favorites Bookmarked</string>
+    <string name="manage_favorites_empty_desc">Tap the star icon on any file or folder in the file browser to bookmark it for instant access here.</string>
+    <string name="manage_favorites_info_notice">Bookmarked files and folders appear in the navigation drawer and quick access panels for fast navigation. Tap the trash icon to remove a favorite.</string>
+    <string name="manage_favorites_clear_all">Clear All Favorites</string>
+    <string name="manage_favorites_clear_all_confirm_title">Clear All Favorites?</string>
+    <string name="manage_favorites_clear_all_confirm_message">Are you sure you want to remove all items from your favorites list? This will not delete the actual files or folders.</string>
+    <string name="manage_favorites_remove_confirm_title">Remove Favorite?</string>
+    <string name="manage_favorites_remove_confirm_message">Are you sure you want to remove \"%1$s\" from your favorites list?</string>
+    <string name="manage_favorites_remove_btn">Remove Favorite</string>
+    <string name="manage_favorites_cleared_all_toast">All favorites removed</string>
     <string name="manage_favorites_removed">%1$s removed from favorites</string>
 
     <!-- Bookmark Launcher Widget -->
@@ -229,6 +242,11 @@
     <string name="delete_cancel">Cancel</string>
     <string name="adb_required_title">ADB Required</string>
     <string name="adb_required_to_take_screenshots">"USB Debugging must be enabled on the TV to capture screenshots.\n\nTo enable:\n1. Open Settings on your TV\n2. Go to Device Preferences &gt; Developer Options\n3. Enable \"USB Debugging\"\n\nIf you don't see Developer Options, go to About and tap \"Build Number\" 7 times first."</string>
+    <string name="adb_enable_desc">USB Debugging must be enabled on the TV to capture screenshots.</string>
+    <string name="adb_step_1">1. Open Settings on your Android TV</string>
+    <string name="adb_step_2">2. Go to Device Preferences → Developer Options</string>
+    <string name="adb_step_3">3. Turn on "USB Debugging"</string>
+    <string name="adb_step_tip">Tip: If Developer Options is hidden, go to Settings → About and tap "Build Number" 7 times.</string>
     <string name="adb_pairing_required">ADB Pairing Required</string>
     <string name="pairing_required_to_take_screenshots">This TV has not been paired for ADB yet. Please pair it from the main screen first.</string>
     <string name="failed_to_capture_screenshot">Failed to capture screenshot</string>
@@ -444,9 +462,14 @@
     <string name="vault_delete_message">These encrypted files will be permanently deleted and cannot be undone.</string>
     <string name="vault_delete_confirm">Delete Permanently</string>
 
+    <string name="theme_section_color_palette">Color Palette</string>
+    <string name="theme_section_mode">Theme Mode</string>
     <string name="theme_light">Light</string>
+    <string name="theme_light_desc">Clean bright interface</string>
     <string name="theme_dark">Dark</string>
+    <string name="theme_dark_desc">Comfortable low-light dark theme</string>
     <string name="theme_system">System Default</string>
+    <string name="theme_system_desc">Follow system day / night schedule</string>
     <string name="theme_amoled">AMOLED Black</string>
     <string name="theme_amoled_desc">Pure black — saves battery on OLED screens</string>
     <string name="theme_applied">Theme applied</string>
@@ -462,12 +485,35 @@
     <string name="font_size_large">Large</string>
     <string name="font_size_applied">Font size applied</string>
     <string name="font_size_preview">The quick brown fox jumps</string>
+    <string name="font_size_small_desc">85% • Compact size for higher screen density</string>
+    <string name="font_size_normal_desc">100% • Default recommended font size</string>
+    <string name="font_size_large_desc">115% • Enlarged size for improved readability</string>
+    <string name="font_size_preview_title">Live Font Preview</string>
+    <string name="font_size_preview_sample_heading">Ultimate File Manager Pro</string>
+    <string name="font_size_preview_sample_body">The quick brown fox jumps over the lazy dog. Dual-pane file manager for power users on Android &amp; TV.</string>
+    <string name="font_size_section_preview">Live Preview</string>
+    <string name="font_size_section_options">Text Size Options</string>
 
     <!-- Storage Renaming -->
     <string name="settings_storage_rename_title">Custom Drive Names</string>
     <string name="settings_storage_rename_subtitle">Rename USB and local storage drives</string>
+    <string name="storage_rename_section_connected">Connected Storage Drives</string>
+    <string name="storage_rename_section_offline">Offline / Disconnected Drives</string>
+    <string name="storage_rename_original_details">Original: %1$s • %2$s</string>
+    <string name="storage_rename_info_notice">Custom labels assigned to internal storage, SD cards, and USB drives. Tap any drive to rename or reset its display label.</string>
+    <string name="storage_rename_empty_title">No Storage Drives Found</string>
+    <string name="storage_rename_empty_desc">Connected internal and external storage drives will appear here for custom naming and identification.</string>
     <string name="rename_drive_dialog_title">Rename Drive</string>
+    <string name="storage_rename_dialog_subtitle">Enter a custom name for %1$s</string>
     <string name="custom_name_hint">New drive name</string>
+    <string name="storage_rename_reset_btn">Reset to Default</string>
+    <string name="storage_rename_save_btn">Save Custom Name</string>
+    <string name="storage_rename_saved_toast">Drive renamed to \"%1$s\"</string>
+    <string name="storage_rename_reset_toast">Drive reset to original name</string>
+    <string name="storage_rename_clear_all">Reset All Drive Names</string>
+    <string name="storage_rename_clear_all_confirm_title">Reset All Drive Names?</string>
+    <string name="storage_rename_clear_all_confirm_message">Are you sure you want to reset all custom drive labels back to their default system names?</string>
+    <string name="storage_rename_cleared_all_toast">All drive names reset to default</string>
     <string name="reset_action">Reset</string>
     <string name="status_online">Online</string>
     <string name="status_offline">Offline</string>
@@ -503,8 +549,14 @@
     <string name="settings_default_start_screen_title">Default Start Screen</string>
     <string name="settings_default_start_screen_subtitle">Choose which screen opens on launch</string>
     <string name="start_screen_storage_browser">Main Menu (Default)</string>
+    <string name="start_screen_storage_browser_desc">Standard home screen with all storages and quick tiles</string>
     <string name="start_screen_twin_window">Twin Window</string>
+    <string name="start_screen_twin_window_desc">Dual-pane side-by-side file manager</string>
     <string name="start_screen_file_server">File Server</string>
+    <string name="start_screen_file_server_desc">HTTP, FTP, and WebDAV file server controls</string>
+    <string name="start_screen_section_main">Main Screens</string>
+    <string name="start_screen_section_storages">Direct Storage Drives</string>
+    <string name="start_screen_storage_desc">Directly open this drive on launch</string>
 
     <!-- Analytics Toggle -->
     <string name="settings_analytics_title">Usage Analytics</string>
@@ -583,7 +635,17 @@
     <string name="settings_default_apps_title">Default Applications</string>
     <string name="settings_default_apps_subtitle">Manage default apps for file types</string>
     <string name="default_apps_empty">No default applications set.</string>
+    <string name="default_apps_empty_title">No Default Apps Configured</string>
+    <string name="default_apps_empty_desc">When you open a file with \"Always\", it will appear here so you can manage or reset file association rules.</string>
+    <string name="default_apps_info_notice">File types configured to automatically open with a specific viewer or app. Tap the trash icon to reset an association rule.</string>
     <string name="default_apps_clear_all">Clear All Defaults</string>
+    <string name="default_apps_clear_all_confirm_title">Clear All Default Apps</string>
+    <string name="default_apps_clear_all_confirm_message">Are you sure you want to clear all file association preferences? Files will prompt for an application when opened.</string>
+    <string name="default_app_remove_confirm_title">Reset .%1$s Association?</string>
+    <string name="default_app_remove_confirm_message">Are you sure you want to reset the default application for .%1$s (%2$s)? You will be prompted to choose an app next time you open this file type.</string>
+    <string name="default_app_remove_btn">Reset Default</string>
+    <string name="default_apps_removed_toast">Reset default for .%1$s</string>
+    <string name="default_apps_cleared_all_toast">All default applications cleared</string>
     <string name="default_apps_extension_label">File type: %1$s</string>
     <string name="default_apps_action_internal">Internal Viewer</string>
     <string name="default_apps_action_external">External App</string>
@@ -701,6 +763,9 @@
     <!-- Drive Picker -->
     <string name="select_drive">Select drive</string>
     <string name="all_drives">All Drives</string>
+    <string name="search_select_location_title">Search Location</string>
+    <string name="search_select_location_subtitle">Choose a storage location to search within</string>
+    <string name="search_all_drives_subtitle">Search across all connected storage</string>
 
     <!-- Category detail -->
     <string name="category_files_title">%1$s Files</string>
@@ -1088,6 +1153,8 @@
     <string name="tile_color_select_tile">Tap a tile to customize its colors</string>
     <string name="tile_color_title_select">Select a tile to color</string>
     <string name="tile_color_message_select">Tap a tile after pressing Select to open the color picker.</string>
+    <string name="tile_color_tip_title">Tile Color Customizer</string>
+    <string name="tile_color_tip_desc">Tap any storage drive or feature tile on the home screen to personalize its color palette</string>
     <string name="tile_color_button_select">Select Tile</string>
     <string name="tile_color_done">Done</string>
     <string name="tile_color_cancel">Cancel</string>
@@ -1131,6 +1198,7 @@
     <string name="storage_indexer_subtitle">Manage file indexing for all drives</string>
     <string name="storage_indexer_detail_title">Indexer Details</string>
     <string name="storage_indexer_delete_records">Delete Indexed Records</string>
+    <string name="storage_indexer_delete_records_desc">Clear indexing database for this storage</string>
     <string name="storage_indexer_not_now">Ignore This Storage (Not Now)</string>
     <string name="storage_indexer_delete_confirm_title">Delete Indexed Records?</string>
     <string name="storage_indexer_delete_confirm_message">This will remove all indexed file records for this storage. You will need to index it again for blazing fast loading.</string>
@@ -1221,9 +1289,18 @@
     <string name="settings_main_menu_layout_subtitle">List or Grid view</string>
     <string name="layout_list">List</string>
     <string name="layout_grid">Grid</string>
+    <string name="layout_list_size_section">List Layout Size</string>
+    <string name="layout_size_large">Large</string>
+    <string name="layout_size_large_desc">Spacious rows with large icons</string>
+    <string name="layout_size_medium">Medium</string>
+    <string name="layout_size_medium_desc">Standard balanced row height</string>
+    <string name="layout_size_small">Small</string>
+    <string name="layout_size_small_desc">Compact rows with high density</string>
     <string name="column_count">Columns</string>
     <string name="columns_4">4 Columns</string>
+    <string name="columns_4_desc">Compact 4-column grid layout</string>
     <string name="columns_3">3 Columns</string>
+    <string name="columns_3_desc">Spacious 3-column grid layout</string>
 
     <!-- Long Press Duration Settings -->
     <string name="settings_long_press_title">Edit Mode Hold Duration</string>
@@ -1231,6 +1308,42 @@
 
     <string name="settings_toolbar_icons_title">Long Press Toolbar Icons</string>
     <string name="settings_toolbar_icons_subtitle">Customize selection action bar</string>
+    <string name="settings_toolbar_icons_info_notice">Customize which action buttons appear in the toolbar when files or folders are selected. Turn off actions you do not use to keep your workspace clean and efficient.</string>
+    <string name="settings_toolbar_icons_reset_defaults">Reset to Defaults</string>
+    <string name="settings_toolbar_icons_reset_confirm_title">Reset Toolbar Icons?</string>
+    <string name="settings_toolbar_icons_reset_confirm_message">Are you sure you want to reset all selection toolbar icons back to their default enabled state?</string>
+    <string name="settings_toolbar_icons_reset_toast">Toolbar icons reset to defaults</string>
+    <string name="toolbar_section_file_operations">File Operations</string>
+    <string name="toolbar_section_security">Security &amp; Privacy</string>
+    <string name="toolbar_section_selection_navigation">Selection &amp; Bookmarks</string>
+    <string name="toolbar_section_tools_media">Archive, Media &amp; Utilities</string>
+    <string name="toolbar_desc_create_new">Create new files, folders, or archives</string>
+    <string name="toolbar_desc_copy">Duplicate selected items to clipboard</string>
+    <string name="toolbar_desc_move">Cut selected items to move</string>
+    <string name="toolbar_desc_rename">Rename selected file or directory</string>
+    <string name="toolbar_desc_share">Send files via system share sheet</string>
+    <string name="toolbar_desc_delete">Permanently remove or trash items</string>
+    <string name="toolbar_desc_copy_encrypt">Encrypt and copy items</string>
+    <string name="toolbar_desc_move_encrypt">Encrypt and move items</string>
+    <string name="toolbar_desc_protect">Set read-only or protected flag</string>
+    <string name="toolbar_desc_unprotect">Remove protection lock</string>
+    <string name="toolbar_desc_hide">Mark items as hidden</string>
+    <string name="toolbar_desc_unhide">Reveal hidden files</string>
+    <string name="toolbar_desc_select_all">Select all items in current pane</string>
+    <string name="toolbar_desc_invert_selection">Toggle selection state of all items</string>
+    <string name="toolbar_desc_favorite">Add or remove from starred bookmarks</string>
+    <string name="toolbar_desc_pin">Pin item to quick access panel</string>
+    <string name="toolbar_desc_unpin">Unpin item from quick access</string>
+    <string name="toolbar_desc_compress">Create ZIP or 7Z archive</string>
+    <string name="toolbar_desc_extract">Decompress archive in current folder</string>
+    <string name="toolbar_desc_compress_image">Optimize image file size</string>
+    <string name="toolbar_desc_retrigger_thumbnails">Rebuild cached image and video thumbnails</string>
+    <string name="toolbar_desc_create_gif">Assemble images into an animated GIF</string>
+    <string name="toolbar_desc_exif_tools">Scrub metadata and batch rename photos</string>
+    <string name="toolbar_desc_set_home_wallpaper">Set selected image as home screen wallpaper</string>
+    <string name="toolbar_desc_set_lock_wallpaper">Set selected image as lock screen wallpaper</string>
+    <string name="toolbar_desc_duplicate_finder">Scan and detect duplicate files</string>
+    <string name="toolbar_desc_large_files_finder">Identify files consuming excess storage</string>
     <string name="long_press_duration_seconds">%1$.1f seconds</string>
     <string name="long_press_duration_value">%1$.1f s</string>
     <string name="long_press_faster">Faster (0.5 s)</string>
@@ -1279,11 +1392,37 @@
     <string name="use_pin_pairing">Use PIN (Pairing)</string>
     <string name="pair_and_connect">Pair and Connect</string>
     <string name="connect_to_android_device">Connect to Android device</string>
+    <string name="adb_terminal_empty_title">ADB Shell Ready</string>
+    <string name="adb_terminal_empty_subtitle">Connect to an Android device or TV to run shell commands, inspect packages, and monitor system processes.</string>
+    <string name="adb_terminal_clear">Clear Console</string>
+    <string name="adb_terminal_copy">Copy Output</string>
+    <string name="adb_terminal_cleared">Terminal output cleared</string>
+    <string name="adb_terminal_copied">All output copied to clipboard</string>
+    <string name="adb_quick_commands">Quick Commands</string>
+    <string name="adb_host_label">Target Device IP Address</string>
+    <string name="adb_host_hint">192.168.1.50 or 127.0.0.1</string>
+    <string name="adb_pairing_guide_title">3-Step Wireless Pairing Guide</string>
+    <string name="adb_pairing_guide_step1">Enable Developer Options &amp; Wireless Debugging on target device</string>
+    <string name="adb_pairing_guide_step2">Tap \"Pair device with pairing code\" in Wireless Debugging settings</string>
+    <string name="adb_pairing_guide_step3">Enter the displayed IP, pairing port, and 6-digit PIN code below</string>
+    <string name="adb_discovery_title">Network Device Auto-Discovery</string>
+    <string name="adb_manual_title">Target IP &amp; Port Settings</string>
+    <string name="adb_pin_title">6-Digit Pairing Code</string>
     <string name="search_apps">Search apps...</string>
     <string name="no_apps_found">No apps found</string>
     <string name="paired_tvs">Paired TVs</string>
     <string name="manage_tv_connections">Manage TV connections</string>
     <string name="no_devices_paired_yetntap_to">No devices paired yet.\nTap + to link a TV.</string>
+    <string name="link_tv">Link TV</string>
+    <string name="link_tv_button">Link a New TV</string>
+    <string name="paired_tvs_empty_title">No TVs Paired Yet</string>
+    <string name="paired_tvs_empty_subtitle">Connect your phone to Android TV running UFM for wireless file transfers, storage management, and remote access.</string>
+    <string name="tv_pairing_guide_title">3-Step Quick Guide</string>
+    <string name="tv_pairing_guide_step1">Open UFM on your Android TV</string>
+    <string name="tv_pairing_guide_step2">Select \"Paired Phones\" on TV main menu</string>
+    <string name="tv_pairing_guide_step3">Select \"Link Mobile App\" on TV to get the 4-digit PIN</string>
+    <string name="paired_status_connected">Connected</string>
+    <string name="paired_status_disconnected">Disconnected</string>
     <string name="paired_phones">Paired Phones</string>
     <string name="rename_tv">Rename TV</string>
     <string name="link_mobile_app">Link Mobile App</string>
@@ -1578,7 +1717,9 @@
     <string name="usb_debugging_required">USB Debugging Required</string>
 
     <string name="take_screenshot">Take Screenshot</string>
+    <string name="take_screenshot_subtitle">Capture the current TV screen to your device</string>
     <string name="record_screen">Record Screen</string>
+    <string name="record_screen_subtitle">Record TV screen video with audio options</string>
     <string name="record_screen_audio_title">TV Audio</string>
     <string name="record_screen_audio_enabled">Include TV audio in recording</string>
     <string name="record_screen_audio_disabled">Mute TV audio recording</string>
@@ -1976,10 +2117,20 @@
     <string name="clipboard_total_files">Clipboard (%1$d files)</string>
     <string name="error_loading_directory_errmessage">Error loading directory: %1$s</string>
     <string name="sideload_apk">Sideload APK</string>
+    <string name="sideload_apk_subtitle">Install single APK package onto TV</string>
     <string name="sideload_xapk">Sideload XAPK</string>
+    <string name="sideload_xapk_subtitle">Install bundled XAPK / APKM apps onto TV</string>
+    <string name="sideload_dialog_desc_apk">Install an Android application package (.apk) from your device onto your paired TV.</string>
+    <string name="sideload_dialog_desc_xapk">Install a bundled application package (.xapk / .apkm) from your device onto your paired TV.</string>
+    <string name="sideload_step_1_apk">1. Choose the .apk file from your device storage</string>
+    <string name="sideload_step_1_xapk">1. Choose the .xapk / .apkm package from your device storage</string>
+    <string name="sideload_step_2">2. UFM will wirelessly transfer the package to your TV</string>
+    <string name="sideload_step_3">3. Confirm the install prompt on your TV screen to finish</string>
+    <string name="sideload_choose_file">Choose File</string>
 
     <!-- Transfer Settings Feature -->
     <string name="transfer_settings">Transfer Settings</string>
+    <string name="transfer_settings_action_subtitle">Transfer settings and network shares to TV</string>
     <string name="transfer_settings_select_all">Select All</string>
     <string name="transfer_settings_subtitle">From %1$s → %2$s</string>
     <string name="transfer_settings_biometric_subtitle">Authenticate to securely transfer settings to TV</string>
@@ -2608,6 +2759,41 @@
     <string name="shizuku_start_failed">Failed to start service. Please ensure Wireless Debugging is enabled or start it manually.</string>
     <string name="shizuku_enabled_and_active">Elevated Access is enabled and active</string>
     <string name="shizuku_adb_not_connected">ADB is not connected. Connect via ADB Terminal to enable Elevated Access automatically.</string>
+    <string name="shizuku_header_subtitle">Shizuku &amp; Shevery Service</string>
+    <string name="shizuku_status_not_installed_desc">Install Shizuku or Shevery to unlock protected Android/data folders and elevated operations without root.</string>
+    <string name="shizuku_status_stopped_desc">Elevated service is installed but currently not running. Start the service via Wireless Debugging or your manager app.</string>
+    <string name="shizuku_status_unauthorized_desc">Service is running, but UFM requires authorization to access system-level APIs.</string>
+    <string name="shizuku_status_active_desc">Elevated service is active with full permissions granted. Protected folders and elevated operations are ready.</string>
+    <string name="shizuku_badge_unavailable">UNAVAILABLE</string>
+    <string name="shizuku_badge_stopped">INACTIVE</string>
+    <string name="shizuku_badge_auth_needed">AUTH NEEDED</string>
+    <string name="shizuku_badge_connected">CONNECTED</string>
+    <string name="shizuku_section_capabilities">Elevated Capabilities</string>
+    <string name="shizuku_feature_protected_title">Protected Folders</string>
+    <string name="shizuku_feature_protected_desc">Full read/write access to Android/data &amp; obb</string>
+    <string name="shizuku_feature_speed_title">High-Speed Operations</string>
+    <string name="shizuku_feature_speed_desc">Direct system-level I/O without root</string>
+    <string name="shizuku_feature_security_title">Rootless &amp; Secure</string>
+    <string name="shizuku_feature_security_desc">Standard Android privileged API bridge</string>
+    <string name="shizuku_section_managers">Available Managers</string>
+    <string name="shizuku_manager_shizuku_title">Shizuku</string>
+    <string name="shizuku_manager_shizuku_desc">Standard elevated service from GitHub</string>
+    <string name="shizuku_manager_shevery_title">Shevery</string>
+    <string name="shizuku_manager_shevery_desc">Lightweight fast alternative</string>
+    <string name="shizuku_download_shizuku_apk">Download Shizuku (APK)</string>
+    <string name="shizuku_download_shevery_apk">Download Shevery (APK)</string>
+    <string name="shizuku_open_manager">Open %1$s Manager</string>
+    <string name="shizuku_section_setup_guide">3-Step Setup Guide</string>
+    <string name="shizuku_step_1">1. Install APK</string>
+    <string name="shizuku_step_2">2. Start Service</string>
+    <string name="shizuku_step_3">3. Authorize UFM</string>
+    <string name="shizuku_service_info_title">Service Information</string>
+    <string name="shizuku_service_provider_label">Service Provider</string>
+    <string name="shizuku_service_mode_label">Connection Mode</string>
+    <string name="shizuku_service_permission_label">Permission Level</string>
+    <string name="shizuku_service_mode_adb">ADB / Wireless Debugging</string>
+    <string name="shizuku_permission_granted_api">Granted (API v23)</string>
+    <string name="shizuku_recheck_status">Recheck Status</string>
     <string name="shizuku_manager_open_error">Could not open manager. Please install Shizuku or Shevery first.</string>
 
     <!-- Media Player errors -->
@@ -3051,6 +3237,11 @@
     <string name="note_save_error">Error saving note: %1$s</string>
     <string name="note_empty_warning">Note is empty</string>
     <string name="notes_folder_title">My Notes</string>
+    <string name="export_txt_desc">Plain text document (.txt)</string>
+    <string name="export_csv_desc">Comma-separated values (.csv)</string>
+    <string name="export_pdf_desc">Portable Document Format (.pdf)</string>
+    <string name="notepad_select_format_desc">Choose the export format for your document</string>
+    <string name="notepad_destination_label">Save Destination</string>
     <string name="notepad_select_export_format">Save As</string>
     <string name="clear_text">Clear all text</string>
     <string name="clear_text_confirm_title">Clear all text?</string>
@@ -3069,8 +3260,16 @@
 
     <!-- APK / XAPK Extract Settings -->
     <string name="settings_apk_extract_title">APK / XAPK Extract</string>
+    <string name="settings_apk_extract_subtitle">Configure app extraction and manifest metadata</string>
     <string name="settings_apk_extract_subtitle_off">Standard extraction only</string>
     <string name="settings_apk_extract_subtitle_on">Enhanced</string>
+    <string name="settings_apk_extract_info_notice">Configure extraction preferences for installed applications. When enabled, UFM saves app icons and JSON metadata alongside extracted APK and XAPK files.</string>
+    <string name="settings_apk_extract_reset_defaults">Reset to Defaults</string>
+    <string name="settings_apk_extract_reset_confirm_title">Reset Extraction Settings?</string>
+    <string name="settings_apk_extract_reset_confirm_message">Are you sure you want to reset all APK and XAPK extraction settings and metadata fields back to default?</string>
+    <string name="settings_apk_extract_reset_toast">Extraction settings reset to defaults</string>
+    <string name="settings_apk_extract_metadata_header">Metadata Fields to Include in JSON</string>
+    <string name="settings_apk_extract_section_general">Extraction Features</string>
     <string name="apk_extract_master_title">Enhanced APK/XAPK Extract</string>
     <string name="apk_extract_master_summary">Extract icon and metadata alongside APK/XAPK</string>
     <string name="apk_extract_master_subtitle_on">Enabled — tap to change fields</string>
@@ -3079,19 +3278,33 @@
     <string name="apk_extract_icon_summary">Save {appname}-icon.png next to the APK</string>
     <string name="apk_extract_fields_title">Metadata fields to include in JSON</string>
     <string name="field_extracted_date">Extracted Date</string>
+    <string name="field_extracted_date_desc">Timestamp when the file was extracted (extracted_date)</string>
     <string name="field_package_name">Package Name</string>
+    <string name="field_package_name_desc">Unique Android application ID (package_name)</string>
     <string name="field_version_name">Version Name</string>
+    <string name="field_version_name_desc">User-visible version string (version_name)</string>
     <string name="field_version_code">Version Code</string>
+    <string name="field_version_code_desc">Internal numeric version integer (version_code)</string>
     <string name="field_label">App Label</string>
+    <string name="field_label_desc">Display name of the application (label)</string>
     <string name="field_install_time">Install Date</string>
+    <string name="field_install_time_desc">Original installation timestamp on device (install_time)</string>
     <string name="field_last_update_time">Last Update Date</string>
+    <string name="field_last_update_time_desc">Last update timestamp on device (last_update_time)</string>
     <string name="field_target_sdk">Target SDK</string>
+    <string name="field_target_sdk_desc">Target Android API version (target_sdk)</string>
     <string name="field_min_sdk">Minimum SDK</string>
+    <string name="field_min_sdk_desc">Minimum required Android API version (min_sdk)</string>
     <string name="field_app_size">App Size</string>
+    <string name="field_app_size_desc">Total installed application size in bytes (app_size)</string>
     <string name="field_source_dir">Source Directory</string>
+    <string name="field_source_dir_desc">File system directory path of base APK (source_dir)</string>
     <string name="field_split_apks">Split APKs</string>
+    <string name="field_split_apks_desc">List of split configuration APK paths (split_apks)</string>
     <string name="field_has_obb">Has OBB</string>
+    <string name="field_has_obb_desc">Indicates presence of OBB expansion data (has_obb)</string>
     <string name="field_permissions">Permissions</string>
+    <string name="field_permissions_desc">List of requested manifest permissions (permissions)</string>
     <string name="extracts_subtitle_files">file(s)</string>
     <string name="export_format">Format</string>
 
@@ -3142,6 +3355,19 @@
     <string name="backup_cat_smart_sort">Smart Sort Folder Configurations</string>
     <string name="backup_cat_custom_tiles">Custom Tiles &amp; Groups</string>
     <string name="backup_import_details_title">Import Preview</string>
+    <string name="backup_restore_notice">Create an exportable backup file of your settings, custom tiles, and network shares, or restore from a previously exported backup archive.</string>
+    <string name="backup_restore_section_actions">Actions</string>
+    <string name="backup_export_notice">Select the configuration categories and components you want to include in this backup archive.</string>
+    <string name="backup_import_notice">Review the configuration categories found in this archive. Restoring will apply these settings and restart the app.</string>
+    <string name="backup_import_password_desc">This backup file is encrypted with a password. Enter the password below to decrypt and review its contents.</string>
+    <string name="backup_password_dialog_desc">Optionally protect your backup file with AES-256 encryption. If you skip setting a password, the file will be saved unencrypted.</string>
+    <string name="backup_skip_confirm_desc">Saving unencrypted means anyone with access to the backup file can read your exported settings and configurations. Are you sure you want to proceed without a password?</string>
+    <string name="backup_import_guide_title">Import Settings</string>
+    <string name="backup_import_guide_subtitle">Select a Backup File</string>
+    <string name="backup_import_guide_msg">Select an exported backup archive (.ufmconfig) from your device storage. Your settings, network shares, custom tiles, and preferences will be restored.</string>
+    <string name="backup_import_guide_format_label">Supported Archive Format</string>
+    <string name="backup_import_guide_format_val">*.ufmconfig files</string>
+    <string name="backup_import_guide_btn_browse">Select Backup File</string>
 
     <!-- Auto Backup -->
     <string name="auto_backup_title">Auto Backup</string>
@@ -3219,6 +3445,7 @@
     <string name="category_navigation">Navigation</string>
     <string name="category_settings">Settings &amp; Preferences</string>
     <string name="category_main_menu_tiles">Main Menu Tiles</string>
+    <string name="category_icons_count">%1$d icons included</string>
     <string name="icon_file_generic">Generic File</string>
     <string name="icon_file_image">Image</string>
     <string name="icon_file_video">Video</string>
@@ -3314,6 +3541,8 @@
     <string name="icon_status_check_circle">Check Circle</string>
     <string name="icon_status_shield_check">Shield Check</string>
     <string name="icon_status_shield_alert">Shield Alert</string>
+    <string name="icon_status_customized">Customized</string>
+    <string name="icon_status_default">Default</string>
     <string name="icon_view_grid_small">Grid Small</string>
     <string name="icon_view_grid_medium">Grid Medium</string>
     <string name="icon_view_grid_large">Grid Large</string>
@@ -3453,6 +3682,14 @@
     <string name="theme_password_btn_encrypt">Encrypt &amp; Export</string>
     <string name="theme_password_btn_skip">Skip (unencrypted)</string>
 
+    <!-- Theme pack import instructions -->
+    <string name="theme_import_instructions_title">Import Icon Pack</string>
+    <string name="theme_import_instructions_desc">Import customized icons and tile colors from a previously exported .ufmtheme file.</string>
+    <string name="theme_import_step_select">Locate and select a .ufmtheme file in storage</string>
+    <string name="theme_import_step_password">Enter decryption password if pack is protected</string>
+    <string name="theme_import_step_preview">Preview included icons and confirm to apply</string>
+    <string name="theme_import_btn_select">Select .ufmtheme File</string>
+
     <!-- Theme pack import password -->
     <string name="theme_import_password_title">Enter theme pack password</string>
     <string name="theme_import_password_hint">Password</string>
@@ -3573,12 +3810,20 @@
     <string name="settings_resume_playback_subtitle_on">Auto-resumes after calls</string>
     <string name="settings_resume_playback_subtitle_off">Stays paused after interruption</string>
     <string name="settings_skip_length_title">Skip length</string>
+    <string name="settings_skip_length_dialog_desc">Choose how far to jump forward or backward when seeking in media playback.</string>
     <string name="skip_length_option_3s">3s</string>
     <string name="skip_length_option_5s">5s</string>
     <string name="skip_length_option_10s">10s</string>
     <string name="skip_length_option_20s">20s</string>
     <string name="skip_length_option_30s">30s</string>
     <string name="skip_length_option_disable">Disable</string>
+    <string name="skip_length_desc_3s">Skip by 3 seconds</string>
+    <string name="skip_length_desc_5s">Skip by 5 seconds</string>
+    <string name="skip_length_desc_10s">Skip by 10 seconds (Default)</string>
+    <string name="skip_length_desc_20s">Skip by 20 seconds</string>
+    <string name="skip_length_desc_30s">Skip by 30 seconds</string>
+    <string name="skip_length_desc_disable">Hide forward and backward skip buttons</string>
+    <string name="skip_length_toast_set">Skip length set to %1$s</string>
 
     <!-- UFM Media Player — Speed & Skip Toasts -->
     <string name="player_speed_title">Playback speed</string>
@@ -3670,6 +3915,21 @@
     <string name="backup_pref_analytics">Usage Analytics</string>
     <string name="settings_file_tags_title">File Tags</string>
     <string name="settings_file_tags_subtitle">Manage hashtags and tagging options</string>
+    <string name="settings_file_tags_info_notice">Custom tags assigned to files and folders for fast filtering, search, and categorization. Tap the trash icon on any tag to remove it globally.</string>
+    <string name="settings_file_tags_empty_title">No File Tags Created</string>
+    <string name="settings_file_tags_empty_desc">Tag any file or folder from the file properties sheet or multi-select toolbar to organize your media and documents here.</string>
+    <string name="settings_file_tags_delete_confirm_title">Delete Tag?</string>
+    <string name="settings_file_tags_delete_confirm_message">Are you sure you want to delete the tag \"#%1$s\"? It will be removed from all tagged files and folders.</string>
+    <string name="settings_file_tags_delete_btn">Delete Tag</string>
+    <string name="settings_file_tags_clear_all">Delete All Tags</string>
+    <string name="settings_file_tags_clear_all_confirm_title">Delete All File Tags?</string>
+    <string name="settings_file_tags_clear_all_confirm_message">Are you sure you want to permanently delete all created file tags? This will remove all tags from all files and folders.</string>
+    <string name="settings_file_tags_deleted_toast">Tag #%1$s deleted</string>
+    <string name="settings_file_tags_cleared_all_toast">All file tags deleted</string>
+    <string name="settings_file_tags_multi_title">Multiple File Tagging</string>
+    <string name="settings_file_tags_multi_desc">Allows tagging multiple files simultaneously when selected</string>
+    <string name="settings_file_tags_created_header">Created Tags</string>
+    <string name="settings_file_tags_empty">No tags created yet</string>
     <string name="action_tag">Tag</string>
     <string name="action_tools">Tools</string>
 
@@ -3700,9 +3960,18 @@
     <!-- Folder Sort Manager Activity -->
     <string name="folder_sort_manager_title">Folder Sort Overrides</string>
     <string name="folder_sort_manager_empty">No folder-specific sort settings saved.\n\nOpen a folder, tap Sort &amp; Filter and choose \"This Folder\" to create an override.</string>
-    <string name="folder_sort_manager_clear_all">Clear All</string>
+    <string name="folder_sort_manager_empty_title">No Sort Overrides Configured</string>
+    <string name="folder_sort_manager_empty_desc">When you change the sort order or filter for a specific folder using \"This Folder\", it will appear here so you can manage or reset custom sorting rules.</string>
+    <string name="folder_sort_manager_info_notice">Custom sort orders and filters configured for specific directories. Tap the trash icon to revert a folder back to global sorting.</string>
+    <string name="folder_sort_manager_clear_all">Clear All Overrides</string>
     <string name="folder_sort_manager_clear_confirm">Remove all folder-specific sort overrides? Folders will revert to the global sort setting.</string>
-    <string name="folder_sort_manager_deleted">Override removed</string>
+    <string name="folder_sort_manager_clear_all_confirm_title">Clear All Sort Overrides?</string>
+    <string name="folder_sort_manager_clear_all_confirm_message">Are you sure you want to remove all per-folder sort overrides? All folders will revert to your global sort and filter settings.</string>
+    <string name="folder_sort_manager_remove_confirm_title">Reset Folder Sort Override?</string>
+    <string name="folder_sort_manager_remove_confirm_message">Are you sure you want to remove the custom sort override for \"%1$s\"? This folder will revert to global sorting.</string>
+    <string name="folder_sort_manager_remove_btn">Reset Override</string>
+    <string name="folder_sort_manager_cleared_all_toast">All folder sort overrides cleared</string>
+    <string name="folder_sort_manager_deleted">Override removed for %1$s</string>
     <string name="folder_sort_network_badge">Network / Online</string>
     <string name="folder_sort_manager_settings_summary_asc">Ascending</string>
     <string name="folder_sort_manager_settings_summary_desc">Descending</string>
@@ -3765,6 +4034,7 @@
     <string name="support_error_title">Couldn\'t Send</string>
     <string name="support_error_message">Something went wrong. Please try again.</string>
     <string name="support_retry">Try Again</string>
+    <string name="retry">Try Again</string>
     <string name="support_no_internet">No internet connection. Please check your connection and try again.</string>
     <string name="support_file_too_large">File is too large. Maximum size is 10MB.</string>
     <string name="support_discard_title">Discard Message?</string>
@@ -3956,6 +4226,76 @@
     <string name="exif_has_gps_badge">📍 GPS</string>
     <string name="exif_no_gps_badge">No GPS</string>
     <string name="exif_select_destination_folder">Select Output Folder</string>
+
+    <!-- Video Thumbnail Time Modernization -->
+    <string name="vtt_section_options">Capture Point</string>
+    <string name="vtt_info_notice">Select the timestamp used to generate video thumbnails throughout the app. Setting a percentage avoids blank, dark, or intro frames at the start of videos.</string>
+    <string name="vtt_percent_0_subtitle">Capture the very first frame of the video (00:00)</string>
+    <string name="vtt_percent_10_subtitle">Recommended default — skips black or opening intro frames</string>
+    <string name="vtt_percent_25_subtitle">Capture frame at 25% into the video duration</string>
+    <string name="vtt_percent_50_subtitle">Capture frame at the exact midpoint (50%) of the video</string>
+    <string name="vtt_percent_75_subtitle">Capture frame at 75% into the video duration</string>
+
+    <!-- Network Thumbnail Settings Modernization -->
+    <string name="nt_section_caching">Configuration</string>
+    <string name="nt_section_storage">Storage &amp; Maintenance</string>
+    <string name="nt_info_notice">Remote thumbnails are cached locally so network shares, SMB, FTP, SFTP, and cloud drives display fast image and video previews without re-downloading files.</string>
+    <string name="nt_cache_folder_guide_title">Select Cache Location</string>
+    <string name="nt_cache_folder_guide_msg">Choose an internal storage or SD card directory to store network thumbnail cache files.\n\nIn the storage browser, navigate to your desired directory and tap \"SELECT THIS FOLDER\" at the top.</string>
+    <string name="nt_cache_folder_btn_browse">Browse Storage</string>
+    <string name="nt_cache_folder_btn_reset_default">Reset to Default Location</string>
+    <string name="nt_cache_folder_current_label">Current Location:</string>
+
+    <!-- Cache Limit Dialog Modernization -->
+    <string name="nt_cache_limit_dialog_desc">Choose the maximum disk space used to cache remote thumbnails.</string>
+    <string name="nt_limit_subtitle_500mb">Standard default — ideal for general browsing</string>
+    <string name="nt_limit_subtitle_1gb">Recommended for moderate network usage</string>
+    <string name="nt_limit_subtitle_2gb">Generous storage for photos &amp; video thumbnails</string>
+    <string name="nt_limit_subtitle_5gb">Maximum standard cache capacity</string>
+    <string name="nt_limit_subtitle_custom">Set a custom MB or GB storage limit</string>
+    <string name="nt_custom_limit_dialog_title">Custom Cache Limit</string>
+    <string name="nt_custom_limit_dialog_desc">Enter a custom size limit in MB or GB</string>
+    <string name="nt_custom_presets_label">Quick Presets</string>
+    <string name="nt_custom_size_label">Custom Size</string>
+
+    <!-- File Server System Tiles Modernization -->
+    <string name="file_server_tiles_section_server">File Server</string>
+    <string name="file_server_tiles_section_tiles">Quick Settings Tiles</string>
+    <string name="file_server_tiles_info_notice">Quick Settings tiles let you start and stop FTP, SFTP, and DLNA media servers directly from your Android notification drawer without opening the app.</string>
+
+    <!-- Storage Indexer Modernization -->
+    <string name="storage_indexer_section_storages">Detected Storage</string>
+    <string name="storage_indexer_section_actions">Maintenance</string>
+    <string name="storage_indexer_info_notice">Index internal storage and removable drives for instant search results, duplicate detection, and category filtering across your device.</string>
+    <string name="storage_indexer_detail_info_notice">This storage volume is indexed. Indexed records enable fast multi-criteria searching without scanning the file system.</string>
+    <string name="storage_indexer_btn_delete_confirm">Delete Records</string>
+
+    <!-- Auto Backup Modernization -->
+    <string name="auto_backup_section_general">Configuration</string>
+    <string name="auto_backup_section_schedule">Schedule</string>
+    <string name="auto_backup_section_security">Security &amp; Encryption</string>
+    <string name="auto_backup_section_location">Backup Destination</string>
+    <string name="auto_backup_info_notice">Auto Backup periodically creates encrypted or plain backups of your app preferences, custom themes, and tiles so you never lose your configuration.</string>
+    <string name="auto_backup_folder_guide_title">Select Backup Folder</string>
+    <string name="auto_backup_folder_guide_msg">Choose where automatic backups will be saved. Navigate to any local or removable folder and tap the save button to confirm.</string>
+    <string name="auto_backup_folder_guide_current">Current Location:</string>
+    <string name="auto_backup_folder_guide_btn_choose">Choose Folder</string>
+    <string name="auto_backup_reset_success">Backup location reset to default (Documents/UFM).</string>
+
+    <!-- File Server Modernization -->
+    <string name="file_server_section_services">Server Services</string>
+    <string name="file_server_section_profiles">Authentication &amp; Access</string>
+    <string name="file_server_info_notice">Host local FTP and SFTP file servers or stream media via DLNA. Devices on your local Wi-Fi network can connect to browse, stream, and transfer files.</string>
+    <string name="file_server_empty_profiles_desc">Tap \'Add Profile\' to configure login credentials, access permissions, and shared directories.</string>
+
+    <!-- DLNA Modernization -->
+    <string name="dlna_section_services">DLNA Services</string>
+    <string name="dlna_section_config">Configuration</string>
+    <string name="dlna_section_identification">Identification</string>
+    <string name="dlna_section_shared_folders">Shared Directories</string>
+    <string name="dlna_info_notice">Stream photos, music, and videos to smart TVs and DLNA media players on your local Wi-Fi network, or allow other devices to cast media to this device.</string>
+    <string name="dlna_settings_info_notice">Configure how your device appears on the local network and choose directories to share. DLNA media shares are strictly read-only.</string>
+    <string name="dlna_empty_shared_folders_desc">Tap \'Add Folder\' to select internal storage, SD card, or USB folders to expose via DLNA.</string>
 </resources>
 
 

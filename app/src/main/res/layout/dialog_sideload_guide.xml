@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sideload Guide — Premium Glassmorphic Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Icon Header -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:id="@+id/imgSideloadHero"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_apps"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvSideloadTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/sideload_apk"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/tvSideloadDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="@string/sideload_dialog_desc_apk"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Step Guide Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:id="@+id/tvSideloadStep1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sideload_step_1_apk"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/tvSideloadStep2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/sideload_step_2"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/tvSideloadStep3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/sideload_step_3"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+    </LinearLayout>
+
+    <!-- Choose File Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnProceed"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/sideload_choose_file"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_folder"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="?attr/colorOnPrimary" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

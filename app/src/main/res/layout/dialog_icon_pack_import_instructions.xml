@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="24dp">
+
+    <!-- Hero Import Icon Badge -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_import"
+            app:tint="?attr/colorPrimary"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/theme_import_instructions_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="6dp" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/theme_import_instructions_desc"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13.5sp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="2.5dp"
+        android:layout_marginBottom="18dp" />
+
+    <!-- How It Works / Steps Glass Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/mobile_glass_card"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/mobile_glass_stroke"
+        android:layout_marginBottom="22dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Step 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+
+                <FrameLayout
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="10dp">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_file"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theme_import_step_select"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/mobile_glass_stroke"
+                android:layout_marginVertical="3dp"
+                android:layout_marginStart="38dp" />
+
+            <!-- Step 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+
+                <FrameLayout
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="10dp">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lock"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theme_import_step_password"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/mobile_glass_stroke"
+                android:layout_marginVertical="3dp"
+                android:layout_marginStart="38dp" />
+
+            <!-- Step 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+
+                <FrameLayout
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginEnd="10dp">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/theme_import_step_preview"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="12.5sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Primary Action: Select File -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectPack"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/theme_import_btn_select"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_folder"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:backgroundTint="?attr/colorPrimary"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Secondary Action: Cancel -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="12dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+</LinearLayout>

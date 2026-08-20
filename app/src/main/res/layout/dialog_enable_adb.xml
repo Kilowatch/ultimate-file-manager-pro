@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Enable ADB Guide — Premium Glassmorphic Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Screenshot Icon -->
+    <ImageView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_screenshot"
+        app:tint="?attr/colorPrimary"
+        android:layout_marginBottom="@dimen/margin_md"
+        android:contentDescription="@null" />
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/adb_required_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/margin_xs"
+        android:text="@string/adb_enable_desc"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <!-- Step Guide Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="@dimen/margin_lg">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/adb_step_1"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/adb_step_2"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/adb_step_3"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/adb_step_tip"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:lineSpacingMultiplier="1.2" />
+
+    </LinearLayout>
+
+    <!-- Got It Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDone"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/action_done"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="?attr/colorOnPrimary" />
+
+</LinearLayout>

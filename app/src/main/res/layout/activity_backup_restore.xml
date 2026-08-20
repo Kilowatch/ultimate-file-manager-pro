@@ -9,23 +9,23 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.BackupRestoreActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -45,14 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/backup_restore_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -67,6 +67,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -74,145 +75,211 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md">
+            android:padding="16dp">
 
-            <!-- Export Card -->
+            <!-- Top Guidance Notice Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardExport"
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:padding="14dp">
 
                     <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_export"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@string/backup_export_btn" />
+                            android:src="@drawable/ic_file_backup"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
                     </FrameLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backup_export_btn"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backup_export_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/mobile_text_secondary"
-                        android:contentDescription="@null" />
+                        android:layout_marginStart="12dp"
+                        android:text="@string/backup_restore_notice"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="2dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Import Card -->
+            <!-- Actions Section Header -->
+            <TextView
+                android:id="@+id/txtActionsHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/backup_restore_section_actions"
+                android:textAllCaps="true"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05" />
+
+            <!-- Grouped Glass Card: Actions -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardImport"
+                android:id="@+id/cardBackupActions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:layout_marginBottom="24dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:orientation="vertical">
 
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
+                    <!-- Export Row -->
+                    <LinearLayout
+                        android:id="@+id/rowExport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_export"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/backup_export_btn"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/backup_export_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_import"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@string/backup_import_btn" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backup_import_btn"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backup_import_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mobile_text_secondary"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/mobile_text_secondary"
-                        android:contentDescription="@null" />
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Import Row -->
+                    <LinearLayout
+                        android:id="@+id/rowImport"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_import"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/backup_import_btn"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/backup_import_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/mobile_text_secondary"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

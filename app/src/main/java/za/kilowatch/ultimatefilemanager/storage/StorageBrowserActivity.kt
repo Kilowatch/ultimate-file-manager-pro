@@ -1237,18 +1237,25 @@ class StorageBrowserActivity : AppCompatActivity() {
 
 
     private fun showColorSelectionPopup() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_tile_color_select, null)
         val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
-            .setMessage(getString(R.string.tile_color_message_select))
-            .setPositiveButton(getString(R.string.tile_color_button_select)) { _, _ ->
-                isSelectingTileForColor = true
-                selectedTileId = null
-                showPremiumSnackbar(getString(R.string.tile_color_select_tile))
-            }
-            .setNegativeButton(getString(R.string.tile_color_cancel), null)
+            .setView(dialogView)
+            .setCancelable(true)
             .create()
-        dialog.setTitle(getString(R.string.tile_color_title_select))
-        dialog.window?.setBackgroundDrawableResource(R.drawable.bg_dialog_surface)
+
+        dialogView.findViewById<View>(R.id.btnSelectTile).setOnClickListener {
+            dialog.dismiss()
+            isSelectingTileForColor = true
+            selectedTileId = null
+            showPremiumSnackbar(getString(R.string.tile_color_select_tile))
+        }
+
+        dialogView.findViewById<View>(R.id.btnCancel).setOnClickListener {
+            dialog.dismiss()
+        }
+
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
     }
 
     private fun showColorPickerForTile(item: StorageItem) {

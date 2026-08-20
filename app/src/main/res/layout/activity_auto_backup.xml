@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Auto Backup Activity — Language & Grouped Glass Card Standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,23 +12,24 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.AutoBackupActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -45,14 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/auto_backup_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -64,331 +68,452 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/margin_md">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="32dp">
 
-            <!-- Enable Auto Backup Toggle Card -->
+            <!-- Top Guidance Notice Card -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAutoBackupEnable"
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:padding="14dp">
 
                     <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
 
                         <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_cloud"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@null" />
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
                     </FrameLayout>
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_enable"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_enable_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switchAutoBackup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="false"
-                        android:clickable="false"
-                        android:focusable="false" />
+                        android:layout_marginStart="12dp"
+                        android:text="@string/auto_backup_info_notice"
+                        android:textColor="@color/mobile_card_text_primary"
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.2" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Backup Settings Checkbox Card -->
+            <!-- ── SECTION 1: CONFIGURATION ───────────────────────────────── -->
+            <TextView
+                android:id="@+id/labelSectionGeneral"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_backup_section_general"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAutoBackupSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:orientation="vertical">
 
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_export"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@null" />
-                    </FrameLayout>
-
+                    <!-- Row 1: Master Enable Switch -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:id="@+id/cardAutoBackupEnable"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                        <TextView
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_cloud"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_enable"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_enable_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchAutoBackup"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_settings_label"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_settings_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
+                            android:checked="false"
+                            android:clickable="false"
+                            android:focusable="false" />
                     </LinearLayout>
 
-                    <CheckBox
-                        android:id="@+id/chkBackupSettings"
-                        android:layout_width="wrap_content"
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 2: Backup Settings Checkbox -->
+                    <LinearLayout
+                        android:id="@+id/cardAutoBackupSettings"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:clickable="false"
-                        android:focusable="false" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_export"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_settings_label"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_settings_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/chkBackupSettings"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:buttonTint="?attr/colorPrimary" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 3: Backup Theme Checkbox -->
+                    <LinearLayout
+                        android:id="@+id/cardAutoBackupTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_palette"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_theme_label"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/auto_backup_theme_desc"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <CheckBox
+                            android:id="@+id/chkBackupTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:buttonTint="?attr/colorPrimary" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Backup Theme Checkbox Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAutoBackupTheme"
-                android:layout_width="match_parent"
+            <!-- ── SECTION 2: SCHEDULE ────────────────────────────────────── -->
+            <TextView
+                android:id="@+id/labelSectionSchedule"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                app:cardBackgroundColor="@color/mobile_glass_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                android:text="@string/auto_backup_section_schedule"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
-
-                    <FrameLayout
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_palette"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@null" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_theme_label"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/auto_backup_theme_desc"
-                            android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <CheckBox
-                        android:id="@+id/chkBackupTheme"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:clickable="false"
-                        android:focusable="false" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Schedule Selector Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSchedule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_md">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_schedule_label"
                         android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_marginBottom="@dimen/margin_sm" />
+                        android:textSize="15.5sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:layout_marginBottom="10dp" />
 
-                    <RadioGroup
-                        android:id="@+id/radioSchedule"
+                    <!-- Schedule Toggle Button Group -->
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleSchedule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        app:singleSelection="true"
+                        app:selectionRequired="true">
 
-                        <RadioButton
-                            android:id="@+id/rbDaily"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnDaily"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_daily"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:buttonTint="?attr/colorPrimary" />
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            android:textColor="@color/selector_protocol_text"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:strokeWidth="1dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbWeekly"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnWeekly"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_weekly"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:checked="true"
-                            android:buttonTint="?attr/colorPrimary" />
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            android:textColor="@color/selector_protocol_text"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:strokeWidth="1dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbMonthly"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMonthly"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_schedule_monthly"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:buttonTint="?attr/colorPrimary" />
-                    </RadioGroup>
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            android:textColor="@color/selector_protocol_text"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:strokeWidth="1dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Password Set Button Card -->
+            <!-- ── SECTION 3: SECURITY & ENCRYPTION ───────────────────────── -->
+            <TextView
+                android:id="@+id/labelSectionSecurity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_backup_section_security"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAutoBackupPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
+                    android:id="@+id/cardAutoBackupPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:padding="@dimen/margin_md">
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
                     <FrameLayout
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:background="@drawable/bg_icon_circle_accent">
+                        android:background="@drawable/bg_btn_icon_frosted">
 
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lock"
-                            app:tint="@color/mobile_icon_tint"
-                            android:contentDescription="@null" />
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
                     </FrameLayout>
 
                     <LinearLayout
@@ -396,7 +521,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:layout_marginStart="@dimen/margin_md">
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="8dp">
 
                         <TextView
                             android:id="@+id/txtPasswordTitle"
@@ -404,8 +530,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/auto_backup_password_set"
                             android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="15sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:textSize="15.5sp"
+                            android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:id="@+id/txtPasswordStatus"
@@ -417,163 +543,209 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_arrow_down"
-                        android:rotation="-90"
-                        app:tint="@color/mobile_text_secondary"
-                        android:contentDescription="@null" />
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/mobile_icon_tint"
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Save Location Card -->
+            <!-- ── SECTION 4: BACKUP DESTINATION ─────────────────────────── -->
+            <TextView
+                android:id="@+id/labelSectionLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auto_backup_section_location"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAutoBackupLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/mobile_glass_stroke"
-                app:rippleColor="@color/mobile_glass_ripple">
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/margin_md">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_save_location"
                         android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_marginBottom="12dp" />
+                        android:textSize="15.5sp"
+                        android:fontFamily="sans-serif-bold"
+                        android:layout_marginBottom="10dp" />
 
-                    <RadioGroup
-                        android:id="@+id/radioLocation"
+                    <!-- Location Toggle Button Group -->
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggleLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        android:layout_marginBottom="12dp">
 
-                        <RadioButton
-                            android:id="@+id/rbLocationDefault"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLocationDefault"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_location_default"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:checked="true"
-                            android:buttonTint="#FF00897B" />
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            android:textColor="@color/selector_protocol_text"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:strokeWidth="1dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbLocationCustom"
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLocationCustom"
+                            style="@style/Widget.Material3Expressive.Button.OutlinedButton"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="44dp"
                             android:layout_weight="1"
                             android:text="@string/auto_backup_location_custom"
-                            android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="14sp"
-                            android:buttonTint="#FF00897B" />
-                    </RadioGroup>
+                            android:textSize="13sp"
+                            android:fontFamily="sans-serif-bold"
+                            android:checkable="true"
+                            app:backgroundTint="@color/selector_protocol_bg"
+                            android:textColor="@color/selector_protocol_text"
+                            app:strokeColor="@color/mobile_glass_stroke"
+                            app:strokeWidth="1dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="4dp" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                    <!-- Current path display -->
+                    <!-- Custom Location Path Box -->
                     <TextView
                         android:id="@+id/txtLocationPath"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp"
+                        android:textColor="@color/mobile_text_primary"
+                        android:textSize="12.5sp"
+                        android:fontFamily="monospace"
+                        android:background="@drawable/bg_url_box"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="7dp"
                         android:maxLines="2"
                         android:ellipsize="middle"
-                        android:visibility="gone" />
+                        android:layout_marginBottom="10dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:text="/storage/emulated/0/MyBackups" />
 
-                    <!-- Unavailable warning -->
+                    <!-- Unavailable Warning -->
                     <TextView
                         android:id="@+id/txtLocationWarning"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/auto_backup_location_unavailable"
-                        android:textColor="#FFD32F2F"
+                        android:textColor="@color/status_error"
                         android:textSize="12sp"
+                        android:layout_marginBottom="10dp"
                         android:visibility="gone" />
 
-                    <!-- Select Folder button -->
+                    <!-- Select Folder Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSelectFolder"
                         android:layout_width="match_parent"
-                        android:layout_height="44dp"
+                        android:layout_height="46dp"
                         android:text="@string/auto_backup_select_folder_btn"
                         android:textColor="@android:color/white"
-                        android:visibility="gone"
-                        app:cornerRadius="12dp"
-                        
-                        
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-bold"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        app:backgroundTint="?attr/colorPrimary" />
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_folder"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="@android:color/white"
+                        app:backgroundTint="?attr/colorPrimary"
+                        android:layout_marginBottom="6dp"
+                        android:visibility="gone" />
 
-                    <!-- Reset to Default button -->
+                    <!-- Reset to Default Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnResetLocation"
+                        style="@style/Widget.Material3Expressive.Button.TextButton"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
                         android:text="@string/auto_backup_reset_default"
-                        android:visibility="gone"
-                        style="@style/Widget.Material3Expressive.Button.TextButton"
-                        
-                        
+                        android:textSize="13.5sp"
                         android:insetTop="0dp"
                         android:insetBottom="0dp"
-                        android:textColor="?attr/colorPrimary" />
+                        app:cornerRadius="12dp"
+                        android:textColor="?attr/colorPrimary"
+                        android:visibility="gone" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Status Summary -->
+            <!-- Status Summary Text -->
             <TextView
                 android:id="@+id/txtAutoBackupSummary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/mobile_text_secondary"
-                android:textSize="12sp"
+                android:textSize="12.5sp"
                 android:gravity="center"
-                android:paddingVertical="12dp"
+                android:paddingVertical="8dp"
                 android:visibility="gone"
+                tools:visibility="visible"
                 tools:text="Auto backup is ON — Settings and Theme — Weekly — No password" />
 
-            <!-- Backup Now Button -->
+            <!-- Backup Now Action Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBackupNow"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/auto_backup_now"
-                android:textSize="16sp"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
                 android:textColor="@android:color/white"
-                app:cornerRadius="16dp"
-                
-                
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
+                app:cornerRadius="14dp"
+                app:icon="@drawable/ic_cloud"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"
+                app:iconTint="@android:color/white"
                 app:backgroundTint="?attr/colorPrimary" />
 
-            <!-- Progress Bar (hidden by default) -->
+            <!-- Progress Bar -->
             <ProgressBar
                 android:id="@+id/progressBar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:indeterminateTint="?attr/colorPrimary" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

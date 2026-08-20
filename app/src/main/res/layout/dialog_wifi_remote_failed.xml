@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- WiFi Remote Connection Failed — Premium Glassmorphic Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Warning Icon -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_btn_icon_danger"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_remote_disabled"
+            app:tint="#FFEF5350"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/use_remote_failed_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:text="Could not establish ADB connection with your TV."
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Troubleshooting Guide Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TROUBLESHOOTING"
+            android:textSize="11sp"
+            android:textColor="@color/mobile_text_secondary"
+            android:fontFamily="sans-serif-bold"
+            android:letterSpacing="0.08"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="• Enable USB Debugging in TV Developer Options."
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingMultiplier="1.2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="• Verify both devices are connected to the same WiFi."
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingMultiplier="1.2" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="• Accept the authorization dialog on your TV screen."
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingMultiplier="1.2" />
+
+    </LinearLayout>
+
+    <!-- Try Again Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRetry"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/retry"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_refresh"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="?attr/colorOnPrimary" />
+
+    <!-- Dismiss Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDismiss"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/close"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    TV DLNA Host — same structure as TV Server Host but with DLNA cards only.
-    Key fix: "DLNA Settings" is a separate focusable row so D-pad can select it.
+    TV DLNA Host Activity — Language & Grouped Glass Card Standard
+    Dual-Service Manager: DLNA Media Server (Port 8200) & DLNA Media Renderer
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,15 +13,15 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".server.DlnaHostActivity">
 
-    <!-- Header Bar -->
+    <!-- 72dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="24dp"
-        android:paddingVertical="14dp"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -34,26 +34,22 @@
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="@string/cd_back"
             android:focusable="true"
-            android:background="@drawable/selector_tv_icon_btn" />
-
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="#33FFFFFF" />
+            android:background="@drawable/selector_tv_icon_btn"
+            app:tint="@color/tv_text_primary" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dlna_host_title"
                 android:textColor="@color/tv_text_primary"
-                android:textSize="17sp"
+                android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -61,12 +57,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/dlna_host_subtitle"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:layout_marginTop="2dp" />
         </LinearLayout>
     </LinearLayout>
 
-    <ScrollView
+    <!-- Scrollable Content Area -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -81,188 +78,338 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+            android:paddingHorizontal="24dp"
+            android:paddingTop="16dp">
 
-            <!-- ═══ DLNA Media Server Toggle Row ═══ -->
-            <LinearLayout
+            <!-- Top Guidance Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_about"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/dlna_info_notice"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TV Section 1 Header: DLNA Services -->
+            <TextView
+                android:id="@+id/labelSectionServices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_services"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- TV Card 1: DLNA Media Server -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/layoutDlnaCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="14dp"
+                android:clickable="true"
                 android:focusable="true"
-                android:clickable="true">
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:duplicateParentState="true"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/dlna_server_title"
-                        android:textColor="@color/selector_tv_button_text_yellow"
-                        android:textSize="17sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:duplicateParentState="true" />
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchDlna"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:duplicateParentState="true" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_port_info"
-                    android:textColor="@color/selector_tv_btn_secondary_text"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:duplicateParentState="true" />
-
-                <TextView
-                    android:id="@+id/txtDlnaUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="14sp"
-                    android:fontFamily="monospace"
-                    android:background="@drawable/bg_url_box"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <!-- ═══ DLNA Settings Row (separate focusable row — fixes TV D-pad selection) ═══ -->
-            <LinearLayout
-                android:id="@+id/layoutDlnaSettingsCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp"
-                android:focusable="true"
-                android:clickable="true">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:src="@drawable/ic_settings"
-                    android:contentDescription="@null"
-                    android:duplicateParentState="true"
-                    app:tint="@color/selector_tv_button_text_yellow" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_marginStart="14dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="14dp"
+                            android:background="@drawable/bg_icon_circle_accent">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_dlna"
+                                app:tint="@color/white"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dlna_server_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/dlna_port_info"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switchDlna"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/txtDlnaUrl"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/dlna_settings_row_label"
-                        android:textColor="@color/selector_tv_button_text_yellow"
-                        android:textSize="17sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:duplicateParentState="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dlna_settings_row_subtitle"
-                        android:textColor="@color/selector_tv_btn_secondary_text"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp"
-                        android:duplicateParentState="true" />
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="13sp"
+                        android:fontFamily="monospace"
+                        android:background="@drawable/bg_url_box"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:text="http://192.168.1.100:8200" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_down"
-                    android:rotation="-90"
-                    android:duplicateParentState="true"
-                    app:tint="@color/selector_tv_btn_secondary_text"
-                    android:contentDescription="@null" />
-            </LinearLayout>
-
-            <!-- ═══ DLNA Renderer Toggle Row ═══ -->
-            <LinearLayout
+            <!-- TV Card 2: DLNA Media Renderer -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/layoutDlnaRendererCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
                 android:focusable="true"
-                android:clickable="true">
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:duplicateParentState="true"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginEnd="14dp"
+                            android:background="@drawable/bg_icon_circle_accent">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_tv"
+                                app:tint="@color/white"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="12dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dlna_renderer_title"
+                                android:textColor="@color/tv_text_primary"
+                                android:textSize="16sp"
+                                android:fontFamily="sans-serif-medium" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/dlna_renderer_description"
+                                android:textColor="@color/tv_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.materialswitch.MaterialSwitch
+                            android:id="@+id/switchDlnaRenderer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
 
                     <TextView
+                        android:id="@+id/txtDlnaRendererUrl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="13sp"
+                        android:fontFamily="monospace"
+                        android:background="@drawable/bg_url_box"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="10dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        tools:text="DLNA Renderer active" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TV Section 2 Header: Configuration -->
+            <TextView
+                android:id="@+id/labelSectionConfig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_config"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- TV Card 3: DLNA Server Settings -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/layoutDlnaSettingsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_settings"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/dlna_renderer_title"
-                        android:textColor="@color/selector_tv_button_text_yellow"
-                        android:textSize="17sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:duplicateParentState="true" />
+                        android:orientation="vertical"
+                        android:layout_marginEnd="12dp">
 
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/switchDlnaRenderer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:duplicateParentState="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dlna_server_settings"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/dlna_settings_row_subtitle"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/tv_text_secondary"
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_renderer_description"
-                    android:textColor="@color/selector_tv_btn_secondary_text"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"
-                    android:duplicateParentState="true" />
-
-                <TextView
-                    android:id="@+id/txtDlnaRendererUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tv_text_primary"
-                    android:textSize="14sp"
-                    android:fontFamily="monospace"
-                    android:background="@drawable/bg_url_box"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="12dp"
-                    android:layout_marginTop="8dp"
-                    android:visibility="gone" />
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

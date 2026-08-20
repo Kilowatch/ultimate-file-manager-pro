@@ -1,6 +1,7 @@
 package za.kilowatch.ultimatefilemanager.settings
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -17,23 +18,23 @@ import za.kilowatch.ultimatefilemanager.util.DeviceUtils
 
 /**
  * Main Menu View Mode selection screen.
- * Allows toggling between List and Grid, and selecting column count for Grid.
+ * Allows toggling between List and Grid, and selecting column count or list row size.
  */
 class MainMenuViewModeActivity : AppCompatActivity() {
 
-    private lateinit var cardList:     MaterialCardView
-    private lateinit var cardGrid:     MaterialCardView
-    private lateinit var cardColumns4: MaterialCardView
-    private lateinit var cardColumns3: MaterialCardView
+    private lateinit var cardList:     View
+    private lateinit var cardGrid:     View
+    private lateinit var cardColumns4: View
+    private lateinit var cardColumns3: View
     private lateinit var rbList:       RadioButton
     private lateinit var rbGrid:       RadioButton
     private lateinit var rbColumns4:   RadioButton
     private lateinit var rbColumns3:   RadioButton
     private lateinit var layoutColumns: View
 
-    private lateinit var cardSizeLarge:  MaterialCardView
-    private lateinit var cardSizeMedium: MaterialCardView
-    private lateinit var cardSizeSmall:  MaterialCardView
+    private lateinit var cardSizeLarge:  View
+    private lateinit var cardSizeMedium: View
+    private lateinit var cardSizeSmall:  View
     private lateinit var rbSizeLarge:    RadioButton
     private lateinit var rbSizeMedium:   RadioButton
     private lateinit var rbSizeSmall:    RadioButton
@@ -69,8 +70,8 @@ class MainMenuViewModeActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageView?>(R.id.btnBack)
         if (isTv) {
-            val whiteCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_text_primary))
-            val blackCsl = android.content.res.ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
+            val whiteCsl = ColorStateList.valueOf(getColor(R.color.tv_text_primary))
+            val blackCsl = ColorStateList.valueOf(getColor(R.color.tv_button_focused_yellow_text))
             btnBack?.imageTintList = whiteCsl
             btnBack?.setOnFocusChangeListener { _, hasFocus ->
                 btnBack.imageTintList = if (hasFocus) blackCsl else whiteCsl
@@ -109,7 +110,7 @@ class MainMenuViewModeActivity : AppCompatActivity() {
         cardGrid.setOnClickListener { selectViewMode(MainMenuViewModeManager.ViewMode.GRID) }
         cardColumns4.setOnClickListener { selectColumnCount(4) }
         cardColumns3.setOnClickListener { selectColumnCount(3) }
-        
+
         cardSizeLarge.setOnClickListener { selectItemSize(MainMenuViewModeManager.ItemSize.LARGE) }
         cardSizeMedium.setOnClickListener { selectItemSize(MainMenuViewModeManager.ItemSize.MEDIUM) }
         cardSizeSmall.setOnClickListener { selectItemSize(MainMenuViewModeManager.ItemSize.SMALL) }
@@ -142,38 +143,38 @@ class MainMenuViewModeActivity : AppCompatActivity() {
     }
 
     private fun updateViewModeSelection(mode: MainMenuViewModeManager.ViewMode) {
-        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else getColor(R.color.ufm_primary)
-        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.ufm_surface_variant)
+        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
+        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.mobile_glass_stroke)
 
         rbList.isChecked = mode == MainMenuViewModeManager.ViewMode.LIST
         rbGrid.isChecked = mode == MainMenuViewModeManager.ViewMode.GRID
 
-        cardList.strokeColor = if (mode == MainMenuViewModeManager.ViewMode.LIST) activeColor else inactiveColor
-        cardGrid.strokeColor = if (mode == MainMenuViewModeManager.ViewMode.GRID) activeColor else inactiveColor
+        (cardList as? MaterialCardView)?.strokeColor = if (mode == MainMenuViewModeManager.ViewMode.LIST) activeColor else inactiveColor
+        (cardGrid as? MaterialCardView)?.strokeColor = if (mode == MainMenuViewModeManager.ViewMode.GRID) activeColor else inactiveColor
     }
 
     private fun updateColumnCountSelection(count: Int) {
-        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else getColor(R.color.ufm_primary)
-        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.ufm_surface_variant)
+        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
+        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.mobile_glass_stroke)
 
         rbColumns4.isChecked = count == 4
         rbColumns3.isChecked = count == 3
 
-        cardColumns4.strokeColor = if (count == 4) activeColor else inactiveColor
-        cardColumns3.strokeColor = if (count == 3) activeColor else inactiveColor
+        (cardColumns4 as? MaterialCardView)?.strokeColor = if (count == 4) activeColor else inactiveColor
+        (cardColumns3 as? MaterialCardView)?.strokeColor = if (count == 3) activeColor else inactiveColor
     }
 
     private fun updateItemSizeSelection(size: MainMenuViewModeManager.ItemSize) {
-        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else getColor(R.color.ufm_primary)
-        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.ufm_surface_variant)
+        val activeColor   = if (isTv) getColor(R.color.tv_accent)        else za.kilowatch.ultimatefilemanager.util.ThemeColors.primary(this)
+        val inactiveColor = if (isTv) getColor(R.color.tv_glass_border)  else getColor(R.color.mobile_glass_stroke)
 
         rbSizeLarge.isChecked  = size == MainMenuViewModeManager.ItemSize.LARGE
         rbSizeMedium.isChecked = size == MainMenuViewModeManager.ItemSize.MEDIUM
         rbSizeSmall.isChecked  = size == MainMenuViewModeManager.ItemSize.SMALL
 
-        cardSizeLarge.strokeColor  = if (size == MainMenuViewModeManager.ItemSize.LARGE) activeColor else inactiveColor
-        cardSizeMedium.strokeColor = if (size == MainMenuViewModeManager.ItemSize.MEDIUM) activeColor else inactiveColor
-        cardSizeSmall.strokeColor  = if (size == MainMenuViewModeManager.ItemSize.SMALL) activeColor else inactiveColor
+        (cardSizeLarge as? MaterialCardView)?.strokeColor  = if (size == MainMenuViewModeManager.ItemSize.LARGE) activeColor else inactiveColor
+        (cardSizeMedium as? MaterialCardView)?.strokeColor = if (size == MainMenuViewModeManager.ItemSize.MEDIUM) activeColor else inactiveColor
+        (cardSizeSmall as? MaterialCardView)?.strokeColor  = if (size == MainMenuViewModeManager.ItemSize.SMALL) activeColor else inactiveColor
     }
 
     private fun updateColumnsVisibility(mode: MainMenuViewModeManager.ViewMode) {
@@ -181,7 +182,8 @@ class MainMenuViewModeActivity : AppCompatActivity() {
         layoutListSize.visibility = if (mode == MainMenuViewModeManager.ViewMode.LIST) View.VISIBLE else View.GONE
     }
 
-    private fun setupTvCardFocus(card: MaterialCardView) {
+    private fun setupTvCardFocus(card: View) {
+        if (card !is MaterialCardView) return
         val yellowFill   = getColor(R.color.tv_button_focused_yellow)
         val blackText    = getColor(R.color.tv_button_focused_yellow_text)
         val glassColor   = getColor(R.color.tv_glass_white_10)
@@ -214,7 +216,7 @@ class MainMenuViewModeActivity : AppCompatActivity() {
     }
 
     private fun setCardRadioTint(view: View, color: Int) {
-        if (view is RadioButton) { view.buttonTintList = android.content.res.ColorStateList.valueOf(color); return }
+        if (view is RadioButton) { view.buttonTintList = ColorStateList.valueOf(color); return }
         if (view is android.view.ViewGroup) {
             for (i in 0 until view.childCount)
                 setCardRadioTint(view.getChildAt(i), color)

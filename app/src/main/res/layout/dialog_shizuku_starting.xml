@@ -1,38 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Shizuku Service Starting — Premium Progress Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="28dp"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_dialog_glass">
+
+    <ProgressBar
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="16dp"
+        android:indeterminateTint="?attr/colorPrimary" />
 
     <TextView
         android:id="@+id/txtStartingTitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/shizuku_starting_service"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAlignment="center" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txtStartingMsg"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:layout_marginTop="8dp"
+        android:text="@string/shizuku_starting_msg"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center" />
 
-        <ProgressBar
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:progressTint="@color/tv_accent"
-            android:indeterminateTint="@color/tv_accent" />
-
-        <TextView
-            android:id="@+id/txtStartingMsg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/shizuku_starting_msg"
-            android:textSize="14sp"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
 </LinearLayout>

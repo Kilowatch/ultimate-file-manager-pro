@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV Manage Favorites Activity — matched to UFM glass standard
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -31,7 +34,6 @@
             android:contentDescription="@string/back"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="false"
             android:background="@drawable/selector_tv_icon_btn" />
 
         <LinearLayout
@@ -44,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/manage_favorites_title"
+                android:text="@string/settings_favorites_title"
                 android:textColor="@color/tv_text_primary"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-black" />
@@ -56,58 +58,136 @@
                 android:textColor="@color/tv_text_secondary"
                 android:textSize="14sp" />
         </LinearLayout>
+
+        <!-- Clear All Button for TV -->
+        <ImageView
+            android:id="@+id/btnClearAll"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_delete"
+            android:background="@drawable/tv_button_selector"
+            android:focusable="true"
+            app:tint="@color/tv_text_primary"
+            android:contentDescription="@string/manage_favorites_clear_all" />
     </LinearLayout>
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFavorites"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingHorizontal="@dimen/tv_safe_horizontal"
-        android:paddingVertical="@dimen/margin_xl"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/layoutEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_star"
-            app:tint="@color/tv_text_secondary"
-            android:alpha="0.5" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/manage_favorites_empty"
-            android:textColor="@color/tv_text_secondary"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:layout_marginHorizontal="64dp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/tv_safe_horizontal"
+            android:paddingTop="@dimen/margin_md"
+            android:paddingBottom="48dp"
+            android:clipChildren="false">
+
+            <!-- Info Guidance Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="14dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_star"
+                            app:tint="@color/tv_accent"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/manage_favorites_info_notice"
+                        android:textColor="@color/tv_text_secondary"
+                        android:textSize="14sp"
+                        android:lineSpacingExtra="2.5dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Favorites RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerFavorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:clipToPadding="false" />
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layoutEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_star"
+                        app:tint="@color/tv_accent"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manage_favorites_empty_title"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="22sp"
+                    android:fontFamily="sans-serif-black"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/manage_favorites_empty_desc"
+                    android:textColor="@color/tv_text_secondary"
+                    android:textSize="14sp"
+                    android:textAlignment="center"
+                    android:lineSpacingExtra="3dp"
+                    android:maxWidth="400dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

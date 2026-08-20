@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    Mobile File Tags Settings Activity — premium dark glassmorphism design
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -8,11 +12,11 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.FileTagsSettingsActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
@@ -21,10 +25,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -43,28 +48,45 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="File Tags Settings"
+                android:text="@string/settings_file_tags_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manage hashtags and tagging features"
+                android:text="@string/settings_file_tags_subtitle"
                 android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <!-- Clear All Button (Frosted Danger Button) -->
+        <FrameLayout
+            android:id="@+id/btnClearAll"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_danger"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/status_error"
+                android:contentDescription="@string/settings_file_tags_clear_all" />
+        </FrameLayout>
     </LinearLayout>
 
-    <!-- Scrollable content -->
     <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
@@ -78,11 +100,12 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Toggle Switch Card -->
+            <!-- Info Guidance Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/mobile_glass_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -94,45 +117,112 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:padding="14dp">
+
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_label"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_file_tags_info_notice"
+                        android:textColor="@color/mobile_text_secondary"
+                        android:textSize="12.5sp"
+                        android:lineSpacingExtra="2dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Toggle Switch Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMultiTagging"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke"
+                app:rippleColor="@color/mobile_glass_ripple">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted"
+                        android:layout_marginEnd="14dp">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_label"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Multiple File Tagging"
+                            android:text="@string/settings_file_tags_multi_title"
                             android:textColor="@color/mobile_card_text_primary"
-                            android:textSize="16sp"
-                            android:fontFamily="sans-serif-medium" />
+                            android:textSize="15.5sp"
+                            android:fontFamily="sans-serif-bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Allows tagging multiple files simultaneously when selected"
+                            android:text="@string/settings_file_tags_multi_desc"
                             android:textColor="@color/mobile_text_secondary"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
                         android:id="@+id/switchMultiTagging"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        app:useMaterialThemeColors="true" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Tags List Section Header -->
             <TextView
+                android:id="@+id/txtHeaderCreatedTags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Created Tags"
-                android:textColor="@color/mobile_text_primary"
-                android:textSize="16sp"
+                android:text="@string/settings_file_tags_created_header"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
                 android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
                 android:layout_marginBottom="12dp" />
 
             <!-- Recycler View for Tags list -->
@@ -141,20 +231,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                android:clipToPadding="false"
                 tools:listitem="@layout/item_settings_tag" />
 
-            <!-- Empty Placeholder -->
-            <TextView
-                android:id="@+id/txtNoTags"
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/layoutEmpty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No tags created yet"
-                android:textColor="@color/mobile_text_secondary"
-                android:textSize="14sp"
-                android:fontStyle="italic"
+                android:minHeight="260dp"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginTop="32dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:padding="24dp">
+
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:background="@drawable/bg_btn_icon_frosted"
+                    android:layout_marginBottom="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_label"
+                        app:tint="?attr/colorPrimary"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_file_tags_empty_title"
+                    android:textColor="@color/mobile_text_primary"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="6dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_file_tags_empty_desc"
+                    android:textColor="@color/mobile_text_secondary"
+                    android:textSize="13sp"
+                    android:textAlignment="center"
+                    android:lineSpacingExtra="3dp"
+                    android:maxWidth="280dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

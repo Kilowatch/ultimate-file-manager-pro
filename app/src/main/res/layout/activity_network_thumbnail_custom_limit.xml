@@ -1,109 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+    TV Custom Cache Limit Screen — Modern TV Glass Standard
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="48dp"
-    android:background="@color/tv_dialog_background">
+    android:background="@drawable/bg_tv_gradient">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceHeadline5"
-        android:text="Custom Cache Size"
-        android:layout_marginBottom="24dp" />
-
+    <!-- TV Header Bar (72dp standard) -->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/layoutToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="24dp">
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/tv_safe_horizontal"
+        android:background="@color/tv_glass_white_10"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btnMinus"
-            style="?attr/buttonStyle"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:text="-"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector"
-            android:textSize="36sp" />
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/back"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/selector_tv_icon_btn" />
 
-        <TextView
-            android:id="@+id/txtValue"
-            android:layout_width="240dp"
-            android:layout_height="96dp"
-            android:gravity="center"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:text="500 MB"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/margin_md">
 
-        <Button
-            android:id="@+id/btnPlus"
-            style="?attr/buttonStyle"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:text="+"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector"
-            android:textSize="36sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_custom_limit_dialog_title"
+                android:textColor="@color/tv_text_primary"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-black" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nt_custom_limit_dialog_desc"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <!-- Centered TV Adjustment Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="560dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="24dp">
+        app:cardBackgroundColor="@color/tv_glass_white_10"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/tv_glass_border"
+        app:layout_constraintTop_toBottomOf="@id/layoutToolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btnUnitMb"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:text="MB"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector"
-            android:layout_marginEnd="12dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="32dp">
 
-        <Button
-            android:id="@+id/btnUnitGb"
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:text="GB"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector" />
-    </LinearLayout>
+            <!-- Stepper Controls Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+                <Button
+                    android:id="@+id/btnMinus"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:text="−"
+                    android:textSize="28sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:focusable="true" />
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="160dp"
-            android:layout_height="64dp"
-            android:text="Cancel"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector"
-            android:layout_marginEnd="24dp" />
+                <TextView
+                    android:id="@+id/txtValue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="32sp"
+                    android:fontFamily="sans-serif-black"
+                    android:textColor="@color/tv_text_primary"
+                    tools:text="500 MB" />
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="160dp"
-            android:layout_height="64dp"
-            android:text="Save"
-            android:background="@drawable/selector_tv_button_yellow"
-            android:textColor="@color/tv_button_text_selector" />
+                <Button
+                    android:id="@+id/btnPlus"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:text="+"
+                    android:textSize="28sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:focusable="true" />
+            </LinearLayout>
 
-    </LinearLayout>
+            <!-- Unit Toggle Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="28dp">
 
-</LinearLayout>
+                <Button
+                    android:id="@+id/btnUnitMb"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:text="MB"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:focusable="true"
+                    android:layout_marginEnd="16dp" />
+
+                <Button
+                    android:id="@+id/btnUnitGb"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:text="GB"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Action Buttons Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="@string/cancel"
+                    android:background="@drawable/selector_tv_button"
+                    android:textColor="@color/tv_text_primary"
+                    android:textSize="15sp"
+                    android:focusable="true"
+                    android:layout_marginEnd="14dp" />
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="@string/save"
+                    android:background="@drawable/selector_tv_button_yellow"
+                    android:textColor="@color/selector_tv_button_text_yellow"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-bold"
+                    android:focusable="true" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

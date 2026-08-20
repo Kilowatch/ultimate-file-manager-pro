@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- Scanned Page Item — Premium Glassmorphic Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingVertical="8dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_reindex_option_card"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp">
 
+    <!-- Rounded Thumbnail Container -->
     <androidx.cardview.widget.CardView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="2dp"
-        android:backgroundTint="#1AFFFFFF">
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        android:backgroundTint="#26FFFFFF">
 
         <ImageView
             android:id="@+id/imgPage"
@@ -20,29 +26,45 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:contentDescription="@string/scanner_pages" />
-
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/txtPageNumber"
+    <!-- Page Title & Info -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:textColor="@color/mobile_text_primary"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif-medium" />
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
 
+        <TextView
+            android:id="@+id/txtPageNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_primary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-bold"
+            tools:text="Page 1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ready for export"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Delete Page Button -->
     <ImageView
         android:id="@+id/btnDeletePage"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:padding="6dp"
+        android:padding="8dp"
         android:src="@drawable/ic_delete"
         android:contentDescription="@string/clear_text"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/bg_icon_circle_accent"
-        app:tint="@android:color/white" />
+        android:background="@drawable/bg_header_action_ripple"
+        app:tint="@color/ufm_denied" />
 
 </LinearLayout>

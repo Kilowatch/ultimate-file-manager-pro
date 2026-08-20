@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Confirm Use Certificate Dialog — Premium Glassmorphic Standard -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/margin_xl"
+    android:background="@drawable/bg_dialog_glass">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="14dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lock"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
+    <TextView
+        android:id="@+id/txtUseCertTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remote_cert_import_title"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="HTTPS &amp; TLS Security"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
+
+    <!-- Certificate Details Card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
+
+        <!-- File Name Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <FrameLayout
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_btn_icon_frosted"
+                android:layout_marginEnd="12dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_lock"
+                    app:tint="?attr/colorPrimary"
+                    android:contentDescription="@null" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/txtCertFileName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-bold"
+                android:maxLines="1"
+                android:ellipsize="middle"
+                tools:text="custom_ca.p12" />
+        </LinearLayout>
+
+        <!-- Full File Path -->
+        <TextView
+            android:id="@+id/txtCertPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/bg_url_box"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="10dp"
+            tools:text="/storage/emulated/0/Download/custom_ca.p12" />
+
+        <!-- Description Note -->
+        <TextView
+            android:id="@+id/txtCertDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remote_cert_import_msg"
+            android:textColor="@color/mobile_text_secondary"
+            android:textSize="12sp"
+            android:lineSpacingMultiplier="1.2" />
+
+    </LinearLayout>
+
+    <!-- Use Certificate Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnConfirmUseCert"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/remote_use_ca"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_check_circle"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/white" />
+
+    <!-- Cancel Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelUseCert"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

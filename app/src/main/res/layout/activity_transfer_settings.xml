@@ -1,84 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Transfer Settings Activity — Premium Mobile Glassmorphic Standard -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorSurface">
+    android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Toolbar -->
+    <!-- Modern Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="8dp"
-        android:elevation="4dp"
-        android:background="?attr/colorSurfaceVariant">
+        android:paddingHorizontal="16dp"
+        android:background="@color/mobile_glass_header">
 
-        <ImageView
-            android:id="@+id/btnBack"
+        <FrameLayout
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:padding="8dp"
-            android:src="@drawable/ic_arrow_back"
-            android:contentDescription="@string/back"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="@drawable/bg_btn_icon_frosted">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="@string/cd_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="false"
+                app:tint="@color/mobile_icon_tint" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/txtTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="14dp"
             android:text="@string/transfer_settings"
             android:textSize="18sp"
             android:textColor="@color/mobile_text_primary"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-black" />
 
         <TextView
             android:id="@+id/txtSelectAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
             android:text="@string/transfer_settings_select_all"
-            android:textSize="14sp"
-            android:textColor="@color/tv_button_focused_yellow"
-            android:fontFamily="sans-serif-medium"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:textSize="13sp"
+            android:textColor="?attr/colorPrimary"
+            android:fontFamily="sans-serif-bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/bg_badge_step_pill" />
     </LinearLayout>
 
-    <!-- Subtitle -->
-    <TextView
-        android:id="@+id/txtSubtitle"
+    <!-- Target Device & Security Banner Card -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="4dp"
-        android:textSize="13sp"
-        android:textColor="@color/mobile_text_secondary" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-    <!-- Settings list -->
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_btn_icon_frosted"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_sync"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTargetDeviceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-black"
+                tools:text="Living Room TV" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="13sp"
+                android:textColor="@color/mobile_text_secondary"
+                tools:text="From SM-S908U → Living Room TV" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Settings List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+        android:paddingVertical="6dp" />
 
-    <!-- Transfer button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnTransfer"
+    <!-- Bottom Transfer Action Area -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_margin="16dp"
-        android:text="@string/transfer_to_tv"
-        android:textSize="15sp"
-        android:backgroundTint="@color/tv_button_focused_yellow"
-        android:textColor="@color/tv_button_focused_yellow_text"
-        style="@style/Widget.Material3Expressive.Button" />
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/mobile_glass_header">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTransfer"
+            style="@style/Widget.Material3Expressive.Button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="@string/transfer_to_tv"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-bold"
+            android:textAllCaps="false"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"
+            app:icon="@drawable/ic_sync"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="?attr/colorOnPrimary" />
+    </LinearLayout>
 
 </LinearLayout>

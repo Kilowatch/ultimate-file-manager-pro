@@ -105,8 +105,8 @@ class ShizukuTvActivity : AppCompatActivity() {
     }
 
     private fun showAuthDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_shizuku_auth, null)
-        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_shizuku_auth_tv, null)
+        val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
             .setCancelable(true)
             .create()
@@ -124,6 +124,7 @@ class ShizukuTvActivity : AppCompatActivity() {
         }
 
         dialog.show()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
         btnAuth.requestFocus()
     }
 

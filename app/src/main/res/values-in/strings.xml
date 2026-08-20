@@ -10523,14 +10523,8 @@ Tidak ada pengaturan urutan khusus folder yang disimpan.\n
 \n
 Buka folder, ketuk Urutkan &amp; Filter dan pilih \"Folder Ini\" untuk membuat override.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Hapus Semua
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Hapus semua override urutan khusus folder? Folder akan kembali ke pengaturan urutan global.
-</string>
-    <string name="folder_sort_manager_deleted">
-Override dihapus
 </string>
     <string name="folder_sort_network_badge">
 Jaringan / Online

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV DLNA Shared Folder Item Layout — Language & Grouped Glass Card Standard
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="4dp">
+
+    <!-- Folder Badge -->
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_icon_circle_accent"
+        android:layout_marginEnd="14dp">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_folder"
+            app:tint="@color/white"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Folder Label & Path -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginEnd="12dp">
+
+        <TextView
+            android:id="@+id/txtFolderLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Movies &amp; Videos" />
+
+        <TextView
+            android:id="@+id/txtFolderPath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:layout_marginTop="2dp"
+            tools:text="/storage/emulated/0/Movies" />
+    </LinearLayout>
+
+    <!-- Remove Folder Button for TV -->
+    <ImageView
+        android:id="@+id/btnRemoveFolder"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_delete"
+        android:contentDescription="@string/delete"
+        android:focusable="true"
+        android:background="@drawable/selector_tv_icon_btn"
+        app:tint="@color/tv_text_secondary" />
+
+</LinearLayout>

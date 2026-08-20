@@ -141,17 +141,20 @@ class RemoteManageActivity : AppCompatActivity() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_remote_mode_select, null)
         val cardWindows = dialogView.findViewById<LinearLayout>(R.id.cardWindowsApp)
         val cardHttps = dialogView.findViewById<LinearLayout>(R.id.cardHttpsServer)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelMode)
 
         if (DeviceUtils.isTvDevice(this)) {
             cardWindows.setBackgroundResource(R.drawable.bg_tv_card_selector)
             cardHttps.setBackgroundResource(R.drawable.bg_tv_card_selector)
         }
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_connect_type_title)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
             .setView(dialogView)
-            .setCancelable(false)
-            .show()
+            .setCancelable(true)
+            .setOnCancelListener { finish() }
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.show()
 
         cardWindows.setOnClickListener {
             dialog.dismiss()
@@ -163,6 +166,11 @@ class RemoteManageActivity : AppCompatActivity() {
             dialog.dismiss()
             currentMode = ConnectionMode.HTTPS_SERVER
             applyConnectionMode(ConnectionMode.HTTPS_SERVER, pin, startServer = true)
+        }
+
+        btnCancel?.setOnClickListener {
+            dialog.dismiss()
+            finish()
         }
     }
 
@@ -176,8 +184,12 @@ class RemoteManageActivity : AppCompatActivity() {
         val txtFingerprintLabel = findViewById<TextView>(R.id.txtFingerprintLabel)
         val txtFingerprint = findViewById<TextView>(R.id.txtFingerprint)
         val txtVerifyFingerprint = findViewById<TextView>(R.id.txtVerifyFingerprint)
+        val cardSecurity = findViewById<View>(R.id.cardSecurityDetails)
+        val imgHero = findViewById<ImageView>(R.id.imgHeroRemote)
 
         if (mode == ConnectionMode.WINDOWS_APP) {
+            imgHero?.setImageResource(R.drawable.ic_remote_manage)
+            cardSecurity?.visibility = View.GONE
             txtStatus.text = getString(R.string.remote_status_running)
             txtOpenBrowser.text = getString(R.string.remote_device_ip)
             txtWarning.text = getString(R.string.remote_warning_windows_app)
@@ -190,6 +202,8 @@ class RemoteManageActivity : AppCompatActivity() {
                 txtServerUrl.text = getDeviceIpAddress()
             }
         } else {
+            imgHero?.setImageResource(R.drawable.ic_file_server)
+            cardSecurity?.visibility = View.VISIBLE
             txtStatus.text = getString(R.string.remote_server_running)
             txtOpenBrowser.text = getString(R.string.remote_open_browser)
             txtWarning.text = getString(R.string.remote_warning_screen)
@@ -307,15 +321,20 @@ class RemoteManageActivity : AppCompatActivity() {
      * Shown whenever the user taps "Import CA Certificate".
      */
     private fun showCaInfoDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_ca_info_title)
-            .setMessage(R.string.remote_ca_info_message)
-            .setIcon(R.drawable.ic_lock)
-            .setPositiveButton(R.string.remote_ca_info_browse) { _: DialogInterface, _: Int ->
-                openCertPicker()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_custom_ca_info, null)
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        dialogView.findViewById<View>(R.id.btnBrowseCert)?.setOnClickListener {
+            dialog.dismiss()
+            openCertPicker()
+        }
+        dialogView.findViewById<View>(R.id.btnCancelCa)?.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun openCertPicker() {
@@ -327,45 +346,42 @@ class RemoteManageActivity : AppCompatActivity() {
     }
 
     private fun promptPkcs12Password(path: String) {
-        // Build a TextInputLayout so the user gets a password-toggle eye button
-        val inputLayout = com.google.android.material.textfield.TextInputLayout(this, null,
-            com.google.android.material.R.attr.textInputOutlinedStyle).apply {
-            hint = getString(R.string.remote_cert_password_hint)
-            endIconMode = com.google.android.material.textfield.TextInputLayout.END_ICON_PASSWORD_TOGGLE
-            boxBackgroundMode = com.google.android.material.textfield.TextInputLayout.BOX_BACKGROUND_OUTLINE
-            setPadding(0, 8, 0, 0)
-        }
-        val inputField = com.google.android.material.textfield.TextInputEditText(inputLayout.context).apply {
-            inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
-        }
-        inputLayout.addView(inputField)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_cert_password, null)
+        val edtPassword = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.edtCertPassword)
+        val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmCertPassword)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelCertPassword)
 
-        val container = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            val hPad = (24 * resources.displayMetrics.density).toInt()
-            val vPad = (12 * resources.displayMetrics.density).toInt()
-            setPadding(hPad, vPad, hPad, 0)
-            addView(inputLayout)
-        }
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_cert_password_title)
-            .setView(container)
-            .setPositiveButton(R.string.remote_cert_confirm) { _: DialogInterface, _: Int ->
-                val pw = inputField.text.toString().toCharArray()
-                if (fileServer?.importPkcs12Cert(path, pw) == true) {
-                    Toast.makeText(this, R.string.remote_cert_imported, Toast.LENGTH_SHORT).show()
-                    restartServer()
-                } else {
-                    Toast.makeText(this, R.string.remote_cert_failed, Toast.LENGTH_LONG).show()
-                }
-                Arrays.fill(pw, '0')
+        fun doImport() {
+            val pw = edtPassword.text?.toString()?.toCharArray() ?: CharArray(0)
+            if (fileServer?.importPkcs12Cert(path, pw) == true) {
+                Toast.makeText(this, R.string.remote_cert_imported, Toast.LENGTH_SHORT).show()
+                restartServer()
+            } else {
+                Toast.makeText(this, R.string.remote_cert_failed, Toast.LENGTH_LONG).show()
             }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+            Arrays.fill(pw, '0')
+            dialog.dismiss()
+        }
 
-        // Auto-focus the field and open the keyboard
-        inputField.requestFocus()
+        btnConfirm.setOnClickListener { doImport() }
+        btnCancel.setOnClickListener { dialog.dismiss() }
+
+        edtPassword.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE) {
+                doImport()
+                true
+            } else {
+                false
+            }
+        }
+
+        dialog.show()
+        edtPassword.requestFocus()
         dialog.window?.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
     }
 
@@ -379,15 +395,24 @@ class RemoteManageActivity : AppCompatActivity() {
     }
 
     private fun promptRemoveCert() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.remote_cert_remove_title)
-            .setMessage(R.string.remote_cert_remove_msg)
-            .setPositiveButton(R.string.remote_cert_remove) { _: DialogInterface, _: Int ->
-                fileServer?.removeCustomCert()
-                restartServer()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        val dialogView = layoutInflater.inflate(R.layout.dialog_remove_cert_confirm, null)
+        val btnRemove = dialogView.findViewById<View>(R.id.btnConfirmRemoveCert)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelRemoveCert)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnRemove.setOnClickListener {
+            dialog.dismiss()
+            fileServer?.removeCustomCert()
+            restartServer()
+        }
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private fun restartServer() {
@@ -425,6 +450,16 @@ class RemoteManageActivity : AppCompatActivity() {
                 .start()
         }
         pulse()
+
+        txtServerUrl.setOnClickListener {
+            val text = txtServerUrl.text.toString()
+            if (text.isNotEmpty()) {
+                val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                val clip = android.content.ClipData.newPlainText("URL", text)
+                clipboard.setPrimaryClip(clip)
+                android.widget.Toast.makeText(this, getString(R.string.tile_color_export_copied), android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
 
         btnStopServer.setOnClickListener {
             navigateBack()

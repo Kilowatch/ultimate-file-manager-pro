@@ -208,41 +208,118 @@ class ServerProfileEditActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
     }
 
-    private fun setupClickListeners() {
-        // Open the unified storage browser in location-picker mode — no dialog.
-        val openPicker = View.OnClickListener {
+    private fun showSelectLocationGuide() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_server_guide, null)
+        val imgHero = dialogView.findViewById<ImageView>(R.id.imgGuideHero)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvGuideTitle)
+        val tvDesc = dialogView.findViewById<TextView>(R.id.tvGuideDesc)
+        val tvStep1 = dialogView.findViewById<TextView>(R.id.tvGuideStep1)
+        val tvStep2 = dialogView.findViewById<TextView>(R.id.tvGuideStep2)
+        val tvStep3 = dialogView.findViewById<TextView>(R.id.tvGuideStep3)
+        val btnProceed = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnProceedGuide)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelGuide)
+
+        imgHero?.setImageResource(R.drawable.ic_folder)
+        tvTitle?.text = getString(R.string.select_default_location)
+        tvDesc?.text = "Choose the root storage directory for this server profile"
+        tvStep1?.text = "1. Select your target storage (Internal, SD Card, USB, or Network)."
+        tvStep2?.text = "2. Navigate inside the folder you want this user to access."
+        tvStep3?.text = "3. Tap 'Select This Folder' to confirm your selection."
+        btnProceed?.text = "Browse Storage"
+        btnProceed?.setIconResource(R.drawable.ic_folder)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnProceed?.setOnClickListener {
+            dialog.dismiss()
             folderPickerLauncher.launch(
                 Intent(this, StorageBrowserActivity::class.java).apply {
                     putExtra(StorageBrowserActivity.EXTRA_LOCATION_PICKER, true)
                 }
             )
         }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
 
-        findViewById<MaterialButton>(R.id.btnSelectLocation).setOnClickListener(openPicker)
-        findViewById<View>(R.id.layoutDefaultLocationCard)?.setOnClickListener(openPicker)
+    private fun showPickPublicKeyGuide() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_server_guide, null)
+        val imgHero = dialogView.findViewById<ImageView>(R.id.imgGuideHero)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvGuideTitle)
+        val tvDesc = dialogView.findViewById<TextView>(R.id.tvGuideDesc)
+        val tvStep1 = dialogView.findViewById<TextView>(R.id.tvGuideStep1)
+        val tvStep2 = dialogView.findViewById<TextView>(R.id.tvGuideStep2)
+        val tvStep3 = dialogView.findViewById<TextView>(R.id.tvGuideStep3)
+        val btnProceed = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnProceedGuide)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnCancelGuide)
 
-        btnPickAuthorizedKeys.setOnClickListener {
+        imgHero?.setImageResource(R.drawable.ic_lock)
+        tvTitle?.text = getString(R.string.authorized_keys_pick)
+        tvDesc?.text = "Select an OpenSSH or SSH2 public key to authenticate this user"
+        tvStep1?.text = "1. Browse your storage to locate your public key file (.pub, .txt, etc.)."
+        tvStep2?.text = "2. Tap on the key file to select and import it."
+        tvStep3?.text = "3. The key data will be verified for SSH passwordless authentication."
+        btnProceed?.text = "Browse for Key"
+        btnProceed?.setIconResource(R.drawable.ic_lock)
+
+        val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+        btnProceed?.setOnClickListener {
+            dialog.dismiss()
             keyPickerLauncher.launch(
                 Intent(this, StorageBrowserActivity::class.java).apply {
                     putExtra(StorageBrowserActivity.EXTRA_KEYFILE_PICKER, true)
                 }
             )
         }
+        btnCancel?.setOnClickListener { dialog.dismiss() }
+        dialog.show()
+    }
+
+    private fun setupClickListeners() {
+        val openLocationPicker = View.OnClickListener {
+            showSelectLocationGuide()
+        }
+
+        findViewById<MaterialButton>(R.id.btnSelectLocation).setOnClickListener(openLocationPicker)
+        findViewById<View>(R.id.layoutDefaultLocationCard)?.setOnClickListener(openLocationPicker)
+
+        btnPickAuthorizedKeys.setOnClickListener {
+            showPickPublicKeyGuide()
+        }
 
         btnSave.setOnClickListener { saveProfile() }
 
         btnDelete.setOnClickListener {
             editingProfile?.let { profile ->
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.delete_profile)
-                    .setMessage(getString(R.string.delete_profile_confirm, profile.username))
-                    .setPositiveButton(R.string.delete) { _, _ ->
-                        profileRepo.delete(profile.id)
-                        Toast.makeText(this, R.string.profile_deleted, Toast.LENGTH_SHORT).show()
-                        finish()
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .show()
+                val dialogView = layoutInflater.inflate(R.layout.dialog_delete_profile_confirm, null)
+                val txtMsg = dialogView.findViewById<TextView>(R.id.txtDeleteProfileMsg)
+                val btnConfirm = dialogView.findViewById<View>(R.id.btnConfirmDeleteProfile)
+                val btnCancel = dialogView.findViewById<View>(R.id.btnCancelDeleteProfile)
+
+                txtMsg?.text = getString(R.string.delete_profile_confirm, profile.username)
+
+                val dialog = MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
+                    .setView(dialogView)
+                    .create()
+                dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
+
+                btnConfirm?.setOnClickListener {
+                    dialog.dismiss()
+                    profileRepo.delete(profile.id)
+                    Toast.makeText(this, R.string.profile_deleted, Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                btnCancel?.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
             }
         }
     }
@@ -259,7 +336,7 @@ class ServerProfileEditActivity : AppCompatActivity() {
         val normalized = normalizePublicKeys(text)
         val validation = validatePublicKeyFile(normalized)
         if (validation != null) {
-            MaterialAlertDialogBuilder(this)
+            MaterialAlertDialogBuilder(this, R.style.UFM_Dialog)
                 .setTitle(R.string.authorized_keys_invalid_title)
                 .setMessage(validation)
                 .setPositiveButton(R.string.ok, null)

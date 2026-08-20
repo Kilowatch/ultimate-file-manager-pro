@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_mobile_gradient">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
@@ -21,9 +21,9 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="20dp"
@@ -40,13 +40,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="16dp">
+            android:layout_marginStart="14dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/icon_pack_import_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
             <TextView
                 android:layout_width="wrap_content"
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/mobile_glass_stroke"

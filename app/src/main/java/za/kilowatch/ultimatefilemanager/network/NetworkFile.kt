@@ -12,5 +12,6 @@ data class NetworkFile(
     val freeSpace: Long = -1L,   // -1 = unknown; ≥0 = drive entry with storage info
     val iconRes: Int = 0,        // optional custom icon resource; 0 = use default
     val isToggle: Boolean = false, // true = render with a Switch instead of detail text
-    val isToggled: Boolean = false // current state of the Switch
+    val isToggled: Boolean = false, // current state of the Switch
+    val subtitle: String? = null // optional custom subtitle text
 )

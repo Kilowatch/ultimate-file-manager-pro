@@ -39,19 +39,13 @@ class AdbPairingActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_adb_pairing)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.layoutToolbar)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, v.paddingBottom)
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.scrollView)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             v.setPadding(
-                v.paddingLeft,
-                v.paddingTop,
-                v.paddingRight,
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
                 maxOf(systemBars.bottom, ime.bottom)
             )
             insets
@@ -59,19 +53,20 @@ class AdbPairingActivity : AppCompatActivity() {
 
         adbManager = AdbManager.getInstance(this)
 
+        val editHost = findViewById<EditText>(R.id.editAdbHost)
         val editPort = findViewById<EditText>(R.id.editAdbPort)
         val spinnerDevices = findViewById<Spinner>(R.id.spinnerDevices)
         val btnScan = findViewById<Button>(R.id.btnScanDevices)
         val btnConnectNoPIN = findViewById<Button>(R.id.btnConnectNoPIN)
-        val btnTogglePIN = findViewById<Button>(R.id.btnTogglePIN)
         val btnConnectWithPin = findViewById<Button>(R.id.btnConnectWithPin)
-        val pinContainer = findViewById<View>(R.id.pinContainer)
         val scanProgressContainer = findViewById<View>(R.id.scanProgressContainer)
         val scanProgressText = findViewById<TextView>(R.id.scanProgressText)
         val devicesDetectedText = findViewById<TextView>(R.id.devicesDetectedText)
         val txtAdbStatus = findViewById<TextView>(R.id.txtAdbStatus)
         val txtHeaderStatus = findViewById<TextView>(R.id.txtHeaderStatus)
         val btnBack = findViewById<ImageView>(R.id.btnBack)
+
+        editHost?.setText("127.0.0.1")
 
         val pins = listOf(
             findViewById<EditText>(R.id.pin_1), findViewById(R.id.pin_2), findViewById(R.id.pin_3),
@@ -93,6 +88,7 @@ class AdbPairingActivity : AppCompatActivity() {
                     val device = discoveredDevices[position]
                     selectedHost = device.host
                     selectedPort = device.port
+                    editHost.setText(device.host)
                     editPort.setText(device.port.toString())
                 }
             }
@@ -152,20 +148,14 @@ class AdbPairingActivity : AppCompatActivity() {
             }
         }
 
-        btnTogglePIN.setOnClickListener {
-            val pinVisible = pinContainer.visibility != View.VISIBLE
-            pinContainer.visibility = if (pinVisible) View.VISIBLE else View.GONE
-            btnTogglePIN.text = if (pinVisible) getString(R.string.hide_pin) else "Use PIN"
-        }
-
         btnConnectNoPIN.setOnClickListener {
-            val host = selectedHost.ifEmpty { "127.0.0.1" }
+            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { "127.0.0.1" } }
             val port = editPort.text.toString().toIntOrNull() ?: 5555
             attemptConnection(host, port, "", txtAdbStatus, txtHeaderStatus, btnConnectNoPIN, btnConnectWithPin)
         }
 
         btnConnectWithPin.setOnClickListener {
-            val host = selectedHost.ifEmpty { "127.0.0.1" }
+            val host = editHost.text.toString().trim().ifEmpty { selectedHost.ifEmpty { "127.0.0.1" } }
             val port = editPort.text.toString().toIntOrNull() ?: 5555
             val pin = pins.joinToString("") { it.text.toString() }
             if (pin.length == 6) {
@@ -285,7 +275,7 @@ class AdbPairingActivity : AppCompatActivity() {
                     btnNoPIN.setTextColor(originalTextColors)
                     btnNoPIN.isEnabled = true
                     btnNoPIN.setOnClickListener {
-                        val h = host.ifEmpty { "127.0.0.1" }
+                        val h = findViewById<EditText>(R.id.editAdbHost)?.text?.toString()?.trim()?.ifEmpty { host.ifEmpty { "127.0.0.1" } } ?: host.ifEmpty { "127.0.0.1" }
                         val p = findViewById<EditText>(R.id.editAdbPort).text.toString().toIntOrNull() ?: 5555
                         attemptConnection(h, p, "", statusText, headerStatusText, btnNoPIN, btnWithPin)
                     }

@@ -2,64 +2,165 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="@dimen/margin_xl"
-    android:background="@drawable/bg_glass_card">
+    android:background="@drawable/bg_dialog_glass"
+    android:gravity="center_horizontal">
 
-    <ImageView
+    <!-- 64dp Frosted Hero Badge -->
+    <FrameLayout
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_lightning"
-        android:layout_marginBottom="@dimen/margin_md" />
+        android:background="@drawable/bg_btn_icon_frosted"
+        android:layout_marginBottom="16dp">
 
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_lightning"
+            app:tint="?attr/colorPrimary"
+            android:contentDescription="@null" />
+    </FrameLayout>
+
+    <!-- Dialog Title -->
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="@string/storage_indexer_premium_title"
         android:textColor="@color/mobile_text_primary"
         android:textSize="20sp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center" />
 
+    <!-- Dialog Subtitle -->
     <TextView
         android:id="@+id/txtMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/margin_sm"
+        android:layout_marginTop="4dp"
         android:text="@string/storage_indexer_premium_message"
         android:textColor="@color/mobile_text_secondary"
-        android:textSize="14sp"
-        android:textAlignment="center" />
+        android:textSize="13sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="18dp" />
 
+    <!-- Feature Benefits Card -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/margin_xl"
-        android:gravity="center">
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnExit"
-            style="@style/Widget.Material3Expressive.Button.TextButton"
-            android:layout_width="wrap_content"
+        <!-- Benefit 1: Real-time search -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/storage_indexer_btn_exit"
-            android:textColor="@color/mobile_text_secondary"
-            android:layout_marginEnd="@dimen/margin_md" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnContinue"
-            style="@style/Widget.Material3Expressive.Button.TonalButton"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_search"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Instant search results across all folders"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Benefit 2: Advanced filters -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/storage_indexer_btn_continue"
-            app:backgroundTint="?attr/colorSecondary"
-            android:textColor="@android:color/white" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_sort"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Filter by size, type, extension and date"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
+
+        <!-- Benefit 3: Lightweight -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_lightning"
+                app:tint="@color/tv_button_focused_yellow"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Zero lag and minimal battery consumption"
+                android:textColor="@color/mobile_text_primary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium" />
+        </LinearLayout>
     </LinearLayout>
+
+    <!-- Enable Indexing Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContinue"
+        style="@style/Widget.Material3Expressive.Button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/storage_indexer_btn_continue"
+        app:cornerRadius="16dp"
+        app:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-bold"
+        android:textAllCaps="false" />
+
+    <!-- Not Now / Exit Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnExit"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/storage_indexer_btn_exit"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:layout_marginTop="4dp" />
+
 </LinearLayout>

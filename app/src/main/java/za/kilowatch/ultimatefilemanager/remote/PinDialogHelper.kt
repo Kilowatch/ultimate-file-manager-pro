@@ -90,19 +90,19 @@ object PinDialogHelper {
             }
         })
 
+        val btnConfirm = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPinConfirm)
+        val btnCancel = dialogView.findViewById<View>(R.id.btnPinCancel)
+
+        btnConfirm.text = resolvedConfirmText
+        btnCancel.visibility = if (onCancel != null) View.VISIBLE else View.GONE
+
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        val builder = MaterialAlertDialogBuilder(context)
+        val dialog = MaterialAlertDialogBuilder(context, R.style.UFM_Dialog)
             .setView(dialogView)
-            .setPositiveButton(resolvedConfirmText, null)
             .setCancelable(onCancel != null)
-        // Only add a Cancel button when there is something to cancel to
-        if (onCancel != null) {
-            builder.setNegativeButton(R.string.cancel) { _, _ ->
-                onCancel.invoke()
-            }
-        }
-        val dialog = builder.create()
+            .create()
+        dialog.window?.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
 
         /** Shared confirm logic — used by on-screen button and keyboard Done key. */
         fun confirmPin() {
@@ -123,6 +123,15 @@ object PinDialogHelper {
                 // Defer until after the dismiss animation so the next dialog can open
                 Handler(Looper.getMainLooper()).post { onPinSet(pin) }
             }
+        }
+
+        btnConfirm.setOnClickListener {
+            confirmPin()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+            onCancel?.invoke()
         }
 
         // Keyboard Done key on the last-digit scenario → confirm
@@ -167,10 +176,6 @@ object PinDialogHelper {
                     dialog.dismiss()
                     onRecoveryCode.invoke()
                 }
-            }
-
-            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                confirmPin()
             }
         }
 

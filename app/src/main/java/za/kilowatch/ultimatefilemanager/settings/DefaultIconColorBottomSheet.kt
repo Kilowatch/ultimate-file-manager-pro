@@ -1,8 +1,10 @@
 package za.kilowatch.ultimatefilemanager.settings
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
@@ -11,8 +13,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import za.kilowatch.ultimatefilemanager.R
 import za.kilowatch.ultimatefilemanager.ui.HexColorHelper
 import za.kilowatch.ultimatefilemanager.ui.HsvPaletteView
@@ -72,28 +76,25 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
             swatchCurrent = R.id.swatchLightCurrent,
             presetsContainer = R.id.presetsLight,
             btnCustom = R.id.btnCustomLight,
-            btnReset = R.id.btnResetLight,
-            presetBaseId = R.id.swatchLight0
+            btnReset = R.id.btnResetLight
         )
         setupSection(
             section = ThemeHelper.THEME_DARK,
             swatchCurrent = R.id.swatchDarkCurrent,
             presetsContainer = R.id.presetsDark,
             btnCustom = R.id.btnCustomDark,
-            btnReset = R.id.btnResetDark,
-            presetBaseId = R.id.swatchDark0
+            btnReset = R.id.btnResetDark
         )
         setupSection(
             section = ThemeHelper.THEME_AMOLED,
             swatchCurrent = R.id.swatchAmoledCurrent,
             presetsContainer = R.id.presetsAmoled,
             btnCustom = R.id.btnCustomAmoled,
-            btnReset = R.id.btnResetAmoled,
-            presetBaseId = R.id.swatchAmoled0
+            btnReset = R.id.btnResetAmoled
         )
 
         // Reset all
-        view.findViewById<TextView>(R.id.btnResetAll)?.setOnClickListener {
+        view.findViewById<View>(R.id.btnResetAll)?.setOnClickListener {
             lightColor  = DefaultIconColorManager.DEFAULT_LIGHT
             darkColor   = DefaultIconColorManager.DEFAULT_DARK
             amoledColor = DefaultIconColorManager.DEFAULT_AMOLED
@@ -102,11 +103,11 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
         }
 
         // Done
-        view.findViewById<TextView>(R.id.btnDone)?.setOnClickListener {
-            val ctx = requireContext()
-            DefaultIconColorManager.setCustomColor(ctx, ThemeHelper.THEME_LIGHT,  lightColor)
-            DefaultIconColorManager.setCustomColor(ctx, ThemeHelper.THEME_DARK,   darkColor)
-            DefaultIconColorManager.setCustomColor(ctx, ThemeHelper.THEME_AMOLED, amoledColor)
+        view.findViewById<View>(R.id.btnDone)?.setOnClickListener {
+            val context = requireContext()
+            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_LIGHT,  lightColor)
+            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_DARK,   darkColor)
+            DefaultIconColorManager.setCustomColor(context, ThemeHelper.THEME_AMOLED, amoledColor)
             DefaultIconColorManager.invalidateCache()
             dismiss()
         }
@@ -119,38 +120,37 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
         swatchCurrent: Int,
         presetsContainer: Int,
         btnCustom: Int,
-        btnReset: Int,
-        presetBaseId: Int
+        btnReset: Int
     ) {
         val view = requireView()
 
         // Current swatch
         val swatch = view.findViewById<View>(swatchCurrent)
-        swatch?.setBackgroundColor(currentColor(section))
+        swatch?.backgroundTintList = ColorStateList.valueOf(currentColor(section))
 
         // Presets
         val container = view.findViewById<ViewGroup>(presetsContainer) ?: return
         for (i in 0 until container.childCount.coerceAtMost(presets.size)) {
             val presetView = container.getChildAt(i)
-            presetView?.setBackgroundColor(presets[i])
+            presetView?.backgroundTintList = ColorStateList.valueOf(presets[i])
             presetView?.setOnClickListener {
                 setCurrentColor(section, presets[i])
-                swatch?.setBackgroundColor(presets[i])
+                swatch?.backgroundTintList = ColorStateList.valueOf(presets[i])
                 updatePreview()
             }
         }
 
         // Custom button → HSV colour picker
-        view.findViewById<TextView>(btnCustom)?.setOnClickListener {
+        view.findViewById<View>(btnCustom)?.setOnClickListener {
             showColorPickerDialog(currentColor(section)) { picked ->
                 setCurrentColor(section, picked)
-                swatch?.setBackgroundColor(picked)
+                swatch?.backgroundTintList = ColorStateList.valueOf(picked)
                 updatePreview()
             }
         }
 
         // Reset button
-        view.findViewById<TextView>(btnReset)?.setOnClickListener {
+        view.findViewById<View>(btnReset)?.setOnClickListener {
             val default = when (section) {
                 ThemeHelper.THEME_LIGHT  -> DefaultIconColorManager.DEFAULT_LIGHT
                 ThemeHelper.THEME_DARK   -> DefaultIconColorManager.DEFAULT_DARK
@@ -158,7 +158,7 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
                 else -> DefaultIconColorManager.DEFAULT_DARK
             }
             setCurrentColor(section, default)
-            swatch?.setBackgroundColor(default)
+            swatch?.backgroundTintList = ColorStateList.valueOf(default)
             updatePreview()
         }
     }
@@ -167,22 +167,30 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
 
     private fun updatePreview() {
         val view = view ?: return
-        val previewIcon = view.findViewById<android.widget.ImageView>(R.id.imgPreviewIcon) ?: return
+        val previewIcon1 = view.findViewById<ImageView>(R.id.imgPreviewIcon)
+        val previewIcon2 = view.findViewById<ImageView>(R.id.imgPreviewIcon2)
+        val previewIcon3 = view.findViewById<ImageView>(R.id.imgPreviewIcon3)
+        val previewIcon4 = view.findViewById<ImageView>(R.id.imgPreviewIcon4)
         val hexLabel = view.findViewById<TextView>(R.id.txtPreviewHex) ?: return
 
         val ctx = requireContext()
         val theme = ThemeHelper.getSavedTheme(ctx)
         val color = currentColor(theme)
 
-        previewIcon.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        val filter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        previewIcon1?.colorFilter = filter
+        previewIcon2?.colorFilter = filter
+        previewIcon3?.colorFilter = filter
+        previewIcon4?.colorFilter = filter
+
         hexLabel.text = "#%06X".format(0xFFFFFF and color)
     }
 
     private fun refreshAllSwatches() {
         val view = view ?: return
-        view.findViewById<View>(R.id.swatchLightCurrent)?.setBackgroundColor(lightColor)
-        view.findViewById<View>(R.id.swatchDarkCurrent)?.setBackgroundColor(darkColor)
-        view.findViewById<View>(R.id.swatchAmoledCurrent)?.setBackgroundColor(amoledColor)
+        view.findViewById<View>(R.id.swatchLightCurrent)?.backgroundTintList = ColorStateList.valueOf(lightColor)
+        view.findViewById<View>(R.id.swatchDarkCurrent)?.backgroundTintList = ColorStateList.valueOf(darkColor)
+        view.findViewById<View>(R.id.swatchAmoledCurrent)?.backgroundTintList = ColorStateList.valueOf(amoledColor)
     }
 
     // ── Colour helpers ──────────────────────────────────────────────────────
@@ -205,7 +213,8 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
     // ── HSV colour picker dialog (reused from TileColorBottomSheet pattern) ─
 
     private fun showColorPickerDialog(initialColor: Int, onColorSelected: (Int) -> Unit) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_color_picker, null)
+        val ctx = context ?: return
+        val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_color_picker, null)
 
         val palette      = dialogView.findViewById<HsvPaletteView>(R.id.hsvPalette)
         val hueSlider    = dialogView.findViewById<HueSliderView>(R.id.hueSlider)
@@ -239,14 +248,14 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
                 HexColorHelper.parseHex(hex)?.let { color ->
                     palette.setColor(color)
                     hueSlider.currentHue = palette.currentHue
-                    colorPreview.setBackgroundColor(color)
+                    colorPreview.backgroundTintList = ColorStateList.valueOf(color)
                 }
             }
         })
 
         palette.setColor(initialColor)
         hueSlider.currentHue = palette.currentHue
-        colorPreview.setBackgroundColor(initialColor)
+        colorPreview.backgroundTintList = ColorStateList.valueOf(initialColor)
 
         // Prefill hex field from saved colour
         if (initialColor != Color.TRANSPARENT) {
@@ -256,20 +265,21 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
 
         palette.onColorChanged = { color ->
             hueSlider.currentHue = palette.currentHue
-            colorPreview.setBackgroundColor(color)
+            colorPreview.backgroundTintList = ColorStateList.valueOf(color)
             syncHexFromColor(color)
         }
 
         hueSlider.onHueChanged = { hue ->
             palette.setHue(hue)
-            colorPreview.setBackgroundColor(palette.selectedColor)
+            colorPreview.backgroundTintList = ColorStateList.valueOf(palette.selectedColor)
             syncHexFromColor(palette.selectedColor)
         }
 
-        val builder = android.app.AlertDialog.Builder(context)
+        val dialog = MaterialAlertDialogBuilder(ctx, R.style.UFM_Dialog)
             .setView(dialogView)
-        val dialog = builder.create()
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            .create()
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         // Preset swatches in the picker dialog
         dialogView.findViewById<View>(R.id.swatchBlack)?.setOnClickListener {
@@ -297,10 +307,10 @@ class DefaultIconColorBottomSheet : BottomSheetDialogFragment() {
             dialog.dismiss(); onColorSelected(0xFF8E24AA.toInt())
         }
 
-        dialogView.findViewById<TextView>(R.id.btnCancel)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnCancel)?.setOnClickListener {
             dialog.dismiss()
         }
-        dialogView.findViewById<TextView>(R.id.btnSelect)?.setOnClickListener {
+        dialogView.findViewById<View>(R.id.btnSelect)?.setOnClickListener {
             dialog.dismiss()
             // Priority: valid hex → use hex; otherwise → use visual selection
             val hexText = hexInput.text?.toString() ?: ""

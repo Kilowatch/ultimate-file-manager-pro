@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    TV DLNA Server Settings Activity — Language & Grouped Glass Card Standard
+    Configuration: Server Name, Renderer Name, and Shared Directory List
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,15 +13,15 @@
     android:background="@drawable/bg_tv_gradient"
     tools:context=".server.DlnaServerSettingsActivity">
 
-    <!-- Header Bar -->
+    <!-- 72dp Fixed Glass Header Bar -->
     <LinearLayout
         android:id="@+id/layoutToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="24dp"
-        android:paddingVertical="14dp"
+        android:background="@color/tv_glass_white_10"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -33,22 +37,18 @@
             android:background="@drawable/selector_tv_icon_btn"
             app:tint="@color/tv_text_primary" />
 
-        <View
-            android:layout_width="1.5dp"
-            android:layout_height="36dp"
-            android:layout_marginHorizontal="14dp"
-            android:background="#33FFFFFF" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/dlna_server_settings"
             android:textColor="@color/tv_text_primary"
-            android:textSize="17sp"
-            android:fontFamily="sans-serif-black" />
+            android:textSize="22sp"
+            android:fontFamily="sans-serif-black"
+            android:layout_marginStart="20dp" />
     </LinearLayout>
 
-    <ScrollView
+    <!-- Scrollable Form Area -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -63,146 +63,251 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp">
+            android:paddingHorizontal="24dp"
+            android:paddingTop="16dp">
 
-            <!-- Server Name Card -->
-            <LinearLayout
+            <!-- Top Guidance Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_server_name_label"
-                    android:textColor="@color/selector_tv_button_text_yellow"
-                    android:textSize="17sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/tv_text_secondary">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editServerName"
-                        android:layout_width="match_parent"
+                    <FrameLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@drawable/bg_icon_circle_accent">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_about"
+                            app:tint="@color/white"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/dlna_settings_info_notice"
                         android:textColor="@color/tv_text_primary"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:hint="@string/dlna_server_name_default" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:textSize="14sp"
+                        android:lineSpacingMultiplier="1.2" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Renderer Name Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_renderer_name_label"
-                    android:textColor="@color/selector_tv_button_text_yellow"
-                    android:textSize="17sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    app:boxBackgroundMode="outline"
-                    app:boxStrokeColor="@color/tv_text_secondary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editRendererName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/tv_text_primary"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:hint="@string/dlna_renderer_name_default" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <!-- Shared Folders Card -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@drawable/selector_tv_list_item"
-                android:padding="16dp"
-                android:layout_marginBottom="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_shared_folders_label"
-                    android:textColor="@color/selector_tv_button_text_yellow"
-                    android:textSize="17sp"
-                    android:fontFamily="sans-serif-medium" />
-
-                <!-- Empty state -->
-                <TextView
-                    android:id="@+id/txtNoFolders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_no_folders_configured"
-                    android:textColor="@color/selector_tv_btn_secondary_text"
-                    android:textSize="14sp"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    android:visibility="visible" />
-
-                <!-- Folder list -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvSharedFolders"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    android:visibility="gone"
-                    android:focusable="true" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAddFolder"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dlna_add_folder"
-                    android:layout_marginTop="@dimen/margin_sm"
-                    android:focusable="true"
-                    app:icon="@drawable/ic_folder" />
-            </LinearLayout>
-
-            <!-- Security Notice -->
+            <!-- TV Section 1 Header: Identification -->
             <TextView
+                android:id="@+id/labelSectionIdentification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_identification"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- TV Card 1: Identification -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dlna_security_warning"
-                android:textColor="@color/selector_tv_btn_secondary_text"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:alpha="0.7"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
 
-            <!-- Port Display -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Server Name Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dlna_server_name_label"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeColor="@color/tv_text_secondary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editServerName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:inputType="textCapWords"
+                            android:maxLines="1"
+                            android:hint="@string/dlna_server_name_default"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="14dp"
+                        android:background="@color/tv_glass_border" />
+
+                    <!-- Renderer Name Field -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dlna_renderer_name_label"
+                        android:textColor="@color/tv_text_primary"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        app:boxBackgroundMode="outline"
+                        app:boxStrokeColor="@color/tv_text_secondary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editRendererName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/tv_text_primary"
+                            android:inputType="textCapWords"
+                            android:maxLines="1"
+                            android:hint="@string/dlna_renderer_name_default"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- TV Section 2 Header: Shared Directories -->
+            <TextView
+                android:id="@+id/labelSectionSharedFolders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_section_shared_folders"
+                android:textColor="@color/tv_accent"
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="10dp" />
+
+            <!-- TV Card 2: Shared Folders -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/tv_glass_white_10"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/tv_glass_border">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Empty State Container -->
+                    <LinearLayout
+                        android:id="@+id/layoutEmptyFolders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:paddingVertical="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/txtNoFolders"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dlna_no_folders_configured"
+                            android:textColor="@color/tv_text_primary"
+                            android:textSize="15sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dlna_empty_shared_folders_desc"
+                            android:textColor="@color/tv_text_secondary"
+                            android:textSize="13sp"
+                            android:gravity="center"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <!-- Folders RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvSharedFolders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="visible" />
+
+                    <!-- Add Folder Button -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddFolder"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/dlna_add_folder"
+                        android:focusable="true"
+                        app:icon="@drawable/ic_folder" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Port & Security Warning -->
             <TextView
                 android:id="@+id/txtPortInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/tv_text_secondary"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:gravity="center"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="4dp"
+                tools:text="Port 8200 • Unencrypted media streaming" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dlna_security_warning"
+                android:textColor="@color/tv_text_secondary"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:alpha="0.7"
+                android:layout_marginBottom="16dp" />
 
             <!-- Save Button -->
             <com.google.android.material.button.MaterialButton
@@ -215,5 +320,6 @@
                 android:focusable="true" />
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

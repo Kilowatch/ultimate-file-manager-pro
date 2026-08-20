@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Connecting Progress — Premium Glassmorphic Dialog -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_xl"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_dialog_glass">
+
+    <ProgressBar
+        android:id="@+id/progressConnecting"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:indeterminateTint="?attr/colorPrimary" />
+
+    <TextView
+        android:id="@+id/tvConnectingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_remote_disabled"
+        android:textColor="@color/mobile_text_primary"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/tvConnectingStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/adb_terminal_status_connecting"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:lineSpacingMultiplier="1.3"
+        android:textAlignment="center"
+        android:layout_marginBottom="@dimen/margin_md" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelConnecting"
+        style="@style/Widget.Material3Expressive.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="@string/delete_cancel"
+        android:textColor="@color/mobile_text_secondary"
+        android:textSize="14sp"
+        android:textAllCaps="false" />
+
+</LinearLayout>

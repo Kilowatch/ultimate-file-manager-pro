@@ -10523,14 +10523,8 @@ Klasöre özel sıralama ayarı kaydedilmedi.\n
 \n
 Bir klasör açın, Sırala ve Filtrele\'ye dokunun ve geçersiz kılma oluşturmak için \\\"Bu Klasör\\\"ü seçin.
 </string>
-    <string name="folder_sort_manager_clear_all">
-Tümünü Temizle
-</string>
     <string name="folder_sort_manager_clear_confirm">
 Tüm klasöre özel sıralama geçersiz kılmaları kaldırılsın mı? Klasörler genel sıralama ayarına dönecek.
-</string>
-    <string name="folder_sort_manager_deleted">
-Geçersiz kılma kaldırıldı
 </string>
     <string name="folder_sort_network_badge">
 Ağ / Çevrimiçi

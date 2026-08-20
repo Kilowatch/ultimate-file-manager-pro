@@ -10523,14 +10523,8 @@ OK
 \n
 フォルダを開き、並べ替えとフィルターをタップして「このフォルダ」を選択すると、オーバーライドを作成できます。
 </string>
-    <string name="folder_sort_manager_clear_all">
-すべてクリア
-</string>
     <string name="folder_sort_manager_clear_confirm">
 フォルダごとの並べ替えオーバーライドをすべて削除しますか？フォルダは全体の並べ替え設定に戻ります。
-</string>
-    <string name="folder_sort_manager_deleted">
-オーバーライドを削除しました
 </string>
     <string name="folder_sort_network_badge">
 ネットワーク/オンライン

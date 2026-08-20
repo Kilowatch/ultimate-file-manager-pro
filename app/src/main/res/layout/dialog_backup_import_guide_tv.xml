@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="700dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_glass"
+    android:padding="32dp"
+    android:gravity="center_horizontal">
+
+    <!-- Hero Icon Badge -->
+    <FrameLayout
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/bg_icon_circle_accent"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_file_backup"
+            app:tint="@color/white"
+            android:importantForAccessibility="no" />
+    </FrameLayout>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_import_guide_title"
+        android:textColor="@color/tv_text_primary"
+        android:textSize="24sp"
+        android:fontFamily="sans-serif-black"
+        android:textAlignment="center"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Format Info Box -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_reindex_option_card"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/backup_import_guide_format_label"
+            android:textColor="@color/tv_text_secondary"
+            android:textSize="13sp"
+            android:fontFamily="sans-serif-bold"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/txtFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/tv_text_primary"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:background="@drawable/bg_url_box"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="9dp"
+            android:text="@string/backup_import_guide_format_val" />
+    </LinearLayout>
+
+    <!-- Message / Guidance -->
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backup_import_guide_msg"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Select Backup File Action Button -->
+    <Button
+        android:id="@+id/btnBrowse"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/backup_import_guide_btn_browse"
+        android:background="@drawable/selector_tv_button_yellow"
+        android:textColor="@color/selector_tv_button_text_yellow"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-bold"
+        android:focusable="true"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Cancel Button -->
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/cancel"
+        android:background="@drawable/selector_tv_button"
+        android:textColor="@color/tv_text_secondary"
+        android:textSize="14sp"
+        android:focusable="true" />
+
+</LinearLayout>

@@ -33,6 +33,7 @@ class SortFilterAppSheet : BottomSheetDialogFragment() {
         dialog.setOnShowListener {
             val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             if (bottomSheet != null) {
+                bottomSheet.setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 val behavior = BottomSheetBehavior.from(bottomSheet)
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.skipCollapsed = true
@@ -87,6 +88,11 @@ class SortFilterAppSheet : BottomSheetDialogFragment() {
                 else -> AppSortOrder.ASC
             }
             onApply?.invoke(sortMode, sortOrder)
+            dismiss()
+        }
+
+        // Cancel button
+        view.findViewById<View?>(R.id.btnCancelSort)?.setOnClickListener {
             dismiss()
         }
 

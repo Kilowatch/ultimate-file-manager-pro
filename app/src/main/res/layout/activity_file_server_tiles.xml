@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Mobile File Server System Tiles Activity — premium dark glassmorphism design.
+    File Server System Tiles Activity — Language & Grouped Glass Card Standard
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,24 +12,24 @@
     android:background="@drawable/bg_mobile_gradient"
     tools:context=".settings.FileServerTilesActivity">
 
-    <!-- Glass Header Bar -->
+    <!-- Glass Header Bar (56dp standard) -->
     <LinearLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/margin_md"
+        android:paddingHorizontal="16dp"
         android:background="@color/mobile_glass_header"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Back Button in Accent Circle -->
+        <!-- Back Button in Frosted Squircle -->
         <FrameLayout
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle_accent">
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_btn_icon_frosted">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -49,14 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/file_server_tiles_title"
                 android:textColor="@color/mobile_text_primary"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:fontFamily="sans-serif-black" />
 
             <TextView
@@ -68,298 +68,389 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Tiles Configuration list -->
-    <LinearLayout
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_md"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Open File Server Activity Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardOpenFileServer"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
 
-            <LinearLayout
+            <!-- Top Guidance Notice Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_file_server"
-                        app:tint="@color/mobile_icon_tint"
-                        android:contentDescription="@string/open_file_server_card_title" />
-                </FrameLayout>
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp">
+
+                    <FrameLayout
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_tune"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/open_file_server_card_title"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/file_server_tiles_info_notice"
                         android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/open_file_server_card_subtitle"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp" />
+                        android:textSize="13sp"
+                        android:lineSpacingMultiplier="1.2" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    app:tint="@color/mobile_icon_tint"
-                    android:contentDescription="@null" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            <!-- Section 1 Header: Server Dashboard -->
+            <TextView
+                android:id="@+id/labelSectionServer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/file_server_tiles_section_server"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
 
-        <!-- FTP Tile Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardFtpTile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
-
-            <LinearLayout
+            <!-- Grouped Glass Card 1: Server Dashboard -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
+                <!-- Open File Server Row -->
+                <LinearLayout
+                    android:id="@+id/cardOpenFileServer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="13dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <FrameLayout
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_btn_icon_frosted">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_file_server"
+                            app:tint="?attr/colorPrimary"
+                            android:importantForAccessibility="no" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/open_file_server_card_title"
+                            android:textColor="@color/mobile_card_text_primary"
+                            android:textSize="15.5sp"
+                            android:fontFamily="sans-serif-bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/open_file_server_card_subtitle"
+                            android:textColor="@color/mobile_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
                     <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_ufm_ftp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_chevron_right"
                         app:tint="@color/mobile_icon_tint"
-                        android:contentDescription="@string/settings_ftp_tile_title" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_ftp_tile_title"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:id="@+id/txtFtpTileSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_ftp_tile_subtitle_off"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp" />
+                        android:importantForAccessibility="no" />
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchFtpTile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            <!-- Section 2 Header: Quick Settings Tiles -->
+            <TextView
+                android:id="@+id/labelSectionTiles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/file_server_tiles_section_tiles"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-black"
+                android:textAllCaps="true"
+                android:letterSpacing="0.05"
+                android:paddingStart="4dp"
+                android:paddingBottom="8dp" />
 
-        <!-- SFTP Tile Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardSftpTile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
-
-            <LinearLayout
+            <!-- Grouped Glass Card 2: Quick Settings Tiles -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_ufm_sftp"
-                        app:tint="@color/mobile_icon_tint"
-                        android:contentDescription="@string/settings_sftp_tile_title" />
-                </FrameLayout>
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/mobile_glass_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/mobile_glass_stroke">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Row 1: FTP Server Tile -->
+                    <LinearLayout
+                        android:id="@+id/cardFtpTile"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/settings_sftp_tile_title"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
 
-                    <TextView
-                        android:id="@+id/txtSftpTileSubtitle"
-                        android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_ufm_ftp"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_ftp_tile_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtFtpTileSubtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_ftp_tile_subtitle_off"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchFtpTile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:clickable="false"
+                            android:focusable="false"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 2: SFTP Server Tile -->
+                    <LinearLayout
+                        android:id="@+id/cardSftpTile"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/settings_sftp_tile_subtitle_off"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_ufm_sftp"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_sftp_tile_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtSftpTileSubtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_sftp_tile_subtitle_off"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchSftpTile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:clickable="false"
+                            android:focusable="false"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="14dp"
+                        android:layout_marginEnd="14dp"
+                        android:background="@color/mobile_glass_stroke" />
+
+                    <!-- Row 3: DLNA Media Server Tile -->
+                    <LinearLayout
+                        android:id="@+id/cardDlnaTile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="13dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:background="@drawable/bg_btn_icon_frosted">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_dlna"
+                                app:tint="?attr/colorPrimary"
+                                android:importantForAccessibility="no" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginEnd="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_dlna_tile_title"
+                                android:textColor="@color/mobile_card_text_primary"
+                                android:textSize="15.5sp"
+                                android:fontFamily="sans-serif-bold" />
+
+                            <TextView
+                                android:id="@+id/txtDlnaTileSubtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/settings_sftp_tile_subtitle_off"
+                                android:textColor="@color/mobile_text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchDlnaTile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:clickable="false"
+                            android:focusable="false"
+                            app:useMaterialThemeColors="true" />
+                    </LinearLayout>
+
                 </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchSftpTile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- DLNA Tile Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardDlnaTile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="false"
-            app:cardBackgroundColor="@color/mobile_glass_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/mobile_glass_stroke"
-            app:rippleColor="@color/mobile_glass_ripple">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/margin_md">
-
-                <FrameLayout
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/bg_icon_circle_accent">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_dlna"
-                        app:tint="@color/mobile_icon_tint"
-                        android:contentDescription="@string/settings_dlna_tile_title" />
-                </FrameLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="@dimen/margin_md">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_dlna_tile_title"
-                        android:textColor="@color/mobile_card_text_primary"
-                        android:textSize="15sp"
-                        android:fontFamily="sans-serif-medium" />
-
-                    <TextView
-                        android:id="@+id/txtDlnaTileSubtitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/settings_sftp_tile_subtitle_off"
-                        android:textColor="@color/mobile_text_secondary"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/switchDlnaTile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:clickable="false"
-                    android:focusable="false" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

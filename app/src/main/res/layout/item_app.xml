@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Mobile App Item — premium dark glassmorphism design
-    Matches the theme of activity_welcome and activity_app_manager.
--->
+<!-- Mobile App Item — Premium Glass Card -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,13 +7,13 @@
     android:id="@+id/cardApp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/margin_md"
-    android:layout_marginVertical="3dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="4dp"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="false"
     app:cardBackgroundColor="@color/mobile_glass_card"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="14dp"
     app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/mobile_glass_stroke"
@@ -27,7 +24,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/margin_md">
+        android:padding="12dp">
 
         <!-- App Icon -->
         <ImageView
@@ -44,15 +41,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_md">
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:id="@+id/txtAppName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/mobile_card_text_primary"
+                android:textColor="@color/mobile_text_primary"
                 android:textSize="15sp"
-                android:fontFamily="sans-serif-medium"
+                android:fontFamily="sans-serif-bold"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="Chrome" />
@@ -62,8 +60,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/mobile_card_text_secondary"
+                android:textColor="@color/mobile_text_secondary"
                 android:textSize="12sp"
+                android:fontFamily="monospace"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="com.android.chrome" />
@@ -75,25 +74,24 @@
             android:id="@+id/txtDebloatBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_md"
+            android:layout_marginEnd="8dp"
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
-            android:background="@drawable/bg_badge"
+            android:background="@drawable/bg_badge_step_pill"
             android:textColor="@color/white"
             android:textSize="10sp"
             android:textAllCaps="true"
             android:fontFamily="sans-serif-black"
             android:visibility="gone"
             tools:visibility="visible"
-            tools:text="Recommended"
-            tools:backgroundTint="#4CAF50" />
+            tools:text="Recommended" />
 
         <!-- App Size -->
         <TextView
             android:id="@+id/txtAppSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/mobile_card_text_secondary"
+            android:textColor="@color/mobile_text_secondary"
             android:textSize="12sp"
             android:fontFamily="sans-serif-medium"
             tools:text="145 MB" />
