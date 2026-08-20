@@ -94,6 +94,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/next_track_skip"
             android:textSize="13sp"
+            android:stateListAnimator="@null"
             app:cornerRadius="12dp"
             app:backgroundTint="?attr/colorPrimary"
             android:textColor="@android:color/white" />
