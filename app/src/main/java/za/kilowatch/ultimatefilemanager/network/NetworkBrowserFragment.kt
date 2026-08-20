@@ -711,7 +711,10 @@ class NetworkBrowserFragment : Fragment() {
                 searchJob?.cancel()
                 searchJob = lifecycleScope.launch {
                     kotlinx.coroutines.delay(500)
-                    performSearch(query)
+                    // Debounce the keystrokes, then run the (internally offloaded)
+                    // search directly — doSearchInternal does NOT manage searchJob,
+                    // so there is no self-cancellation of this debounce coroutine.
+                    doSearchInternal(query, currentFiles)
                 }
             }
         })
@@ -1907,11 +1910,26 @@ class NetworkBrowserFragment : Fragment() {
     }
 
     private fun performSearch(query: String) {
+        val snapshot = currentFiles
+        searchJob?.cancel()
+        searchJob = lifecycleScope.launch { doSearchInternal(query, snapshot) }
+    }
+
+    /**
+     * The actual search/filter/sort. The filter + NaturalSort sort over a large
+     * network listing is pure CPU work; it runs on [kotlinx.coroutines.Dispatchers.Default]
+     * so a huge share can't freeze the main thread past the ANR watchdog threshold
+     * (reported from an NVIDIA SHIELD, SDK 30, app 1.8.6-GOOGLE). Only the
+     * adapter/RecyclerView updates run on the main thread.
+     */
+    private suspend fun doSearchInternal(query: String, snapshot: List<NetworkFile>) {
         val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
-        val baseList = if (query.isEmpty()) currentFiles else currentFiles.filter { it.name.contains(query, ignoreCase = true) }
-        val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
-        val sortedAndFiltered = sortAndFilterFiles(filtered)
-        
+        val sortedAndFiltered = withContext(kotlinx.coroutines.Dispatchers.Default) {
+            val baseList = if (query.isEmpty()) snapshot else snapshot.filter { it.name.contains(query, ignoreCase = true) }
+            val filtered = baseList.filter { isNetworkFileVisible(it, showHidden) }
+            sortAndFilterFiles(filtered)
+        }
+
         submitAdapterList {
             fileAdapter.submitList(sortedAndFiltered)
             layoutEmpty?.visibility = if (sortedAndFiltered.isEmpty()) View.VISIBLE else View.GONE
@@ -1921,7 +1939,7 @@ class NetworkBrowserFragment : Fragment() {
             val requestFocus = shouldRestoreFocus || arguments?.getBoolean(ARG_REQUEST_INITIAL_FOCUS, false) == true
             arguments?.putBoolean(ARG_REQUEST_INITIAL_FOCUS, false)
             shouldRestoreFocus = false
-            
+
             if (requestFocus) {
                 recyclerFiles.post {
                     var focusPos = 0

@@ -194,6 +194,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
     private var originalRemotePath: String = ""
     private lateinit var currentPath: String
     private var loadJob: kotlinx.coroutines.Job? = null
+    // Tracks the in-flight applyData() computation so a newer listing/search can
+    // cancel a stale one instead of letting it overwrite the screen.
+    private var applyDataJob: kotlinx.coroutines.Job? = null
     
     // UI Elements
     private lateinit var txtTitle: TextView
@@ -1772,6 +1775,9 @@ class NetworkBrowserActivity : AppCompatActivity() {
             return
         }
 
+        // Cancel any in-flight async applyData() so its full listing cannot overwrite
+        // the filtered search result when it completes.
+        applyDataJob?.cancel()
         val filtered = currentFiles.filter { it.name.contains(query, ignoreCase = true) }
         fileAdapter.submitList(filtered)
         updateEmptyState(filtered.isEmpty())
@@ -2645,17 +2651,65 @@ class NetworkBrowserActivity : AppCompatActivity() {
     }
 
     private fun applyData() {
-        // Apply hidden files filter
+        // Snapshot the state the filter/sort needs so the heavy computation can run
+        // off the main thread. On a large network listing (NAS/SMB/DLNA media shares)
+        // the NaturalSort + per-comparison pinned-state sort is O(N log N) string work
+        // over every entry; on a slow or huge share it blocked the main thread past
+        // the 5 s ANR watchdog threshold (reported from an NVIDIA SHIELD, SDK 30,
+        // app 1.8.6-GOOGLE).
+        val snapshot = currentFiles
         val showHidden = za.kilowatch.ultimatefilemanager.settings.HiddenFilesManager.isShowHiddenFilesEnabled
-        val withoutHidden = currentFiles.filter { isNetworkFileVisible(it, showHidden) }
+        val filterTypeNow = filterType
+        val activeTagsNow = activeTagsFilter
+        val sortModeNow = sortMode
+        val sortOrderNow = sortOrder
+        val shareNow = share
+        val isTvRoot = shareNow.type == ShareType.TV && currentPath.isEmpty() && !isTv
+
+        applyDataJob?.cancel()
+        applyDataJob = lifecycleScope.launch {
+            val displayFiles = withContext(Dispatchers.Default) {
+                computeDisplayFiles(
+                    snapshot = snapshot,
+                    showHidden = showHidden,
+                    filterTypeNow = filterTypeNow,
+                    activeTagsNow = activeTagsNow,
+                    sortModeNow = sortModeNow,
+                    sortOrderNow = sortOrderNow,
+                    shareNow = shareNow,
+                    isTvRoot = isTvRoot
+                )
+            }
+            presentDisplayFiles(displayFiles)
+        }
+    }
+
+    /**
+     * Pure CPU/filtering portion of [applyData]: hidden-file filter, extension/tag
+     * filter, folders-first + NaturalSort ordering, and (mobile TV-root) action items.
+     * Runs off the main thread and touches no views — it only reads the snapshotted
+     * arguments and resources/prefs, so a large listing cannot freeze the UI.
+     */
+    private fun computeDisplayFiles(
+        snapshot: List<NetworkFile>,
+        showHidden: Boolean,
+        filterTypeNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType,
+        activeTagsNow: Set<String>,
+        sortModeNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode,
+        sortOrderNow: za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder,
+        shareNow: NetworkShare,
+        isTvRoot: Boolean
+    ): List<NetworkFile> {
+        // Apply hidden files filter
+        val withoutHidden = snapshot.filter { isNetworkFileVisible(it, showHidden) }
 
         // Apply filter
         val filtered = withoutHidden.filter {
-            if (filterType == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
+            if (filterTypeNow == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.ALL) true
             else if (it.isDirectory) true
             else {
                 val ext = if (it.name.contains(".")) it.name.substringAfterLast(".").lowercase() else ""
-                when (filterType) {
+                when (filterTypeNow) {
                     za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.IMAGES -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.IMAGE_EXTENSIONS
                     za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.VIDEOS -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.VIDEO_EXTENSIONS
                     za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.FilterType.AUDIO -> ext in za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.AUDIO_EXTENSIONS
@@ -2666,28 +2720,28 @@ class NetworkBrowserActivity : AppCompatActivity() {
             }
         }
 
-        val tagFiltered = if (activeTagsFilter.isNotEmpty()) {
-            filtered.filter { it.isDirectory || za.kilowatch.ultimatefilemanager.storage.FileTagsManager.getTags(this, it.path).any { t -> t in activeTagsFilter } }
+        val tagFiltered = if (activeTagsNow.isNotEmpty()) {
+            filtered.filter { it.isDirectory || za.kilowatch.ultimatefilemanager.storage.FileTagsManager.getTags(this, it.path).any { t -> t in activeTagsNow } }
         } else {
             filtered
         }
 
         // Apply sort — folders first, then sort within groups
-        val secondaryComparator: java.util.Comparator<NetworkFile> = when (sortMode) {
+        val secondaryComparator: java.util.Comparator<NetworkFile> = when (sortModeNow) {
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.NAME -> compareBy(NaturalSort.order) { it.name }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.SIZE -> compareBy { if (it.isDirectory) 0L else it.size }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.DATE -> compareBy { it.lastModified }
             za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortMode.TYPE -> compareBy(String.CASE_INSENSITIVE_ORDER) { if (it.name.contains(".")) it.name.substringAfterLast(".") else "" }
         }
-        val orderedComparator = if (sortOrder == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.DESC) {
+        val orderedComparator = if (sortOrderNow == za.kilowatch.ultimatefilemanager.storage.SortFilterSheet.SortOrder.DESC) {
             secondaryComparator.reversed()
         } else {
             secondaryComparator
         }
 
         val customComparator = Comparator<NetworkFile> { f1, f2 ->
-            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f1.path, share.id)
-            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f2.path, share.id)
+            val p1 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f1.path, shareNow.id)
+            val p2 = za.kilowatch.ultimatefilemanager.settings.PinnedFilesManager.isPinned(this, f2.path, shareNow.id)
             if (p1 && p2) {
                 NaturalSort.naturalCompare(f1.name, f2.name)
             } else if (p1) {
@@ -2707,7 +2761,7 @@ class NetworkBrowserActivity : AppCompatActivity() {
         val sortedFiles = tagFiltered.sortedWith(customComparator)
 
         // Append action items at TV root (mobile only)
-        val displayFiles = if (share.type == ShareType.TV && currentPath.isEmpty() && !isTv) {
+        return if (isTvRoot) {
             sortedFiles + listOf(
                 NetworkFile(
                     name = getString(R.string.take_screenshot),
@@ -2753,7 +2807,14 @@ class NetworkBrowserActivity : AppCompatActivity() {
         } else {
             sortedFiles
         }
+    }
 
+    /**
+     * Applies the computed listing to the RecyclerView on the main thread: captures
+     * the scroll position, swaps the adapter data, hides the progress bar, and runs
+     * the folder-transition animation.
+     */
+    private fun presentDisplayFiles(displayFiles: List<NetworkFile>) {
         val oldPath = lastLoadedPath
         val isNavigatingFolder = oldPath != null && oldPath != currentPath
         lastLoadedPath = currentPath
